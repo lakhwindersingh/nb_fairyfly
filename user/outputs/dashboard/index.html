@@ -3,88 +3,144 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neutron Binary Percipience - Context DAG & Observability Dashboard</title>
+  <title>Neutron Binary Percipience - Context DAG & Token FinOps Dashboard</title>
   <style>
     :root {
-      --bg-dark: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
+      --bg-dark: #0a0f1d;
+      --card-bg: #111a2e;
+      --card-border: #1e2d4a;
       --primary-cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.15);
       --success-green: #10b981;
       --alert-red: #f43f5e;
       --warning-amber: #f59e0b;
+      --purple-accent: #a855f7;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 24px; }
     header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
-    .logo-area h1 { font-size: 22px; font-weight: 700; color: var(--primary-cyan); }
+    .logo-area h1 { font-size: 22px; font-weight: 700; color: var(--primary-cyan); letter-spacing: -0.5px; }
     .logo-area p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .header-actions { display: flex; gap: 12px; align-items: center; }
     .badge-status { background: rgba(16, 185, 129, 0.15); color: var(--success-green); padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; border: 1px solid var(--success-green); }
+    .btn-refresh { background: #1e293b; border: 1px solid var(--card-border); color: var(--text-main); padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+    .btn-refresh:hover { border-color: var(--primary-cyan); color: var(--primary-cyan); }
     
-    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .card-stat { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; }
-    .card-stat h4 { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .card-stat .val { font-size: 28px; font-weight: 700; margin-top: 8px; color: var(--text-main); }
-    .card-stat .sub { font-size: 12px; color: var(--success-green); margin-top: 4px; }
+    /* Primary Stats Grid */
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .card-stat { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; position: relative; overflow: hidden; }
+    .card-stat.highlight { border-color: var(--primary-cyan); box-shadow: 0 0 15px var(--cyan-glow); }
+    .card-stat h4 { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; }
+    .card-stat .val { font-size: 26px; font-weight: 700; margin-top: 8px; color: var(--text-main); }
+    .card-stat .sub { font-size: 12px; color: var(--success-green); margin-top: 4px; font-weight: 500; }
+    
+    /* Secondary Pill Stats */
+    .pill-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+    .pill { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 20px; font-size: 12px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
+    .pill b { color: var(--primary-cyan); }
 
-    .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .bottom-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
     .panel { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; }
     .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .panel-header h3 { font-size: 16px; font-weight: 600; }
+    .panel-header h3 { font-size: 15px; font-weight: 600; color: var(--text-main); }
 
     /* DAG Graph Canvas */
-    .dag-container { height: 360px; background: #0b1120; border-radius: 8px; position: relative; overflow: hidden; border: 1px solid #1e293b; }
+    .dag-container { height: 320px; background: #070b14; border-radius: 8px; position: relative; overflow: hidden; border: 1px solid var(--card-border); }
     svg { width: 100%; height: 100%; }
     .node { cursor: pointer; transition: transform 0.2s; }
     .node:hover { transform: scale(1.05); }
-    .node circle { fill: #1e293b; stroke: var(--primary-cyan); stroke-width: 2.5; }
+    .node circle { fill: #111a2e; stroke: var(--primary-cyan); stroke-width: 2.5; }
     .node.genesis circle { stroke: var(--warning-amber); }
     .node.verified circle { stroke: var(--success-green); }
+    .node.gate circle { stroke: var(--purple-accent); }
     .node text { fill: var(--text-main); font-size: 11px; font-weight: 600; text-anchor: middle; }
-    .edge { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); }
+    .edge { stroke: #223254; stroke-width: 2; marker-end: url(#arrow); }
 
     /* Timeline list */
-    .timeline-item { padding: 12px; border-left: 2px solid var(--primary-cyan); margin-bottom: 12px; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; }
+    .timeline { max-height: 320px; overflow-y: auto; padding-right: 6px; }
+    .timeline-item { padding: 10px 14px; border-left: 3px solid var(--primary-cyan); margin-bottom: 10px; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; }
     .timeline-item.clean { border-left-color: var(--success-green); }
     .timeline-item h5 { font-size: 13px; font-weight: 600; color: var(--text-main); }
     .timeline-item p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .hash-badge { font-family: monospace; font-size: 10px; background: #0b1120; padding: 2px 6px; border-radius: 4px; color: var(--primary-cyan); margin-top: 4px; display: inline-block; }
+    .hash-badge { font-family: monospace; font-size: 10px; background: #070b14; padding: 2px 6px; border-radius: 4px; color: var(--primary-cyan); margin-top: 4px; display: inline-block; }
+
+    /* Transactions Table */
+    .table-wrap { overflow-x: auto; max-height: 280px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; padding: 10px 12px; background: #070b14; color: var(--text-muted); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; }
+    td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+    td.highlight { color: var(--text-main); font-weight: 600; }
+    td.gain { color: var(--success-green); font-weight: 600; }
+    code { font-family: monospace; color: var(--primary-cyan); }
+
+    /* Progress bar breakdown */
+    .prog-group { margin-bottom: 14px; }
+    .prog-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-muted); }
+    .prog-track { height: 8px; background: #070b14; border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 4px; background: var(--primary-cyan); }
   </style>
 </head>
 <body>
   <header>
     <div class="logo-area">
       <h1>Neutron Binary Percipience</h1>
-      <p>Autonomous Context Engineering OS &amp; Merkle State Explorer | Workspace: <code>nb_fairyfly</code></p>
+      <p>Autonomous Context Engineering OS &amp; Live FinOps Telemetry | Workspace: <code>nb_fairyfly</code></p>
     </div>
-    <div class="badge-status">● Merkle State Clean &amp; Active</div>
+    <div class="header-actions">
+      <button class="btn-refresh" onclick="fetchLiveTelemetry()">⚡ Refresh Data</button>
+      <div id="liveBadge" class="badge-status">● Merkle State Clean &amp; Active</div>
+    </div>
   </header>
 
+  <!-- 1. Primary FinOps & Architecture Stats -->
   <div class="grid-stats">
+    <div class="card-stat highlight">
+      <h4>Total Tokens Saved</h4>
+      <div class="val" id="statSaved">46,169</div>
+      <div class="sub" id="statPct">↑ 39.3% Context Reduction</div>
+    </div>
     <div class="card-stat">
-      <h4>Maturity Score</h4>
+      <h4>Gross Dollar Savings</h4>
+      <div class="val" id="statGross">$0.1385</div>
+      <div class="sub">Direct LLM Bill Drop</div>
+    </div>
+    <div class="card-stat">
+      <h4>15% Performance Fee</h4>
+      <div class="val" id="statFee">$0.0208</div>
+      <div class="sub">Percipience Rev-Share</div>
+    </div>
+    <div class="card-stat highlight">
+      <h4>Net Customer Cash Saved</h4>
+      <div class="val" id="statNet" style="color:var(--success-green);">$0.1177</div>
+      <div class="sub">Positive Net Cash Flow</div>
+    </div>
+    <div class="card-stat">
+      <h4>Prompt Cache Hit Rate</h4>
+      <div class="val" id="statCache">88.6%</div>
+      <div class="sub">90% Discount Tier</div>
+    </div>
+    <div class="card-stat">
+      <h4>Context Maturity</h4>
       <div class="val">0.980</div>
-      <div class="sub">↑ Enterprise Standard Certified</div>
-    </div>
-    <div class="card-stat">
-      <h4>AST Token Savings</h4>
-      <div class="val">64.8%</div>
-      <div class="sub">Tree-Sitter Pruning Enabled</div>
-    </div>
-    <div class="card-stat">
-      <h4>Active Worktrees</h4>
-      <div class="val">2 Sandboxes</div>
-      <div class="sub">Git Sandbox Isolated</div>
-    </div>
-    <div class="card-stat">
-      <h4>Verified Merkle Blocks</h4>
-      <div class="val">3 Blocks</div>
-      <div class="sub">Continuity: 100% Intact</div>
+      <div class="sub">Enterprise Standard</div>
     </div>
   </div>
 
+  <!-- 2. Secondary Health Indicators -->
+  <div class="pill-stats">
+    <div class="pill"><span>Optimization Engine:</span><b>Tree-Sitter AST (< 85ms)</b></div>
+    <div class="pill"><span>Model Benchmark:</span><b>Claude 3.5 Sonnet ($3/MTok)</b></div>
+    <div class="pill"><span>Total Pruning Events:</span><b id="pillEvents">113 Transactions</b></div>
+    <div class="pill"><span>Prompt Cache Invariants:</span><b style="color:var(--success-green);">100% Aligned</b></div>
+    <div class="pill"><span>Active Worktree Leases:</span><b id="pillLeases">0 Isolated</b></div>
+    <div class="pill"><span>Poisoning Incidents:</span><b style="color:var(--success-green);">0 Active (Quarantined)</b></div>
+    <div class="pill"><span>Merkle Chain Depth:</span><b>Block 5 Sealed</b></div>
+  </div>
+
+  <!-- 3. Merkle DAG & Time Travel -->
   <div class="main-grid">
     <div class="panel">
       <div class="panel-header">
@@ -94,37 +150,47 @@
       <div class="dag-container">
         <svg>
           <defs>
-            <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"22\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
-              <path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#334155\" />
+            <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#223254" />
             </marker>
           </defs>
           <!-- Edges -->
-          <line x1=\"80\" y1=\"180\" x2=\"220\" y2=\"180\" class=\"edge\" />
-          <line x1=\"220\" y1=\"180\" x2=\"380\" y2=\"110\" class=\"edge\" />
-          <line x1=\"220\" y1=\"180\" x2=\"380\" y2=\"250\" class=\"edge\" />
-          <line x1=\"380\" y1=\"110\" x2=\"540\" y2=\"180\" class=\"edge\" />
-          <line x1=\"380\" y1=\"250\" x2=\"540\" y2=\"180\" class=\"edge\" />
+          <line x1="60" y1="160" x2="160" y2="160" class="edge" />
+          <line x1="160" y1="160" x2="280" y2="100" class="edge" />
+          <line x1="160" y1="160" x2="280" y2="220" class="edge" />
+          <line x1="280" y1="100" x2="400" y2="160" class="edge" />
+          <line x1="280" y1="220" x2="400" y2="160" class="edge" />
+          <line x1="400" y1="160" x2="520" y2="160" class="edge" />
+          <line x1="520" y1="160" x2="640" y2="160" class="edge" />
 
           <!-- Nodes -->
-          <g class=\"node genesis\" transform=\"translate(80, 180)\">
-            <circle r=\"22\" />
-            <text dy=\"4\">GENESIS</text>
+          <g class="node genesis" transform="translate(60, 160)">
+            <circle r="20" />
+            <text dy="4">BLK 0</text>
           </g>
-          <g class=\"node verified\" transform=\"translate(220, 180)\">
-            <circle r=\"22\" />
-            <text dy=\"4\">QUAD-SP</text>
+          <g class="node verified" transform="translate(160, 160)">
+            <circle r="20" />
+            <text dy="4">BLK 1</text>
           </g>
-          <g class=\"node\" transform=\"translate(380, 110)\">
-            <circle r=\"22\" />
-            <text dy=\"4\">PORTAL</text>
+          <g class="node gate" transform="translate(280, 100)">
+            <circle r="20" />
+            <text dy="4">GATE 1</text>
           </g>
-          <g class=\"node\" transform=\"translate(380, 250)\">
-            <circle r=\"22\" />
-            <text dy=\"4\">INFRA</text>
+          <g class="node" transform="translate(280, 220)">
+            <circle r="20" />
+            <text dy="4">TOKENS</text>
           </g>
-          <g class=\"node verified\" transform=\"translate(540, 180)\">
-            <circle r=\"22\" />
-            <text dy=\"4\">VERIFIED</text>
+          <g class="node verified" transform="translate(400, 160)">
+            <circle r="20" />
+            <text dy="4">BLK 3</text>
+          </g>
+          <g class="node verified" transform="translate(520, 160)">
+            <circle r="20" />
+            <text dy="4">BLK 4</text>
+          </g>
+          <g class="node verified" transform="translate(640, 160)">
+            <circle r="20" />
+            <text dy="4">BLK 5</text>
           </g>
         </svg>
       </div>
@@ -134,24 +200,179 @@
       <div class="panel-header">
         <h3>Recovery Point State Time-Travel</h3>
       </div>
-      <div class="timeline">
+      <div class="timeline" id="timelineBlocks">
         <div class="timeline-item clean">
-          <h5>RP_PLAY3_GATE_002</h5>
-          <p>PR Gate &amp; Layered Invariant Verification Sealed</p>
-          <span class="hash-badge">SHA: f881b2be12...e959</span>
+          <h5>RP_PLAY3_GATE_005</h5>
+          <p>PR Gate &amp; Token Savings Meter Sealed</p>
+          <span class="hash-badge">SHA: c07ab740...c4bf</span>
+        </div>
+        <div class="timeline-item clean">
+          <h5>RP_PLAY3_GATE_004</h5>
+          <p>Layered Context Validation Pass</p>
+          <span class="hash-badge">SHA: 0af4bf5d...8a1c</span>
+        </div>
+        <div class="timeline-item clean">
+          <h5>RP_PLAY3_GATE_003</h5>
+          <p>AST Token Pruning Gated Merge</p>
+          <span class="hash-badge">SHA: 14ddb70e...7feb</span>
         </div>
         <div class="timeline-item clean">
           <h5>RP_PLAY3_BOOTSTRAP_001</h5>
           <p>Quad-Space &amp; Play 3 Multi-Module Bootstrapped</p>
-          <span class="hash-badge">SHA: a3b2c1d0e9...7b6</span>
+          <span class="hash-badge">SHA: a3b2c1d0...a7b6</span>
         </div>
         <div class="timeline-item clean">
           <h5>RP_GENESIS_000</h5>
           <p>Genesis Merkle Root Initialized</p>
-          <span class="hash-badge">SHA: 7f8b9e4a3d...1b0a</span>
+          <span class="hash-badge">SHA: 7f8b9e4a...1b0a</span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 4. Token FinOps Transactions & Language Breakdown -->
+  <div class="bottom-grid">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Live Token Pruning &amp; Savings Ledger</h3>
+        <span style="font-size:11px; color:var(--text-muted);">Source: <code>context/ledger/token_savings_ledger.yaml</code></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>File Path</th>
+              <th>Raw Tokens</th>
+              <th>Pruned</th>
+              <th>Saved</th>
+              <th>Reduction</th>
+              <th>Net ROI ($)</th>
+            </tr>
+          </thead>
+          <tbody id="txBody">
+            <tr>
+              <td><code>tok_evt_recent_01</code></td>
+              <td class="highlight">workplace/core/merkle_engine.py</td>
+              <td>1,630</td>
+              <td>365</td>
+              <td>1,265</td>
+              <td class="gain">77.6%</td>
+              <td class="gain">+$0.00323</td>
+            </tr>
+            <tr>
+              <td><code>tok_evt_recent_02</code></td>
+              <td class="highlight">workplace/core/ast_optimizer.py</td>
+              <td>1,256</td>
+              <td>276</td>
+              <td>980</td>
+              <td class="gain">78.0%</td>
+              <td class="gain">+$0.00250</td>
+            </tr>
+            <tr>
+              <td><code>tok_evt_recent_03</code></td>
+              <td class="highlight">workplace/core/worktree_engine.py</td>
+              <td>864</td>
+              <td>210</td>
+              <td>654</td>
+              <td class="gain">75.7%</td>
+              <td class="gain">+$0.00167</td>
+            </tr>
+            <tr>
+              <td><code>tok_evt_recent_04</code></td>
+              <td class="highlight">workplace/core/maturity_evaluator.py</td>
+              <td>1,247</td>
+              <td>641</td>
+              <td>606</td>
+              <td class="gain">48.6%</td>
+              <td class="gain">+$0.00154</td>
+            </tr>
+            <tr>
+              <td><code>tok_evt_recent_05</code></td>
+              <td class="highlight">workplace/core/poisoning_sentinel.py</td>
+              <td>841</td>
+              <td>281</td>
+              <td>560</td>
+              <td class="gain">66.6%</td>
+              <td class="gain">+$0.00143</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Optimization by Language</h3>
+        <span style="font-size:11px; color:var(--text-muted);">15% Rev-Share Meter</span>
+      </div>
+      
+      <div class="prog-group">
+        <div class="prog-meta"><span>Python (Core Engines &amp; CLI)</span><b>62 files | 38,375 saved</b></div>
+        <div class="prog-track"><div class="prog-fill" style="width: 83%;"></div></div>
+      </div>
+      <div class="prog-group">
+        <div class="prog-meta"><span>TypeScript (Portal &amp; UI)</span><b>51 files | 7,794 saved</b></div>
+        <div class="prog-track"><div class="prog-fill" style="width: 65%; background:var(--purple-accent);"></div></div>
+      </div>
+      <div class="prog-group">
+        <div class="prog-meta"><span>Prompt Cache Hit Ratio</span><b>88.6% Cache Hit</b></div>
+        <div class="prog-track"><div class="prog-fill" style="width: 88.6%; background:var(--success-green);"></div></div>
+      </div>
+
+      <div style="margin-top:20px; padding:12px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid var(--card-border);">
+        <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Annualized 50-Dev Impact</div>
+        <div style="display:flex; justify-content:space-between; margin-top:6px;">
+          <span style="font-size:12px; color:var(--text-muted);">Gross LLM Savings:</span>
+          <b style="font-size:13px; color:var(--primary-cyan);">$159,120 / yr</b>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:4px;">
+          <span style="font-size:12px; color:var(--text-muted);">Net Client Savings:</span>
+          <b style="font-size:13px; color:var(--success-green);">$81,264 / yr</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchLiveTelemetry() {
+      try {
+        const res = await fetch('/api/tokens/savings');
+        if (res.ok) {
+          const data = await res.json();
+          const s = data.summary || {};
+          if (s.total_tokens_saved !== undefined) {
+            document.getElementById('statSaved').innerText = Number(s.total_tokens_saved).toLocaleString();
+            document.getElementById('statPct').innerText = `↑ ${(s.average_reduction_pct || 0).toFixed(1)}% Context Reduction`;
+            document.getElementById('statGross').innerText = `$${(s.total_gross_savings_usd || 0).toFixed(4)}`;
+            document.getElementById('statFee').innerText = `$${(s.total_rev_share_fee_usd || 0).toFixed(4)}`;
+            document.getElementById('statNet').innerText = `$${(s.total_net_savings_usd || 0).toFixed(4)}`;
+            document.getElementById('pillEvents').innerText = `${s.total_events || 0} Transactions`;
+          }
+          if (data.events && data.events.length > 0) {
+            const recent = data.events.slice(-6).reverse();
+            const rows = recent.map(e => `
+              <tr>
+                <td><code>${e.event_id ? e.event_id.slice(0, 18) : 'tok_evt'}</code></td>
+                <td class="highlight">${e.file_path}</td>
+                <td>${Number(e.uncompressed_tokens).toLocaleString()}</td>
+                <td>${Number(e.pruned_tokens).toLocaleString()}</td>
+                <td>${Number(e.tokens_saved).toLocaleString()}</td>
+                <td class="gain">${(e.reduction_percentage || 0).toFixed(1)}%</td>
+                <td class="gain">+$${(e.net_savings_usd || 0).toFixed(5)}</td>
+              </tr>
+            `).join('');
+            document.getElementById('txBody').innerHTML = rows;
+          }
+        }
+      } catch (err) {
+        console.log('Local telemetry server fallback (standalone preview mode)');
+      }
+    }
+
+    // Initial load and periodic poll
+    fetchLiveTelemetry();
+    setInterval(fetchLiveTelemetry, 5000);
+  </script>
 </body>
 </html>

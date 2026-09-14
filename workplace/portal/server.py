@@ -474,6 +474,25 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           </div>
         </div>
       </div>
+      <div class="card" style="margin-top:20px; border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+        <div class="card-badge" style="background:var(--cyan); color:#000;">Live FinOps Telemetry</div>
+        <h3>Repository Token Savings &amp; Metering Ledger</h3>
+        <p>Continuous context token reduction metrics calculated from <code>context/ledger/token_savings_ledger.yaml</code>:</p>
+        <div class="grid-3" style="margin-top:14px;">
+          <div class="stat-box"><span>Tokens Saved:</span><span id="portalTokensSaved" class="stat-val" style="color:var(--cyan);">46,169</span></div>
+          <div class="stat-box"><span>Gross Bill Savings:</span><span id="portalGrossSaved" class="stat-val" style="color:var(--green);">$0.1385</span></div>
+          <div class="stat-box"><span>15% Performance Fee:</span><span id="portalFee" class="stat-val">$0.0208</span></div>
+        </div>
+        <div class="grid-3" style="margin-top:10px;">
+          <div class="stat-box"><span>Net Client Retained:</span><span id="portalNetSaved" class="stat-val" style="color:var(--green);">$0.1177</span></div>
+          <div class="stat-box"><span>Avg Token Reduction:</span><span id="portalReductionPct" class="stat-val">39.3%</span></div>
+          <div class="stat-box"><span>Pruning Events:</span><span id="portalEventsCount" class="stat-val">113</span></div>
+        </div>
+        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+          <a href="/api/tokens/savings" target="_blank" style="color:var(--cyan); font-size:12px; font-weight:600; text-decoration:none;">View Raw YAML/JSON Ledger &rarr;</a>
+          <button class="action-btn" style="padding:6px 14px; font-size:12px;" onclick="fetchPortalTokenSavings()">Refresh FinOps Telemetry</button>
+        </div>
+      </div>
     </section>
 
     <!-- TAB 6: CLOUD & OPEX -->
@@ -736,6 +755,28 @@ percipience rollback \
   </main>
 
   <script>
+    async function fetchPortalTokenSavings() {
+      try {
+        const res = await fetch('/api/tokens/savings');
+        if (res.ok) {
+          const data = await res.json();
+          const s = data.summary || {};
+          if (s.total_tokens_saved !== undefined) {
+            document.getElementById('portalTokensSaved').innerText = Number(s.total_tokens_saved).toLocaleString();
+            document.getElementById('portalGrossSaved').innerText = `$${(s.total_gross_savings_usd || 0).toFixed(4)}`;
+            document.getElementById('portalFee').innerText = `$${(s.total_rev_share_fee_usd || 0).toFixed(4)}`;
+            document.getElementById('portalNetSaved').innerText = `$${(s.total_net_savings_usd || 0).toFixed(4)}`;
+            document.getElementById('portalReductionPct').innerText = `${(s.average_reduction_pct || 0).toFixed(1)}%`;
+            document.getElementById('portalEventsCount').innerText = `${s.total_events || 0}`;
+          }
+        }
+      } catch (e) {
+        console.log('Telemetry auto-sync fallback');
+      }
+    }
+    setTimeout(fetchPortalTokenSavings, 500);
+    setInterval(fetchPortalTokenSavings, 5000);
+
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));

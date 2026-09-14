@@ -1,6 +1,6 @@
 workflow_id: "wf_enterprise_pr_gate"
-name: "Enterprise PR Gate with Custom Infosec Review"
-description: "Demonstrates hybrid composition of sealed platform executors with customer custom agent."
+name: "Enterprise PR Gate with Custom Infosec & FinOps Audit"
+description: "Demonstrates hybrid composition of sealed platform executors with customer custom agents."
 
 steps:
   - step_id: "ast_prune"
@@ -8,10 +8,18 @@ steps:
     executor: "platform.ast_pruner"
     inputs: ["workplace/"]
 
+  - step_id: "token_savings_audit"
+    name: "Autonomous Token FinOps & Metering Verification"
+    executor: "agent_token_finops_auditor"
+    depends_on: ["ast_prune"]
+    inputs:
+      - "context/ledger/token_savings_ledger.yaml"
+    failure_action: "warn_and_meter"
+
   - step_id: "custom_security_audit"
     name: "Enterprise Infosec & Banking Rule Audit"
     executor: "agent_security_auditor"
-    depends_on: ["ast_prune"]
+    depends_on: ["token_savings_audit"]
     inputs:
       - "workplace/"
       - "context/custom/rules/banking_security.md"

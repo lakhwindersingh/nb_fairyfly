@@ -1,15 +1,22 @@
 workflow_id: "wf_pr_gatekeeper"
-description: "Automated verification gate workflow run on every incoming pull request."
+description: "Automated verification gate workflow run on every incoming pull request with token savings metering."
 steps:
   - id: "step_ast_prune"
     name: "AST Symbol Pruning"
     executor: "platform.ast_pruner"
     max_duration_sec: 15
 
+  - id: "step_token_metering"
+    name: "Token Savings Capture & FinOps Metering"
+    executor: "platform.token_tracker"
+    depends_on: ["step_ast_prune"]
+    action: "RECORD_SAVINGS_LEDGER"
+    output_ledger: "context/ledger/token_savings_ledger.yaml"
+
   - id: "step_contract_compat"
     name: "Cross-Module Contract Verification"
     executor: "agent_verifier"
-    depends_on: ["step_ast_prune"]
+    depends_on: ["step_token_metering"]
     gate: "gate_contract_compatibility"
 
   - id: "step_bounded_tdd"
