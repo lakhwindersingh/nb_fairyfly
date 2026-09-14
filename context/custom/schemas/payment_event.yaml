@@ -1,0 +1,21 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PaymentEvent"
+description: "Customer-authored banking domain event schema layered on platform invariants."
+type: "object"
+properties:
+  transaction_id:
+    type: "string"
+    format: "uuid"
+  amount_cents:
+    type: "integer"
+    minimum: 1
+  currency:
+    type: "string"
+    enum: ["USD", "EUR", "GBP"]
+  timestamp:
+    type: "string"
+    format: "date-time"
+required:
+  - "transaction_id"
+  - "amount_cents"
+  - "currency"

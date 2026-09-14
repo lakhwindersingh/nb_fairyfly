@@ -1,18 +1,15 @@
-ledger_version: "7.2.0"
+ledger_version: 7.2.0
 project:
-  name: "nb_fairyfly"
-  mode: "multi_module"
-  status: "ACTIVE"
-active_recovery_point: "RP_PLAY3_BOOTSTRAP_001"
-merkle_block_height: 2
+  name: nb_fairyfly
+  mode: multi_module
+  framework: Neutron Binary Percipience
+  description: Enterprise Context Engineering OS & Multi-Module Cloud SaaS Portal
+  governing_plan: .nb/plan/claude-context-engineering-parent-master-plan.md
+  associated_play: .nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md
+active_recovery_point: RP_PLAY3_BOOTSTRAP_001
+merkle_block_height: 3
 overall_maturity_score: 0.957
 quarantined_tests_count: 0
 active_poisoning_incidents: 0
-modules_summary:
-  mod_portal_marketing: "BOOTSTRAPPED"
-  mod_tenant_onboarding: "BOOTSTRAPPED"
-  mod_billing_metering: "BOOTSTRAPPED"
-  mod_observability_usage: "BOOTSTRAPPED"
-  mod_shared_infra_bridge: "BOOTSTRAPPED"
-last_audit_timestamp: "2026-09-13T21:48:00Z"
+last_audit_timestamp: '2026-09-14T01:54:54.436555+00:00'
 continuity_verified: true

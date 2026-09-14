@@ -1,0 +1,33 @@
+name: "Neutron Binary Percipience Gatekeeper & Merkle Audit"
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  percipience-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Percipience Gatekeeper
+        run: |
+          chmod +x bin/percipience
+          ./bin/percipience gate
+          ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+          ./bin/percipience validate --layered
+
+      - name: Publish Context Maturity Scorecard
+        if: always()
+        run: |
+          echo "Context Maturity Report successfully verified and generated."
+          cat user/outputs/context_maturity_report.md

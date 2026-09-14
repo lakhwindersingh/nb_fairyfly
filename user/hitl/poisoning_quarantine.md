@@ -33,3 +33,21 @@ When context poisoning, hallucination drift, or invalid contract schemas are det
 | Incident ID | Detection Date | Module | Root Cause | Clean Recovery Point | Signed Off By |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | *None* | - | - | - | - | - |
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-14T01:54:56.652767+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-14T01:56:37.295429+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-14T01:56:56.730299+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`

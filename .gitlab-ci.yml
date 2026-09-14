@@ -1,0 +1,23 @@
+stages:
+  - verify
+
+percipience_gatekeeper:
+  stage: verify
+  image: python:3.11-slim
+  variables:
+    PERCIPIENCE_API_URL: "https://percipience.corp.internal/api/v1"
+    GIT_DEPTH: "0"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  before_script:
+    - chmod +x bin/percipience
+  script:
+    - echo "Running Percipience Gatekeeper & Merkle State Audit on self-hosted repo..."
+    - ./bin/percipience gate
+    - ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+    - ./bin/percipience validate --layered
+  artifacts:
+    when: always
+    paths:
+      - user/outputs/context_maturity_report.md

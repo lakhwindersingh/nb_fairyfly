@@ -1,0 +1,32 @@
+workflow_id: "wf_enterprise_pr_gate"
+name: "Enterprise PR Gate with Custom Infosec Review"
+description: "Demonstrates hybrid composition of sealed platform executors with customer custom agent."
+
+steps:
+  - step_id: "ast_prune"
+    name: "Structural AST Token Pruner"
+    executor: "platform.ast_pruner"
+    inputs: ["workplace/"]
+
+  - step_id: "custom_security_audit"
+    name: "Enterprise Infosec & Banking Rule Audit"
+    executor: "agent_security_auditor"
+    depends_on: ["ast_prune"]
+    inputs:
+      - "workplace/"
+      - "context/custom/rules/banking_security.md"
+    failure_action: "quarantine_and_pause"
+
+  - step_id: "contract_verification"
+    name: "Cross-Module Schema Verification"
+    executor: "platform.contract_verifier"
+    depends_on: ["custom_security_audit"]
+    inputs:
+      - "context/contracts/"
+      - "context/custom/schemas/"
+
+  - step_id: "merkle_seal"
+    name: "Merkle State DAG Block Sealer"
+    executor: "platform.merkle_ledger"
+    depends_on: ["contract_verification"]
+    action: "SEAL_BLOCK"
