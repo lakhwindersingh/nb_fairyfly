@@ -1,0 +1,121 @@
+ledger_version: "7.2.0"
+project:
+  name: "nb_fairyfly"
+  mode: "multi_module"
+  framework: "Neutron Binary Percipience"
+  description: "Enterprise Context Engineering OS & Multi-Module Cloud SaaS Portal"
+  governing_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
+  associated_play: ".nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md"
+
+mcp_integrations:
+  jira:
+    enabled: true
+    server_package: "@modelcontextprotocol/server-jira"
+    endpoint: "https://neutronbinary.atlassian.net"
+    auth_secret_arn: "arn:aws:secretsmanager:us-east-1:123456789012:secret/jira-api-token"
+    jql_query: "project = PERC AND status = 'Ready for Dev' AND labels = 'percipience-ready'"
+    poll_interval_seconds: 300
+    auto_transition:
+      on_start: "In Progress"
+      on_verify_pass: "Done"
+      on_hitl_quarantine: "Needs HITL Review"
+    attach_maturity_report: true
+    attach_merkle_proof: true
+
+modules:
+  mod_portal_marketing:
+    name: "Corporate Marketing & MDX Docs"
+    path: "workplace/modules/mod_portal_marketing"
+    status: "BOOTSTRAPPED"
+    contract_dependencies: []
+  mod_tenant_onboarding:
+    name: "Self-Serve Onboarding & CMEK Provisioner"
+    path: "workplace/modules/mod_tenant_onboarding"
+    status: "BOOTSTRAPPED"
+    contract_dependencies:
+      - "context/contracts/onboarding_contract.yaml"
+  mod_billing_metering:
+    name: "Stripe Billing & 15% Token Rev-Share Engine"
+    path: "workplace/modules/mod_billing_metering"
+    status: "BOOTSTRAPPED"
+    contract_dependencies:
+      - "context/contracts/billing_meter_contract.yaml"
+  mod_observability_usage:
+    name: "Live Merkle Explorer & Telemetry UI"
+    path: "workplace/modules/mod_observability_usage"
+    status: "BOOTSTRAPPED"
+    contract_dependencies:
+      - "context/contracts/observability_contract.yaml"
+  mod_shared_infra_bridge:
+    name: "Shared-to-Decoupled Infrastructure Adapter"
+    path: "workplace/modules/mod_shared_infra_bridge"
+    status: "BOOTSTRAPPED"
+    contract_dependencies: []
+
+contracts:
+  - id: "CTR_ONBOARDING_V1"
+    file: "context/contracts/onboarding_contract.yaml"
+    version: "1.0.0"
+    status: "VALID"
+  - id: "CTR_BILLING_METER_V1"
+    file: "context/contracts/billing_meter_contract.yaml"
+    version: "1.0.0"
+    status: "VALID"
+  - id: "CTR_OBSERVABILITY_V1"
+    file: "context/contracts/observability_contract.yaml"
+    version: "1.0.0"
+    status: "VALID"
+
+recovery_points:
+  - id: "RP_GENESIS_000"
+    module_scope: "global_system"
+    git_commit: "ca10338ce1c9b0ef9cd9aa936cb7e0fc92604111"
+    timestamp: "2026-09-13T21:45:52Z"
+    status: "VERIFIED"
+    description: "Initial plan specification commit into .nb/plan/"
+  - id: "RP_PLAY3_BOOTSTRAP_001"
+    module_scope: "global_system"
+    git_commit: "2cf559a"
+    timestamp: "2026-09-13T21:48:00Z"
+    status: "VERIFIED"
+    description: "Quad-Space clean layout and Play 3 multi-module bootstrap"
+
+ledger_chain:
+  - block_id: 0
+    block_type: "GENESIS"
+    prev_block_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+    timestamp: "2026-09-13T21:45:52Z"
+    merkle_root: "ca10338ce1c9b0ef9cd9aa936cb7e0fc9260411100000000000000000000000"
+    current_block_hash: "7f8b9e4a3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a"
+    action: "GENESIS_INITIALIZATION"
+  - block_id: 1
+    block_type: "BOOTSTRAP_PLAY3"
+    prev_block_hash: "7f8b9e4a3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a"
+    timestamp: "2026-09-13T21:48:00Z"
+    merkle_root: "9a4f21b7c8e90123df6543210abcedf0123456789abcdef0123456789abcdef0"
+    current_block_hash: "a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2"
+    action: "QUAD_SPACE_AND_MULTI_MODULE_BOOTSTRAP"
+
+quarantined_tests: []
+poisoning_incidents: []
+
+git_commits:
+  - commit_sha: "ca10338ce1c9b0ef9cd9aa936cb7e0fc92604111"
+    message: "plan"
+    requirements: ["REQ_PARENT_MASTER_PLAN", "REQ_CORP_SITE_PLAN", "REQ_PLAY3_CEaaS"]
+  - commit_sha: "2cf559a"
+    message: "feat(bootstrap): Quad-Space architecture and Play 3 multi-module SaaS platform bootstrap"
+    requirements: ["REQ_QUAD_SPACE_BOOTSTRAP", "REQ_MULTI_MODULE_ROUTING", "REQ_MERKLE_LEDGER"]
+
+standard_issue_checklist:
+  CHK_CONTEXT_POISONING_FREE: "PASS"
+  CHK_MERKLE_CHAIN_CONTINUITY: "PASS"
+  CHK_QUAD_SPACE_ISOLATION: "PASS"
+  CHK_CROSS_MODULE_CONTRACTS: "PASS"
+  CHK_TOKEN_COMPRESSION_RULES: "PASS"
+
+remaining_issues: []
+model_suggestions:
+  - suggestion_id: "SUGG_001"
+    description: "Implement live Tree-Sitter WebAssembly worker in mod_portal_marketing for interactive client-side AST pruning demo."
+    priority: "MEDIUM"

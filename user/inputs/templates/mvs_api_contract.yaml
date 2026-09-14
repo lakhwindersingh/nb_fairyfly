@@ -1,0 +1,136 @@
+---
+mvs_version: "1.0.0"
+format_type: "api_contract_openapi"
+id: "MVS-API-002"
+title: "Account Balance & Transfer Settlement API"
+target_module: "mod_settlement_api"
+priority: "High"
+---
+
+openapi: "3.1.0"
+info:
+  title: "Percipience Settlement API"
+  description: "MVS Schema-First Contract for Account Balance and Transfer Settlements"
+  version: "1.0.0"
+
+servers:
+  - url: "https://api.percipience.internal/v1"
+    description: "Internal High-Speed VPC Endpoint"
+
+paths:
+  /accounts/{accountId}/balance:
+    get:
+      summary: "Retrieve Real-Time Account Balance"
+      operationId: "getAccountBalance"
+      parameters:
+        - name: "accountId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+      responses:
+        "200":
+          description: "Current ledger balance"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountBalanceResponse"
+        "404":
+          description: "Account not found"
+
+  /transfers:
+    post:
+      summary: "Execute Atomic Account-to-Account Transfer"
+      operationId: "executeTransfer"
+      headers:
+        X-Idempotency-Key:
+          schema:
+            type: "string"
+            format: "uuid"
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequest"
+      responses:
+        "201":
+          description: "Transfer successfully committed to Merkle ledger"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferReceipt"
+        "409":
+          description: "Insufficient balance or concurrent lock conflict"
+
+components:
+  schemas:
+    AccountBalanceResponse:
+      type: "object"
+      required:
+        - account_id
+        - available_balance_cents
+        - currency
+        - ledger_checkpoint_sha
+      properties:
+        account_id:
+          type: "string"
+          format: "uuid"
+        available_balance_cents:
+          type: "integer"
+          format: "int64"
+          example: 1250000
+        currency:
+          type: "string"
+          enum: ["USD", "EUR", "GBP"]
+          example: "USD"
+        ledger_checkpoint_sha:
+          type: "string"
+          example: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+    TransferRequest:
+      type: "object"
+      required:
+        - source_account_id
+        - destination_account_id
+        - amount_cents
+        - currency
+      properties:
+        source_account_id:
+          type: "string"
+          format: "uuid"
+        destination_account_id:
+          type: "string"
+          format: "uuid"
+        amount_cents:
+          type: "integer"
+          format: "int64"
+          minimum: 1
+        currency:
+          type: "string"
+          enum: ["USD", "EUR", "GBP"]
+        metadata:
+          type: "object"
+          additionalProperties: true
+
+    TransferReceipt:
+      type: "object"
+      required:
+        - transfer_id
+        - status
+        - merkle_block_hash
+        - timestamp
+      properties:
+        transfer_id:
+          type: "string"
+          format: "uuid"
+        status:
+          type: "string"
+          enum: ["SETTLED", "HELD", "REJECTED"]
+        merkle_block_hash:
+          type: "string"
+        timestamp:
+          type: "string"
+          format: "date-time"
