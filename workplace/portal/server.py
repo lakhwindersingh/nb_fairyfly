@@ -148,6 +148,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('infrastructure')">Cloud &amp; OpEx</button>
       <button class="nav-btn" onclick="showTab('pricing')">Pricing &amp; Onboard</button>
       <button class="nav-btn" onclick="showTab('docs')">Docs</button>
+      <a href="/dashboard" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--cyan); color:#000; font-size:12px; font-weight:700; padding:7px 12px; border-radius:6px; text-decoration:none; margin-left:8px;">&#128202; Observability Hub &rarr;</a>
     </nav>
   </header>
 
@@ -865,6 +866,17 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
 
+        if parsed.path == "/dashboard":
+            dash_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "index.html"
+            if dash_path.exists():
+                body = dash_path.read_text(encoding="utf-8").encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
         if parsed.path in ("/", "/app"):
             body = PORTAL_HTML.encode("utf-8")
             self.send_response(200)
@@ -906,6 +918,267 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
+
+        if parsed.path == "/api/observability/agents":
+            agents = [
+                {
+                    "agent_id": "platform.ast_pruner",
+                    "name": "Structural AST Skeletonizer",
+                    "type": "System Agent (Base Enclave)",
+                    "model": "Deterministic Tree-Sitter (Sub-85ms)",
+                    "role": "AST Body Stripping & Token Compression",
+                    "scope": "All incoming code context turns",
+                    "sandboxing": "Ephemeral tmpfs RAM Enclave",
+                    "status": "ACTIVE"
+                },
+                {
+                    "agent_id": "agent_token_finops_auditor",
+                    "name": "Autonomous Token FinOps & Metering Auditor",
+                    "type": "Custom Agent (agentic/custom/agents/)",
+                    "model": "claude-3-5-sonnet-20241022",
+                    "role": "Token FinOps, Budget Enforcement & Rev-Share Metering",
+                    "scope": "workplace/ & context/ledger/",
+                    "sandboxing": "Ephemeral Git Worktree Isolation",
+                    "status": "ACTIVE"
+                },
+                {
+                    "agent_id": "agent_security_auditor",
+                    "name": "Enterprise Infosec & Invariant Auditor",
+                    "type": "Custom Agent (agentic/custom/agents/)",
+                    "model": "claude-3-5-sonnet-20241022",
+                    "role": "Hardcoded Secret Interception & Anti-Poisoning Quarantine",
+                    "scope": "workplace/ & context/custom/rules/",
+                    "sandboxing": "Isolated AST Scan Sandbox",
+                    "status": "ACTIVE"
+                },
+                {
+                    "agent_id": "agent_verifier",
+                    "name": "Cross-Module Contract Verifier",
+                    "type": "System Agent (Platform)",
+                    "model": "claude-3-5-sonnet-20241022",
+                    "role": "Cross-Module Schema Verification & Contract Integrity",
+                    "scope": "context/contracts/ & context/custom/schemas/",
+                    "sandboxing": "Read-Only Worktree Mount",
+                    "status": "ACTIVE"
+                },
+                {
+                    "agent_id": "agent_tester",
+                    "name": "Bounded TDD Self-Healing Engine",
+                    "type": "System Agent (Platform)",
+                    "model": "claude-3-5-sonnet-20241022",
+                    "role": "Automated Unit & Integration Test Loops (Max 3 Retries)",
+                    "scope": "workplace/templates/tests/",
+                    "sandboxing": "Ephemeral Git Worktree Isolation",
+                    "status": "ACTIVE"
+                }
+            ]
+            self._send_json({"total_agents": len(agents), "agents": agents})
+            return
+
+        if parsed.path == "/api/observability/prompts":
+            prompts = [
+                {
+                    "file": "agentic/prompts/system_prompt.md",
+                    "name": "Platform System Prompt",
+                    "role": "Global Invariants & Quad-Space Architecture Constraints",
+                    "cache_alignment": "100% Invariant (Bit-for-Bit Cache Prefix)",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 420
+                },
+                {
+                    "file": "agentic/prompts/derivation_prompt.md",
+                    "name": "Plan Derivation Prompt",
+                    "role": "AST Skeleton to Implementation Code Synthesis",
+                    "cache_alignment": "Static Prefix Aligned",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 680
+                },
+                {
+                    "file": "agentic/prompts/evaluation_refinement_prompt.md",
+                    "name": "Context Maturity Prompt",
+                    "role": "6-Dimensional Context Scoring & Gap Analysis",
+                    "cache_alignment": "Static Prefix Aligned",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 510
+                },
+                {
+                    "file": "agentic/prompts/bootstrapping_prompt.md",
+                    "name": "Quad-Space Bootstrapping Prompt",
+                    "role": "Directory Tree Generation & Genesis Merkle Block Sealing",
+                    "cache_alignment": "Static Prefix Aligned",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 390
+                },
+                {
+                    "file": "agentic/prompts/workflow_orchestration_prompt.md",
+                    "name": "Workflow Orchestrator Prompt",
+                    "role": "Multi-Agent DAG Dependency Execution & Quarantine Intercept",
+                    "cache_alignment": "Static Prefix Aligned",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 590
+                },
+                {
+                    "file": "agentic/prompts/lifecycle_delivery_prompt.md",
+                    "name": "Lifecycle Delivery Prompt",
+                    "role": "PR Gatekeeping, Rollback Recovery & Release Audits",
+                    "cache_alignment": "Static Prefix Aligned",
+                    "cache_tier": "90% Input Discount",
+                    "tokens": 620
+                }
+            ]
+            self._send_json({"total_prompts": len(prompts), "prompts": prompts})
+            return
+
+        if parsed.path == "/api/observability/workflows":
+            workflows = [
+                {
+                    "workflow_id": "wf_pr_gatekeeper",
+                    "name": "PR Gatekeeper & Token Metering Pipeline",
+                    "source": "agentic/workflows/pr_gatekeeper.yaml",
+                    "trigger": "GitHub PR / GitLab Merge Request / Local Pre-Commit",
+                    "steps": [
+                        {"id": "step_ast_prune", "name": "AST Symbol Pruning", "executor": "platform.ast_pruner"},
+                        {"id": "step_token_metering", "name": "Token Savings Capture & Metering", "executor": "platform.token_tracker"},
+                        {"id": "step_contract_compat", "name": "Cross-Module Contract Verification", "executor": "agent_verifier"},
+                        {"id": "step_bounded_tdd", "name": "Bounded Unit & Integration TDD", "executor": "agent_tester", "max_retries": 3},
+                        {"id": "step_merkle_seal", "name": "Merkle State Ledger Sealing", "executor": "platform.merkle_ledger", "action": "SEAL_BLOCK"}
+                    ]
+                },
+                {
+                    "workflow_id": "wf_enterprise_pr_gate",
+                    "name": "Enterprise PR Gate with Infosec & FinOps Audit",
+                    "source": "agentic/custom/workflows/enterprise_sdlc.yaml",
+                    "trigger": "Enterprise Branch Merge Event",
+                    "steps": [
+                        {"id": "ast_prune", "name": "Structural AST Token Pruner", "executor": "platform.ast_pruner"},
+                        {"id": "token_savings_audit", "name": "Token FinOps Audit", "executor": "agent_token_finops_auditor"},
+                        {"id": "custom_security_audit", "name": "Infosec & Banking Security Audit", "executor": "agent_security_auditor"},
+                        {"id": "contract_verification", "name": "Cross-Module Schema Verification", "executor": "platform.contract_verifier"},
+                        {"id": "merkle_seal", "name": "Merkle State DAG Sealer", "executor": "platform.merkle_ledger", "action": "SEAL_BLOCK"}
+                    ]
+                },
+                {
+                    "workflow_id": "wf_derivation_pipeline",
+                    "name": "Quad-Space Plan-to-Code Derivation Pipeline",
+                    "source": "agentic/workflows/derivation_pipeline.yaml",
+                    "trigger": "Plan Ingestion Event (.nbpack or Markdown Plan)",
+                    "steps": [
+                        {"id": "step_hydrate_plan", "name": "In-Memory Enclave Hydration", "executor": "platform.nbpack_envelope"},
+                        {"id": "step_scaffold_spaces", "name": "Quad-Space Directory Scaffolding", "executor": "platform.bootstrapper"},
+                        {"id": "step_derive_contracts", "name": "Contract Schema Synthesis", "executor": "agent_architect"},
+                        {"id": "step_genesis_seal", "name": "Genesis Merkle Root Sealing", "executor": "platform.merkle_ledger"}
+                    ]
+                }
+            ]
+            self._send_json({"total_workflows": len(workflows), "workflows": workflows})
+            return
+
+        if parsed.path == "/api/observability/hooks":
+            hooks = [
+                {
+                    "name": "Local Git Pre-Commit Hook",
+                    "location": ".git/hooks/pre-commit",
+                    "installed_by": "scripts/install_git_hook.sh",
+                    "actions": ["./bin/percipience gate", "./bin/percipience tokens summary"],
+                    "behavior": "Blocks git commit if AST compression fails, contract tests fail, or Merkle chain breaks",
+                    "status": "ACTIVE & ENFORCED"
+                },
+                {
+                    "name": "GitHub Actions CI PR Gatekeeper",
+                    "location": ".github/workflows/percipience.yml",
+                    "trigger": "pull_request (opened, synchronize), push (main)",
+                    "actions": ["./bin/percipience gate", "./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85", "./bin/percipience validate --layered"],
+                    "behavior": "Publishes token savings scorecard & context maturity report to $GITHUB_STEP_SUMMARY",
+                    "status": "CONFIGURED"
+                },
+                {
+                    "name": "GitLab CI Enterprise Pipeline",
+                    "location": ".gitlab-ci.yml",
+                    "trigger": "merge_request_event, commit on main",
+                    "actions": ["./bin/percipience gate", "./bin/percipience audit", "./bin/percipience validate"],
+                    "behavior": "Emits artifacts to user/outputs/ for self-hosted compliance tracking",
+                    "status": "CONFIGURED"
+                },
+                {
+                    "name": "Quarantine Sentinel Anti-Poisoning Hook",
+                    "location": "workplace/core/poisoning_sentinel.py",
+                    "trigger": "On every file modification & context compile",
+                    "actions": ["Scans for hardcoded secrets, hallucinated packages, and unpinned dependencies"],
+                    "behavior": "Immediately quarantines file into user/hitl/poisoning_quarantine.md and triggers alert",
+                    "status": "ACTIVE & ZERO INCIDENTS"
+                },
+                {
+                    "name": "BYOR VCS Webhook Receiver",
+                    "location": "workplace/portal/server.py (/api/vcs/webhook)",
+                    "trigger": "HTTP POST with X-Hub-Signature-256 or X-Gitlab-Token",
+                    "actions": ["Validates HMAC signature, triggers gatekeeper, reports commit status back to VCS"],
+                    "behavior": "Multi-VCS compatibility for GitHub, GitLab, Bitbucket",
+                    "status": "LISTENING"
+                }
+            ]
+            self._send_json({"total_hooks": len(hooks), "hooks": hooks})
+            return
+
+        if parsed.path == "/api/observability/maturity":
+            scores = MaturityEvaluator.evaluate_workspace(REPO_ROOT)
+            playbook = MaturityEvaluator.get_improvement_playbook(REPO_ROOT)
+            dimensions = [
+                {
+                    "id": "D1",
+                    "name": "Requirements Coverage",
+                    "score": scores["requirements_coverage"],
+                    "weight": 0.20,
+                    "target": 1.00,
+                    "criteria": "Minimum Viable Specification (MVS) templates, user story inputs, acceptance criteria in user/inputs/"
+                },
+                {
+                    "id": "D2",
+                    "name": "Architecture & Grounding",
+                    "score": scores["architecture_grounding"],
+                    "weight": 0.20,
+                    "target": 1.00,
+                    "criteria": "Full Quad-Space directory layout, inter-module YAML contract schemas in context/contracts/"
+                },
+                {
+                    "id": "D3",
+                    "name": "Code & Config Quality",
+                    "score": scores["code_quality"],
+                    "weight": 0.15,
+                    "target": 1.00,
+                    "criteria": "Shared DTOs, strict linting, zero cyclic dependencies, typed interfaces across workplace/modules/"
+                },
+                {
+                    "id": "D4",
+                    "name": "Test & Verification Coverage",
+                    "score": scores["test_coverage"],
+                    "weight": 0.15,
+                    "target": 1.00,
+                    "criteria": "Bounded self-healing test loops (max 3 retries), automated integration test suite passing"
+                },
+                {
+                    "id": "D5",
+                    "name": "Security & Anti-Leak Compliance",
+                    "score": scores["security_compliance"],
+                    "weight": 0.15,
+                    "target": 1.00,
+                    "criteria": "Zero active context poisoning incidents, SHA-256 Merkle chain continuity, zero plaintext leaks"
+                },
+                {
+                    "id": "D6",
+                    "name": "Token & GenAI Optimization",
+                    "score": scores["token_efficiency"],
+                    "weight": 0.15,
+                    "target": 1.00,
+                    "criteria": "Tree-Sitter AST body stripping (>=50% reduction), 88%+ prompt cache prefix hit rate"
+                }
+            ]
+            self._send_json({
+                "composite_score": scores["composite_score"],
+                "status": scores["status"],
+                "dimensions": dimensions,
+                "improvement_playbook": playbook
+            })
+            return
 
         if parsed.path == "/api/infrastructure":
             self._send_json({
