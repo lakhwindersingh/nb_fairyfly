@@ -22,6 +22,7 @@ from core.nbpack_envelope import NBPackEnvelope
 from core.worktree_engine import WorktreeEngine
 from core.byor_adapter import BYORAdapter
 from core.layered_context_validator import LayeredContextValidator
+from core.token_tracker import TokenTracker
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -103,6 +104,26 @@ class TestPlay3Subsystems(unittest.TestCase):
         val_res = LayeredContextValidator.validate_layered_hierarchy(REPO_ROOT)
         self.assertTrue(val_res["overall_valid"])
         self.assertEqual(val_res["tier1_invariants"], "VALID")
+
+    def test_10_token_tracker(self):
+        """Test token savings capture, 15% rev-share metering, and report generation."""
+        evt = TokenTracker.record_event(
+            repo_root=REPO_ROOT,
+            file_path="workplace/core/test_sample.py",
+            uncompressed_tokens=1000,
+            pruned_tokens=400,
+            session_or_pr="test_suite_run"
+        )
+        self.assertEqual(evt["tokens_saved"], 600)
+        self.assertEqual(evt["reduction_percentage"], 60.0)
+        self.assertAlmostEqual(evt["gross_savings_usd"], 0.0018, places=4)
+        self.assertAlmostEqual(evt["rev_share_fee_usd"], 0.00027, places=5)
+        self.assertAlmostEqual(evt["net_savings_usd"], 0.00153, places=5)
+
+        # Verify report generation
+        md = TokenTracker.generate_markdown_report(REPO_ROOT)
+        self.assertIn("Percipience Context Token Savings & Rev-Share Metering Report", md)
+        self.assertIn("15.0%", md)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

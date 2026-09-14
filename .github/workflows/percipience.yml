@@ -1,4 +1,4 @@
-name: "Neutron Binary Percipience Gatekeeper & Merkle Audit"
+name: "Neutron Binary Percipience Gatekeeper & Token Savings Metering"
 on:
   pull_request:
     types: [opened, synchronize]
@@ -19,15 +19,44 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run Percipience Gatekeeper
+      - name: Install Runtime Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Run Percipience PR Gatekeeper & AST Token Pruning
         run: |
           chmod +x bin/percipience
           ./bin/percipience gate
+          ./bin/percipience tokens summary
+
+      - name: Enforce Merkle Chain Continuity & Context Maturity
+        run: |
           ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+
+      - name: Validate Layered Context Hierarchy & Invariants
+        run: |
           ./bin/percipience validate --layered
 
-      - name: Publish Context Maturity Scorecard
+      - name: Post Reports to GitHub Actions Step Summary
         if: always()
         run: |
-          echo "Context Maturity Report successfully verified and generated."
-          cat user/outputs/context_maturity_report.md
+          if [ -f user/outputs/token_savings_report.md ]; then
+            echo "## ⚡ Percipience Token Savings Summary" >> $GITHUB_STEP_SUMMARY
+            cat user/outputs/token_savings_report.md >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f user/outputs/context_maturity_report.md ]; then
+            echo "## 🛡️ Context Maturity Scorecard" >> $GITHUB_STEP_SUMMARY
+            cat user/outputs/context_maturity_report.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Percipience Verification Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: percipience-gate-reports
+          path: |
+            user/outputs/token_savings_report.md
+            user/outputs/context_maturity_report.md
+            context/ledger/token_savings_ledger.yaml
+            context/ledger/context_ledger.yaml

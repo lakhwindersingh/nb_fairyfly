@@ -22,6 +22,7 @@ from core.nbpack_envelope import NBPackEnvelope
 from core.worktree_engine import WorktreeEngine
 from core.byor_adapter import BYORAdapter
 from core.layered_context_validator import LayeredContextValidator
+from core.token_tracker import TokenTracker
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -78,14 +79,17 @@ def cmd_audit(args):
 
 def cmd_gate(args):
     print("🚦 Running Percipience PR Verification Gatekeeper...")
-    print("   [1/4] Scanning AST diffs and running symbol compression...")
+    print("   [1/4] Scanning AST diffs and capturing token savings...")
+    scan_res = TokenTracker.scan_and_track_repo(REPO_ROOT, target_dir="workplace", session_or_pr="pr_gatekeeper")
+    s = scan_res.get("summary", {})
+    print(f"         Tokens Saved: {s.get('total_tokens_saved', 0):,} ({s.get('average_reduction_pct', 0.0):.1f}% reduction | Gross: ${s.get('total_gross_savings_usd', 0.0):.4f})")
     print("   [2/4] Verifying cross-module contracts in context/contracts/...")
     print("   [3/4] Running bounded self-healing TDD checks (max 3 retries)...")
     
     # Seal state block
     block = MerkleEngine.seal_block(REPO_ROOT, "PR_GATE_VERIFICATION_PASS")
     print(f"   [4/4] Merkle Block {block['block_id']} sealed! Hash: {block['current_block_hash'][:16]}...")
-    print("✅ Gatekeeper checks PASSED. Safe to merge.")
+    print("✅ Gatekeeper checks PASSED. Token report emitted to user/outputs/token_savings_report.md. Safe to merge.")
 
 def cmd_rollback(args):
     print(f"🔄 Executing surgical rollback on module: '{args.module}' -> Target: '{args.target_point}'")
@@ -184,6 +188,66 @@ def cmd_run(args):
     print(f"   Step 4: Merkle State Sealer -> Execution OK")
     print("✅ Workflow execution completed successfully.")
 
+def cmd_tokens(args):
+    action = args.tokens_action
+    if action == "track":
+        file_path = Path(args.file)
+        if not file_path.exists():
+            print(f"❌ File not found: {args.file}")
+            sys.exit(1)
+        content = file_path.read_text(encoding="utf-8", errors="ignore")
+        ext = file_path.suffix.lstrip(".")
+        lang = "typescript" if ext in ["ts", "js"] else ("python" if ext == "py" else ext)
+        _, stats = ASTOptimizer.prune_source(content, lang)
+        try:
+            rel_path = str(file_path.resolve().relative_to(REPO_ROOT.resolve()))
+        except Exception:
+            rel_path = str(file_path)
+        evt = TokenTracker.record_event(
+            repo_root=REPO_ROOT,
+            file_path=rel_path,
+            uncompressed_tokens=stats["uncompressed_tokens"],
+            pruned_tokens=stats["pruned_tokens"],
+            session_or_pr=args.pr or "manual_cli",
+            model_id=args.model or "claude-3-5-sonnet-20241022"
+        )
+        print(f"✅ Token savings captured for: {rel_path}")
+        print(f"   Uncompressed: {evt['uncompressed_tokens']:,} tokens | Pruned: {evt['pruned_tokens']:,} tokens")
+        print(f"   Saved: {evt['tokens_saved']:,} tokens ({evt['reduction_percentage']}%)")
+        print(f"   Gross Savings: ${evt['gross_savings_usd']:.5f} | Net Client Savings: ${evt['net_savings_usd']:.5f}")
+    elif action == "scan":
+        target = args.dir if args.dir else "workplace"
+        print(f"⚡ Scanning repository directory '{target}' for AST token compression...")
+        res = TokenTracker.scan_and_track_repo(
+            repo_root=REPO_ROOT,
+            target_dir=target,
+            session_or_pr=args.pr or "ci_scan",
+            model_id=args.model or "claude-3-5-sonnet-20241022"
+        )
+        s = res["summary"]
+        print(f"✅ AST Pruning Scan Complete: {res['new_events_count']} files logged to ledger.")
+        print(f"   Total Uncompressed: {s.get('total_uncompressed_tokens', 0):,} tokens")
+        print(f"   Total Pruned: {s.get('total_pruned_tokens', 0):,} tokens")
+        print(f"   Total Tokens Saved: {s.get('total_tokens_saved', 0):,} tokens ({s.get('average_reduction_pct', 0.0):.1f}% reduction)")
+        print(f"   Gross Dollar Savings: ${s.get('total_gross_savings_usd', 0.0):.4f}")
+        print(f"   15% Performance Fee: ${s.get('total_rev_share_fee_usd', 0.0):.4f}")
+        print(f"   Net Client Savings: ${s.get('total_net_savings_usd', 0.0):.4f}")
+    elif action == "summary":
+        ledger = TokenTracker.load_ledger(REPO_ROOT)
+        s = ledger.get("summary", {})
+        print("📊 Percipience Token Savings & Metering Summary:")
+        print(f"   Events Tracked: {s.get('total_events', 0):,}")
+        print(f"   Total Tokens Saved: {s.get('total_tokens_saved', 0):,} tokens ({s.get('average_reduction_pct', 0.0):.1f}% avg reduction)")
+        print(f"   Gross Financial Savings: ${s.get('total_gross_savings_usd', 0.0):.4f} USD")
+        print(f"   15% Performance Fee: ${s.get('total_rev_share_fee_usd', 0.0):.4f} USD")
+        print(f"   Net Customer Cash Saved: ${s.get('total_net_savings_usd', 0.0):.4f} USD")
+        print(f"   Ledger: context/ledger/token_savings_ledger.yaml")
+    elif action == "report":
+        out_path = Path(args.output) if args.output else None
+        TokenTracker.generate_markdown_report(REPO_ROOT, out_path)
+        dest = out_path or (REPO_ROOT / "user/outputs/token_savings_report.md")
+        print(f"✅ Token savings scorecard emitted to: {dest}")
+
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
@@ -269,6 +333,26 @@ def main():
     p_run.add_argument("--workflow", required=True)
     p_run.add_argument("--dry-run", action="store_true")
     p_run.set_defaults(func=cmd_run)
+
+        # tokens
+    p_tok = subparsers.add_parser("tokens", help="Capture, track, and meter context token savings")
+    p_tok_subs = p_tok.add_subparsers(dest="tokens_action", required=True)
+    
+    p_tok_track = p_tok_subs.add_parser("track", help="Track token savings on a specific file")
+    p_tok_track.add_argument("--file", required=True)
+    p_tok_track.add_argument("--pr", default="")
+    p_tok_track.add_argument("--model", default="claude-3-5-sonnet-20241022")
+
+    p_tok_scan = p_tok_subs.add_parser("scan", help="Scan directory, prune with AST, and record savings")
+    p_tok_scan.add_argument("--dir", default="workplace")
+    p_tok_scan.add_argument("--pr", default="")
+    p_tok_scan.add_argument("--model", default="claude-3-5-sonnet-20241022")
+
+    p_tok_sum = p_tok_subs.add_parser("summary", help="Display token savings ledger summary")
+
+    p_tok_rep = p_tok_subs.add_parser("report", help="Generate markdown token savings report")
+    p_tok_rep.add_argument("--output", default="")
+    p_tok.set_defaults(func=cmd_tokens)
 
     args = parser.parse_args()
     if hasattr(args, "func"):

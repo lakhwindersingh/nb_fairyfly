@@ -373,7 +373,11 @@ percipience_gatekeeper:
 | :--- | :--- |
 | `./bin/percipience init --mode <mode> --parent-plan <plan>` | Bootstrap the Quad-Space directory structure and genesis state ledger. |
 | `./bin/percipience audit [--enforce-merkle-chain] [--min-maturity 0.85]` | Validate cryptographic Merkle continuity, contract compatibility, and context purity. |
-| `./bin/percipience gate` | Run PR gatekeeper checks (AST prune, contracts, bounded TDD, Merkle block seal). |
+| `./bin/percipience gate` | Run PR gatekeeper checks (AST prune & token capture, contracts, bounded TDD, Merkle block seal). |
+| `./bin/percipience tokens track --file <path>` | Prune a specific file using AST, calculate savings, and record event to ledger. |
+| `./bin/percipience tokens scan [--dir <dir>]` | Scan codebase directory, prune ASTs, and record aggregate token savings to ledger. |
+| `./bin/percipience tokens summary` | Display aggregate tokens saved, gross $ saved, and 15% rev-share performance fee. |
+| `./bin/percipience tokens report [--output <path>]` | Generate markdown scorecard in `user/outputs/token_savings_report.md`. |
 | `./bin/percipience pack [--output <path>] [--obfuscate] [--sign]` | Compile and sign proprietary plans into an encrypted binary envelope (`.nbpack`). |
 | `./bin/percipience hydrate [--pack <path>]` | Decrypt and hydrate proprietary envelope strictly inside volatile RAM (`tmpfs`). |
 | `./bin/percipience worktree acquire --agent <id> [--ttl <sec>]` | Mount an ephemeral isolated Git worktree for concurrent subagent execution. |

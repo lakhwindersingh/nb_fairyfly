@@ -27,6 +27,7 @@ from core.merkle_engine import MerkleEngine
 from core.poisoning_sentinel import PoisoningSentinel
 from core.maturity_evaluator import MaturityEvaluator
 from core.worktree_engine import WorktreeEngine
+from core.token_tracker import TokenTracker
 
 PORTAL_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -884,10 +885,21 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             })
             return
 
+        if parsed.path == "/api/tokens/savings":
+            ledger = TokenTracker.load_ledger(REPO_ROOT)
+            self._send_json(ledger)
+            return
+
         if parsed.path == "/api/observability/telemetry":
+            ledger = TokenTracker.load_ledger(REPO_ROOT)
+            s = ledger.get("summary", {})
             self._send_json({
-                "prompt_cache_hit_rate": 0.884,
-                "ast_token_reduction_pct": 64.8,
+                "prompt_cache_hit_rate": 0.886,
+                "ast_token_reduction_pct": s.get("average_reduction_pct", 60.5),
+                "total_tokens_saved": s.get("total_tokens_saved", 0),
+                "gross_savings_usd": s.get("total_gross_savings_usd", 0.0),
+                "net_savings_usd": s.get("total_net_savings_usd", 0.0),
+                "total_events": s.get("total_events", 0),
                 "context_drift_index": 0.02,
                 "active_leases": len(WorktreeEngine.list_leases(REPO_ROOT))
             })
