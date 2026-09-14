@@ -158,6 +158,7 @@
     <button class="tab-btn" onclick="switchTab('tab-agents')">2. Autonomous Agents &amp; Prompts</button>
     <button class="tab-btn" onclick="switchTab('tab-workflows')">3. Workflows, Gates &amp; Hooks</button>
     <button class="tab-btn" onclick="switchTab('tab-finops')">4. Token FinOps &amp; Merkle Ledger</button>
+    <button class="tab-btn" onclick="switchTab('tab-cicd')">5. Autonomous CI/CD &amp; Self-Healing Control Plane</button>
   </div>
 
   <!-- TAB 1: CONTEXT MATURITY & IMPROVEMENT PLAYBOOK -->
@@ -708,6 +709,142 @@
               <td class="gain">66.6%</td>
               <td>$0.00168</td>
               <td class="gain">+$0.00143</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: AUTONOMOUS CI/CD & SELF-HEALING CONTROL PLANE -->
+  <section id="tab-cicd" class="tab-pane">
+    <div class="grid-2">
+      <!-- Autonomous Triad Architecture Card -->
+      <div class="card">
+        <div class="card-badge">Closed-Loop Autonomous Architecture</div>
+        <h3>The Autonomous CI/CD Triad</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Transcending passive gatekeeping: an autonomous, self-governing delivery plane that maintains its own runtime health, auto-heals code and test regressions, and continuously recalibrates AST and cache parameters.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:700; color:var(--cyan); font-size:13px;">1. Self-Sustaining Engine</span>
+              <span class="badge badge-green" id="cicdSustainBadge">HEALTHY</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+              Automated worktree lease garbage collection, WORM Merkle continuity verification, context diff cleanup, and token budget velocity throttling.
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:700; color:var(--purple); font-size:13px;">2. Self-Recovering Engine</span>
+              <span class="badge badge-cyan" id="cicdRecoverBadge">&lt; 1.2s SLA</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+              Isolated diagnostic worktrees, bounded hypothesis-driven patch generation (max 3 TDD retries), and sub-1.2s single-module surgical rollback fallback.
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:700; color:var(--green); font-size:13px;">3. Self-Improving Engine</span>
+              <span class="badge badge-green" id="cicdImproveBadge">ACTIVE TUNING</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+              Closed-loop telemetry analysis, dynamic AST pruning depth calibration, and byte-for-byte prompt cache prefix alignment preserving Anthropic's 90% discount.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding:12px; background:var(--cyan-glow); border:1px solid var(--cyan); border-radius:8px;">
+          <div style="font-weight:700; font-size:13px; color:var(--cyan); margin-bottom:4px;">📖 Engineering Architecture & Roadmap</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+            Read the complete multi-phase strategic specification covering Phase 1 through Phase 4 (Distributed swarms, cognitive AST drift prediction, and zero-touch release).
+          </div>
+          <a href="/api/docs/roadmap" target="_blank" style="color:#000; background:var(--cyan); text-decoration:none; padding:5px 12px; border-radius:6px; font-size:11px; font-weight:700; display:inline-block;">View Autonomous CI/CD Roadmap (.md) &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Live Interactive Control Console -->
+      <div class="card">
+        <div class="card-badge">Interactive Management Plane</div>
+        <h3>Autonomous Control Console</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Trigger autonomous operations directly against the live Percipience control plane or inspect terminal execution logs.
+        </p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+          <button onclick="triggerAutonomousAction('run')" style="background:linear-gradient(135deg, var(--cyan), #0284c7); color:#000; border:none; padding:10px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; text-align:left;">
+            ▶ Run Full Pipeline<br><span style="font-size:10px; font-weight:400; opacity:0.85;">Sustain &rarr; Prune &rarr; Heal &rarr; Optimize</span>
+          </button>
+          <button onclick="triggerAutonomousAction('heal')" style="background:rgba(168,85,247,0.15); border:1px solid var(--purple); color:var(--purple); padding:10px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; text-align:left;">
+            🩹 Self-Healing Pass<br><span style="font-size:10px; font-weight:400; opacity:0.85;">Bounded TDD diagnosis &amp; patch</span>
+          </button>
+          <button onclick="triggerAutonomousAction('sustain')" style="background:rgba(16,185,129,0.15); border:1px solid var(--green); color:var(--green); padding:10px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; text-align:left;">
+            🧹 Sustain Pass<br><span style="font-size:10px; font-weight:400; opacity:0.85;">Reclaim leases &amp; verify Merkle</span>
+          </button>
+          <button onclick="triggerAutonomousAction('optimize')" style="background:rgba(245,158,11,0.15); border:1px solid var(--amber); color:var(--amber); padding:10px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; text-align:left;">
+            🧠 Optimize Calibration<br><span style="font-size:10px; font-weight:400; opacity:0.85;">Recalibrate AST &amp; cache prefix</span>
+          </button>
+        </div>
+
+        <!-- Terminal Output -->
+        <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Live Execution Terminal</div>
+        <pre id="cicdTerminal" style="background:#030712; border:1px solid var(--border); border-radius:8px; padding:14px; color:#38bdf8; font-family:monospace; font-size:11px; max-height:260px; overflow-y:auto; line-height:1.5;">// Ready. Click any action above to trigger the live Autonomous CI/CD Control Plane.</pre>
+      </div>
+    </div>
+
+    <!-- Phased Roadmap Timeline Overview -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-badge">Strategic Horizon</div>
+      <h3>Autonomous CI/CD Engineering Milestones (2026 - 2027)</h3>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Milestone Focus</th>
+              <th>Target Window</th>
+              <th>Key Deliverables</th>
+              <th>SLA Commitment</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Phase 1</strong></td>
+              <td class="highlight">Closed-Loop Triad Foundation</td>
+              <td>Q4 2026</td>
+              <td>Self-Sustaining daemon, AutonomousHealer, dynamic AST pruner, Merkle block sealing, CLI <code>cicd</code> suite.</td>
+              <td>&le; 3 Retries; &lt; 1.2s Rollback</td>
+              <td><span class="badge badge-green">SHIPPED &amp; ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 2</strong></td>
+              <td class="highlight">Multi-Agent Swarm Orchestration</td>
+              <td>Q1 2027</td>
+              <td>Distributed Kubernetes worktree scheduler, parallel hypothesis healing swarm, Jira/Linear MCP ingestion.</td>
+              <td>Concurrent subagent scale (50+)</td>
+              <td><span class="badge badge-amber">IN PROGRESS</span></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 3</strong></td>
+              <td class="highlight">Cognitive Telemetry &amp; Zero Flakiness</td>
+              <td>Q2 2027</td>
+              <td>AST semantic call-graph drift prediction, machine-learning flaky test quarantine, model fine-tuning on Merkle diffs.</td>
+              <td>Zero false-positive PR blocks</td>
+              <td><span class="badge badge-cyan">PLANNED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 4</strong></td>
+              <td class="highlight">Zero-Touch Production Release</td>
+              <td>Q3 2027</td>
+              <td>Canary traffic routing (5%), live APM automated production rollback, air-gapped FedRAMP appliance bundle.</td>
+              <td>&lt; 2.0s Production Rollback</td>
+              <td><span class="badge badge-cyan">PLANNED</span></td>
             </tr>
           </tbody>
         </table>

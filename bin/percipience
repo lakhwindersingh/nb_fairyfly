@@ -23,6 +23,12 @@ from core.worktree_engine import WorktreeEngine
 from core.byor_adapter import BYORAdapter
 from core.layered_context_validator import LayeredContextValidator
 from core.token_tracker import TokenTracker
+from core.autonomous_cicd import (
+    SelfSustainingEngine,
+    AutonomousHealer,
+    SelfImprovingEngine,
+    AutonomousCICDOrchestrator
+)
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -248,6 +254,46 @@ def cmd_tokens(args):
         dest = out_path or (REPO_ROOT / "user/outputs/token_savings_report.md")
         print(f"✅ Token savings scorecard emitted to: {dest}")
 
+
+def cmd_cicd(args):
+    action = args.action or "run"
+    if action == "run":
+        print("🤖 Running Autonomous CI/CD Pipeline (Self-Sustaining, Self-Recovering, Self-Improving)...")
+        res = AutonomousCICDOrchestrator.run_autonomous_pipeline(
+            repo_root=REPO_ROOT,
+            auto_heal=not args.no_heal,
+            optimize=not args.no_optimize
+        )
+        print(f"   [1/4] Self-Sustaining Housekeeping: Reclaimed {res['stages']['sustain']['reclaimed_leases']} leases, Merkle intact: {res['stages']['sustain']['merkle_continuous']}")
+        print(f"   [2/4] Token FinOps Scan: {res['stages']['token_metering']['total_tokens_saved']:,} tokens saved (${res['stages']['token_metering']['gross_savings_usd']:.4f} USD)")
+        print(f"   [3/4] Verification & Self-Healing: {res['stages']['self_healing'].get('status', 'OK')}")
+        print(f"   [4/4] Self-Improving Feedback Loop: Avg reduction: {res['stages']['self_improving']['current_avg_reduction_pct']:.1f}%")
+        print(f"✅ Autonomous CI/CD Pipeline Run Complete: {res['run_id']} (Sealed Merkle Block: {res['stages']['merkle_seal']['block_id']})")
+    elif action == "heal":
+        print(f"🩹 Triggering Autonomous Self-Healing on module: {args.target_module}...")
+        res = AutonomousHealer.diagnose_and_heal(REPO_ROOT, target_module=args.target_module)
+        print(f"   Action: {res['action_taken']}")
+        print(f"   Attempts: {res['attempts']}")
+        print(f"   Resulting Recovery Point: {res.get('recovery_point') or res.get('rollback_details')}")
+        print("✅ Self-Healing routine completed.")
+    elif action == "sustain":
+        print("🧹 Executing Self-Sustaining Housekeeping Pass...")
+        res = SelfSustainingEngine.execute_maintenance(REPO_ROOT)
+        print(f"   Reclaimed Leases: {res['reclaimed_leases']}")
+        print(f"   Cleaned Artifacts: {res['cleaned_artifacts']}")
+        print(f"   Merkle Continuous: {res['merkle_continuous']}")
+        print("✅ Workspace self-sustaining pass completed.")
+    elif action == "optimize":
+        print("🧠 Running Self-Improving Telemetry Analysis...")
+        res = SelfImprovingEngine.analyze_and_optimize(REPO_ROOT)
+        print(f"   Current Reduction: {res['current_avg_reduction_pct']:.1f}% (Target: {res['target_reduction_pct']}%)")
+        print(f"   Policy Adjustments: {len(res['policy_adjustments'])}")
+        for p in res["policy_adjustments"]:
+            print(f"     • {p.get('rule')}: {p.get('new_value', p.get('status'))}")
+        for r in res["recommendations"]:
+            print(f"     • {r}")
+        print("✅ Self-improving ledger updated: context/ledger/self_improving_ledger.yaml")
+
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
@@ -353,6 +399,14 @@ def main():
     p_tok_rep = p_tok_subs.add_parser("report", help="Generate markdown token savings report")
     p_tok_rep.add_argument("--output", default="")
     p_tok.set_defaults(func=cmd_tokens)
+
+    # cicd
+    p_cicd = subparsers.add_parser("cicd", help="Autonomous CI/CD control plane commands")
+    p_cicd.add_argument("action", nargs="?", default="run", choices=["run", "heal", "sustain", "optimize"])
+    p_cicd.add_argument("--target-module", default="mod_portal_marketing")
+    p_cicd.add_argument("--no-heal", action="store_true")
+    p_cicd.add_argument("--no-optimize", action="store_true")
+    p_cicd.set_defaults(func=cmd_cicd)
 
     args = parser.parse_args()
     if hasattr(args, "func"):

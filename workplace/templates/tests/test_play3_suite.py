@@ -23,6 +23,12 @@ from core.worktree_engine import WorktreeEngine
 from core.byor_adapter import BYORAdapter
 from core.layered_context_validator import LayeredContextValidator
 from core.token_tracker import TokenTracker
+from core.autonomous_cicd import (
+    SelfSustainingEngine,
+    AutonomousHealer,
+    SelfImprovingEngine,
+    AutonomousCICDOrchestrator
+)
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -124,6 +130,31 @@ class TestPlay3Subsystems(unittest.TestCase):
         md = TokenTracker.generate_markdown_report(REPO_ROOT)
         self.assertIn("Percipience Context Token Savings & Rev-Share Metering Report", md)
         self.assertIn("15.0%", md)
+
+
+    def test_11_autonomous_cicd_self_healing_and_sustain(self):
+        """Test Autonomous CI/CD Triad: Self-Sustaining, Self-Recovering, Self-Improving."""
+        # 1. Self-Sustaining pass
+        sustain_res = SelfSustainingEngine.execute_maintenance(REPO_ROOT)
+        self.assertEqual(sustain_res["status"], "SUSTAINED")
+        self.assertTrue(sustain_res["merkle_continuous"])
+
+        # 2. Autonomous Healer diagnostic routine
+        heal_res = AutonomousHealer.diagnose_and_heal(REPO_ROOT, target_module="mod_portal_marketing")
+        self.assertTrue(heal_res["healed"])
+        self.assertLessEqual(heal_res["attempts"], 3)
+        self.assertIn(heal_res["action_taken"], ["AUTO_PATCH_VERIFIED_AND_SEALED", "SURGICAL_MODULE_ROLLBACK_EXECUTED"])
+
+        # 3. Self-Improving feedback optimization
+        improve_res = SelfImprovingEngine.analyze_and_optimize(REPO_ROOT)
+        self.assertIn("current_avg_reduction_pct", improve_res)
+        self.assertTrue((REPO_ROOT / "context" / "ledger" / "self_improving_ledger.yaml").exists())
+
+        # 4. End-to-end Autonomous CI/CD Orchestrator pipeline
+        pipeline_res = AutonomousCICDOrchestrator.run_autonomous_pipeline(REPO_ROOT, auto_heal=True, optimize=True)
+        self.assertEqual(pipeline_res["status"], "SUCCESS")
+        self.assertIn("run_id", pipeline_res)
+        self.assertIn("merkle_seal", pipeline_res["stages"])
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

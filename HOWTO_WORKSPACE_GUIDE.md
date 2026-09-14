@@ -378,6 +378,10 @@ percipience_gatekeeper:
 | `./bin/percipience tokens scan [--dir <dir>]` | Scan codebase directory, prune ASTs, and record aggregate token savings to ledger. |
 | `./bin/percipience tokens summary` | Display aggregate tokens saved, gross $ saved, and 15% rev-share performance fee. |
 | `./bin/percipience tokens report [--output <path>]` | Generate markdown scorecard in `user/outputs/token_savings_report.md`. |
+| `./bin/percipience cicd run [--no-heal] [--no-optimize]` | Execute full Autonomous CI/CD pipeline (Sustain -> Prune -> Bounded Auto-Heal -> Optimize -> Merkle Seal). |
+| `./bin/percipience cicd heal [--target-module <id>]` | Trigger autonomous self-healing on a failing module with bounded TDD (max 3 retries) and surgical rollback fallback. |
+| `./bin/percipience cicd sustain` | Execute self-sustaining housekeeping pass (reclaim expired leases, clean scratch diffs, verify Merkle DAG). |
+| `./bin/percipience cicd optimize` | Run closed-loop telemetry analysis and dynamically calibrate AST pruning and prompt cache prefix alignment. |
 | `./bin/percipience pack [--output <path>] [--obfuscate] [--sign]` | Compile and sign proprietary plans into an encrypted binary envelope (`.nbpack`). |
 | `./bin/percipience hydrate [--pack <path>]` | Decrypt and hydrate proprietary envelope strictly inside volatile RAM (`tmpfs`). |
 | `./bin/percipience worktree acquire --agent <id> [--ttl <sec>]` | Mount an ephemeral isolated Git worktree for concurrent subagent execution. |
