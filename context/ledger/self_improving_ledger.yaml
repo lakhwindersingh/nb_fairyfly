@@ -1,4 +1,4 @@
-current_avg_reduction_pct: 44.4
+current_avg_reduction_pct: 44.89
 policy_adjustments:
 - expected_gain_pct: +12.5%
   new_value: AGGRESSIVE_STRIP_INTERNAL_HELPERS
@@ -17,4 +17,4 @@ recommendations:
   tier.
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
-timestamp: '2026-09-14T18:39:38.447055+00:00'
+timestamp: '2026-09-14T18:42:23.922031+00:00'
