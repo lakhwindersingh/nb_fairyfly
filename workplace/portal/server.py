@@ -706,6 +706,21 @@ percipience audit --enforce-merkle-chain</pre>
   --sign</pre>
         </div>
 
+        <div class="card" style="border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+          <div class="card-badge" style="background:var(--cyan); color:#000;">Empirical Study</div>
+          <h3>Benchmark Whitepaper: -62% Claude Token Bills</h3>
+          <p>Read our empirical research paper analyzing 250 tasks across 565k LOC in TypeScript, Python, Go, Rust, and Java:</p>
+          <ul class="bullet-list">
+            <li><b>-62.4% Context Tokens</b> via Tree-Sitter AST body stripping</li>
+            <li><b>88.6% Prompt Cache Hit Rate</b> via static invariant alignment</li>
+            <li><b>-71.8% Direct Cost Drop</b> ($1.42 -&gt; $0.40 blended cost per task)</li>
+            <li><b>0% Workspace Collisions</b> across 10 concurrent agent worktrees</li>
+          </ul>
+          <div style="margin-top:14px;">
+            <a href="/api/docs/whitepaper" target="_blank" style="color:var(--cyan); font-weight:700; text-decoration:none;">Download / View Full Whitepaper Markdown &rarr;</a>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-badge">Recovery</div>
           <h3>Surgical Module Rollback Protocol</h3>
@@ -836,6 +851,19 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "downtime_hours_saved_per_incident": 4.5
             })
             return
+
+        if parsed.path == "/api/docs/whitepaper":
+            wp_path = REPO_ROOT / "workplace" / "modules" / "mod_portal_marketing" / "docs" / "token_savings_whitepaper.md"
+            if wp_path.exists():
+                content = wp_path.read_text(encoding="utf-8")
+                body = content.encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/markdown; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+                return
 
         if parsed.path == "/api/infrastructure":
             self._send_json({
