@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.percipience.ai/v1/mvs_design_tokens.json",
+  "mvs_version": "1.0.0",
+  "format_type": "ui_design_tokens",
+  "id": "MVS-UI-006",
+  "title": "Corporate Design System & Accessibility Tokens",
+  "target_module": "mod_portal_marketing",
+  "theme": "corporate_dark_mode",
+  "accessibility": {
+    "wcag_target": "WCAG_2_1_AA",
+    "min_contrast_ratio": 4.5
+  },
+  "tokens": {
+    "color": {
+      "primary": { "value": "#6366F1", "name": "Indigo Neon" },
+      "secondary": { "value": "#06B6D4", "name": "Cyan Glow" },
+      "background": { "value": "#0B0F19", "name": "Deep Cosmic Slate" },
+      "surface": { "value": "#1E293B", "name": "Slate Card" },
+      "success": { "value": "#10B981", "name": "Emerald Verified" },
+      "warning": { "value": "#F59E0B", "name": "Amber Quarantine" },
+      "danger": { "value": "#EF4444", "name": "Rose Alert" }
+    },
+    "typography": {
+      "font_family_sans": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      "font_family_mono": "'JetBrains Mono', 'Fira Code', monospace",
+      "scale": {
+        "h1": { "size": "3rem", "line_height": "1.15", "weight": "700" },
+        "h2": { "size": "2.25rem", "line_height": "1.25", "weight": "600" },
+        "body": { "size": "1rem", "line_height": "1.5", "weight": "400" },
+        "caption": { "size": "0.75rem", "line_height": "1.4", "weight": "500" }
+      }
+    },
+    "spacing": {
+      "unit": "4px",
+      "xs": "4px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "xl": "32px",
+      "2xl": "48px"
+    },
+    "radii": {
+      "sm": "4px",
+      "md": "8px",
+      "lg": "16px",
+      "full": "9999px"
+    }
+  }
+}

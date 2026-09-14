@@ -1,0 +1,30 @@
+compression_rules:
+  ast_pruning:
+    enabled: true
+    target_reduction_percentage: 60
+    strip_function_bodies: true
+    preserve_docstrings: false
+    supported_languages: ["typescript", "javascript", "python", "go", "rust"]
+
+  model_cascading:
+    tier_a_frontier:
+      model: "claude-3-5-sonnet-20241022"
+      tasks:
+        - "mvs_derivation"
+        - "cross_module_contract_check"
+        - "verification_gate_audit"
+        - "security_compliance"
+        - "poisoning_diagnosis"
+    tier_b_compact:
+      model: "claude-3-5-haiku-20241022"
+      tasks:
+        - "ast_symbol_extraction"
+        - "unified_diff_application"
+        - "unit_test_scaffolding"
+        - "git_commit_drafting"
+        - "dashboard_serialization"
+
+  budget_limits:
+    sprint_token_ceiling: 5000000
+    alert_threshold_percentage: 85
+    throttle_on_limit: true

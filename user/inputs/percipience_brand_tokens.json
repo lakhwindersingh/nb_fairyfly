@@ -1,0 +1,20 @@
+{
+  "brand_name": "Neutron Binary Percipience",
+  "theme_tokens": {
+    "colors": {
+      "primary": "#0F172A",
+      "cyan": "#38BDF8",
+      "green": "#10B981",
+      "red": "#F43F5E"
+    },
+    "typography": {
+      "heading_font": "Inter, sans-serif",
+      "code_font": "JetBrains Mono, monospace"
+    }
+  },
+  "compliance_targets": {
+    "accessibility": "WCAG 2.1 AA",
+    "security": "SOC 2 Type II / ISO 27001",
+    "token_reduction_target": ">= 50%"
+  }
+}

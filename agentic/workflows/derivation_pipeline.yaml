@@ -1,0 +1,25 @@
+workflow_id: "wf_derivation_pipeline"
+description: "Autonomous end-to-end derivation workflow converting MVS inputs into verified workplace code."
+steps:
+  - id: "step_ingest_mvs"
+    name: "Parse & Normalize MVS Input"
+    executor: "agent_architect"
+    input_directory: "user/inputs/"
+
+  - id: "step_generate_contracts"
+    name: "Synthesize Inter-Module Contracts"
+    executor: "agent_architect"
+    depends_on: ["step_ingest_mvs"]
+    output_directory: "context/contracts/"
+
+  - id: "step_scaffold_workplace"
+    name: "Scaffold Source & Configs"
+    executor: "agent_developer"
+    depends_on: ["step_generate_contracts"]
+    output_directory: "workplace/"
+
+  - id: "step_verify_maturity"
+    name: "Calculate Context Maturity"
+    executor: "agent_evaluator"
+    depends_on: ["step_scaffold_workplace"]
+    output_file: "user/outputs/context_maturity_report.md"

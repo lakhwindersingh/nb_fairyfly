@@ -1,0 +1,26 @@
+workflow_id: "wf_pr_gatekeeper"
+description: "Automated verification gate workflow run on every incoming pull request."
+steps:
+  - id: "step_ast_prune"
+    name: "AST Symbol Pruning"
+    executor: "platform.ast_pruner"
+    max_duration_sec: 15
+
+  - id: "step_contract_compat"
+    name: "Cross-Module Contract Verification"
+    executor: "agent_verifier"
+    depends_on: ["step_ast_prune"]
+    gate: "gate_contract_compatibility"
+
+  - id: "step_bounded_tdd"
+    name: "Bounded Unit & Integration TDD"
+    executor: "agent_tester"
+    depends_on: ["step_contract_compat"]
+    max_retries: 3
+    quarantine_on_failure: true
+
+  - id: "step_merkle_seal"
+    name: "Merkle State Ledger Sealing"
+    executor: "platform.merkle_ledger"
+    depends_on: ["step_bounded_tdd"]
+    action: "SEAL_BLOCK"

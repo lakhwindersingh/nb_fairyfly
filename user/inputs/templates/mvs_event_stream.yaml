@@ -1,0 +1,78 @@
+---
+mvs_version: "1.0.0"
+format_type: "event_stream_asyncapi"
+id: "MVS-EVENT-003"
+title: "Event-Driven Telemetry & Anomaly Detection Pipeline"
+target_module: "mod_event_telemetry"
+priority: "Medium"
+---
+
+asyncapi: "3.0.0"
+info:
+  title: "Vehicle & Device Telemetry Event Pipeline"
+  version: "1.0.0"
+  description: "MVS Specification for High-Volume IoT Telemetry Stream Ingestion"
+
+servers:
+  kafkaCluster:
+    host: "kafka.prod.internal:9092"
+    protocol: "kafka"
+    description: "Enterprise Event Bus"
+
+channels:
+  deviceTelemetry:
+    address: "telemetry.v1.raw"
+    messages:
+      publishTelemetry:
+        $ref: "#/components/messages/DeviceTelemetryMessage"
+
+  anomalyAlerts:
+    address: "telemetry.v1.anomalies"
+    messages:
+      alertNotification:
+        $ref: "#/components/messages/AnomalyAlertMessage"
+
+components:
+  messages:
+    DeviceTelemetryMessage:
+      name: "DeviceTelemetryMessage"
+      contentType: "application/json"
+      payload:
+        type: "object"
+        required:
+          - device_uuid
+          - epoch_millis
+          - metrics
+          - hmac_signature
+        properties:
+          device_uuid:
+            type: "string"
+            format: "uuid"
+          epoch_millis:
+            type: "integer"
+            format: "int64"
+          metrics:
+            type: "object"
+            properties:
+              cpu_temperature_c: { type: "number" }
+              battery_voltage_mv: { type: "integer" }
+              gps_lat: { type: "number" }
+              gps_lon: { type: "number" }
+          hmac_signature:
+            type: "string"
+
+    AnomalyAlertMessage:
+      name: "AnomalyAlertMessage"
+      contentType: "application/json"
+      payload:
+        type: "object"
+        required:
+          - alert_id
+          - device_uuid
+          - severity
+          - rule_violated
+        properties:
+          alert_id: { type: "string", format: "uuid" }
+          device_uuid: { type: "string", format: "uuid" }
+          severity: { type: "string", enum: ["CRITICAL", "WARNING", "INFO"] }
+          rule_violated: { type: "string" }

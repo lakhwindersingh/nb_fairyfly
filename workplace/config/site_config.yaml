@@ -1,0 +1,48 @@
+site_id: "percipience_cloud_portal"
+version: "1.0.0"
+brand:
+  name: "Neutron Binary Percipience"
+  tagline: "Enterprise Context Engineering OS & CI/CD Gatekeeper"
+  domain: "https://percipience.ai"
+  support_email: "support@neutronbinary.com"
+  theme:
+    primary: "#0F172A" # Deep slate
+    accent: "#38BDF8"  # Precision cyan
+    verified: "#10B981" # Cryptographic green
+    alert: "#F43F5E"    # Poisoning quarantine red
+
+modules:
+  mod_portal_marketing:
+    enabled: true
+    root_path: "/"
+    features:
+      ast_demo_enabled: true
+      roi_calculator_enabled: true
+      docs_engine: "mdx_collections"
+
+  mod_tenant_onboarding:
+    enabled: true
+    root_path: "/onboard"
+    auth_provider: "workos_sso"
+    auto_bootstrap_quadspace: true
+    default_plan: "plan_business"
+
+  mod_billing_metering:
+    enabled: true
+    root_path: "/billing"
+    payment_processor: "stripe"
+    rev_share_rate: 0.15
+    metering_aggregation_window_sec: 300
+
+  mod_observability_usage:
+    enabled: true
+    root_path: "/app"
+    refresh_interval_ms: 3000
+    merkle_explorer_enabled: true
+    rollback_gate_enabled: true
+
+  mod_shared_infra_bridge:
+    mode: "shared_co_located" # Options: "shared_co_located" | "decoupled_dedicated"
+    connection_pool_max: 20
+    redis_namespace_prefix: "portal:"
+    storage_bucket_override: ""

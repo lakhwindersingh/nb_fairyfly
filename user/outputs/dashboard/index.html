@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neutron Binary Percipience - Context DAG & Observability Dashboard</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --primary-cyan: #38bdf8;
+      --success-green: #10b981;
+      --alert-red: #f43f5e;
+      --warning-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; padding: 24px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .logo-area h1 { font-size: 22px; font-weight: 700; color: var(--primary-cyan); }
+    .logo-area p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .badge-status { background: rgba(16, 185, 129, 0.15); color: var(--success-green); padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; border: 1px solid var(--success-green); }
+    
+    .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card-stat { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px; }
+    .card-stat h4 { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-stat .val { font-size: 28px; font-weight: 700; margin-top: 8px; color: var(--text-main); }
+    .card-stat .sub { font-size: 12px; color: var(--success-green); margin-top: 4px; }
+
+    .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .panel { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .panel-header h3 { font-size: 16px; font-weight: 600; }
+
+    /* DAG Graph Canvas */
+    .dag-container { height: 360px; background: #0b1120; border-radius: 8px; position: relative; overflow: hidden; border: 1px solid #1e293b; }
+    svg { width: 100%; height: 100%; }
+    .node { cursor: pointer; transition: transform 0.2s; }
+    .node:hover { transform: scale(1.05); }
+    .node circle { fill: #1e293b; stroke: var(--primary-cyan); stroke-width: 2.5; }
+    .node.genesis circle { stroke: var(--warning-amber); }
+    .node.verified circle { stroke: var(--success-green); }
+    .node text { fill: var(--text-main); font-size: 11px; font-weight: 600; text-anchor: middle; }
+    .edge { stroke: #334155; stroke-width: 2; marker-end: url(#arrow); }
+
+    /* Timeline list */
+    .timeline-item { padding: 12px; border-left: 2px solid var(--primary-cyan); margin-bottom: 12px; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; }
+    .timeline-item.clean { border-left-color: var(--success-green); }
+    .timeline-item h5 { font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .timeline-item p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .hash-badge { font-family: monospace; font-size: 10px; background: #0b1120; padding: 2px 6px; border-radius: 4px; color: var(--primary-cyan); margin-top: 4px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-area">
+      <h1>Neutron Binary Percipience</h1>
+      <p>Autonomous Context Engineering OS &amp; Merkle State Explorer | Workspace: <code>nb_fairyfly</code></p>
+    </div>
+    <div class="badge-status">● Merkle State Clean &amp; Active</div>
+  </header>
+
+  <div class="grid-stats">
+    <div class="card-stat">
+      <h4>Maturity Score</h4>
+      <div class="val">0.957</div>
+      <div class="sub">↑ Enterprise Standard Certified</div>
+    </div>
+    <div class="card-stat">
+      <h4>AST Token Savings</h4>
+      <div class="val">64.8%</div>
+      <div class="sub">Tree-Sitter Pruning Enabled</div>
+    </div>
+    <div class="card-stat">
+      <h4>Active Worktrees</h4>
+      <div class="val">0 / 20</div>
+      <div class="sub">Git Sandbox Isolated</div>
+    </div>
+    <div class="card-stat">
+      <h4>Verified Merkle Blocks</h4>
+      <div class="val">2 Blocks</div>
+      <div class="sub">Continuity: 100% Intact</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Live Context Merkle DAG &amp; Artifact Lineage</h3>
+        <span style="font-size:12px; color:var(--text-muted);">Mode: Multi-Module (Play 3 CEaaS)</span>
+      </div>
+      <div class="dag-container">
+        <svg>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" />
+            </marker>
+          </defs>
+          <!-- Edges -->
+          <line x1="80" y1="180" x2="220" y2="180" class="edge" />
+          <line x1="220" y1="180" x2="380" y2="110" class="edge" />
+          <line x1="220" y1="180" x2="380" y2="250" class="edge" />
+          <line x1="380" y1="110" x2="540" y2="180" class="edge" />
+          <line x1="380" y1="250" x2="540" y2="180" class="edge" />
+
+          <!-- Nodes -->
+          <g class="node genesis" transform="translate(80, 180)">
+            <circle r="22" />
+            <text dy="4">GENESIS</text>
+          </g>
+          <g class="node verified" transform="translate(220, 180)">
+            <circle r="22" />
+            <text dy="4">QUAD-SP</text>
+          </g>
+          <g class="node" transform="translate(380, 110)">
+            <circle r="22" />
+            <text dy="4">PORTAL</text>
+          </g>
+          <g class="node" transform="translate(380, 250)">
+            <circle r="22" />
+            <text dy="4">INFRA</text>
+          </g>
+          <g class="node verified" transform="translate(540, 180)">
+            <circle r="22" />
+            <text dy="4">VERIFIED</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h3>Recovery Point State Time-Travel</h3>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item clean">
+          <h5>RP_PLAY3_BOOTSTRAP_001</h5>
+          <p>Quad-Space &amp; Play 3 Multi-Module Bootstrapped</p>
+          <span class="hash-badge">SHA: 9a4f21b7c8...e9f0</span>
+        </div>
+        <div class="timeline-item clean">
+          <h5>RP_GENESIS_000</h5>
+          <p>Genesis Merkle Root Initialized</p>
+          <span class="hash-badge">SHA: 0000000000...0000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ContextLedgerSchema",
+  "type": "object",
+  "required": [
+    "ledger_version",
+    "project",
+    "ledger_chain",
+    "recovery_points",
+    "standard_issue_checklist"
+  ],
+  "properties": {
+    "ledger_version": { "type": "string" },
+    "project": {
+      "type": "object",
+      "required": ["name", "mode"],
+      "properties": {
+        "name": { "type": "string" },
+        "mode": { "type": "string", "enum": ["single_module", "multi_module"] },
+        "framework": { "type": "string" }
+      }
+    },
+    "mcp_integrations": { "type": "object" },
+    "modules": { "type": "object" },
+    "contracts": { "type": "array" },
+    "recovery_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "module_scope", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "module_scope": { "type": "string" },
+          "git_commit": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    },
+    "ledger_chain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["block_id", "prev_block_hash", "current_block_hash", "merkle_root"],
+        "properties": {
+          "block_id": { "type": "integer" },
+          "prev_block_hash": { "type": "string" },
+          "current_block_hash": { "type": "string" },
+          "merkle_root": { "type": "string" }
+        }
+      }
+    },
+    "standard_issue_checklist": { "type": "object" }
+  }
+}

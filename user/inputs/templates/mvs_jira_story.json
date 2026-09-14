@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.percipience.ai/v1/mvs_jira_story.json",
+  "mvs_version": "1.0.0",
+  "format_type": "jira_issue_interchange",
+  "source_system": "JIRA_CLOUD",
+  "mcp_server": "@modelcontextprotocol/server-jira",
+  "issue": {
+    "key": "PERC-1042",
+    "id": "10042",
+    "project": {
+      "key": "PERC",
+      "name": "Percipience Core Engineering"
+    },
+    "issue_type": "Story",
+    "status": "Ready for Dev",
+    "priority": "High",
+    "summary": "Implement Automated Customer CMEK Key Rotation Poller",
+    "description": "As a SecOps engineer, I need the Percipience control plane to poll AWS KMS and GCP Cloud KMS every 24 hours to detect Customer-Managed Encryption Key (CMEK) rotations, and automatically re-envelope active tenant secrets without downtime.",
+    "acceptance_criteria": [
+      "AC1: Poller must query AWS KMS:DescribeKey / GCP Cloud KMS for current primary key version every 24 hours.",
+      "AC2: If key version changed, initiate re-wrap of tenant data encryption keys (DEK) within PostgreSQL RLS partitions.",
+      "AC3: Incur zero downtime for active API read/write operations during key rotation.",
+      "AC4: Emit a SHA-256 Merkle audit block into context_ledger.yaml recording the key rotation event."
+    ],
+    "components": [
+      "security",
+      "crypto-engine",
+      "tenant-isolation"
+    ],
+    "labels": [
+      "percipience-ready",
+      "security-p0",
+      "sprint-44"
+    ],
+    "target_module": "mod_tenant_security",
+    "story_points": 5,
+    "linked_epic": {
+      "key": "PERC-EPIC-12",
+      "summary": "Enterprise Zero-Trust & CMEK Hardening"
+    },
+    "custom_fields": {
+      "target_branch": "feature/PERC-1042-cmek-rotation",
+      "max_token_budget_usd": 12.50,
+      "required_test_coverage_pct": 90
+    }
+  },
+  "ingestion_metadata": {
+    "fetched_at": "2026-09-13T19:00:00Z",
+    "jql_query": "project = PERC AND status = 'Ready for Dev' AND labels = 'percipience-ready'"
+  }
+}
