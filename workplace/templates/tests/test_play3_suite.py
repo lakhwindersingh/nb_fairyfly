@@ -234,5 +234,41 @@ class TestPlay3Subsystems(unittest.TestCase):
                 yaml.dump(d, f, sort_keys=False)
 
 
+
+    def test_13_layerable_nbpack_compilation_and_enclave_consumption(self):
+        """Test compilation of layerable domain plan into sealed .nbpack and zero-disk RAM enclave consumption."""
+        saas_plan = REPO_ROOT / ".nb" / "plan" / "claude-context-engineering-saas-portal-domain-plan.md"
+        self.assertTrue(saas_plan.exists(), "SaaS Portal domain plan must exist")
+
+        out_pack = REPO_ROOT / ".workspaces" / "test_saas_layer.nbpack"
+        
+        # 1. Compile layerable plan into sealed binary envelope
+        compiled_pack = NBPackEnvelope.compile_layer_pack(REPO_ROOT, saas_plan, out_pack)
+        self.assertTrue(compiled_pack.exists())
+        self.assertGreater(compiled_pack.stat().st_size, 500)
+
+        # 2. Verify binary header seal
+        with open(compiled_pack, "rb") as bf:
+            header = bf.read(len(NBPackEnvelope.MAGIC_HEADER))
+            self.assertEqual(header, NBPackEnvelope.MAGIC_HEADER)
+
+        # 3. Apply encrypted layer strictly in RAM enclave
+        res = NBPackEnvelope.apply_layer_pack(REPO_ROOT, compiled_pack, in_memory=True)
+        self.assertEqual(res["status"], "APPLIED")
+        self.assertEqual(res["storage_mode"], "RAM_ENCLAVE")
+        self.assertGreaterEqual(res["components_loaded"], 3)
+        self.assertIsNotNone(res["merkle_block_id"])
+        self.assertIsNotNone(res["merkle_block_hash"])
+
+        # 4. Verify in-memory residency and zero disk leaks
+        mounted = NBPackEnvelope.list_mounted_layers()
+        self.assertIn(res["layer_id"], mounted)
+        self.assertGreater(mounted[res["layer_id"]], 0)
+
+        # 5. Verify Merkle chain cryptographic continuity
+        chain_ok, logs = MerkleEngine.verify_chain(REPO_ROOT)
+        self.assertTrue(chain_ok, f"Merkle verification failed: {logs}")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

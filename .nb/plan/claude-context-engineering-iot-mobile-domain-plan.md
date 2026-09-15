@@ -1,17 +1,26 @@
 ---
-sessionId: session-260915-iot-mobile-domain-plan
-parent_plan: .nb/plan/claude-context-engineering-parent-master-plan.md
-domain: "IoT, Embedded Hardware & Mobile App Connected Ecosystem"
-tier: "Tier 2 (Enterprise Domain Plan) & Tier 3 (Specialist Subagents)"
+plan_type: "layerable_domain_plan"
+plan_id: "domain_iot_mobile"
+name: "Connected IoT, Embedded Hardware & Mobile Management Ecosystem"
+parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
+tier_mapping:
+  tier_2: "Enterprise Domain Rules & Wire Contracts (context/contracts/, context/rules/)"
+  tier_3: "Specialist Subagents & Delivery Workflows (agentic/custom/agents/, agentic/custom/workflows/)"
+model_tiering_policy:
+  provider_agnostic: true
+  tier_a_model: "claude-3-7-sonnet / pro"
+  tier_b_model: "claude-3-5-haiku / flash"
+  tier_a_reference_models: ["claude-3-7-sonnet", "gemini-2.0-pro", "gpt-4o", "deepseek-r1"]
+  tier_b_reference_models: ["claude-3-5-haiku", "gemini-2.0-flash", "gpt-4o-mini"]
 ---
 
 # Layerable Context Engineering Plan: Connected IoT & Mobile Management Space
 
 ### Executive Overview & Domain Grounding
-This document is a **Layerable Domain-Specific Context Engineering Plan** designed to be overlaid onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/claude-context-engineering-parent-master-plan.md`). While the parent plan governs universal multi-module lifecycle orchestration, Merkle state verification, AST token compression, and autonomous CI/CD, this plan injects concrete domain contracts, specialized subagents, and virtual hardware emulation bridges required for:
+This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/claude-context-engineering-parent-master-plan.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete wire contracts, specialized subagents, and virtual hardware emulation bridges required for:
 
 1. **Embedded Firmware Engineering**: FreeRTOS, Zephyr RTOS, Embedded C/C++, and Embedded Rust targeting Nordic Semiconductor nRF52/nRF53, ESP32-S3, and STM32 MCUs.
-2. **Cross-Platform Mobile Management Applications**: Kotlin Multiplatform (KMP), Jetpack Compose, Swift, and SwiftUI for iOS and Android BLE peripherals management.
+2. **Cross-Platform Mobile Management Applications**: Kotlin Multiplatform (KMP), Jetpack Compose, Swift, and SwiftUI for iOS and Android BLE peripheral orchestration.
 3. **Low-Energy Wireless & Security Wire Protocols**: Bluetooth Low Energy (BLE 5.2/5.4 GATT), mutual TLS (mTLS) certificate enrollment, and Over-The-Air (OTA) cryptographically signed dual-partition (A/B) firmware updates.
 4. **Hardware-in-the-Loop (HIL) & Virtual Simulation**: QEMU-based firmware emulation, virtual BLE loopback bridges, and synthetic GATT characteristic streams enabling autonomous CI/CD test passes without physical hardware attached.
 
@@ -63,35 +72,9 @@ When layered onto the Parent Master Plan, the workspace instantiates domain-spec
 
 ---
 
-## 2. Specialized Domain Subagents
+## 2. Wire Contracts & Safety Invariants (`context/contracts/`, `context/rules/`)
 
-### 2.1. `agent_iot_developer` (Embedded Firmware Specialist)
-- **Role**: Embedded Firmware & MCU Systems Engineer
-- **Base Model**: `claude-3-5-sonnet-20241022` (Tier A Frontier)
-- **Sandboxing**: Ephemeral Git Worktree (`.workspaces/wt_iot_dev_01`)
-- **Module Scope**: Strictly scoped to `workplace/modules/iot_node/` and `workplace/shared/`
-- **Domain Invariants Enforced**:
-  - Zero dynamic heap allocation (`malloc`/`free`) after boot initialization; static memory buffers only.
-  - Strict compliance with MISRA C:2012 guidelines.
-  - Watchdog timer (WDT) refresh hooks inside all FreeRTOS task loops.
-  - Non-volatile storage (NVS) flash wear leveling for device credentials and mTLS keys.
-
-### 2.2. `agent_mobile_developer` (Mobile Client Specialist)
-- **Role**: Cross-Platform Mobile Bluetooth & Systems Engineer
-- **Base Model**: `claude-3-5-sonnet-20241022` (Tier A Frontier)
-- **Sandboxing**: Ephemeral Git Worktree (`.workspaces/wt_mobile_dev_01`)
-- **Module Scope**: Strictly scoped to `workplace/modules/mobile_app/` and `workplace/shared/`
-- **Domain Invariants Enforced**:
-  - Non-blocking asynchronous Bluetooth I/O with exponential backoff on connection drops.
-  - Strict GATT MTU negotiation (requesting 512 bytes with 23-byte default fallback).
-  - Secure platform keychain / Android Keystore storage for mTLS private keys.
-  - Adherence to iOS `CBCentralManager` state restoration and Android BLE foreground service requirements.
-
----
-
-## 3. Domain Wire Contracts (`context/contracts/`)
-
-### 3.1. BLE GATT Service Contract (`context/contracts/ble_gatt_spec.yaml`)
+### 2.1. BLE GATT Service Contract (`context/contracts/ble_gatt_spec.yaml`)
 Formal specification of Bluetooth Low Energy services and characteristics shared between `iot_node` and `mobile_app`:
 ```yaml
 protocol: "BLE_GATT_v5.2"
@@ -115,7 +98,7 @@ characteristics:
     max_payload_bytes: 512
 ```
 
-### 3.2. mTLS Device Provisioning Specification (`context/contracts/mtls_provisioning_contract.json`)
+### 2.2. mTLS Device Provisioning Specification (`context/contracts/mtls_provisioning_contract.json`)
 Governs the zero-touch cryptographic certificate enrollment handshake:
 ```json
 {
@@ -132,7 +115,7 @@ Governs the zero-touch cryptographic certificate enrollment handshake:
 }
 ```
 
-### 3.3. OTA Binary Header & Dual-Bank Update Manifest (`context/contracts/ota_firmware_manifest.json`)
+### 2.3. OTA Binary Header & Dual-Bank Update Manifest (`context/contracts/ota_firmware_manifest.json`)
 Ensures fail-safe dual-bank (Slot A / Slot B) firmware upgrade verification:
 ```json
 {
@@ -151,12 +134,39 @@ Ensures fail-safe dual-bank (Slot A / Slot B) firmware upgrade verification:
 
 ---
 
+## 3. Specialized Domain Subagents & Workflows (`agentic/custom/`)
+
+### 3.1. `agentic/custom/agents/iot_developer.yaml`
+- **Role**: Embedded Firmware & MCU Systems Engineer
+- **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
+- **Sandboxing**: Ephemeral Git Worktree (`.workspaces/wt_iot_dev_01`)
+- **Module Scope**: Strictly scoped to `workplace/modules/iot_node/` and `workplace/shared/`
+- **Domain Invariants Enforced**:
+  - Zero dynamic heap allocation (`malloc`/`free`) after boot initialization; static memory buffers only.
+  - Strict compliance with MISRA C:2012 guidelines.
+  - Watchdog timer (WDT) refresh hooks inside all FreeRTOS task loops.
+  - Non-volatile storage (NVS) flash wear leveling for device credentials and mTLS keys.
+
+### 3.2. `agentic/custom/agents/mobile_developer.yaml`
+- **Role**: Cross-Platform Mobile Bluetooth & Systems Engineer
+- **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
+- **Sandboxing**: Ephemeral Git Worktree (`.workspaces/wt_mobile_dev_01`)
+- **Module Scope**: Strictly scoped to `workplace/modules/mobile_app/` and `workplace/shared/`
+- **Domain Invariants Enforced**:
+  - Non-blocking asynchronous Bluetooth I/O with exponential backoff on connection drops.
+  - Strict GATT MTU negotiation (requesting 512 bytes with 23-byte default fallback).
+  - Secure platform keychain / Android Keystore storage for mTLS private keys.
+  - Adherence to iOS `CBCentralManager` state restoration and Android BLE foreground service requirements.
+
+---
+
 ## 4. Virtual End-to-End Emulation & Simulator Loopback Bridge
 
 In autonomous CI/CD pipelines, physical hardware is unavailable. The domain test harness creates a virtual integration bridge connecting Mobile and IoT emulators:
 
 ```mermaid
 sequenceDiagram
+  autonumber
   participant MobileTest as Mobile App KMP Test Runner
   participant Bridge as Virtual BLE Bridge (virtual_ble_bridge.py)
   participant Peripheral as Mock IoT Peripheral / QEMU (mock_iot_peripheral.py)
@@ -187,10 +197,6 @@ sequenceDiagram
 
 ## 5. Domain-Specific Surgical Rollback & Poisoning Defense
 
-### The Challenge of Polyglot Embedded/Mobile Contamination
-If an LLM subagent generates an invalid BLE Characteristic UUID in the mobile app, traditional monolithic CI/CD fails the whole repository, requiring full rebuilds of both C/C++ firmware and mobile app binaries.
-
-### Surgical Isolation Protocol
 Under this domain plan, recovery points are strictly partitioned:
 - `RP_IOT_003`: Verified state of embedded C/C++ firmware.
 - `RP_MOB_004`: Verified state of mobile app UI and client BLE stack.
@@ -206,17 +212,44 @@ Under this domain plan, recovery points are strictly partitioned:
 
 ---
 
-## 6. Layering Recipe onto the Parent Master Plan
+## 6. Encrypted Packaging & Layer Consumption Workflow (`.nbpack`)
 
-To bootstrap a new IoT & Mobile project using this layerable plan:
+To protect proprietary IoT communication stacks, RTOS drivers, and device provisioning protocols, this layerable plan can be compiled into an encrypted `.nbpack` binary envelope:
+
+### 6.1. Compiling the Sealed Domain Bundle
+```bash
+./bin/percipience layer pack \
+  --plan .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md \
+  --output .nb/bundles/iot_mobile_domain.nbpack \
+  --include-spaces context/contracts,context/rules,agentic/custom
+```
+
+### 6.2. Consuming the Encrypted Bundle in Target Repository
+```bash
+# Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
+./bin/percipience layer apply \
+  --pack .nb/bundles/iot_mobile_domain.nbpack \
+  --in-memory-only \
+  --mode multi_module
+```
+
+When consumed:
+1. The **Percipience Enclave Runtime** verifies the binary header `NBPACK_V2_SEALED` and SHA-256 signature.
+2. BLE GATT specs and embedded/mobile prompt trees are mounted into volatile RAM memory.
+3. The master context ledger registers the domain layer in `context/ledger/context_ledger.yaml` under Merkle block audit protection.
+
+---
+
+## 7. CLI Layering Commands & Verification Protocol
+
+To apply this domain onto a repository and verify full end-to-end compatibility:
 
 ```bash
 # 1. Initialize repository using Parent Master Plan in multi-module mode
-./bin/percipience init --mode multi_module
+./bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # 2. Layer this domain plan into active context
-cp .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md context/rules/domain_plan.md
-cp context/contracts/ble_gatt_spec.yaml context/contracts/
+./bin/percipience layer apply --plan .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md
 
 # 3. Scaffold custom domain agents from the healthy plugin template
 ./bin/percipience agent create --name iot_developer --template cicd_quality --role "Embedded MCU Specialist" --module "workplace/modules/iot_node"

@@ -1,4 +1,4 @@
-current_avg_reduction_pct: 48.36
+current_avg_reduction_pct: 46.82
 policy_adjustments:
 - rule: AST_PRUNING_AGGRESSIVENESS
   status: OPTIMAL
@@ -15,4 +15,4 @@ recommendations:
   tier.
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
-timestamp: '2026-09-15T22:37:43.835722+00:00'
+timestamp: '2026-09-15T22:44:31.567197+00:00'

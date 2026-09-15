@@ -597,6 +597,132 @@ recovery_points:
   timestamp: '2026-09-15T22:37:44.615844+00:00'
   status: VERIFIED
   description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_AUTOHEAL_MOD_PORTAL_MARKETING_1789512223
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:43.890229+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- id: RP_AGENT_TASK_AGENT_QUALITY_GUARD_1789512227
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:47.899020+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_quality_guard)
+- id: RP_AUTOCICD_1789512227
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:48.020940+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1789512228
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:48.084412+00:00'
+  status: VERIFIED
+  description: AGENT_REGISTERED (agent_test_perf_guard)
+- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1789512228
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:48.149762+00:00'
+  status: VERIFIED
+  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1789512228
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:48.955297+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1789512228
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:49.020342+00:00'
+  status: VERIFIED
+  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_AUTOHEAL_MOD_PORTAL_MARKETING_1789512235
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:43:55.048751+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- id: RP_AGENT_TASK_AGENT_QUALITY_GUARD_1789512240
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:00.091687+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_quality_guard)
+- id: RP_AUTOCICD_1789512240
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:00.229503+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1789512240
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:00.297576+00:00'
+  status: VERIFIED
+  description: AGENT_REGISTERED (agent_test_perf_guard)
+- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1789512240
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:00.369040+00:00'
+  status: VERIFIED
+  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1789512241
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:01.316803+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1789512241
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:01.388409+00:00'
+  status: VERIFIED
+  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_AUTOHEAL_MOD_PORTAL_MARKETING_1789512265
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:25.298903+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- id: RP_AGENT_TASK_AGENT_QUALITY_GUARD_1789512271
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:31.454542+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_quality_guard)
+- id: RP_AUTOCICD_1789512271
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:31.613247+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1789512271
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:31.685165+00:00'
+  status: VERIFIED
+  description: AGENT_REGISTERED (agent_test_perf_guard)
+- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1789512271
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:31.759441+00:00'
+  status: VERIFIED
+  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1789512272
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:32.922895+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1789512272
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-15T22:44:32.999779+00:00'
+  status: VERIFIED
+  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
 ledger_chain:
 - block_id: 0
   block_type: GENESIS
@@ -1382,6 +1508,195 @@ ledger_chain:
   merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
   current_block_hash: a779965552897532092416554633f47d302861d0b6684606be1c721ee9d9af3e
   action: PR_GATE_VERIFICATION_PASS
+- block_id: 112
+  block_type: STATE_UPDATE
+  prev_block_hash: a779965552897532092416554633f47d302861d0b6684606be1c721ee9d9af3e
+  timestamp: '2026-09-15T22:43:23.297976+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 61f96f558d7c4ec2abb1d601027e11f65d599b7b0cd1afab00cba0eb08b4e39c
+  action: LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan
+- block_id: 113
+  block_type: STATE_UPDATE
+  prev_block_hash: 61f96f558d7c4ec2abb1d601027e11f65d599b7b0cd1afab00cba0eb08b4e39c
+  timestamp: '2026-09-15T22:43:24.793431+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: b646c8a05ab8e94288f2f87ab050833e3fa205b56a6907847f8cefc65dc622e9
+  action: LAYER_APPLIED:claude-context-engineering-iot-mobile-domain-plan
+- block_id: 114
+  block_type: STATE_UPDATE
+  prev_block_hash: b646c8a05ab8e94288f2f87ab050833e3fa205b56a6907847f8cefc65dc622e9
+  timestamp: '2026-09-15T22:43:43.890229+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: d425322ca13770ca367c16dc03ab454697472c66d0a2ccad7c03cb48eac2b33a
+  action: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- block_id: 115
+  block_type: STATE_UPDATE
+  prev_block_hash: d425322ca13770ca367c16dc03ab454697472c66d0a2ccad7c03cb48eac2b33a
+  timestamp: '2026-09-15T22:43:47.899020+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 30fe63177b8b1b0904b03e61ddf7671c2a3542412e4436a25ced31f8810f5eaf
+  action: AGENT_TASK_VERIFIED (agent_quality_guard)
+- block_id: 116
+  block_type: STATE_UPDATE
+  prev_block_hash: 30fe63177b8b1b0904b03e61ddf7671c2a3542412e4436a25ced31f8810f5eaf
+  timestamp: '2026-09-15T22:43:48.020940+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: b3a853f2ec1735073acc8c5814e9a24fc040cc1d1525c6fb143eb4c6a4ad1b5f
+  action: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- block_id: 117
+  block_type: STATE_UPDATE
+  prev_block_hash: b3a853f2ec1735073acc8c5814e9a24fc040cc1d1525c6fb143eb4c6a4ad1b5f
+  timestamp: '2026-09-15T22:43:48.084412+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 2925e7354f7cb713eff6263c3149db5faf285bbcd19bc4dae9612e17cf29dddc
+  action: AGENT_REGISTERED (agent_test_perf_guard)
+- block_id: 118
+  block_type: STATE_UPDATE
+  prev_block_hash: 2925e7354f7cb713eff6263c3149db5faf285bbcd19bc4dae9612e17cf29dddc
+  timestamp: '2026-09-15T22:43:48.149762+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 8642dab8e4e3490f26f1fe58cd8a315ebc3108c35bb98d41d5b7911d21af5610
+  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- block_id: 119
+  block_type: STATE_UPDATE
+  prev_block_hash: 8642dab8e4e3490f26f1fe58cd8a315ebc3108c35bb98d41d5b7911d21af5610
+  timestamp: '2026-09-15T22:43:48.955297+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 4c7d652ed5a402dd7927acd0191770d7370f3d9905b759aefdaacd4e922ad139
+  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- block_id: 120
+  block_type: STATE_UPDATE
+  prev_block_hash: 4c7d652ed5a402dd7927acd0191770d7370f3d9905b759aefdaacd4e922ad139
+  timestamp: '2026-09-15T22:43:49.020342+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: ef9e63caa0e55558c0c9c6182eb2f0caa20f2e1e20edf9d8b6af5a3aba5f7b5c
+  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- block_id: 121
+  block_type: STATE_UPDATE
+  prev_block_hash: ef9e63caa0e55558c0c9c6182eb2f0caa20f2e1e20edf9d8b6af5a3aba5f7b5c
+  timestamp: '2026-09-15T22:43:49.191133+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: fc7099fffab7be51a13c0e1915cbcdd8ab84c211bd89bd057a19653b03ceb4ef
+  action: LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan
+- block_id: 122
+  block_type: STATE_UPDATE
+  prev_block_hash: fc7099fffab7be51a13c0e1915cbcdd8ab84c211bd89bd057a19653b03ceb4ef
+  timestamp: '2026-09-15T22:43:55.048751+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: eb36f5193a9c8232ba7f279caf6fc6a2566dd71df91b9e29635cf929db592488
+  action: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- block_id: 123
+  block_type: STATE_UPDATE
+  prev_block_hash: eb36f5193a9c8232ba7f279caf6fc6a2566dd71df91b9e29635cf929db592488
+  timestamp: '2026-09-15T22:44:00.091687+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: c89297da6d3859aef2afaaf56a8bc4455fe8365b8092bc5950c609142e8286b6
+  action: AGENT_TASK_VERIFIED (agent_quality_guard)
+- block_id: 124
+  block_type: STATE_UPDATE
+  prev_block_hash: c89297da6d3859aef2afaaf56a8bc4455fe8365b8092bc5950c609142e8286b6
+  timestamp: '2026-09-15T22:44:00.229503+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 611b520d0fd353d3be3e28bfc18d82a9ac769147c2e290c8341b201fce5fe503
+  action: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- block_id: 125
+  block_type: STATE_UPDATE
+  prev_block_hash: 611b520d0fd353d3be3e28bfc18d82a9ac769147c2e290c8341b201fce5fe503
+  timestamp: '2026-09-15T22:44:00.297576+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: f5a0d469f72156186fb1ca275c8f2436d1ac7e3d52a50084c62d1524bfe536e5
+  action: AGENT_REGISTERED (agent_test_perf_guard)
+- block_id: 126
+  block_type: STATE_UPDATE
+  prev_block_hash: f5a0d469f72156186fb1ca275c8f2436d1ac7e3d52a50084c62d1524bfe536e5
+  timestamp: '2026-09-15T22:44:00.369040+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: f901425698b66061954f9b50b9f30a443d6d10bb5d1b3a6f7e372f37b7df43b1
+  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- block_id: 127
+  block_type: STATE_UPDATE
+  prev_block_hash: f901425698b66061954f9b50b9f30a443d6d10bb5d1b3a6f7e372f37b7df43b1
+  timestamp: '2026-09-15T22:44:01.316803+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 8f60a23ddda406dabaa8a80e66eeedacd4cf7ecc53fe2730786a3487931d729b
+  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- block_id: 128
+  block_type: STATE_UPDATE
+  prev_block_hash: 8f60a23ddda406dabaa8a80e66eeedacd4cf7ecc53fe2730786a3487931d729b
+  timestamp: '2026-09-15T22:44:01.388409+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 401b346d5ee4700cc96b7e36cba804cfe71af18aae59f3f15d16f02ba3109e75
+  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- block_id: 129
+  block_type: STATE_UPDATE
+  prev_block_hash: 401b346d5ee4700cc96b7e36cba804cfe71af18aae59f3f15d16f02ba3109e75
+  timestamp: '2026-09-15T22:44:01.572951+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 9e62d3c0c83ec8b58bef15f65ba3399fa244af0f61d1319024187447a3a4bf17
+  action: LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan
+- block_id: 130
+  block_type: STATE_UPDATE
+  prev_block_hash: 9e62d3c0c83ec8b58bef15f65ba3399fa244af0f61d1319024187447a3a4bf17
+  timestamp: '2026-09-15T22:44:25.298903+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: bb17bafdfd7eb9cefda08b29164d210d2b85e787a5c62671b476551644e172b9
+  action: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
+- block_id: 131
+  block_type: STATE_UPDATE
+  prev_block_hash: bb17bafdfd7eb9cefda08b29164d210d2b85e787a5c62671b476551644e172b9
+  timestamp: '2026-09-15T22:44:31.454542+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: b1ba9bc4b9a35e3bf6a933685b753a5625e8b65caa0d4791e1e2888e56475c86
+  action: AGENT_TASK_VERIFIED (agent_quality_guard)
+- block_id: 132
+  block_type: STATE_UPDATE
+  prev_block_hash: b1ba9bc4b9a35e3bf6a933685b753a5625e8b65caa0d4791e1e2888e56475c86
+  timestamp: '2026-09-15T22:44:31.613247+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: dcec62b01cf5dcbf28f2507dd5a88dfb1de90caeff2ff14a3e72aab649b234c3
+  action: AUTONOMOUS_CICD_PIPELINE_COMPLETE
+- block_id: 133
+  block_type: STATE_UPDATE
+  prev_block_hash: dcec62b01cf5dcbf28f2507dd5a88dfb1de90caeff2ff14a3e72aab649b234c3
+  timestamp: '2026-09-15T22:44:31.685165+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 46def7dd7adfb4a57378837d91a96ed0bac6a5d3b702f01dca71d28a9d409ca2
+  action: AGENT_REGISTERED (agent_test_perf_guard)
+- block_id: 134
+  block_type: STATE_UPDATE
+  prev_block_hash: 46def7dd7adfb4a57378837d91a96ed0bac6a5d3b702f01dca71d28a9d409ca2
+  timestamp: '2026-09-15T22:44:31.759441+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 4aa295fa70272d0a98b57eb0fa8d380355ad3d0450615d1c80f39c4845006976
+  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- block_id: 135
+  block_type: STATE_UPDATE
+  prev_block_hash: 4aa295fa70272d0a98b57eb0fa8d380355ad3d0450615d1c80f39c4845006976
+  timestamp: '2026-09-15T22:44:32.922895+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 95def353b835eaeab8190251c6d18eb16b8a51b8b02e604111bebba599e5a6b5
+  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- block_id: 136
+  block_type: STATE_UPDATE
+  prev_block_hash: 95def353b835eaeab8190251c6d18eb16b8a51b8b02e604111bebba599e5a6b5
+  timestamp: '2026-09-15T22:44:32.999779+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 61f2d50a973bf12c83020f3fe0587eb11ea5aeb55a8fa4690318a8110df5849c
+  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- block_id: 137
+  block_type: STATE_UPDATE
+  prev_block_hash: 61f2d50a973bf12c83020f3fe0587eb11ea5aeb55a8fa4690318a8110df5849c
+  timestamp: '2026-09-15T22:44:33.194100+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: 57a61362c45c548f902b71154ddafb2398cc6f176cc7886f21aeaa4f99ae76e7
+  action: LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan
+- block_id: 138
+  block_type: STATE_UPDATE
+  prev_block_hash: 57a61362c45c548f902b71154ddafb2398cc6f176cc7886f21aeaa4f99ae76e7
+  timestamp: '2026-09-15T22:44:46.169169+00:00'
+  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
+  current_block_hash: e591a77d3a8a9725c7ba3ccc9e62d57b533d7f099cfaccd02056d237f8972e1e
+  action: PR_GATE_VERIFICATION_PASS
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
@@ -1410,3 +1725,16 @@ model_suggestions:
   description: Implement live Tree-Sitter WebAssembly worker in mod_portal_marketing
     for interactive client-side AST pruning demo.
   priority: MEDIUM
+applied_layers:
+- layer_id: claude-context-engineering-iot-mobile-domain-plan
+  bundle_file: iot_mobile_domain.nbpack
+  bundle_sha256: dcd1a37e0977c6c21f6a8efaacccc3e3309c9d0c23ecbcf5f4bcf3050b033daf
+  storage_mode: RAM_ENCLAVE
+  components_count: 9
+  status: ACTIVE
+- layer_id: claude-context-engineering-saas-portal-domain-plan
+  bundle_file: test_saas_layer.nbpack
+  bundle_sha256: 94122a6030b749c887ddb4a9e5683bd6ed4d0f16e453b6298b21b353bb4d1159
+  storage_mode: RAM_ENCLAVE
+  components_count: 9
+  status: ACTIVE
