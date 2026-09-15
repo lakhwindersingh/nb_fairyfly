@@ -84,7 +84,7 @@ class WorktreeEngine:
                 f.truncate()
                 json.dump(leases, f, indent=2)
 
-                # Remove worktree directory via git
+                # Remove worktree directory and branch via git
                 try:
                     subprocess.run(
                         ["git", "worktree", "remove", "--force", info["path"]],
@@ -95,5 +95,19 @@ class WorktreeEngine:
                     )
                 except Exception:
                     pass
+                
+                # Clean up ephemeral subagent branch
+                branch_to_del = info.get("branch")
+                if branch_to_del and branch_to_del not in ["main", "master"]:
+                    try:
+                        subprocess.run(
+                            ["git", "branch", "-D", branch_to_del],
+                            cwd=str(workspace_root),
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            check=False
+                        )
+                    except Exception:
+                        pass
                 return True
         return False
