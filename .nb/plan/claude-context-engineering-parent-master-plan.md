@@ -22,6 +22,18 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 13. **Zero-Overhead Dual-Mode Architecture (Single-Module vs. Poly-Module Ecosystem)**: A dual-operating mode configured via `project.mode: single_module | multi_module`. In `single_module` mode, the framework maintains absolute simplicity with zero nested directory overhead (flat `workplace/src/` and `workplace/config/`). In `multi_module` mode, the framework coordinates heterogeneous multi-system projects (such as Mobile apps managing IoT hardware fleets, web frontends controlling ML pipelines, or multi-service microarchitectures) via isolated module subtrees (`workplace/modules/<module_id>/`), shared wire contracts (`workplace/shared/protos/`), cross-module interface specifications (`context/contracts/`), surgical module-scoped rollbacks, and virtual simulator loopback bridges.
 14. **Proprietary Context & Agentic Space Obfuscation, Anti-Exfiltration & Cryptographic Package Sealing (`.nbpack`)**: A binary compilation, AST minification, and authenticated envelope encryption engine (`percipience pack`). Compiles proprietary markdown master plans, `agentic/` prompt suites, and `context/` governance/schema machinery into tamper-proof, Ed25519-signed AES-256-GCM binary envelopes (`.nbpack`). Hydrates both proprietary spaces directly into volatile RAM / secure sandbox memory without persisting plaintext files to the client's physical filesystem, preventing intellectual property theft, prompt injection, and LLM context exfiltration during `percipience init`.
 15. **External Issue Tracker & Jira MCP Server Integration Layer**: A bi-directional Model Context Protocol (MCP) bridge connecting enterprise issue tracking systems (Jira Software, Linear, GitHub Issues, Azure DevOps). The engine continuously polls or subscribes to Jira via MCP servers (e.g., `@modelcontextprotocol/server-jira`), ingests "Ready for Dev" stories directly into the MVS processing queue, drives subagents through derivation and test verification, and automatically synchronizes issue states, test evidence, and Merkle block audit proofs back to Jira upon completion.
+16. **Autonomous Closed-Loop CI/CD Triad (Self-Sustaining, Self-Recovering, Self-Improving)**: A fully autonomous continuous delivery engine (`workplace/core/autonomous_cicd.py`) that elevates CI/CD from a passive blocker to an active, closed-loop orchestrator. It comprises three unified capabilities:
+    - *Self-Sustaining*: Proactively reclaims expired subagent worktree leases, purges uncommitted scratch diffs, garbage-collects zombie branches, validates WORM Merkle continuity, and enforces sprint token budget caps before resource exhaustion occurs.
+    - *Self-Recovering*: Isolates regression faults into dedicated diagnostic worktrees, executes bounded TDD auto-patching ($\le 3$ retries), and, if unresolvable, triggers sub-1.2s surgical module rollbacks to verified recovery points ($\text{RP}_k$) without disturbing unaffected sibling microservices.
+    - *Self-Improving*: Analyzes post-run pipeline telemetry, dynamically calibrates AST pruning thresholds (escalating from standard body stripping to aggressive internal helper pruning for high-token files to capture $+12.5\%$ additional savings), aligns prompt cache prefixes, and persists lessons learned into `context/ledger/self_improving_ledger.yaml`.
+17. **Extensible Custom Agent Plugin Architecture & Workflow DAG Injection**: A standardized plugin model and engine (`workplace/core/agent_plugin_engine.py`) allowing teams to scaffold, configure, and integrate custom agent specialists into existing workflow DAGs (e.g. `agentic/workflows/pr_gatekeeper.yaml`). Follows the *Healthy Integration Pattern* enforcing ephemeral worktree sandboxing, AST token budgeting, pre/post contract verification, and cryptographic Merkle state sealing (`RP_AGENT_*`). If a custom plugin injects anomalies, the engine triggers surgical rollback to recovery points without collateral disruption.
+18. **Production Token FinOps & Rev-Share Performance Metering Engine**: An integrated financial observability engine (`workplace/core/token_tracker.py`) that captures raw vs. AST-pruned token metrics across heterogeneous languages in real time. Automatically logs transparent accounting entries to `context/ledger/token_savings_ledger.yaml`, computing gross customer savings ($0.003/1K tokens) and 15% rev-share performance fees, backed by automated scorecard and whitepaper generation (`user/outputs/token_savings_report.md`, `user/outputs/token_savings_whitepaper.md`).
+19. **5-Tab Enterprise Context Observability Hub & Decoupled SaaS Portal Gateway**: A unified, zero-dependency browser observability control plane (`user/outputs/dashboard/index.html`) coupled with a production-grade HTTP/API gateway server (`workplace/portal/server.py`). Features 5 specialized operational tabs: (1) 6-Dimensional Context Maturity Radar & Remediation Diagnostics, (2) Autonomous Agent Swarm & Custom Plugin Manager, (3) Declarative Workflow DAGs & Invariant Gates, (4) FinOps Token Metering & ROI Calculator, and (5) Autonomous CI/CD Triad & Self-Healing Control Plane.
+20. **3-Tier Layered Context Precedence Hierarchy & Bring-Your-Own-Repository (BYOR) Adapter**: A security and configuration architecture (`workplace/core/layered_context_validator.py`, `workplace/core/byor_adapter.py`) that enforces non-overridable platform invariants:
+    - *Tier 1 (Base Platform Invariants)*: Core security contracts, Merkle schemas, and tamper proofs in `context/invariants/` (or encrypted `.nbpack` enclaves) that cannot be overridden by user prompts.
+    - *Tier 2 (Enterprise Global Rules)*: Organization-wide policies and API contracts in `context/rules/` and `context/contracts/`.
+    - *Tier 3 (Team / User Custom Context)*: Unencrypted domain schemas, custom agent plugins, and prompt templates in `context/custom/` and `agentic/custom/agents/`.
+    - *BYOR Adapter*: Native multi-VCS adapter supporting self-hosted GitLab, GitHub Enterprise Server, and Bitbucket Data Center via SSH deploy keys and internal Root CA validation.
 
 ### Scope
 #### In Scope
@@ -68,6 +80,22 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Time-Travel Debugging & Visual DAG Dashboard**:
   - Automated generation of `user/outputs/dashboard/index.html`.
   - Interactive visual rendering of artifact DAG, recovery checkpoints, module subgraphs, and agent handoffs.
+- **Autonomous CI/CD Triad Control Plane**:
+  - Closed-loop orchestration in `workplace/core/autonomous_cicd.py` implementing `SelfSustainingEngine`, `AutonomousHealer`, `SelfImprovingEngine`, and `AutonomousCICDOrchestrator`.
+  - Multi-phase engineering roadmap in `user/outputs/autonomous_cicd_roadmap.md`.
+- **Custom Agent Plugin Architecture & Workflow DAG Injection**:
+  - Plugin scaffolding and lifecycle management in `workplace/core/agent_plugin_engine.py`.
+  - Standardized plugin template in `agentic/templates/custom_agent_template.yaml` and guide in `agentic/templates/AGENT_PLUGIN_GUIDE.md`.
+  - Dynamic workflow DAG injection into `agentic/workflows/pr_gatekeeper.yaml` with pre/post-execution Merkle seals.
+- **Token FinOps & Rev-Share Performance Metering Engine**:
+  - Real-time token tracking in `workplace/core/token_tracker.py` logging to `context/ledger/token_savings_ledger.yaml`.
+  - Automated generation of executive scorecard (`user/outputs/token_savings_report.md`) and benchmark whitepaper (`user/outputs/token_savings_whitepaper.md`).
+- **Enterprise Context Observability Hub & Cloud SaaS Portal**:
+  - Interactive 5-tab browser control plane (`user/outputs/dashboard/index.html`) with real-time REST API integration (`workplace/portal/server.py`).
+  - Self-healing trigger, agent plugin manager, ROI calculator, and context maturity radar with automated remediation playbooks.
+- **3-Tier Layered Context Precedence Hierarchy & Multi-VCS BYOR Adapter**:
+  - Invariant protection in `workplace/core/layered_context_validator.py` maintaining strict priority: Tier 1 (Platform) > Tier 2 (Enterprise) > Tier 3 (User).
+  - Multi-VCS remote adapter in `workplace/core/byor_adapter.py` connecting self-hosted GitLab, GitHub Enterprise, Bitbucket Data Center.
   - Checkpoint state diffing, token burn charts, and interactive HITL clarification review.
 - **Context Compression & GenAI Optimization Engine**:
   - Token budget management and dynamic context window allocation rules.
@@ -98,6 +126,9 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **As an Autonomous Software Product Owner**, I want the agent suite to operate autonomously starting from a Minimum Viable Set (MVS) of sparse inputs so that complete systems are derived, built, tested, and documented with minimal manual overhead.
 - **As a Financial & Engineering Manager**, I want dynamic multi-model cascading and context compression so that long-running agent workflows reduce token expenses by up to 70% by routing lightweight tasks to fast models and caching static prompt prefixes.
 - **As a Concurrency & Platform Lead**, I want subagents to work in isolated Git worktrees so that multiple specialized agents can develop and test features concurrently without file lock collisions or merge conflicts.
+- **As an Autonomous DevOps Lead**, I want a self-sustaining and self-recovering CI/CD control plane so that build failures and test regressions are automatically diagnosed and patched within 3 retries or surgically rolled back without human firefighting.
+- **As an Extensibility & Tools Architect**, I want a custom agent plugin template and automated workflow DAG injection so that new domain agents can be onboarded safely inside sandboxed worktrees without risking repository state corruption or context poisoning.
+- **As an Enterprise FinOps Director**, I want real-time cryptographic metering of token savings and transparent 15% performance fee accounting so that our 62% AI cost reduction is auditable and budget-enforced.
 - **As a Compliance & Audit Officer**, I want a cryptographic Merkle hash-chain in the context ledger so that all AI decisions, code changes, and test approvals are tamper-evident and compliant with SOC2/ISO27001 standards.
 - **As a QA & Test Lead**, I want a bounded TDD self-healing engine that quarantines intractable tests after 3 attempts, preventing runaway token spend while alerting human engineers via `user/hitl/`.
 - **As a Technical Director**, I want a visual DAG dashboard and time-travel inspection tool at `user/outputs/dashboard/index.html` so that I can visually audit project evolution, diff recovery points, inspect module subgraphs, and track token spend in real-time.
@@ -225,6 +256,21 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Block header formula: $H_i = \text{SHA256}(H_{i-1} + \text{canonical\_json}(\Delta_i) + T_i)$.
 - **Time-Travel Visual Dashboard**:
   - Single-file zero-dependency HTML/SVG dashboard generated at `user/outputs/dashboard/index.html`.
+- **The Triad of Autonomous Delivery (Self-Sustaining, Self-Recovering, Self-Improving)**:
+  - *Self-Sustaining*: Proactive lease reclamation, zombie branch cleanup, and WORM Merkle continuity validation executed on scheduled cycles or pre-PR checks.
+  - *Self-Recovering*: Autonomous fault diagnosis, ephemeral worktree test execution, bounded TDD auto-patching ($\le 3$ retries), and sub-1.2s surgical module rollback fallback sparing sibling services.
+  - *Self-Improving*: Closed-loop telemetry feedback analyzing token burn and test pass velocities, dynamically tuning AST pruning thresholds (+12.5% compression gains) and prompt cache prefix alignment.
+- **Healthy Custom Agent Plugin Integration Pattern**:
+  - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the [Plugin Architectural Guide](file:///agentic/templates/AGENT_PLUGIN_GUIDE.md).
+  - Scaffolding, workflow DAG injection (`wf_pr_gatekeeper.yaml`), ephemeral worktree sandboxing, and pre/post Merkle block sealing (`RP_AGENT_*`) are governed by `AgentPluginEngine`.
+- **Token FinOps & 15% Performance Fee Accounting Engine**:
+  - Real-time token tracking (`TokenTracker`) capturing raw vs. AST-pruned tokens across multiple programming languages.
+  - Transparent accounting logged to `context/ledger/token_savings_ledger.yaml` computing gross customer savings ($0.003/1K tokens) and 15% performance fee.
+- **3-Tier Layered Context Precedence Hierarchy & BYOR Multi-VCS Adapter**:
+  - Guarantees Tier 1 (Platform Invariants / Enclave) cannot be overridden by user prompts or custom schemas.
+  - Native BYOR adapter (`BYORAdapter`) connecting self-hosted GitLab, GitHub Enterprise, and Bitbucket Data Center with SSH deploy keys and internal Root CA validation.
+- **Decoupled Enterprise Observability Hub & SaaS Portal**:
+  - Zero-dependency interactive 5-tab dashboard (`user/outputs/dashboard/index.html`) backed by production HTTP/API gateway (`workplace/portal/server.py`).
 
 ---
 
@@ -778,6 +824,20 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`user/`** | Visual DAG & Time-Travel Console | `user/outputs/dashboard/index.html` | HTML5 / CSS3 / JS | Static Browser Visualization | **Active & Verified** |
 | **`user/`** | Visual DAG Frontend Controller | `user/outputs/dashboard/app.js` | Vanilla ES6 JavaScript | Real-time Merkle Node Explorer | **Active & Verified** |
 | **`user/`** | Visual DAG Dark-Mode Styling | `user/outputs/dashboard/style.css` | Modern CSS Grid / Flex | Responsive Dashboard Styling | **Active & Verified** |
+| **`workplace/`**| Autonomous CI/CD Triad Engine | `workplace/core/autonomous_cicd.py` | Python 3 Module | Self-Sustaining, Self-Recovering, Self-Improving | **Active & Verified** |
+| **`workplace/`**| Agent Plugin Engine | `workplace/core/agent_plugin_engine.py` | Python 3 Module | Custom Plugin Lifecycle & Merkle Sealing | **Active & Verified** |
+| **`workplace/`**| Token FinOps & Savings Tracker | `workplace/core/token_tracker.py` | Python 3 Module | Real-time AST Token Metering & 15% Rev-Share | **Active & Verified** |
+| **`workplace/`**| Multi-VCS BYOR Remote Adapter | `workplace/core/byor_adapter.py` | Python 3 Module | SSH Key & Webhook Multi-Vendor VCS Bridge | **Active & Verified** |
+| **`workplace/`**| 3-Tier Layered Context Validator | `workplace/core/layered_context_validator.py` | Python 3 Module | Platform Invariant Precedence Enforcement | **Active & Verified** |
+| **`workplace/`**| Cloud SaaS Portal & API Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Active & Verified** |
+| **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Active & Verified** |
+| **`agentic/`** | Agent Plugin Architecture Guide | `agentic/templates/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Active & Verified** |
+| **`context/`** | Token Savings Ledger | `context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Active & Verified** |
+| **`context/`** | Self-Improving Telemetry Ledger | `context/ledger/self_improving_ledger.yaml` | YAML Ledger | Closed-Loop Optimization History | **Active & Verified** |
+| **`user/`** | Autonomous CI/CD Strategic Roadmap| `user/outputs/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Active & Verified** |
+| **`user/`** | Benchmark Whitepaper (62% Savings)| `user/outputs/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Active & Verified** |
+| **`user/`** | Token Savings Scorecard Report | `user/outputs/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Active & Verified** |
+| **`platform`** | Unified CLI Control Plane | `bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Active & Verified** |
 | **`user/`** | Context Maturity Report | `user/outputs/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Active & Verified** |
 
 ---
