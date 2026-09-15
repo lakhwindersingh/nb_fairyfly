@@ -10,7 +10,11 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 1. **Autonomous Operations on Multi-Format Minimum Viable Set (MVS) Inputs**: An auto-intelligent derivation engine that consumes sparse initial user inputs across multiple standardized formats (Markdown feature specifications, OpenAPI contracts, AsyncAPI event streams, ADR blueprints, structured Jira/Linear issue exports, and UI/UX design tokens) in `user/inputs/` (or `input/templates/`), normalizing them into a canonical Abstract Semantic Graph (ASG) to autonomously bootstrap, derive, scaffold, test, build, and document the complete project without human intervention unless explicit ambiguity gates are triggered.
 2. **Context Poisoning Detection, Recovery Point Rollback & Incremental Replay Engine**: A resilient state control engine that continuously audits context purity. If context poisoning, hallucination drift, or invalid state propagation occurs, the engine rewinds project artifacts, git commit history, and agent state to a verified clean recovery point (`recovery_point`), quarantines and removes the poisoning culprit in `user/hitl/poisoning_quarantine.md`, and replays subsequent valid incremental enhancements seamlessly.
 3. **Context Compression & GenAI Optimization Engine**: A systematic framework for context compression, token budget management, prompt caching optimization, AST symbol pruning, unified diff-based state updates, and context window tiering to drastically reduce token consumption and API expenses by 50–70%.
-4. **Dynamic Multi-Model Cascading & Cost-Aware Token Tiering**: An intelligent multi-model routing layer that delegates tasks based on cognitive complexity (Tier A: Frontier/Reasoning for architecture, security audits, and verification gates; Tier B: Fast/Compact for AST extraction, unified diffs, test boilerplate, and commit formatting), backed by hard budget ceilings, token burn monitoring, and automatic throttle/down-shift policies.
+4. **Model-Agnostic Dynamic Multi-Model Cascading & Cost-Aware Token Tiering**: An intelligent, vendor-neutral multi-model routing layer that delegates tasks based on cognitive complexity while remaining fully decoupled from any single LLM provider (supporting Anthropic Claude, Google Gemini, OpenAI GPT, DeepSeek, AWS Bedrock, Azure OpenAI, and local/private vLLM endpoints):
+    - **Tier A (Frontier / High-Reasoning)**: Architecture derivation, cross-module contract verification, invariant gates, security audits, and context poisoning root-cause diagnosis. Reference models: `claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o / o1`, `deepseek-r1`.
+    - **Tier B (Fast / Compact / High-Throughput)**: AST symbol extraction, unified diff application, test scaffolding, commit drafting, and dashboard JSON serialization. Reference models: `claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`.
+    - **Tier C (Deterministic / Offline Rules Engine)**: Local AST pruning, cryptographic SHA-256 Merkle chain verification, and offline regex sentinel scanning.
+    - Backed by hard budget ceilings, token burn monitoring, and automatic throttle/down-shift policies.
 5. **Git Worktree Workspace Isolation for Concurrent Subagents**: An isolated concurrent execution engine leveraging ephemeral Git worktrees (`.workspaces/subagent_<id>/`). Subagents develop in sandboxed worktrees with independent working directories, preventing concurrent file merge collisions and ledger write races, backed by atomic verification gate merges back to `main`.
 6. **Automated Spec-to-Code Semantic Parity & Anti-Drift Engine**: A quantitative anti-drift subsystem measuring semantic parity (0.00 to 1.00) between `user/inputs/` specs and `workplace/src/` implementations via AST contract analysis and semantic embeddings. Features a bi-directional reconciliation protocol supporting both *Revert Mode* (restoring drifted code to spec) and *Evolve Mode* (updating the specification delta via HITL approval).
 7. **Bounded TDD Self-Healing Engine with Test Quarantine Ledger**: A strictly bounded self-healing loop (configurable max retry attempts, default: 3) for test failures. Prevents infinite looping and token thrashing by automatically quarantining persistently failing or flaky tests into `quarantined_tests` in `context_ledger.yaml`, auto-filing high-priority tickets in `remaining_issues`, and safely pausing at `user/hitl/`.
@@ -113,18 +117,18 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - `system_prompt.md`, `bootstrapping_prompt.md`, `derivation_prompt.md`, `evaluation_refinement_prompt.md`, `lifecycle_delivery_prompt.md`, and `workflow_orchestration_prompt.md`.
 
 #### Out of Scope
-- Direct cloud infrastructure runtime deployment execution inside Claude's immediate inference loop (Claude provides full deployment manifests, CI/CD scripts, Dockerfiles, and provisioning manifests).
+- Direct cloud infrastructure runtime deployment execution inside the agentic AI engine's immediate inference loop (the AI engine provides full deployment manifests, CI/CD scripts, Dockerfiles, and provisioning manifests; Claude, Gemini, or GPT can be used as the reference reasoning engine).
 - Physical hardware or bare-metal environment execution (automated integration testing is executed via containerized virtual bridges and loopback mock daemons; specialized hardware/embedded firmware concerns are encapsulated in layerable domain plans such as `.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`).
 
 ### User Stories
 - **As a Commercial Software Vendor & Enterprise Architect**, I want to obfuscate and cryptographically compile parent master plans, `context/` governance schemas, and `agentic/` prompt suites into signed `.nbpack` bundles so that client installations (`percipience init`) run securely without exposing proprietary architecture IP, recovery state algorithms, or risking prompt exfiltration.
-- **As an AI Systems Architect & Lead**, I want a universal parent context engineering plan so that any project domain (IoT, GenAI, Web, Mobile, Neural, DB Migration) adopts a standardized, mature agentic structure with zero drift.
+- **As an AI Systems Architect & Lead**, I want a universal, model-agnostic parent context engineering plan so that any project domain (IoT, GenAI, Web, Mobile, Neural, DB Migration) adopts a standardized, mature agentic structure that operates seamlessly across Claude, Gemini, GPT, or local models with zero vendor lock-in.
 - **As a Poly-Module Solution Architect**, I want a unified space to manage multi-module systems (e.g., Client Application communicating with Core Backend Service via shared wire contracts) without breaking the simple structure of standalone single-module projects.
 - **As a Polyglot Systems Lead**, I want versioned cross-module interface contracts in `context/contracts/` so that changes to API schemas, gRPC definitions, or event payloads are automatically verified against all producer and consumer modules before merge.
 - **As a System Reliability Engineer**, I want surgical module-scoped rollbacks so that if context poisoning occurs in a consumer interface or client module, only the contaminated module is rolled back and replayed without throwing away verified provider service builds.
 - **As a QA & Systems Engineer**, I want an automated end-to-end simulator bridge linking client application test suites with virtual service daemons so that full request/response, event streams, and contract lifecycles can be validated autonomously.
 - **As an Autonomous Software Product Owner**, I want the agent suite to operate autonomously starting from a Minimum Viable Set (MVS) of sparse inputs so that complete systems are derived, built, tested, and documented with minimal manual overhead.
-- **As a Financial & Engineering Manager**, I want dynamic multi-model cascading and context compression so that long-running agent workflows reduce token expenses by up to 70% by routing lightweight tasks to fast models and caching static prompt prefixes.
+- **As a Financial & Engineering Manager**, I want vendor-neutral multi-model cascading and context compression across Anthropic, Google, and OpenAI models so that long-running agent workflows reduce token expenses by up to 70% by routing lightweight tasks to fast models (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`) and caching static prompt prefixes across any supported LLM provider.
 - **As a Concurrency & Platform Lead**, I want subagents to work in isolated Git worktrees so that multiple specialized agents can develop and test features concurrently without file lock collisions or merge conflicts.
 - **As an Autonomous DevOps Lead**, I want a self-sustaining and self-recovering CI/CD control plane so that build failures and test regressions are automatically diagnosed and patched within 3 retries or surgically rolled back without human firefighting.
 - **As an Extensibility & Tools Architect**, I want a custom agent plugin template and automated workflow DAG injection so that new domain agents can be onboarded safely inside sandboxed worktrees without risking repository state corruption or context poisoning.
@@ -178,9 +182,10 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Create an immutable recovery point (`recovery_point`) snapshot in `context_ledger.yaml` at each verified milestone, committing workspace state to Git.
   - Continuously audit context against schema validators and independent verification gates for context poisoning or hallucination drift.
   - Upon detecting poisoning: (1) trigger `rollback_to_recovery_point(RP_k)`, (2) isolate and quarantine the poisoning culprit in `user/hitl/poisoning_quarantine.md`, (3) sanitize active agent memory and ledger state, and (4) execute `replay_incremental_enhancements()` for subsequent valid steps.
-- **Dynamic Multi-Model Cascading & Token Throttling**:
-  - Maintain a model tiering map in `workplace/config/token_compression_rules.yaml`.
-  - Automatically route tasks: Tier A (Frontier) for complex derivation, verification gates, and security audits; Tier B (Fast) for AST parsing, diff updates, docstrings, and commit formatting.
+- **Model-Agnostic Dynamic Multi-Model Cascading & Token Throttling**:
+  - Maintain a provider-agnostic model tiering map in `workplace/config/token_compression_rules.yaml`.
+  - Support multi-provider switching (`active_provider: anthropic | google | openai | bedrock | azure | local_vllm`) with standardized cognitive tier mappings.
+  - Automatically route tasks: Tier A (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`) for complex derivation, verification gates, and security audits; Tier B (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`) for AST parsing, diff updates, docstrings, and commit formatting.
   - Enforce token budget limits per sprint milestone; pause or down-shift when spend exceeds 85% of ceiling.
 - **Git Worktree Isolation & Atomic Merging**:
   - Automatically spin up isolated ephemeral worktrees in `.workspaces/subagent_<id>/` for concurrent tasks.
@@ -374,8 +379,21 @@ contracts:
     status: "Verified_Compatible"
 
 model_tiering_policy:
+  provider_agnostic: true
+  active_provider: "anthropic"  # Options: "anthropic" | "google" | "openai" | "bedrock" | "azure" | "local_vllm"
   tier_a_model: "claude-3-7-sonnet / pro"
   tier_b_model: "claude-3-5-haiku / flash"
+  tier_a_reference_models:
+    anthropic: "claude-3-7-sonnet"
+    google: "gemini-2.0-pro"
+    openai: "gpt-4o / o1"
+    deepseek: "deepseek-r1"
+  tier_b_reference_models:
+    anthropic: "claude-3-5-haiku"
+    google: "gemini-2.0-flash"
+    openai: "gpt-4o-mini"
+  tier_a_fallback: "gemini-2.0-pro"
+  tier_b_fallback: "gemini-2.0-flash"
   budget_cap_usd: 35.00
   current_spend_usd: 8.20
   spend_alert_threshold: 0.85
@@ -484,7 +502,7 @@ artifacts:
 git_commits:
   - commit_sha: "5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d"
     timestamp: "2026-09-13T14:46:00Z"
-    author: "Claude Agentic Engine <agent@antigravity.ai>"
+    author: "Percipience Agentic Engine (Claude / Gemini / GPT) <agent@antigravity.ai>"
     message: "feat(cross-module): integrate consumer module with provider service contract"
     linked_requirements: ["REQ-PROVIDER-API-01", "REQ-CONSUMER-INT-01"]
     touched_artifacts: ["art_contract_api_01", "art_provider_service_01", "art_consumer_client_01"]
@@ -635,7 +653,7 @@ graph TD
   SealedPack --> Boot["percipience init --mode multi_module --parent-plan parent_master.nbpack"]
   Boot --> MemoryHydrate["In-Memory Enclave Hydrator<br/>(RAM-Only Hydration of context/ & agentic/<br/>Zero Disk Plaintext)"]
 
-  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., Provider Spec + Consumer Spec)"] --> B["Claude Engine - Parent System Metaprompt<br/>(Mediated via Percipience RAM Enclave)"]
+  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., Provider Spec + Consumer Spec)"] --> B["Model-Agnostic Agentic Engine<br/>(Mediated via Percipience RAM Enclave<br/>Reference: Claude / Gemini / GPT)"]
   MemoryHydrate --> B
   B --> C{"project.mode in context_ledger.yaml"}
   
@@ -645,7 +663,7 @@ graph TD
   
   subgraph Cross-Module Contract & Model Router
     MM --> CR["Contract Derivation Engine:<br/>Generate OpenAPI, AsyncAPI, Protobuf Specs in context/contracts/"]
-    CR --> TR["Dynamic Model Tier Router (Tier A: Arch/Audit vs Tier B: Diffs/Stubs)"]
+    CR --> TR["Dynamic Model Tier Router<br/>(Tier A: Sonnet/Pro/GPT-4o vs Tier B: Haiku/Flash/Mini)"]
   end
 
   subgraph Concurrent Sandboxed Worktrees
@@ -865,7 +883,7 @@ Establish the machine-readable YAML schemas for `context_ledger.yaml` supporting
 - Formulate cross-module contract specifications in `context/contracts/` (`service_contract.yaml`, `event_stream_spec.yaml`, `common_schema.json`).
 
 ### Step 2: Quad-Space Bootstrapping Metaprompt (Dual-Mode Aware)
-Develop system and bootstrapping prompts establishing Claude's role as the Parent Context Engineering Orchestrator supporting both single-module simplicity and poly-module coordination.
+Develop system and bootstrapping prompts establishing the Model-Agnostic Agentic Orchestrator's role (with Claude / Gemini / GPT as reference engines) supporting both single-module simplicity and poly-module coordination.
 
 - Formulate `system_prompt.md` with zero-drift constraints, context poisoning defense rules, dual-mode execution rules, and Quad-Space registration rules.
 - Draft `bootstrapping_prompt.md` dynamically creating flat folders for `single_module` or modular folder hierarchies for `multi_module`.

@@ -7,8 +7,15 @@ compression_rules:
     supported_languages: ["typescript", "javascript", "python", "go", "rust"]
 
   model_cascading:
+    provider_agnostic: true
+    default_provider: "anthropic"  # Options: anthropic, google, openai, bedrock, azure, local_vllm
     tier_a_frontier:
-      model: "claude-3-5-sonnet-20241022"
+      model: "claude-3-7-sonnet / pro"
+      reference_models:
+        anthropic: "claude-3-7-sonnet"
+        google: "gemini-2.0-pro"
+        openai: "gpt-4o / o1"
+        deepseek: "deepseek-r1"
       tasks:
         - "mvs_derivation"
         - "cross_module_contract_check"
@@ -16,7 +23,11 @@ compression_rules:
         - "security_compliance"
         - "poisoning_diagnosis"
     tier_b_compact:
-      model: "claude-3-5-haiku-20241022"
+      model: "claude-3-5-haiku / flash"
+      reference_models:
+        anthropic: "claude-3-5-haiku"
+        google: "gemini-2.0-flash"
+        openai: "gpt-4o-mini"
       tasks:
         - "ast_symbol_extraction"
         - "unified_diff_application"
