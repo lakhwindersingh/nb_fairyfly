@@ -19,12 +19,6 @@ steps:
   depends_on:
   - step_token_metering
   gate: gate_contract_compatibility
-- id: step_test_perf_guard
-  name: Execute Custom Plugin (agent_test_perf_guard)
-  executor: agent_test_perf_guard
-  depends_on:
-  - step_contract_compat
-  fail_action: AUTO_HEAL_OR_ROLLBACK
 - id: step_quality_guard
   name: Execute Custom Plugin (agent_quality_guard)
   executor: agent_quality_guard

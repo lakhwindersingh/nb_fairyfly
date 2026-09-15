@@ -270,7 +270,15 @@ class TokenTracker:
             md += "| *No transactions yet recorded* | - | - | - | - | - | - | - |\n"
         else:
             for e in reversed(recent_events):
-                md += f"| `{e['event_id'][:18]}` | {e['timestamp'][:19]} | `{e['file_path']}` | {e['uncompressed_tokens']} | {e['pruned_tokens']} | {e['tokens_saved']} | **{e['reduction_percentage']:.1f}%** | `${e['net_savings_usd']:.5f}` |\n"
+                evt_id = str(e.get('event_id', 'unknown'))[:18]
+                ts = str(e.get('timestamp', ''))[:19]
+                fpath = str(e.get('file_path', ''))
+                raw_tok = e.get('uncompressed_tokens', 0)
+                pruned_tok = e.get('pruned_tokens', 0)
+                saved_tok = e.get('tokens_saved', 0)
+                pct = float(e.get('reduction_percentage', 0.0))
+                net_usd = float(e.get('net_savings_usd', 0.0))
+                md += f"| `{evt_id}` | {ts} | `{fpath}` | {raw_tok} | {pruned_tok} | {saved_tok} | **{pct:.1f}%** | `${net_usd:.5f}` |\n"
 
         md += """
 ---
