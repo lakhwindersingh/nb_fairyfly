@@ -196,7 +196,7 @@ gantt
 The Autonomous CI/CD Triad engine is validated continuously by the automated integration test suite:
 
 ```bash
-$ python3 workplace/templates/tests/test_play3_suite.py
+$ python3 tests/test_play3_suite.py
 ...
 test_11_autonomous_cicd_self_healing_and_sustain (__main__.TestPlay3Subsystems)
 Test Autonomous CI/CD Triad: Self-Sustaining, Self-Recovering, Self-Improving. ... ok

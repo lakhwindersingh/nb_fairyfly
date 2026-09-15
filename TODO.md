@@ -44,7 +44,7 @@
   - `percipience worktree acquire --agent <id> --ttl <sec>`
   - `percipience worktree list`
   - `percipience worktree release --agent <id>`
-- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L112).
+- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L112).
 - [-] **Production Redis Distributed Lock Backend**:
   - *Current*: Local atomic file leasing (`leases.json`).
   - *TODO*: Wire Redis 7.x Redlock distributed lease backend for multi-node Karpenter cluster scaling (`ElastiCache` / `Memorystore`).
@@ -62,7 +62,7 @@
   - Generates [`context/ledger/context_ledger.public.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.public.yaml) with stripped private paths for public commit audits.
 - [x] **Ledger Chain Verifier**:
   - Validates full cryptographic continuity and parent hash integrity (`workplace/core/merkle_engine.py`).
-  - Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L42).
+  - Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L42).
 - [x] **Visual Merkle State DAG Web Explorer**:
   - Live browser dashboard at [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html).
   - API endpoint `GET /api/observability/dag` returning chain verification logs.
@@ -81,7 +81,7 @@
   - Generates standard `git diff` unified patch strings to enforce output token savings.
 - [x] **Interactive Web Playground**:
   - Live code editor and real-time pruning API (`POST /api/marketing/ast-prune`) on `http://127.0.0.1:3000/`.
-- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L32).
+- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L32).
 - [-] **Rust-Compiled Tree-Sitter Native Daemon**:
   - *Current*: Python AST regex & structural parser with $< 85\text{ms}$ execution.
   - *TODO*: Compile standalone Rust Tree-Sitter native binary daemon for sub-20ms ultra-high throughput parsing across 50+ concurrent agents.
@@ -98,7 +98,7 @@
   - Preserves 100% of sibling micro-modules (e.g., resets `mod_billing` without clobbering `mod_marketing`).
 - [x] **Web Console Trigger**:
   - Interactive surgical rollback button on portal dashboard calling `POST /api/observability/rollback`.
-- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L56) and [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L71).
+- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L56) and [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L71).
 - [ ] **Diagnostic Re-Prompting Loop**:
   - *TODO*: Implement automated self-healing re-prompting handler injecting only the isolated failure context into the recovery agent prompt.
 
@@ -113,7 +113,7 @@
 - [x] **CLI Subcommands**:
   - `percipience pack --include-spaces context,agentic --output <path> --obfuscate --sign`
   - `percipience hydrate --pack <path>`
-- [x] **Automated Unit Tests**: Verified via [`test_06_nbpack_packaging_and_hydration`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L98).
+- [x] **Automated Unit Tests**: Verified via [`test_06_nbpack_packaging_and_hydration`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L98).
 - [ ] **KMS Envelope Key Binding**:
   - *TODO*: Connect AWS KMS / Cloud KMS CMEK key derivation to decrypt bundles at container boot using IAM roles.
 
@@ -134,7 +134,7 @@
   - `percipience validate --layered`
   - `percipience agent create --name <name>`
   - `percipience agent test --agent <name> --dry-run`
-- [x] **Automated Unit Tests**: Verified via [`test_09_layered_context_validator`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L136).
+- [x] **Automated Unit Tests**: Verified via [`test_09_layered_context_validator`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L136).
 
 ---
 
@@ -148,7 +148,7 @@
 - [x] **CLI Subcommands**:
   - `percipience repo connect --url <url> --auth-type <type> --webhook-provider <vcs>`
   - `percipience repo status`
-- [x] **Automated Unit Tests**: Verified via [`test_08_byor_adapter`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/tests/test_play3_suite.py#L124).
+- [x] **Automated Unit Tests**: Verified via [`test_08_byor_adapter`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L124).
 - [ ] **AWS Secrets Manager / Vault Auto-Sync**:
   - *TODO*: Wire dynamic SSH private key retrieval from AWS Secrets Manager ARN or HashiCorp Vault.
 

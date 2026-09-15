@@ -296,7 +296,7 @@ All core components from the Parent Master Plan and Play 3 have corresponding ve
 
 ```bash
 # Run the complete automated test suite (9 test suites)
-python3 workplace/templates/tests/test_play3_suite.py
+python3 tests/test_play3_suite.py
 ```
 
 | Subsystem Module | Location | Purpose |
