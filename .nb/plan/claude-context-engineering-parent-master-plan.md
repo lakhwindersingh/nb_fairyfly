@@ -19,7 +19,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 10. **Multi-Dimensional Context Maturity Evaluation Report**: A comprehensive, quantitative evaluation matrix in `user/outputs/` and `context/reports/` assessing project context across six dimensions (Requirement Coverage, Architecture & Design Grounding, Code & Config Quality, Test & Verification Coverage, Security & Compliance, and Token/GenAI Efficiency).
 11. **Master Context Ledger (`context_ledger.yaml`) with Integrated Git Commit & Issue Tracker**: A machine-readable DAG in `context/` that logs all artifact lineage, tracks issued Git commits with full requirement traceability, manages open remaining issues, enforces a standard checklist of common technical issues, captures model-suggested improvements, and registers recovery point snapshots in a standardized format.
 12. **Universal Quad-Space Clean Folder Bootstrapping & Multi-Agent Flow**: Standardized scaffolding strictly partitioning customer-owned mutable directories (`workplace/` with `config/`, and `user/` with `inputs/`, `hitl/`, `outputs/`) from Neutron Binary proprietary logic (`context/` and `agentic/`). In enterprise deployments, `context/` (governance, schemas, DAG state engine) and `agentic/` (system prompts, bootstrapping/derivation metaprompts, model tiering router, workflows) are obfuscated, compiled, and cryptographically sealed inside `.nbpack` envelopes, hydrated exclusively inside an in-memory enclave to protect proprietary IP while leaving customer workspaces clean.
-13. **Zero-Overhead Dual-Mode Architecture (Single-Module vs. Poly-Module Ecosystem)**: A dual-operating mode configured via `project.mode: single_module | multi_module`. In `single_module` mode, the framework maintains absolute simplicity with zero nested directory overhead (flat `workplace/src/` and `workplace/config/`). In `multi_module` mode, the framework coordinates heterogeneous multi-system projects (such as Mobile apps managing IoT hardware fleets, web frontends controlling ML pipelines, or multi-service microarchitectures) via isolated module subtrees (`workplace/modules/<module_id>/`), shared wire contracts (`workplace/shared/protos/`), cross-module interface specifications (`context/contracts/`), surgical module-scoped rollbacks, and virtual simulator loopback bridges.
+13. **Zero-Overhead Dual-Mode Architecture (Single-Module vs. Poly-Module Ecosystem)**: A dual-operating mode configured via `project.mode: single_module | multi_module`. In `single_module` mode, the framework maintains absolute simplicity with zero nested directory overhead (flat `workplace/src/` and `workplace/config/`). In `multi_module` mode, the framework coordinates heterogeneous multi-system projects (such as client web/mobile portals communicating with core backend services, event-driven microservices, or distributed data/ML pipelines) via isolated module subtrees (`workplace/modules/<module_id>/`), shared wire contracts (`workplace/shared/protos/` or schemas), cross-module interface specifications (`context/contracts/`), surgical module-scoped rollbacks, and virtual simulator loopback bridges.
 14. **Proprietary Context & Agentic Space Obfuscation, Anti-Exfiltration & Cryptographic Package Sealing (`.nbpack`)**: A binary compilation, AST minification, and authenticated envelope encryption engine (`percipience pack`). Compiles proprietary markdown master plans, `agentic/` prompt suites, and `context/` governance/schema machinery into tamper-proof, Ed25519-signed AES-256-GCM binary envelopes (`.nbpack`). Hydrates both proprietary spaces directly into volatile RAM / secure sandbox memory without persisting plaintext files to the client's physical filesystem, preventing intellectual property theft, prompt injection, and LLM context exfiltration during `percipience init`.
 15. **External Issue Tracker & Jira MCP Server Integration Layer**: A bi-directional Model Context Protocol (MCP) bridge connecting enterprise issue tracking systems (Jira Software, Linear, GitHub Issues, Azure DevOps). The engine continuously polls or subscribes to Jira via MCP servers (e.g., `@modelcontextprotocol/server-jira`), ingests "Ready for Dev" stories directly into the MVS processing queue, drives subagents through derivation and test verification, and automatically synchronizes issue states, test evidence, and Merkle block audit proofs back to Jira upon completion.
 16. **Autonomous Closed-Loop CI/CD Triad (Self-Sustaining, Self-Recovering, Self-Improving)**: A fully autonomous continuous delivery engine (`workplace/core/autonomous_cicd.py`) that elevates CI/CD from a passive blocker to an active, closed-loop orchestrator. It comprises three unified capabilities:
@@ -43,13 +43,13 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - `mode: single_module`: Direct flat layout (`workplace/src/`, `workplace/config/`, single linear DAG, global recovery point). Zero overhead for standalone apps.
   - `mode: multi_module`: Module subtrees (`workplace/modules/<module_id>/`), shared wire formats (`workplace/shared/`), versioned cross-module interface contracts (`context/contracts/`), and federated DAG state in `context_ledger.yaml`.
 - **Cross-Module Contract Compatibility & Interface Gate**:
-  - Formal interface contract management in `context/contracts/` (BLE GATT UUIDs/characteristics, OpenAPI schemas, Protobuf DTOs, mTLS enrollment payloads, OTA binary manifests).
+  - Formal interface contract management in `context/contracts/` (OpenAPI 3.1 specifications, JSON Schema definitions, gRPC/Protobuf DTOs, AsyncAPI event streams, and shared data schemas).
   - Independent verification gate (`gate_contract_compatibility`) validating that producer modules and consumer modules adhere strictly to shared contracts before merging.
 - **Surgical Module-Scoped Poisoning Isolation & Rollback**:
-  - Module-scoped recovery points in `context_ledger.yaml` (e.g., `RP_IOT_003`, `RP_MOB_004`) alongside global system snapshots (`RP_SYS_001`).
-  - Targeted rollback capability: when context poisoning or contract drift occurs in one module (e.g., Mobile BLE UUID hallucination), only the contaminated module is rolled back and quarantined; unaffected modules (e.g., IoT firmware) remain untouched, preventing collateral re-compilation and token waste.
+  - Module-scoped recovery points in `context_ledger.yaml` (e.g., `RP_CORE_003`, `RP_PORTAL_004`) alongside global system snapshots (`RP_SYS_001`).
+  - Targeted rollback capability: when context poisoning or contract drift occurs in one module (e.g., client portal schema mismatch or API payload drift), only the contaminated module is rolled back and quarantined; unaffected modules (e.g., core backend engine or data worker) remain untouched, preventing collateral re-compilation and token waste.
 - **Virtual End-to-End Emulation & Simulator Bridge**:
-  - Cross-module test harnesses wiring together heterogeneous simulators (e.g., Mobile GUI simulator communicating with IoT QEMU/mock BLE peripheral over a local virtual loopback socket) for automated end-to-end integration validation.
+  - Cross-module test harnesses wiring together heterogeneous component emulators (e.g., client application simulator communicating with backend service daemon over a local virtual loopback socket or mock API bridge) for automated end-to-end integration validation.
 - **Multi-Format MVS Ingestion & Parsing Engine**: Standardized ingestion templates in `user/inputs/templates/` (and `input/templates/`) supporting 6 industry-standard formats: Markdown Feature Specs (`mvs_feature_spec.md`), OpenAPI 3.1 Schemas (`mvs_api_contract.yaml`), AsyncAPI Event Streams (`mvs_event_stream.yaml`), ADR System Blueprints (`mvs_adr_blueprint.md`), Structured Jira Issues (`mvs_jira_story.json`), and UI Design Tokens (`mvs_design_tokens.json`).
 - **External Issue Tracker MCP Integration (Jira / Linear / GitHub Issues)**: Native MCP tool bindings to pull "Ready for Dev" user stories, epics, and acceptance criteria into the active derivation queue, update issue progress, attach verification reports, and link SHA-256 Merkle block commit hashes.
 - **Context Poisoning Detection, Rollback & Replay Engine**:
@@ -114,15 +114,15 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 
 #### Out of Scope
 - Direct cloud infrastructure runtime deployment execution inside Claude's immediate inference loop (Claude provides full deployment manifests, CI/CD scripts, Dockerfiles, and provisioning manifests).
-- Physical hardware device flashing (automated simulation and virtual device flashing are performed via QEMU and mock BLE bridges).
+- Physical hardware or bare-metal environment execution (automated integration testing is executed via containerized virtual bridges and loopback mock daemons; specialized hardware/embedded firmware concerns are encapsulated in layerable domain plans such as `.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`).
 
 ### User Stories
 - **As a Commercial Software Vendor & Enterprise Architect**, I want to obfuscate and cryptographically compile parent master plans, `context/` governance schemas, and `agentic/` prompt suites into signed `.nbpack` bundles so that client installations (`percipience init`) run securely without exposing proprietary architecture IP, recovery state algorithms, or risking prompt exfiltration.
 - **As an AI Systems Architect & Lead**, I want a universal parent context engineering plan so that any project domain (IoT, GenAI, Web, Mobile, Neural, DB Migration) adopts a standardized, mature agentic structure with zero drift.
-- **As a Poly-Module Solution Architect**, I want a unified space to manage multi-module systems (e.g., Mobile App controlling IoT hardware nodes via BLE/mTLS/OTA) without breaking the simple structure of standalone single-module projects.
-- **As an Embedded Firmware & Mobile Lead**, I want versioned cross-module interface contracts in `context/contracts/` so that changes to BLE GATT tables, mTLS certificate payloads, or OTA manifests are automatically verified against both firmware and mobile code before merge.
-- **As a System Reliability Engineer**, I want surgical module-scoped rollbacks so that if context poisoning occurs in the mobile UI layer, only the mobile module is rolled back and replayed without throwing away days of verified IoT C/C++ firmware builds.
-- **As a QA & Simulation Engineer**, I want an automated end-to-end simulator bridge linking the mobile visual GUI simulator with virtual IoT hardware mocks so that full pairing, telemetry, and OTA update lifecycles can be validated autonomously.
+- **As a Poly-Module Solution Architect**, I want a unified space to manage multi-module systems (e.g., Client Application communicating with Core Backend Service via shared wire contracts) without breaking the simple structure of standalone single-module projects.
+- **As a Polyglot Systems Lead**, I want versioned cross-module interface contracts in `context/contracts/` so that changes to API schemas, gRPC definitions, or event payloads are automatically verified against all producer and consumer modules before merge.
+- **As a System Reliability Engineer**, I want surgical module-scoped rollbacks so that if context poisoning occurs in a client portal or UI layer, only the contaminated module is rolled back and replayed without throwing away verified core service builds.
+- **As a QA & Systems Engineer**, I want an automated end-to-end simulator bridge linking client application test suites with virtual service daemons so that full request/response, event streams, and contract lifecycles can be validated autonomously.
 - **As an Autonomous Software Product Owner**, I want the agent suite to operate autonomously starting from a Minimum Viable Set (MVS) of sparse inputs so that complete systems are derived, built, tested, and documented with minimal manual overhead.
 - **As a Financial & Engineering Manager**, I want dynamic multi-model cascading and context compression so that long-running agent workflows reduce token expenses by up to 70% by routing lightweight tasks to fast models and caching static prompt prefixes.
 - **As a Concurrency & Platform Lead**, I want subagents to work in isolated Git worktrees so that multiple specialized agents can develop and test features concurrently without file lock collisions or merge conflicts.
@@ -146,13 +146,13 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Support `project.mode: single_module` (default: flat `workplace/src/` and `workplace/config/`, global recovery point, zero nested folder overhead).
   - Support `project.mode: multi_module` (scoped `workplace/modules/<module_id>/`, `workplace/shared/`, `context/contracts/`, federated ledger).
 - **Cross-Module Contract Registry & Verification**:
-  - Formalize shared interface contracts in `context/contracts/` (e.g., Protobuf, OpenAPI, BLE GATT YAML, mTLS enrollment schemas, OTA update manifests).
+  - Formalize shared interface contracts in `context/contracts/` (e.g., OpenAPI 3.1 specifications, Protobuf/gRPC DTOs, AsyncAPI event streams, shared JSON schemas).
   - Enforce `gate_contract_compatibility` ensuring both producer and consumer modules pass schema validation.
 - **Surgical Module-Scoped Poisoning Isolation & Rollback**:
   - Support module-scoped checkpoints in `recovery_points` (`module_scope: <module_id> | global_system`).
   - Isolate context poisoning incidents to the culprit module (`culprit_module: <module_id>`), allowing unaffected modules to remain active without rollbacks.
 - **Cross-Module Emulation Bridge**:
-  - Scaffold cross-module integration test suites in `workplace/tests/integration/` connecting simulated components (e.g., KMP Mobile BLE client communicating with Zephyr/FreeRTOS QEMU mock peripheral over virtual TCP loopback).
+  - Scaffold cross-module integration test suites in `workplace/tests/integration/` connecting simulated components (e.g., client application communicating with virtual service daemon over local TCP loopback).
 - **Quad-Space Directory Bootstrapping**: Automated creation and strict isolation of `context/`, `agentic/`, `workplace/` (with `workplace/config/` or `workplace/modules/`), and `user/` (`inputs/`, `hitl/`, `outputs/`).
 - **Multi-Format Autonomous MVS Ingestion & Template Catalog**:
   - Provide and support 6 standardized MVS templates in `user/inputs/templates/` (accessible also via `input/templates/`):
@@ -229,13 +229,13 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - *Single-Module Mode*: Code lives directly in `workplace/src/` and `workplace/config/`. Single linear DAG. Global recovery points.
   - *Multi-Module Mode*: Code lives in `workplace/modules/<module_id>/` with shared DTOs/stubs in `workplace/shared/`. Versioned interface contracts in `context/contracts/`.
 - **Cross-Module Contract Architecture**:
-  - `context/contracts/` houses single sources of truth for cross-module boundaries (e.g., `ble_gatt_spec.yaml`, `mtls_provisioning_contract.json`, `ota_firmware_manifest.json`, `api_spec.json`).
+  - `context/contracts/` houses single sources of truth for cross-module boundaries (e.g., `service_contract.yaml`, `api_schema.json`, `event_stream_spec.yaml`).
   - Code generators (`protoc`, code-stubs) compile these contracts into module stubs in `workplace/shared/generated/`.
 - **Surgical Module Rollbacks**:
   - In multi-module mode, recovery points are scoped by `module_scope: <module_id> | global_system`.
-  - If context poisoning occurs in `mobile_app` (e.g., hallucinated BLE UUID), only the `mobile_app` working tree and its ledger nodes are rewound. The `iot_node` firmware remains untouched.
+  - If context poisoning occurs in `mod_client_portal` (e.g., hallucinated endpoint or invalid payload schema), only the `mod_client_portal` working tree and its ledger nodes are rewound. The `mod_core_service` remains untouched.
 - **End-to-End Emulation Bridge**:
-  - In integrated systems, Mobile and IoT components are connected via virtual loopback sockets (e.g., WebSocket/TCP bridge) allowing automated end-to-end integration tests to execute in CI/CD without physical hardware.
+  - In integrated systems, client and service components are connected via virtual loopback sockets (e.g., WebSocket/TCP bridge or mock HTTP server) allowing automated end-to-end integration tests to execute in CI/CD without external infrastructure.
 - **Quad-Space Clean Folder Architecture**: Standardize on four isolated top-level clean folders:
   - `context/`: Governance, schemas, contracts, state ledger, cryptographic chain, recovery snapshots, context maturity report templates.
   - `agentic/`: Prompt suites, agent role definitions, model tiering router, workflow DAGs, gates, hooks, replay mechanisms, methodologies.
@@ -295,13 +295,13 @@ mcp_integrations:
     attach_merkle_proof: true
 ledger_version: "7.2.0"
 project:
-  name: "Universal_Connected_Ecosystem"
-  domain: "Multi-Module IoT & Mobile Management Space"
+  name: "Enterprise_Unified_Ecosystem"
+  domain: "Universal Multi-Module Enterprise Space"
   mode: "multi_module"  # Options: "single_module" | "multi_module"
   methodology: "Agile / Hybrid SDLC"
   tech_stack:
-    language: "Kotlin / Swift / C++ / Python"
-    framework: "KMP & FreeRTOS / Zephyr"
+    language: "Polyglot (TypeScript / Python / Go / Java / Rust)"
+    framework: "Multi-Service Architecture / Modern Full-Stack"
     orchestration: "Multi-Agent Framework"
   code_config: "workplace/config/project_master_config.yaml"
 
@@ -337,38 +337,38 @@ ledger_chain:
 
 # Module Registry for Multi-Module Mode
 modules:
-  - id: "mod_iot"
-    name: "IoT Node Firmware"
-    path: "workplace/modules/iot_node"
-    domain: "IoT, Embedded & Hardware Security"
-    tech_stack: "C / C++, FreeRTOS, Zephyr, mTLS 1.3"
+  - id: "mod_core_service"
+    name: "Core Business & State Service"
+    path: "workplace/modules/mod_core_service"
+    domain: "Core Business Logic & API Engine"
+    tech_stack: "Python / FastAPI / SQLModel"
     maturity: "Scaffolded"
-    current_recovery_point: "RP_IOT_003"
+    current_recovery_point: "RP_CORE_003"
 
-  - id: "mod_mobile"
-    name: "Mobile Device Controller"
-    path: "workplace/modules/mobile_app"
-    domain: "Cross-Platform Mobile"
-    tech_stack: "Kotlin Multiplatform, Jetpack Compose, SwiftUI"
+  - id: "mod_client_portal"
+    name: "Client Portal & Consumer App"
+    path: "workplace/modules/mod_client_portal"
+    domain: "Web Client, UI & API Consumer"
+    tech_stack: "TypeScript / React / Tailwind"
     maturity: "Scaffolded"
-    current_recovery_point: "RP_MOB_004"
+    current_recovery_point: "RP_PORTAL_004"
 
 # Versioned Cross-Module Interface Contracts
 contracts:
-  - id: "contract_ble_gatt"
-    name: "BLE GATT Protocol & Characteristics"
-    spec_path: "context/contracts/ble_gatt_spec.yaml"
-    producer_module: "mod_iot"
-    consumer_modules: ["mod_mobile"]
+  - id: "contract_service_api"
+    name: "Core Service OpenAPI Interface"
+    spec_path: "context/contracts/service_contract.yaml"
+    producer_module: "mod_core_service"
+    consumer_modules: ["mod_client_portal"]
     version: "1.2.0"
     hash: "d4e5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
     status: "Verified_Compatible"
 
-  - id: "contract_ota_update"
-    name: "Signed OTA Binary Transport Contract"
-    spec_path: "context/contracts/ota_firmware_manifest.json"
-    producer_module: "mod_iot"
-    consumer_modules: ["mod_mobile"]
+  - id: "contract_event_stream"
+    name: "Async Event Stream Specification"
+    spec_path: "context/contracts/event_stream_spec.yaml"
+    producer_module: "mod_core_service"
+    consumer_modules: ["mod_client_portal"]
     version: "2.0.0"
     hash: "a1b2c3d4e5f67890123456789abcdef012345678"
     status: "Verified_Compatible"
@@ -390,18 +390,18 @@ token_optimization:
   estimated_token_savings_pct: 66.4
 
 worktrees:
-  - worktree_id: "wt_iot_dev_01"
-    subagent_role: "agent_iot_developer"
-    module_scope: "mod_iot"
-    branch: "feature/ble-firmware"
-    path: ".workspaces/iot_dev_01"
+  - worktree_id: "wt_core_dev_01"
+    subagent_role: "agent_service_developer"
+    module_scope: "mod_core_service"
+    branch: "feature/core-service"
+    path: ".workspaces/core_dev_01"
     status: "Active"
     isolated_commits: 4
-  - worktree_id: "wt_mobile_dev_01"
-    subagent_role: "agent_mobile_developer"
-    module_scope: "mod_mobile"
-    branch: "feature/ble-manager-ui"
-    path: ".workspaces/mobile_dev_01"
+  - worktree_id: "wt_portal_dev_01"
+    subagent_role: "agent_client_developer"
+    module_scope: "mod_client_portal"
+    branch: "feature/client-portal"
+    path: ".workspaces/portal_dev_01"
     status: "Active"
     isolated_commits: 3
 
@@ -413,16 +413,16 @@ semantic_parity:
   reconciliation_mode: "Revert"
 
 recovery_points:
-  - snapshot_id: "RP_IOT_003"
-    module_scope: "mod_iot"
+  - snapshot_id: "RP_CORE_003"
+    module_scope: "mod_core_service"
     timestamp: "2026-09-13T14:40:00Z"
     git_commit_sha: "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b"
     clean_artifacts_hash: "3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b"
     verified_maturity: "Scaffolded"
     status: "Active_Clean"
 
-  - snapshot_id: "RP_MOB_004"
-    module_scope: "mod_mobile"
+  - snapshot_id: "RP_PORTAL_004"
+    module_scope: "mod_client_portal"
     timestamp: "2026-09-13T14:45:00Z"
     git_commit_sha: "1f2e3d4c5b6a7890123456789abcdef012345678"
     clean_artifacts_hash: "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d"
@@ -440,60 +440,60 @@ recovery_points:
 poisoning_incidents:
   - incident_id: "POI_002"
     detected_at: "2026-09-13T14:42:00Z"
-    culprit_type: "BLE_Characteristic_UUID_Mismatch"
-    culprit_module: "mod_mobile"
-    isolated_from: ["mod_iot"]
-    rolled_back_to: "RP_MOB_004"
+    culprit_type: "Payload_Schema_Contract_Mismatch"
+    culprit_module: "mod_client_portal"
+    isolated_from: ["mod_core_service"]
+    rolled_back_to: "RP_PORTAL_004"
     quarantine_file: "user/hitl/poisoning_quarantine.md"
     replay_status: "Successfully_Replayed"
 
 quarantined_tests:
-  - test_id: "test_ble_packet_retransmission_jitter"
-    test_file: "workplace/tests/integration/test_ble_e2e.py"
+  - test_id: "test_cross_module_payload_stream"
+    test_file: "workplace/tests/integration/test_cross_module_e2e.py"
     quarantined_at: "2026-09-13T14:35:00Z"
-    failure_reason: "AssertionError: Simulated BLE packet jitter exceeded 200ms threshold"
+    failure_reason: "AssertionError: Consumer payload validation failed against service contract schema"
     retry_count: 3
     retry_budget_max: 3
     linked_issue_id: "ISSUE-003"
     status: "Quarantined_Awaiting_HITL"
 
 artifacts:
-  - id: "art_contract_ble_01"
-    name: "ble_gatt_spec.yaml"
+  - id: "art_contract_api_01"
+    name: "service_contract.yaml"
     type: "CrossModuleContract"
-    source: "context/contracts/ble_gatt_spec.yaml"
+    source: "context/contracts/service_contract.yaml"
     hash: "d4e5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
     maturity: "Derived"
 
-  - id: "art_iot_firmware_01"
-    name: "main_node.c"
+  - id: "art_core_service_01"
+    name: "service_handler.py"
     type: "SourceCode"
-    source: "workplace/modules/iot_node/src/main_node.c"
-    module: "mod_iot"
-    derived_from: ["art_contract_ble_01"]
+    source: "workplace/modules/mod_core_service/src/service_handler.py"
+    module: "mod_core_service"
+    derived_from: ["art_contract_api_01"]
     maturity: "Scaffolded"
 
-  - id: "art_mobile_ble_manager_01"
-    name: "BleDeviceManager.kt"
+  - id: "art_client_portal_01"
+    name: "client_controller.ts"
     type: "SourceCode"
-    source: "workplace/modules/mobile_app/src/BleDeviceManager.kt"
-    module: "mod_mobile"
-    derived_from: ["art_contract_ble_01"]
+    source: "workplace/modules/mod_client_portal/src/client_controller.ts"
+    module: "mod_client_portal"
+    derived_from: ["art_contract_api_01"]
     maturity: "Scaffolded"
 
 git_commits:
   - commit_sha: "5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d"
     timestamp: "2026-09-13T14:46:00Z"
     author: "Claude Agentic Engine <agent@antigravity.ai>"
-    message: "feat(cross-module): integrate Mobile BLE manager with IoT firmware GATT contract"
-    linked_requirements: ["REQ-IOT-BLE-01", "REQ-MOB-BLE-01"]
-    touched_artifacts: ["art_contract_ble_01", "art_iot_firmware_01", "art_mobile_ble_manager_01"]
+    message: "feat(cross-module): integrate client portal with core service contract"
+    linked_requirements: ["REQ-CORE-API-01", "REQ-PORTAL-UI-01"]
+    touched_artifacts: ["art_contract_api_01", "art_core_service_01", "art_client_portal_01"]
 
 remaining_issues:
   - issue_id: "ISSUE-003"
     category: "Cross_Module_Integration"
     severity: "Medium"
-    description: "test_ble_packet_retransmission_jitter failed 3 self-healing attempts; quarantined."
+    description: "test_cross_module_payload_stream failed 3 self-healing attempts; quarantined."
     status: "Quarantined"
     target_milestone: "Sprint-2"
 
@@ -536,27 +536,27 @@ workflow:
       model_tier: "Tier_A"
       stage: "architect"
       task_status: "Verified"
-      output_artifact: "art_contract_ble_01"
+      output_artifact: "art_contract_api_01"
       verified_by_gate: "gate_arch_review"
       handoff_hook: "hook_arch_to_devs"
-    - id: "agent_iot_developer"
-      role: "IoT Firmware Specialist"
+    - id: "agent_service_developer"
+      role: "Core Service Specialist"
       model_tier: "Tier_A"
-      stage: "develop_iot"
-      worktree: "wt_iot_dev_01"
+      stage: "develop_core_service"
+      worktree: "wt_core_dev_01"
       task_status: "Verified"
-      output_artifact: "art_iot_firmware_01"
-      verified_by_gate: "gate_iot_review"
-      handoff_hook: "hook_iot_to_integration"
-    - id: "agent_mobile_developer"
-      role: "Mobile App Specialist"
+      output_artifact: "art_core_service_01"
+      verified_by_gate: "gate_service_review"
+      handoff_hook: "hook_service_to_integration"
+    - id: "agent_client_developer"
+      role: "Client Portal Specialist"
       model_tier: "Tier_A"
-      stage: "develop_mobile"
-      worktree: "wt_mobile_dev_01"
+      stage: "develop_client_portal"
+      worktree: "wt_portal_dev_01"
       task_status: "Verified"
-      output_artifact: "art_mobile_ble_manager_01"
-      verified_by_gate: "gate_mobile_review"
-      handoff_hook: "hook_mobile_to_integration"
+      output_artifact: "art_client_portal_01"
+      verified_by_gate: "gate_portal_review"
+      handoff_hook: "hook_portal_to_integration"
     - id: "agent_integration_verifier"
       role: "Cross-Module Integration Verifier"
       model_tier: "Tier_A"
@@ -573,14 +573,14 @@ workflow:
     - id: "gate_cross_module_compatibility"
       type: "CrossModuleCompatibility"
       verifier_agent: "agent_integration_verifier"
-      checks: ["contract_schema_valid", "ble_uuid_alignment", "e2e_sim_test_passed"]
+      checks: ["contract_schema_valid", "interface_payload_alignment", "e2e_sim_test_passed"]
       result: "Passed"
   hooks:
     - id: "hook_arch_to_devs"
       trigger: "on_gate_pass:gate_arch_review"
       from_agent: "agent_architect"
-      to_agents: ["agent_iot_developer", "agent_mobile_developer"]
-      payload_artifact: "art_contract_ble_01"
+      to_agents: ["agent_service_developer", "agent_client_developer"]
+      payload_artifact: "art_contract_api_01"
       status: "Fired"
 ```
 
@@ -635,36 +635,36 @@ graph TD
   SealedPack --> Boot["percipience init --mode multi_module --parent-plan parent_master.nbpack"]
   Boot --> MemoryHydrate["In-Memory Enclave Hydrator<br/>(RAM-Only Hydration of context/ & agentic/<br/>Zero Disk Plaintext)"]
 
-  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., IoT Hardware Spec + Mobile App Spec)"] --> B["Claude Engine - Parent System Metaprompt<br/>(Mediated via Percipience RAM Enclave)"]
+  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., Core Service Spec + Client Portal Spec)"] --> B["Claude Engine - Parent System Metaprompt<br/>(Mediated via Percipience RAM Enclave)"]
   MemoryHydrate --> B
   B --> C{"project.mode in context_ledger.yaml"}
   
   C -- "mode: single_module" --> SM["Single Module Scaffolding:<br/>Flat workplace/src/, workplace/config/<br/>Single Linear DAG & Global Recovery Points"]
   
-  C -- "mode: multi_module" --> MM["Poly-Module Bootstrapping:<br/>Initialize context/contracts/, workplace/shared/<br/>workplace/modules/iot_node/, workplace/modules/mobile_app/"]
+  C -- "mode: multi_module" --> MM["Poly-Module Bootstrapping:<br/>Initialize context/contracts/, workplace/shared/<br/>workplace/modules/mod_core_service/, workplace/modules/mod_client_portal/"]
   
   subgraph Cross-Module Contract & Model Router
-    MM --> CR["Contract Derivation Engine:<br/>Generate BLE GATT, mTLS Schemas, OTA Manifests in context/contracts/"]
+    MM --> CR["Contract Derivation Engine:<br/>Generate OpenAPI, AsyncAPI, Protobuf Specs in context/contracts/"]
     CR --> TR["Dynamic Model Tier Router (Tier A: Arch/Audit vs Tier B: Diffs/Stubs)"]
   end
 
   subgraph Concurrent Sandboxed Worktrees
-    TR --> WT1["Worktree 1 (.workspaces/iot_dev): agent_iot_developer"]
-    TR --> WT2["Worktree 2 (.workspaces/mobile_dev): agent_mobile_developer"]
-    WT1 --> G1["IoT Verification Gate (C/C++ Build & QEMU Unit Tests)"]
-    WT2 --> G2["Mobile Verification Gate (KMP / Compose Tests)"]
+    TR --> WT1["Worktree 1 (.workspaces/core_dev): agent_service_developer"]
+    TR --> WT2["Worktree 2 (.workspaces/portal_dev): agent_client_developer"]
+    WT1 --> G1["Core Service Gate (FastAPI / Contract Unit Tests)"]
+    WT2 --> G2["Client Portal Gate (React / Consumer Contract Tests)"]
   end
 
   G1 --> CCG{"Cross-Module Compatibility Gate (gate_cross_module_compatibility)"}
   G2 --> CCG
   
   subgraph End-to-End Emulation Bridge
-    CCG --> SIM["Cross-Module Simulator Loopback Bridge:<br/>Mobile App Simulator <--> Virtual IoT BLE / TCP Peripheral Mock"]
+    CCG --> SIM["Cross-Module Simulator Loopback Bridge:<br/>Client Simulator <--> Virtual Service Loopback Mock"]
     SIM --> SIM_PASS{E2E Tests Pass?}
   end
 
   SIM_PASS -- Yes --> E["Atomic Merge to main & Log Multi-Module Recovery Point (RP_SYS_k)"]
-  SIM_PASS -- "Poisoning Detected in Mobile" --> SRM["Surgical Rollback: Rewind Mobile App to RP_MOB_k<br/>IoT Firmware remains untouched!<br/>Quarantine culprit in user/hitl/poisoning_quarantine.md"]
+  SIM_PASS -- "Poisoning Detected in Portal" --> SRM["Surgical Rollback: Rewind Client Portal to RP_PORTAL_k<br/>Core Service remains untouched!<br/>Quarantine culprit in user/hitl/poisoning_quarantine.md"]
   SRM --> WT2
 
   E --> F["Reconcile Master Context Ledger & Merkle Block Chaining"]
@@ -713,9 +713,9 @@ graph TD
 │   │   ├── context_ledger.yaml               # Federated multi-module state DAG (RAM-enclave)
 │   │   └── context_ledger.public.yaml        # Client-facing sanitized status projection
 │   ├── contracts/                          # Cross-module interface specifications
-│   │   ├── ble_gatt_spec.yaml              # Shared BLE UUIDs, characteristics & permissions
-│   │   ├── mtls_provisioning_contract.json # mTLS CSR/CRT payload exchange schema
-│   │   └── ota_firmware_manifest.json      # Binary header & ECDSA signature format
+│   │   ├── service_contract.yaml           # Shared API specifications & endpoint contracts
+│   │   ├── event_stream_spec.yaml          # Async event stream schema (AsyncAPI)
+│   │   └── common_schema.json              # Shared entity and DTO schemas
 │   ├── schemas/                            # Sealed validation schemas (RAM-enclave)
 │   │   ├── context_ledger_schema.yaml
 │   │   ├── recovery_point_schema.yaml
@@ -733,24 +733,24 @@ graph TD
 │   │   ├── protos/
 │   │   └── generated/
 │   ├── modules/
-│   │   ├── iot_node/                       # IoT Space module
-│   │   │   ├── config/                     # Device pinouts, partition tables, mTLS configs
-│   │   │   ├── src/                        # FreeRTOS / Zephyr C/C++ firmware
-│   │   │   └── tests/                      # Hardware-in-the-loop & QEMU unit tests
-│   │   └── mobile_app/                     # Mobile Space module
-│   │       ├── config/                     # KMP settings, bundle IDs, Bluetooth permissions
-│   │       ├── src/                        # Kotlin Multiplatform, Compose, SwiftUI
-│   │       └── tests/                      # UI tests, BLE mock tests
+│   │   ├── mod_core_service/               # Backend Core Service module
+│   │   │   ├── config/                     # Database, service ports, auth configs
+│   │   │   ├── src/                        # Service business logic & REST/gRPC handlers
+│   │   │   └── tests/                      # Unit & contract test fixtures
+│   │   └── mod_client_portal/              # Client Portal / Consumer module
+│   │       ├── config/                     # Portal bundle settings, client routes
+│   │       ├── src/                        # Client UI, API client adapters, state store
+│   │       └── tests/                      # Client component & integration tests
 │   ├── tests/
 │   │   └── integration/                    # End-to-end cross-module integration tests
-│   │       └── test_mobile_iot_e2e.py
+│   │       └── test_cross_module_e2e.py
 │   ├── templates/
 │   │   ├── packaging/                      # Plan compilation and obfuscation tools
 │   │   │   ├── plan_pack_compiler.py
 │   │   │   └── envelope_hydrator.py
 │   │   ├── bridge/                         # Virtual simulation loopback bridge
-│   │   │   ├── virtual_ble_bridge.py
-│   │   │   └── mock_iot_peripheral.py
+│   │   │   ├── virtual_service_bridge.py
+│   │   │   └── mock_service_daemon.py
 │   │   ├── concurrency/
 │   │   │   ├── worktree_manager.py
 │   │   │   └── atomic_gate_merger.py
@@ -761,8 +761,8 @@ graph TD
 │       └── parent_context_engineering_guide.md
 └── user/
     ├── inputs/
-    │   ├── iot_mvs_spec.yaml
-    │   └── mobile_mvs_spec.yaml
+    │   ├── core_service_mvs_spec.yaml
+    │   └── client_portal_mvs_spec.yaml
     ├── hitl/
     │   ├── clr_sample_request.md
     │   └── poisoning_quarantine.md
@@ -787,9 +787,9 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`context/`** | Master Ledger Schema | `context/schemas/context_ledger_schema.yaml` | JSON Schema Draft-07 | Syntax & Schema Validation | **Encrypted in .nbpack & RAM Enclave** |
 | **`context/`** | Recovery Point Schema | `context/schemas/recovery_point_schema.yaml` | JSON Schema Draft-07 | Snapshot Contract Validation | **Encrypted in .nbpack & RAM Enclave** |
 | **`context/`** | Ledger Block Chain Schema | `context/schemas/ledger_chain_schema.yaml` | JSON Schema Draft-07 | Merkle Header Conformance | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Cross-Module BLE GATT Contract | `context/contracts/ble_gatt_spec.yaml` | YAML Contract | `gate_cross_module_compatibility` | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Cross-Module mTLS Spec | `context/contracts/mtls_provisioning_contract.json`| JSON Payload Contract | CSR/CRT Signature Validation | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | OTA Update Binary Manifest | `context/contracts/ota_firmware_manifest.json` | JSON Header Spec | ECDSA / SHA-256 Hash Matching | **Encrypted in .nbpack & RAM Enclave** |
+| **`context/`** | Cross-Module Service Contract | `context/contracts/service_contract.yaml` | YAML OpenAPI Contract | `gate_cross_module_compatibility` | **Encrypted in .nbpack & RAM Enclave** |
+| **`context/`** | Cross-Module Event Spec | `context/contracts/event_stream_spec.yaml` | AsyncAPI YAML Contract | Payload & Event Validation | **Encrypted in .nbpack & RAM Enclave** |
+| **`context/`** | Cross-Module Entity Schema | `context/contracts/common_schema.json` | JSON Schema Contract | Schema Compatibility Check | **Encrypted in .nbpack & RAM Enclave** |
 | **`context/`** | Maturity Report Template | `context/reports/context_maturity_report_template.md`| Markdown Template | 6-Dimensional Score Evaluation | **Encrypted in .nbpack & RAM Enclave** |
 | **`agentic/`** | Master System Prompt | `agentic/prompts/system_prompt.md` | Markdown Prompt | Quad-Space Invariant Assertion | **Encrypted in .nbpack & RAM Enclave** |
 | **`agentic/`** | Bootstrapping Prompt | `agentic/prompts/bootstrapping_prompt.md` | Markdown Prompt | Dual-Mode Folder Scaffolding | **Encrypted in .nbpack & RAM Enclave** |
@@ -807,8 +807,8 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Issue Tracker MCP Config | `workplace/config/issue_tracker_mcp.yaml` | YAML Config | Jira MCP Server Binding | **Active & Verified** |
 | **`workplace/`**| Plan Pack Compiler | `workplace/templates/packaging/plan_pack_compiler.py` | Python 3 CLI | Ed25519 / AES-256-GCM Packaging | **Active & Verified** |
 | **`workplace/`**| Enclave Runtime Hydrator | `workplace/templates/packaging/envelope_hydrator.py` | Python 3 CLI | RAM-Enclave Memory Hydration | **Active & Verified** |
-| **`workplace/`**| Virtual BLE Loopback Bridge | `workplace/templates/bridge/virtual_ble_bridge.py` | Python 3 Async Socket| Local Virtual Integration Loopback | **Active & Verified** |
-| **`workplace/`**| Mock IoT Peripheral Emulator | `workplace/templates/bridge/mock_iot_peripheral.py` | Python 3 Daemon | Synthetic GATT Telemetry Stream | **Active & Verified** |
+| **`workplace/`**| Virtual Service Loopback Bridge | `workplace/templates/bridge/virtual_service_bridge.py` | Python 3 Async Socket| Local Virtual Integration Loopback | **Active & Verified** |
+| **`workplace/`**| Mock Service Daemon Emulator | `workplace/templates/bridge/mock_service_daemon.py` | Python 3 Daemon | Synthetic Service Telemetry Stream | **Active & Verified** |
 | **`workplace/`**| Worktree Lease Manager | `workplace/templates/concurrency/worktree_manager.py`| Python 3 CLI | Ephemeral Worktree Provisioning | **Active & Verified** |
 | **`workplace/`**| Atomic Verification Gate Merger | `workplace/templates/concurrency/atomic_gate_merger.py`| Python 3 CLI | Gate Enforcement & Git Atomic Merge| **Active & Verified** |
 | **`workplace/`**| Surgical Rollback Manager | `workplace/templates/recovery/surgical_rollback_manager.py`| Python 3 CLI | Module-Scoped State Rewind | **Active & Verified** |
@@ -848,10 +848,10 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 Verification is performed by executing the Parent Master Prompt Suite against synthetic single-module and multi-module MVS packages:
 1. **Plan & Proprietary Space Obfuscation Verification Test**: Verify that compiling with `percipience pack --include-spaces context,agentic` produces an Ed25519-signed `.nbpack` bundle. Verify that initializing via `percipience init --parent-plan parent_master.nbpack` decrypts cleanly into RAM enclave without leaving plaintext markdown or YAML files for `context/` and `agentic/` on client disk.
 2. **Single-Module Integrity Test**: Verify that initializing a single-module project produces zero nested folder bloat, uses flat `workplace/src/` and `workplace/config/`, and executes the complete lifecycle without multi-module overhead.
-3. **Multi-Module Bootstrapping Test**: Initialize a multi-module project (`mode: multi_module`) with IoT and Mobile specs; verify deterministic creation of `context/contracts/`, `workplace/shared/`, and `workplace/modules/`.
-4. **Cross-Module Contract Compatibility Gate Test**: Intentionally alter a characteristic UUID in `ble_gatt_spec.yaml`; verify `gate_cross_module_compatibility` flags the breaking change before merging.
-5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Mobile module; verify that only the Mobile module rolls back to its recovery point (`RP_MOB_004`), leaving the IoT firmware builds (`RP_IOT_003`) completely untouched.
-6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the Mobile simulator client interacts with the mock IoT peripheral over loopback, confirming pairing, telemetry rendering, and OTA binary streaming.
+3. **Multi-Module Bootstrapping Test**: Initialize a multi-module project (`mode: multi_module`) with Core Service and Client Portal specs; verify deterministic creation of `context/contracts/`, `workplace/shared/`, and `workplace/modules/`.
+4. **Cross-Module Contract Compatibility Gate Test**: Intentionally alter an endpoint payload schema in `service_contract.yaml`; verify `gate_cross_module_compatibility` flags the breaking change before merging.
+5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Client Portal module; verify that only the Client Portal module rolls back to its recovery point (`RP_PORTAL_004`), leaving the Core Service builds (`RP_CORE_003`) completely untouched.
+6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the client application simulator interacts with the mock service daemon over loopback, confirming request routing, payload rendering, and event streaming.
 7. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
 
 ---
@@ -862,7 +862,7 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 Establish the machine-readable YAML schemas for `context_ledger.yaml` supporting `mode: single_module | multi_module`, module registries, cross-module contracts, Merkle hash chaining, plan security parameters, and surgical recovery points.
 
 - Define `context_ledger_schema.yaml` supporting `mode`, `modules`, `contracts`, `ledger_chain`, `plan_security`, `model_tiering_policy`, `worktrees`, `semantic_parity`, `quarantined_tests`, `recovery_points`, `poisoning_incidents`, `git_commits`, `remaining_issues`, and `standard_issue_checklist`.
-- Formulate cross-module contract specifications in `context/contracts/` (`ble_gatt_spec.yaml`, `mtls_provisioning_contract.json`, `ota_firmware_manifest.json`).
+- Formulate cross-module contract specifications in `context/contracts/` (`service_contract.yaml`, `event_stream_spec.yaml`, `common_schema.json`).
 
 ### Step 2: Quad-Space Bootstrapping Metaprompt (Dual-Mode Aware)
 Develop system and bootstrapping prompts establishing Claude's role as the Parent Context Engineering Orchestrator supporting both single-module simplicity and poly-module coordination.
@@ -879,7 +879,7 @@ Build scripts and prompt handlers for module isolation and contract compatibilit
 ### Step 4: Develop Cross-Module Simulation Loopback Bridge
 Build virtual emulation bridges linking heterogeneous domain components.
 
-- Scaffold `virtual_ble_bridge.py` and `mock_iot_peripheral.py` in `workplace/templates/bridge/`.
+- Scaffold `virtual_service_bridge.py` and `mock_service_daemon.py` in `workplace/templates/bridge/`.
 - Wire up integration test runners in `workplace/tests/integration/`.
 
 ### Step 5: Develop Git Worktree Concurrency & Atomic Gate Merger Templates
@@ -919,3 +919,11 @@ Build CLI tools and cryptographic packers (`percipience pack`) for obfuscating a
 
 - Scaffold `plan_pack_compiler.py` and `envelope_hydrator.py` in `workplace/templates/packaging/`.
 - Wire `percipience pack --include-spaces context,agentic` and `percipience init --parent-plan <file.nbpack>` into the CLI runner to ensure proprietary trade secrets, metaprompts, and architectural blueprints are never exposed in plaintext on the client filesystem.
+
+---
+
+### Domain-Specific Layering Architecture
+The Parent Master Plan deliberately provides generic, domain-agnostic abstractions (`mod_core_service`, `mod_client_portal`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific systems (embedded hardware, BLE wireless protocols, medical devices, neural training pipelines) are defined in dedicated **Layerable Context Engineering Plans** that overlay on top of this framework:
+
+- **IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md) (covers BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
+- **Enterprise SaaS & Web Platforms**: Defined in [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md) (covers multi-tenant cloud portals, ROI calculators, REST API gateways, and interactive observability hubs).
