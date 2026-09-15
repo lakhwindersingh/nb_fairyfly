@@ -19,7 +19,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 10. **Multi-Dimensional Context Maturity Evaluation Report**: A comprehensive, quantitative evaluation matrix in `user/outputs/` and `context/reports/` assessing project context across six dimensions (Requirement Coverage, Architecture & Design Grounding, Code & Config Quality, Test & Verification Coverage, Security & Compliance, and Token/GenAI Efficiency).
 11. **Master Context Ledger (`context_ledger.yaml`) with Integrated Git Commit & Issue Tracker**: A machine-readable DAG in `context/` that logs all artifact lineage, tracks issued Git commits with full requirement traceability, manages open remaining issues, enforces a standard checklist of common technical issues, captures model-suggested improvements, and registers recovery point snapshots in a standardized format.
 12. **Universal Quad-Space Clean Folder Bootstrapping & Multi-Agent Flow**: Standardized scaffolding strictly partitioning customer-owned mutable directories (`workplace/` with `config/`, and `user/` with `inputs/`, `hitl/`, `outputs/`) from Neutron Binary proprietary logic (`context/` and `agentic/`). In enterprise deployments, `context/` (governance, schemas, DAG state engine) and `agentic/` (system prompts, bootstrapping/derivation metaprompts, model tiering router, workflows) are obfuscated, compiled, and cryptographically sealed inside `.nbpack` envelopes, hydrated exclusively inside an in-memory enclave to protect proprietary IP while leaving customer workspaces clean.
-13. **Zero-Overhead Dual-Mode Architecture (Single-Module vs. Poly-Module Ecosystem)**: A dual-operating mode configured via `project.mode: single_module | multi_module`. In `single_module` mode, the framework maintains absolute simplicity with zero nested directory overhead (flat `workplace/src/` and `workplace/config/`). In `multi_module` mode, the framework coordinates heterogeneous multi-system projects (such as client web/mobile portals communicating with core backend services, event-driven microservices, or distributed data/ML pipelines) via isolated module subtrees (`workplace/modules/<module_id>/`), shared wire contracts (`workplace/shared/protos/` or schemas), cross-module interface specifications (`context/contracts/`), surgical module-scoped rollbacks, and virtual simulator loopback bridges.
+13. **Zero-Overhead Dual-Mode Architecture (Single-Module vs. Poly-Module Ecosystem)**: A dual-operating mode configured via `project.mode: single_module | multi_module`. In `single_module` mode, the framework maintains absolute simplicity with zero nested directory overhead (flat `workplace/src/` and `workplace/config/`). In `multi_module` mode, the framework coordinates heterogeneous multi-system projects (such as consumer interfaces communicating with provider services, event-driven microservices, or distributed data/ML pipelines) via isolated module subtrees (`workplace/modules/<module_id>/`), shared wire contracts (`workplace/shared/protos/` or schemas), cross-module interface specifications (`context/contracts/`), surgical module-scoped rollbacks, and virtual simulator loopback bridges.
 14. **Proprietary Context & Agentic Space Obfuscation, Anti-Exfiltration & Cryptographic Package Sealing (`.nbpack`)**: A binary compilation, AST minification, and authenticated envelope encryption engine (`percipience pack`). Compiles proprietary markdown master plans, `agentic/` prompt suites, and `context/` governance/schema machinery into tamper-proof, Ed25519-signed AES-256-GCM binary envelopes (`.nbpack`). Hydrates both proprietary spaces directly into volatile RAM / secure sandbox memory without persisting plaintext files to the client's physical filesystem, preventing intellectual property theft, prompt injection, and LLM context exfiltration during `percipience init`.
 15. **External Issue Tracker & Jira MCP Server Integration Layer**: A bi-directional Model Context Protocol (MCP) bridge connecting enterprise issue tracking systems (Jira Software, Linear, GitHub Issues, Azure DevOps). The engine continuously polls or subscribes to Jira via MCP servers (e.g., `@modelcontextprotocol/server-jira`), ingests "Ready for Dev" stories directly into the MVS processing queue, drives subagents through derivation and test verification, and automatically synchronizes issue states, test evidence, and Merkle block audit proofs back to Jira upon completion.
 16. **Autonomous Closed-Loop CI/CD Triad (Self-Sustaining, Self-Recovering, Self-Improving)**: A fully autonomous continuous delivery engine (`workplace/core/autonomous_cicd.py`) that elevates CI/CD from a passive blocker to an active, closed-loop orchestrator. It comprises three unified capabilities:
@@ -28,7 +28,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
     - *Self-Improving*: Analyzes post-run pipeline telemetry, dynamically calibrates AST pruning thresholds (escalating from standard body stripping to aggressive internal helper pruning for high-token files to capture $+12.5\%$ additional savings), aligns prompt cache prefixes, and persists lessons learned into `context/ledger/self_improving_ledger.yaml`.
 17. **Extensible Custom Agent Plugin Architecture & Workflow DAG Injection**: A standardized plugin model and engine (`workplace/core/agent_plugin_engine.py`) allowing teams to scaffold, configure, and integrate custom agent specialists into existing workflow DAGs (e.g. `agentic/workflows/pr_gatekeeper.yaml`). Follows the *Healthy Integration Pattern* enforcing ephemeral worktree sandboxing, AST token budgeting, pre/post contract verification, and cryptographic Merkle state sealing (`RP_AGENT_*`). If a custom plugin injects anomalies, the engine triggers surgical rollback to recovery points without collateral disruption.
 18. **Production Token FinOps & Rev-Share Performance Metering Engine**: An integrated financial observability engine (`workplace/core/token_tracker.py`) that captures raw vs. AST-pruned token metrics across heterogeneous languages in real time. Automatically logs transparent accounting entries to `context/ledger/token_savings_ledger.yaml`, computing gross customer savings ($0.003/1K tokens) and 15% rev-share performance fees, backed by automated scorecard and whitepaper generation (`user/outputs/token_savings_report.md`, `user/outputs/token_savings_whitepaper.md`).
-19. **5-Tab Enterprise Context Observability Hub & Decoupled SaaS Portal Gateway**: A unified, zero-dependency browser observability control plane (`user/outputs/dashboard/index.html`) coupled with a production-grade HTTP/API gateway server (`workplace/portal/server.py`). Features 5 specialized operational tabs: (1) 6-Dimensional Context Maturity Radar & Remediation Diagnostics, (2) Autonomous Agent Swarm & Custom Plugin Manager, (3) Declarative Workflow DAGs & Invariant Gates, (4) FinOps Token Metering & ROI Calculator, and (5) Autonomous CI/CD Triad & Self-Healing Control Plane.
+19. **5-Tab Enterprise Context Observability Hub & Telemetry Gateway**: A unified, zero-dependency browser observability control plane (`user/outputs/dashboard/index.html`) coupled with a production-grade HTTP/API gateway server (`workplace/portal/server.py`). Features 5 specialized operational tabs: (1) 6-Dimensional Context Maturity Radar & Remediation Diagnostics, (2) Autonomous Agent Swarm & Custom Plugin Manager, (3) Declarative Workflow DAGs & Invariant Gates, (4) FinOps Token Metering & ROI Calculator, and (5) Autonomous CI/CD Triad & Self-Healing Control Plane.
 20. **3-Tier Layered Context Precedence Hierarchy & Bring-Your-Own-Repository (BYOR) Adapter**: A security and configuration architecture (`workplace/core/layered_context_validator.py`, `workplace/core/byor_adapter.py`) that enforces non-overridable platform invariants:
     - *Tier 1 (Base Platform Invariants)*: Core security contracts, Merkle schemas, and tamper proofs in `context/invariants/` (or encrypted `.nbpack` enclaves) that cannot be overridden by user prompts.
     - *Tier 2 (Enterprise Global Rules)*: Organization-wide policies and API contracts in `context/rules/` and `context/contracts/`.
@@ -46,8 +46,8 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Formal interface contract management in `context/contracts/` (OpenAPI 3.1 specifications, JSON Schema definitions, gRPC/Protobuf DTOs, AsyncAPI event streams, and shared data schemas).
   - Independent verification gate (`gate_contract_compatibility`) validating that producer modules and consumer modules adhere strictly to shared contracts before merging.
 - **Surgical Module-Scoped Poisoning Isolation & Rollback**:
-  - Module-scoped recovery points in `context_ledger.yaml` (e.g., `RP_CORE_003`, `RP_PORTAL_004`) alongside global system snapshots (`RP_SYS_001`).
-  - Targeted rollback capability: when context poisoning or contract drift occurs in one module (e.g., client portal schema mismatch or API payload drift), only the contaminated module is rolled back and quarantined; unaffected modules (e.g., core backend engine or data worker) remain untouched, preventing collateral re-compilation and token waste.
+  - Module-scoped recovery points in `context_ledger.yaml` (e.g., `RP_PROV_003`, `RP_CONS_004`) alongside global system snapshots (`RP_SYS_001`).
+  - Targeted rollback capability: when context poisoning or contract drift occurs in one module (e.g., consumer interface schema mismatch or API payload drift), only the contaminated module is rolled back and quarantined; unaffected modules (e.g., provider service engine or data worker) remain untouched, preventing collateral re-compilation and token waste.
 - **Virtual End-to-End Emulation & Simulator Bridge**:
   - Cross-module test harnesses wiring together heterogeneous component emulators (e.g., client application simulator communicating with backend service daemon over a local virtual loopback socket or mock API bridge) for automated end-to-end integration validation.
 - **Multi-Format MVS Ingestion & Parsing Engine**: Standardized ingestion templates in `user/inputs/templates/` (and `input/templates/`) supporting 6 industry-standard formats: Markdown Feature Specs (`mvs_feature_spec.md`), OpenAPI 3.1 Schemas (`mvs_api_contract.yaml`), AsyncAPI Event Streams (`mvs_event_stream.yaml`), ADR System Blueprints (`mvs_adr_blueprint.md`), Structured Jira Issues (`mvs_jira_story.json`), and UI Design Tokens (`mvs_design_tokens.json`).
@@ -90,7 +90,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Token FinOps & Rev-Share Performance Metering Engine**:
   - Real-time token tracking in `workplace/core/token_tracker.py` logging to `context/ledger/token_savings_ledger.yaml`.
   - Automated generation of executive scorecard (`user/outputs/token_savings_report.md`) and benchmark whitepaper (`user/outputs/token_savings_whitepaper.md`).
-- **Enterprise Context Observability Hub & Cloud SaaS Portal**:
+- **Enterprise Context Observability Hub & Telemetry Gateway**:
   - Interactive 5-tab browser control plane (`user/outputs/dashboard/index.html`) with real-time REST API integration (`workplace/portal/server.py`).
   - Self-healing trigger, agent plugin manager, ROI calculator, and context maturity radar with automated remediation playbooks.
 - **3-Tier Layered Context Precedence Hierarchy & Multi-VCS BYOR Adapter**:
@@ -121,7 +121,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **As an AI Systems Architect & Lead**, I want a universal parent context engineering plan so that any project domain (IoT, GenAI, Web, Mobile, Neural, DB Migration) adopts a standardized, mature agentic structure with zero drift.
 - **As a Poly-Module Solution Architect**, I want a unified space to manage multi-module systems (e.g., Client Application communicating with Core Backend Service via shared wire contracts) without breaking the simple structure of standalone single-module projects.
 - **As a Polyglot Systems Lead**, I want versioned cross-module interface contracts in `context/contracts/` so that changes to API schemas, gRPC definitions, or event payloads are automatically verified against all producer and consumer modules before merge.
-- **As a System Reliability Engineer**, I want surgical module-scoped rollbacks so that if context poisoning occurs in a client portal or UI layer, only the contaminated module is rolled back and replayed without throwing away verified core service builds.
+- **As a System Reliability Engineer**, I want surgical module-scoped rollbacks so that if context poisoning occurs in a consumer interface or client module, only the contaminated module is rolled back and replayed without throwing away verified provider service builds.
 - **As a QA & Systems Engineer**, I want an automated end-to-end simulator bridge linking client application test suites with virtual service daemons so that full request/response, event streams, and contract lifecycles can be validated autonomously.
 - **As an Autonomous Software Product Owner**, I want the agent suite to operate autonomously starting from a Minimum Viable Set (MVS) of sparse inputs so that complete systems are derived, built, tested, and documented with minimal manual overhead.
 - **As a Financial & Engineering Manager**, I want dynamic multi-model cascading and context compression so that long-running agent workflows reduce token expenses by up to 70% by routing lightweight tasks to fast models and caching static prompt prefixes.
@@ -233,7 +233,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Code generators (`protoc`, code-stubs) compile these contracts into module stubs in `workplace/shared/generated/`.
 - **Surgical Module Rollbacks**:
   - In multi-module mode, recovery points are scoped by `module_scope: <module_id> | global_system`.
-  - If context poisoning occurs in `mod_client_portal` (e.g., hallucinated endpoint or invalid payload schema), only the `mod_client_portal` working tree and its ledger nodes are rewound. The `mod_core_service` remains untouched.
+  - If context poisoning occurs in `mod_service_consumer` (e.g., hallucinated endpoint or invalid payload schema), only the `mod_service_consumer` working tree and its ledger nodes are rewound. The `mod_service_provider` remains untouched.
 - **End-to-End Emulation Bridge**:
   - In integrated systems, client and service components are connected via virtual loopback sockets (e.g., WebSocket/TCP bridge or mock HTTP server) allowing automated end-to-end integration tests to execute in CI/CD without external infrastructure.
 - **Quad-Space Clean Folder Architecture**: Standardize on four isolated top-level clean folders:
@@ -269,7 +269,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **3-Tier Layered Context Precedence Hierarchy & BYOR Multi-VCS Adapter**:
   - Guarantees Tier 1 (Platform Invariants / Enclave) cannot be overridden by user prompts or custom schemas.
   - Native BYOR adapter (`BYORAdapter`) connecting self-hosted GitLab, GitHub Enterprise, and Bitbucket Data Center with SSH deploy keys and internal Root CA validation.
-- **Decoupled Enterprise Observability Hub & SaaS Portal**:
+- **Decoupled Enterprise Observability Hub & Telemetry Gateway**:
   - Zero-dependency interactive 5-tab dashboard (`user/outputs/dashboard/index.html`) backed by production HTTP/API gateway (`workplace/portal/server.py`).
 
 ---
@@ -337,29 +337,29 @@ ledger_chain:
 
 # Module Registry for Multi-Module Mode
 modules:
-  - id: "mod_core_service"
-    name: "Core Business & State Service"
-    path: "workplace/modules/mod_core_service"
-    domain: "Core Business Logic & API Engine"
+  - id: "mod_service_provider"
+    name: "Core Business & State Provider Service"
+    path: "workplace/modules/mod_service_provider"
+    domain: "Provider Engine & Business Logic"
     tech_stack: "Python / FastAPI / SQLModel"
     maturity: "Scaffolded"
-    current_recovery_point: "RP_CORE_003"
+    current_recovery_point: "RP_PROV_003"
 
-  - id: "mod_client_portal"
-    name: "Client Portal & Consumer App"
-    path: "workplace/modules/mod_client_portal"
-    domain: "Web Client, UI & API Consumer"
+  - id: "mod_service_consumer"
+    name: "Downstream Consumer & Client Application"
+    path: "workplace/modules/mod_service_consumer"
+    domain: "Interface Layer & API Consumer"
     tech_stack: "TypeScript / React / Tailwind"
     maturity: "Scaffolded"
-    current_recovery_point: "RP_PORTAL_004"
+    current_recovery_point: "RP_CONS_004"
 
 # Versioned Cross-Module Interface Contracts
 contracts:
   - id: "contract_service_api"
     name: "Core Service OpenAPI Interface"
     spec_path: "context/contracts/service_contract.yaml"
-    producer_module: "mod_core_service"
-    consumer_modules: ["mod_client_portal"]
+    producer_module: "mod_service_provider"
+    consumer_modules: ["mod_service_consumer"]
     version: "1.2.0"
     hash: "d4e5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
     status: "Verified_Compatible"
@@ -367,8 +367,8 @@ contracts:
   - id: "contract_event_stream"
     name: "Async Event Stream Specification"
     spec_path: "context/contracts/event_stream_spec.yaml"
-    producer_module: "mod_core_service"
-    consumer_modules: ["mod_client_portal"]
+    producer_module: "mod_service_provider"
+    consumer_modules: ["mod_service_consumer"]
     version: "2.0.0"
     hash: "a1b2c3d4e5f67890123456789abcdef012345678"
     status: "Verified_Compatible"
@@ -390,18 +390,18 @@ token_optimization:
   estimated_token_savings_pct: 66.4
 
 worktrees:
-  - worktree_id: "wt_core_dev_01"
-    subagent_role: "agent_service_developer"
-    module_scope: "mod_core_service"
-    branch: "feature/core-service"
-    path: ".workspaces/core_dev_01"
+  - worktree_id: "wt_provider_dev_01"
+    subagent_role: "agent_provider_developer"
+    module_scope: "mod_service_provider"
+    branch: "feature/provider-service"
+    path: ".workspaces/provider_dev_01"
     status: "Active"
     isolated_commits: 4
-  - worktree_id: "wt_portal_dev_01"
-    subagent_role: "agent_client_developer"
-    module_scope: "mod_client_portal"
-    branch: "feature/client-portal"
-    path: ".workspaces/portal_dev_01"
+  - worktree_id: "wt_consumer_dev_01"
+    subagent_role: "agent_consumer_developer"
+    module_scope: "mod_service_consumer"
+    branch: "feature/consumer-service"
+    path: ".workspaces/consumer_dev_01"
     status: "Active"
     isolated_commits: 3
 
@@ -413,16 +413,16 @@ semantic_parity:
   reconciliation_mode: "Revert"
 
 recovery_points:
-  - snapshot_id: "RP_CORE_003"
-    module_scope: "mod_core_service"
+  - snapshot_id: "RP_PROV_003"
+    module_scope: "mod_service_provider"
     timestamp: "2026-09-13T14:40:00Z"
     git_commit_sha: "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b"
     clean_artifacts_hash: "3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b"
     verified_maturity: "Scaffolded"
     status: "Active_Clean"
 
-  - snapshot_id: "RP_PORTAL_004"
-    module_scope: "mod_client_portal"
+  - snapshot_id: "RP_CONS_004"
+    module_scope: "mod_service_consumer"
     timestamp: "2026-09-13T14:45:00Z"
     git_commit_sha: "1f2e3d4c5b6a7890123456789abcdef012345678"
     clean_artifacts_hash: "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d"
@@ -441,9 +441,9 @@ poisoning_incidents:
   - incident_id: "POI_002"
     detected_at: "2026-09-13T14:42:00Z"
     culprit_type: "Payload_Schema_Contract_Mismatch"
-    culprit_module: "mod_client_portal"
-    isolated_from: ["mod_core_service"]
-    rolled_back_to: "RP_PORTAL_004"
+    culprit_module: "mod_service_consumer"
+    isolated_from: ["mod_service_provider"]
+    rolled_back_to: "RP_CONS_004"
     quarantine_file: "user/hitl/poisoning_quarantine.md"
     replay_status: "Successfully_Replayed"
 
@@ -465,19 +465,19 @@ artifacts:
     hash: "d4e5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
     maturity: "Derived"
 
-  - id: "art_core_service_01"
+  - id: "art_provider_service_01"
     name: "service_handler.py"
     type: "SourceCode"
-    source: "workplace/modules/mod_core_service/src/service_handler.py"
-    module: "mod_core_service"
+    source: "workplace/modules/mod_service_provider/src/service_handler.py"
+    module: "mod_service_provider"
     derived_from: ["art_contract_api_01"]
     maturity: "Scaffolded"
 
-  - id: "art_client_portal_01"
+  - id: "art_consumer_client_01"
     name: "client_controller.ts"
     type: "SourceCode"
-    source: "workplace/modules/mod_client_portal/src/client_controller.ts"
-    module: "mod_client_portal"
+    source: "workplace/modules/mod_service_consumer/src/client_controller.ts"
+    module: "mod_service_consumer"
     derived_from: ["art_contract_api_01"]
     maturity: "Scaffolded"
 
@@ -485,9 +485,9 @@ git_commits:
   - commit_sha: "5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d"
     timestamp: "2026-09-13T14:46:00Z"
     author: "Claude Agentic Engine <agent@antigravity.ai>"
-    message: "feat(cross-module): integrate client portal with core service contract"
-    linked_requirements: ["REQ-CORE-API-01", "REQ-PORTAL-UI-01"]
-    touched_artifacts: ["art_contract_api_01", "art_core_service_01", "art_client_portal_01"]
+    message: "feat(cross-module): integrate consumer module with provider service contract"
+    linked_requirements: ["REQ-PROVIDER-API-01", "REQ-CONSUMER-INT-01"]
+    touched_artifacts: ["art_contract_api_01", "art_provider_service_01", "art_consumer_client_01"]
 
 remaining_issues:
   - issue_id: "ISSUE-003"
@@ -539,24 +539,24 @@ workflow:
       output_artifact: "art_contract_api_01"
       verified_by_gate: "gate_arch_review"
       handoff_hook: "hook_arch_to_devs"
-    - id: "agent_service_developer"
-      role: "Core Service Specialist"
+    - id: "agent_provider_developer"
+      role: "Service Provider Specialist"
       model_tier: "Tier_A"
-      stage: "develop_core_service"
-      worktree: "wt_core_dev_01"
+      stage: "develop_provider_service"
+      worktree: "wt_provider_dev_01"
       task_status: "Verified"
-      output_artifact: "art_core_service_01"
-      verified_by_gate: "gate_service_review"
-      handoff_hook: "hook_service_to_integration"
-    - id: "agent_client_developer"
-      role: "Client Portal Specialist"
+      output_artifact: "art_provider_service_01"
+      verified_by_gate: "gate_provider_review"
+      handoff_hook: "hook_provider_to_integration"
+    - id: "agent_consumer_developer"
+      role: "Service Consumer Specialist"
       model_tier: "Tier_A"
-      stage: "develop_client_portal"
-      worktree: "wt_portal_dev_01"
+      stage: "develop_consumer_service"
+      worktree: "wt_consumer_dev_01"
       task_status: "Verified"
-      output_artifact: "art_client_portal_01"
-      verified_by_gate: "gate_portal_review"
-      handoff_hook: "hook_portal_to_integration"
+      output_artifact: "art_consumer_client_01"
+      verified_by_gate: "gate_consumer_review"
+      handoff_hook: "hook_consumer_to_integration"
     - id: "agent_integration_verifier"
       role: "Cross-Module Integration Verifier"
       model_tier: "Tier_A"
@@ -579,7 +579,7 @@ workflow:
     - id: "hook_arch_to_devs"
       trigger: "on_gate_pass:gate_arch_review"
       from_agent: "agent_architect"
-      to_agents: ["agent_service_developer", "agent_client_developer"]
+      to_agents: ["agent_provider_developer", "agent_consumer_developer"]
       payload_artifact: "art_contract_api_01"
       status: "Fired"
 ```
@@ -635,13 +635,13 @@ graph TD
   SealedPack --> Boot["percipience init --mode multi_module --parent-plan parent_master.nbpack"]
   Boot --> MemoryHydrate["In-Memory Enclave Hydrator<br/>(RAM-Only Hydration of context/ & agentic/<br/>Zero Disk Plaintext)"]
 
-  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., Core Service Spec + Client Portal Spec)"] --> B["Claude Engine - Parent System Metaprompt<br/>(Mediated via Percipience RAM Enclave)"]
+  A["Sparse User MVS Inputs in user/inputs/<br/>(e.g., Provider Spec + Consumer Spec)"] --> B["Claude Engine - Parent System Metaprompt<br/>(Mediated via Percipience RAM Enclave)"]
   MemoryHydrate --> B
   B --> C{"project.mode in context_ledger.yaml"}
   
   C -- "mode: single_module" --> SM["Single Module Scaffolding:<br/>Flat workplace/src/, workplace/config/<br/>Single Linear DAG & Global Recovery Points"]
   
-  C -- "mode: multi_module" --> MM["Poly-Module Bootstrapping:<br/>Initialize context/contracts/, workplace/shared/<br/>workplace/modules/mod_core_service/, workplace/modules/mod_client_portal/"]
+  C -- "mode: multi_module" --> MM["Poly-Module Bootstrapping:<br/>Initialize context/contracts/, workplace/shared/<br/>workplace/modules/mod_service_provider/, workplace/modules/mod_service_consumer/"]
   
   subgraph Cross-Module Contract & Model Router
     MM --> CR["Contract Derivation Engine:<br/>Generate OpenAPI, AsyncAPI, Protobuf Specs in context/contracts/"]
@@ -649,22 +649,22 @@ graph TD
   end
 
   subgraph Concurrent Sandboxed Worktrees
-    TR --> WT1["Worktree 1 (.workspaces/core_dev): agent_service_developer"]
-    TR --> WT2["Worktree 2 (.workspaces/portal_dev): agent_client_developer"]
-    WT1 --> G1["Core Service Gate (FastAPI / Contract Unit Tests)"]
-    WT2 --> G2["Client Portal Gate (React / Consumer Contract Tests)"]
+    TR --> WT1["Worktree 1 (.workspaces/provider_dev): agent_provider_developer"]
+    TR --> WT2["Worktree 2 (.workspaces/consumer_dev): agent_consumer_developer"]
+    WT1 --> G1["Provider Gate (FastAPI / Contract Unit Tests)"]
+    WT2 --> G2["Consumer Gate (Client / Interface Contract Tests)"]
   end
 
   G1 --> CCG{"Cross-Module Compatibility Gate (gate_cross_module_compatibility)"}
   G2 --> CCG
   
   subgraph End-to-End Emulation Bridge
-    CCG --> SIM["Cross-Module Simulator Loopback Bridge:<br/>Client Simulator <--> Virtual Service Loopback Mock"]
+    CCG --> SIM["Cross-Module Simulator Loopback Bridge:<br/>Consumer Simulator <--> Virtual Provider Loopback Mock"]
     SIM --> SIM_PASS{E2E Tests Pass?}
   end
 
   SIM_PASS -- Yes --> E["Atomic Merge to main & Log Multi-Module Recovery Point (RP_SYS_k)"]
-  SIM_PASS -- "Poisoning Detected in Portal" --> SRM["Surgical Rollback: Rewind Client Portal to RP_PORTAL_k<br/>Core Service remains untouched!<br/>Quarantine culprit in user/hitl/poisoning_quarantine.md"]
+  SIM_PASS -- "Poisoning Detected in Consumer" --> SRM["Surgical Rollback: Rewind Consumer to RP_CONS_k<br/>Provider Service remains untouched!<br/>Quarantine culprit in user/hitl/poisoning_quarantine.md"]
   SRM --> WT2
 
   E --> F["Reconcile Master Context Ledger & Merkle Block Chaining"]
@@ -733,14 +733,14 @@ graph TD
 │   │   ├── protos/
 │   │   └── generated/
 │   ├── modules/
-│   │   ├── mod_core_service/               # Backend Core Service module
+│   │   ├── mod_service_provider/           # Backend Core Provider Service module
 │   │   │   ├── config/                     # Database, service ports, auth configs
 │   │   │   ├── src/                        # Service business logic & REST/gRPC handlers
 │   │   │   └── tests/                      # Unit & contract test fixtures
-│   │   └── mod_client_portal/              # Client Portal / Consumer module
-│   │       ├── config/                     # Portal bundle settings, client routes
-│   │       ├── src/                        # Client UI, API client adapters, state store
-│   │       └── tests/                      # Client component & integration tests
+│   │   └── mod_service_consumer/           # Downstream Consumer / Client module
+│   │       ├── config/                     # Client bundle settings, route config
+│   │       ├── src/                        # Client interface, API client adapters, state store
+│   │       └── tests/                      # Component & contract integration tests
 │   ├── tests/
 │   │   └── integration/                    # End-to-end cross-module integration tests
 │   │       └── test_cross_module_e2e.py
@@ -761,8 +761,8 @@ graph TD
 │       └── parent_context_engineering_guide.md
 └── user/
     ├── inputs/
-    │   ├── core_service_mvs_spec.yaml
-    │   └── client_portal_mvs_spec.yaml
+    │   ├── provider_module_mvs_spec.yaml
+    │   └── consumer_module_mvs_spec.yaml
     ├── hitl/
     │   ├── clr_sample_request.md
     │   └── poisoning_quarantine.md
@@ -829,7 +829,7 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Token FinOps & Savings Tracker | `workplace/core/token_tracker.py` | Python 3 Module | Real-time AST Token Metering & 15% Rev-Share | **Active & Verified** |
 | **`workplace/`**| Multi-VCS BYOR Remote Adapter | `workplace/core/byor_adapter.py` | Python 3 Module | SSH Key & Webhook Multi-Vendor VCS Bridge | **Active & Verified** |
 | **`workplace/`**| 3-Tier Layered Context Validator | `workplace/core/layered_context_validator.py` | Python 3 Module | Platform Invariant Precedence Enforcement | **Active & Verified** |
-| **`workplace/`**| Cloud SaaS Portal & API Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Active & Verified** |
+| **`workplace/`**| Observability Telemetry Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Active & Verified** |
 | **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Active & Verified** |
 | **`agentic/`** | Agent Plugin Architecture Guide | `agentic/templates/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Active & Verified** |
 | **`context/`** | Token Savings Ledger | `context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Active & Verified** |
@@ -848,9 +848,9 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 Verification is performed by executing the Parent Master Prompt Suite against synthetic single-module and multi-module MVS packages:
 1. **Plan & Proprietary Space Obfuscation Verification Test**: Verify that compiling with `percipience pack --include-spaces context,agentic` produces an Ed25519-signed `.nbpack` bundle. Verify that initializing via `percipience init --parent-plan parent_master.nbpack` decrypts cleanly into RAM enclave without leaving plaintext markdown or YAML files for `context/` and `agentic/` on client disk.
 2. **Single-Module Integrity Test**: Verify that initializing a single-module project produces zero nested folder bloat, uses flat `workplace/src/` and `workplace/config/`, and executes the complete lifecycle without multi-module overhead.
-3. **Multi-Module Bootstrapping Test**: Initialize a multi-module project (`mode: multi_module`) with Core Service and Client Portal specs; verify deterministic creation of `context/contracts/`, `workplace/shared/`, and `workplace/modules/`.
+3. **Multi-Module Bootstrapping Test**: Initialize a multi-module project (`mode: multi_module`) with Provider Service and Consumer Module specs; verify deterministic creation of `context/contracts/`, `workplace/shared/`, and `workplace/modules/`.
 4. **Cross-Module Contract Compatibility Gate Test**: Intentionally alter an endpoint payload schema in `service_contract.yaml`; verify `gate_cross_module_compatibility` flags the breaking change before merging.
-5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Client Portal module; verify that only the Client Portal module rolls back to its recovery point (`RP_PORTAL_004`), leaving the Core Service builds (`RP_CORE_003`) completely untouched.
+5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Consumer module; verify that only the Consumer module rolls back to its recovery point (`RP_CONS_004`), leaving the Provider Service builds (`RP_PROV_003`) completely untouched.
 6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the client application simulator interacts with the mock service daemon over loopback, confirming request routing, payload rendering, and event streaming.
 7. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
 
@@ -923,7 +923,7 @@ Build CLI tools and cryptographic packers (`percipience pack`) for obfuscating a
 ---
 
 ### Domain-Specific Layering Architecture
-The Parent Master Plan deliberately provides generic, domain-agnostic abstractions (`mod_core_service`, `mod_client_portal`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific systems (embedded hardware, BLE wireless protocols, medical devices, neural training pipelines) are defined in dedicated **Layerable Context Engineering Plans** that overlay on top of this framework:
+The Parent Master Plan deliberately provides universal, domain-agnostic abstractions (`mod_service_provider`, `mod_service_consumer`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific software systems are decoupled into dedicated **Layerable Context Engineering Plans** that overlay on top of this framework via Tier 2 (Enterprise Domain Rules & Wire Contracts) and Tier 3 (Specialist Subagents & Workflow Plugins):
 
-- **IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md) (covers BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
-- **Enterprise SaaS & Web Platforms**: Defined in [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md) (covers multi-tenant cloud portals, ROI calculators, REST API gateways, and interactive observability hubs).
+- **Connected IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md) (encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
+- **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
