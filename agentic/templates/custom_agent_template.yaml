@@ -1,0 +1,89 @@
+# Percipience Custom Agent Plugin Specification & Template
+# Version: 1.0.0
+# Standard: Autonomous CI/CD Extension Pattern
+# Schema: context/schemas/custom_agent_schema.yaml
+
+metadata:
+  agent_id: "agent_custom_quality_guard"
+  name: "Autonomous Code Quality & Architecture Guard"
+  version: "1.0.0"
+  author: "Platform Engineering"
+  created_at: "2026-09-15T00:00:00Z"
+  category: "cicd_quality" # Options: cicd_quality, security, finops, self_healing, refactor
+  description: "Autonomous CI/CD plugin that analyzes AST diffs, enforces cyclomatic complexity limits, verifies type hints, and seals cryptographic Merkle proofs."
+
+model_profile:
+  model: "claude-3-5-sonnet-20241022"
+  temperature: 0.1
+  role: "Code Quality & Invariant Enforcer"
+  context_budget_tokens: 12000
+  cache_prefix_alignment: true # Enforces byte-identical prompt prefix for Anthropic 90% discount
+
+isolation_and_sandboxing:
+  worktree_isolation: true # Must execute in an ephemeral isolated Git worktree (.workspaces/wt_{agent_id})
+  default_ttl_seconds: 300
+  clean_worktree_on_exit: true
+  prevent_cross_module_leakage: true
+
+module_scope:
+  allowed_modules:
+    - "workplace/core"
+    - "workplace/modules/mod_portal_marketing"
+    - "workplace/modules/mod_observability_usage"
+  denied_paths:
+    - "context/invariants"
+    - ".git"
+    - ".workspaces"
+
+contracts_and_invariants:
+  enforce_tiered_hierarchy: true
+  target_contracts:
+    - "context/contracts/contract_schema_v2.json"
+  min_maturity_threshold: 0.85
+
+tools_and_capabilities:
+  - name: "read_ast_skeleton"
+    description: "Inspects pruned Tree-Sitter AST delta rather than raw source code"
+    handler: "workplace/core/ast_optimizer.py"
+  - name: "track_token_savings"
+    description: "Captures and logs token savings to token_savings_ledger.yaml"
+    handler: "workplace/core/token_tracker.py"
+  - name: "validate_invariants"
+    description: "Verifies 3-tier precedence context purity"
+    handler: "workplace/core/layered_context_validator.py"
+  - name: "quarantine_anomaly"
+    description: "Appends unhealable anomalies to user/hitl/poisoning_quarantine.md"
+    handler: "workplace/core/poisoning_sentinel.py"
+
+autonomous_cicd_hooks:
+  auto_trigger_in_cicd: true
+  target_workflows:
+    - workflow_id: "wf_pr_gatekeeper"
+      insertion_point: "after:step_contract_compat"
+      step_id: "step_custom_quality_guard"
+      step_name: "Run Custom Quality Guard Plugin"
+      fail_action: "AUTO_HEAL_OR_ROLLBACK" # Options: AUTO_HEAL_OR_ROLLBACK, BLOCK, WARN
+  bounded_sla:
+    max_retries: 3
+    timeout_seconds: 60
+    allow_hypothesis_patching: true
+
+cryptographic_governance:
+  seal_merkle_block_on_success: true
+  merkle_action_label: "AGENT_PLUGIN_VERIFIED (agent_custom_quality_guard)"
+  recovery_point_prefix: "RP_AGENT_QUALITY"
+  rollback_policy:
+    enabled: true
+    fallback_recovery_point: "RP_PLAY3_BOOTSTRAP_001"
+    target_module: "mod_portal_marketing"
+    auto_isolate_on_poisoning: true
+    quarantine_file: "user/hitl/poisoning_quarantine.md"
+
+system_prompt: |
+  You are an Autonomous CI/CD Quality Specialist operating within the Percipience Context Engineering OS.
+  Your task is to analyze proposed changes in your target modules and enforce:
+  1. No functions exceeding cyclomatic complexity of 15.
+  2. 100% strict type hints on exported module symbols.
+  3. Preservation of all cross-module schemas in context/contracts/.
+  4. If an issue is detected, generate a minimal unified diff patch to auto-heal within 3 bounded iterations.
+  5. Never modify invariant files in context/invariants/.

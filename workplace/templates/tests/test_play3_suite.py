@@ -23,6 +23,7 @@ from core.worktree_engine import WorktreeEngine
 from core.byor_adapter import BYORAdapter
 from core.layered_context_validator import LayeredContextValidator
 from core.token_tracker import TokenTracker
+from core.agent_plugin_engine import AgentPluginEngine
 from core.autonomous_cicd import (
     SelfSustainingEngine,
     AutonomousHealer,
@@ -155,6 +156,83 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertEqual(pipeline_res["status"], "SUCCESS")
         self.assertIn("run_id", pipeline_res)
         self.assertIn("merkle_seal", pipeline_res["stages"])
+
+    def test_12_agent_plugin_lifecycle_and_workflow_integration(self):
+        """Test Custom Agent Plugin registration, workflow integration, worktree execution, Merkle seal, and surgical rollback."""
+        # 1. Scaffold and register agent from template
+        agent_name = "test_perf_guard"
+        reg_res = AgentPluginEngine.create_agent(
+            workspace_root=REPO_ROOT,
+            name=agent_name,
+            template_type="cicd_quality",
+            role="Performance & Latency Guard",
+            model="claude-3-5-sonnet-20241022",
+            allowed_modules=["workplace/core", "workplace/modules/mod_portal_marketing"],
+            target_workflow="wf_pr_gatekeeper"
+        )
+        self.assertEqual(reg_res["status"], "REGISTERED")
+        self.assertEqual(reg_res["agent_id"], "agent_test_perf_guard")
+        self.assertTrue((REPO_ROOT / reg_res["manifest_path"]).exists())
+        self.assertIsNotNone(reg_res["merkle_block"])
+        self.assertIsNotNone(reg_res["recovery_point"])
+
+        # 2. Integrate into workflow DAG
+        integ_res = AgentPluginEngine.integrate_into_workflow(
+            workspace_root=REPO_ROOT,
+            agent_id="agent_test_perf_guard",
+            workflow_id="wf_pr_gatekeeper",
+            after_step_id="step_contract_compat"
+        )
+        self.assertEqual(integ_res["status"], "INTEGRATED")
+        self.assertEqual(integ_res["step_id"], "step_test_perf_guard")
+        self.assertIsNotNone(integ_res["merkle_block_id"])
+
+        # 3. List agents and verify discovery & workflow binding
+        agents = AgentPluginEngine.list_agents(REPO_ROOT)
+        matched = [a for a in agents if a["agent_id"] == "agent_test_perf_guard"]
+        self.assertTrue(len(matched) > 0)
+        self.assertEqual(matched[0]["category"], "cicd_quality")
+        self.assertTrue(any(w["workflow_id"] == "wf_pr_gatekeeper" for w in matched[0]["workflow_bindings"]))
+
+        # 4. Execute task in sandboxed worktree with Merkle seal
+        exec_res = AgentPluginEngine.execute_agent_task(
+            workspace_root=REPO_ROOT,
+            agent_id="agent_test_perf_guard",
+            task_description="Verify AST complexity in mod_portal_marketing",
+            target_module="mod_portal_marketing",
+            auto_rollback_on_failure=True
+        )
+        self.assertEqual(exec_res["status"], "SUCCESS")
+        self.assertIsNotNone(exec_res["merkle_block_id"])
+        self.assertIsNotNone(exec_res["recovery_point_id"])
+
+        # 5. Surgical Rollback capability
+        rb_res = AgentPluginEngine.rollback_agent(
+            workspace_root=REPO_ROOT,
+            agent_id="agent_test_perf_guard",
+            target_module="mod_portal_marketing",
+            target_point="RP_PLAY3_BOOTSTRAP_001"
+        )
+        self.assertEqual(rb_res["status"], "ROLLED_BACK")
+        self.assertIsNotNone(rb_res["merkle_block_id"])
+
+        # 6. Verify Merkle chain continuity holds
+        chain_verified = MerkleEngine.verify_chain(REPO_ROOT)
+        self.assertTrue(chain_verified)
+
+        # 7. Cleanup test artifacts
+        test_file = REPO_ROOT / reg_res["manifest_path"]
+        if test_file.exists():
+            test_file.unlink()
+        wf_file = REPO_ROOT / "agentic" / "workflows" / "pr_gatekeeper.yaml"
+        if wf_file.exists():
+            import yaml
+            with open(wf_file, "r", encoding="utf-8") as f:
+                d = yaml.safe_load(f)
+            d["steps"] = [s for s in d.get("steps", []) if s.get("id") != "step_test_perf_guard"]
+            with open(wf_file, "w", encoding="utf-8") as f:
+                yaml.dump(d, f, sort_keys=False)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -388,7 +388,11 @@ percipience_gatekeeper:
 | `./bin/percipience worktree list` | View active worktree leases and remaining TTL. |
 | `./bin/percipience worktree release --agent <id>` | Release and prune an ephemeral Git worktree lease. |
 | `./bin/percipience rollback --module <id> --target-point <RP>` | Surgically rewind a specific module to a clean recovery point snapshot. |
-| `./bin/percipience agent create --name <name>` | Scaffold a custom unencrypted agent definition in `agentic/custom/agents/`. |
+| `./bin/percipience agent create --name <name> [--template <type>]` | Scaffold custom agent from healthy plugin template and seal Merkle block (`RP_AGENT_REGISTER_*`). |
+| `./bin/percipience agent integrate --agent <id> --workflow <wf_id> [--after <step>]` | Dynamically inject custom agent into workflow DAG, validate dependencies, and seal Merkle block. |
+| `./bin/percipience agent run --agent <id> [--module <mod>] [--task <desc>]` | Execute agent in ephemeral sandboxed worktree with AST token metering, invariant checks, and Merkle seal. |
+| `./bin/percipience agent rollback --agent <id> [--module <mod>] [--recovery-point <RP>]` | Surgically rollback an agent's changes to a recovery point without disrupting sibling modules. |
+| `./bin/percipience agent list` | List all registered custom agent plugins, categories, and workflow bindings. |
 | `./bin/percipience agent test --agent <name> [--dry-run]` | Test custom agent syntax, tool bindings, and AST diff execution in a sandbox. |
 | `./bin/percipience validate --layered` | Verify that unencrypted custom context and schemas adhere to platform invariants. |
 | `./bin/percipience repo connect --url <git_url> --auth-type <ssh_key|pat>` | Connect a self-hosted or cloud Git repository (BYOR) with SSH deploy keys. |

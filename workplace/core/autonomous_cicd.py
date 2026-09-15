@@ -211,6 +211,31 @@ class AutonomousCICDOrchestrator:
             "gross_savings_usd": summary.get("total_gross_savings_usd", 0.0)
         }
 
+        # Stage 2.5: Custom Agent Plugins Execution
+        try:
+            from core.agent_plugin_engine import AgentPluginEngine
+            registered_agents = AgentPluginEngine.list_agents(repo_root)
+            active_plugins = [
+                a for a in registered_agents
+                if any(w.get("workflow_id") == "wf_pr_gatekeeper" for w in a.get("workflow_bindings", []))
+            ]
+            plugin_results = []
+            for agent in active_plugins:
+                p_res = AgentPluginEngine.execute_agent_task(
+                    workspace_root=repo_root,
+                    agent_id=agent["agent_id"],
+                    task_description=f"Autonomous CI/CD quality & invariant check by {agent['name']}",
+                    target_module="mod_portal_marketing",
+                    auto_rollback_on_failure=True
+                )
+                plugin_results.append(p_res)
+            pipeline_run["stages"]["custom_agent_plugins"] = {
+                "active_count": len(active_plugins),
+                "executions": plugin_results
+            }
+        except Exception as e:
+            pipeline_run["stages"]["custom_agent_plugins"] = {"error": str(e)}
+
         # Stage 3: Verification & Auto-Healing Check
         if auto_heal:
             # Check context maturity and test health

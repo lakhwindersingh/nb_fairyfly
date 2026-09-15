@@ -451,6 +451,61 @@
         </div>
       </div>
     </div>
+
+    <!-- Custom Agent Plugin Manager & Workflow Integration -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">Autonomous Extension Plane</div>
+      <h3>Custom Agent Plugin Manager &amp; Workflow Integration</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+        Register, integrate, and execute custom agent plugins governed by the Healthy Integration Pattern: Ephemeral worktree sandboxing, AST token budgeting, cryptographic Merkle DAG sealing, and sub-1.2s surgical rollback.
+      </p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        <!-- Left: Quick Actions -->
+        <div>
+          <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:8px; text-transform:uppercase;">1. Scaffold &amp; Register Agent Plugin</div>
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input id="newAgentName" type="text" placeholder="e.g. perf_optimizer" style="flex:1; background:#0f172a; border:1px solid var(--border); color:#fff; padding:8px 12px; border-radius:6px; font-size:12px;">
+            <select id="newAgentTemplate" style="background:#0f172a; border:1px solid var(--border); color:#fff; padding:8px 12px; border-radius:6px; font-size:12px;">
+              <option value="cicd_quality">cicd_quality</option>
+              <option value="security">security</option>
+              <option value="finops">finops</option>
+              <option value="self_healing">self_healing</option>
+            </select>
+            <button onclick="createCustomAgent()" style="background:var(--cyan); color:#000; border:none; padding:8px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">Scaffold</button>
+          </div>
+
+          <div style="font-size:12px; font-weight:700; color:var(--purple); margin-bottom:8px; text-transform:uppercase;">2. Workflow DAG Integration</div>
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input id="integAgentId" type="text" value="agent_quality_guard" placeholder="Agent ID" style="flex:1; background:#0f172a; border:1px solid var(--border); color:#fff; padding:8px 12px; border-radius:6px; font-size:12px;">
+            <select id="integWorkflow" style="background:#0f172a; border:1px solid var(--border); color:#fff; padding:8px 12px; border-radius:6px; font-size:12px;">
+              <option value="wf_pr_gatekeeper">wf_pr_gatekeeper</option>
+              <option value="wf_derivation_pipeline">wf_derivation_pipeline</option>
+            </select>
+            <button onclick="integrateCustomAgent()" style="background:rgba(168,85,247,0.2); border:1px solid var(--purple); color:var(--purple); padding:8px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer;">Integrate</button>
+          </div>
+
+          <div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:8px; text-transform:uppercase;">3. Sandboxed Execution &amp; Surgical Rollback</div>
+          <div style="display:flex; gap:8px;">
+            <button onclick="runCustomAgent('agent_quality_guard')" style="flex:1; background:rgba(16,185,129,0.15); border:1px solid var(--green); color:var(--green); padding:8px 12px; border-radius:6px; font-weight:700; font-size:11px; cursor:pointer;">
+              ⚡ Run in Isolated Worktree
+            </button>
+            <button onclick="rollbackCustomAgent('agent_quality_guard')" style="flex:1; background:rgba(239,68,68,0.15); border:1px solid var(--red); color:var(--red); padding:8px 12px; border-radius:6px; font-weight:700; font-size:11px; cursor:pointer;">
+              🔄 Surgical Rollback (RP_k)
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Execution Output -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Plugin Control Plane Output</span>
+            <span style="font-size:11px; color:var(--green);" id="agentStatusBadge">● Engine Ready</span>
+          </div>
+          <pre id="agentConsoleTerminal" style="background:#030712; border:1px solid var(--border); border-radius:8px; padding:12px; color:#38bdf8; font-family:monospace; font-size:11px; max-height:160px; overflow-y:auto; line-height:1.4;">// Ready. Scaffold, integrate, or execute custom agent plugins.</pre>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- TAB 3: WORKFLOWS, GATES & HOOKS -->

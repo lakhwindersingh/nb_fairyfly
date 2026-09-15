@@ -28,6 +28,7 @@ from core.poisoning_sentinel import PoisoningSentinel
 from core.maturity_evaluator import MaturityEvaluator
 from core.worktree_engine import WorktreeEngine
 from core.token_tracker import TokenTracker
+from core.agent_plugin_engine import AgentPluginEngine
 from core.autonomous_cicd import (
     SelfSustainingEngine,
     AutonomousHealer,
@@ -1315,6 +1316,68 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "quadspace_status": "READY",
                 "merkle_genesis_block": "SEALED"
             })
+            return
+
+        if parsed.path == "/api/agents/create":
+            name = payload.get("name", "custom_plugin")
+            template = payload.get("template", "cicd_quality")
+            role = payload.get("role", "Custom CI/CD Specialist")
+            model = payload.get("model", "claude-3-5-sonnet-20241022")
+            modules = payload.get("allowed_modules", ["workplace/core", "workplace/modules/mod_portal_marketing"])
+            wf = payload.get("target_workflow", "wf_pr_gatekeeper")
+            res = AgentPluginEngine.create_agent(
+                workspace_root=REPO_ROOT,
+                name=name,
+                template_type=template,
+                role=role,
+                model=model,
+                allowed_modules=modules,
+                target_workflow=wf
+            )
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/agents/integrate":
+            agent_id = payload.get("agent_id", "agent_custom_quality_guard")
+            wf_id = payload.get("workflow_id", "wf_pr_gatekeeper")
+            after = payload.get("after_step_id", "step_contract_compat")
+            step_name = payload.get("step_name")
+            res = AgentPluginEngine.integrate_into_workflow(
+                workspace_root=REPO_ROOT,
+                agent_id=agent_id,
+                workflow_id=wf_id,
+                after_step_id=after,
+                step_name=step_name
+            )
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/agents/run":
+            agent_id = payload.get("agent_id", "agent_custom_quality_guard")
+            task = payload.get("task", "Autonomous code analysis & verification")
+            module = payload.get("module", "mod_portal_marketing")
+            auto_rb = payload.get("auto_rollback_on_failure", True)
+            res = AgentPluginEngine.execute_agent_task(
+                workspace_root=REPO_ROOT,
+                agent_id=agent_id,
+                task_description=task,
+                target_module=module,
+                auto_rollback_on_failure=auto_rb
+            )
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/agents/rollback":
+            agent_id = payload.get("agent_id", "agent_custom_quality_guard")
+            module = payload.get("module", "mod_portal_marketing")
+            target_pt = payload.get("target_point", "RP_PLAY3_BOOTSTRAP_001")
+            res = AgentPluginEngine.rollback_agent(
+                workspace_root=REPO_ROOT,
+                agent_id=agent_id,
+                target_module=module,
+                target_point=target_pt
+            )
+            self._send_json(res)
             return
 
         if parsed.path == "/api/cicd/trigger":

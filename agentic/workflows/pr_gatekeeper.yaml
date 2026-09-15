@@ -1,33 +1,40 @@
-workflow_id: "wf_pr_gatekeeper"
-description: "Automated verification gate workflow run on every incoming pull request with token savings metering."
+workflow_id: wf_pr_gatekeeper
+description: Automated verification gate workflow run on every incoming pull request
+  with token savings metering.
 steps:
-  - id: "step_ast_prune"
-    name: "AST Symbol Pruning"
-    executor: "platform.ast_pruner"
-    max_duration_sec: 15
-
-  - id: "step_token_metering"
-    name: "Token Savings Capture & FinOps Metering"
-    executor: "platform.token_tracker"
-    depends_on: ["step_ast_prune"]
-    action: "RECORD_SAVINGS_LEDGER"
-    output_ledger: "context/ledger/token_savings_ledger.yaml"
-
-  - id: "step_contract_compat"
-    name: "Cross-Module Contract Verification"
-    executor: "agent_verifier"
-    depends_on: ["step_token_metering"]
-    gate: "gate_contract_compatibility"
-
-  - id: "step_bounded_tdd"
-    name: "Bounded Unit & Integration TDD"
-    executor: "agent_tester"
-    depends_on: ["step_contract_compat"]
-    max_retries: 3
-    quarantine_on_failure: true
-
-  - id: "step_merkle_seal"
-    name: "Merkle State Ledger Sealing"
-    executor: "platform.merkle_ledger"
-    depends_on: ["step_bounded_tdd"]
-    action: "SEAL_BLOCK"
+- id: step_ast_prune
+  name: AST Symbol Pruning
+  executor: platform.ast_pruner
+  max_duration_sec: 15
+- id: step_token_metering
+  name: Token Savings Capture & FinOps Metering
+  executor: platform.token_tracker
+  depends_on:
+  - step_ast_prune
+  action: RECORD_SAVINGS_LEDGER
+  output_ledger: context/ledger/token_savings_ledger.yaml
+- id: step_contract_compat
+  name: Cross-Module Contract Verification
+  executor: agent_verifier
+  depends_on:
+  - step_token_metering
+  gate: gate_contract_compatibility
+- id: step_quality_guard
+  name: Execute Custom Plugin (agent_quality_guard)
+  executor: agent_quality_guard
+  depends_on:
+  - step_contract_compat
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+- id: step_bounded_tdd
+  name: Bounded Unit & Integration TDD
+  executor: agent_tester
+  depends_on:
+  - step_contract_compat
+  max_retries: 3
+  quarantine_on_failure: true
+- id: step_merkle_seal
+  name: Merkle State Ledger Sealing
+  executor: platform.merkle_ledger
+  depends_on:
+  - step_bounded_tdd
+  action: SEAL_BLOCK
