@@ -19140,13 +19140,61 @@ events:
   gross_savings_usd: 0.000552
   rev_share_fee_usd: 8.3e-05
   net_savings_usd: 0.000469
+- event_id: tok_evt_20260916_213833_265791
+  timestamp: '2026-09-16T21:38:33.265808+00:00'
+  session_or_pr: agent_run_agent_quality_guard
+  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 289
+  pruned_tokens: 52
+  tokens_saved: 237
+  reduction_percentage: 82.01
+  gross_savings_usd: 0.000711
+  rev_share_fee_usd: 0.000107
+  net_savings_usd: 0.000604
+- event_id: tok_evt_20260916_213834_015932
+  timestamp: '2026-09-16T21:38:34.015947+00:00'
+  session_or_pr: agent_run_agent_quality_guard
+  file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 241
+  pruned_tokens: 112
+  tokens_saved: 129
+  reduction_percentage: 53.53
+  gross_savings_usd: 0.000387
+  rev_share_fee_usd: 5.8e-05
+  net_savings_usd: 0.000329
+- event_id: tok_evt_20260916_213836_892596
+  timestamp: '2026-09-16T21:38:36.892620+00:00'
+  session_or_pr: agent_run_agent_test_perf_guard
+  file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 976
+  pruned_tokens: 792
+  tokens_saved: 184
+  reduction_percentage: 18.85
+  gross_savings_usd: 0.000552
+  rev_share_fee_usd: 8.3e-05
+  net_savings_usd: 0.000469
+- event_id: tok_evt_20260916_213837_640912
+  timestamp: '2026-09-16T21:38:37.640928+00:00'
+  session_or_pr: agent_run_agent_test_perf_guard
+  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 289
+  pruned_tokens: 52
+  tokens_saved: 237
+  reduction_percentage: 82.01
+  gross_savings_usd: 0.000711
+  rev_share_fee_usd: 0.000107
+  net_savings_usd: 0.000604
 summary:
-  total_events: 1595
-  total_uncompressed_tokens: 2690326
-  total_pruned_tokens: 1415043
-  total_tokens_saved: 1275283
+  total_events: 1599
+  total_uncompressed_tokens: 2692121
+  total_pruned_tokens: 1416051
+  total_tokens_saved: 1276070
   average_reduction_pct: 47.4
-  total_gross_savings_usd: 3.8258
-  total_rev_share_fee_usd: 0.5739
-  total_net_savings_usd: 3.2519
-last_updated: '2026-09-16T21:38:32.980319+00:00'
+  total_gross_savings_usd: 3.8282
+  total_rev_share_fee_usd: 0.5743
+  total_net_savings_usd: 3.254
+last_updated: '2026-09-16T21:38:38.098516+00:00'
