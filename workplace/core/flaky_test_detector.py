@@ -20,6 +20,21 @@ class FlakyTestDetector:
     QUARANTINE_FILE = "user/hitl/flaky_quarantine.yaml"
 
     @classmethod
+    def check_test_stability(cls, workspace_root: Path, runs: int = 3):
+        """Convenience check returning (is_deterministic, quarantined_tests)."""
+        q_path = workspace_root / cls.QUARANTINE_FILE
+        quarantined = []
+        if q_path.exists():
+            try:
+                with open(q_path, "r", encoding="utf-8") as f:
+                    data = yaml.safe_load(f) if yaml else {}
+                    if isinstance(data, dict):
+                        quarantined = data.get("quarantined_flaky_tests", [])
+            except Exception:
+                pass
+        return (len(quarantined) == 0, quarantined)
+
+    @classmethod
     def audit_test_stability(
         cls,
         workspace_root: Path,
