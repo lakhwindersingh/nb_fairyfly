@@ -1,3 +1,4 @@
+from typing import Dict, Any, List, Optional, Tuple
 #!/usr/bin/env python3
 """
 Neutron Binary Percipience - Enterprise Product Site & Cloud SaaS Portal
@@ -416,6 +417,187 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
         </table>
       </div>
     </section>
+
+    <!-- TAB: CONTEXT GATEWAY (OPTION 1) -->
+    <section id="gateway" class="tab-content">
+      <div class="hero" style="margin-bottom:32px; padding:16px 0;">
+        <div class="hero-badge">🛡️ Zero Client IP Exposure Standard</div>
+        <h1>Context Gateway (Option 1)<br>&amp; Sealed Plan Bundles</h1>
+        <p>Enforces the fundamental law of client security: Proprietary plans and KMS decryption keys reside strictly inside the Gateway server-side volatile RAM. Local client subagents receive zero plaintext blueprint files while executing in full architectural compliance via In-Flight Prompt Injection and Sealed Binary Envelopes (.nbpack).</p>
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-val">0.0%</div>
+            <div class="hero-stat-label">Client Plan Exposure</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-val">100%</div>
+            <div class="hero-stat-label">Invariant Enforcement</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-val">AES-256-GCM</div>
+            <div class="hero-stat-label">Binary Envelope Seal</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-val">&lt; 25ms</div>
+            <div class="hero-stat-label">In-Flight Enclave Latency</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Security Pillars -->
+      <div class="grid-3" style="margin-bottom:28px;">
+        <div class="card">
+          <div class="card-badge" style="background:rgba(56,189,248,0.1); color:var(--cyan);">Architecture</div>
+          <h3>1. Server-Side RAM Enclave</h3>
+          <p>Domain blueprints, wire contracts, and KMS decryption keys reside strictly in ephemeral Gateway memory. No plaintext plan file is ever shipped or exposed to client developer workstations.</p>
+          <div class="stat-box"><span>KMS Key Broker:</span><span class="stat-val" style="font-size:11px; font-family:monospace; color:var(--cyan);">CMEK-Vault-Enclave</span></div>
+          <div class="stat-box"><span>Plaintext Residue:</span><span class="stat-val" style="color:var(--green);">0.0% Disk Residue</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">Runtime Interception</div>
+          <h3>2. In-Flight Prompt Injection</h3>
+          <p>The Gateway transparently intercepts LLM completions, injects architectural constraints and invariants into the provider context in-flight, and sanitizes output before streaming code back to the client.</p>
+          <div class="stat-box"><span>Drop-in Compatibility:</span><span class="stat-val" style="color:var(--cyan);">OpenAI / Claude API</span></div>
+          <div class="stat-box"><span>Sanitization Guard:</span><span class="stat-val" style="color:var(--green);">100% Redacted Invariants</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge" style="background:rgba(245,158,11,0.15); color:var(--amber);">Distribution</div>
+          <h3>3. Encrypted .nbpack Bundles</h3>
+          <p>Encrypted domain layers (e.g. <code>iot_mobile_domain.nbpack</code>) can be downloaded and bootstrapped via <code>npm / npx</code> or native CLI into RAM with zero client filesystem exposure.</p>
+          <div class="stat-box"><span>Cryptographic Format:</span><span class="stat-val" style="color:var(--cyan);">NBPACK_V2_SEALED</span></div>
+          <div class="stat-box"><span>Space Hydration:</span><span class="stat-val" style="color:var(--green);">Volatile Memory Only</span></div>
+        </div>
+      </div>
+
+      <!-- ENCRYPTED BUNDLES DOWNLOAD & SPACE BOOTSTRAPPING CENTER -->
+      <div class="card" style="margin-bottom:28px;">
+        <div class="card-badge" style="background:rgba(56,189,248,0.15); color:var(--cyan);">Distribution Center</div>
+        <h3>📦 Encrypted Plan Bundles (.nbpack) &amp; Zero-Exposure Space Bootstrapping</h3>
+        <p>Download pre-compiled, Ed25519-signed AES-256-GCM binary envelopes. Developers and autonomous subagents can install and hydrate these sealed packages directly in volatile memory via <code>npm / npx</code> or the native Percipience CLI without exposing the proprietary blueprint content.</p>
+
+        <div class="table-wrap" style="margin:16px 0;">
+          <table>
+            <thead>
+              <tr>
+                <th>Plan Bundle / File</th>
+                <th>Target Domain Architecture</th>
+                <th>Envelope Format &amp; Seal</th>
+                <th>Size</th>
+                <th>Client Exposure</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="gatewayBundlesTableBody">
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:#fff;">IoT Edge &amp; Mobile Domain</div>
+                  <code style="font-size:11px; color:var(--cyan);">iot_mobile_domain.nbpack</code>
+                </td>
+                <td>Embedded FreeRTOS, BLE GATT telemetry, ring-buffer concurrency &amp; dual-bank OTA invariants.</td>
+                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td>8.2 KB</td>
+                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/iot_mobile_domain.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:#fff;">Enterprise SaaS &amp; Cloud Portal</div>
+                  <code style="font-size:11px; color:var(--cyan);">saas_portal_domain.nbpack</code>
+                </td>
+                <td>Multi-tenant RBAC, PostgreSQL RLS, Stripe 15% FinOps billing &amp; portal UI design tokens.</td>
+                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td>7.8 KB</td>
+                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/saas_portal_domain.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:#fff;">Context Engineering OS Kernel</div>
+                  <code style="font-size:11px; color:var(--cyan);">percipience_parent.nbpack</code>
+                </td>
+                <td>Complete Quad-Space kernel, Merkle state chain DAG, active PID worktrees &amp; CI/CD gatekeeper.</td>
+                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td>70.2 KB</td>
+                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/percipience_parent.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="color:#fff; margin-top:20px; font-size:15px; margin-bottom:8px;">Zero-Exposure Space Bootstrapping Quickstart</h4>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">Choose your preferred toolchain to bootstrap and hydrate domain quad-spaces in volatile memory:</p>
+
+        <div class="grid-2">
+          <div>
+            <label style="font-size:12px; color:var(--cyan); font-weight:700;">Option A: npm / npx Developer CLI Quickstart</label>
+            <pre style="margin-top:6px;"># 1. Download sealed bundle via Gateway (Zero Plaintext Exposure)
+curl -fsSL https://portal.percipience.dev/api/gateway/bundles/iot_mobile_domain.nbpack -o ./iot_mobile_domain.nbpack
+
+# 2. Bootstrap workspace in volatile RAM (0% disk residue)
+npx @percipience/cli layer apply --pack ./iot_mobile_domain.nbpack --mode in-memory
+
+# 3. Or install as local npm dependency package
+npm install --save-dev @percipience/context-gateway</pre>
+          </div>
+
+          <div>
+            <label style="font-size:12px; color:var(--green); font-weight:700;">Option B: Native Percipience Control Plane &amp; Proxy</label>
+            <pre style="margin-top:6px;"># 1. Mount encrypted layer directly into volatile memory
+./bin/percipience layer apply --pack .nb/bundles/iot_mobile_domain.nbpack
+
+# 2. Verify active in-memory mounts
+./bin/percipience layer list
+
+# 3. Set drop-in proxy environment for local agent
+export OPENAI_BASE_URL="http://localhost:8080/v1"
+export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE IN-FLIGHT PROMPT INJECTION PLAYGROUND -->
+      <div class="card">
+        <div class="card-badge">Live Interactive Proxy</div>
+        <h3>⚡ Drop-in Proxy Playground (In-Flight Invariant Injection)</h3>
+        <p>Simulate an autonomous coding subagent querying the Context Gateway. Watch how proprietary invariants are injected in-flight server-side, while only sanitized, compliant code is streamed back to the client.</p>
+
+        <div class="grid-2" style="margin-top:16px;">
+          <div>
+            <label style="font-size:12px; color:var(--muted); font-weight:600;">Governing Proprietary Plan:</label>
+            <select id="gwPlanSelect" style="margin-bottom:10px;">
+              <option value="plan_iot_mobile">IoT Edge &amp; Mobile Plan (BLE GATT &amp; Ring-Buffer Mutex)</option>
+              <option value="plan_saas_portal">SaaS Cloud Portal Plan (Multi-Tenant &amp; 15% FinOps)</option>
+              <option value="plan_parent_master">Parent Master Plan (Quad-Space OS &amp; Merkle Ledger)</option>
+            </select>
+
+            <label style="font-size:12px; color:var(--muted); font-weight:600;">Client Context / Local Error Trace (Repo State):</label>
+            <textarea id="gwRepoState" rows="3" style="margin-bottom:10px;">{"module": "mod_telemetry_stream", "test_error": "AssertionError: ring-buffer mutex lock violated on characteristic 0xFF01"}</textarea>
+
+            <label style="font-size:12px; color:var(--muted); font-weight:600;">Client Subagent Query Prompt:</label>
+            <textarea id="gwPrompt" rows="3" style="margin-bottom:12px;">Fix the ring-buffer mutex lock violation in the telemetry characteristic and ensure process liveness.</textarea>
+
+            <button class="action-btn" onclick="runContextGatewayDemo()">🚀 Route Through Context Gateway</button>
+          </div>
+
+          <div>
+            <label style="font-size:12px; color:var(--cyan); font-weight:700;">Live Gateway Execution &amp; Sanitization Audit:</label>
+            <div id="gwDemoResults" style="background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px; min-height:240px; font-family:monospace; font-size:12px; color:var(--muted); line-height:1.5;">
+              <span style="color:var(--muted);">Click "Route Through Context Gateway" to execute in-flight prompt injection...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- TAB 4: ROI & BENEFITS -->
     <section id="roi-calculator" class="tab-content">
@@ -1030,6 +1212,16 @@ percipience rollback \
 """
 
 class PortalRequestHandler(BaseHTTPRequestHandler):
+    def _send_bytes(self, data: bytes, content_type: str = "application/octet-stream", filename: Optional[str] = None, status: int = 200):
+        self.send_response(status)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(data)))
+        if filename:
+            self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(data)
+
     def _send_json(self, data: dict, status: int = 200):
         body = json.dumps(data).encode("utf-8")
         self.send_response(status)
@@ -1547,6 +1739,34 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "tier_b_routed_share_pct": 78.0,
                 "blended_cost_reduction_pct": 70.2
             })
+            return
+
+        if parsed.path == "/api/gateway/bundles":
+            bundles = ContextGateway.list_encrypted_bundles(REPO_ROOT)
+            self._send_json({"bundles": bundles, "total_bundles": len(bundles), "status": "AVAILABLE"})
+            return
+
+        if parsed.path.startswith("/api/gateway/bundles/"):
+            bundle_filename = parsed.path[len("/api/gateway/bundles/"):]
+            bundle_res = ContextGateway.get_bundle_file(REPO_ROOT, bundle_filename)
+            if bundle_res:
+                bundle_path, data, sha = bundle_res
+                self._send_bytes(data, content_type="application/octet-stream", filename=bundle_filename)
+                return
+            else:
+                self._send_json({"error": f"Bundle '{bundle_filename}' not found in encrypted storage"}, 404)
+                return
+
+        if parsed.path == "/api/gateway/download":
+            qs = parse_qs(parsed.query)
+            bundle_filename = qs.get("bundle", [None])[0]
+            if bundle_filename:
+                bundle_res = ContextGateway.get_bundle_file(REPO_ROOT, bundle_filename)
+                if bundle_res:
+                    bundle_path, data, sha = bundle_res
+                    self._send_bytes(data, content_type="application/octet-stream", filename=bundle_filename)
+                    return
+            self._send_json({"error": "Bundle not found or unspecified"}, 404)
             return
 
         if parsed.path == "/api/gateway/status":

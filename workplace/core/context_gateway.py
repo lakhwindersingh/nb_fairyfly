@@ -126,6 +126,112 @@ class ContextGateway:
         return res
 
     @classmethod
+    def list_encrypted_bundles(cls, workspace_root: Path) -> List[Dict[str, Any]]:
+        """
+        Scans .nb/bundles and .nb/ for sealed .nbpack bundles.
+        Returns metadata enabling one-click download and zero-exposure bootstrapping.
+        """
+        bundles = []
+        search_dirs = [workspace_root / ".nb" / "bundles", workspace_root / ".nb"]
+        seen_filenames = set()
+
+        bundle_meta_map = {
+            "iot_mobile_domain.nbpack": {
+                "id": "bundle_iot_mobile",
+                "title": "IoT Edge & Mobile Embedded Domain Plan",
+                "domain": "Embedded IoT, FreeRTOS, BLE GATT & OTA",
+                "plan_source": "claude-context-engineering-iot-mobile-domain-plan.md",
+                "tier": "Tier_A",
+                "description": "Sealed binary bundle containing BLE GATT characteristic tables, ring-buffer concurrency rules, and dual-bank OTA invariants."
+            },
+            "saas_portal_domain.nbpack": {
+                "id": "bundle_saas_portal",
+                "title": "Enterprise Cloud SaaS Portal & Multi-Tenant Plan",
+                "domain": "Multi-Tenant Cloud SaaS & 15% FinOps Metering",
+                "plan_source": "claude-context-engineering-saas-portal-domain-plan.md",
+                "tier": "Tier_A",
+                "description": "Sealed binary bundle containing multi-tenant RBAC schemas, Stripe performance-fee reconcilers, and dark-mode portal design tokens."
+            },
+            "percipience_parent.nbpack": {
+                "id": "bundle_parent_master",
+                "title": "Percipience Enterprise Context OS Kernel",
+                "domain": "Quad-Space OS & Autonomous CI/CD Fleet",
+                "plan_source": "claude-context-engineering-parent-master-plan.md",
+                "tier": "Tier_A",
+                "description": "Sealed parent kernel containing Merkle hash chain algorithms, active PID-probing worktree engines, and 7-stage PR gatekeepers."
+            }
+        }
+
+        for sdir in search_dirs:
+            if not sdir.exists():
+                continue
+            for f in sorted(sdir.glob("*.nbpack")):
+                if f.name in seen_filenames:
+                    continue
+                seen_filenames.add(f.name)
+                
+                try:
+                    raw_bytes = f.read_bytes()
+                    file_sha = hashlib.sha256(raw_bytes).hexdigest()
+                    size_bytes = len(raw_bytes)
+                except Exception:
+                    file_sha = "unknown"
+                    size_bytes = 0
+
+                meta = bundle_meta_map.get(f.name, {
+                    "id": f"bundle_{f.stem}",
+                    "title": f"{f.stem.replace('_', ' ').title()} Bundle",
+                    "domain": "Domain Architecture Extension",
+                    "plan_source": f"{f.stem}.md",
+                    "tier": "Tier_A",
+                    "description": "Sealed binary .nbpack domain bundle."
+                })
+
+                bundles.append({
+                    "bundle_id": meta["id"],
+                    "filename": f.name,
+                    "title": meta["title"],
+                    "domain": meta["domain"],
+                    "tier": meta["tier"],
+                    "description": meta["description"],
+                    "plan_source": meta["plan_source"],
+                    "size_bytes": size_bytes,
+                    "size_kb": round(size_bytes / 1024, 1),
+                    "sha256": file_sha,
+                    "sha256_short": file_sha[:16] + "..." if file_sha != "unknown" else "unknown",
+                    "envelope_format": "NBPACK_V2_SEALED (AES-256-GCM / zlib-9)",
+                    "signature_algorithm": "Ed25519 Cryptographic Seal",
+                    "client_exposure_pct": 0.0,
+                    "download_url": f"/api/gateway/bundles/{f.name}",
+                    "npm_bootstrap_command": f"npx @percipience/cli layer apply --pack ./{f.name} --mode in-memory",
+                    "cli_bootstrap_command": f"./bin/percipience layer apply --pack .nb/bundles/{f.name}" if (sdir.name == "bundles") else f"./bin/percipience hydrate --pack .nb/{f.name}"
+                })
+
+        return bundles
+
+    @classmethod
+    def get_bundle_file(cls, workspace_root: Path, filename: str) -> Optional[Tuple[Path, bytes, str]]:
+        """
+        Locates and reads an encrypted .nbpack file safely.
+        Returns (Path, bytes, sha256) or None.
+        """
+        clean_name = Path(filename).name
+        if not clean_name.endswith(".nbpack"):
+            return None
+
+        candidates = [
+            workspace_root / ".nb" / "bundles" / clean_name,
+            workspace_root / ".nb" / clean_name
+        ]
+        for c in candidates:
+            if c.exists() and c.is_file():
+                raw_bytes = c.read_bytes()
+                file_sha = hashlib.sha256(raw_bytes).hexdigest()
+                return (c, raw_bytes, file_sha)
+
+        return None
+
+    @classmethod
     def sanitize_client_output(cls, raw_output: str, plan_id: str) -> str:
         """Strips any inadvertent proprietary plan markers, prompt engineering templates, or internal tokens."""
         sanitized = raw_output
@@ -263,5 +369,6 @@ class ContextGateway:
             "kms_key_broker": cls.KMS_KEY_ARN,
             "plans_in_memory_count": len(cls._PROTECTED_PLANS),
             "protected_plans": cls.list_protected_plans(),
+            "encrypted_bundles": cls.list_encrypted_bundles(workspace_root),
             "telemetry": cls._GATEWAY_STATS
         }

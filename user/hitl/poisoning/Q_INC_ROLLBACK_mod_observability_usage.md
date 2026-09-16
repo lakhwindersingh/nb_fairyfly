@@ -1,4 +1,4 @@
-### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-16T20:06:39.733023+00:00)
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-16T21:16:07.669571+00:00)
 - **Target Module**: `mod_observability_usage`
 - **Status**: `QUARANTINED`
 - **Violations**:

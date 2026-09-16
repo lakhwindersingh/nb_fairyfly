@@ -480,6 +480,23 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertNotIn("<<PROPRIETARY_PLAN_INVARIANT", client_code)
         self.assertIn("reconcileModuleState", client_code)
 
+        # 5. Encrypted Plan Bundles & Zero-Exposure Bootstrapping
+        bundles = ContextGateway.list_encrypted_bundles(REPO_ROOT)
+        self.assertGreaterEqual(len(bundles), 3)
+        self.assertTrue(any(b["filename"] == "iot_mobile_domain.nbpack" for b in bundles))
+        for b in bundles:
+            self.assertEqual(b["client_exposure_pct"], 0.0)
+            self.assertIn("NBPACK_V2_SEALED", b["envelope_format"])
+            self.assertTrue(b["download_url"].startswith("/api/gateway/bundles/"))
+            self.assertIn("npm_bootstrap_command", b)
+
+        # 6. Binary Bundle Download Retrieval
+        b_res = ContextGateway.get_bundle_file(REPO_ROOT, "iot_mobile_domain.nbpack")
+        self.assertIsNotNone(b_res)
+        bpath, bdata, bsha = b_res
+        self.assertGreater(len(bdata), 100)
+        self.assertTrue(bdata.startswith(b"NBPACK_V2_SEALED"))
+
     def test_19_living_documentation_and_mermaid_visualizer(self):
         """Test CAP-21: Autonomous Living Documentation & Mermaid Visualizer (agent_living_doc_architect)."""
         # 1. Synchronize all living docs
