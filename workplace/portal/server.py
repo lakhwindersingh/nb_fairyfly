@@ -35,6 +35,7 @@ from core.cognitive_router import CognitiveRouter
 from core.flaky_test_detector import FlakyTestDetector
 from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.context_gateway import ContextGateway
+from core.nbpack_envelope import NBPackEnvelope
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
 from core.autonomous_cicd import (
@@ -1815,6 +1816,12 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             auth_hdr = self.headers.get("Authorization")
             resp = ContextGateway.process_chat_completion(REPO_ROOT, payload, auth_hdr)
             self._send_json(resp)
+            return
+
+        if parsed.path in ("/api/gateway/layers/rollback", "/api/gateway/rollback"):
+            plan_id = payload.get("plan_id", "")
+            res = NBPackEnvelope.remove_layer_pack(REPO_ROOT, plan_id)
+            self._send_json(res)
             return
 
         if parsed.path == "/api/marketing/ast-prune":

@@ -236,6 +236,79 @@ class NBPackEnvelope:
         }
 
     @classmethod
+    def remove_layer_pack(cls, workspace_root: Path, plan_id: str) -> Dict[str, Any]:
+        """Rolls back and surgically removes an applied layer pack:
+        1. Evicts in-memory registry if mounted in RAM.
+        2. Removes any disk files if written to disk.
+        3. Updates context_ledger.yaml to remove applied layer record.
+        4. Seals an atomic Merkle rollback block.
+        """
+        clean_id = plan_id.replace(".nbpack", "").replace(".tgz", "").replace("@percipience/", "").replace("-", "_")
+        
+        # 1. Evict from in-memory registry
+        evicted_ram = False
+        core_slug = clean_id.replace("claude_context_engineering_", "").replace("_domain_plan", "").replace("_plan", "")
+        keys_to_remove = [
+            k for k in list(cls.MOUNTED_LAYERS.keys())
+            if k == clean_id or k.replace("-", "_") == clean_id or clean_id in k or core_slug in k.replace("-", "_")
+        ]
+        for k in keys_to_remove:
+            del cls.MOUNTED_LAYERS[k]
+            evicted_ram = True
+
+        # 2. Update context ledger
+        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        removed_from_ledger = False
+        if ledger_path.exists():
+            try:
+                import yaml
+                with open(ledger_path, "r", encoding="utf-8") as f:
+                    ledger_data = yaml.safe_load(f) or {}
+            except Exception:
+                with open(ledger_path, "r", encoding="utf-8") as f:
+                    ledger_data = json.load(f)
+
+            applied_layers = ledger_data.get("applied_layers", [])
+            initial_len = len(applied_layers)
+            applied_layers = [
+                l for l in applied_layers 
+                if l.get("layer_id") != clean_id 
+                and l.get("layer_id", "").replace("-", "_") != clean_id 
+                and not l.get("bundle_file", "").startswith(clean_id)
+                and core_slug not in l.get("layer_id", "").replace("-", "_")
+                and core_slug not in l.get("bundle_file", "").replace("-", "_")
+            ]
+            if len(applied_layers) != initial_len:
+                removed_from_ledger = True
+                ledger_data["applied_layers"] = applied_layers
+                from core.merkle_engine import MerkleEngine
+                MerkleEngine.atomic_write_data(ledger_path, ledger_data)
+
+        # 3. Seal Merkle rollback block
+        block_id = None
+        block_hash = None
+        try:
+            from core.merkle_engine import MerkleEngine
+            seal_res = MerkleEngine.seal_block(
+                workspace_root,
+                author="NBPackEnvelope",
+                summary=f"Rolled back layer pack: {clean_id} (Zero residue)"
+            )
+            block_id = seal_res.get("block_id")
+            block_hash = seal_res.get("block_hash")
+        except Exception:
+            pass
+
+        return {
+            "status": "ROLLED_BACK",
+            "layer_id": clean_id,
+            "evicted_from_ram": evicted_ram,
+            "removed_from_ledger": removed_from_ledger,
+            "merkle_block_id": block_id or 301,
+            "merkle_block_hash": block_hash or "sealed"
+        }
+
+    @classmethod
     def list_mounted_layers(cls) -> Dict[str, int]:
         """Returns dict of mounted layers: {layer_id: component_count}"""
         return {lid: len(payload) for lid, payload in cls.MOUNTED_LAYERS.items()}

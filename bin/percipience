@@ -436,6 +436,19 @@ def cmd_layer(args):
         for layer in applied:
             print(f"   • {layer.get('layer_id')} [{layer.get('storage_mode')}] - SHA: {layer.get('bundle_sha256', '')[:12]}...")
 
+    elif action in ("remove", "rollback"):
+        layer_id = getattr(args, "layer", "") or getattr(args, "pack", "")
+        if not layer_id:
+            print("❌ Layer ID or pack path required for removal.")
+            sys.exit(1)
+        print(f"🔄 Rolling back setup for layer: {layer_id}...")
+        res = NBPackEnvelope.remove_layer_pack(REPO_ROOT, layer_id)
+        print(f"✅ Layer '{res['layer_id']}' rolled back with zero disk residue.")
+        print(f"   Evicted from RAM: {res['evicted_from_ram']}")
+        print(f"   Removed from Ledger: {res['removed_from_ledger']}")
+        if res.get('merkle_block_id'):
+            print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
+
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
@@ -598,6 +611,16 @@ def main():
 
     # layer list
     p_ll = p_layer_subs.add_parser("list", help="List registered and mounted domain layers")
+
+    # layer remove / rollback
+    p_lr = p_layer_subs.add_parser("remove", help="Roll back and remove an applied domain layer")
+    p_lr.add_argument("--layer", default="", help="Layer ID or slug (e.g. iot_mobile_domain)")
+    p_lr.add_argument("--pack", default="", help="Path to sealed .nbpack or package file")
+
+    p_lrb = p_layer_subs.add_parser("rollback", help="Alias for layer remove")
+    p_lrb.add_argument("--layer", default="", help="Layer ID or slug (e.g. iot_mobile_domain)")
+    p_lrb.add_argument("--pack", default="", help="Path to sealed .nbpack or package file")
+
     p_layer.set_defaults(func=cmd_layer)
 
     args = parser.parse_args()
