@@ -1,0 +1,163 @@
+{
+  "epoch_id": "epoch_0217_0233",
+  "archived_at": "2026-09-16T20:07:18.373807+00:00",
+  "start_block_id": 217,
+  "end_block_id": 233,
+  "block_count": 17,
+  "epoch_rollup_hash": "464f7af0eac2a2a0a5fa1f11ee27328bfb4d4decb7d07bd31fff7171bc2365b0",
+  "blocks": [
+    {
+      "block_id": 217,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "815b60b40672ea5e78423d6ae28ac6a89e7b4f6320fd19674a0ada1ad1fe5fc8",
+      "timestamp": "2026-09-16T01:43:46.123967+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "99759d51e293e73e26325e2fbc489ad5b1afca678ab3d9740a518e95322d4041",
+      "action": "WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)"
+    },
+    {
+      "block_id": 218,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "99759d51e293e73e26325e2fbc489ad5b1afca678ab3d9740a518e95322d4041",
+      "timestamp": "2026-09-16T01:43:46.701995+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "cba6eafd53a470500aa60fbb20d3c99bfd66c46c5b85c081436d8b863b0f919a",
+      "action": "AGENT_TASK_VERIFIED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 219,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "cba6eafd53a470500aa60fbb20d3c99bfd66c46c5b85c081436d8b863b0f919a",
+      "timestamp": "2026-09-16T01:43:46.786749+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "c238f857904b32fdaaaaf803075f60898cd470d544af9196ce98e57851676af4",
+      "action": "AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)"
+    },
+    {
+      "block_id": 220,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "c238f857904b32fdaaaaf803075f60898cd470d544af9196ce98e57851676af4",
+      "timestamp": "2026-09-16T01:43:47.009089+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "5b26d0041dac375b963192099e8f80c85917cb4c6d1c8e18e6e7572a1311011d",
+      "action": "LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan"
+    },
+    {
+      "block_id": 221,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "5b26d0041dac375b963192099e8f80c85917cb4c6d1c8e18e6e7572a1311011d",
+      "timestamp": "2026-09-16T01:43:49.626701+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "f14b16020d790a0859421cc4b4ff6bcd7eeb051c1c875341477df38ddc31ba17",
+      "action": "AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)"
+    },
+    {
+      "block_id": 222,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "f14b16020d790a0859421cc4b4ff6bcd7eeb051c1c875341477df38ddc31ba17",
+      "timestamp": "2026-09-16T01:43:52.812329+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "e879a78047db3cf2612ad40140bb1a1710650594bf5fb62179fbd30ca23934e5",
+      "action": "AGENT_TASK_VERIFIED (agent_contract_compatibility_checker)"
+    },
+    {
+      "block_id": 223,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "e879a78047db3cf2612ad40140bb1a1710650594bf5fb62179fbd30ca23934e5",
+      "timestamp": "2026-09-16T01:43:53.526771+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "5d85b094af88584cf603a6d5e63208e31351d14a27c8fa939efd220d3c4f667d",
+      "action": "AGENT_TASK_VERIFIED (agent_dependency_cve_sentinel)"
+    },
+    {
+      "block_id": 224,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "5d85b094af88584cf603a6d5e63208e31351d14a27c8fa939efd220d3c4f667d",
+      "timestamp": "2026-09-16T01:43:54.270332+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "365c6cc79e77ebe148fd26f770474884e29347961e444fd1b05b27ed4b1c3209",
+      "action": "AGENT_TASK_VERIFIED (agent_doc_drift_synchronizer)"
+    },
+    {
+      "block_id": 225,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "365c6cc79e77ebe148fd26f770474884e29347961e444fd1b05b27ed4b1c3209",
+      "timestamp": "2026-09-16T01:43:55.023713+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "f8cba3c5c944981b5c43b466180358503fe9413c9b7f76bdba58014c7b32a5c5",
+      "action": "AGENT_TASK_VERIFIED (agent_flaky_test_detector)"
+    },
+    {
+      "block_id": 226,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "f8cba3c5c944981b5c43b466180358503fe9413c9b7f76bdba58014c7b32a5c5",
+      "timestamp": "2026-09-16T01:43:55.782530+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "73d8ab4375ee5999caf2a8b3a1040f2571f0ad479e4a757ffb2149f53b0f5c69",
+      "action": "AGENT_TASK_VERIFIED (agent_quality_guard)"
+    },
+    {
+      "block_id": 227,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "73d8ab4375ee5999caf2a8b3a1040f2571f0ad479e4a757ffb2149f53b0f5c69",
+      "timestamp": "2026-09-16T01:43:55.915728+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "09b3a47d24f3b86e53c2fc8adc9c37e352c3514e5798dfc1d7b0bac6396375bf",
+      "action": "AUTONOMOUS_CICD_PIPELINE_COMPLETE"
+    },
+    {
+      "block_id": 228,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "09b3a47d24f3b86e53c2fc8adc9c37e352c3514e5798dfc1d7b0bac6396375bf",
+      "timestamp": "2026-09-16T01:43:56.000582+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "50111cc63ea729f8e00deb85f0584aad4042f7384c8ef3f2d754f747a9f3c709",
+      "action": "AGENT_REGISTERED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 229,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "50111cc63ea729f8e00deb85f0584aad4042f7384c8ef3f2d754f747a9f3c709",
+      "timestamp": "2026-09-16T01:43:56.093233+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "715d4814340a108394d7cd8edf3059727c219a165958312adc8e6e7526c8b5ef",
+      "action": "WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)"
+    },
+    {
+      "block_id": 230,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "715d4814340a108394d7cd8edf3059727c219a165958312adc8e6e7526c8b5ef",
+      "timestamp": "2026-09-16T01:43:56.882434+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "84cc6d1b5465110f05ab22832e58e995103231feb0bc531e3e2a75afb922f7e7",
+      "action": "AGENT_TASK_VERIFIED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 231,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "84cc6d1b5465110f05ab22832e58e995103231feb0bc531e3e2a75afb922f7e7",
+      "timestamp": "2026-09-16T01:43:56.973160+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "b3337eca5c39b3052c95228ee473aac69790f8914c57629b7fc307191018ef16",
+      "action": "AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)"
+    },
+    {
+      "block_id": 232,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "b3337eca5c39b3052c95228ee473aac69790f8914c57629b7fc307191018ef16",
+      "timestamp": "2026-09-16T01:43:57.221271+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "537e91e7b9a1bf446f4fdfadf8acb07db42d96e276de9dca27596fd0cf169a0c",
+      "action": "LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan"
+    },
+    {
+      "block_id": 233,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "537e91e7b9a1bf446f4fdfadf8acb07db42d96e276de9dca27596fd0cf169a0c",
+      "timestamp": "2026-09-16T01:44:02.939429+00:00",
+      "merkle_root": "0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def",
+      "current_block_hash": "e757d2edabb916c8903e64f34b7c48aacaa1462da1e97f552c5746cb86a7e703",
+      "action": "PR_GATE_VERIFICATION_PASS"
+    }
+  ]
+}

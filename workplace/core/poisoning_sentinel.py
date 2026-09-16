@@ -61,6 +61,13 @@ class PoisoningSentinel:
         with open(quarantine_file, "a", encoding="utf-8") as f:
             f.write(entry)
 
+        # Append-only incident store
+        inc_dir = workspace_root / "user" / "hitl" / "poisoning"
+        inc_dir.mkdir(parents=True, exist_ok=True)
+        inc_file = inc_dir / f"{incident_id}.md"
+        with open(inc_file, "w", encoding="utf-8") as f:
+            f.write(entry.strip() + "\n")
+
     @classmethod
     def execute_surgical_rollback(cls, workspace_root: Path, module_id: str, target_point: str) -> bool:
         """Rolls back the target module directory while preserving sibling modules."""

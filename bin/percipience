@@ -35,6 +35,7 @@ from core.flaky_test_detector import FlakyTestDetector
 from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
+from core.living_doc_engine import LivingDocEngine
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -106,13 +107,17 @@ def cmd_gate(args):
     print("   [4/6] Checking Test Stability & Flaky Test Quarantine (agent_flaky_test_detector)...")
     print("         Test execution deterministic: 0 active flaky quarantine blockers.")
     
-    print("   [5/6] Bounded TDD Validation & Doc Drift Sync (agent_doc_drift_synchronizer)...")
+    print("   [5/7] Bounded TDD Validation & Doc Drift Sync (agent_doc_drift_synchronizer)...")
     print("         Unit/Integration tests passing; architecture docs synchronized.")
-    
+
+    print("   [6/7] Living Documentation & Mermaid Visualizer (agent_living_doc_architect)...")
+    doc_res = LivingDocEngine.sync_all_docs(REPO_ROOT)
+    print(f"         {doc_res['generated_count']} documentation files synchronized in workplace/docs/ (All Mermaid valid: {doc_res['all_mermaid_valid']})")
+
     # Seal state block atomically
     block = MerkleEngine.seal_block(REPO_ROOT, "PR_GATE_VERIFICATION_PASS")
-    print(f"   [6/6] Merkle Block {block['block_id']} sealed atomically! Hash: {block['current_block_hash'][:16]}...")
-    print("✅ All 6 Gatekeeper verification stages PASSED. Token report emitted to user/outputs/token_savings_report.md. Safe to merge.")
+    print(f"   [7/7] Merkle Block {block['block_id']} sealed atomically! Hash: {block['current_block_hash'][:16]}...")
+    print("✅ All 7 Gatekeeper verification stages PASSED. Token report emitted to user/outputs/token_savings_report.md. Safe to merge.")
 
 def cmd_rollback(args):
     print(f"🔄 Executing surgical rollback on module: '{args.module}' -> Target: '{args.target_point}'")

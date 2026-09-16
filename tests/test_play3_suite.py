@@ -37,6 +37,7 @@ from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
 from core.context_gateway import ContextGateway
+from core.living_doc_engine import LivingDocEngine
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -478,6 +479,25 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertNotIn("[PERCIPIENCE SECURE GATEWAY IN-FLIGHT INJECTION", client_code)
         self.assertNotIn("<<PROPRIETARY_PLAN_INVARIANT", client_code)
         self.assertIn("reconcileModuleState", client_code)
+
+    def test_19_living_documentation_and_mermaid_visualizer(self):
+        """Test CAP-21: Autonomous Living Documentation & Mermaid Visualizer (agent_living_doc_architect)."""
+        # 1. Synchronize all living docs
+        res = LivingDocEngine.sync_all_docs(REPO_ROOT, force=True)
+        self.assertEqual(res["status"], "SYNCHRONIZED")
+        self.assertEqual(res["generated_count"], 7)
+        self.assertTrue(res["all_mermaid_valid"])
+
+        # 2. Check existence of all 7 files
+        docs_dir = REPO_ROOT / "workplace" / "docs"
+        for doc_name in ["architecture.md", "module_catalog.md", "sequence_flows.md", "data_flow.md", "entity_relationship.md", "domain_extensions.md", "README.md"]:
+            doc_file = docs_dir / doc_name
+            self.assertTrue(doc_file.exists(), f"Missing {doc_name}")
+            self.assertGreater(doc_file.stat().st_size, 50)
+
+        # 3. Check syntax validator on valid and invalid Mermaid
+        self.assertTrue(LivingDocEngine.validate_mermaid_syntax("graph TD\n  A[\"Clean Label\"] --> B")["is_valid"])
+        self.assertFalse(LivingDocEngine.validate_mermaid_syntax("graph TD\n  A[Unquoted (Parens)] --> B")["is_valid"])
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

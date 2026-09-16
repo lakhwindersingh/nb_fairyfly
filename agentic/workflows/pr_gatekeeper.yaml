@@ -1,6 +1,6 @@
 workflow_id: wf_pr_gatekeeper
 description: Automated verification gate workflow run on every incoming pull request
-  with token savings metering and specialist agent plugins.
+  with token savings metering, specialist agent plugins, and autonomous living documentation.
 steps:
 - id: step_ast_prune
   name: AST Symbol Pruning & Caching
@@ -57,10 +57,19 @@ steps:
   depends_on:
   - step_bounded_tdd
   action: AUDIT_DOC_COVERAGE
+- id: step_living_doc_synthesis
+  name: Living Documentation & Mermaid Visualizer (agent_living_doc_architect)
+  executor: agent_living_doc_architect
+  tier: Tier_B
+  depends_on:
+  - step_doc_drift_sync
+  gate: gate_doc_drift_verification
+  action: SYNCHRONIZE_LIVING_DOCS
+  output_dir: workplace/docs/
 - id: step_merkle_seal
   name: Merkle State Ledger Sealing
   executor: platform.merkle_ledger
   tier: Tier_A
   depends_on:
-  - step_doc_drift_sync
+  - step_living_doc_synthesis
   action: SEAL_BLOCK

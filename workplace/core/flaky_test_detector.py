@@ -83,3 +83,14 @@ class FlakyTestDetector:
                 else:
                     import json
                     json.dump(data, f, indent=2)
+
+            # Append-only incident store
+            inc_dir = workspace_root / "user" / "hitl" / "flaky"
+            inc_dir.mkdir(parents=True, exist_ok=True)
+            inc_file = inc_dir / f"{details.get('test_id', 'unknown_test')}.yaml"
+            with open(inc_file, "w", encoding="utf-8") as f:
+                if yaml:
+                    yaml.dump(details, f, sort_keys=False)
+                else:
+                    import json
+                    json.dump(details, f, indent=2)

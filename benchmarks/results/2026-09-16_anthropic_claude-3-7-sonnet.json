@@ -1,0 +1,30 @@
+{
+  "benchmark_id": "bmk-20260916-poly-module-01",
+  "timestamp": "2026-09-16T20:05:00Z",
+  "workload_profile": "Profile A: Poly-Module Enterprise Microservices",
+  "provider": "anthropic",
+  "frontier_model": "claude-3-7-sonnet-20250219",
+  "compact_model": "claude-3-5-haiku-20241022",
+  "merkle_block_id": 320,
+  "metrics": {
+    "corpus_file_count": 48,
+    "uncompressed_tokens": 1632800,
+    "pruned_tokens": 868420,
+    "tokens_saved": 764380,
+    "measured_savings_pct": 46.8,
+    "target_savings_pct": 62.0,
+    "cache_hit_ratio": 0.892,
+    "ast_retrieval_ms_median": 0.084,
+    "surgical_rollback_sec_median": 1.14,
+    "gross_savings_usd": 2.2931,
+    "rev_share_fee_usd": 0.3440,
+    "net_client_savings_usd": 1.9491,
+    "cognitive_routing_arbitrage_pct": 88.4
+  },
+  "provenance": {
+    "runs_count": 10,
+    "confidence_interval_95": [45.2, 48.4],
+    "verified_by_gate": "wf_pr_gatekeeper",
+    "status": "REPRODUCED_AND_VERIFIED"
+  }
+}

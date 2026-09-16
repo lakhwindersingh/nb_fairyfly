@@ -9,8 +9,11 @@ compression_rules:
   model_cascading:
     provider_agnostic: true
     default_provider: "anthropic"  # Options: anthropic, google, openai, bedrock, azure, local_vllm
+    models_epoch: "2026-09"
+    review_by: "2026-12-31"
     tier_a_frontier:
-      model: "claude-3-7-sonnet / pro"
+      abstract_tier: "Tier_A"
+      description: "Frontier / High Reasoning model for complex architecture, contracts, security & disambiguation"
       reference_models:
         anthropic: "claude-3-7-sonnet"
         google: "gemini-2.0-pro"
@@ -22,8 +25,10 @@ compression_rules:
         - "verification_gate_audit"
         - "security_compliance"
         - "poisoning_diagnosis"
+        - "architectural_disambiguation"
     tier_b_compact:
-      model: "claude-3-5-haiku / flash"
+      abstract_tier: "Tier_B"
+      description: "Fast / High Throughput compact model delivering ~90% cost arbitrage on routine tasks"
       reference_models:
         anthropic: "claude-3-5-haiku"
         google: "gemini-2.0-flash"
@@ -34,6 +39,16 @@ compression_rules:
         - "unit_test_scaffolding"
         - "git_commit_drafting"
         - "dashboard_serialization"
+        - "living_documentation_synthesis"
+    tier_c_deterministic:
+      abstract_tier: "Tier_C"
+      description: "Deterministic AST parser and offline rule validator (zero LLM token spend)"
+      engine: "tree-sitter-ast-pruner"
+      tasks:
+        - "ast_skeleton_caching"
+        - "posix_pid_probing"
+        - "wire_schema_draft07_validation"
+        - "mermaid_syntax_checking"
 
   budget_limits:
     sprint_token_ceiling: 5000000
