@@ -490,12 +490,18 @@ class TestPlay3Subsystems(unittest.TestCase):
             self.assertTrue(b["download_url"].startswith("/api/gateway/bundles/"))
             self.assertIn("npm_bootstrap_command", b)
 
-        # 6. Binary Bundle Download Retrieval
-        b_res = ContextGateway.get_bundle_file(REPO_ROOT, "iot_mobile_domain.nbpack")
+        # 6. Binary Bundle Download & npm Tarball Retrieval
+        b_res = ContextGateway.get_bundle_file(REPO_ROOT, "iot_mobile_domain.nbpack", as_npm_tarball=True)
         self.assertIsNotNone(b_res)
         bpath, bdata, bsha = b_res
         self.assertGreater(len(bdata), 100)
-        self.assertTrue(bdata.startswith(b"NBPACK_V2_SEALED"))
+        self.assertTrue(bdata.startswith(b"\x1f\x8b"))
+
+        # Raw binary retrieval
+        raw_res = ContextGateway.get_bundle_file(REPO_ROOT, "iot_mobile_domain.nbpack", as_npm_tarball=False)
+        self.assertIsNotNone(raw_res)
+        _, raw_data, _ = raw_res
+        self.assertTrue(raw_data.startswith(b"NBPACK_V2_SEALED"))
 
     def test_19_living_documentation_and_mermaid_visualizer(self):
         """Test CAP-21: Autonomous Living Documentation & Mermaid Visualizer (agent_living_doc_architect)."""

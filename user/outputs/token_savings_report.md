@@ -1,6 +1,6 @@
 # Percipience Context Token Savings & Rev-Share Metering Report
 
-> **Last Updated**: 2026-09-16T21:26:40.156284+00:00  
+> **Last Updated**: 2026-09-16T21:28:06.633837+00:00  
 > **Ledger Source**: [`context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/token_savings_ledger.yaml)  
 > **Performance Rev-Share Rate**: **15.0%** of verified token savings  
 > **Target Optimization Engine**: **Tree-Sitter Structural AST Pruning & Prompt Cache Alignment**
@@ -11,14 +11,14 @@
 
 | Metric Dimension | Value Recorded | Functional Significance |
 | :--- | :--- | :--- |
-| **Total AST Pruning Events** | **1,304** | Discrete files/turns optimized across CI/CD runs |
-| **Uncompressed Context Tokens** | **2,134,890** tokens | Baseline tokens if passed unmanaged to Claude/OpenAI |
-| **Pruned Context Tokens** | **1,126,094** tokens | Structural interface skeletons actually sent |
-| **Total Tokens Saved** | **1,008,796** tokens | Net volume eliminated from context windows |
-| **Average Token Reduction Ratio**| **47.2%** | Consistent with 50%–70% target reduction |
-| **Gross Financial Savings** | **$3.0264** | Direct inference API bill reduction |
-| **15% Percipience Performance Fee**| **$0.4540** | Aligned value capture model |
-| **Net Customer Cash Savings** | **$2.5724** | **Positive Net Return** post performance fee |
+| **Total AST Pruning Events** | **1,396** | Discrete files/turns optimized across CI/CD runs |
+| **Uncompressed Context Tokens** | **2,295,478** tokens | Baseline tokens if passed unmanaged to Claude/OpenAI |
+| **Pruned Context Tokens** | **1,209,093** tokens | Structural interface skeletons actually sent |
+| **Total Tokens Saved** | **1,086,385** tokens | Net volume eliminated from context windows |
+| **Average Token Reduction Ratio**| **47.3%** | Consistent with 50%–70% target reduction |
+| **Gross Financial Savings** | **$3.2592** | Direct inference API bill reduction |
+| **15% Percipience Performance Fee**| **$0.4889** | Aligned value capture model |
+| **Net Customer Cash Savings** | **$2.7703** | **Positive Net Return** post performance fee |
 
 ---
 
@@ -26,16 +26,16 @@
 
 | Event ID | Timestamp (UTC) | File Path | Raw Tokens | Pruned | Saved | Reduction | Net Savings ($) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| `tok_evt_20260916_2` | 2026-09-16T21:26:39 | `workplace/core/test_sample.py` | 1000 | 400 | 600 | **60.0%** | `$0.00153` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:34 | `workplace/modules/mod_observability_usage/quarantine_console.ts` | 179 | 99 | 80 | **44.7%** | `$0.00020` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:33 | `workplace/modules/mod_observability_usage/lease_monitor.ts` | 186 | 80 | 106 | **57.0%** | `$0.00027` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:32 | `workplace/modules/mod_observability_usage/merkle_explorer.ts` | 337 | 92 | 245 | **72.7%** | `$0.00063` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:31 | `workplace/modules/mod_observability_usage/telemetry_stream.ts` | 159 | 65 | 94 | **59.1%** | `$0.00024` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:30 | `workplace/modules/mod_tenant_onboarding/auth.ts` | 194 | 96 | 98 | **50.5%** | `$0.00025` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:29 | `workplace/modules/mod_tenant_onboarding/byor_wizard.ts` | 212 | 142 | 70 | **33.0%** | `$0.00018` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:28 | `workplace/modules/mod_tenant_onboarding/provisioner.ts` | 156 | 54 | 102 | **65.4%** | `$0.00026` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:27 | `workplace/modules/mod_portal_marketing/components/roi_calculator.ts` | 241 | 112 | 129 | **53.5%** | `$0.00033` |
-| `tok_evt_20260916_2` | 2026-09-16T21:17:26 | `workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts` | 289 | 52 | 237 | **82.0%** | `$0.00060` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:06 | `workplace/modules/mod_observability_usage/quarantine_console.ts` | 179 | 99 | 80 | **44.7%** | `$0.00020` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:05 | `workplace/modules/mod_observability_usage/lease_monitor.ts` | 186 | 80 | 106 | **57.0%** | `$0.00027` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:04 | `workplace/modules/mod_observability_usage/merkle_explorer.ts` | 337 | 92 | 245 | **72.7%** | `$0.00063` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:04 | `workplace/modules/mod_observability_usage/telemetry_stream.ts` | 159 | 65 | 94 | **59.1%** | `$0.00024` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:03 | `workplace/modules/mod_tenant_onboarding/auth.ts` | 194 | 96 | 98 | **50.5%** | `$0.00025` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:03 | `workplace/modules/mod_tenant_onboarding/byor_wizard.ts` | 212 | 142 | 70 | **33.0%** | `$0.00018` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:02 | `workplace/modules/mod_tenant_onboarding/provisioner.ts` | 156 | 54 | 102 | **65.4%** | `$0.00026` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:01 | `workplace/modules/mod_portal_marketing/components/roi_calculator.ts` | 241 | 112 | 129 | **53.5%** | `$0.00033` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:01 | `workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts` | 289 | 52 | 237 | **82.0%** | `$0.00060` |
+| `tok_evt_20260916_2` | 2026-09-16T21:28:00 | `workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts` | 976 | 792 | 184 | **18.9%** | `$0.00047` |
 
 ---
 
