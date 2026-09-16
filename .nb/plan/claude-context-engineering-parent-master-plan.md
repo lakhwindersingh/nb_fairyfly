@@ -5,7 +5,7 @@ sessionId: session-260913-master-parent-plan
 # Requirements
 
 ### Overview & Goals
-The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces fifteen core foundational capabilities required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
+The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces **twenty-one (21)** core foundational capabilities (each referenced by a stable identifier `CAP-01` through `CAP-21`, in list order below) required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
 
 1. **Autonomous Operations on Multi-Format Minimum Viable Set (MVS) Inputs**: An auto-intelligent derivation engine that consumes sparse initial user inputs across multiple standardized formats (Markdown feature specifications, OpenAPI contracts, AsyncAPI event streams, ADR blueprints, structured Jira/Linear issue exports, and UI/UX design tokens) in `user/inputs/` (or `input/templates/`), normalizing them into a canonical Abstract Semantic Graph (ASG) to autonomously bootstrap, derive, scaffold, test, build, and document the complete project without human intervention unless explicit ambiguity gates are triggered.
 2. **Context Poisoning Detection, Recovery Point Rollback & Incremental Replay Engine**: A resilient state control engine that continuously audits context purity. If context poisoning, hallucination drift, or invalid state propagation occurs, the engine rewinds project artifacts, git commit history, and agent state to a verified clean recovery point (`recovery_point`), quarantines and removes the poisoning culprit in `user/hitl/poisoning_quarantine.md`, and replays subsequent valid incremental enhancements seamlessly.
@@ -38,6 +38,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
     - *Tier 2 (Enterprise Global Rules)*: Organization-wide policies and API contracts in `context/rules/` and `context/contracts/`.
     - *Tier 3 (Team / User Custom Context)*: Unencrypted domain schemas, custom agent plugins, and prompt templates in `context/custom/` and `agentic/custom/agents/`.
     - *BYOR Adapter*: Native multi-VCS adapter supporting self-hosted GitLab, GitHub Enterprise Server, and Bitbucket Data Center via SSH deploy keys and internal Root CA validation.
+21. **Autonomous Living Documentation Engine & Architecture Visualizer (`agent_living_doc_architect`)**: An in-workflow living documentation engine (`workplace/core/living_doc_engine.py`) and specialist documentation subagent (`agentic/custom/agents/agent_living_doc_architect.yaml`) that executes autonomously during workflow runs, PR verification gates, and release cuts to create and continuously update living, drift-free documentation in `workplace/docs/`. It programmatically inspects codebase Abstract Syntax Trees (ASTs), wire contracts (`context/contracts/`), runtime configurations, and active layered domain specifications to synthesize: (1) Module Catalogs & Public API surfaces, (2) High-Level System Architecture & C4 Topologies, (3) Runtime Execution & Cross-Module Sequence Flows, (4) Data Transformation Pipelines & Event Streams, (5) Entity-Relationship & Relational Data Models, and (6) Layered Plan Domain Extensions (such as IoT BLE GATT profiles, Web3 P2P capability loans, or SaaS multi-tenant RBAC policies). It strongly prefers rich, executable **Mermaid** diagrams across all documents, hashes source files to enable incremental zero-token-overhead doc updates, and seals document revision proofs into the cryptographic Merkle ledger (`context_ledger.yaml`).
 
 ### Scope
 #### In Scope
@@ -101,6 +102,13 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Invariant protection in `workplace/core/layered_context_validator.py` maintaining strict priority: Tier 1 (Platform) > Tier 2 (Enterprise) > Tier 3 (User).
   - Multi-VCS remote adapter in `workplace/core/byor_adapter.py` connecting self-hosted GitLab, GitHub Enterprise, Bitbucket Data Center.
   - Checkpoint state diffing, token burn charts, and interactive HITL clarification review.
+- **Autonomous Living Documentation Engine & Architecture Visualizer (`agent_living_doc_architect`)**:
+  - Automated generation and continuous in-workflow synchronization of structured documentation under `workplace/docs/` (`architecture.md`, `module_catalog.md`, `sequence_flows.md`, `data_flow.md`, `entity_relationship.md`, `domain_extensions.md`).
+  - Deep AST symbol extraction and contract-to-doc synthesis for classes, functions, routes, schemas, and event channels.
+  - Mandatory preference for expressive, valid **Mermaid** diagrams (`graph TD/LR`, `sequenceDiagram`, `flowchart TD`, `erDiagram`, `stateDiagram-v2`, `classDiagram`) embedded directly within Markdown artifacts.
+  - Dynamic layered domain plan awareness: introspecting active domain layers (e.g. `domain_blockchained_audio`, `domain_iot_mobile`, `domain_saas_portal`) to generate specialized domain models and sequence flows.
+  - Incremental documentation caching via SHA-256 AST hashing to eliminate redundant LLM token spend on unchanged files during continuous workflow runs.
+  - Integration into verification gatekeepers (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`) to block code merges if documentation drifts or Mermaid syntax fails validation.
 - **Context Compression & GenAI Optimization Engine**:
   - Token budget management and dynamic context window allocation rules.
   - AST / symbol table extraction for code compression (transmitting interface signatures instead of full implementations during planning).
@@ -138,6 +146,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **As a Technical Director**, I want a visual DAG dashboard and time-travel inspection tool at `user/outputs/dashboard/index.html` so that I can visually audit project evolution, diff recovery points, inspect module subgraphs, and track token spend in real-time.
 - **As a Product Manager & Scrum Master**, I want Percipience to connect via Jira MCP servers to automatically ingest user stories marked "Ready for Dev", so that AI coding swarms begin implementing verified features directly from our Jira backlog without manual copy-pasting.
 - **As an API Architect & Systems Engineer**, I want to submit schema-first OpenAPI and AsyncAPI MVS contracts in `user/inputs/` so that Percipience derives type-safe server stubs, client SDKs, integration tests, and database schemas with zero semantic drift.
+- **As a Principal Architect & Full-Stack Developer**, I want an autonomous documentation agent (`agent_living_doc_architect`) running within our continuous workflow to synthesize and update comprehensive living documentation in `workplace/docs/` with Mermaid diagrams for architecture, sequence flows, data pipelines, entity relationships, and module catalogs, so that system architecture and code never drift apart and new team members can immediately visualize system internals.
 
 ### Functional Requirements
 - **Proprietary Context & Agentic Space Obfuscation & Encrypted Bundle Compilation**:
@@ -206,7 +215,20 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Calculate scores (0.00 to 1.00) across 6 dimensions (Requirement Coverage, Architectural Grounding, Code/Config Quality, Test Coverage, Security, Token Efficiency).
   - Automatically emit context maturity scorecards to `user/outputs/context_maturity_report.md`.
 - **Integrated State Ledger (`context_ledger.yaml`)**:
-  - Maintain unified tracking across all 14 capabilities.
+  - Maintain unified tracking across all 21 capabilities (`CAP-01`..`CAP-21`).
+- **Autonomous Living Documentation & In-Workflow Mermaid Visualizer (`agent_living_doc_architect`)**:
+  - *In-Workflow Lifecycle Hook*: `workplace/core/living_doc_engine.py` hooks directly into pre-PR verification gates, release workflows, and post-derivation stages to evaluate codebase deltas.
+  - *Standardized Document Taxonomy in `workplace/docs/`*:
+    1. `workplace/docs/README.md`: Central documentation index, system overview, and links to visual specifications.
+    2. `workplace/docs/architecture.md`: System topology, component decomposition, communication channels, and C4 container diagrams rendered in Mermaid `graph TD` or `graph LR`.
+    3. `workplace/docs/module_catalog.md`: Module boundaries, responsibilities, public interface signatures, types, and module-to-module dependency matrices.
+    4. `workplace/docs/sequence_flows.md`: Critical runtime execution flows, cross-module request-response lifecycles, authentication handshakes, and error-recovery paths rendered in Mermaid `sequenceDiagram` with step autonumbering.
+    5. `workplace/docs/data_flow.md`: End-to-end data ingestion, asynchronous event streaming, message broker routing, and state transition lifecycles rendered in Mermaid `flowchart` and `stateDiagram-v2`.
+    6. `workplace/docs/entity_relationship.md`: Database tables, DDL relationships, wire contract DTO structures, and domain entities rendered in Mermaid `erDiagram` with explicit foreign key cardinality (`||--o{`, `}|--||`).
+    7. `workplace/docs/domain_extensions.md`: Domain-specific documentation tailored dynamically to whichever layered plan is active (e.g., P2P torrent swarm topology and EIP-712 capability loans for `domain_blockchained_audio`; BLE GATT characteristic tables and A/B OTA partitions for `domain_iot_mobile`; RBAC roles and webhook handlers for `domain_saas_portal`).
+  - *Mermaid Robustness Rules*: All generated Mermaid diagrams must enclose node labels containing parentheses, brackets, or punctuation in quotes (e.g. `node["FastAPI Provider (Port 8000)"]`), avoid raw HTML formatting, and pass offline syntax validation.
+  - *Incremental AST Change Detection*: Maintain an AST skeleton hash store (`.scratch/doc_ast_hashes.json`); only re-render document sections and Mermaid blocks whose underlying source files or wire contracts have changed, avoiding token burn.
+  - *Cryptographic Ledger Verification*: Register each documentation synchronization event in `context_ledger.yaml` under `living_docs`, sealing document hashes and diagram types into the active Merkle block.
 - **Enterprise Reliability Hardening (Phases 1-3)**:
   - *Atomic Temporary Disk Serialization*: All critical state transitions (Merkle state sealing, token FinOps recordings, recovery snapshots) must execute via temporary file creation + `os.fsync()` + atomic `os.replace()`, eliminating corrupt, partial, or zero-byte ledger files during process crashes or concurrency collisions.
   - *Active POSIX PID-Probing & Stale Lease Eviction*: Ephemeral subagent worktrees must register their owning OS PID (`os.getpid()`). The runtime actively probes `os.kill(pid, 0)` upon lease operations, automatically reclaiming dead leases and running `git worktree remove --force` to eliminate zombie directory deadlocks without human intervention.
@@ -216,21 +238,66 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - *Rolling Merkle Epoch Checkpointing*: Scalable ledger verification must archive historical Merkle blocks into `context/ledger/archive/epoch_{start}_{end}.json` once height exceeds rolling thresholds, preserving constant $O(1)$ ledger read/write times while maintaining end-to-end cryptographic continuity through sealed `epoch_rollup_hash` references.
   - *Model-Agnostic Cognitive Tiering Router*: Runtime model dispatching dynamically routes routine subagent tasks (AST extraction, linting, docs, test runs) to **Tier B** (`claude-3-5-haiku / flash`, `gemini-2.0-flash`), delivering a 90% cost arbitrage while strictly reserving **Tier A** (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`) for high-reasoning tasks (SemVer diffing, security audits, PR gate decisions).
 - **Autonomous CI/CD Specialist Agent Plugins**:
-  - Standardize four pre-configured specialist agent plugins under `agentic/custom/agents/`:
+  - Standardize five pre-configured specialist agent plugins under `agentic/custom/agents/`:
     1. `agent_flaky_test_detector`: Multi-run test stability analysis, quarantining intermittent non-deterministic test suites into `user/hitl/flaky_quarantine.yaml` as non-blocking.
     2. `agent_contract_compatibility_checker`: SemVer evolution guard, diffing wire contracts in `context/contracts/` to block breaking field removals or type mutations.
     3. `agent_dependency_cve_sentinel`: Supply-chain security, auditing source AST imports and manifests for CVEs, typosquatting packages, and restrictive licenses (AGPL).
     4. `agent_doc_drift_synchronizer`: Architecture sync, auditing exported AST interface symbols against `.nb/plan/` specifications to flag documentation drift.
-  - Wire all four plugins into a unified 6-stage PR verification gatekeeper (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
+    5. `agent_living_doc_architect`: In-workflow living documentation engine, synthesizing Mermaid visual architecture, sequences, data pipelines, entity-relationships, and module catalogs directly in `workplace/docs/`.
+  - Wire all specialist plugins into a unified verification gatekeeper (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
 
 ### Non-Functional Requirements
 - **Intellectual Property Protection**: Zero plaintext markdown or YAML leakage for `context/` and `agentic/` on client filesystems when executing from compiled `.nbpack` bundles.
 - **Zero-Drift & Determinism**: All derived code and configs in `workplace/` must maintain 100% lineage traceability to `user/inputs/`.
 - **Context Integrity & Poisoning Resilience**: Guaranteed recovery to clean state within < 1 step upon detecting context contamination or severe hallucination.
 - **Zero-Overhead Single-Module Simplicity**: Single-module projects incur zero structural bloat, using direct flat directories.
-- **Token Cost Efficiency**: Achieve >= 50–70% token reduction in long-running agentic conversations compared to uncompressed context passing.
+- **Token Cost Efficiency**: *Target* of >= 50–70% token reduction in long-running agentic conversations compared to uncompressed context passing, validated by the benchmark harness (see *Benchmark & Metrics Provenance*). All percentage figures in this plan are targets until reproduced by that harness.
 - **Concurrency & Merge Safety**: Zero merge collisions during multi-agent concurrent execution via worktree isolation.
 - **Tamper Evidence**: Cryptographic non-repudiation of all ledger state transitions via SHA-256 block hashing.
+
+### Benchmark & Metrics Provenance
+All quantitative figures stated throughout this plan (e.g., "50–70% token reduction", "62% savings", "90% cost arbitrage", "+12.5% additional savings", "sub-1.2s surgical rollback", "0.1ms AST retrieval", ">85% parsing reduction", "cache_hit_ratio", "estimated_token_savings_pct") are **targets/design goals, not measured results**, until reproduced by the benchmark suite. Each figure MUST be tied to a reproducible methodology recorded under `benchmarks/`:
+- `benchmarks/methodology.md`: workload definition, corpus size, model/provider + version, measurement harness, warm/cold cache policy, and statistical treatment (median over N runs, confidence interval).
+- `benchmarks/results/<date>_<provider>_<model>.json`: raw measurements linked back to a Merkle ledger block so a claimed number is auditable to the run that produced it.
+- Until a figure is backed by a `benchmarks/results/*` entry it is rendered as a *target* in prose and in the dashboard FinOps tab.
+
+### Canonical Model Tiering & ID Centralization
+To prevent staleness and drift, concrete model IDs are **not** authoritative in this narrative. The single source of truth is `workplace/config/token_compression_rules.yaml`, which maps abstract tiers to provider-specific IDs:
+- Prose and diagrams refer only to abstract tiers — **Tier A** (Frontier / High-Reasoning), **Tier B** (Fast / Compact / High-Throughput), **Tier C** (Deterministic / Offline Rules). Any concrete model name appearing elsewhere (`claude-3-7-sonnet`, `gemini-2.0-*`, `gpt-4o/o1`, `deepseek-r1`, etc.) is an **illustrative reference for the current epoch only** and is superseded by the config.
+- The config carries a `models_epoch` date and a `review_by` date so tier→ID mappings are refreshed on a schedule rather than hard-coded across the document.
+
+### Security Hardening: `.nbpack` Threat Model, TEE Attestation & Key Management
+The "zero disk plaintext" + "RAM-only enclave" design raises the cost of exfiltration but does **not** by itself prevent IP theft on a host the client fully controls (the client can attach a debugger/ptrace, dump `tmpfs`/`ramfs`, or read process memory). The security claim is therefore restated and hardened:
+- **Honest claim**: On an untrusted client host, RAM-only hydration *raises the cost of and complicates* exfiltration; it does not guarantee prevention. A hard IP-protection guarantee requires a hardware **Trusted Execution Environment** (Intel SGX, AMD SEV-SNP, or AWS Nitro Enclaves) with **remote attestation**: the enclave proves its measured identity to the Neutron Binary key server before any decryption key is released.
+- **Key management**: The AES-256-GCM content key is never shipped inside the `.nbpack`. At `percipience init`, the enclave performs remote attestation and receives a short-lived, memory-only content key from a KMS/HSM (or the attestation authority) bound to the attested measurement; the key is zeroized on teardown and never touches disk. Ed25519 signing keys live in an HSM; only public keys ship to clients.
+- **Anti-tamper degradation**: If no TEE is available, the runtime downgrades to a clearly-labeled "obfuscation-only" posture (documented as best-effort, not IP-guaranteeing) rather than overclaiming protection.
+
+### Merkle Terminology Clarification (Tree vs. Chain vs. Epoch Rollup)
+The ledger combines three distinct constructs, and the term "Merkle" is used precisely as follows:
+- **Per-block Merkle tree**: within a single ledger block, a Merkle tree is built over all tracked artifact hashes, yielding `merkle_root`. This supports **inclusion proofs** (an artifact can be proven to belong to a block without revealing the whole block).
+- **Linear hash-chain across blocks**: blocks are linked by $H_i = \text{SHA256}(H_{i-1} + \text{canonical\_json}(\Delta_i) + T_i)$, giving append-only tamper evidence across time (this is a hash-chain, not a tree).
+- **Epoch rollup**: when height exceeds a threshold, a range of blocks is archived and summarized by an `epoch_rollup_hash` that commits to the archived segment, preserving continuity in $O(1)$ active state.
+
+### Ledger Concurrency & Hash-Chain Serialization
+Atomic `os.replace()` guarantees each write is all-or-nothing, but the hash-chain append (`prev_block_hash` → `current_block_hash`) must be **serialized** so two subagents cannot fork the chain:
+- **Single-host / multi-worktree**: a single advisory file lock (`flock` on `context/ledger/.ledger.lock`) plus an in-process mutex guards the read-modify-append critical section; `prev_block_hash` is read, the new block computed, and the file atomically replaced while the lock is held.
+- **Multi-host (BYOR / distributed)**: a distributed lock (e.g., DB row lock, Redis Redlock, or object-store conditional-put/compare-and-swap) provides the same single-writer guarantee; conflicting appends are rejected and retried against the new head.
+- **Ordering guarantee**: appends are strictly linearized (each block's `prev_block_hash` equals the previous committed `current_block_hash`); a losing writer re-reads the head and recomputes rather than forking.
+
+### Append-Only HITL & Quarantine Stores
+To avoid reintroducing the write races that worktree isolation solves, mutable single-file HITL stores are replaced by append-only, incident-scoped directories routed through the locked ledger:
+- Poisoning incidents: `user/hitl/poisoning/<incident_id>.md` (one immutable file per incident) instead of a single mutable `poisoning_quarantine.md`.
+- Flaky tests: `user/hitl/flaky/<test_id>.yaml` instead of a single mutable `flaky_quarantine.yaml`.
+- Each new incident file is registered in `context_ledger.yaml` under the ledger lock, so concurrent worktrees never contend on the same physical file. (The legacy single-file paths may remain as read-only rolled-up views generated from the directory.)
+
+### Operational Semantics: Rollback Data Loss, Determinism, Observability & Secrets
+- **Rollback data-loss semantics**: surgical rollback rewinds *agent-authored* artifacts and ledger nodes only. In-flight user-owned data in `user/` and externally-committed side effects (e.g., already-sent Jira transitions, pushed commits) are **not** silently discarded — they are captured in a `rollback_manifest` recording what was reverted, what was preserved, and any compensating actions required, surfaced to HITL before destructive rewind.
+- **Replay determinism**: because LLM outputs are non-deterministic, "incremental replay" reproduces state via a **determinism contract** — pinned model tier + provider/version, fixed `seed`/`temperature=0` where the provider supports it, and a **cached-response store** keyed by `(prompt_hash, model_epoch)`. Replay first serves cached responses; only cache misses re-invoke a model, and any divergence is flagged as a replay-drift incident rather than silently accepted.
+- **Engine self-observability**: beyond the customer dashboard, the agent engine emits its own structured telemetry (spans/metrics/logs, e.g., OpenTelemetry) for scheduler decisions, tier routing, lock contention, and enclave attestation events, so the *engine itself* — not just derived artifacts — is observable.
+- **Secrets handling**: all secrets (issue-tracker tokens, VCS deploy keys, KMS/HSM handles) are referenced only by secret-manager ARNs/URIs (as with the Jira `auth_secret_arn` example) — never inlined in `context_ledger.yaml`, `.nbpack`, or logs — and are resolved at runtime into the enclave with least-privilege scoping and rotation.
+
+### Input Template Path Canonicalization
+The canonical location for MVS ingestion templates is **`user/inputs/templates/`**. Earlier references to `input/templates/` are deprecated aliases retained only for backward compatibility and resolve (via symlink/shim) to the canonical path; new content and tooling MUST target `user/inputs/templates/`.
 
 ---
 
@@ -259,11 +326,11 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Quad-Space Clean Folder Architecture**: Standardize on four isolated top-level clean folders:
   - `context/`: Governance, schemas, contracts, state ledger, cryptographic chain, recovery snapshots, context maturity report templates.
   - `agentic/`: Prompt suites, agent role definitions, model tiering router, workflow DAGs, gates, hooks, replay mechanisms, methodologies.
-  - `workplace/`: Implementation source code, test suites, AND `workplace/config/` (or `workplace/modules/` and `workplace/shared/` in multi-module mode).
+  - `workplace/`: Implementation source code, test suites, `workplace/docs/`, AND `workplace/config/` (or `workplace/modules/` and `workplace/shared/` in multi-module mode).
   - `user/`: Dedicated input/output/HITL directory (`inputs/`, `hitl/`, `outputs/` / `reports/` / `dashboard/`).
 - **Dynamic Model Tier Router**:
   - Tier A (Frontier / High Reasoning): Complex MVS derivation, cross-module contract validation, architectural verification gates, security audits, context poisoning diagnosis.
-  - Tier B (Fast / Compact): AST symbol extraction, unified diff application, test scaffolding, commit drafting, dashboard data serialization.
+  - Tier B (Fast / Compact): AST symbol extraction, unified diff application, test scaffolding, commit drafting, dashboard data serialization, routine living documentation extraction.
 - **Git Worktree Isolation Engine**:
   - Ephemeral subagent working directories created via `git worktree add .workspaces/<agent_id> -b feature/<task>`.
   - Atomic verification gate checks out isolated branch, executes test suite, and merges to `main` upon approval.
@@ -283,6 +350,12 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Healthy Custom Agent Plugin Integration Pattern**:
   - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the [Plugin Architectural Guide](file:///agentic/templates/AGENT_PLUGIN_GUIDE.md).
   - Scaffolding, workflow DAG injection (`wf_pr_gatekeeper.yaml`), ephemeral worktree sandboxing, and pre/post Merkle block sealing (`RP_AGENT_*`) are governed by `AgentPluginEngine`.
+- **Autonomous In-Workflow Living Documentation Engine & Mermaid Visualizer (Living Docs)**:
+  - Software architecture documentation historically suffers from severe drift, rapidly becoming obsolete as code evolves. Percipience solves this by treating documentation as a compiled, living artifact of the codebase itself.
+  - `workplace/core/living_doc_engine.py` and `agentic/custom/agents/agent_living_doc_architect.yaml` run directly within workflow executions (such as PR gatekeeper checks, post-derivation runs, and release cuts).
+  - The engine inspects ASTs, wire contracts, and active layered domain plans, generating standardized Markdown documents in `workplace/docs/` with embedded Mermaid diagrams for architecture, module interfaces, sequence flows, data pipelines, entity-relationships, and domain specifics.
+  - Changes are tracked incrementally via content-addressable AST hashes so that unchanged modules cost zero extra tokens.
+  - A dedicated verification gate (`gate_doc_drift_verification`) ensures zero drift and verifies Mermaid syntax before code merge.
 - **Token FinOps & 15% Performance Fee Accounting Engine**:
   - Real-time token tracking (`TokenTracker`) capturing raw vs. AST-pruned tokens across multiple programming languages.
   - Transparent accounting logged to `context/ledger/token_savings_ledger.yaml` computing gross customer savings ($0.003/1K tokens) and 15% performance fee.
@@ -303,8 +376,8 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Model-Agnostic Cognitive Tiering Router (Scalability & FinOps Arbitrage)**:
   - Dynamically routes routine subagent tasks (AST pruning, linting, docs, test runs) to **Tier B** (`claude-3-5-haiku / flash`), delivering a 90% cost arbitrage while reserving **Tier A** (`claude-3-7-sonnet / pro`) for high-complexity reasoning (SemVer contract diffs, security audits, PR gate merge decisions).
 - **Autonomous CI/CD Specialist Agent Plugin Fleet & 6-Stage PR Gatekeeper (Ecosystem Extensibility)**:
-  - Standardizes four built-in specialist plugins in `agentic/custom/agents/`: `agent_flaky_test_detector`, `agent_contract_compatibility_checker`, `agent_dependency_cve_sentinel`, and `agent_doc_drift_synchronizer`.
-  - Integrates all four into the unified 6-stage PR gatekeeper workflow (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
+  - Standardizes five built-in specialist plugins in `agentic/custom/agents/`: `agent_flaky_test_detector`, `agent_contract_compatibility_checker`, `agent_dependency_cve_sentinel`, `agent_doc_drift_synchronizer`, and `agent_living_doc_architect`.
+  - Integrates all five into the unified PR gatekeeper workflow (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
 
 ---
 
@@ -327,7 +400,7 @@ mcp_integrations:
       on_hitl_quarantine: "Needs HITL Review"
     attach_maturity_report: true
     attach_merkle_proof: true
-ledger_version: "7.2.0"
+ledger_version: "7.3.0"
 project:
   name: "Enterprise_Unified_Ecosystem"
   domain: "Universal Multi-Module Enterprise Space"
@@ -406,6 +479,68 @@ contracts:
     version: "2.0.0"
     hash: "a1b2c3d4e5f67890123456789abcdef012345678"
     status: "Verified_Compatible"
+
+# Autonomous Living Documentation Engine Tracking (CAP-21)
+living_docs:
+  engine_enabled: true
+  docs_root: "workplace/docs/"
+  preferred_diagram_engine: "mermaid"
+  auto_sync_on_workflow_run: true
+  documents:
+    - id: "doc_arch_overview"
+      path: "workplace/docs/architecture.md"
+      title: "System Architecture & C4 Topology"
+      diagram_types: ["mermaid:graph", "mermaid:c4Component"]
+      source_hashes:
+        modules_hash: "7f8b9a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a"
+        contracts_hash: "d4e5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
+    - id: "doc_module_catalog"
+      path: "workplace/docs/module_catalog.md"
+      title: "Poly-Module Interface Catalog & Responsibilities"
+      diagram_types: ["mermaid:graph", "table:api_matrix"]
+      source_hashes:
+        ast_skeleton_hash: "3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f"
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
+    - id: "doc_sequence_flows"
+      path: "workplace/docs/sequence_flows.md"
+      title: "Runtime Execution & Cross-Module Sequence Flows"
+      diagram_types: ["mermaid:sequenceDiagram"]
+      source_hashes:
+        workflows_hash: "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b"
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
+    - id: "doc_data_flows"
+      path: "workplace/docs/data_flow.md"
+      title: "Data Transformation Pipelines & Event Streams"
+      diagram_types: ["mermaid:flowchart", "mermaid:stateDiagram-v2"]
+      source_hashes:
+        event_stream_hash: "a1b2c3d4e5f67890123456789abcdef012345678"
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
+    - id: "doc_entity_rel"
+      path: "workplace/docs/entity_relationship.md"
+      title: "Domain Models & Entity-Relationship Schema"
+      diagram_types: ["mermaid:erDiagram", "mermaid:classDiagram"]
+      source_hashes:
+        schemas_hash: "5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b"
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
+    - id: "doc_domain_extensions"
+      path: "workplace/docs/domain_extensions.md"
+      title: "Active Layered Domain Deep Dive"
+      active_layer_id: "domain_blockchained_audio"  # e.g., domain_iot_mobile, domain_saas_portal
+      diagram_types: ["mermaid:graph", "mermaid:sequenceDiagram"]
+      last_synced_commit: "9c8b7a6f"
+      merkle_block_id: 110
+      status: "Synchronized"
 
 model_tiering_policy:
   provider_agnostic: true
@@ -528,13 +663,20 @@ artifacts:
     derived_from: ["art_contract_api_01"]
     maturity: "Scaffolded"
 
+  - id: "art_living_docs_bundle"
+    name: "workplace_docs"
+    type: "LivingDocumentation"
+    source: "workplace/docs/"
+    derived_from: ["art_provider_service_01", "art_consumer_client_01", "art_contract_api_01"]
+    maturity: "Verified"
+
 git_commits:
   - commit_sha: "5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d"
     timestamp: "2026-09-13T14:46:00Z"
     author: "Percipience Agentic Engine (Claude / Gemini / GPT) <agent@antigravity.ai>"
     message: "feat(cross-module): integrate consumer module with provider service contract"
     linked_requirements: ["REQ-PROVIDER-API-01", "REQ-CONSUMER-INT-01"]
-    touched_artifacts: ["art_contract_api_01", "art_provider_service_01", "art_consumer_client_01"]
+    touched_artifacts: ["art_contract_api_01", "art_provider_service_01", "art_consumer_client_01", "art_living_docs_bundle"]
 
 remaining_issues:
   - issue_id: "ISSUE-003"
@@ -568,6 +710,10 @@ standard_issue_checklist:
   - check_id: "CHK_PLAN_ENVELOPE_SIGNATURE_VALID"
     passed: true
   - check_id: "CHK_PROPRIETARY_SPACES_OBFUSCATED"
+    passed: true
+  - check_id: "CHK_LIVING_DOCS_IN_SYNC"
+    passed: true
+  - check_id: "CHK_MERMAID_SYNTAX_VALID"
     passed: true
 
 workflow:
@@ -610,7 +756,16 @@ workflow:
       stage: "verify_integration"
       task_status: "Verified"
       verified_by_gate: "gate_cross_module_compatibility"
-      handoff_hook: "hook_integration_to_eval"
+      handoff_hook: "hook_integration_to_docs"
+    - id: "agent_living_doc_architect"
+      role: "Living Documentation & Architecture Visualizer"
+      model_tier: "Tier_B"
+      stage: "generate_living_documentation"
+      worktree: "wt_living_docs_01"
+      task_status: "Verified"
+      output_artifact: "art_living_docs_bundle"
+      verified_by_gate: "gate_doc_drift_verification"
+      handoff_hook: "hook_docs_to_eval"
   gates:
     - id: "gate_arch_review"
       type: "IndependentVerification"
@@ -622,12 +777,23 @@ workflow:
       verifier_agent: "agent_integration_verifier"
       checks: ["contract_schema_valid", "interface_payload_alignment", "e2e_sim_test_passed"]
       result: "Passed"
+    - id: "gate_doc_drift_verification"
+      type: "LivingDocSyncGate"
+      verifier_agent: "agent_doc_drift_synchronizer"
+      checks: ["ast_symbol_coverage", "mermaid_syntax_validity", "contract_doc_alignment", "zero_stale_diagrams"]
+      result: "Passed"
   hooks:
     - id: "hook_arch_to_devs"
       trigger: "on_gate_pass:gate_arch_review"
       from_agent: "agent_architect"
       to_agents: ["agent_provider_developer", "agent_consumer_developer"]
       payload_artifact: "art_contract_api_01"
+      status: "Fired"
+    - id: "hook_integration_to_docs"
+      trigger: "on_gate_pass:gate_cross_module_compatibility"
+      from_agent: "agent_integration_verifier"
+      to_agents: ["agent_living_doc_architect"]
+      payload_artifact: "art_provider_service_01"
       status: "Fired"
 ```
 
@@ -637,11 +803,13 @@ workflow:
 
 ```mermaid
 sequenceDiagram
+  autonumber
   participant Jira as Atlassian Jira Software
   participant MCP as Jira MCP Server (@modelcontextprotocol/server-jira)
   participant Ingest as Percipience MVS Ingest Engine
   participant Worktree as Ephemeral Subagent Worktree
   participant Verifier as Independent Verification Gate
+  participant DocAgent as agent_living_doc_architect
   participant Merkle as Merkle Ledger Engine
 
   Note over Jira,MCP: 1. Story Prepared by Product Owner
@@ -664,10 +832,15 @@ sequenceDiagram
   Worktree->>Verifier: Run gate_contract_compatibility & gate_test_verification
   Verifier-->>Worktree: Verification Passed (Coverage >= 85%, Zero Drift)
 
-  Note over Verifier,Jira: 5. Merkle Seal & Bi-Directional Closure
-  Verifier->>Merkle: Append Block H_i, compute Merkle Root
+  Note over Verifier,DocAgent: 5. Living Documentation & Visual Synthesis (CAP-21)
+  Verifier->>DocAgent: Trigger AST & contract introspection
+  DocAgent->>DocAgent: Synthesize Mermaid diagrams (architecture, sequence, data flow, ERD)
+  DocAgent->>DocAgent: Update workplace/docs/ (modules, sequences, architecture, domain)
+
+  Note over DocAgent,Jira: 6. Merkle Seal & Bi-Directional Closure
+  DocAgent->>Merkle: Append Block H_i, compute Merkle Root with living_docs hashes
   Merkle-->>Ingest: Merkle Block Hash (SHA-256) & Git Commit SHA
-  Ingest->>MCP: call_tool: jira_add_comment(issue_key='PERC-1042', comment='Maturity: 0.94, Merkle SHA: e3b0c4..., Tests: 42 passed')
+  Ingest->>MCP: call_tool: jira_add_comment(issue_key='PERC-1042', comment='Maturity: 0.94, Merkle SHA: e3b0c4..., Docs: workplace/docs/ synchronized with Mermaid models')
   Ingest->>MCP: call_tool: jira_transition_issue(issue_key='PERC-1042', status='Done')
   MCP->>Jira: Issue PERC-1042 updated with audit evidence and closed
 ```
@@ -676,7 +849,7 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-  PlanSource["Proprietary Parent Master Plan (.md)<br/>+ agentic/ (Prompt Suites & Workflows)<br/>+ context/ (Schemas & State Engines)"] --> Compiler["percipience pack Compiler<br/>(AST Minification + Manging + Ed25519 Signer)"]
+  PlanSource["Proprietary Parent Master Plan (.md)<br/>+ agentic/ (Prompt Suites & Workflows)<br/>+ context/ (Schemas & State Engines)"] --> Compiler["percipience pack Compiler<br/>(AST Minification + Mangling + Ed25519 Signer)"]
   Compiler --> SealedPack[".percipience/parent_master.nbpack<br/>(AES-256-GCM Encrypted Binary Envelope)"]
   
   SealedPack --> Boot["percipience init --mode multi_module --parent-plan parent_master.nbpack"]
@@ -710,10 +883,11 @@ graph TD
     SIM --> SIM_PASS{E2E Tests Pass?}
   end
 
-  SIM_PASS -- Yes --> E["Atomic Merge to main & Log Multi-Module Recovery Point (RP_SYS_k)"]
+  SIM_PASS -- Yes --> DOC["Living Documentation Agent (agent_living_doc_architect)<br/>AST Introspection & Mermaid Synthesis into workplace/docs/"]
   SIM_PASS -- "Poisoning Detected in Consumer" --> SRM["Surgical Rollback: Rewind Consumer to RP_CONS_k<br/>Provider Service remains untouched!<br/>Quarantine culprit in user/hitl/poisoning_quarantine.md"]
   SRM --> WT2
 
+  DOC --> E["Atomic Merge to main & Log Multi-Module Recovery Point (RP_SYS_k)"]
   E --> F["Reconcile Master Context Ledger & Merkle Block Chaining"]
   F --> G["Multi-Dimensional Context Maturity & Multi-Module Dashboard<br/>(user/outputs/dashboard/index.html)"]
   G --> H{Final Gate Passed?}
@@ -741,6 +915,16 @@ graph TD
 │   └── methodologies/                        # Proprietary agentic heuristics & playbooks
 ├── workplace/                               # [CLIENT-ACCESSIBLE / TRANSPARENT FILESYSTEM]
 │   ├── config/project_master_config.yaml
+│   ├── core/
+│   │   └── living_doc_engine.py              # In-workflow AST living doc generator
+│   ├── docs/                                 # Living documentation & visual models
+│   │   ├── README.md                         # Documentation index & guide
+│   │   ├── architecture.md                   # System C4 & component diagrams (Mermaid)
+│   │   ├── module_catalog.md                 # Public interface catalog & exports
+│   │   ├── sequence_flows.md                 # Runtime execution sequence flows (Mermaid)
+│   │   ├── data_flow.md                      # Data pipelines & event streams (Mermaid)
+│   │   ├── entity_relationship.md            # Schema ER diagrams (Mermaid erDiagram)
+│   │   └── domain_extensions.md              # Active layered domain deep-dive docs
 │   ├── src/
 │   ├── include/
 │   └── tests/
@@ -789,8 +973,16 @@ graph TD
 │       ├── flaky_test_detector.yaml          # Test stabilization & quarantine guard
 │       ├── contract_compatibility_checker.yaml # SemVer wire contract guard
 │       ├── dependency_cve_sentinel.yaml      # Supply-chain security sentinel
-│       └── doc_drift_synchronizer.yaml       # Blueprint documentation sync guard
+│       ├── doc_drift_synchronizer.yaml       # Blueprint documentation sync guard
+│       └── agent_living_doc_architect.yaml   # In-workflow living doc & Mermaid visualizer
 ├── workplace/                               # [CLIENT-ACCESSIBLE / TRANSPARENT FILESYSTEM]
+│   ├── core/
+│   │   ├── autonomous_cicd.py
+│   │   ├── agent_plugin_engine.py
+│   │   ├── token_tracker.py
+│   │   ├── byor_adapter.py
+│   │   ├── layered_context_validator.py
+│   │   └── living_doc_engine.py              # In-workflow AST living doc & Mermaid generator
 │   ├── shared/                             # Cross-boundary protocols and generated types
 │   │   ├── protos/
 │   │   └── generated/
@@ -819,7 +1011,14 @@ graph TD
 │   │   └── recovery/
 │   │       ├── surgical_rollback_manager.py
 │   │       └── ledger_chain_verifier.py
-│   └── docs/
+│   └── docs/                               # Living visual documentation
+│       ├── README.md                       # Documentation index & map
+│       ├── architecture.md                 # System C4 topologies & component graphs (Mermaid)
+│       ├── module_catalog.md               # Poly-module interface & API catalog
+│       ├── sequence_flows.md               # Runtime sequence diagrams (Mermaid)
+│       ├── data_flow.md                    # Data pipeline & event stream DAGs (Mermaid)
+│       ├── entity_relationship.md          # Schema ER diagrams (Mermaid erDiagram)
+│       ├── domain_extensions.md            # Active layered domain deep-dive docs
 │       └── parent_context_engineering_guide.md
 └── user/
     ├── inputs/
@@ -841,79 +1040,87 @@ graph TD
 
 ### Comprehensive Component Inventory & Production Manifest
 
-To guarantee enterprise rigor and zero ambiguity, every architectural component specified across the 15 core capabilities is formally realized and instantiated across the Quad-Space workspace:
+To guarantee enterprise rigor and zero ambiguity, every architectural component specified across the 21 core capabilities (`CAP-01`..`CAP-21`) is enumerated below with its intended Quad-Space location. The **Target State** column reflects the planned lifecycle stage for each artifact (`Planned | Scaffolded | Implemented | Verified`); because this is a design document, most artifacts are `Planned` until validated by the benchmark and test harness (see *Benchmark & Metrics Provenance* below). It must not be read as an assertion that the component is already built and verified.
 
-| Space | Subsystem / Component | Path | Format & Engine | Verification Mechanism | Status |
+| Space | Subsystem / Component | Path | Format & Engine | Verification Mechanism | Target State |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`context/`** | Master State Ledger | `context/ledger/context_ledger.yaml` | YAML Merkle DAG | SHA-256 Block Chaining (`ledger_chain_verifier.py`) | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Public Sanitized Projection | `context/ledger/context_ledger.public.yaml` | YAML Status View | Masked state projection | **Active & Verified (Public)** |
-| **`context/`** | Master Ledger Schema | `context/schemas/context_ledger_schema.yaml` | JSON Schema Draft-07 | Syntax & Schema Validation | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Recovery Point Schema | `context/schemas/recovery_point_schema.yaml` | JSON Schema Draft-07 | Snapshot Contract Validation | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Ledger Block Chain Schema | `context/schemas/ledger_chain_schema.yaml` | JSON Schema Draft-07 | Merkle Header Conformance | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Cross-Module Service Contract | `context/contracts/service_contract.yaml` | YAML OpenAPI Contract | `gate_cross_module_compatibility` | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Cross-Module Event Spec | `context/contracts/event_stream_spec.yaml` | AsyncAPI YAML Contract | Payload & Event Validation | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Cross-Module Entity Schema | `context/contracts/common_schema.json` | JSON Schema Contract | Schema Compatibility Check | **Encrypted in .nbpack & RAM Enclave** |
-| **`context/`** | Maturity Report Template | `context/reports/context_maturity_report_template.md`| Markdown Template | 6-Dimensional Score Evaluation | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Master System Prompt | `agentic/prompts/system_prompt.md` | Markdown Prompt | Quad-Space Invariant Assertion | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Bootstrapping Prompt | `agentic/prompts/bootstrapping_prompt.md` | Markdown Prompt | Dual-Mode Folder Scaffolding | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Derivation Metaprompt | `agentic/prompts/derivation_prompt.md` | Markdown Prompt | MVS ASG Synthesizer | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Evaluation & Refinement Prompt | `agentic/prompts/evaluation_refinement_prompt.md` | Markdown Prompt | Scorecard Generator | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Lifecycle Delivery Prompt | `agentic/prompts/lifecycle_delivery_prompt.md` | Markdown Prompt | Release Manifest Sealer | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Worktree Orchestration Prompt | `agentic/prompts/workflow_orchestration_prompt.md` | Markdown Prompt | Ephemeral Subagent Lease Gate | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Cross-Module Orchestrator | `agentic/workflows/cross_module_orchestrator.yaml` | YAML Workflow DAG | Multi-Module Compatibility Check | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Model Tiering Router | `agentic/workflows/model_tiering_router.yaml` | YAML Policy | Frontier vs. Fast Model Routing | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Jira / Linear MCP Sync Workflow | `agentic/workflows/issue_tracker_sync_workflow.yaml`| YAML Workflow | Model Context Protocol Tool Call | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Zero-Drift Engineering Rules | `agentic/methodologies/zero_drift_rules.md` | Markdown Heuristic | AST Spec-to-Code Parity Gate | **Encrypted in .nbpack & RAM Enclave** |
-| **`agentic/`** | Poisoning Defense Playbook | `agentic/methodologies/poisoning_defense_playbook.md`| Markdown Heuristic | 4-Step Remediation Protocol | **Encrypted in .nbpack & RAM Enclave** |
-| **`workplace/`**| Master Project Configuration | `workplace/config/project_master_config.yaml` | YAML Config | Dual-Mode Module Registry | **Active & Verified** |
-| **`workplace/`**| Token Compression Rules | `workplace/config/token_compression_rules.yaml` | YAML Config | AST Pruner & Cache Alignment | **Active & Verified** |
-| **`workplace/`**| Issue Tracker MCP Config | `workplace/config/issue_tracker_mcp.yaml` | YAML Config | Jira MCP Server Binding | **Active & Verified** |
-| **`workplace/`**| Plan Pack Compiler | `workplace/templates/packaging/plan_pack_compiler.py` | Python 3 CLI | Ed25519 / AES-256-GCM Packaging | **Active & Verified** |
-| **`workplace/`**| Enclave Runtime Hydrator | `workplace/templates/packaging/envelope_hydrator.py` | Python 3 CLI | RAM-Enclave Memory Hydration | **Active & Verified** |
-| **`workplace/`**| Virtual Service Loopback Bridge | `workplace/templates/bridge/virtual_service_bridge.py` | Python 3 Async Socket| Local Virtual Integration Loopback | **Active & Verified** |
-| **`workplace/`**| Mock Service Daemon Emulator | `workplace/templates/bridge/mock_service_daemon.py` | Python 3 Daemon | Synthetic Service Telemetry Stream | **Active & Verified** |
-| **`workplace/`**| Worktree Lease Manager | `workplace/templates/concurrency/worktree_manager.py`| Python 3 CLI | Ephemeral Worktree Provisioning | **Active & Verified** |
-| **`workplace/`**| Atomic Verification Gate Merger | `workplace/templates/concurrency/atomic_gate_merger.py`| Python 3 CLI | Gate Enforcement & Git Atomic Merge| **Active & Verified** |
-| **`workplace/`**| Surgical Rollback Manager | `workplace/templates/recovery/surgical_rollback_manager.py`| Python 3 CLI | Module-Scoped State Rewind | **Active & Verified** |
-| **`workplace/`**| Ledger Chain Cryptographic Verifier| `workplace/templates/recovery/ledger_chain_verifier.py`| Python 3 CLI | SHA-256 Merkle Block Continuity | **Active & Verified** |
-| **`user/`** | MVS Feature Spec Template | `user/inputs/templates/mvs_feature_spec.md` | Markdown + Gherkin | MVS Ingestion Pipeline | **Active & Verified** |
-| **`user/`** | MVS OpenAPI Contract Template | `user/inputs/templates/mvs_api_contract.yaml` | OpenAPI 3.1 YAML | Schema Validation & Stub Codegen | **Active & Verified** |
-| **`user/`** | MVS Event Stream Template | `user/inputs/templates/mvs_event_stream.yaml` | AsyncAPI 3.0 YAML | Pub/Sub Topic & Payload Linting | **Active & Verified** |
-| **`user/`** | MVS ADR Blueprint Template | `user/inputs/templates/mvs_adr_blueprint.md` | Markdown + Mermaid | Architectural Constraint Engine | **Active & Verified** |
-| **`user/`** | MVS Jira Story JSON Template | `user/inputs/templates/mvs_jira_story.json` | JSON Schema Interchange | Jira MCP Ingestion Engine | **Active & Verified** |
-| **`user/`** | MVS UI Design Tokens Template | `user/inputs/templates/mvs_design_tokens.json` | JSON Design System | WCAG 2.1 AA Contrast Auditing | **Active & Verified** |
-| **`user/`** | Context Poisoning Quarantine Log | `user/hitl/poisoning_quarantine.md` | Markdown Quarantine | HITL Inspection Protocol | **Active & Verified** |
-| **`user/`** | Clarification Sample Request | `user/hitl/clr_sample_request.md` | Markdown Clarification | Operator Disambiguation Gate | **Active & Verified** |
-| **`user/`** | Visual DAG & Time-Travel Console | `user/outputs/dashboard/index.html` | HTML5 / CSS3 / JS | Static Browser Visualization | **Active & Verified** |
-| **`user/`** | Visual DAG Frontend Controller | `user/outputs/dashboard/app.js` | Vanilla ES6 JavaScript | Real-time Merkle Node Explorer | **Active & Verified** |
-| **`user/`** | Visual DAG Dark-Mode Styling | `user/outputs/dashboard/style.css` | Modern CSS Grid / Flex | Responsive Dashboard Styling | **Active & Verified** |
-| **`workplace/`**| Autonomous CI/CD Triad Engine | `workplace/core/autonomous_cicd.py` | Python 3 Module | Self-Sustaining, Self-Recovering, Self-Improving | **Active & Verified** |
-| **`workplace/`**| Agent Plugin Engine | `workplace/core/agent_plugin_engine.py` | Python 3 Module | Custom Plugin Lifecycle & Merkle Sealing | **Active & Verified** |
-| **`workplace/`**| Token FinOps & Savings Tracker | `workplace/core/token_tracker.py` | Python 3 Module | Real-time AST Token Metering & 15% Rev-Share | **Active & Verified** |
-| **`workplace/`**| Multi-VCS BYOR Remote Adapter | `workplace/core/byor_adapter.py` | Python 3 Module | SSH Key & Webhook Multi-Vendor VCS Bridge | **Active & Verified** |
-| **`workplace/`**| 3-Tier Layered Context Validator | `workplace/core/layered_context_validator.py` | Python 3 Module | Platform Invariant Precedence Enforcement | **Active & Verified** |
-| **`workplace/`**| Observability Telemetry Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Active & Verified** |
-| **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Active & Verified** |
-| **`agentic/`** | Agent Plugin Architecture Guide | `agentic/templates/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Active & Verified** |
-| **`context/`** | Token Savings Ledger | `context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Active & Verified** |
-| **`context/`** | Self-Improving Telemetry Ledger | `context/ledger/self_improving_ledger.yaml` | YAML Ledger | Closed-Loop Optimization History | **Active & Verified** |
-| **`user/`** | Autonomous CI/CD Strategic Roadmap| `user/outputs/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Active & Verified** |
-| **`user/`** | Benchmark Whitepaper (62% Savings)| `user/outputs/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Active & Verified** |
-| **`user/`** | Token Savings Scorecard Report | `user/outputs/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Active & Verified** |
-| **`platform`** | Unified CLI Control Plane | `bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Active & Verified** |
-| **`user/`** | Context Maturity Report | `user/outputs/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Active & Verified** |
-| **`workplace/`**| Model Cognitive Router | `workplace/core/cognitive_router.py` | Python 3 Module | Tier A / Tier B Model Dispatcher & FinOps Arbitrage | **Active & Verified** |
-| **`workplace/`**| Flaky Test Isolation Engine | `workplace/core/flaky_test_detector.py` | Python 3 Module | Multi-run Test Stability & Non-blocking Quarantine | **Active & Verified** |
-| **`workplace/`**| Contract Compatibility Checker | `workplace/core/contract_compatibility_checker.py` | Python 3 Module | SemVer & Wire Contract Backward-Compatibility Diff | **Active & Verified** |
-| **`workplace/`**| Dependency CVE Sentinel | `workplace/core/dependency_cve_sentinel.py` | Python 3 Module | Supply-Chain Vulnerability & License Auditor | **Active & Verified** |
-| **`workplace/`**| Doc Drift Synchronizer | `workplace/core/doc_drift_synchronizer.py` | Python 3 Module | AST Export vs Markdown Blueprint Sync | **Active & Verified** |
-| **`agentic/`** | Flaky Test Detector Manifest | `agentic/custom/agents/flaky_test_detector.yaml` | YAML Specification | Autonomous Flaky Test Isolation Guard | **Active & Verified** |
-| **`agentic/`** | Contract Checker Manifest | `agentic/custom/agents/contract_compatibility_checker.yaml` | YAML Specification | Wire Contract Evolution & SemVer Guard | **Active & Verified** |
-| **`agentic/`** | Dependency CVE Manifest | `agentic/custom/agents/dependency_cve_sentinel.yaml` | YAML Specification | Supply-Chain Security & License Sentinel | **Active & Verified** |
-| **`agentic/`** | Doc Drift Manifest | `agentic/custom/agents/doc_drift_synchronizer.yaml` | YAML Specification | Architectural Blueprint & Doc Drift Synchronizer | **Active & Verified** |
-| **`context/`** | Merkle Epoch Checkpoint Archives | `context/ledger/archive/epoch_*.json` | JSON Archive | Constant-size Active Window & Cryptographic Rollups | **Active & Verified** |
-| **`user/`** | Flaky Test Quarantine Registry | `user/hitl/flaky_quarantine.yaml` | YAML Registry | Non-blocking Flaky Test Isolation Store | **Active & Verified** |
-| **`platform`** | Standardized Integration Test Suite | `tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Active & Verified** |
+| **`context/`** | Master State Ledger | `context/ledger/context_ledger.yaml` | YAML Merkle DAG | SHA-256 Block Chaining (`ledger_chain_verifier.py`) | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Public Sanitized Projection | `context/ledger/context_ledger.public.yaml` | YAML Status View | Masked state projection | **Planned (Public projection)** |
+| **`context/`** | Master Ledger Schema | `context/schemas/context_ledger_schema.yaml` | JSON Schema Draft-07 | Syntax & Schema Validation | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Recovery Point Schema | `context/schemas/recovery_point_schema.yaml` | JSON Schema Draft-07 | Snapshot Contract Validation | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Ledger Block Chain Schema | `context/schemas/ledger_chain_schema.yaml` | JSON Schema Draft-07 | Merkle Header Conformance | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Cross-Module Service Contract | `context/contracts/service_contract.yaml` | YAML OpenAPI Contract | `gate_cross_module_compatibility` | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Cross-Module Event Spec | `context/contracts/event_stream_spec.yaml` | AsyncAPI YAML Contract | Payload & Event Validation | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Cross-Module Entity Schema | `context/contracts/common_schema.json` | JSON Schema Contract | Schema Compatibility Check | **Planned (sealed in .nbpack enclave)** |
+| **`context/`** | Maturity Report Template | `context/reports/context_maturity_report_template.md`| Markdown Template | 6-Dimensional Score Evaluation | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Master System Prompt | `agentic/prompts/system_prompt.md` | Markdown Prompt | Quad-Space Invariant Assertion | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Bootstrapping Prompt | `agentic/prompts/bootstrapping_prompt.md` | Markdown Prompt | Dual-Mode Folder Scaffolding | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Derivation Metaprompt | `agentic/prompts/derivation_prompt.md` | Markdown Prompt | MVS ASG Synthesizer | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Evaluation & Refinement Prompt | `agentic/prompts/evaluation_refinement_prompt.md` | Markdown Prompt | Scorecard Generator | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Lifecycle Delivery Prompt | `agentic/prompts/lifecycle_delivery_prompt.md` | Markdown Prompt | Release Manifest Sealer | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Worktree Orchestration Prompt | `agentic/prompts/workflow_orchestration_prompt.md` | Markdown Prompt | Ephemeral Subagent Lease Gate | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Cross-Module Orchestrator | `agentic/workflows/cross_module_orchestrator.yaml` | YAML Workflow DAG | Multi-Module Compatibility Check | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Model Tiering Router | `agentic/workflows/model_tiering_router.yaml` | YAML Policy | Frontier vs. Fast Model Routing | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Jira / Linear MCP Sync Workflow | `agentic/workflows/issue_tracker_sync_workflow.yaml`| YAML Workflow | Model Context Protocol Tool Call | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Zero-Drift Engineering Rules | `agentic/methodologies/zero_drift_rules.md` | Markdown Heuristic | AST Spec-to-Code Parity Gate | **Planned (sealed in .nbpack enclave)** |
+| **`agentic/`** | Poisoning Defense Playbook | `agentic/methodologies/poisoning_defense_playbook.md`| Markdown Heuristic | 4-Step Remediation Protocol | **Planned (sealed in .nbpack enclave)** |
+| **`workplace/`**| Master Project Configuration | `workplace/config/project_master_config.yaml` | YAML Config | Dual-Mode Module Registry | **Planned** |
+| **`workplace/`**| Token Compression Rules | `workplace/config/token_compression_rules.yaml` | YAML Config | AST Pruner & Cache Alignment | **Planned** |
+| **`workplace/`**| Issue Tracker MCP Config | `workplace/config/issue_tracker_mcp.yaml` | YAML Config | Jira MCP Server Binding | **Planned** |
+| **`workplace/`**| Plan Pack Compiler | `workplace/templates/packaging/plan_pack_compiler.py` | Python 3 CLI | Ed25519 / AES-256-GCM Packaging | **Planned** |
+| **`workplace/`**| Enclave Runtime Hydrator | `workplace/templates/packaging/envelope_hydrator.py` | Python 3 CLI | RAM-Enclave Memory Hydration | **Planned** |
+| **`workplace/`**| Virtual Service Loopback Bridge | `workplace/templates/bridge/virtual_service_bridge.py` | Python 3 Async Socket| Local Virtual Integration Loopback | **Planned** |
+| **`workplace/`**| Mock Service Daemon Emulator | `workplace/templates/bridge/mock_service_daemon.py` | Python 3 Daemon | Synthetic Service Telemetry Stream | **Planned** |
+| **`workplace/`**| Worktree Lease Manager | `workplace/templates/concurrency/worktree_manager.py`| Python 3 CLI | Ephemeral Worktree Provisioning | **Planned** |
+| **`workplace/`**| Atomic Verification Gate Merger | `workplace/templates/concurrency/atomic_gate_merger.py`| Python 3 CLI | Gate Enforcement & Git Atomic Merge| **Planned** |
+| **`workplace/`**| Surgical Rollback Manager | `workplace/templates/recovery/surgical_rollback_manager.py`| Python 3 CLI | Module-Scoped State Rewind | **Planned** |
+| **`workplace/`**| Ledger Chain Cryptographic Verifier| `workplace/templates/recovery/ledger_chain_verifier.py`| Python 3 CLI | SHA-256 Merkle Block Continuity | **Planned** |
+| **`user/`** | MVS Feature Spec Template | `user/inputs/templates/mvs_feature_spec.md` | Markdown + Gherkin | MVS Ingestion Pipeline | **Planned** |
+| **`user/`** | MVS OpenAPI Contract Template | `user/inputs/templates/mvs_api_contract.yaml` | OpenAPI 3.1 YAML | Schema Validation & Stub Codegen | **Planned** |
+| **`user/`** | MVS Event Stream Template | `user/inputs/templates/mvs_event_stream.yaml` | AsyncAPI 3.0 YAML | Pub/Sub Topic & Payload Linting | **Planned** |
+| **`user/`** | MVS ADR Blueprint Template | `user/inputs/templates/mvs_adr_blueprint.md` | Markdown + Mermaid | Architectural Constraint Engine | **Planned** |
+| **`user/`** | MVS Jira Story JSON Template | `user/inputs/templates/mvs_jira_story.json` | JSON Schema Interchange | Jira MCP Ingestion Engine | **Planned** |
+| **`user/`** | MVS UI Design Tokens Template | `user/inputs/templates/mvs_design_tokens.json` | JSON Design System | WCAG 2.1 AA Contrast Auditing | **Planned** |
+| **`user/`** | Context Poisoning Quarantine Log | `user/hitl/poisoning_quarantine.md` | Markdown Quarantine | HITL Inspection Protocol | **Planned** |
+| **`user/`** | Clarification Sample Request | `user/hitl/clr_sample_request.md` | Markdown Clarification | Operator Disambiguation Gate | **Planned** |
+| **`user/`** | Visual DAG & Time-Travel Console | `user/outputs/dashboard/index.html` | HTML5 / CSS3 / JS | Static Browser Visualization | **Planned** |
+| **`user/`** | Visual DAG Frontend Controller | `user/outputs/dashboard/app.js` | Vanilla ES6 JavaScript | Real-time Merkle Node Explorer | **Planned** |
+| **`user/`** | Visual DAG Dark-Mode Styling | `user/outputs/dashboard/style.css` | Modern CSS Grid / Flex | Responsive Dashboard Styling | **Planned** |
+| **`workplace/`**| Autonomous CI/CD Triad Engine | `workplace/core/autonomous_cicd.py` | Python 3 Module | Self-Sustaining, Self-Recovering, Self-Improving | **Planned** |
+| **`workplace/`**| Agent Plugin Engine | `workplace/core/agent_plugin_engine.py` | Python 3 Module | Custom Plugin Lifecycle & Merkle Sealing | **Planned** |
+| **`workplace/`**| Token FinOps & Savings Tracker | `workplace/core/token_tracker.py` | Python 3 Module | Real-time AST Token Metering & 15% Rev-Share | **Planned** |
+| **`workplace/`**| Multi-VCS BYOR Remote Adapter | `workplace/core/byor_adapter.py` | Python 3 Module | SSH Key & Webhook Multi-Vendor VCS Bridge | **Planned** |
+| **`workplace/`**| 3-Tier Layered Context Validator | `workplace/core/layered_context_validator.py` | Python 3 Module | Platform Invariant Precedence Enforcement | **Planned** |
+| **`workplace/`**| Observability Telemetry Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Planned** |
+| **`workplace/`**| Living Documentation Engine | `workplace/core/living_doc_engine.py` | Python 3 Module | AST & Contract living docs & Mermaid visualizer | **Planned** |
+| **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Planned** |
+| **`agentic/`** | Agent Plugin Architecture Guide | `agentic/templates/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Planned** |
+| **`context/`** | Token Savings Ledger | `context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Planned** |
+| **`context/`** | Self-Improving Telemetry Ledger | `context/ledger/self_improving_ledger.yaml` | YAML Ledger | Closed-Loop Optimization History | **Planned** |
+| **`user/`** | Autonomous CI/CD Strategic Roadmap| `user/outputs/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Planned** |
+| **`user/`** | Benchmark Whitepaper (62% Savings)| `user/outputs/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Planned** |
+| **`user/`** | Token Savings Scorecard Report | `user/outputs/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Planned** |
+| **`platform`** | Unified CLI Control Plane | `bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Planned** |
+| **`user/`** | Context Maturity Report | `user/outputs/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Planned** |
+| **`workplace/`**| Model Cognitive Router | `workplace/core/cognitive_router.py` | Python 3 Module | Tier A / Tier B Model Dispatcher & FinOps Arbitrage | **Planned** |
+| **`workplace/`**| Flaky Test Isolation Engine | `workplace/core/flaky_test_detector.py` | Python 3 Module | Multi-run Test Stability & Non-blocking Quarantine | **Planned** |
+| **`workplace/`**| Contract Compatibility Checker | `workplace/core/contract_compatibility_checker.py` | Python 3 Module | SemVer & Wire Contract Backward-Compatibility Diff | **Planned** |
+| **`workplace/`**| Dependency CVE Sentinel | `workplace/core/dependency_cve_sentinel.py` | Python 3 Module | Supply-Chain Vulnerability & License Auditor | **Planned** |
+| **`workplace/`**| Doc Drift Synchronizer | `workplace/core/doc_drift_synchronizer.py` | Python 3 Module | AST Export vs Markdown Blueprint Sync | **Planned** |
+| **`agentic/`** | Flaky Test Detector Manifest | `agentic/custom/agents/flaky_test_detector.yaml` | YAML Specification | Autonomous Flaky Test Isolation Guard | **Planned** |
+| **`agentic/`** | Contract Checker Manifest | `agentic/custom/agents/contract_compatibility_checker.yaml` | YAML Specification | Wire Contract Evolution & SemVer Guard | **Planned** |
+| **`agentic/`** | Dependency CVE Manifest | `agentic/custom/agents/dependency_cve_sentinel.yaml` | YAML Specification | Supply-Chain Security & License Sentinel | **Planned** |
+| **`agentic/`** | Doc Drift Manifest | `agentic/custom/agents/doc_drift_synchronizer.yaml` | YAML Specification | Architectural Blueprint & Doc Drift Synchronizer | **Planned** |
+| **`agentic/`** | Living Documentation Agent Manifest| `agentic/custom/agents/agent_living_doc_architect.yaml` | YAML Specification | In-workflow Living Documentation & Mermaid Visualizer | **Planned** |
+| **`context/`** | Merkle Epoch Checkpoint Archives | `context/ledger/archive/epoch_*.json` | JSON Archive | Constant-size Active Window & Cryptographic Rollups | **Planned** |
+| **`user/`** | Flaky Test Quarantine Registry | `user/hitl/flaky_quarantine.yaml` | YAML Registry | Non-blocking Flaky Test Isolation Store | **Planned** |
+| **`workplace/`**| Living Architecture Document | `workplace/docs/architecture.md` | Markdown + Mermaid | System Topologies, Boundaries & C4 Components | **Planned** |
+| **`workplace/`**| Poly-Module Interface Catalog | `workplace/docs/module_catalog.md` | Markdown + Mermaid | Module Inventory, Public APIs & Dependencies | **Planned** |
+| **`workplace/`**| Runtime Sequence Flow Document | `workplace/docs/sequence_flows.md` | Markdown + Mermaid | Execution Sequences & Cross-Module Handshakes | **Planned** |
+| **`workplace/`**| Data Flow & Pipeline Document | `workplace/docs/data_flow.md` | Markdown + Mermaid | Ingestion DAGs, Event Streams & State Machines | **Planned** |
+| **`workplace/`**| Entity-Relationship Document | `workplace/docs/entity_relationship.md` | Markdown + Mermaid | DDL Relations, Data Models & Schema Mappings | **Planned** |
+| **`workplace/`**| Domain Layer Extensions Document| `workplace/docs/domain_extensions.md` | Markdown + Mermaid | Active Layered Domain Deep Dive Visuals | **Planned** |
+| **`platform`** | Standardized Integration Test Suite | `tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Planned** |
 
 ---
 
@@ -927,7 +1134,8 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 4. **Cross-Module Contract Compatibility Gate Test**: Intentionally alter an endpoint payload schema in `service_contract.yaml`; verify `gate_cross_module_compatibility` flags the breaking change before merging.
 5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Consumer module; verify that only the Consumer module rolls back to its recovery point (`RP_CONS_004`), leaving the Provider Service builds (`RP_PROV_003`) completely untouched.
 6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the client application simulator interacts with the mock service daemon over loopback, confirming request routing, payload rendering, and event streaming.
-7. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
+7. **Living Documentation & Mermaid Visualizer Verification Test**: Run `workplace/core/living_doc_engine.py` across derived multi-module repositories; verify that `workplace/docs/` contains complete, non-empty Markdown files (`architecture.md`, `module_catalog.md`, `sequence_flows.md`, `data_flow.md`, `entity_relationship.md`, `domain_extensions.md`), that all embedded Mermaid blocks pass syntax parsing, and that AST-to-doc hash synchronization avoids unnecessary token burn on unchanged files.
+8. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
 
 ---
 
@@ -936,7 +1144,7 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 ### Step 1: Define Parent Ledger Schema, Dual-Mode & Multi-Module Contracts
 Establish the machine-readable YAML schemas for `context_ledger.yaml` supporting `mode: single_module | multi_module`, module registries, cross-module contracts, Merkle hash chaining, plan security parameters, and surgical recovery points.
 
-- Define `context_ledger_schema.yaml` supporting `mode`, `modules`, `contracts`, `ledger_chain`, `plan_security`, `model_tiering_policy`, `worktrees`, `semantic_parity`, `quarantined_tests`, `recovery_points`, `poisoning_incidents`, `git_commits`, `remaining_issues`, and `standard_issue_checklist`.
+- Define `context_ledger_schema.yaml` covering every section referenced by the `CAP-01`..`CAP-21` capabilities: `mcp_integrations`, `mode`, `modules`, `contracts`, `ledger_chain`, `plan_security`, `model_tiering_policy`, `token_optimization`, `worktrees`, `semantic_parity`, `quarantined_tests`, `recovery_points`, `poisoning_incidents`, `git_commits`, `remaining_issues`, `standard_issue_checklist`, plus the newer capability sections — `token_savings_ledger`, `self_improving_ledger`, `living_docs`, custom-agent/plugin registry, `layered_context` precedence policy, and forward-compatible `simulations` / `training_runs` blocks. The schema is validated against the `CAP` list in CI to prevent schema drift.
 - Formulate cross-module contract specifications in `context/contracts/` (`service_contract.yaml`, `event_stream_spec.yaml`, `common_schema.json`).
 
 ### Step 2: Quad-Space Bootstrapping Metaprompt (Dual-Mode Aware)
@@ -981,7 +1189,7 @@ Build the interactive time-travel dashboard engine rendering module clusters.
 Create incremental SDLC orchestration prompts with worktree concurrency, multi-module coordination, verification gates, hooks, and HITL clarification gates.
 
 - Scaffold `git_commit_formatter.py` and `ci_cd_pipeline_template.yml` in `workplace/templates/delivery/`.
-- Formulate `lifecycle_delivery_prompt.md` and `workflow_orchestration_prompt.md` linking all 14 capabilities into an executable autonomous delivery flow.
+- Formulate `lifecycle_delivery_prompt.md` and `workflow_orchestration_prompt.md` linking all 21 capabilities (`CAP-01`..`CAP-21`) into an executable autonomous delivery flow.
 
 ### Step 10: Domain Adaptation & Validation Playbook
 Produce comprehensive guidance for applying the parent master plan across domain spaces (IoT, GenAI, Web, Mobile, Neural, DB Migration, Robotics, Multi-Module Connected Ecosystems).
@@ -1016,15 +1224,34 @@ Build a standardized fleet of specialist agent plugins under `agentic/custom/age
 - Scaffold `agent_contract_compatibility_checker` (`contract_compatibility_checker.py`) enforcing SemVer rules and blocking breaking wire contract removals.
 - Scaffold `agent_dependency_cve_sentinel` (`dependency_cve_sentinel.py`) detecting compromised dependencies and restrictive licenses.
 - Scaffold `agent_doc_drift_synchronizer` (`doc_drift_synchronizer.py`) auditing exported AST interface coverage against architecture plans.
-- Upgrade `agentic/workflows/pr_gatekeeper.yaml` and `./bin/percipience gate` into a comprehensive 6-stage verification pipeline.
-- Expand the automated test suite in `tests/test_play3_suite.py` to 17 end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems.
+- Upgrade `agentic/workflows/pr_gatekeeper.yaml` and `./bin/percipience gate` into a comprehensive verification pipeline.
+- Expand the automated test suite in `tests/test_play3_suite.py` to end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems.
+
+### Step 15: Autonomous Living Documentation Agent & In-Workflow Mermaid Visualizer Integration
+Build and integrate the autonomous in-workflow documentation engine and Mermaid visualizer (`agent_living_doc_architect`) to continuously synchronize `workplace/docs/` with zero drift.
+
+- Implement `LivingDocEngine` in `workplace/core/living_doc_engine.py`:
+  - *AST Symbol & Contract Parser*: Automatically extracts module hierarchies, exported classes/methods, REST/gRPC endpoints, event stream channels, and DDL entity schemas.
+  - *Mermaid Visual Generators*:
+    - C4 Architecture & Topologies (`render_architecture_mermaid()`): Renders boundary graphs (`graph TD` / `graph LR`) showing client tiers, API gateways, worker pools, persistence tiers, and virtual simulation bridges.
+    - Module Interface Catalog (`render_module_catalog_mermaid()`): Renders module dependency graphs and tabular interface matrices (`workplace/docs/module_catalog.md`).
+    - Sequence Flow Engine (`render_sequence_mermaid()`): Generates chronological `sequenceDiagram` models for request lifecycles, auth flows, and cross-module message dispatching (`workplace/docs/sequence_flows.md`).
+    - Data Flow & Transformation DAGs (`render_data_flow_mermaid()`): Generates `flowchart TD` pipelines and `stateDiagram-v2` lifecycles (`workplace/docs/data_flow.md`).
+    - Entity-Relationship Modeler (`render_erd_mermaid()`): Generates standard `erDiagram` structures with exact field typing and cardinality keys (`workplace/docs/entity_relationship.md`).
+    - Active Domain Layer Deep Dives (`render_domain_extensions_mermaid()`): Inspects active domain layer IDs (e.g. `domain_blockchained_audio`, `domain_iot_mobile`, `domain_saas_portal`) and generates layer-specific diagrams (such as P2P swarm mesh topologies, BLE GATT characteristic graphs, or multi-tenant RBAC trees in `workplace/docs/domain_extensions.md`).
+  - *Incremental Content-Addressable AST Hashing*: Maintains `.scratch/doc_ast_hashes.json` to skip re-rendering unchanged modules, achieving zero redundant token consumption during continuous workflow runs.
+  - *Mermaid Syntax Validator*: Enforces node quotation rules (`id["Label (Details)"]`) and checks syntax validity before persisting Markdown files.
+- Scaffold specialist agent manifest `agentic/custom/agents/agent_living_doc_architect.yaml` (Tier B execution for routine extraction, escalating to Tier A for complex architectural disambiguation).
+- Inject `agent_living_doc_architect` and `gate_doc_drift_verification` into `agentic/workflows/pr_gatekeeper.yaml` and `agentic/workflows/cross_module_orchestrator.yaml`.
+- Implement automated verification test in `tests/test_living_doc_engine.py` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
 
 ---
 
 ### Domain-Specific Layering Architecture
 The Parent Master Plan deliberately provides universal, domain-agnostic abstractions (`mod_service_provider`, `mod_service_consumer`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific software systems are decoupled into dedicated **Layerable Context Engineering Plans** that overlay on top of this framework via Tier 2 (Enterprise Domain Rules & Wire Contracts) and Tier 3 (Specialist Subagents & Workflow Plugins):
 
-- **Connected IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md) (encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
-- **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
-- **Standardized Custom Layer Template**: Reusable domain authoring blueprint defined in [`.nb/plan/templates/custom_domain_layer_template.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md) and [`agentic/templates/custom_domain_layer_template.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/templates/custom_domain_layer_template.md) for scaffolding domain wire contracts, specialist agents, and virtual simulator bridges.
+- **Decentralized Audio Streaming, P2P Swarms & Capability Loans**: Defined in [`.nb/plan/claude-context-engineering-blockchained-audio-streamer-space.md`](./claude-context-engineering-blockchained-audio-streamer-space.md) (encapsulates Web3 EIP-712 capability loans, P2P audio chunks, BitTorrent swarm mesh routing, IPFS content-addressed manifests, tokenized royalty splitters, and dynamic domain extensions in `workplace/docs/domain_extensions.md`).
+- **Connected IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](./claude-context-engineering-iot-mobile-domain-plan.md) (encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
+- **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](./claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](./CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
+- **Standardized Custom Layer Template**: Reusable domain authoring blueprint defined in [`.nb/plan/templates/custom_domain_layer_template.md`](./templates/custom_domain_layer_template.md) and [`agentic/templates/custom_domain_layer_template.md`](../../agentic/templates/custom_domain_layer_template.md) for scaffolding domain wire contracts, specialist agents, and virtual simulator bridges.
 - **Encrypted Layer Packaging & In-Memory Enclave Consumption (`.nbpack`)**: Proprietary domain layers are compiled and sealed via `./bin/percipience layer pack` and consumed directly into volatile memory (zero disk plaintext residue) with Merkle state transitions via `./bin/percipience layer apply`.
