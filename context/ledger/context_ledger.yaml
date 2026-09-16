@@ -1875,91 +1875,25 @@ recovery_points:
   timestamp: '2026-09-16T21:28:27.509695+00:00'
   status: VERIFIED
   description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1789594110
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-16T21:28:30.673403+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1789594110
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-16T21:28:30.796399+00:00'
+  status: VERIFIED
+  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_AUTOHEAL_MOD_PORTAL_MARKETING_1789594134
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-16T21:28:54.741753+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
 ledger_chain:
-- block_id: 264
-  block_type: STATE_UPDATE
-  prev_block_hash: 71592226f998c2d7932cef333153f6fa90a4751e9541fb21d3beb338a8966e82
-  timestamp: '2026-09-16T01:53:58.284790+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 811124a8ccb9534203f9eed6fafbc1ab48b121eded2378de0c0700754b3a5449
-  action: AGENT_TASK_VERIFIED (agent_contract_compatibility_checker)
-- block_id: 265
-  block_type: STATE_UPDATE
-  prev_block_hash: 811124a8ccb9534203f9eed6fafbc1ab48b121eded2378de0c0700754b3a5449
-  timestamp: '2026-09-16T01:54:00.232574+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 107d05e1632d717a75107f8ffed4dc3560ff301c09e79f8de5927b156c802b27
-  action: AGENT_TASK_VERIFIED (agent_dependency_cve_sentinel)
-- block_id: 266
-  block_type: STATE_UPDATE
-  prev_block_hash: 107d05e1632d717a75107f8ffed4dc3560ff301c09e79f8de5927b156c802b27
-  timestamp: '2026-09-16T01:54:02.137734+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 3e3e41daed16df2c54446ac25fdd62138f16ff2a0da5e09d8f5e1a4bdd38ed65
-  action: AGENT_TASK_VERIFIED (agent_doc_drift_synchronizer)
-- block_id: 267
-  block_type: STATE_UPDATE
-  prev_block_hash: 3e3e41daed16df2c54446ac25fdd62138f16ff2a0da5e09d8f5e1a4bdd38ed65
-  timestamp: '2026-09-16T01:54:04.127134+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: d7ca20138006c96c9628c5b41699f2617e9d5fd9cb5253717bfdff1d6eb18ea9
-  action: AGENT_TASK_VERIFIED (agent_flaky_test_detector)
-- block_id: 268
-  block_type: STATE_UPDATE
-  prev_block_hash: d7ca20138006c96c9628c5b41699f2617e9d5fd9cb5253717bfdff1d6eb18ea9
-  timestamp: '2026-09-16T01:54:06.063210+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 66fc8845129268ba294c0bf61f650fd51d7de2f0a6583e7e4e24a2aed1a8e402
-  action: AGENT_TASK_VERIFIED (agent_quality_guard)
-- block_id: 269
-  block_type: STATE_UPDATE
-  prev_block_hash: 66fc8845129268ba294c0bf61f650fd51d7de2f0a6583e7e4e24a2aed1a8e402
-  timestamp: '2026-09-16T01:54:06.328903+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 66db75f41786629297bde1aca0a0b0c0727d5d02810e0b89cbd498ad9c9b7f5e
-  action: AUTONOMOUS_CICD_PIPELINE_COMPLETE
-- block_id: 270
-  block_type: STATE_UPDATE
-  prev_block_hash: 66db75f41786629297bde1aca0a0b0c0727d5d02810e0b89cbd498ad9c9b7f5e
-  timestamp: '2026-09-16T01:54:06.424506+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 3fb50dbec7239f3fd7e3d21dd693add7791e07c8736f0cf1fec8b95394513356
-  action: AGENT_REGISTERED (agent_test_perf_guard)
-- block_id: 271
-  block_type: STATE_UPDATE
-  prev_block_hash: 3fb50dbec7239f3fd7e3d21dd693add7791e07c8736f0cf1fec8b95394513356
-  timestamp: '2026-09-16T01:54:06.524905+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: ae8b26db065585067646dfab5ca73121cdbd767751894325cec3c49b768b0b59
-  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
-- block_id: 272
-  block_type: STATE_UPDATE
-  prev_block_hash: ae8b26db065585067646dfab5ca73121cdbd767751894325cec3c49b768b0b59
-  timestamp: '2026-09-16T01:54:08.483417+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 40a516b5398d24630edef2aae6c6b2346212ea57b7bf1c92539edf0c09bde0be
-  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
-- block_id: 273
-  block_type: STATE_UPDATE
-  prev_block_hash: 40a516b5398d24630edef2aae6c6b2346212ea57b7bf1c92539edf0c09bde0be
-  timestamp: '2026-09-16T01:54:08.584679+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 2922653f7e09229e1f295d7131ce1dfbb85ac8aa16c27d18aca3a2feedfe3acc
-  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
-- block_id: 274
-  block_type: STATE_UPDATE
-  prev_block_hash: 2922653f7e09229e1f295d7131ce1dfbb85ac8aa16c27d18aca3a2feedfe3acc
-  timestamp: '2026-09-16T01:54:08.845613+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: a6234e71e9217b3468442cb5ff514146b69b44c22f6d8544d95a7d659761e436
-  action: LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan
-- block_id: 275
-  block_type: STATE_UPDATE
-  prev_block_hash: a6234e71e9217b3468442cb5ff514146b69b44c22f6d8544d95a7d659761e436
-  timestamp: '2026-09-16T01:54:20.565549+00:00'
-  merkle_root: 0bd8bcfcb9bd5a7593ee464c087c73295e02ade32590eef2197649115b761def
-  current_block_hash: 205407549c269189ef792bdbb2e0924c4807bdc004ade3ac949a13b0c9c5ac2c
-  action: PR_GATE_VERIFICATION_PASS
 - block_id: 276
   block_type: STATE_UPDATE
   prev_block_hash: 205407549c269189ef792bdbb2e0924c4807bdc004ade3ac949a13b0c9c5ac2c
@@ -2646,6 +2580,27 @@ ledger_chain:
   merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
   current_block_hash: d2b7fee53b3ff9b8a89b71b25710321913e6e8e2248745a5ee4a9692f45d2f71
   action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- block_id: 374
+  block_type: STATE_UPDATE
+  prev_block_hash: d2b7fee53b3ff9b8a89b71b25710321913e6e8e2248745a5ee4a9692f45d2f71
+  timestamp: '2026-09-16T21:28:30.673403+00:00'
+  merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
+  current_block_hash: 6ce82f4c4da8191606c5505b999b361c990c4c35b2c2724174b0dbfc256b94a9
+  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- block_id: 375
+  block_type: STATE_UPDATE
+  prev_block_hash: 6ce82f4c4da8191606c5505b999b361c990c4c35b2c2724174b0dbfc256b94a9
+  timestamp: '2026-09-16T21:28:30.796399+00:00'
+  merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
+  current_block_hash: fb2da807371b5de3e3b2b89311c4f45e1113eeeb1bce3335a8181b933baf38c9
+  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- block_id: 376
+  block_type: STATE_UPDATE
+  prev_block_hash: fb2da807371b5de3e3b2b89311c4f45e1113eeeb1bce3335a8181b933baf38c9
+  timestamp: '2026-09-16T21:28:54.741753+00:00'
+  merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
+  current_block_hash: f644b28c7e9386211021c3932db36cc12fd881d9266d9abcfc26d83bf5d96624
+  action: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
@@ -2772,6 +2727,12 @@ epoch_rollups:
   block_count: 14
   epoch_rollup_hash: b09f5cb99a2c80a8df719cf500121690e6ff75b970dad27df26a3a8da8ff8146
   archive_path: context/ledger/archive/epoch_0250_0263.json
+- epoch_id: epoch_0264_0275
+  start_block_id: 264
+  end_block_id: 275
+  block_count: 12
+  epoch_rollup_hash: 363543a5be4b8245d319a58882f3b7dd68bb1b4121aa89679b2f9b04fd274ada
+  archive_path: context/ledger/archive/epoch_0264_0275.json
 living_docs:
   engine_enabled: true
   docs_root: workplace/docs/
@@ -2806,4 +2767,4 @@ living_docs:
     path: workplace/docs/README.md
     status: Synchronized
     syntax_valid: true
-  last_synchronized: '2026-09-16T21:28:20.358818+00:00'
+  last_synchronized: '2026-09-16T21:28:31.482830+00:00'

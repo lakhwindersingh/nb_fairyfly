@@ -205,18 +205,12 @@ class NBPackEnvelope:
             applied_layers.append(layer_record)
             ledger_data["applied_layers"] = applied_layers
 
-            try:
-                from workplace.core.atomic_writer import AtomicWriter
-            except ImportError:
-                from core.atomic_writer import AtomicWriter
-            AtomicWriter.write_yaml_atomic(ledger_path, ledger_data)
+            from core.merkle_engine import MerkleEngine
+            MerkleEngine.atomic_write_data(ledger_path, ledger_data)
 
         # Auto-seal Merkle ledger block
         try:
-            try:
-                from workplace.core.merkle_engine import MerkleEngine
-            except ImportError:
-                from core.merkle_engine import MerkleEngine
+            from core.merkle_engine import MerkleEngine
             MerkleEngine.seal_block(
                 workspace_root,
                 author="NBPackEnvelope",
