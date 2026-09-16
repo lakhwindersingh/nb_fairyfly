@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@percipience/iot-mobile-domain": "http://localhost:3000/api/gateway/bundles/iot_mobile_domain.nbpack"
-  }
-}
