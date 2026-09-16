@@ -94,8 +94,16 @@ class TokenTracker:
     def save_ledger(cls, ledger_data: Dict[str, Any], repo_root: Path = REPO_ROOT):
         p = cls.get_ledger_path(repo_root)
         ledger_data["last_updated"] = datetime.now(timezone.utc).isoformat()
-        with open(p, "w", encoding="utf-8") as f:
-            yaml.dump(ledger_data, f, default_flow_style=False, sort_keys=False)
+        import tempfile
+        import os
+        p.parent.mkdir(parents=True, exist_ok=True)
+        content_bytes = yaml.dump(ledger_data, default_flow_style=False, sort_keys=False).encode("utf-8")
+        with tempfile.NamedTemporaryFile(mode="wb", dir=str(p.parent), prefix=f".tmp_{p.name}_", delete=False) as tmp:
+            tmp.write(content_bytes)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+            temp_name = tmp.name
+        os.replace(temp_name, str(p))
 
     @classmethod
     def record_event(
@@ -137,8 +145,9 @@ class TokenTracker:
         ledger = cls.load_ledger(repo_root)
         ledger["events"].append(event)
 
-        # Update running aggregates
-        events = ledger["events"]
+        # Update running aggregates with defensive validation
+        events = [e for e in ledger.get("events", []) if isinstance(e, dict)]
+        ledger["events"] = events
         tot_events = len(events)
         tot_uncompressed = sum(e.get("uncompressed_tokens", 0) for e in events)
         tot_pruned = sum(e.get("pruned_tokens", 0) for e in events)

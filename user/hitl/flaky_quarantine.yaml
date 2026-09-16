@@ -1,0 +1,6 @@
+quarantined_flaky_tests:
+- test_id: test_mod_portal_async_worker
+  quarantined_at: '2026-09-16T01:42:48.526715+00:00'
+  pass_fail_ratio: 2/3
+  status: QUARANTINED_NON_BLOCKING
+  stabilization_strategy: SYNTHETIC_DETERMINISTIC_MOCK

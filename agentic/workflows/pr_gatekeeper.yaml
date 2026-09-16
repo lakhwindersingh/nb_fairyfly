@@ -1,40 +1,66 @@
 workflow_id: wf_pr_gatekeeper
 description: Automated verification gate workflow run on every incoming pull request
-  with token savings metering.
+  with token savings metering and specialist agent plugins.
 steps:
 - id: step_ast_prune
-  name: AST Symbol Pruning
+  name: AST Symbol Pruning & Caching
   executor: platform.ast_pruner
   max_duration_sec: 15
+- id: step_cve_sentinel
+  name: Supply-Chain & Dependency CVE Audit (agent_dependency_cve_sentinel)
+  executor: agent_dependency_cve_sentinel
+  tier: Tier_B
+  depends_on:
+  - step_ast_prune
+  fail_action: QUARANTINE_AND_HALT
 - id: step_token_metering
   name: Token Savings Capture & FinOps Metering
   executor: platform.token_tracker
   depends_on:
-  - step_ast_prune
+  - step_cve_sentinel
   action: RECORD_SAVINGS_LEDGER
   output_ledger: context/ledger/token_savings_ledger.yaml
 - id: step_contract_compat
-  name: Cross-Module Contract Verification
-  executor: agent_verifier
+  name: Cross-Module Contract & SemVer Verification (agent_contract_compatibility_checker)
+  executor: agent_contract_compatibility_checker
+  tier: Tier_A
   depends_on:
   - step_token_metering
   gate: gate_contract_compatibility
+  fail_action: BLOCK_BREAKING_CHANGE
 - id: step_quality_guard
-  name: Execute Custom Plugin (agent_quality_guard)
+  name: Execute Code Quality Guard (agent_quality_guard)
   executor: agent_quality_guard
+  tier: Tier_B
   depends_on:
   - step_contract_compat
   fail_action: AUTO_HEAL_OR_ROLLBACK
+- id: step_flaky_test_isolation
+  name: Flaky Test Detection & Quarantine (agent_flaky_test_detector)
+  executor: agent_flaky_test_detector
+  tier: Tier_B
+  depends_on:
+  - step_quality_guard
+  output_quarantine: user/hitl/flaky_quarantine.yaml
 - id: step_bounded_tdd
   name: Bounded Unit & Integration TDD
   executor: agent_tester
+  tier: Tier_B
   depends_on:
-  - step_contract_compat
+  - step_flaky_test_isolation
   max_retries: 3
   quarantine_on_failure: true
+- id: step_doc_drift_sync
+  name: Architectural Blueprint & Doc Drift Audit (agent_doc_drift_synchronizer)
+  executor: agent_doc_drift_synchronizer
+  tier: Tier_B
+  depends_on:
+  - step_bounded_tdd
+  action: AUDIT_DOC_COVERAGE
 - id: step_merkle_seal
   name: Merkle State Ledger Sealing
   executor: platform.merkle_ledger
+  tier: Tier_A
   depends_on:
-  - step_bounded_tdd
+  - step_doc_drift_sync
   action: SEAL_BLOCK

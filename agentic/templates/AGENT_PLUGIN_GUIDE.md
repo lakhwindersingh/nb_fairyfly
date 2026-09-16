@@ -125,3 +125,19 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 Every custom agent plugin engineered according to this guide is guaranteed to satisfy:
 1. **0.95+ Context Maturity Standard**: Fully compliant with D1 (Invariance) and D6 (Autonomous Gatekeeping).
 2. **Deterministic Cryptographic Continuity**: Every plugin registration, workflow integration, and execution pass is hashed and sealed into the continuous SHA-256 Merkle chain.
+
+
+---
+
+## 5. Built-in Autonomous CI/CD Specialist Plugins
+
+The Percipience platform ships with four pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/):
+
+| Agent Plugin ID | Manifest File | Cognitive Tier | Primary Responsibility |
+| :--- | :--- | :---: | :--- |
+| **`agent_flaky_test_detector`** | [`flaky_test_detector.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/flaky_test_detector.yaml) | **Tier B** | Multi-run stability analysis, quarantines non-deterministic tests into `user/hitl/flaky_quarantine.yaml` without halting CI. |
+| **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
+| **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
+| **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
+
+All specialist plugins are integrated into the 6-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/workflows/pr_gatekeeper.yaml).

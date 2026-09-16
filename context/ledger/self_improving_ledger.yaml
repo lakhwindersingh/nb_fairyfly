@@ -1,10 +1,12 @@
-current_avg_reduction_pct: 46.15
+current_avg_reduction_pct: 33.33
 policy_adjustments:
-- rule: AST_PRUNING_AGGRESSIVENESS
-  status: OPTIMAL
-  value: STANDARD_BODIES
+- expected_gain_pct: +12.5%
+  new_value: AGGRESSIVE_STRIP_INTERNAL_HELPERS
+  previous_value: STANDARD_BODIES
+  rule: AST_PRUNING_AGGRESSIVENESS
 prompt_cache_alignment_score: 0.98
 recommendations:
+- Deepened AST pruning rules to strip private class helper implementations.
 - Prompt derivation_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 - Prompt evaluation_refinement_prompt.md prefix aligned for Anthropic 90% cache discount
   tier.
@@ -15,4 +17,4 @@ recommendations:
   tier.
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
-timestamp: '2026-09-16T00:19:16.961229+00:00'
+timestamp: '2026-09-16T01:43:55.865620+00:00'

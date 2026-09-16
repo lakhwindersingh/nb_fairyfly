@@ -9,6 +9,7 @@ import os
 import sys
 import unittest
 import json
+import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +31,11 @@ from core.autonomous_cicd import (
     SelfImprovingEngine,
     AutonomousCICDOrchestrator
 )
+from core.cognitive_router import CognitiveRouter
+from core.flaky_test_detector import FlakyTestDetector
+from core.contract_compatibility_checker import ContractCompatibilityChecker
+from core.dependency_cve_sentinel import DependencyCVESentinel
+from core.doc_drift_synchronizer import DocDriftSynchronizer
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -269,6 +275,162 @@ class TestPlay3Subsystems(unittest.TestCase):
         chain_ok, logs = MerkleEngine.verify_chain(REPO_ROOT)
         self.assertTrue(chain_ok, f"Merkle verification failed: {logs}")
 
+
+    def test_14_atomic_ledger_and_pid_probing(self):
+        """Test Phase 1 Reliability: Atomic temporary file replacement & active PID-probing lease eviction."""
+        test_file = REPO_ROOT / ".workspaces" / "test_atomic.json"
+        data = {"key": "value", "integrity": "verified"}
+        checksum = MerkleEngine.atomic_write_data(test_file, data)
+        self.assertTrue(test_file.exists())
+        self.assertGreater(len(checksum), 32)
+        
+        # Test active PID probing in WorktreeEngine
+        lease = WorktreeEngine.acquire(REPO_ROOT, "agent_test_pid_probe", ttl_seconds=60)
+        self.assertEqual(lease["pid"], os.getpid())
+        leases = WorktreeEngine.list_leases(REPO_ROOT)
+        matching = [l for l in leases if l["agent_id"] == "agent_test_pid_probe"]
+        self.assertTrue(len(matching) > 0)
+        self.assertTrue(matching[0]["pid_alive"])
+        
+        # Simulate dead PID eviction
+        lease_file = WorktreeEngine._lease_file(REPO_ROOT)
+        with open(lease_file, "r") as lf:
+            all_l = json.load(lf)
+        all_l["agent_test_dead_proc"] = {
+            "agent_id": "agent_test_dead_proc",
+            "branch": "wt_branch_test_dead",
+            "path": str(REPO_ROOT / ".workspaces" / "wt_dead"),
+            "pid": 99999999,  # Non-existent dead PID
+            "acquired_at": int(time.time()),
+            "expires_at": int(time.time()) + 3600,
+            "status": "ACTIVE"
+        }
+        with open(lease_file, "w") as lf:
+            json.dump(all_l, lf, indent=2)
+
+        evicted = WorktreeEngine.reclaim_stale_leases(REPO_ROOT)
+        self.assertIn("agent_test_dead_proc", evicted)
+        
+        # Cleanup test lease
+        WorktreeEngine.release(REPO_ROOT, "agent_test_pid_probe")
+
+    def test_15_ast_caching_and_epoch_checkpointing(self):
+        """Test Phase 2 Scalability: Content-addressable AST caching & rolling epoch checkpointing."""
+        code = """export class FinOpsAuditor {
+  private threshold: number = 5000;
+  public audit(tokens: number): boolean {
+    return tokens > this.threshold;
+  }
+}"""
+        # 1. First AST pruning pass (Cache Miss)
+        p1, s1 = ASTOptimizer.prune_source(code, "typescript", use_cache=True)
+        self.assertFalse(s1["cache_hit"])
+        
+        # 2. Second AST pruning pass with identical code (Cache Hit, 0ms)
+        p2, s2 = ASTOptimizer.prune_source(code, "typescript", use_cache=True)
+        self.assertTrue(s2["cache_hit"])
+        self.assertEqual(p1, p2)
+        
+        # 3. Epoch checkpointing test
+        ledger_path = REPO_ROOT / "context" / "ledger" / "context_ledger.yaml"
+        self.assertTrue(ledger_path.exists())
+        # Retain active window of 100 blocks, archive older
+        res = MerkleEngine.checkpoint_epoch(REPO_ROOT, retain_active_blocks=100)
+        self.assertIn(res["status"], ["CHECKPOINTED", "SKIPPED"])
+        
+        # Verify chain continuity across archive + active blocks
+        chain_ok, logs = MerkleEngine.verify_chain(REPO_ROOT)
+        self.assertTrue(chain_ok, f"Merkle chain break: {logs}")
+
+    def test_16_cognitive_tier_routing_and_wire_contracts(self):
+        """Test Phase 2 Model Dispatcher & Phase 1 Wire Contract Runtime Gate."""
+        # 1. Cognitive Tier Routing
+        d1 = CognitiveRouter.dispatch("ast_parsing", requested_model="claude-3-7-sonnet")
+        self.assertEqual(d1["assigned_tier"], "Tier_B")
+        self.assertTrue(d1["downgraded_from_tier_a"])
+        self.assertEqual(d1["cost_discount_pct"], 90.0)
+
+        d2 = CognitiveRouter.dispatch("wire_contract_compat")
+        self.assertEqual(d2["assigned_tier"], "Tier_A")
+        self.assertFalse(d2["downgraded_from_tier_a"])
+        
+        # 2. Wire Contract Schema Validation
+        contract_res = LayeredContextValidator.validate_wire_contracts(REPO_ROOT)
+        self.assertTrue(contract_res["valid"])
+        self.assertGreaterEqual(len(contract_res["contracts"]), 3)
+
+        # 3. Runtime Event Payload Validation
+        billing_schema = {
+            "required": ["tenant_id", "event_type", "tokens_saved"],
+            "properties": {
+                "tenant_id": {"type": "string"},
+                "event_type": {"type": "string"},
+                "tokens_saved": {"type": "integer"}
+            }
+        }
+        valid_payload = {"tenant_id": "cust_123", "event_type": "pr_gate_verified", "tokens_saved": 450}
+        ok, errs = LayeredContextValidator.validate_sample_payload(billing_schema, valid_payload)
+        self.assertTrue(ok)
+        self.assertEqual(len(errs), 0)
+
+        invalid_payload = {"tenant_id": "cust_123", "tokens_saved": "not_an_int"}
+        bad_ok, bad_errs = LayeredContextValidator.validate_sample_payload(billing_schema, invalid_payload)
+        self.assertFalse(bad_ok)
+        self.assertGreaterEqual(len(bad_errs), 1)
+
+    def test_17_autonomous_cicd_specialist_plugins(self):
+        """Test Phase 3 Specialist Plugins: Flaky Test, Contract Evolution, CVE Sentinel, Doc Drift."""
+        # 1. Flaky Test Detection & Quarantine
+        flaky_res = FlakyTestDetector.audit_test_stability(
+            REPO_ROOT,
+            test_id="test_mod_portal_async_worker",
+            runs=3,
+            simulated_failure_rate=0.33
+        )
+        self.assertTrue(flaky_res["is_flaky"])
+        self.assertEqual(flaky_res["action"], "QUARANTINED")
+        q_file = REPO_ROOT / "user" / "hitl" / "flaky_quarantine.yaml"
+        self.assertTrue(q_file.exists())
+
+        # 2. Wire Contract Compatibility Checker (SemVer)
+        base_c = {
+            "title": "V1",
+            "required": ["id", "amount"],
+            "properties": {"id": {"type": "string"}, "amount": {"type": "number"}}
+        }
+        # Compatible addition: new optional field
+        head_compat = {
+            "title": "V1.1",
+            "required": ["id", "amount"],
+            "properties": {"id": {"type": "string"}, "amount": {"type": "number"}, "currency": {"type": "string"}}
+        }
+        c_res1 = ContractCompatibilityChecker.check_compatibility(base_c, head_compat)
+        self.assertTrue(c_res1["is_compatible"])
+
+        # Breaking removal: required 'amount' removed
+        head_breaking = {
+            "title": "V2_BROKEN",
+            "required": ["id"],
+            "properties": {"id": {"type": "string"}}
+        }
+        c_res2 = ContractCompatibilityChecker.check_compatibility(base_c, head_breaking)
+        self.assertFalse(c_res2["is_compatible"])
+        self.assertIn("REMOVED_REQUIRED_FIELD", c_res2["breaking_changes"][0])
+
+        # 3. Supply-Chain CVE Sentinel
+        clean_code = "import os\nimport sys\n"
+        dirty_code = "import os\nimport event-stream\n"
+        vuln_res = DependencyCVESentinel.audit_source_imports(dirty_code)
+        self.assertFalse(vuln_res["clean"])
+        self.assertEqual(vuln_res["violations"][0]["package"], "event-stream")
+
+        # 4. Doc Drift Synchronizer
+        exports = ["calculateRisk", "executeTrade", "orphanedFunction"]
+        docs = "# API Docs\nUse `calculateRisk` and `executeTrade` to manage assets."
+        drift_res = DocDriftSynchronizer.audit_doc_coverage(exports, docs)
+        self.assertEqual(drift_res["documented_count"], 2)
+        self.assertIn("orphanedFunction", drift_res["missing_symbols"])
+        self.assertEqual(drift_res["status"], "DRIFT_DETECTED")
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
