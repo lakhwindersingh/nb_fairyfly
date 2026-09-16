@@ -2,12 +2,15 @@
 Percipience Proprietary Package Compiler & In-Memory Hydration Engine (.nbpack)
 Compiles plans, prompt trees, and governance into an Ed25519-signed AES-256-GCM envelope.
 Hydrates strictly within volatile memory / tmpfs with zero disk residue.
+Supports both raw binary envelopes and npm-compatible package tarballs (.tgz).
 """
 
 import os
+import io
 import json
 import zlib
 import base64
+import tarfile
 import hashlib
 from pathlib import Path
 from typing import Dict, Any, List
@@ -55,17 +58,37 @@ class NBPackEnvelope:
 
     @classmethod
     def hydrate_in_memory(cls, pack_file: Path) -> Dict[str, str]:
-        """Verifies signature and extracts bundle directly into in-memory dictionary without writing to disk."""
+        """Verifies signature and extracts bundle directly into in-memory dictionary without writing to disk.
+        Supports both raw NBPACK_V2_SEALED binaries and npm tarball (.tgz) sealed envelopes."""
         if not pack_file.exists():
             raise FileNotFoundError(f"Package not found: {pack_file}")
 
-        with open(pack_file, "rb") as f:
-            header = f.read(len(cls.MAGIC_HEADER))
-            if header != cls.MAGIC_HEADER:
-                raise ValueError("Invalid .nbpack binary header or corrupted envelope.")
+        raw = pack_file.read_bytes()
 
-            stored_checksum = f.read(32)
-            compressed_data = f.read()
+        # 1. Handle npm package tarball envelope (.tgz / .tar.gz)
+        if raw.startswith(b"\x1f\x8b"):
+            try:
+                with tarfile.open(fileobj=io.BytesIO(raw), mode="r:gz") as tar:
+                    member = None
+                    for name in ["package/sealed_plan.nbpack", "package/bundle.nbpack", "package/.nbpack"]:
+                        try:
+                            member = tar.extractfile(name)
+                            if member:
+                                break
+                        except KeyError:
+                            continue
+                    if member:
+                        raw = member.read()
+            except Exception as e:
+                raise ValueError(f"Failed to read sealed payload from npm tarball: {e}")
+
+        # 2. Verify magic header
+        header_len = len(cls.MAGIC_HEADER)
+        if not raw.startswith(cls.MAGIC_HEADER):
+            raise ValueError("Invalid .nbpack binary header or corrupted envelope.")
+
+        stored_checksum = raw[header_len:header_len + 32]
+        compressed_data = raw[header_len + 32:]
 
         computed_checksum = hashlib.sha256(compressed_data).digest()
         if computed_checksum != stored_checksum:
@@ -169,7 +192,6 @@ class NBPackEnvelope:
                     ledger_data = json.load(f)
 
             applied_layers = ledger_data.setdefault("applied_layers", [])
-            # Update or append layer
             layer_record = {
                 "layer_id": plan_id,
                 "bundle_file": pack_file.name,
@@ -178,42 +200,44 @@ class NBPackEnvelope:
                 "components_count": len(payload),
                 "status": "ACTIVE"
             }
-            # Remove existing record if present
+            # Avoid duplicate records for the same bundle
             applied_layers = [l for l in applied_layers if l.get("layer_id") != plan_id]
             applied_layers.append(layer_record)
             ledger_data["applied_layers"] = applied_layers
 
-            try:
-                import yaml
-                with open(ledger_path, "w", encoding="utf-8") as f:
-                    yaml.dump(ledger_data, f, sort_keys=False)
-            except Exception:
-                with open(ledger_path, "w", encoding="utf-8") as f:
-                    json.dump(ledger_data, f, indent=2)
+            from core.atomic_writer import AtomicWriter
+            AtomicWriter.write_yaml_atomic(ledger_path, ledger_data)
 
-        # Seal cryptographic Merkle block for the layer application
+        # Auto-seal Merkle ledger block
         try:
             from core.merkle_engine import MerkleEngine
-            seal_res = MerkleEngine.seal_block(workspace_root, action=f"LAYER_APPLIED:{plan_id}")
-            block_id = seal_res.get("block_id")
-            current_hash = seal_res.get("current_block_hash")
+            MerkleEngine.seal_block(
+                workspace_root,
+                author="NBPackEnvelope",
+                summary=f"Applied layer pack: {plan_id} ({'in-memory' if in_memory else 'filesystem'})"
+            )
         except Exception:
-            block_id = -1
-            current_hash = "0" * 64
+            pass
 
         return {
             "status": "APPLIED",
             "layer_id": plan_id,
-            "bundle_file": str(pack_file.name),
-            "bundle_sha256": bundle_checksum,
             "storage_mode": "RAM_ENCLAVE" if in_memory else "FILESYSTEM",
-            "components_loaded": len(payload),
-            "written_to_disk": len(written_files),
-            "merkle_block_id": block_id,
-            "merkle_block_hash": current_hash
+            "components_count": len(payload),
+            "written_files": written_files,
+            "in_memory_mounted": in_memory
         }
 
     @classmethod
-    def list_mounted_layers(cls) -> Dict[str, int]:
-        """Returns currently active in-memory mounted layers and component counts."""
-        return {k: len(v) for k, v in cls.MOUNTED_LAYERS.items()}
+    def list_mounted_layers(cls) -> List[Dict[str, Any]]:
+        """Lists all active encrypted domain layers currently mounted in volatile RAM."""
+        res = []
+        for lid, payload in cls.MOUNTED_LAYERS.items():
+            manifest = json.loads(payload.get("__layer_manifest__.json", "{}"))
+            res.append({
+                "layer_id": lid,
+                "components_count": len(payload),
+                "plan_file": manifest.get("plan_file", "unknown"),
+                "status": "ACTIVE_RAM_ENCLAVE"
+            })
+        return res

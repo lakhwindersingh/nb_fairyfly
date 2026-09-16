@@ -1749,6 +1749,12 @@ recovery_points:
   timestamp: '2026-09-16T21:16:50.247956+00:00'
   status: VERIFIED
   description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_AUTOHEAL_MOD_PORTAL_MARKETING_1789594001
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-09-16T21:26:41.409373+00:00'
+  status: VERIFIED
+  description: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
 ledger_chain:
 - block_id: 250
   block_type: STATE_UPDATE
@@ -2464,6 +2470,13 @@ ledger_chain:
   merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
   current_block_hash: 3654acf85a365d7dfc49be293ce9dfe3165807b1c6e2fffe43b488477ae2e7b3
   action: PR_GATE_VERIFICATION_PASS
+- block_id: 352
+  block_type: STATE_UPDATE
+  prev_block_hash: 3654acf85a365d7dfc49be293ce9dfe3165807b1c6e2fffe43b488477ae2e7b3
+  timestamp: '2026-09-16T21:26:41.409373+00:00'
+  merkle_root: f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5
+  current_block_hash: 57e3c1c5c1277454900fcc04865d1c20f4cc0a5f62bcc0111bef93398bc6c8a5
+  action: AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
