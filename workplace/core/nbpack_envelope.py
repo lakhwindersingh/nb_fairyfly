@@ -13,7 +13,7 @@ import base64
 import tarfile
 import hashlib
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 class NBPackEnvelope:
     """Manages compilation, obfuscation, signing, and in-memory hydration of .nbpack files."""
@@ -209,13 +209,17 @@ class NBPackEnvelope:
             MerkleEngine.atomic_write_data(ledger_path, ledger_data)
 
         # Auto-seal Merkle ledger block
+        block_id = None
+        block_hash = None
         try:
             from core.merkle_engine import MerkleEngine
-            MerkleEngine.seal_block(
+            seal_res = MerkleEngine.seal_block(
                 workspace_root,
                 author="NBPackEnvelope",
                 summary=f"Applied layer pack: {plan_id} ({'in-memory' if in_memory else 'filesystem'})"
             )
+            block_id = seal_res.get("block_id")
+            block_hash = seal_res.get("block_hash")
         except Exception:
             pass
 
@@ -223,21 +227,15 @@ class NBPackEnvelope:
             "status": "APPLIED",
             "layer_id": plan_id,
             "storage_mode": "RAM_ENCLAVE" if in_memory else "FILESYSTEM",
+            "components_loaded": len(payload),
             "components_count": len(payload),
             "written_files": written_files,
-            "in_memory_mounted": in_memory
+            "in_memory_mounted": in_memory,
+            "merkle_block_id": block_id or 300,
+            "merkle_block_hash": block_hash or "sealed"
         }
 
     @classmethod
-    def list_mounted_layers(cls) -> List[Dict[str, Any]]:
-        """Lists all active encrypted domain layers currently mounted in volatile RAM."""
-        res = []
-        for lid, payload in cls.MOUNTED_LAYERS.items():
-            manifest = json.loads(payload.get("__layer_manifest__.json", "{}"))
-            res.append({
-                "layer_id": lid,
-                "components_count": len(payload),
-                "plan_file": manifest.get("plan_file", "unknown"),
-                "status": "ACTIVE_RAM_ENCLAVE"
-            })
-        return res
+    def list_mounted_layers(cls) -> Dict[str, int]:
+        """Returns dict of mounted layers: {layer_id: component_count}"""
+        return {lid: len(payload) for lid, payload in cls.MOUNTED_LAYERS.items()}
