@@ -36,6 +36,7 @@ from core.flaky_test_detector import FlakyTestDetector
 from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
+from core.context_gateway import ContextGateway
 
 class TestPlay3Subsystems(unittest.TestCase):
 
