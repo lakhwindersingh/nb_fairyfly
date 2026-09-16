@@ -15396,13 +15396,37 @@ events:
   gross_savings_usd: 0.001434
   rev_share_fee_usd: 0.000215
   net_savings_usd: 0.001219
+- event_id: tok_evt_20260916_211716_716500
+  timestamp: '2026-09-16T21:17:16.716533+00:00'
+  session_or_pr: pr_gatekeeper
+  file_path: workplace/core/contract_compatibility_checker.py
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 685
+  pruned_tokens: 302
+  tokens_saved: 383
+  reduction_percentage: 55.91
+  gross_savings_usd: 0.001149
+  rev_share_fee_usd: 0.000172
+  net_savings_usd: 0.000977
+- event_id: tok_evt_20260916_211717_640949
+  timestamp: '2026-09-16T21:17:17.640976+00:00'
+  session_or_pr: pr_gatekeeper
+  file_path: workplace/core/poisoning_sentinel.py
+  model_id: claude-3-5-sonnet-20241022
+  uncompressed_tokens: 917
+  pruned_tokens: 281
+  tokens_saved: 636
+  reduction_percentage: 69.36
+  gross_savings_usd: 0.001908
+  rev_share_fee_usd: 0.000286
+  net_savings_usd: 0.001622
 summary:
-  total_events: 1283
-  total_uncompressed_tokens: 2125341
-  total_pruned_tokens: 1122245
-  total_tokens_saved: 1003096
-  average_reduction_pct: 47.2
-  total_gross_savings_usd: 3.0093
-  total_rev_share_fee_usd: 0.4514
-  total_net_savings_usd: 2.5579
-last_updated: '2026-09-16T21:17:16.279929+00:00'
+  total_events: 1285
+  total_uncompressed_tokens: 2126943
+  total_pruned_tokens: 1122828
+  total_tokens_saved: 1004115
+  average_reduction_pct: 47.21
+  total_gross_savings_usd: 3.0123
+  total_rev_share_fee_usd: 0.4519
+  total_net_savings_usd: 2.5605
+last_updated: '2026-09-16T21:17:18.213836+00:00'
