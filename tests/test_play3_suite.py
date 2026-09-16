@@ -223,8 +223,8 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertIsNotNone(rb_res["merkle_block_id"])
 
         # 6. Verify Merkle chain continuity holds
-        chain_verified = MerkleEngine.verify_chain(REPO_ROOT)
-        self.assertTrue(chain_verified)
+        chain_ok, logs = MerkleEngine.verify_chain(REPO_ROOT)
+        self.assertTrue(chain_ok, f"Merkle chain check failed: {logs}")
 
         # 7. Cleanup test artifacts
         test_file = REPO_ROOT / reg_res["manifest_path"]
