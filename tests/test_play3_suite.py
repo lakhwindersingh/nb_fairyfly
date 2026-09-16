@@ -432,5 +432,51 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertIn("orphanedFunction", drift_res["missing_symbols"])
         self.assertEqual(drift_res["status"], "DRIFT_DETECTED")
 
+
+    def test_18_context_gateway_in_flight_injection(self):
+        """Test user/inputs/context_gateway.md Option 1: In-Flight Prompt Injection with Zero Client Exposure."""
+        # 1. Gateway Status & KMS Enclave Verification
+        status = ContextGateway.get_gateway_status(REPO_ROOT)
+        self.assertEqual(status["status"], "OPERATIONAL")
+        self.assertEqual(status["architecture_mode"], "Option 1: Context Gateway (In-Flight Injection)")
+        self.assertEqual(status["client_exposure_percentage"], 0.0)
+        self.assertGreaterEqual(status["plans_in_memory_count"], 3)
+        self.assertIn("cmek-percipience-gateway", status["kms_key_broker"])
+
+        # 2. Protected Plans Catalog
+        plans = ContextGateway.list_protected_plans()
+        self.assertTrue(any(p["plan_id"] == "plan_iot_mobile" for p in plans))
+        for p in plans:
+            self.assertEqual(p["client_exposure_pct"], 0.0)
+            self.assertEqual(p["security_status"], "KMS_SEALED_RAM_ONLY")
+
+        # 3. Chat Completion with In-Flight Injection
+        req_payload = {
+            "model": "claude-3-7-sonnet / pro",
+            "plan_id": "plan_iot_mobile",
+            "repo_state": {
+                "module": "mod_telemetry_stream",
+                "test_error": "AssertionError: ring-buffer mutex lock violated on characteristic 0xFF01"
+            },
+            "messages": [
+                {"role": "user", "content": "Fix the ring-buffer mutex lock violation in the telemetry characteristic."}
+            ]
+        }
+        resp = ContextGateway.process_chat_completion(REPO_ROOT, req_payload)
+        self.assertTrue(resp["id"].startswith("chatcmpl-gw-"))
+        self.assertGreater(resp["usage"]["in_flight_injected_tokens"], 0)
+        
+        gw_meta = resp["percipience_gateway"]
+        self.assertEqual(gw_meta["plan_id"], "plan_iot_mobile")
+        self.assertEqual(gw_meta["plan_exposure_to_client"], "0.0% (Zero Leakage)")
+        self.assertEqual(gw_meta["injection_status"], "ENCLAVE_IN_FLIGHT_INJECTED")
+        self.assertEqual(len(gw_meta["merkle_execution_receipt"]), 64)
+
+        # 4. Output Sanitization Guarantee
+        client_code = resp["choices"][0]["message"]["content"]
+        self.assertNotIn("[PERCIPIENCE SECURE GATEWAY IN-FLIGHT INJECTION", client_code)
+        self.assertNotIn("<<PROPRIETARY_PLAN_INVARIANT", client_code)
+        self.assertIn("reconcileModuleState", client_code)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

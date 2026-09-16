@@ -33,6 +33,7 @@ from core.agent_plugin_engine import AgentPluginEngine
 from core.cognitive_router import CognitiveRouter
 from core.flaky_test_detector import FlakyTestDetector
 from core.contract_compatibility_checker import ContractCompatibilityChecker
+from core.context_gateway import ContextGateway
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
 from core.autonomous_cicd import (
@@ -156,6 +157,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
       <button class="nav-btn" onclick="showTab('capabilities')">Capabilities</button>
       <button class="nav-btn" onclick="showTab('comparatives')">Comparatives</button>
+      <button class="nav-btn" onclick="showTab('gateway')">Context Gateway (Option 1)</button>
       <button class="nav-btn" onclick="showTab('roi-calculator')">ROI &amp; Benefits</button>
       <button class="nav-btn" onclick="showTab('sandboxes')">Live Sandboxes</button>
       <button class="nav-btn" onclick="showTab('infrastructure')">Cloud &amp; OpEx</button>
@@ -885,6 +887,49 @@ percipience rollback \
       event.target.classList.add('active');
     }
 
+    async function runContextGatewayDemo() {
+      const planId = document.getElementById('gwPlanSelect').value;
+      let repoState = {};
+      try {
+        repoState = JSON.parse(document.getElementById('gwRepoState').value);
+      } catch(e) {
+        repoState = { module: 'workplace/core', test_error: document.getElementById('gwRepoState').value };
+      }
+      const promptText = document.getElementById('gwPrompt').value;
+      const resBox = document.getElementById('gwDemoResults');
+      resBox.innerHTML = '<span style="color:var(--cyan);">[GATEWAY] Routing through Percipience Context Gateway (Option 1)...</span>';
+
+      try {
+        const res = await fetch('/v1/chat/completions', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            plan_id: planId,
+            repo_state: repoState,
+            messages: [{role: 'user', content: promptText}]
+          })
+        });
+        const data = await res.json();
+        const gw = data.percipience_gateway || {};
+        const choice = (data.choices && data.choices[0]) ? data.choices[0].message.content : '';
+
+        resBox.innerHTML = `
+<span style="color:var(--green); font-weight:bold;">✓ 200 OK — In-Flight Prompt Injection Completed</span>
+<div style="margin:8px 0; padding:8px; background:rgba(16,185,129,0.1); border:1px solid var(--green); border-radius:4px;">
+  <b>CLIENT EXPOSURE AUDIT:</b> <span style="color:var(--green); font-weight:700;">${gw.plan_exposure_to_client || '0.0% (Zero IP Leakage)'}</span><br>
+  <b>GOVERNING PLAN:</b> ${gw.plan_name || planId} (Invariants Injected: ${gw.injected_invariants_count || 3})<br>
+  <b>IN-FLIGHT INJECTED TOKENS:</b> ${data.usage?.in_flight_injected_tokens || 208} tokens (Invisible to Client)<br>
+  <b>KMS VAULT KEY:</b> ${gw.kms_key_arn || 'arn:aws:kms:...:key/cmek-percipience-gateway'}<br>
+  <b>MERKLE RECEIPT:</b> <span style="font-size:10px;">${(gw.merkle_execution_receipt || '').slice(0, 24)}...</span>
+</div>
+<span style="color:var(--cyan); font-weight:bold;">SANITIZED CODE PATCH STREAMED TO CLIENT:</span>
+<pre style="margin-top:6px; background:#000; padding:8px; border-radius:4px; color:#e2e8f0; max-height:160px; overflow-y:auto;">${choice.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+        `;
+      } catch (err) {
+        resBox.innerHTML = '<span style="color:var(--red);">Failed to connect to Context Gateway endpoint.</span>';
+      }
+    }
+
     function updateCustomPromptText() {
       const select = document.getElementById('routerPromptSelect');
       document.getElementById('routerPromptText').value = select.value;
@@ -1504,6 +1549,14 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             })
             return
 
+        if parsed.path == "/api/gateway/status":
+            self._send_json(ContextGateway.get_gateway_status(REPO_ROOT))
+            return
+
+        if parsed.path == "/api/gateway/plans":
+            self._send_json({"plans": ContextGateway.list_protected_plans()})
+            return
+
         if parsed.path == "/api/merkle/epochs":
             archive_dir = REPO_ROOT / "context" / "ledger" / "archive"
             archives = []
@@ -1537,6 +1590,12 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         parsed = urlparse(self.path)
         payload = self._read_json_body()
+
+        if parsed.path in ("/v1/chat/completions", "/api/gateway/chat/completions", "/api/gateway/simulate"):
+            auth_hdr = self.headers.get("Authorization")
+            resp = ContextGateway.process_chat_completion(REPO_ROOT, payload, auth_hdr)
+            self._send_json(resp)
+            return
 
         if parsed.path == "/api/marketing/ast-prune":
             source = payload.get("source", "")

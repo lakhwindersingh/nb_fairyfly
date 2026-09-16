@@ -122,4 +122,14 @@ export const COMPETITIVE_MATRIX_DATA: CompetitorComparisonRow[] = [
     percipience: "✅ O(1) rolling active window with historical JSON archives in context/ledger/archive/",
     impactVerdict: "Constant-time cryptographic ledger verification even across 10,000+ blocks"
   }
+,
+  {
+    dimension: "Proprietary Plan IP Defense (Option 1 Context Gateway)",
+    category: "security",
+    rawCursorClaudeCode: "❌ Plaintext markdown prompts exposed to client disk & memory",
+    langChainLangSmith: "⚠️ Centralized prompts logged in SaaS dashboards without KMS enclaves",
+    arizePhoenixArmor: "❌ None (client holds entire system prompt)",
+    percipience: "✅ Option 1 Context Gateway: 0% client exposure with in-flight KMS RAM injection",
+    impactVerdict: "Guarantees zero client-side reverse engineering of proprietary context engineering IP"
+  }
 ];

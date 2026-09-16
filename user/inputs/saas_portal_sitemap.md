@@ -23,3 +23,10 @@
 - `/api/marketing/cognitive-route` (POST): Interactive cognitive tier dispatch simulation.
 - `/api/marketing/flaky-check` (POST): Multi-run test determinism verification.
 - `/dashboard`: Direct embed of the comprehensive 5-tab Enterprise Observability Hub.
+
+## Context Gateway (Option 1: In-Flight Prompt Injection)
+- `/v1/chat/completions`: OpenAI/Claude drop-in compatible completions endpoint. Injects proprietary plan invariants in-flight while maintaining 0.0% client-side plan exposure.
+- `/api/gateway/chat/completions`: Dedicated Percipience Context Gateway completions route.
+- `/api/gateway/status`: Gateway operational health, KMS key broker ARN, and protected plans loaded in RAM.
+- `/api/gateway/plans`: Protected plan registry with zero-exposure guarantee.
+- `/api/gateway/simulate`: Interactive simulator for portal sandbox.
