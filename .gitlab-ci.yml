@@ -12,16 +12,16 @@ percipience_gatekeeper:
     - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
     - pip install pyyaml
-    - chmod +x bin/percipience
+    - chmod +x workplace/bin/percipience
   script:
     - echo "Running Percipience Gatekeeper, AST Token Metering & Merkle State Audit..."
-    - ./bin/percipience gate
-    - ./bin/percipience tokens summary
-    - ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
-    - ./bin/percipience validate --layered
+    - ./workplace/bin/percipience gate
+    - ./workplace/bin/percipience tokens summary
+    - ./workplace/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+    - ./workplace/bin/percipience validate --layered
   artifacts:
     when: always
     paths:
-      - user/outputs/token_savings_report.md
-      - user/outputs/context_maturity_report.md
+      - workplace/docs/reports/token_savings_report.md
+      - workplace/docs/reports/context_maturity_report.md
       - context/ledger/token_savings_ledger.yaml

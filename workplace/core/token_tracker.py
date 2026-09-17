@@ -39,7 +39,7 @@ DEFAULT_MODEL_RATES = {
 
 class TokenTracker:
     LEDGER_FILE = "context/ledger/token_savings_ledger.yaml"
-    REPORT_FILE = "user/outputs/token_savings_report.md"
+    REPORT_FILE = "workplace/docs/reports/token_savings_report.md"
 
     @classmethod
     def get_ledger_path(cls, repo_root: Path = REPO_ROOT) -> Path:
@@ -235,7 +235,7 @@ class TokenTracker:
         output_path: Optional[Path] = None
     ) -> str:
         """
-        Emits user/outputs/token_savings_report.md
+        Emits workplace/docs/reports/token_savings_report.md
         """
         ledger = cls.load_ledger(repo_root)
         summary = ledger.get("summary", {})

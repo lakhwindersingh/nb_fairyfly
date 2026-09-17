@@ -31,7 +31,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
     - *Self-Recovering*: Isolates regression faults into dedicated diagnostic worktrees, executes bounded TDD auto-patching ($\le 3$ retries), and, if unresolvable, triggers sub-1.2s surgical module rollbacks to verified recovery points ($\text{RP}_k$) without disturbing unaffected sibling microservices.
     - *Self-Improving*: Analyzes post-run pipeline telemetry, dynamically calibrates AST pruning thresholds (escalating from standard body stripping to aggressive internal helper pruning for high-token files to capture $+12.5\%$ additional savings), aligns prompt cache prefixes, and persists lessons learned into `context/ledger/self_improving_ledger.yaml`.
 17. **Extensible Custom Agent Plugin Architecture & Workflow DAG Injection**: A standardized plugin model and engine (`workplace/core/agent_plugin_engine.py`) allowing teams to scaffold, configure, and integrate custom agent specialists into existing workflow DAGs (e.g. `agentic/workflows/pr_gatekeeper.yaml`). Follows the *Healthy Integration Pattern* enforcing ephemeral worktree sandboxing, AST token budgeting, pre/post contract verification, and cryptographic Merkle state sealing (`RP_AGENT_*`). If a custom plugin injects anomalies, the engine triggers surgical rollback to recovery points without collateral disruption.
-18. **Production Token FinOps & Rev-Share Performance Metering Engine**: An integrated financial observability engine (`workplace/core/token_tracker.py`) that captures raw vs. AST-pruned token metrics across heterogeneous languages in real time. Automatically logs transparent accounting entries to `context/ledger/token_savings_ledger.yaml`, computing gross customer savings ($0.003/1K tokens) and 15% rev-share performance fees, backed by automated scorecard and whitepaper generation (`user/outputs/token_savings_report.md`, `user/outputs/token_savings_whitepaper.md`).
+18. **Production Token FinOps & Rev-Share Performance Metering Engine**: An integrated financial observability engine (`workplace/core/token_tracker.py`) that captures raw vs. AST-pruned token metrics across heterogeneous languages in real time. Automatically logs transparent accounting entries to `context/ledger/token_savings_ledger.yaml`, computing gross customer savings ($0.003/1K tokens) and 15% rev-share performance fees, backed by automated scorecard and whitepaper generation (`workplace/docs/reports/token_savings_report.md`, `workplace/docs/reports/token_savings_whitepaper.md`).
 19. **5-Tab Enterprise Context Observability Hub & Telemetry Gateway**: A unified, zero-dependency browser observability control plane (`user/outputs/dashboard/index.html`) coupled with a production-grade HTTP/API gateway server (`workplace/portal/server.py`). Features 5 specialized operational tabs: (1) 6-Dimensional Context Maturity Radar & Remediation Diagnostics, (2) Autonomous Agent Swarm & Custom Plugin Manager, (3) Declarative Workflow DAGs & Invariant Gates, (4) FinOps Token Metering & ROI Calculator, and (5) Autonomous CI/CD Triad & Self-Healing Control Plane.
 20. **3-Tier Layered Context Precedence Hierarchy & Bring-Your-Own-Repository (BYOR) Adapter**: A security and configuration architecture (`workplace/core/layered_context_validator.py`, `workplace/core/byor_adapter.py`) that enforces non-overridable platform invariants:
     - *Tier 1 (Base Platform Invariants)*: Core security contracts, Merkle schemas, and tamper proofs in `context/invariants/` (or encrypted `.nbpack` enclaves) that cannot be overridden by user prompts.
@@ -87,14 +87,14 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Interactive visual rendering of artifact DAG, recovery checkpoints, module subgraphs, and agent handoffs.
 - **Autonomous CI/CD Triad Control Plane**:
   - Closed-loop orchestration in `workplace/core/autonomous_cicd.py` implementing `SelfSustainingEngine`, `AutonomousHealer`, `SelfImprovingEngine`, and `AutonomousCICDOrchestrator`.
-  - Multi-phase engineering roadmap in `user/outputs/autonomous_cicd_roadmap.md`.
+  - Multi-phase engineering roadmap in `workplace/docs/reports/autonomous_cicd_roadmap.md`.
 - **Custom Agent Plugin Architecture & Workflow DAG Injection**:
   - Plugin scaffolding and lifecycle management in `workplace/core/agent_plugin_engine.py`.
-  - Standardized plugin template in `agentic/templates/custom_agent_template.yaml` and guide in `agentic/templates/AGENT_PLUGIN_GUIDE.md`.
+  - Standardized plugin template in `agentic/templates/custom_agent_template.yaml` and guide in `workplace/docs/guides/AGENT_PLUGIN_GUIDE.md`.
   - Dynamic workflow DAG injection into `agentic/workflows/pr_gatekeeper.yaml` with pre/post-execution Merkle seals.
 - **Token FinOps & Rev-Share Performance Metering Engine**:
   - Real-time token tracking in `workplace/core/token_tracker.py` logging to `context/ledger/token_savings_ledger.yaml`.
-  - Automated generation of executive scorecard (`user/outputs/token_savings_report.md`) and benchmark whitepaper (`user/outputs/token_savings_whitepaper.md`).
+  - Automated generation of executive scorecard (`workplace/docs/reports/token_savings_report.md`) and benchmark whitepaper (`workplace/docs/reports/token_savings_whitepaper.md`).
 - **Enterprise Context Observability Hub & Telemetry Gateway**:
   - Interactive 5-tab browser control plane (`user/outputs/dashboard/index.html`) with real-time REST API integration (`workplace/portal/server.py`).
   - Self-healing trigger, agent plugin manager, ROI calculator, and context maturity radar with automated remediation playbooks.
@@ -108,7 +108,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Mandatory preference for expressive, valid **Mermaid** diagrams (`graph TD/LR`, `sequenceDiagram`, `flowchart TD`, `erDiagram`, `stateDiagram-v2`, `classDiagram`) embedded directly within Markdown artifacts.
   - Dynamic layered domain plan awareness: introspecting active domain layers (e.g. `domain_blockchained_audio`, `domain_iot_mobile`, `domain_saas_portal`) to generate specialized domain models and sequence flows.
   - Incremental documentation caching via SHA-256 AST hashing to eliminate redundant LLM token spend on unchanged files during continuous workflow runs.
-  - Integration into verification gatekeepers (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`) to block code merges if documentation drifts or Mermaid syntax fails validation.
+  - Integration into verification gatekeepers (`wf_pr_gatekeeper.yaml`, `workplace/bin/percipience gate`) to block code merges if documentation drifts or Mermaid syntax fails validation.
 - **Context Compression & GenAI Optimization Engine**:
   - Token budget management and dynamic context window allocation rules.
   - AST / symbol table extraction for code compression (transmitting interface signatures instead of full implementations during planning).
@@ -213,7 +213,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Render artifact lineage DAG, recovery points, module subgraphs, diff inspector, and HITL clarification actions.
 - **Multi-Dimensional Maturity Assessment**:
   - Calculate scores (0.00 to 1.00) across 6 dimensions (Requirement Coverage, Architectural Grounding, Code/Config Quality, Test Coverage, Security, Token Efficiency).
-  - Automatically emit context maturity scorecards to `user/outputs/context_maturity_report.md`.
+  - Automatically emit context maturity scorecards to `workplace/docs/reports/context_maturity_report.md`.
 - **Integrated State Ledger (`context_ledger.yaml`)**:
   - Maintain unified tracking across all 21 capabilities (`CAP-01`..`CAP-21`).
 - **Autonomous Living Documentation & In-Workflow Mermaid Visualizer (`agent_living_doc_architect`)**:
@@ -244,7 +244,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
     3. `agent_dependency_cve_sentinel`: Supply-chain security, auditing source AST imports and manifests for CVEs, typosquatting packages, and restrictive licenses (AGPL).
     4. `agent_doc_drift_synchronizer`: Architecture sync, auditing exported AST interface symbols against `.nb/plan/` specifications to flag documentation drift.
     5. `agent_living_doc_architect`: In-workflow living documentation engine, synthesizing Mermaid visual architecture, sequences, data pipelines, entity-relationships, and module catalogs directly in `workplace/docs/`.
-  - Wire all specialist plugins into a unified verification gatekeeper (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
+  - Wire all specialist plugins into a unified verification gatekeeper (`wf_pr_gatekeeper.yaml`, `workplace/bin/percipience gate`).
 
 ### Non-Functional Requirements
 - **Intellectual Property Protection**: Zero plaintext markdown or YAML leakage for `context/` and `agentic/` on client filesystems when executing from compiled `.nbpack` bundles.
@@ -257,7 +257,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 
 ### Benchmark & Metrics Provenance
 All quantitative figures stated throughout this plan (e.g., "50–70% token reduction", "62% savings", "90% cost arbitrage", "+12.5% additional savings", "sub-1.2s surgical rollback", "0.1ms AST retrieval", ">85% parsing reduction", "cache_hit_ratio", "estimated_token_savings_pct") are **targets/design goals, not measured results**, until reproduced by the benchmark suite. Each figure MUST be tied to a reproducible methodology recorded under `benchmarks/`:
-- `benchmarks/methodology.md`: workload definition, corpus size, model/provider + version, measurement harness, warm/cold cache policy, and statistical treatment (median over N runs, confidence interval).
+- `workplace/docs/benchmarks/methodology.md`: workload definition, corpus size, model/provider + version, measurement harness, warm/cold cache policy, and statistical treatment (median over N runs, confidence interval).
 - `benchmarks/results/<date>_<provider>_<model>.json`: raw measurements linked back to a Merkle ledger block so a claimed number is auditable to the run that produced it.
 - Until a figure is backed by a `benchmarks/results/*` entry it is rendered as a *target* in prose and in the dashboard FinOps tab.
 
@@ -348,7 +348,7 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
   - *Self-Recovering*: Autonomous fault diagnosis, ephemeral worktree test execution, bounded TDD auto-patching ($\le 3$ retries), and sub-1.2s surgical module rollback fallback sparing sibling services.
   - *Self-Improving*: Closed-loop telemetry feedback analyzing token burn and test pass velocities, dynamically tuning AST pruning thresholds (+12.5% compression gains) and prompt cache prefix alignment.
 - **Healthy Custom Agent Plugin Integration Pattern**:
-  - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the [Plugin Architectural Guide](file:///agentic/templates/AGENT_PLUGIN_GUIDE.md).
+  - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the [Plugin Architectural Guide](file:///workplace/docs/guides/AGENT_PLUGIN_GUIDE.md).
   - Scaffolding, workflow DAG injection (`wf_pr_gatekeeper.yaml`), ephemeral worktree sandboxing, and pre/post Merkle block sealing (`RP_AGENT_*`) are governed by `AgentPluginEngine`.
 - **Autonomous In-Workflow Living Documentation Engine & Mermaid Visualizer (Living Docs)**:
   - Software architecture documentation historically suffers from severe drift, rapidly becoming obsolete as code evolves. Percipience solves this by treating documentation as a compiled, living artifact of the codebase itself.
@@ -377,7 +377,7 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
   - Dynamically routes routine subagent tasks (AST pruning, linting, docs, test runs) to **Tier B** (`claude-3-5-haiku / flash`), delivering a 90% cost arbitrage while reserving **Tier A** (`claude-3-7-sonnet / pro`) for high-complexity reasoning (SemVer contract diffs, security audits, PR gate merge decisions).
 - **Autonomous CI/CD Specialist Agent Plugin Fleet & 6-Stage PR Gatekeeper (Ecosystem Extensibility)**:
   - Standardizes five built-in specialist plugins in `agentic/custom/agents/`: `agent_flaky_test_detector`, `agent_contract_compatibility_checker`, `agent_dependency_cve_sentinel`, `agent_doc_drift_synchronizer`, and `agent_living_doc_architect`.
-  - Integrates all five into the unified PR gatekeeper workflow (`wf_pr_gatekeeper.yaml`, `bin/percipience gate`).
+  - Integrates all five into the unified PR gatekeeper workflow (`wf_pr_gatekeeper.yaml`, `workplace/bin/percipience gate`).
 
 ---
 
@@ -1094,14 +1094,14 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Observability Telemetry Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Planned** |
 | **`workplace/`**| Living Documentation Engine | `workplace/core/living_doc_engine.py` | Python 3 Module | AST & Contract living docs & Mermaid visualizer | **Planned** |
 | **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Planned** |
-| **`agentic/`** | Agent Plugin Architecture Guide | `agentic/templates/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Planned** |
+| **`agentic/`** | Agent Plugin Architecture Guide | `workplace/docs/guides/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Planned** |
 | **`context/`** | Token Savings Ledger | `context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Planned** |
 | **`context/`** | Self-Improving Telemetry Ledger | `context/ledger/self_improving_ledger.yaml` | YAML Ledger | Closed-Loop Optimization History | **Planned** |
-| **`user/`** | Autonomous CI/CD Strategic Roadmap| `user/outputs/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Planned** |
-| **`user/`** | Benchmark Whitepaper (62% Savings)| `user/outputs/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Planned** |
-| **`user/`** | Token Savings Scorecard Report | `user/outputs/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Planned** |
-| **`platform`** | Unified CLI Control Plane | `bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Planned** |
-| **`user/`** | Context Maturity Report | `user/outputs/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Planned** |
+| **`user/`** | Autonomous CI/CD Strategic Roadmap| `workplace/docs/reports/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Planned** |
+| **`user/`** | Benchmark Whitepaper (62% Savings)| `workplace/docs/reports/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Planned** |
+| **`user/`** | Token Savings Scorecard Report | `workplace/docs/reports/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Planned** |
+| **`platform`** | Unified CLI Control Plane | `workplace/bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Planned** |
+| **`user/`** | Context Maturity Report | `workplace/docs/reports/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Planned** |
 | **`workplace/`**| Model Cognitive Router | `workplace/core/cognitive_router.py` | Python 3 Module | Tier A / Tier B Model Dispatcher & FinOps Arbitrage | **Planned** |
 | **`workplace/`**| Flaky Test Isolation Engine | `workplace/core/flaky_test_detector.py` | Python 3 Module | Multi-run Test Stability & Non-blocking Quarantine | **Planned** |
 | **`workplace/`**| Contract Compatibility Checker | `workplace/core/contract_compatibility_checker.py` | Python 3 Module | SemVer & Wire Contract Backward-Compatibility Diff | **Planned** |
@@ -1120,7 +1120,7 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Data Flow & Pipeline Document | `workplace/docs/data_flow.md` | Markdown + Mermaid | Ingestion DAGs, Event Streams & State Machines | **Planned** |
 | **`workplace/`**| Entity-Relationship Document | `workplace/docs/entity_relationship.md` | Markdown + Mermaid | DDL Relations, Data Models & Schema Mappings | **Planned** |
 | **`workplace/`**| Domain Layer Extensions Document| `workplace/docs/domain_extensions.md` | Markdown + Mermaid | Active Layered Domain Deep Dive Visuals | **Planned** |
-| **`platform`** | Standardized Integration Test Suite | `tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Planned** |
+| **`platform`** | Standardized Integration Test Suite | `workplace/tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Planned** |
 
 ---
 
@@ -1224,8 +1224,8 @@ Build a standardized fleet of specialist agent plugins under `agentic/custom/age
 - Scaffold `agent_contract_compatibility_checker` (`contract_compatibility_checker.py`) enforcing SemVer rules and blocking breaking wire contract removals.
 - Scaffold `agent_dependency_cve_sentinel` (`dependency_cve_sentinel.py`) detecting compromised dependencies and restrictive licenses.
 - Scaffold `agent_doc_drift_synchronizer` (`doc_drift_synchronizer.py`) auditing exported AST interface coverage against architecture plans.
-- Upgrade `agentic/workflows/pr_gatekeeper.yaml` and `./bin/percipience gate` into a comprehensive verification pipeline.
-- Expand the automated test suite in `tests/test_play3_suite.py` to end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems.
+- Upgrade `agentic/workflows/pr_gatekeeper.yaml` and `./workplace/workplace/bin/percipience gate` into a comprehensive verification pipeline.
+- Expand the automated test suite in `workplace/tests/test_play3_suite.py` to end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems.
 
 ### Step 15: Autonomous Living Documentation Agent & In-Workflow Mermaid Visualizer Integration
 Build and integrate the autonomous in-workflow documentation engine and Mermaid visualizer (`agent_living_doc_architect`) to continuously synchronize `workplace/docs/` with zero drift.
@@ -1243,7 +1243,7 @@ Build and integrate the autonomous in-workflow documentation engine and Mermaid 
   - *Mermaid Syntax Validator*: Enforces node quotation rules (`id["Label (Details)"]`) and checks syntax validity before persisting Markdown files.
 - Scaffold specialist agent manifest `agentic/custom/agents/agent_living_doc_architect.yaml` (Tier B execution for routine extraction, escalating to Tier A for complex architectural disambiguation).
 - Inject `agent_living_doc_architect` and `gate_doc_drift_verification` into `agentic/workflows/pr_gatekeeper.yaml` and `agentic/workflows/cross_module_orchestrator.yaml`.
-- Implement automated verification test in `tests/test_living_doc_engine.py` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
+- Implement automated verification test in `workplace/tests/test_living_doc_engine.py` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
 
 ---
 
@@ -1254,4 +1254,4 @@ The Parent Master Plan deliberately provides universal, domain-agnostic abstract
 - **Connected IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](./claude-context-engineering-iot-mobile-domain-plan.md) (encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
 - **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](./claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](./CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
 - **Standardized Custom Layer Template**: Reusable domain authoring blueprint defined in [`.nb/plan/templates/custom_domain_layer_template.md`](./templates/custom_domain_layer_template.md) and [`agentic/templates/custom_domain_layer_template.md`](../../agentic/templates/custom_domain_layer_template.md) for scaffolding domain wire contracts, specialist agents, and virtual simulator bridges.
-- **Encrypted Layer Packaging & In-Memory Enclave Consumption (`.nbpack`)**: Proprietary domain layers are compiled and sealed via `./bin/percipience layer pack` and consumed directly into volatile memory (zero disk plaintext residue) with Merkle state transitions via `./bin/percipience layer apply`.
+- **Encrypted Layer Packaging & In-Memory Enclave Consumption (`.nbpack`)**: Proprietary domain layers are compiled and sealed via `./workplace/workplace/bin/percipience layer pack` and consumed directly into volatile memory (zero disk plaintext residue) with Merkle state transitions via `./workplace/workplace/bin/percipience layer apply`.

@@ -335,7 +335,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <div class="card-badge">Autonomous CI/CD</div>
           <h3>12. Specialist Agent Fleet &amp; 6-Stage Gatekeeper</h3>
           <p>Extensible fleet of autonomous specialist agents (Flaky Test Detector, Contract Compatibility Checker, CVE Sentinel, Doc Drift Synchronizer) operating under an automated 6-stage PR gate.</p>
-          <pre>./bin/percipience gate  # Executes complete 6-stage verification gate</pre>
+          <pre>./workplace/bin/percipience gate  # Executes complete 6-stage verification gate</pre>
           <div class="stat-box"><span>Verification Suite:</span><span class="stat-val">17/17 Tests Green | 0 Flaky Blockers</span></div>
         </div>
       </div>
@@ -553,10 +553,10 @@ npm install --save-dev @percipience/context-gateway</pre>
           <div>
             <label style="font-size:12px; color:var(--green); font-weight:700;">Option B: Native Percipience Control Plane &amp; Proxy</label>
             <pre style="margin-top:6px;"># 1. Mount encrypted layer directly into volatile memory
-./bin/percipience layer apply --pack .nb/bundles/iot_mobile_domain.nbpack
+./workplace/bin/percipience layer apply --pack .nb/bundles/iot_mobile_domain.nbpack
 
 # 2. Verify active in-memory mounts
-./bin/percipience layer list
+./workplace/bin/percipience layer list
 
 # 3. Set drop-in proxy environment for local agent
 export OPENAI_BASE_URL="http://localhost:8080/v1"
@@ -1511,8 +1511,8 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "name": "Local Git Pre-Commit Hook",
                     "location": ".git/hooks/pre-commit",
-                    "installed_by": "scripts/install_git_hook.sh",
-                    "actions": ["./bin/percipience gate", "./bin/percipience tokens summary"],
+                    "installed_by": "workplace/scripts/install_git_hook.sh",
+                    "actions": ["./workplace/bin/percipience gate", "./workplace/bin/percipience tokens summary"],
                     "behavior": "Blocks git commit if AST compression fails, contract tests fail, or Merkle chain breaks",
                     "status": "ACTIVE & ENFORCED"
                 },
@@ -1520,7 +1520,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "name": "GitHub Actions CI PR Gatekeeper",
                     "location": ".github/workflows/percipience.yml",
                     "trigger": "pull_request (opened, synchronize), push (main)",
-                    "actions": ["./bin/percipience gate", "./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85", "./bin/percipience validate --layered"],
+                    "actions": ["./workplace/bin/percipience gate", "./workplace/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85", "./workplace/bin/percipience validate --layered"],
                     "behavior": "Publishes token savings scorecard & context maturity report to $GITHUB_STEP_SUMMARY",
                     "status": "CONFIGURED"
                 },
@@ -1528,7 +1528,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "name": "GitLab CI Enterprise Pipeline",
                     "location": ".gitlab-ci.yml",
                     "trigger": "merge_request_event, commit on main",
-                    "actions": ["./bin/percipience gate", "./bin/percipience audit", "./bin/percipience validate"],
+                    "actions": ["./workplace/bin/percipience gate", "./workplace/bin/percipience audit", "./workplace/bin/percipience validate"],
                     "behavior": "Emits artifacts to user/outputs/ for self-hosted compliance tracking",
                     "status": "CONFIGURED"
                 },

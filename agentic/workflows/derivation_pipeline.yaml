@@ -22,4 +22,4 @@ steps:
     name: "Calculate Context Maturity"
     executor: "agent_evaluator"
     depends_on: ["step_scaffold_workplace"]
-    output_file: "user/outputs/context_maturity_report.md"
+    output_file: "workplace/docs/reports/context_maturity_report.md"

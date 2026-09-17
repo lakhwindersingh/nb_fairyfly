@@ -65,28 +65,28 @@ The workspace operates in one of two standardized modes configured in `context/l
 
 ### Unified CLI Quickstart Commands
 
-The repository provides the unified [`bin/percipience`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/bin/percipience) CLI executable:
+The repository provides the unified [`workplace/bin/percipience`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/bin/percipience) CLI executable:
 
 ```bash
 # Option A: Bootstrap from an Encrypted Enterprise Package (.nbpack)
 # (context/ and agentic/ core logic are hydrated strictly in volatile RAM / tmpfs)
-./bin/percipience init \
+./workplace/workplace/bin/percipience init \
   --mode multi_module \
   --parent-plan .nb/percipience_parent.nbpack
 
 # Option B: Bootstrap from Plaintext Parent Plan (Development / Internal Mode)
-./bin/percipience init \
+./workplace/workplace/bin/percipience init \
   --mode multi_module \
   --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # Verify workspace health and cryptographic Merkle ledger continuity
-./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+./workplace/workplace/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
 
 # Compile and seal proprietary envelope (.nbpack)
-./bin/percipience pack --obfuscate --sign
+./workplace/workplace/bin/percipience pack --obfuscate --sign
 
 # Hydrate sealed envelope in volatile memory
-./bin/percipience hydrate
+./workplace/workplace/bin/percipience hydrate
 
 # Launch Cloud SaaS Portal webserver locally
 ./start_portal.sh 3000
@@ -144,7 +144,7 @@ percipience mcp jira pull \
 ### Step 2: Running Autonomous Derivation
 Run the derivation agent to infer the complete system:
 ```bash
-./bin/percipience run --workflow derivation_pipeline --dry-run
+./workplace/workplace/bin/percipience run --workflow derivation_pipeline --dry-run
 ```
 The derivation engine automatically:
 1. Derives typed configs in `workplace/config/` (e.g., API schemas, token compression thresholds).
@@ -159,17 +159,17 @@ When multiple autonomous subagents work concurrently (e.g., frontend developer, 
 
 ```bash
 # Claim an isolated execution worktree for a subagent (TTL: 3600 seconds)
-./bin/percipience worktree acquire --agent agent_dev_01 --ttl 3600
+./workplace/workplace/bin/percipience worktree acquire --agent agent_dev_01 --ttl 3600
 
 # The subagent executes inside:
 # .workspaces/wt_agent_dev_01/
 # All file modifications are isolated from the main branch.
 
 # List active leases
-./bin/percipience worktree list
+./workplace/workplace/bin/percipience worktree list
 
 # Release and prune the ephemeral worktree lease
-./bin/percipience worktree release --agent agent_dev_01
+./workplace/workplace/bin/percipience worktree release --agent agent_dev_01
 ```
 
 #### Token Optimization & AST Pruning
@@ -194,7 +194,7 @@ If an autonomous agent hallucinates a non-existent API, breaks typing, or introd
 3. **Surgical Rollback**: The workspace rewinds git commits and ledger state to the last clean recovery point snapshot:
    ```bash
    # Surgical rollback of a single affected module (leaving other modules untouched)
-   ./bin/percipience rollback --module mod_observability_usage --target-point RP_PLAY3_BOOTSTRAP_001
+   ./workplace/workplace/bin/percipience rollback --module mod_observability_usage --target-point RP_PLAY3_BOOTSTRAP_001
    ```
 4. **Replay**: Downstream valid enhancements are re-executed using the sanitized context.
 
@@ -242,7 +242,7 @@ steps:
 
 #### 4. Validate Layered Context
 ```bash
-./bin/percipience validate --layered
+./workplace/workplace/bin/percipience validate --layered
 ```
 
 ---
@@ -252,13 +252,13 @@ If your team uses self-hosted GitLab, GitHub Enterprise Server, Bitbucket Data C
 
 ```bash
 # Connect self-hosted Git remote with corporate SSH Deploy Key and internal Root CA
-./bin/percipience repo connect \
+./workplace/workplace/bin/percipience repo connect \
   --url git@gitlab.internal.bank.com:core-ledger.git \
   --auth-type ssh_key \
   --webhook-provider gitlab
 
 # Inspect connection status
-./bin/percipience repo status
+./workplace/workplace/bin/percipience repo status
 ```
 
 ---
@@ -273,7 +273,7 @@ The central state machine tracking:
 - **`git_commits`**: Traceability map linking git commits directly to requirement IDs.
 - **`standard_issue_checklist`**: Automated audit gates including `CHK_CONTEXT_POISONING_FREE`.
 
-### 2. Context Maturity Report ([`user/outputs/context_maturity_report.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/context_maturity_report.md))
+### 2. Context Maturity Report ([`workplace/docs/reports/context_maturity_report.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/context_maturity_report.md))
 After each milestone, Percipience calculates a normalized score ($0.00 - 1.00$) across 6 dimensions:
 1. **Requirement Coverage**: Percentage of MVS specifications satisfied.
 2. **Architectural & Design Grounding**: Contract conformance and AST schema adherence.
@@ -296,7 +296,7 @@ All core components from the Parent Master Plan and Play 3 have corresponding ve
 
 ```bash
 # Run the complete automated test suite (9 test suites)
-python3 tests/test_play3_suite.py
+python3 workplace/tests/test_play3_suite.py
 ```
 
 | Subsystem Module | Location | Purpose |
@@ -334,10 +334,10 @@ jobs:
         with:
           python-version: "3.11"
       - run: |
-          chmod +x bin/percipience
-          ./bin/percipience gate
-          ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
-          ./bin/percipience validate --layered
+          chmod +x workplace/bin/percipience
+          ./workplace/workplace/bin/percipience gate
+          ./workplace/workplace/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+          ./workplace/workplace/bin/percipience validate --layered
 ```
 
 ### GitLab CI ([`.gitlab-ci.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.gitlab-ci.yml))
@@ -355,14 +355,14 @@ percipience_gatekeeper:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
-    - chmod +x bin/percipience
+    - chmod +x workplace/bin/percipience
   script:
-    - ./bin/percipience gate
-    - ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
-    - ./bin/percipience validate --layered
+    - ./workplace/workplace/bin/percipience gate
+    - ./workplace/workplace/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+    - ./workplace/workplace/bin/percipience validate --layered
   artifacts:
     paths:
-      - user/outputs/context_maturity_report.md
+      - workplace/docs/reports/context_maturity_report.md
 ```
 
 ---
@@ -371,31 +371,31 @@ percipience_gatekeeper:
 
 | Command | Description |
 | :--- | :--- |
-| `./bin/percipience init --mode <mode> --parent-plan <plan>` | Bootstrap the Quad-Space directory structure and genesis state ledger. |
-| `./bin/percipience audit [--enforce-merkle-chain] [--min-maturity 0.85]` | Validate cryptographic Merkle continuity, contract compatibility, and context purity. |
-| `./bin/percipience gate` | Run PR gatekeeper checks (AST prune & token capture, contracts, bounded TDD, Merkle block seal). |
-| `./bin/percipience tokens track --file <path>` | Prune a specific file using AST, calculate savings, and record event to ledger. |
-| `./bin/percipience tokens scan [--dir <dir>]` | Scan codebase directory, prune ASTs, and record aggregate token savings to ledger. |
-| `./bin/percipience tokens summary` | Display aggregate tokens saved, gross $ saved, and 15% rev-share performance fee. |
-| `./bin/percipience tokens report [--output <path>]` | Generate markdown scorecard in `user/outputs/token_savings_report.md`. |
-| `./bin/percipience cicd run [--no-heal] [--no-optimize]` | Execute full Autonomous CI/CD pipeline (Sustain -> Prune -> Bounded Auto-Heal -> Optimize -> Merkle Seal). |
-| `./bin/percipience cicd heal [--target-module <id>]` | Trigger autonomous self-healing on a failing module with bounded TDD (max 3 retries) and surgical rollback fallback. |
-| `./bin/percipience cicd sustain` | Execute self-sustaining housekeeping pass (reclaim expired leases, clean scratch diffs, verify Merkle DAG). |
-| `./bin/percipience cicd optimize` | Run closed-loop telemetry analysis and dynamically calibrate AST pruning and prompt cache prefix alignment. |
-| `./bin/percipience pack [--output <path>] [--obfuscate] [--sign]` | Compile and sign proprietary plans into an encrypted binary envelope (`.nbpack`). |
-| `./bin/percipience hydrate [--pack <path>]` | Decrypt and hydrate proprietary envelope strictly inside volatile RAM (`tmpfs`). |
-| `./bin/percipience worktree acquire --agent <id> [--ttl <sec>]` | Mount an ephemeral isolated Git worktree for concurrent subagent execution. |
-| `./bin/percipience worktree list` | View active worktree leases and remaining TTL. |
-| `./bin/percipience worktree release --agent <id>` | Release and prune an ephemeral Git worktree lease. |
-| `./bin/percipience rollback --module <id> --target-point <RP>` | Surgically rewind a specific module to a clean recovery point snapshot. |
-| `./bin/percipience agent create --name <name> [--template <type>]` | Scaffold custom agent from healthy plugin template and seal Merkle block (`RP_AGENT_REGISTER_*`). |
-| `./bin/percipience agent integrate --agent <id> --workflow <wf_id> [--after <step>]` | Dynamically inject custom agent into workflow DAG, validate dependencies, and seal Merkle block. |
-| `./bin/percipience agent run --agent <id> [--module <mod>] [--task <desc>]` | Execute agent in ephemeral sandboxed worktree with AST token metering, invariant checks, and Merkle seal. |
-| `./bin/percipience agent rollback --agent <id> [--module <mod>] [--recovery-point <RP>]` | Surgically rollback an agent's changes to a recovery point without disrupting sibling modules. |
-| `./bin/percipience agent list` | List all registered custom agent plugins, categories, and workflow bindings. |
-| `./bin/percipience agent test --agent <name> [--dry-run]` | Test custom agent syntax, tool bindings, and AST diff execution in a sandbox. |
-| `./bin/percipience validate --layered` | Verify that unencrypted custom context and schemas adhere to platform invariants. |
-| `./bin/percipience repo connect --url <git_url> --auth-type <ssh_key|pat>` | Connect a self-hosted or cloud Git repository (BYOR) with SSH deploy keys. |
-| `./bin/percipience repo status` | Inspect current BYOR remote status and mock deploy public keys. |
-| `./bin/percipience run --workflow <id> [--dry-run]` | Execute a multi-step SDLC workflow DAG. |
+| `./workplace/workplace/bin/percipience init --mode <mode> --parent-plan <plan>` | Bootstrap the Quad-Space directory structure and genesis state ledger. |
+| `./workplace/workplace/bin/percipience audit [--enforce-merkle-chain] [--min-maturity 0.85]` | Validate cryptographic Merkle continuity, contract compatibility, and context purity. |
+| `./workplace/workplace/bin/percipience gate` | Run PR gatekeeper checks (AST prune & token capture, contracts, bounded TDD, Merkle block seal). |
+| `./workplace/workplace/bin/percipience tokens track --file <path>` | Prune a specific file using AST, calculate savings, and record event to ledger. |
+| `./workplace/workplace/bin/percipience tokens scan [--dir <dir>]` | Scan codebase directory, prune ASTs, and record aggregate token savings to ledger. |
+| `./workplace/workplace/bin/percipience tokens summary` | Display aggregate tokens saved, gross $ saved, and 15% rev-share performance fee. |
+| `./workplace/workplace/bin/percipience tokens report [--output <path>]` | Generate markdown scorecard in `workplace/docs/reports/token_savings_report.md`. |
+| `./workplace/workplace/bin/percipience cicd run [--no-heal] [--no-optimize]` | Execute full Autonomous CI/CD pipeline (Sustain -> Prune -> Bounded Auto-Heal -> Optimize -> Merkle Seal). |
+| `./workplace/workplace/bin/percipience cicd heal [--target-module <id>]` | Trigger autonomous self-healing on a failing module with bounded TDD (max 3 retries) and surgical rollback fallback. |
+| `./workplace/workplace/bin/percipience cicd sustain` | Execute self-sustaining housekeeping pass (reclaim expired leases, clean scratch diffs, verify Merkle DAG). |
+| `./workplace/workplace/bin/percipience cicd optimize` | Run closed-loop telemetry analysis and dynamically calibrate AST pruning and prompt cache prefix alignment. |
+| `./workplace/workplace/bin/percipience pack [--output <path>] [--obfuscate] [--sign]` | Compile and sign proprietary plans into an encrypted binary envelope (`.nbpack`). |
+| `./workplace/workplace/bin/percipience hydrate [--pack <path>]` | Decrypt and hydrate proprietary envelope strictly inside volatile RAM (`tmpfs`). |
+| `./workplace/workplace/bin/percipience worktree acquire --agent <id> [--ttl <sec>]` | Mount an ephemeral isolated Git worktree for concurrent subagent execution. |
+| `./workplace/workplace/bin/percipience worktree list` | View active worktree leases and remaining TTL. |
+| `./workplace/workplace/bin/percipience worktree release --agent <id>` | Release and prune an ephemeral Git worktree lease. |
+| `./workplace/workplace/bin/percipience rollback --module <id> --target-point <RP>` | Surgically rewind a specific module to a clean recovery point snapshot. |
+| `./workplace/workplace/bin/percipience agent create --name <name> [--template <type>]` | Scaffold custom agent from healthy plugin template and seal Merkle block (`RP_AGENT_REGISTER_*`). |
+| `./workplace/workplace/bin/percipience agent integrate --agent <id> --workflow <wf_id> [--after <step>]` | Dynamically inject custom agent into workflow DAG, validate dependencies, and seal Merkle block. |
+| `./workplace/workplace/bin/percipience agent run --agent <id> [--module <mod>] [--task <desc>]` | Execute agent in ephemeral sandboxed worktree with AST token metering, invariant checks, and Merkle seal. |
+| `./workplace/workplace/bin/percipience agent rollback --agent <id> [--module <mod>] [--recovery-point <RP>]` | Surgically rollback an agent's changes to a recovery point without disrupting sibling modules. |
+| `./workplace/workplace/bin/percipience agent list` | List all registered custom agent plugins, categories, and workflow bindings. |
+| `./workplace/workplace/bin/percipience agent test --agent <name> [--dry-run]` | Test custom agent syntax, tool bindings, and AST diff execution in a sandbox. |
+| `./workplace/workplace/bin/percipience validate --layered` | Verify that unencrypted custom context and schemas adhere to platform invariants. |
+| `./workplace/workplace/bin/percipience repo connect --url <git_url> --auth-type <ssh_key|pat>` | Connect a self-hosted or cloud Git repository (BYOR) with SSH deploy keys. |
+| `./workplace/workplace/bin/percipience repo status` | Inspect current BYOR remote status and mock deploy public keys. |
+| `./workplace/workplace/bin/percipience run --workflow <id> [--dry-run]` | Execute a multi-step SDLC workflow DAG. |
 | `./start_portal.sh [port]` | Launch the interactive Cloud SaaS Portal and API Gateway locally. |

@@ -240,7 +240,7 @@
           <div class="remedy-box">
             <b>Diagnosis:</b> Missing MVS specifications or untracked feature user stories in <code>user/inputs/</code>.<br>
             <b>Remediation:</b> Scaffold standard MVS templates for APIs, schemas, and UI components.<br>
-            <span class="remedy-cmd">./bin/percipience init --mode multi_module</span>
+            <span class="remedy-cmd">./workplace/bin/percipience init --mode multi_module</span>
           </div>
         </div>
 
@@ -249,7 +249,7 @@
           <div class="remedy-box">
             <b>Diagnosis:</b> Missing cross-module YAML interface schemas in <code>context/contracts/</code>.<br>
             <b>Remediation:</b> Define OpenAPI or JSON-Schema specifications for micro-module interop.<br>
-            <span class="remedy-cmd">./bin/percipience validate --layered</span>
+            <span class="remedy-cmd">./workplace/bin/percipience validate --layered</span>
           </div>
         </div>
 
@@ -267,7 +267,7 @@
           <div class="remedy-box" style="border-left-color:var(--red);">
             <b>Diagnosis:</b> Context poisoning flagged (hardcoded secret, hallucinated package) in quarantine ledger.<br>
             <b>Remediation:</b> Inspect quarantine, triage incident, and execute surgical module rollback.<br>
-            <span class="remedy-cmd">./bin/percipience rollback --module &lt;mod_name&gt; --target-point RP_PLAY3_BOOTSTRAP_001</span>
+            <span class="remedy-cmd">./workplace/bin/percipience rollback --module &lt;mod_name&gt; --target-point RP_PLAY3_BOOTSTRAP_001</span>
           </div>
         </div>
 
@@ -276,7 +276,7 @@
           <div class="remedy-box">
             <b>Diagnosis:</b> Unpruned raw files exceeding 15,000 token turn budget without AST compression.<br>
             <b>Remediation:</b> Run full repository AST compression scan and update token ledger.<br>
-            <span class="remedy-cmd">./bin/percipience tokens scan && ./bin/percipience gate</span>
+            <span class="remedy-cmd">./workplace/bin/percipience tokens scan && ./workplace/bin/percipience gate</span>
           </div>
         </div>
       </div>
@@ -602,7 +602,7 @@
             <tbody>
               <tr>
                 <td class="highlight">Local Pre-Commit Hook</td>
-                <td><code>.git/hooks/pre-commit</code><br><span style="font-size:10px;">Installed via <code>scripts/install_git_hook.sh</code></span></td>
+                <td><code>.git/hooks/pre-commit</code><br><span style="font-size:10px;">Installed via <code>workplace/scripts/install_git_hook.sh</code></span></td>
                 <td>Runs <code>percipience gate</code> and <code>tokens summary</code> before every git commit; blocks unpruned or broken state.</td>
                 <td><span style="color:var(--green); font-weight:700;">ACTIVE</span></td>
               </tr>

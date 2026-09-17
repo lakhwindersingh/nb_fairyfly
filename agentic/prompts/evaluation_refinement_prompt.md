@@ -10,4 +10,4 @@ This metaprompt evaluates codebase health, audit compliance, and context maturit
 5. **Security & Compliance**: Check Merkle chain integrity, Ed25519 signatures, and zero-knowledge hydration.
 6. **Token & GenAI Efficiency**: Measure token compression ratio and prompt cache hit rate.
 
-Output evaluated scorecard to `user/outputs/context_maturity_report.md`.
+Output evaluated scorecard to `workplace/docs/reports/context_maturity_report.md`.

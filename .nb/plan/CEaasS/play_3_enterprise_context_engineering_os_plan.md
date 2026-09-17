@@ -183,7 +183,7 @@ graph TD
 - **Poly-Module Isolation**: In a multi-module system (e.g., Mobile App + IoT Node + Web Integration), rolling back `mod_agentic_integration` to `RP_AI_002` does **not** touch `mod_mobile_app` or `mod_iot_node`.
 
 ### 4.5. 6-Dimensional Context Maturity Evaluator
-Every CI/CD pipeline run calculates quantitative maturity scores (0.00 – 1.00) saved to `user/outputs/context_maturity_report.md`:
+Every CI/CD pipeline run calculates quantitative maturity scores (0.00 – 1.00) saved to `workplace/docs/reports/context_maturity_report.md`:
 
 ```mermaid
 radar-chart
@@ -316,7 +316,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const report = fs.readFileSync('user/outputs/context_maturity_report.md', 'utf8');
+            const report = fs.readFileSync('workplace/docs/reports/context_maturity_report.md', 'utf8');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -352,7 +352,7 @@ percipience_gatekeeper:
     reports:
       junit: user/outputs/percipience_test_report.xml
     paths:
-      - user/outputs/context_maturity_report.md
+      - workplace/docs/reports/context_maturity_report.md
 ```
 
 ---

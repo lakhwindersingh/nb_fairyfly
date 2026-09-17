@@ -15,7 +15,7 @@
 | Core Subsystem / Pillar | Parent Master Plan | Play 3 OS Plan | Play 3 SaaS Portal Plan | Corp Site Space Plan | Implementation Status | Maturity Score |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Quad-Space Standard Scaffolding** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Unified Percipience CLI (`bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
+| **Unified Percipience CLI (`workplace/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
 | **AST Pruning & Token Optimization** | Required | Required | Required | Required | **✅ COMPLETED** | **0.98** |
 | **Cryptographic Merkle State Ledger** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Context Poisoning & Surgical Rollback** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
@@ -24,8 +24,8 @@
 | **BYOR Multi-VCS Adapter** | Specified | Required | Specified | Specified | **✅ COMPLETED** | **0.95** |
 | **Cloud SaaS Portal & Web Server** | N/A | Specified | Required | Specified | **✅ COMPLETED** | **0.96** |
 | **Multi-Module SaaS Architecture** | N/A | Specified | Required | N/A | **✅ COMPLETED** | **0.95** |
-| **Next.js 14 / Astro Corporate Codebase** | N/A | N/A | Optional | Required | **[-] IN PROGRESS** | **0.70** |
-| **Core Web Vitals & WCAG 2.1 AA CI** | N/A | N/A | Specified | Required | **[-] IN PROGRESS** | **0.75** |
+| **Next.js 14 / Astro Corporate Codebase** | N/A | N/A | Optional | Required | **✅ COMPLETED** | **1.00** |
+| **Core Web Vitals & WCAG 2.1 AA CI** | N/A | N/A | Specified | Required | **✅ COMPLETED** | **1.00** |
 | **MVS Ingestion & Jira MCP Connector** | Required | Specified | Specified | Specified | **[-] IN PROGRESS** | **0.80** |
 | **Terraform Multi-Cloud Production Blueprints**| N/A | Required | Specified | N/A | **[ ] PENDING** | **0.50** |
 | **90-Day GTM Commercialization (Months 1–3)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
@@ -44,7 +44,7 @@
   - `percipience worktree acquire --agent <id> --ttl <sec>`
   - `percipience worktree list`
   - `percipience worktree release --agent <id>`
-- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L112).
+- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L112).
 - [-] **Production Redis Distributed Lock Backend**:
   - *Current*: Local atomic file leasing (`leases.json`).
   - *TODO*: Wire Redis 7.x Redlock distributed lease backend for multi-node Karpenter cluster scaling (`ElastiCache` / `Memorystore`).
@@ -62,7 +62,7 @@
   - Generates [`context/ledger/context_ledger.public.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.public.yaml) with stripped private paths for public commit audits.
 - [x] **Ledger Chain Verifier**:
   - Validates full cryptographic continuity and parent hash integrity (`workplace/core/merkle_engine.py`).
-  - Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L42).
+  - Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L42).
 - [x] **Visual Merkle State DAG Web Explorer**:
   - Live browser dashboard at [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html).
   - API endpoint `GET /api/observability/dag` returning chain verification logs.
@@ -81,7 +81,7 @@
   - Generates standard `git diff` unified patch strings to enforce output token savings.
 - [x] **Interactive Web Playground**:
   - Live code editor and real-time pruning API (`POST /api/marketing/ast-prune`) on `http://127.0.0.1:3000/`.
-- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L32).
+- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L32).
 - [-] **Rust-Compiled Tree-Sitter Native Daemon**:
   - *Current*: Python AST regex & structural parser with $< 85\text{ms}$ execution.
   - *TODO*: Compile standalone Rust Tree-Sitter native binary daemon for sub-20ms ultra-high throughput parsing across 50+ concurrent agents.
@@ -98,7 +98,7 @@
   - Preserves 100% of sibling micro-modules (e.g., resets `mod_billing` without clobbering `mod_marketing`).
 - [x] **Web Console Trigger**:
   - Interactive surgical rollback button on portal dashboard calling `POST /api/observability/rollback`.
-- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L56) and [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L71).
+- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L56) and [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L71).
 - [ ] **Diagnostic Re-Prompting Loop**:
   - *TODO*: Implement automated self-healing re-prompting handler injecting only the isolated failure context into the recovery agent prompt.
 
@@ -113,7 +113,7 @@
 - [x] **CLI Subcommands**:
   - `percipience pack --include-spaces context,agentic --output <path> --obfuscate --sign`
   - `percipience hydrate --pack <path>`
-- [x] **Automated Unit Tests**: Verified via [`test_06_nbpack_packaging_and_hydration`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L98).
+- [x] **Automated Unit Tests**: Verified via [`test_06_nbpack_packaging_and_hydration`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L98).
 - [ ] **KMS Envelope Key Binding**:
   - *TODO*: Connect AWS KMS / Cloud KMS CMEK key derivation to decrypt bundles at container boot using IAM roles.
 
@@ -134,7 +134,7 @@
   - `percipience validate --layered`
   - `percipience agent create --name <name>`
   - `percipience agent test --agent <name> --dry-run`
-- [x] **Automated Unit Tests**: Verified via [`test_09_layered_context_validator`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L136).
+- [x] **Automated Unit Tests**: Verified via [`test_09_layered_context_validator`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L136).
 
 ---
 
@@ -148,7 +148,7 @@
 - [x] **CLI Subcommands**:
   - `percipience repo connect --url <url> --auth-type <type> --webhook-provider <vcs>`
   - `percipience repo status`
-- [x] **Automated Unit Tests**: Verified via [`test_08_byor_adapter`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/tests/test_play3_suite.py#L124).
+- [x] **Automated Unit Tests**: Verified via [`test_08_byor_adapter`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L124).
 - [ ] **AWS Secrets Manager / Vault Auto-Sync**:
   - *TODO*: Wire dynamic SSH private key retrieval from AWS Secrets Manager ARN or HashiCorp Vault.
 
@@ -174,25 +174,27 @@
 - [x] **Design Tokens & System Configs**:
   - `workplace/config/site_environment_config.yaml`
   - `workplace/config/token_optimization_config.yaml`
-- [-] **Corporate UI Component Library (`workplace/src/components/`)**:
+- [x] **Corporate UI Component Library (`workplace/src/components/`)**:
   - [x] AST skeletons defined in `workplace/modules/mod_portal_marketing/components/`.
-  - [ ] Scaffold dedicated React / Astro components in `workplace/src/components/`:
-    - `Navbar.tsx` (responsive mobile drawer, theme toggle)
-    - `HeroBanner.tsx` (dynamic badge, CTAs)
-    - `FeatureGrid.tsx` (8 capability cards)
-    - `Testimonials.tsx` (social proof carousels)
-    - `ContactForm.tsx` (React Hook Form + Zod validation)
-    - `Footer.tsx` (sitemap, compliance disclosures)
-- [-] **Tailwind CSS Theme & Globals (`workplace/config/tailwind.config.ts`)**:
-  - [ ] Implement complete Tailwind CSS configuration file specifying custom color scales (`cyan-glow`, `percipience-dark`), font variables, and theme mode overrides.
-  - [ ] Add `workplace/src/styles/globals.css` with CSS variables and custom utility classes.
-- [ ] **MDX Content Collections (`workplace/src/content/`)**:
-  - [ ] Case studies collection (`blog/`, `case-studies/`).
-  - [ ] Content schema definitions using Contentlayer or Astro Content Collections.
-- [ ] **SEO, Structured Data & i18n Engine**:
-  - [ ] JSON-LD metadata component generating `Organization`, `SoftwareApplication`, and `FAQPage` schemas.
-  - [ ] Multi-locale routing dictionary (`en`, `es`, `de`).
-  - [ ] Dynamic `sitemap.xml` and `robots.txt` generation route.
+  - [x] Dedicated React / Next.js / Astro components in `workplace/src/components/`:
+    - [`Navbar.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Navbar.tsx) (responsive mobile drawer, theme toggle, live status badge)
+    - [`HeroBanner.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/HeroBanner.tsx) (dynamic badge, CTAs, interactive terminal demo, 47.4% stats)
+    - [`FeatureGrid.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/FeatureGrid.tsx) (8 capability cards with metrics and AST features)
+    - [`Testimonials.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Testimonials.tsx) (social proof carousels, customer ROI quotes)
+    - [`ContactForm.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/ContactForm.tsx) (React Hook Form + Zod validation, responsive states)
+    - [`Footer.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Footer.tsx) (sitemap, compliance disclosures, SOC2 / ISO badges)
+    - [`JsonLd.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/JsonLd.tsx) (structured schema generator for `Organization`, `SoftwareApplication`, `FAQPage`)
+- [x] **Tailwind CSS Theme & Globals (`workplace/config/tailwind.config.ts`)**:
+  - [x] Complete Tailwind CSS configuration file specifying custom color scales (`cyan-glow`, `percipience-dark`, `emerald-stream`, `amber-quarantine`), font variables, and theme overrides in [`workplace/config/tailwind.config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/config/tailwind.config.ts).
+  - [x] [`workplace/src/styles/globals.css`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/styles/globals.css) with CSS variables, custom glassmorphism, and accessibility focus styles.
+- [x] **MDX Content Collections (`workplace/src/content/`)**:
+  - [x] Content schema definitions using Zod in [`workplace/src/content/config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/config.ts).
+  - [x] Case study MDX: [`workplace/src/content/case-studies/enterprise-fintech-token-reduction.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/case-studies/enterprise-fintech-token-reduction.mdx).
+  - [x] Blog MDX: [`workplace/src/content/blog/ast-pruning-vs-prompt-compression.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/blog/ast-pruning-vs-prompt-compression.mdx).
+- [x] **SEO, Structured Data & i18n Engine**:
+  - [x] [`workplace/src/lib/seo.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/seo.ts) (OpenGraph, Twitter card, Canonical URL metadata).
+  - [x] [`workplace/src/lib/i18n.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/i18n.ts) (Multi-locale routing dictionary with `en`, `es`, `de`).
+  - [x] [`workplace/src/lib/sitemap_generator.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/sitemap_generator.ts) (Dynamic `sitemap.xml` and `robots.txt` generator).
 
 ---
 
@@ -201,14 +203,14 @@
 - [x] **CI/CD PR Gatekeepers**:
   - GitHub Actions: [`.github/workflows/percipience.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.github/workflows/percipience.yml)
   - GitLab CI: [`.gitlab-ci.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.gitlab-ci.yml)
-- [-] **Accessibility (a11y) & Core Web Vitals Harnesses**:
+- [x] **Accessibility (a11y) & Core Web Vitals Harnesses**:
   - [x] Maturity score incorporates WCAG 2.1 AA and Core Web Vitals dimensions.
-  - [ ] Add `workplace/templates/evaluation/axe_accessibility_test.ts` (automated axe-core headless Playwright runner).
-  - [ ] Add `workplace/templates/evaluation/lighthouse_ci_config.json` enforcing scores $\ge 95$ across Performance, Accessibility, Best Practices, and SEO.
-  - [ ] Add `workplace/templates/evaluation/link_checker_script.sh` to prevent broken internal links or MDX references.
-- [ ] **E2E & Unit Test Harnesses**:
-  - [ ] Add Vitest unit test templates (`vitest_unit_test_template.ts`) for corporate form validation.
-  - [ ] Add Playwright E2E test suite (`playwright_e2e_template.ts`) testing full onboarding and AST demo flows.
+  - [x] [`workplace/templates/evaluation/axe_accessibility_test.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/axe_accessibility_test.ts) (automated axe-core headless Playwright runner enforcing zero critical a11y violations).
+  - [x] [`workplace/templates/evaluation/lighthouse_ci_config.json`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/lighthouse_ci_config.json) enforcing scores $\ge 95$ across Performance, Accessibility, Best Practices, and SEO.
+  - [x] [`workplace/templates/evaluation/link_checker_script.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/link_checker_script.sh) verifying 100% of internal links, MDX references, and file URIs.
+- [x] **E2E & Unit Test Harnesses**:
+  - [x] [`workplace/templates/evaluation/vitest_unit_test_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/vitest_unit_test_template.ts) for content schemas, SEO, i18n, and sitemap validation.
+  - [x] [`workplace/templates/evaluation/playwright_e2e_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/playwright_e2e_template.ts) testing onboarding, live AST demo, and surgical rollback flows.
 
 ---
 
@@ -275,7 +277,7 @@ gantt
 
 - [x] **Month 1 Deliverables**:
   - [x] Core OS engines implemented and passing 100% automated test suite.
-  - [x] Standalone `bin/percipience` CLI operational with 11 subcommands.
+  - [x] Standalone `workplace/bin/percipience` CLI operational with 11 subcommands.
   - [x] Multi-module SaaS portal running with live AST pruner and ROI calculator.
   - [x] Zero-disk encrypted `.nbpack` compilation and RAM hydration verified.
   - [ ] Rust/Tree-Sitter native daemon container packaging.
@@ -322,5 +324,5 @@ gantt
   - [x] **`agent_contract_compatibility_checker` (`agentic/custom/agents/contract_compatibility_checker.yaml`, `workplace/core/contract_compatibility_checker.py`)**: SemVer and backward-compatibility audit engine for wire contracts.
   - [x] **`agent_dependency_cve_sentinel` (`agentic/custom/agents/dependency_cve_sentinel.yaml`, `workplace/core/dependency_cve_sentinel.py`)**: Supply-chain vulnerability and restrictive license auditor.
   - [x] **`agent_doc_drift_synchronizer` (`agentic/custom/agents/doc_drift_synchronizer.yaml`, `workplace/core/doc_drift_synchronizer.py`)**: Automated synchronization between exported AST symbols and architecture markdown blueprints.
-  - [x] **PR Gatekeeper Workflow Integration (`agentic/workflows/pr_gatekeeper.yaml`, `bin/percipience`)**: Integrated 6-stage gate pipeline.
-  - [x] **Integration Test Verification (`tests/test_play3_suite.py`)**: 17/17 tests passing covering all 3 phases.
+  - [x] **PR Gatekeeper Workflow Integration (`agentic/workflows/pr_gatekeeper.yaml`, `workplace/bin/percipience`)**: Integrated 6-stage gate pipeline.
+  - [x] **Integration Test Verification (`workplace/tests/test_play3_suite.py`)**: 17/17 tests passing covering all 3 phases.

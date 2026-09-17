@@ -229,7 +229,7 @@ To protect proprietary SaaS design systems, prompt architectures, and pricing he
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
-./bin/percipience layer pack \
+./workplace/workplace/bin/percipience layer pack \
   --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md \
   --output .nb/bundles/saas_portal_domain.nbpack \
   --include-spaces context/contracts,context/rules,agentic/custom
@@ -238,7 +238,7 @@ To protect proprietary SaaS design systems, prompt architectures, and pricing he
 ### 6.2. Consuming the Encrypted Bundle in Target Repository
 ```bash
 # Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
-./bin/percipience layer apply \
+./workplace/workplace/bin/percipience layer apply \
   --pack .nb/bundles/saas_portal_domain.nbpack \
   --in-memory-only \
   --mode multi_module
@@ -257,19 +257,19 @@ To apply this domain onto a repository and verify full end-to-end compatibility:
 
 ```bash
 # 1. Initialize repository with multi-module SaaS configuration
-./bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # 2. Apply the SaaS Portal domain layer
-./bin/percipience layer apply --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md
+./workplace/workplace/bin/percipience layer apply --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md
 
 # 3. Register and integrate domain subagents into PR gatekeeper
-./bin/percipience agent create --name portal_developer --template cicd_quality --role "SaaS Portal Specialist" --module "workplace/modules/mod_portal_admin"
-./bin/percipience agent integrate --agent agent_portal_developer --workflow wf_pr_gatekeeper --after step_contract_compat
+./workplace/workplace/bin/percipience agent create --name portal_developer --template cicd_quality --role "SaaS Portal Specialist" --module "workplace/modules/mod_portal_admin"
+./workplace/workplace/bin/percipience agent integrate --agent agent_portal_developer --workflow wf_pr_gatekeeper --after step_contract_compat
 
 # 4. Launch local real-time telemetry API gateway & browser console
 python3 workplace/portal/server.py --port 8080 &
 open user/outputs/dashboard/index.html
 
 # 5. Run full autonomous CI/CD verification cycle
-./bin/percipience cicd run
+./workplace/workplace/bin/percipience cicd run
 ```

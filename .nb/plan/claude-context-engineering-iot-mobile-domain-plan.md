@@ -218,7 +218,7 @@ To protect proprietary IoT communication stacks, RTOS drivers, and device provis
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
-./bin/percipience layer pack \
+./workplace/workplace/bin/percipience layer pack \
   --plan .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md \
   --output .nb/bundles/iot_mobile_domain.nbpack \
   --include-spaces context/contracts,context/rules,agentic/custom
@@ -227,7 +227,7 @@ To protect proprietary IoT communication stacks, RTOS drivers, and device provis
 ### 6.2. Consuming the Encrypted Bundle in Target Repository
 ```bash
 # Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
-./bin/percipience layer apply \
+./workplace/workplace/bin/percipience layer apply \
   --pack .nb/bundles/iot_mobile_domain.nbpack \
   --in-memory-only \
   --mode multi_module
@@ -246,19 +246,19 @@ To apply this domain onto a repository and verify full end-to-end compatibility:
 
 ```bash
 # 1. Initialize repository using Parent Master Plan in multi-module mode
-./bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # 2. Layer this domain plan into active context
-./bin/percipience layer apply --plan .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md
+./workplace/workplace/bin/percipience layer apply --plan .nb/plan/claude-context-engineering-iot-mobile-domain-plan.md
 
 # 3. Scaffold custom domain agents from the healthy plugin template
-./bin/percipience agent create --name iot_developer --template cicd_quality --role "Embedded MCU Specialist" --module "workplace/modules/iot_node"
-./bin/percipience agent create --name mobile_developer --template cicd_quality --role "Mobile BLE Specialist" --module "workplace/modules/mobile_app"
+./workplace/workplace/bin/percipience agent create --name iot_developer --template cicd_quality --role "Embedded MCU Specialist" --module "workplace/modules/iot_node"
+./workplace/workplace/bin/percipience agent create --name mobile_developer --template cicd_quality --role "Mobile BLE Specialist" --module "workplace/modules/mobile_app"
 
 # 4. Integrate domain agents into the autonomous CI/CD PR gatekeeper
-./bin/percipience agent integrate --agent agent_iot_developer --workflow wf_pr_gatekeeper --after step_contract_compat
-./bin/percipience agent integrate --agent agent_mobile_developer --workflow wf_pr_gatekeeper --after step_iot_developer
+./workplace/workplace/bin/percipience agent integrate --agent agent_iot_developer --workflow wf_pr_gatekeeper --after step_contract_compat
+./workplace/workplace/bin/percipience agent integrate --agent agent_mobile_developer --workflow wf_pr_gatekeeper --after step_iot_developer
 
 # 5. Execute end-to-end verification
-./bin/percipience gate
+./workplace/workplace/bin/percipience gate
 ```

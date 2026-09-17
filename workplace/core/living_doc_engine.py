@@ -489,11 +489,14 @@ This document visualizes the complete high-level system topology, container boun
 
 > **Autonomously Maintained by**: `agent_living_doc_architect` (CAP-21)  
 > **Last Synchronized**: {now}  
-> **Status**: All 6 Visual Diagrams Verified Syntax-Valid
+> **Status**: All 6 Visual Diagrams Verified Syntax-Valid  
+> **Canonical Location**: `workplace/docs/`
 
-Welcome to the Percipience Living Documentation hub. Architecture specifications in this directory are compiled directly from source Abstract Syntax Trees (ASTs), wire contracts, and runtime ledgers, ensuring 100% semantic alignment with zero documentation drift.
+Welcome to the **Percipience Centralized Living Documentation Hub**. This directory is the single canonical source of truth for all workspace architecture, methodologies, technical guides, reports, benchmarks, and HITL governance specifications.
 
-## Documentation Index
+---
+
+## 🏛️ Living Architecture & Visual Topologies
 1. [**System Architecture & C4 Topologies**](file://{arch_path.resolve()})  
    Container boundaries, client interfaces, Context Gateway enclave, and cryptographic storage.
 2. [**Poly-Module Interface Catalog**](file://{mod_path.resolve()})  
@@ -506,6 +509,51 @@ Welcome to the Percipience Living Documentation hub. Architecture specifications
    Relational data models, FinOps ledger entities, and recovery point associations.
 6. [**Active Layered Domain Extensions**](file://{domain_path.resolve()})  
    Specialized architectures for Decentralized Audio P2P Swarms, IoT Edge, and Cloud SaaS Portals.
+
+---
+
+## 📐 Methodologies & Anti-Drift Protocols (`workplace/docs/methodologies/`)
+- [**Anti-Drift Protocol**](file://{(docs_dir / "methodologies" / "anti_drift_protocol.md").resolve()}): Continuous specification-to-code parity checking and reconciliation.
+- [**Token Optimization Guide**](file://{(docs_dir / "methodologies" / "token_optimization_guide.md").resolve()}): Tree-Sitter AST pruning and prompt cache alignment strategies.
+
+---
+
+## 📖 Technical Guides & Developer Manuals (`workplace/docs/guides/`)
+- [**Agent Plugin Developer Guide**](file://{(docs_dir / "guides" / "AGENT_PLUGIN_GUIDE.md").resolve()}): Scaffolding and lifecycle integration for custom CI/CD agent specialists.
+- [**Percipience Quickstart Guide**](file://{(docs_dir / "guides" / "quickstart.md").resolve()}): 90-second onboarding, workspace initialization, and audit execution.
+- [**CI/CD Gatekeeper Guide**](file://{(docs_dir / "guides" / "ci_gatekeeper.md").resolve()}): Multi-stage PR verification and automated Merkle ledger sealing.
+- [**Surgical Rollback Protocol**](file://{(docs_dir / "guides" / "surgical_rollback.md").resolve()}): Isolated sub-module rewinds without collateral disruption.
+- [**.nbpack Envelope Architecture**](file://{(docs_dir / "guides" / "nbpack_architecture.md").resolve()}): Encrypted binary envelope compilation and in-memory hydration.
+- [**Context Gateway Architecture**](file://{(docs_dir / "guides" / "context_gateway.md").resolve()}): Enclave-protected runtime prompt injection.
+- [**SaaS Portal Sitemap & Specifications**](file://{(docs_dir / "guides" / "saas_portal_sitemap.md").resolve()}): Complete information architecture and sitemap.
+
+---
+
+## 📊 Reports, Scorecards & Whitepapers (`workplace/docs/reports/`)
+- [**Context Maturity Evaluation Report**](file://{(docs_dir / "reports" / "context_maturity_report.md").resolve()}): Quantitative 6-dimensional context audit scorecard.
+- [**Token FinOps & Rev-Share Report**](file://{(docs_dir / "reports" / "token_savings_report.md").resolve()}): Real-time AST pruning metrics and performance fee ledger.
+- [**Token Savings Benchmark Whitepaper**](file://{(docs_dir / "reports" / "token_savings_whitepaper.md").resolve()}): Empirical 62% token reduction case study and ROI analysis.
+- [**Autonomous CI/CD Engineering Roadmap**](file://{(docs_dir / "reports" / "autonomous_cicd_roadmap.md").resolve()}): 4-phase strategic roadmap for self-healing pipelines.
+
+---
+
+## 🔬 Benchmarks & Durability Analyses (`workplace/docs/benchmarks/`)
+- [**Empirical Methodology**](file://{(docs_dir / "benchmarks" / "methodology.md").resolve()}): Benchmark execution parameters, fixtures, and measurement methodology.
+- [**Workflow Durability Analysis**](file://{(docs_dir / "benchmarks" / "workflow_durability_analysis.md").resolve()}): Autonomous workflow recovery and multi-turn durability metrics.
+
+---
+
+## 🛡️ HITL Governance & Quarantine Runbooks (`workplace/docs/hitl/`)
+- [**Flaky Test Quarantine Runbook**](file://{(docs_dir / "hitl" / "flaky_readme.md").resolve()}): Intermittent test detection and non-blocking quarantine workflow.
+- [**Context Poisoning Quarantine Runbook**](file://{(docs_dir / "hitl" / "poisoning_readme.md").resolve()}): Remediation protocols for secret leaks and hallucination drift.
+- [**Poisoning Quarantine Manifest**](file://{(docs_dir / "hitl" / "poisoning_quarantine.md").resolve()}): Audit log and status of quarantined context incidents.
+
+---
+
+## 📋 Templates (`workplace/docs/templates/`)
+- [**Custom Domain Layer Template**](file://{(docs_dir / "templates" / "custom_domain_layer_template.md").resolve()}): Boilerplate specification for overlaying new domain layers.
+- [**MVS Feature Specification**](file://{(docs_dir / "templates" / "mvs_feature_spec.md").resolve()}): Standardized template for feature requirements.
+- [**MVS ADR Blueprint**](file://{(docs_dir / "templates" / "mvs_adr_blueprint.md").resolve()}): Architecture Decision Record template with Mermaid diagrams.
 """
         readme_path.write_text(readme_content, encoding="utf-8")
         results.append({"id": "doc_readme", "path": "workplace/docs/README.md", "valid": True})
