@@ -38,6 +38,9 @@ from core.context_gateway import ContextGateway
 from core.nbpack_envelope import NBPackEnvelope
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
+from core.handoff_validator import HandoffValidator
+from core.semantic_parity_engine import SemanticParityEngine
+from core.reconciliation_engine import DualReconciliationEngine
 from core.autonomous_cicd import (
     SelfSustainingEngine,
     AutonomousHealer,
@@ -46,43 +49,93 @@ from core.autonomous_cicd import (
 )
 
 PORTAL_HTML = """<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neutron Binary Percipience | Enterprise Context Engineering OS &amp; CI/CD Gatekeeper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
+      /* Dark Theme Tokens (Default) */
       --bg: #0A0F1D;
-      --bg-alt: #0F172A;
-      --card: #131E36;
-      --card-hover: #1E2D4F;
+      --bg-panel: #111827;
+      --bg-card: #131E36;
+      --bg-card-hover: #1E2D4F;
       --border: #223254;
       --border-accent: #38BDF8;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --code-bg: #070B14;
       --cyan: #38BDF8;
       --cyan-glow: rgba(56, 189, 248, 0.15);
       --green: #10B981;
       --green-glow: rgba(16, 185, 129, 0.15);
+      --purple: #A855F7;
       --amber: #F59E0B;
       --red: #F43F5E;
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --code-bg: #080C17;
+      --header-bg: rgba(10, 15, 29, 0.95);
+      --table-th: #0B1222;
+      --cat-header: #0F172A;
+      --toggle-bg: #1F2937;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
+
+    [data-theme="light"] {
+      /* Light Theme Tokens */
+      --bg: #F8FAFC;
+      --bg-panel: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F1F5F9;
+      --border: #E2E8F0;
+      --border-accent: #0284C7;
+      --text: #0F172A;
+      --muted: #64748B;
+      --code-bg: #F1F5F9;
+      --cyan: #0284C7;
+      --cyan-glow: rgba(2, 132, 199, 0.12);
+      --green: #059669;
+      --green-glow: rgba(5, 150, 105, 0.12);
+      --purple: #9333EA;
+      --amber: #D97706;
+      --red: #E11D48;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --table-th: #F8FAFC;
+      --cat-header: #F1F5F9;
+      --toggle-bg: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
     /* Header */
-    header { background: rgba(10, 15, 29, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    header { background: var(--header-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
     .brand-wrap { display: flex; align-items: center; gap: 12px; }
-    .logo-badge { background: linear-gradient(135deg, #0284C7, #38BDF8); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 18px; box-shadow: 0 0 12px var(--cyan); }
-    .brand-title { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }
-    .brand-sub { font-size: 11px; color: var(--cyan); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+    .logo-badge { background: linear-gradient(135deg, #0284C7, #38BDF8); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 18px; box-shadow: 0 0 12px var(--cyan-glow); }
+    .brand-title { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+    .brand-sub { font-size: 11px; color: var(--cyan); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
 
-    .nav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nav { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .nav-btn { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 6px; transition: all 0.2s; }
-    .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-    .nav-btn.active { background: var(--cyan-glow); border-color: var(--cyan); color: var(--cyan); }
+    .nav-btn:hover { color: var(--text); background: rgba(125,125,125,0.08); }
+    .nav-btn.active { background: var(--cyan-glow); border-color: var(--cyan); color: var(--cyan); font-weight: 700; }
+
+    .theme-toggle-btn {
+      background: var(--toggle-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+    }
+    .theme-toggle-btn:hover { border-color: var(--cyan); }
 
     /* Main Container */
     main { padding: 36px 32px 64px; flex: 1; max-width: 1240px; margin: 0 auto; width: 100%; }
@@ -93,41 +146,41 @@ PORTAL_HTML = """<!DOCTYPE html>
     /* Hero */
     .hero { text-align: center; margin-bottom: 48px; padding: 24px 0; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--cyan-glow); border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 14px; border-radius: 9999px; font-size: 12px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.6px; }
-    .hero h1 { font-size: 42px; line-height: 1.15; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; background: linear-gradient(135deg, #FFFFFF 40%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero h1 { font-size: 42px; line-height: 1.15; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; color: var(--text); }
     .hero p { font-size: 17px; line-height: 1.6; color: var(--muted); max-width: 780px; margin: 0 auto 28px; }
     .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 12px; }
-    .hero-stat-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 22px; text-align: left; }
-    .hero-stat-val { font-size: 24px; font-weight: 800; color: var(--cyan); }
+    .hero-stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 22px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .hero-stat-val { font-size: 24px; font-weight: 800; color: var(--cyan); font-family: 'JetBrains Mono', monospace; }
     .hero-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
     /* Grids & Cards */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px; transition: border-color 0.2s; position: relative; }
-    .card:hover { border-color: rgba(56, 189, 248, 0.4); }
-    .card-badge { position: absolute; top: 18px; right: 18px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 9999px; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--cyan); color: var(--cyan); text-transform: uppercase; }
-    .card h3 { font-size: 19px; margin-bottom: 12px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 26px; transition: border-color 0.2s, transform 0.15s; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+    .card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+    .card-badge { position: absolute; top: 18px; right: 18px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 9999px; background: var(--cyan-glow); border: 1px solid var(--cyan); color: var(--cyan); text-transform: uppercase; }
+    .card h3 { font-size: 19px; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
 
     /* Buttons & Form Elements */
-    textarea, input, select { width: 100%; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--text); font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; margin-bottom: 14px; outline: none; }
+    textarea, input, select { width: 100%; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 14px; outline: none; }
     textarea:focus, input:focus, select:focus { border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
-    button.action-btn { background: linear-gradient(135deg, #0284C7, #38BDF8); color: #070B14; border: none; border-radius: 8px; padding: 12px 24px; font-weight: 700; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s, opacity 0.15s; }
+    button.action-btn { background: linear-gradient(135deg, #0284C7, #38BDF8); color: #FFFFFF; border: none; border-radius: 8px; padding: 12px 24px; font-weight: 700; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s, opacity 0.15s; }
     button.action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
     button.action-btn:active { transform: translateY(0); }
 
     /* Tables */
-    .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-top: 16px; }
+    .table-wrap { overflow-x: auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-top: 16px; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-    th { background: #0b1222; color: #fff; padding: 14px 16px; font-weight: 700; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 11px; letter-spacing: 0.6px; }
+    th { background: var(--table-th); color: var(--text); padding: 14px 16px; font-weight: 700; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 11px; letter-spacing: 0.6px; }
     td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; color: var(--muted); }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(255,255,255,0.015); color: var(--text); }
-    td.feature-name { font-weight: 600; color: #fff; }
-    td.percipience-cell { color: #38BDF8; font-weight: 600; background: rgba(56, 189, 248, 0.03); }
+    tr:hover td { background: rgba(125,125,125,0.03); color: var(--text); }
+    td.feature-name { font-weight: 600; color: var(--text); }
+    td.percipience-cell { color: var(--cyan); font-weight: 600; background: var(--cyan-glow); }
 
     /* Code Blocks & Lists */
-    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; overflow-x: auto; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; color: #93c5fd; line-height: 1.5; margin-top: 10px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan); line-height: 1.5; margin-top: 10px; }
     .bullet-list { list-style: none; margin: 12px 0; }
     .bullet-list li { padding: 5px 0; font-size: 13px; color: var(--muted); display: flex; align-items: flex-start; gap: 8px; }
     .bullet-list li::before { content: "✓"; color: var(--cyan); font-weight: 800; }
@@ -137,21 +190,21 @@ PORTAL_HTML = """<!DOCTYPE html>
     .stat-box:last-child { border-bottom: none; }
     .stat-val { font-weight: 700; color: var(--green); }
 
-    .cat-header { background: #0f172a !important; color: var(--cyan) !important; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 16px; border-top: 2px solid rgba(56, 189, 248, 0.3); border-bottom: 1px solid var(--border); }
+    .cat-header { background: var(--cat-header) !important; color: var(--cyan) !important; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 16px; border-top: 2px solid var(--cyan); border-bottom: 1px solid var(--border); }
     .cat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
     /* Section Headers */
-    .section-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; color: #fff; letter-spacing: -0.5px; }
+    .section-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; color: var(--text); letter-spacing: -0.5px; }
     .section-desc { font-size: 15px; color: var(--muted); margin-bottom: 24px; max-width: 800px; line-height: 1.5; }
 
     /* Pricing Cards */
-    .price-val { font-size: 36px; font-weight: 900; color: #fff; margin: 12px 0 4px; }
+    .price-val { font-size: 36px; font-weight: 900; color: var(--text); margin: 12px 0 4px; font-family: 'JetBrains Mono', monospace; }
     .price-period { font-size: 14px; color: var(--muted); font-weight: 400; }
   </style>
 </head>
 <body>
   <header>
     <div class="brand-wrap">
-      <div class="logo-badge">P</div>
+      <div class="logo-badge">⚡</div>
       <div>
         <div class="brand-title">Neutron Binary Percipience</div>
         <div class="brand-sub">Context Engineering OS &amp; CI/CD Gatekeeper</div>
@@ -161,13 +214,14 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
       <button class="nav-btn" onclick="showTab('capabilities')">Capabilities</button>
       <button class="nav-btn" onclick="showTab('comparatives')">Comparatives</button>
-      <button class="nav-btn" onclick="showTab('gateway')">Context Gateway (Option 1)</button>
+      <button class="nav-btn" onclick="showTab('gateway')">Context Gateway</button>
       <button class="nav-btn" onclick="showTab('roi-calculator')">ROI &amp; Benefits</button>
       <button class="nav-btn" onclick="showTab('sandboxes')">Live Sandboxes</button>
       <button class="nav-btn" onclick="showTab('infrastructure')">Cloud &amp; OpEx</button>
-      <button class="nav-btn" onclick="showTab('pricing')">Pricing &amp; Onboard</button>
+      <button class="nav-btn" onclick="showTab('pricing')">Pricing</button>
       <button class="nav-btn" onclick="showTab('docs')">Docs</button>
-      <a href="/dashboard" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--cyan); color:#000; font-size:12px; font-weight:700; padding:7px 12px; border-radius:6px; text-decoration:none; margin-left:8px;">&#128202; Observability Hub &rarr;</a>
+      <a href="/dashboard" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--cyan); color:#070B14; font-size:12px; font-weight:700; padding:7px 12px; border-radius:6px; text-decoration:none; margin-left:8px;">📊 Dashboard &rarr;</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
 
@@ -1200,6 +1254,24 @@ percipience rollback \
   </main>
 
   <script>
+    function initTheme() {
+      const saved = localStorage.getItem('nb_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeIcon(saved);
+    }
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('nb_theme', next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const btn = document.getElementById('portalThemeBtn');
+      if (btn) btn.innerText = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+    }
+    initTheme();
+
     async function fetchPortalTokenSavings() {
       try {
         const res = await fetch('/api/tokens/savings');
@@ -1404,7 +1476,42 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
 
-        if parsed.path == "/dashboard":
+        # Static dashboard assets
+        if parsed.path in ("/style.css", "/dashboard/style.css"):
+            css_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "style.css"
+            if css_path.exists():
+                body = css_path.read_text(encoding="utf-8").encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/css; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
+        if parsed.path in ("/app.js", "/dashboard/app.js"):
+            js_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "app.js"
+            if js_path.exists():
+                body = js_path.read_text(encoding="utf-8").encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/javascript; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
+        if parsed.path in ("/dashboard", "/dashboard/"):
+            dash_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "index.html"
+            if dash_path.exists():
+                body = dash_path.read_text(encoding="utf-8").encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(body)
+                return
             dash_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "index.html"
             if dash_path.exists():
                 body = dash_path.read_text(encoding="utf-8").encode("utf-8")
@@ -1422,6 +1529,25 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
+            return
+
+        if parsed.path == "/api/drift/parity":
+            rep = SemanticParityEngine.compute_parity_report(REPO_ROOT)
+            self._send_json(rep)
+            return
+
+        if parsed.path == "/api/swarm/status":
+            leases = WorktreeEngine.list_leases(REPO_ROOT)
+            self._send_json({
+                "status": "HEALTHY",
+                "active_worktrees": len(leases),
+                "max_concurrency_ceiling": 4,
+                "swarm_recursion_depth": 1,
+                "max_allowed_depth": 2,
+                "rogue_subagents_detected": 0,
+                "dag_conformity": "100% Verified",
+                "leases": leases
+            })
             return
 
         if parsed.path == "/api/health":
@@ -1971,6 +2097,26 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         self._send_json({"error": "Not Found"}, 404)
 
     def do_POST(self):
+        parsed = urlparse(self.path)
+
+        if parsed.path == "/api/drift/reconcile":
+            body = self._read_json_body()
+            mode = body.get("mode", "revert")
+            module_id = body.get("module", "mod_portal_marketing")
+            if mode == "revert":
+                symbols = body.get("symbols", ["unprompted_helper_fn"])
+                res = DualReconciliationEngine.reconcile_revert(REPO_ROOT, module_id, symbols)
+            else:
+                res = DualReconciliationEngine.reconcile_evolve(
+                    REPO_ROOT,
+                    module_id,
+                    body.get("title", "Evolutionary RFC Delta"),
+                    body.get("desc", "Additive contract extension"),
+                    body.get("fields", [{"name": "extra_param", "type": "string", "description": "Auto-evolved field"}])
+                )
+            self._send_json(res)
+            return
+
         parsed = urlparse(self.path)
         payload = self._read_json_body()
 

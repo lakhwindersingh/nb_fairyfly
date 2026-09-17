@@ -5,7 +5,7 @@ sessionId: session-260913-master-parent-plan
 # Requirements
 
 ### Overview & Goals
-The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces **twenty-one (21)** core foundational capabilities (each referenced by a stable identifier `CAP-01` through `CAP-21`, in list order below) required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
+The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces **twenty-seven (27)** core foundational capabilities (each referenced by a stable identifier `CAP-01` through `CAP-21`, in list order below) required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
 
 1. **Autonomous Operations on Multi-Format Minimum Viable Set (MVS) Inputs**: An auto-intelligent derivation engine that consumes sparse initial user inputs across multiple standardized formats (Markdown feature specifications, OpenAPI contracts, AsyncAPI event streams, ADR blueprints, structured Jira/Linear issue exports, and UI/UX design tokens) in `user/inputs/` (or `input/templates/`), normalizing them into a canonical Abstract Semantic Graph (ASG) to autonomously bootstrap, derive, scaffold, test, build, and document the complete project without human intervention unless explicit ambiguity gates are triggered.
 2. **Context Poisoning Detection, Recovery Point Rollback & Incremental Replay Engine**: A resilient state control engine that continuously audits context purity. If context poisoning, hallucination drift, or invalid state propagation occurs, the engine rewinds project artifacts, git commit history, and agent state to a verified clean recovery point (`recovery_point`), quarantines and removes the poisoning culprit in `user/hitl/poisoning_quarantine.md`, and replays subsequent valid incremental enhancements seamlessly.
@@ -103,6 +103,11 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 - **Multi-Dimensional 6D Token Optimization Suite**:
   - Six discrete compression pruners (`ASTSkeletonPruner`, `DocPruner`, `ConfigSchemaPruner`, `DiagnosticLogPruner`, `GitDiffPruner`, `ConversationMemoryCompactor`) in `workplace/core/token_optimizer_suite.py`.
   - Configurable compression presets (`disabled`, `conservative`, `standard`, `aggressive`, `extreme`) and granular per-strategy toggles.
+- **Multi-Agent Handover Integrity & 6-Vector Semantic Parity Engine (CAP-27)**:
+  - Cryptographic HMAC-SHA256 `HandoffToken` generation and JSON Schema Draft-07 payload validation (`agentic/schemas/handoff_schema.yaml`) in `workplace/core/handoff_validator.py`.
+  - Composite mathematical parity formulation in `workplace/core/semantic_parity_engine.py`: $S_{SP} = 0.20 S_{\text{AST}} + 0.25 S_{\text{Contract}} + 0.20 S_{\text{Behavior}} + 0.15 S_{\text{Handover}} + 0.10 S_{\text{Doc}} + 0.10 S_{\text{SupplyChain}}$.
+  - Automated Dual-Reconciliation Protocol in `workplace/core/reconciliation_engine.py` (automated surgical reverse diffing in Revert Mode vs. HITL RFC spec evolution in `user/hitl/proposed_spec_delta.md` in Evolve Mode).
+  - Multi-agent swarm governance with recursion ceiling ($D_{\max} = 2$) and active worktree lease eviction preventing shadow subagent spawning.
 - **Enhanced Multi-Dialect Diagnostic Log Slicer & Tiered SLA Prompt Envelopes**:
   - Specialized slicing for Python/pytest, JS/Jest, Go panics, Rust compiler errors, and TSC typechecks.
   - Out-of-tree framework frame filtering (stripping `site-packages/` and `node_modules/`).
@@ -234,7 +239,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
   - Calculate scores (0.00 to 1.00) across 6 dimensions (Requirement Coverage, Architectural Grounding, Code/Config Quality, Test Coverage, Security, Token Efficiency).
   - Automatically emit context maturity scorecards to `workplace/docs/reports/context_maturity_report.md`.
 - **Integrated State Ledger (`context_ledger.yaml`)**:
-  - Maintain unified tracking across all 21 capabilities (`CAP-01`..`CAP-21`).
+  - Maintain unified tracking across all 21 capabilities (`CAP-01`..`CAP-27`).
 - **Autonomous Living Documentation & In-Workflow Mermaid Visualizer (`agent_living_doc_architect`)**:
   - *In-Workflow Lifecycle Hook*: `workplace/core/living_doc_engine.py` hooks directly into pre-PR verification gates, release workflows, and post-derivation stages to evaluate codebase deltas.
   - *Standardized Document Taxonomy in `workplace/docs/`*:
@@ -1068,7 +1073,7 @@ graph TD
 
 ### Comprehensive Component Inventory & Production Manifest
 
-To guarantee enterprise rigor and zero ambiguity, every architectural component specified across the 21 core capabilities (`CAP-01`..`CAP-21`) is enumerated below with its intended Quad-Space location. The **Target State** column reflects the planned lifecycle stage for each artifact (`Planned | Scaffolded | Implemented | Verified`); because this is a design document, most artifacts are `Planned` until validated by the benchmark and test harness (see *Benchmark & Metrics Provenance* below). It must not be read as an assertion that the component is already built and verified.
+To guarantee enterprise rigor and zero ambiguity, every architectural component specified across the 21 core capabilities (`CAP-01`..`CAP-27`) is enumerated below with its intended Quad-Space location. The **Target State** column reflects the planned lifecycle stage for each artifact (`Planned | Scaffolded | Implemented | Verified`); because this is a design document, most artifacts are `Planned` until validated by the benchmark and test harness (see *Benchmark & Metrics Provenance* below). It must not be read as an assertion that the component is already built and verified.
 
 | Space | Subsystem / Component | Path | Format & Engine | Verification Mechanism | Target State |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -1175,7 +1180,7 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 ### Step 1: Define Parent Ledger Schema, Dual-Mode & Multi-Module Contracts
 Establish the machine-readable YAML schemas for `context_ledger.yaml` supporting `mode: single_module | multi_module`, module registries, cross-module contracts, Merkle hash chaining, plan security parameters, and surgical recovery points.
 
-- Define `context_ledger_schema.yaml` covering every section referenced by the `CAP-01`..`CAP-21` capabilities: `mcp_integrations`, `mode`, `modules`, `contracts`, `ledger_chain`, `plan_security`, `model_tiering_policy`, `token_optimization`, `worktrees`, `semantic_parity`, `quarantined_tests`, `recovery_points`, `poisoning_incidents`, `git_commits`, `remaining_issues`, `standard_issue_checklist`, plus the newer capability sections — `token_savings_ledger`, `self_improving_ledger`, `living_docs`, custom-agent/plugin registry, `layered_context` precedence policy, and forward-compatible `simulations` / `training_runs` blocks. The schema is validated against the `CAP` list in CI to prevent schema drift.
+- Define `context_ledger_schema.yaml` covering every section referenced by the `CAP-01`..`CAP-27` capabilities: `mcp_integrations`, `mode`, `modules`, `contracts`, `ledger_chain`, `plan_security`, `model_tiering_policy`, `token_optimization`, `worktrees`, `semantic_parity`, `quarantined_tests`, `recovery_points`, `poisoning_incidents`, `git_commits`, `remaining_issues`, `standard_issue_checklist`, plus the newer capability sections — `token_savings_ledger`, `self_improving_ledger`, `living_docs`, custom-agent/plugin registry, `layered_context` precedence policy, and forward-compatible `simulations` / `training_runs` blocks. The schema is validated against the `CAP` list in CI to prevent schema drift.
 - Formulate cross-module contract specifications in `context/contracts/` (`service_contract.yaml`, `event_stream_spec.yaml`, `common_schema.json`).
 
 ### Step 2: Quad-Space Bootstrapping Metaprompt (Dual-Mode Aware)
@@ -1220,7 +1225,7 @@ Build the interactive time-travel dashboard engine rendering module clusters.
 Create incremental SDLC orchestration prompts with worktree concurrency, multi-module coordination, verification gates, hooks, and HITL clarification gates.
 
 - Scaffold `git_commit_formatter.py` and `ci_cd_pipeline_template.yml` in `workplace/templates/delivery/`.
-- Formulate `lifecycle_delivery_prompt.md` and `workflow_orchestration_prompt.md` linking all 21 capabilities (`CAP-01`..`CAP-21`) into an executable autonomous delivery flow.
+- Formulate `lifecycle_delivery_prompt.md` and `workflow_orchestration_prompt.md` linking all 21 capabilities (`CAP-01`..`CAP-27`) into an executable autonomous delivery flow.
 
 ### Step 10: Domain Adaptation & Validation Playbook
 Produce comprehensive guidance for applying the parent master plan across domain spaces (IoT, GenAI, Web, Mobile, Neural, DB Migration, Robotics, Multi-Module Connected Ecosystems).

@@ -43,6 +43,9 @@ from core.token_optimizer_suite import (
     ConversationMemoryCompactor,
     UnifiedTokenOptimizer
 )
+from core.handoff_validator import HandoffValidator
+from core.semantic_parity_engine import SemanticParityEngine
+from core.reconciliation_engine import DualReconciliationEngine
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -952,6 +955,102 @@ def authenticate(token: str) -> bool:
 
         # Clean scratch file
         sample_file.unlink(missing_ok=True)
+
+
+
+    def test_28_anti_drift_handover_and_dual_reconciliation(self):
+        """Test Anti-Drift Handover Validation, 6-Vector Parity Engine & Dual Reconciliation (AD-02, AD-03, AD-04, AD-05)."""
+        # 1. HandoffValidator: Payload Schema Validation
+        valid_payload = {
+            "handoff_id": "HO_PR_STAGE_01",
+            "from_agent": "agent_ast_optimizer",
+            "to_agent": "agent_dependency_cve_sentinel",
+            "workflow_id": "wf_pr_gatekeeper",
+            "stage": "stage_1_ast_diff",
+            "payload_artifact": "art_ast_diff_01",
+            "token_hash": "a" * 64,
+            "timestamp": "2026-09-17T20:00:00Z"
+        }
+        is_valid, errors = HandoffValidator.validate_handoff_payload(valid_payload)
+        self.assertTrue(is_valid, f"Expected valid payload, got errors: {errors}")
+
+        invalid_payload = {
+            "handoff_id": "INVALID ID WITH SPACES",
+            "from_agent": "agent_ast_optimizer"
+        }
+        is_invalid, errors = HandoffValidator.validate_handoff_payload(invalid_payload)
+        self.assertFalse(is_invalid)
+        self.assertTrue(any("Missing required field" in e for e in errors))
+
+        # 2. HandoffValidator: Cryptographic Token Generation & Route Authorization
+        gen_token = HandoffValidator.generate_token(
+            from_agent="agent_ast_optimizer",
+            to_agent="agent_dependency_cve_sentinel",
+            workflow_id="wf_pr_gatekeeper",
+            stage="stage_1_ast_diff",
+            gate_id="stage_1_ast_diff"
+        )
+        self.assertEqual(len(gen_token), 64)
+
+        # Valid Handover Processing
+        valid_payload["token_hash"] = gen_token
+        proc_res = HandoffValidator.process_handover(valid_payload)
+        self.assertTrue(proc_res["is_authorized"])
+        self.assertEqual(proc_res["status"], "AUTHORIZED_HANDOFF_CONFIRMED")
+
+        # Forged Token Rejection
+        forged_payload = dict(valid_payload)
+        forged_payload["token_hash"] = "b" * 64
+        proc_forged = HandoffValidator.process_handover(forged_payload)
+        self.assertFalse(proc_forged["is_authorized"])
+        self.assertEqual(proc_forged["status"], "REJECTED_FORGED_HANDOFF_TOKEN")
+
+        # Unauthorized Direct Route Rejection (Bypassing DAG)
+        unauth_route = dict(valid_payload)
+        unauth_route["to_agent"] = "agent_worm_egress"  # Attempting to jump directly to final stage!
+        unauth_route["token_hash"] = HandoffValidator.generate_token("agent_ast_optimizer", "agent_worm_egress", "wf_pr_gatekeeper", "stage_1_ast_diff", "stage_1_ast_diff")
+        proc_unauth = HandoffValidator.process_handover(unauth_route)
+        self.assertFalse(proc_unauth["is_authorized"])
+        self.assertEqual(proc_unauth["status"], "REJECTED_UNAUTHORIZED_HANDOVER")
+
+        # 3. SemanticParityEngine: 6-Vector Parity Evaluation
+        parity_rep = SemanticParityEngine.compute_parity_report(REPO_ROOT)
+        self.assertGreaterEqual(parity_rep["composite_s_sp"], 0.95)
+        self.assertEqual(parity_rep["classification"], "ALIGNED_MERGE_READY")
+        self.assertEqual(parity_rep["color"], "GREEN")
+        self.assertEqual(len(parity_rep["vector_scores"]), 6)
+        for vec in ["ast_symbols", "wire_contracts", "behavior_tests", "handover_integrity", "living_docs", "supply_chain"]:
+            self.assertIn(vec, parity_rep["vector_scores"])
+
+        # 4. DualReconciliationEngine: Revert Mode
+        revert_res = DualReconciliationEngine.reconcile_revert(
+            workspace_root=REPO_ROOT,
+            module_id="mod_portal_marketing",
+            unauthorized_symbols=["unprompted_helper", "phantom_endpoint"]
+        )
+        self.assertEqual(revert_res["mode"], "REVERT")
+        self.assertEqual(revert_res["status"], "REVERT_DIFF_SYNTHESIZED")
+        self.assertIn("-def unprompted_helper", revert_res["reverse_diff"])
+        self.assertIn("-def phantom_endpoint", revert_res["reverse_diff"])
+        self.assertEqual(revert_res["sibling_impact_pct"], 0.0)
+
+        # 5. DualReconciliationEngine: Evolve Mode & Approval
+        evolve_res = DualReconciliationEngine.reconcile_evolve(
+            workspace_root=REPO_ROOT,
+            module_id="mod_portal_marketing",
+            title="Add Streaming Response Header",
+            description="Necessary wire addition for async chunking.",
+            proposed_fields=[{"name": "x_chunk_id", "type": "string", "description": "Chunk identifier"}]
+        )
+        self.assertEqual(evolve_res["mode"], "EVOLVE")
+        self.assertEqual(evolve_res["status"], "RFC_SPEC_DELTA_DRAFTED")
+        delta_path = REPO_ROOT / evolve_res["file_path"]
+        self.assertTrue(delta_path.exists())
+        self.assertIn("AWAITING_HITL_REVIEW", delta_path.read_text(encoding="utf-8"))
+
+        app_res = DualReconciliationEngine.approve_delta(REPO_ROOT, evolve_res["delta_id"])
+        self.assertEqual(app_res["status"], "DELTA_APPROVED")
+        self.assertIn("APPROVED_AND_BASELINED", delta_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

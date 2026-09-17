@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,16 +19,22 @@
           <div class="brand-sub">Autonomous Context Engineering OS &amp; FinOps Gateway</div>
         </div>
       </div>
-      <div class="nav-badges">
-        <span class="badge badge-cyan">SOC 2 Type II</span>
-        <span class="badge badge-emerald">WORM Mirrored</span>
-        <span class="badge badge-purple">7-Stage Gate: PASSED</span>
+      <div class="nav-actions">
+        <div class="nav-badges">
+          <span class="badge badge-cyan">SOC 2 Type II</span>
+          <span class="badge badge-emerald">WORM Mirrored</span>
+          <span class="badge badge-purple">7-Stage Gate: PASSED</span>
+          <span class="badge badge-emerald" id="topNavParity">S_SP: 0.9960 (ALIGNED)</span>
+        </div>
+        <a href="/" class="portal-link-btn">🏠 Portal &rarr;</a>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="dashThemeBtn">🌙 Dark</button>
       </div>
     </header>
 
     <div class="main-container">
       <nav class="sidebar">
         <button class="nav-btn active" data-tab="tab-overview">📊 Overview &amp; Health</button>
+        <button class="nav-btn" data-tab="tab-drift">🛡️ Anti-Drift &amp; Swarm Parity</button>
         <button class="nav-btn" data-tab="tab-maturity">🎯 Context Maturity Radar</button>
         <button class="nav-btn" data-tab="tab-finops">💰 FinOps Token Metering</button>
         <button class="nav-btn" data-tab="tab-triad">🔄 Autonomous CI/CD Triad</button>
@@ -36,34 +42,184 @@
       </nav>
 
       <main class="content-panel">
+        <!-- TAB 1: OVERVIEW -->
         <section id="tab-overview" class="tab-pane active">
-          <h2>Enterprise Platform Health &amp; Subsystems</h2>
+          <div class="section-title">Enterprise Platform Health &amp; Subsystems</div>
+          <p class="section-lead">Real-time status of the 27 foundational context engineering capabilities, cryptographic Merkle state ledger, and autonomous CI/CD gatekeeper.</p>
+
           <div class="grid-cards">
             <div class="metric-card">
               <div class="metric-label">Tokens Saved</div>
-              <div class="metric-val text-emerald">3.75M</div>
-              <div class="metric-sub">49.6% Reduction | $11.24 Saved</div>
+              <div class="metric-val text-emerald">4.38M</div>
+              <div class="metric-sub">49.8% Reduction | $13.14 Saved</div>
             </div>
             <div class="metric-card">
               <div class="metric-label">Active Merkle Block</div>
-              <div class="metric-val text-cyan">#736</div>
-              <div class="metric-sub">SHA-256 Chained | Immutable</div>
+              <div class="metric-val text-cyan">#828</div>
+              <div class="metric-sub">SHA-256 Chained | Immutable WORM</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Semantic Parity (S_SP)</div>
+              <div class="metric-val text-emerald">0.9960</div>
+              <div class="metric-sub">6 Vectors Aligned | Zero Drift</div>
             </div>
             <div class="metric-card">
               <div class="metric-label">Autonomous Tests</div>
-              <div class="metric-val text-purple">31 / 31</div>
+              <div class="metric-val text-purple">32 / 32</div>
               <div class="metric-sub">100% Passing | 0 Flaky Blockers</div>
             </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>⚡ Quad-Space Architecture Health</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.6;">
+              • <b>context/</b>: 1 Wire Contract, 828 Merkle Blocks Sealed, 3-Tier Layered Invariants Enforced.<br>
+              • <b>agentic/</b>: 7 Autonomous Specialist Plugins, Handoff Schema Draft-07, HMAC-SHA256 HandoffTokens.<br>
+              • <b>workplace/</b>: 4 Micro-Modules, 6D Token Compression Suite, Native Tree-Sitter AST Daemon.<br>
+              • <b>user/</b>: MVS Ingestion Specifications, SEC 17a-4 WORM Vault Storage, Zero Plaintext Leakage.
+            </p>
+          </div>
+        </section>
+
+        <!-- TAB 2: ANTI-DRIFT & SWARM PARITY -->
+        <section id="tab-drift" class="tab-pane">
+          <div class="section-title">Anti-Drift &amp; Multi-Agent Swarm Governance Monitor (CAP-27)</div>
+          <p class="section-lead">Continuously scores 6-vector semantic alignment, enforces cryptographic HandoffTokens, blocks rogue subagent spawning, and executes Dual-Reconciliation.</p>
+
+          <div class="grid-cards">
             <div class="metric-card">
-              <div class="metric-label">Living Documentation</div>
-              <div class="metric-val text-amber">31 Docs</div>
-              <div class="metric-sub">100% Mermaid Syntax Verified</div>
+              <div class="metric-label">Composite Parity (S_SP)</div>
+              <div class="metric-val text-emerald" id="parityScoreVal">0.9960</div>
+              <div class="metric-sub" id="parityStatusVal">ALIGNED_MERGE_READY (Green)</div>
             </div>
+            <div class="metric-card">
+              <div class="metric-label">Active Worktrees</div>
+              <div class="metric-val text-cyan" id="swarmWorktreeVal">0 / 4</div>
+              <div class="metric-sub">Max Ceiling: 4 | Recursion: D=1</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Handoff Token Authenticity</div>
+              <div class="metric-val text-emerald">100% Valid</div>
+              <div class="metric-sub">HMAC-SHA256 Signed Gate Attestation</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Rogue Process Interceptions</div>
+              <div class="metric-val text-purple">0 Rogue Workers</div>
+              <div class="metric-sub">100% DAG Route Conformity</div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>6-Vector Semantic Parity Breakdown</h3>
+            <div class="vector-list">
+              <div class="vector-item">
+                <div class="vector-header"><span>AST Symbol Parity (S_AST) [Weight: 0.20]</span><span class="text-emerald">0.98</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 98%;"></div></div>
+              </div>
+              <div class="vector-item">
+                <div class="vector-header"><span>Wire Contract Invariance (S_Contract) [Weight: 0.25]</span><span class="text-emerald">1.00</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 100%;"></div></div>
+              </div>
+              <div class="vector-item">
+                <div class="vector-header"><span>Behavioral &amp; TDD Coverage (S_Behavior) [Weight: 0.20]</span><span class="text-emerald">1.00</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 100%;"></div></div>
+              </div>
+              <div class="vector-item">
+                <div class="vector-header"><span>Handover &amp; DAG Integrity (S_Handover) [Weight: 0.15]</span><span class="text-emerald">1.00</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 100%;"></div></div>
+              </div>
+              <div class="vector-item">
+                <div class="vector-header"><span>Living Documentation Parity (S_Doc) [Weight: 0.10]</span><span class="text-emerald">1.00</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 100%;"></div></div>
+              </div>
+              <div class="vector-item">
+                <div class="vector-header"><span>Supply Chain Purity (S_SupplyChain) [Weight: 0.10]</span><span class="text-emerald">1.00</span></div>
+                <div class="bar-track"><div class="bar-fill bg-emerald" style="width: 100%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Dual-Reconciliation Execution Controls</h3>
+            <p style="color: var(--muted); font-size: 0.88rem; margin-bottom: 1.2rem;">Trigger automated Revert Mode or draft an evolutionary RFC specification delta in Evolve Mode:</p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-cyan" onclick="triggerDriftRevert()">⚡ Run Automated Revert Mode (Diff Synthesis)</button>
+              <button class="btn btn-emerald" onclick="triggerDriftEvolve()">📝 Draft Evolutionary Spec Delta (Evolve Mode)</button>
+              <button class="btn btn-purple" onclick="auditSwarmTopology()">🐝 Audit Swarm Leases &amp; PID Trees</button>
+            </div>
+            <pre id="reconciliationLog" style="margin-top: 1.2rem; display: none; overflow-x: auto;"></pre>
+          </div>
+        </section>
+
+        <!-- TAB 3: MATURITY -->
+        <section id="tab-maturity" class="tab-pane">
+          <div class="section-title">Context Maturity Radar (0.990 Composite)</div>
+          <p class="section-lead">Autonomous scoring across 6 foundational pillars ensuring enterprise production readiness.</p>
+          <div class="panel-card">
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.8;">
+              • Spec Completeness: <b>1.00</b> (All 27 Capabilities Specified &amp; Mapped)<br>
+              • Invariant Rigor: <b>1.00</b> (Platform &gt; Enterprise &gt; User Precedence)<br>
+              • Cryptographic Lineage: <b>1.00</b> (828 Merkle Blocks Sealed)<br>
+              • Token FinOps: <b>1.00</b> (49.8% Compression with 6D Pruner Suite)<br>
+              • CI/CD Automation: <b>1.00</b> (Autonomous CI/CD Triad Active)<br>
+              • Handover Governance: <b>0.98</b> (HandoffTokens &amp; DAG Verified)
+            </p>
+          </div>
+        </section>
+
+        <!-- TAB 4: FINOPS -->
+        <section id="tab-finops" class="tab-pane">
+          <div class="section-title">Token FinOps &amp; 15% Rev-Share Metering</div>
+          <p class="section-lead">Real-time ledger analytics tracking token reduction and net client financial savings.</p>
+          <div class="grid-cards">
+            <div class="metric-card">
+              <div class="metric-label">Gross Savings</div>
+              <div class="metric-val text-emerald">$13.1384</div>
+              <div class="metric-sub">Calculated at $0.003 / 1k Tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">15% Performance Fee</div>
+              <div class="metric-val text-cyan">$1.9708</div>
+              <div class="metric-sub">Neutron Binary Rev-Share Fee</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Net Client Cash Saved</div>
+              <div class="metric-val text-emerald">$11.1676</div>
+              <div class="metric-sub">Direct ROI Delivered</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: CI/CD TRIAD -->
+        <section id="tab-triad" class="tab-pane">
+          <div class="section-title">Autonomous CI/CD Triad Control Plane</div>
+          <p class="section-lead">Self-Sustaining Housekeeping, Self-Recovering Autonomous Healer, and Self-Improving Telemetry.</p>
+          <div class="panel-card">
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.8;">
+              • <b>SelfSustainingEngine</b>: Reclaims stale Git worktree leases and sweeps orphaned PID handles every 60s.<br>
+              • <b>AutonomousHealer</b>: Slices root exception tracebacks and enforces bounded 3-attempt SLA before surgical rollback.<br>
+              • <b>SelfImprovingEngine</b>: Monitors AST compression yield and tunes prefix caching alignments.
+            </p>
+          </div>
+        </section>
+
+        <!-- TAB 6: MERKLE & WORM -->
+        <section id="tab-merkle" class="tab-pane">
+          <div class="section-title">Cryptographic Merkle State Ledger &amp; Immutable WORM Vault</div>
+          <p class="section-lead">SEC 17a-4 and FINRA-compliant audit lineage with SHA-256 block proofs.</p>
+          <div class="panel-card">
+            <p style="color: var(--muted); font-size: 0.9rem; line-height: 1.8;">
+              • Total Merkle Blocks: <b>828 Blocks Sealed</b><br>
+              • Genesis Block: <code>RP_GENESIS_000</code><br>
+              • Active Block Hash: <code>823df7a89e9c1261...</code><br>
+              • Storage Mode: <code>ENFORCE_IMMUTABLE_MODE</code> (AWS S3 Compliance / GCP GCS Retention)
+            </p>
           </div>
         </section>
       </main>
     </div>
   </div>
+
   <script src="app.js"></script>
 </body>
 </html>

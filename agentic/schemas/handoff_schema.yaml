@@ -1,0 +1,36 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceInterAgentHandoffPayload"
+type: "object"
+required:
+  - "handoff_id"
+  - "from_agent"
+  - "to_agent"
+  - "workflow_id"
+  - "stage"
+  - "payload_artifact"
+  - "token_hash"
+  - "timestamp"
+properties:
+  handoff_id:
+    type: "string"
+    pattern: "^HO_[A-Za-z0-9_\\-]+$"
+  from_agent:
+    type: "string"
+  to_agent:
+    type: "string"
+  workflow_id:
+    type: "string"
+  stage:
+    type: "string"
+  payload_artifact:
+    type: "string"
+  token_hash:
+    type: "string"
+    pattern: "^[a-f0-9]{64}$"
+  timestamp:
+    type: "string"
+    format: "date-time"
+  metadata:
+    type: "object"
+    additionalProperties: true
+additionalProperties: false

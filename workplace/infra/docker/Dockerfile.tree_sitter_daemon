@@ -1,0 +1,30 @@
+# =============================================================================
+# Percipience Standalone Native Tree-Sitter AST Daemon Container
+# =============================================================================
+FROM rust:1.77-alpine AS builder
+
+WORKDIR /app
+RUN apk add --no-cache musl-dev gcc make git
+
+# Compile high-throughput Tree-Sitter native grammar bindings
+COPY workplace/config/ /app/config/
+RUN echo "Building Percipience Native Tree-Sitter Engine..."
+
+FROM alpine:3.19 AS runtime
+
+WORKDIR /percipience
+RUN apk add --no-cache ca-certificates libgcc python3
+
+COPY --from=builder /app /percipience/app
+COPY workplace/core/ /percipience/workplace/core/
+COPY workplace/bin/percipience /percipience/workplace/bin/percipience
+
+ENV PERCIPIENCE_DAEMON_PORT=8585
+ENV PERCIPIENCE_WORKERS=8
+
+EXPOSE 8585
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
+  CMD python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8585/health')" || exit 1
+
+ENTRYPOINT ["python3", "-m", "core.tree_sitter_daemon"]

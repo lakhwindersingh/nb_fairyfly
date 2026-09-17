@@ -8,6 +8,7 @@
 > 3. [`.nb/plan/claude-context-engineering-parent-master-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-plan.md)
 > 4. [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md)
 > 5. [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md)
+> 6. [`workplace/docs/reports/competitive_differentiation_matrix.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md)
 
 ---
 
@@ -29,9 +30,14 @@
 | **Terraform Multi-Cloud Production Blueprints (AWS/GCP)** | N/A | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
 | **Autonomous CI/CD Triad & Specialist Plugins (Phases 1-3)** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Autonomous Living Documentation Engine (`workplace/docs/`)** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Anti-Drift & Multi-Agent Handover Engine** | Required | Required | Required | Required | **✅ COMPLETED** | **0.98** |
 | **Model Context Protocol (MCP) Jira Story Ingestion** | Required | Specified | Specified | Specified | **[-] IN PROGRESS** | **0.80** |
 | **Layerable Domain Extensions (IoT, Mobile & SaaS)** | Specified | Specified | Required | Required | **[-] IN PROGRESS** | **0.75** |
 | **90-Day GTM Commercialization (Months 1–3 Milestones)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
+| **Competitive Parity: Observability & OTel GenAI** | Specified | Required | Specified | N/A | **[-] PLANNED** | **0.40** |
+| **Competitive Parity: Runtime Guardrails & PII** | Specified | Required | Specified | N/A | **[-] PLANNED** | **0.40** |
+| **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
+| **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
@@ -246,3 +252,92 @@
   - Add native BLE ring-buffer and offline SQLite synchronization tests to verify `claude-context-engineering-iot-mobile-domain-plan.md`.
 - [ ] **TODO - 90-Day GTM Commercial Sales Funnel & Stripe Webhook (P2)**:
   - Production Stripe checkout & webhook billing processor in `workplace/modules/mod_tenant_billing/stripe_connector.py`.
+
+---
+
+## 15. Anti-Drift, Handover Governance & Semantic Parity Engine (`CAP-09`, `CAP-26`)
+
+> **Governing Methodology:** [`workplace/docs/methodologies/anti_drift_protocol.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/methodologies/anti_drift_protocol.md)  
+> **Core Objective:** Eliminate code drift, wire contract mutation, doc staleness, and rogue successor agent spawning in multi-agent swarms.
+
+- [x] **Comprehensive Anti-Drift & Handover Protocol Specification** ([`workplace/docs/methodologies/anti_drift_protocol.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/methodologies/anti_drift_protocol.md)):
+  - 6-Vector mathematical parity formulation: $S_{SP} = 0.20 S_{\text{AST}} + 0.25 S_{\text{Contract}} + 0.20 S_{\text{Behavior}} + 0.15 S_{\text{Handover}} + 0.10 S_{\text{Doc}} + 0.10 S_{\text{SupplyChain}}$.
+  - Multi-agent handover failure modes: unauthorized successor spawning, bypassed gate short-circuiting, payload contract mutation, recursive swarm explosions, and role usurpation.
+  - Dual-Reconciliation workflow (Automated Revert Mode vs. HITL-gated Evolve Mode).
+- [ ] **TODO-AD-01: Multi-Agent Swarm Governor & Rogue Spawning Sentinel (P1)**:
+  - Implement `workplace/core/swarm_governor.py` to intercept ad-hoc subagent creation (`define_subagent` / runtime processes) not explicitly defined in `agentic/workflows/`.
+  - Enforce max swarm recursion depth ($D_{\max} = 2$) and max concurrent active worktrees ($N_{\max} = 4$) with automated SIGKILL for rogue workers.
+- [x] **TODO-AD-02: Cryptographic Handoff Token & Payload Schema Validator (P1)** ([`workplace/core/handoff_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/handoff_validator.py)):
+  - Enforce JSON Schema Draft-07 validation for inter-agent communication messages via `agentic/schemas/handoff_schema.yaml`.
+  - Implement non-bypassable signed `HandoffToken` verification in workflow orchestrator to prevent downstream release gates from running without preceding gate attestations.
+- [x] **TODO-AD-03: Composite 6-Vector Semantic Parity Engine & CLI (P1)** ([`workplace/core/semantic_parity_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/semantic_parity_engine.py)):
+  - Implement `workplace/core/semantic_parity_engine.py` calculating real-time $S_{SP}$ metric score ($0.00 \text{ to } 1.00$).
+  - Add CLI subcommands:
+    - `percipience drift check` (calculates composite $S_{SP}$ across all active modules)
+    - `percipience drift report --verbose` (breaks down sub-scores for AST, contract, tests, handover, docs, and supply chain)
+    - `percipience swarm audit` (inspects active PID/Redis lease trees and identifies orphaned worktrees)
+- [x] **TODO-AD-04: Automated Dual-Reconciliation Revert & Evolve Engine (P1)** ([`workplace/core/reconciliation_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/reconciliation_engine.py)):
+  - Implement `percipience drift reconcile --mode revert --module <id>` to synthesize surgical reverse AST diffs removing unauthorized helper functions.
+  - Implement `percipience drift reconcile --mode evolve --module <id>` to draft RFC specification deltas in `user/hitl/proposed_spec_delta.md` with automated blast-radius impact analysis across downstream consumers.
+- [x] **TODO-AD-05: Unit & Integration Test Suite for Handover Drift & Parity (P1)** ([`workplace/tests/test_play3_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py)):
+  - Add test fixtures in `workplace/tests/test_play3_suite.py` simulating rogue subagent spawning, bypassed gatekeeper tokens, and payload schema mutations.
+
+---
+
+## 16. Competitive Parity & Advanced Capabilities Backlog (Learnings from Industry Frameworks)
+
+> **Governing Analysis:** [`workplace/docs/reports/competitive_differentiation_matrix.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md)  
+> **Core Objective:** Adopt high-value capabilities and integrations where specialized external frameworks (Cursor/Windsurf, LangSmith/Phoenix, Lakera/Guardrails AI, GitHub Actions/Dagger) offer mature developer experience and operational ergonomics.
+
+### 16.1. Observability, OpenTelemetry GenAI & Quantitative Evals (LangSmith / Arize Phoenix / Langfuse / Promptfoo / Ragas)
+- [ ] **TODO-COMP-01: OpenTelemetry (OTel) GenAI Semantic Conventions & Distributed Tracing (P1)**:
+  - *Competitor Benchmark*: LangSmith, Phoenix, and Langfuse export standardized OTel GenAI semantic spans (`gen_ai.system`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`, TTFT latency waterfalls) to enterprise APMs (Datadog, Dynatrace, Honeycomb, Jaeger).
+  - *Implementation Scope*: Implement `workplace/core/otel_exporter.py` broadcasting real-time distributed trace spans across multi-agent turns with standard W3C `traceparent` context propagation.
+- [ ] **TODO-COMP-02: Quantitative LLM Evals & Hallucination Scoring Engine (P1)**:
+  - *Competitor Benchmark*: Arize Phoenix & DeepEval/Ragas provide automated evaluation pipelines for faithfulness, hallucination rate, context relevancy, code correctness, and semantic drift.
+  - *Implementation Scope*: Implement `workplace/core/eval_scoring_engine.py` supporting LLM-as-a-judge quantitative rubric evaluations, automated G-Eval / Ragas scoring on generated code, and Merkle recording of eval scores.
+- [ ] **TODO-COMP-03: Side-by-Side Prompt Playground & Regression Test Matrix (P2)**:
+  - *Competitor Benchmark*: Promptfoo & LangSmith offer automated matrix testing of system prompt variations across multiple LLMs with visual diffs and cost-vs-quality comparisons.
+  - *Implementation Scope*: Implement `workplace/core/prompt_benchmark_engine.py` and a web playground UI in `mod_portal_marketing` to benchmark prompt variations against deterministic test suites.
+- [ ] **TODO-COMP-04: Semantic LLM Response & Prompt Embedding Caching (P2)**:
+  - *Competitor Benchmark*: Portkey, Helicone, and GPTCache provide vector-similarity caching for LLM requests, dropping token cost to zero for semantically duplicate diagnostic or query turns.
+  - *Implementation Scope*: Implement `workplace/core/semantic_prompt_cache.py` with cosine similarity thresholding over Redis for repeated diagnostic inquiries.
+
+### 16.2. Runtime Guardrails, PII Anonymization & Jailbreak Defense (Lakera / Prompt Armor / NeMo Guardrails / Guardrails AI)
+- [ ] **TODO-COMP-05: Real-Time Inbound/Outbound PII Masking & De-Anonymization (P1)**:
+  - *Competitor Benchmark*: Lakera and Microsoft Presidio redact Personally Identifiable Information (names, emails, SSNs, credit cards, IP addresses, proprietary internal hostnames) before LLM prompt transit and de-mask upon response ingestion.
+  - *Implementation Scope*: Implement `workplace/core/pii_sanitizer.py` supporting high-speed regex and NER-based PII token masking (`<PERSON_1>`, `<IP_ADDR_1>`) with strict memory-only de-anonymization tables.
+- [ ] **TODO-COMP-06: Inbound Indirect Prompt Injection Firewall (P1)**:
+  - *Competitor Benchmark*: Prompt Armor & Lakera intercept malicious prompt injections embedded inside untrusted external web pages, Jira stories, Git issue descriptions, and PR comments.
+  - *Implementation Scope*: Implement `workplace/core/prompt_injection_guard.py` scanning inbound external payloads for jailbreak markers, prompt overrides, and adversarial instruction delimiters prior to context assembly.
+- [ ] **TODO-COMP-07: Output Policy & Hallucination Safety Rails (P2)**:
+  - *Competitor Benchmark*: NeMo Guardrails and Guardrails AI enforce strict output validation schemas, preventing agents from emitting unverified shell execution commands, dangerous system calls, or out-of-spec code structures.
+  - *Implementation Scope*: Implement `workplace/core/output_guardrail_validator.py` executing post-generation AST structural verification before code is written to disk or worktrees.
+
+### 16.3. In-Editor Developer Experience, Language Server Protocol & Vector Search (Cursor / Windsurf / Claude Code / Copilot)
+- [ ] **TODO-COMP-08: Language Server Protocol (LSP) Indexing & Cross-File Symbol Graphs (P1)**:
+  - *Competitor Benchmark*: Cursor & Windsurf integrate directly with active LSP daemons (`pyright`, `typescript-language-server`, `rust-analyzer`, `gopls`) for precise go-to-definition, find-references, and multi-file type inference across millions of lines of code.
+  - *Implementation Scope*: Implement `workplace/core/lsp_index_engine.py` communicating with local LSP servers to inject exact cross-file type hierarchies, interface implementations, and call graphs into compressed prompt context.
+- [ ] **TODO-COMP-09: Hybrid Sparse-Dense Vector Code Search alongside AST Pruning (P1)**:
+  - *Competitor Benchmark*: Cursor & Claude Code utilize hybrid BM25 + dense embedding vector search (LanceDB / Qdrant / Chroma) with semantic reranking for natural-language conceptual codebase queries.
+  - *Implementation Scope*: Implement `workplace/core/vector_retrieval_engine.py` pairing AST structural skeletons with local embedded vector indices (LanceDB) and Voyage/OpenAI embeddings for multi-hop semantic code discovery.
+- [ ] **TODO-COMP-10: VS Code & JetBrains / PyCharm IDE Extension Adapter (P2)**:
+  - *Competitor Benchmark*: Cursor & GitHub Copilot provide seamless in-editor UI (in-gutter diffs, inline chat, hotkey triggers, one-click rollback/accept).
+  - *Implementation Scope*: Develop VS Code & JetBrains Extension / MCP Bridge (`workplace/integrations/ide_extensions/`) for in-editor interactive gate inspection, gutter diff reviews, and one-click surgical rollback directly in developer IDEs.
+- [ ] **TODO-COMP-11: Multimodal UI & Design Token Context Ingestion (P2)**:
+  - *Competitor Benchmark*: Claude Code / Cursor / Devin accept screenshot images and Figma designs directly to generate CSS/React AST components and verify pixel-level rendering.
+  - *Implementation Scope*: Implement `workplace/core/multimodal_ui_engine.py` parsing design tokens, Figma JSON schemas, and UI screenshots into clean Tailwind/React component ASTs.
+
+### 16.4. Enterprise CI/CD Sandboxing, OIDC Keyless Auth & GitOps PR Bot (GitHub Actions / GitLab CI / Dagger / ArgoCD / Harness)
+- [ ] **TODO-COMP-12: Sub-Second MicroVM / gVisor & WASM Sandbox Isolation (P1)**:
+  - *Competitor Benchmark*: GitHub Actions / Dagger / Fly.io / Modal execute untrusted code in hardened ephemeral Firecracker microVMs or gVisor/WASM runtimes to prevent container breakout and host filesystem leaks.
+  - *Implementation Scope*: Implement `workplace/core/microvm_sandbox.py` providing kernel-isolated ephemeral execution environments for agent test runs with sub-500ms boot times.
+- [ ] **TODO-COMP-13: OIDC Keyless Cloud Authentication (Workload Identity Federation) (P1)**:
+  - *Competitor Benchmark*: GitHub Actions and GitLab CI use OpenID Connect (OIDC) tokens for short-lived, keyless authentication to AWS IAM, GCP Workload Identity, and Azure AD without static API keys or long-lived credentials.
+  - *Implementation Scope*: Implement `workplace/core/oidc_authenticator.py` exchanging dynamic JWTs with cloud IAM providers for secure, credential-less ledger egress and worktree orchestration.
+- [ ] **TODO-COMP-14: Parallel Test Sharding & Multi-Architecture Matrix Dispatcher (P2)**:
+  - *Competitor Benchmark*: GitHub Actions matrix strategies and GitLab CI parallel jobs dynamically shard large test suites across N runners and multiple operating systems/architectures (Linux AMD64/ARM64, macOS, Windows).
+  - *Implementation Scope*: Implement `workplace/core/distributed_test_runner.py` capable of splitting pytest/vitest suites across distributed ephemeral worktree nodes with aggregated Merkle receipts.
+- [ ] **TODO-COMP-15: Interactive GitOps PR Bot & Ephemeral Preview Deployments (P2)**:
+  - *Competitor Benchmark*: Modern CI/CD and developer tools (Vercel, ArgoCD, GitHub Apps) post interactive PR comments with live preview URLs, collapsible test breakdowns, and interactive bot commands (`/re-heal`, `/rollback`).
+  - *Implementation Scope*: Implement `workplace/core/gitops_pr_bot.py` posting rich Markdown status summaries, collapsible test traces, live preview staging links, and responding to developer slash-commands on GitHub/GitLab PRs.

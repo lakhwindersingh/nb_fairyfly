@@ -4,6 +4,7 @@
 > **Target Audience:** CTOs, VP of Engineering, Enterprise Architects, Principal FinOps Leads  
 > **Interactive Portal:** Tab 3 (`Comparatives`) in [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)  
 > **Core Component:** [`workplace/modules/mod_portal_marketing/components/competitive_matrix.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_portal_marketing/components/competitive_matrix.ts)  
+> **Engineering Backlog & Gap Analysis:** [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md)
 
 ---
 
@@ -96,3 +97,32 @@ graph TD
 - **Automated PR Gatekeeper:** Fully integrated and validated across 7 verification stages (`./workplace/bin/percipience gate`).
 - **Test Suite Pass Rate:** 100% across 30 comprehensive unit and integration tests (`pytest workplace/tests`).
 - **Interactive Web Portal:** Live and navigable under Tab 3 (`Comparatives`) of the Percipience Portal server.
+
+---
+
+## 5. Competitive Gap Analysis & Roadmap Adoption (Where Alternatives Lead)
+
+While Percipience leads in context engineering, cryptographic governance, token FinOps, and closed-loop CI/CD remediation, industry alternatives hold specialized capabilities and mature ergonomics in four key areas. These items have been integrated into [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md#L182-L245) for engineering implementation:
+
+### 5.1. Observability, Distributed Traces & Evals (LangSmith / Arize Phoenix / Promptfoo)
+- **OpenTelemetry (OTel) GenAI Conventions**: LangSmith and Phoenix natively export OpenTelemetry spans with TTFT waterfalls and standardized `gen_ai.*` semantic attributes to Datadog/Jaeger. (*Backlog: `TODO-COMP-01`*)
+- **Quantitative LLM-as-a-Judge Evals**: DeepEval, Phoenix, and Ragas provide automated faithfulness, hallucination, and semantic relevancy scoring. (*Backlog: `TODO-COMP-02`*)
+- **Side-by-Side Prompt Playgrounds**: Promptfoo offers cross-model regression matrix benchmarking. (*Backlog: `TODO-COMP-03`*)
+- **Semantic Response Caching**: Portkey & GPTCache provide vector-similarity LLM response caching over Redis. (*Backlog: `TODO-COMP-04`*)
+
+### 5.2. Enterprise Guardrails, PII Redaction & Security (Lakera / Prompt Armor / NeMo Guardrails)
+- **Inbound/Outbound PII Anonymization**: Microsoft Presidio and Lakera redact PII/internal tokens before model transit. (*Backlog: `TODO-COMP-05`*)
+- **Indirect Prompt Injection Firewall**: Prompt Armor protects against adversarial payload injection in external PR/issue text. (*Backlog: `TODO-COMP-06`*)
+- **Output Policy Enforcement**: NeMo Guardrails strictly bounds code outputs and dangerous shell execution. (*Backlog: `TODO-COMP-07`*)
+
+### 5.3. IDE Developer Experience & Vector Hybrid Retrieval (Cursor / Windsurf / Claude Code)
+- **Language Server Protocol (LSP) Indexing**: Active LSP daemons (`pyright`, `gopls`, `rust-analyzer`) provide exact cross-file type hierarchies and references. (*Backlog: `TODO-COMP-08`*)
+- **Hybrid Dense-Sparse Vector Retrieval**: Pairing AST skeletons with local LanceDB vector search for multi-hop semantic code discovery. (*Backlog: `TODO-COMP-09`*)
+- **Native IDE Extensions (VS Code / JetBrains)**: In-editor gutter diffs, inline chat, and one-click surgical rollback buttons. (*Backlog: `TODO-COMP-10`*)
+- **Multimodal Visual UI Ingestion**: Converting Figma mockups and bug screenshots directly into React/Tailwind ASTs. (*Backlog: `TODO-COMP-11`*)
+
+### 5.4. Enterprise CI/CD Sandboxing & GitOps Delivery (GitHub Actions / GitLab CI / Dagger / ArgoCD)
+- **Sub-Second MicroVM / gVisor Sandboxes**: Kernel-level virtualization (Firecracker / gVisor / WASM) for untrusted agent test executions. (*Backlog: `TODO-COMP-12`*)
+- **OIDC Keyless Cloud Authentication**: Workload Identity federation with AWS IAM / GCP without long-lived static secrets. (*Backlog: `TODO-COMP-13`*)
+- **Distributed Test Sharding Matrix**: Dynamic test sharding across multi-platform worker nodes (Linux/macOS/ARM64). (*Backlog: `TODO-COMP-14`*)
+- **Interactive GitOps PR Bot**: Rich PR status comments, collapsible trace folds, live preview staging URLs, and slash commands (`/re-heal`, `/rollback`). (*Backlog: `TODO-COMP-15`*)
