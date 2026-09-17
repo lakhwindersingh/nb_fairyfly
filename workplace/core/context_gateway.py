@@ -609,3 +609,80 @@ npx percipience-bootstrap
             "encrypted_bundles": cls.list_encrypted_bundles(workspace_root),
             "telemetry": cls._GATEWAY_STATS
         }
+
+    @classmethod
+    def handle_portal_token_config(
+        cls,
+        workspace_root: Path,
+        method: str = "GET",
+        payload: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        REST API Handler for Web Portal Token Optimization & FinOps Controls.
+        Supports GET (fetch active config + ROI) and POST (update settings/strategies).
+        """
+        from core.token_optimizer_suite import TokenOptimizationConfig
+        from core.token_tracker import TokenTracker
+
+        if method == "GET":
+            cfg = TokenOptimizationConfig.load_config(workspace_root)
+            token_ledger = TokenTracker.load_ledger(workspace_root)
+            return {
+                "status": "SUCCESS",
+                "config": cfg.get("token_optimization", {}),
+                "summary": token_ledger.get("summary", {}),
+                "available_modes": ["disabled", "conservative", "standard", "aggressive", "extreme"],
+                "available_strategies": [
+                    "ast_skeleton_pruning",
+                    "markdown_doc_pruning",
+                    "config_schema_minification",
+                    "diagnostic_log_slicing",
+                    "git_diff_pruning",
+                    "conversation_memory_compaction"
+                ]
+            }
+
+        elif method == "POST":
+            payload = payload or {}
+            cfg = TokenOptimizationConfig.load_config(workspace_root)
+            tok_opt = cfg.setdefault("token_optimization", {})
+
+            if "enabled" in payload:
+                tok_opt["enabled"] = bool(payload["enabled"])
+            if "mode" in payload:
+                tok_opt["mode"] = str(payload["mode"])
+                if tok_opt["mode"] == "disabled":
+                    tok_opt["enabled"] = False
+                else:
+                    tok_opt["enabled"] = True
+            if "strategies" in payload and isinstance(payload["strategies"], dict):
+                tok_opt.setdefault("strategies", {}).update(payload["strategies"])
+
+            TokenOptimizationConfig.save_config(cfg, workspace_root)
+            token_ledger = TokenTracker.load_ledger(workspace_root)
+
+            return {
+                "status": "UPDATED",
+                "message": "Token optimization settings successfully applied and sealed.",
+                "config": tok_opt,
+                "summary": token_ledger.get("summary", {})
+            }
+
+        return {"status": "ERROR", "message": f"Unsupported HTTP method '{method}'"}
+
+    @classmethod
+    def optimize_context_payload(
+        cls,
+        workspace_root: Path,
+        content: str,
+        content_type: str,
+        override_mode: Optional[str] = None
+    ) -> Tuple[str, Dict[str, Any]]:
+        """Optimizes incoming context payload using UnifiedTokenOptimizer."""
+        from core.token_optimizer_suite import UnifiedTokenOptimizer
+        return UnifiedTokenOptimizer.optimize_content(
+            content=content,
+            content_type=content_type,
+            repo_root=workspace_root,
+            override_mode=override_mode
+        )

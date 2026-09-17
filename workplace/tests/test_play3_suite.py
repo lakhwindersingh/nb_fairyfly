@@ -34,6 +34,15 @@ from core.living_doc_engine import LivingDocEngine
 from core.worm_egress import WORMEgressManager
 from core.tree_sitter_daemon import TreeSitterDaemonClient
 from core.diagnostic_reprompt import DiagnosticRePromptEngine
+from core.token_optimizer_suite import (
+    TokenOptimizationConfig,
+    DocPruner,
+    ConfigSchemaPruner,
+    DiagnosticLogPruner,
+    GitDiffPruner,
+    ConversationMemoryCompactor,
+    UnifiedTokenOptimizer
+)
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -712,6 +721,129 @@ def process_pipeline(events: list) -> dict:
         self.assertEqual(fail_res["attempts_used"], 2)
         self.assertEqual(fail_res["action_taken"], "SURGICALLY_ROLLED_BACK")
         self.assertIsNotNone(fail_res["merkle_block_id"])
+
+
+    def test_26_token_optimization_suite_and_portal_config(self):
+        """Test Multi-Dimensional Token Optimization Suite, selective toggles, and Portal APIs."""
+        # 1. Test Configuration Manager (enable/disable, mode switching, strategies)
+        TokenOptimizationConfig.set_enabled(True, REPO_ROOT)
+        self.assertTrue(TokenOptimizationConfig.is_enabled(REPO_ROOT))
+
+        TokenOptimizationConfig.set_mode('aggressive', REPO_ROOT)
+        cfg = TokenOptimizationConfig.load_config(REPO_ROOT)
+        self.assertEqual(cfg['token_optimization']['mode'], 'aggressive')
+
+        TokenOptimizationConfig.set_strategy('markdown_doc_pruning', False, REPO_ROOT)
+        self.assertFalse(TokenOptimizationConfig.is_strategy_enabled('markdown_doc_pruning', REPO_ROOT))
+        TokenOptimizationConfig.set_strategy('markdown_doc_pruning', True, REPO_ROOT)
+        self.assertTrue(TokenOptimizationConfig.is_strategy_enabled('markdown_doc_pruning', REPO_ROOT))
+
+        # 2. Test Markdown Doc Pruning
+        md_sample = """[![Build Status](https://img.shields.io/badge/build-passing.svg)](https://example.com)
+<!-- Internal Developer Note -->
+# Architecture Overview
+| Component | Status | Description | Notes |
+| :--- | :--- | :--- | :--- |
+| Gateway | Active | Core In-Flight Router | Secure |
+| Merkle | Active | Cryptographic Audit Ledger | High Speed |
+| Token | Active | FinOps Savings Meter | ROI 15% |
+| Worktree | Active | Process-Level Isolation | Posix Lock |
+| Egress | Active | Cloud WORM Vault | S3/GCP |
+> [!NOTE]
+> Detailed historical background notes that consume tokens without runtime value.
+"""
+        pruned_md, md_stats = DocPruner.prune_markdown(md_sample, mode='aggressive')
+        self.assertNotIn('img.shields.io', pruned_md)
+        self.assertNotIn('Internal Developer Note', pruned_md)
+        self.assertGreater(md_stats['saved_tokens'], 0)
+
+        # 3. Test Config & JSONSchema Minification
+        yaml_sample = """# Service configuration
+service_name: payment_gateway # Core payment service
+port: 8080 # HTTP port
+timeout: 30 # Connection timeout
+unused_field: null
+empty_list: []
+"""
+        pruned_yaml, yaml_stats = ConfigSchemaPruner.prune_yaml(yaml_sample, mode='aggressive')
+        self.assertNotIn('# Service configuration', pruned_yaml)
+        self.assertNotIn('unused_field: null', pruned_yaml)
+        self.assertGreater(yaml_stats['saved_tokens'], 0)
+
+        # 4. Test Diagnostic Traceback Slicing
+        raw_traceback = """============================= test session starts ==============================
+rootdir: /workspace
+plugins: pytest-asyncio
+collected 50 items
+
+workplace/tests/test_demo.py ...
+____________________ ERROR collecting workplace/core/auth.py ____________________
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/site-packages/_pytest/runner.py", line 341, in from_call
+    result: Optional[TResult] = func()
+  File "/usr/lib/python3.11/site-packages/_pytest/runner.py", line 262, in <lambda>
+    lambda: ihook(item=item, **kwds),
+  File "workplace/core/auth.py", line 42, in check_jwt_signature
+    raise InvalidTokenError("JWT Signature expired at timestamp 1726000000")
+E   InvalidTokenError: JWT Signature expired at timestamp 1726000000
+=========================== short test summary info ============================
+FAILED workplace/core/auth.py::check_jwt_signature - InvalidTokenError
+========================= 1 failed, 49 passed in 0.45s =========================
+"""
+        pruned_tb, tb_stats = DiagnosticLogPruner.prune_traceback(raw_traceback, max_frames=2)
+        self.assertIn('InvalidTokenError: JWT Signature expired', pruned_tb)
+        self.assertGreater(tb_stats['saved_tokens'], 0)
+
+        # 5. Test Git Diff Pruning
+        diff_sample = """diff --git a/src/app.py b/src/app.py
+--- a/src/app.py
++++ b/src/app.py
+@@ -10,3 +10,4 @@
+ def main():
++    print("Hello")
+diff --git a/package-lock.json b/package-lock.json
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,500 +1,500 @@
+- large lockfile churn ...
++ large lockfile churn ...
+"""
+        pruned_diff, diff_stats = GitDiffPruner.prune_diff(diff_sample)
+        self.assertIn('LOCKFILE/BLOB SKIPPED', pruned_diff)
+        self.assertGreater(diff_stats['saved_tokens'], 0)
+
+        # 6. Test Multi-Turn Conversation Memory Compaction
+        messages = [
+            {"role": "user", "content": "Turn 1: please setup database schema with postgres tables, relations, indexes, migrations, and docker compose setup... " * 5},
+            {"role": "assistant", "content": "Turn 1 answer: schema created with postgres tables, relations, indexes, migrations, and docker compose setup... " * 5},
+            {"role": "user", "content": "Turn 2: add redis caching layer with sentinel, clusters, fallbacks, and connection pooling... " * 5},
+            {"role": "assistant", "content": "Turn 2 answer: redis cache configured with sentinel, clusters, fallbacks, and connection pooling... " * 5},
+            {"role": "user", "content": "Turn 3: implement jwt auth with RSA-256 tokens and refresh rotation"},
+            {"role": "assistant", "content": "Turn 3 answer: jwt auth verified and sealed with Merkle block"},
+            {"role": "user", "content": "Turn 4: check gatekeeper status and token savings meter"},
+        ]
+        compacted_msgs, comp_stats = ConversationMemoryCompactor.compact_history(messages, keep_last_n=3)
+        self.assertLessEqual(len(compacted_msgs), 4)
+        self.assertIn('COMPACTED CONVERSATION STATE', compacted_msgs[0]['content'])
+        self.assertGreater(comp_stats['saved_tokens'], 0)
+        # 7. Test Portal REST API (GET and POST)
+        portal_get = ContextGateway.handle_portal_token_config(REPO_ROOT, method="GET")
+        self.assertEqual(portal_get["status"], "SUCCESS")
+        self.assertIn("config", portal_get)
+        self.assertIn("summary", portal_get)
+        self.assertIn("available_strategies", portal_get)
+
+        portal_post = ContextGateway.handle_portal_token_config(
+            REPO_ROOT,
+            method="POST",
+            payload={
+                "enabled": True,
+                "mode": "standard",
+                "strategies": {"git_diff_pruning": True, "diagnostic_log_slicing": True}
+            }
+        )
+        self.assertEqual(portal_post["status"], "UPDATED")
+        self.assertEqual(portal_post["config"]["mode"], "standard")
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

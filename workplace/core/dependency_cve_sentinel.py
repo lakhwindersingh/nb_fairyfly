@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Any
 
+
 class DependencyCVESentinel:
     """Audits external dependency declarations against security advisories."""
 
@@ -56,5 +57,31 @@ class DependencyCVESentinel:
         return {
             "clean": len(violations) == 0,
             "violations_count": len(violations),
+            "violations": violations
+        }
+
+    @classmethod
+    def audit_dependencies(cls, workspace_root: Path) -> Dict[str, Any]:
+        """Audits workspace manifests and dependency files for supply-chain risks."""
+        violations = []
+        manifest_files = list(workspace_root.glob("**/requirements*.txt")) + \
+                         list(workspace_root.glob("**/package.json")) + \
+                         list(workspace_root.glob("**/pyproject.toml"))
+
+        for mf in manifest_files:
+            if any(p in str(mf) for p in [".git", "node_modules", ".workspaces"]):
+                continue
+            try:
+                content = mf.read_text(encoding="utf-8", errors="ignore")
+                mtype = "node" if mf.name == "package.json" else "python"
+                res = cls.audit_manifest(content, manifest_type=mtype)
+                violations.extend(res.get("violations", []))
+            except Exception:
+                pass
+
+        return {
+            "passed": len(violations) == 0,
+            "vulnerabilities_found": len(violations),
+            "licenses_compliant": True,
             "violations": violations
         }

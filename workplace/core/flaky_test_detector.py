@@ -109,3 +109,13 @@ class FlakyTestDetector:
                 else:
                     import json
                     json.dump(details, f, indent=2)
+
+    @classmethod
+    def detect_flakiness(cls, workspace_root: Path, iterations: int = 2) -> Dict[str, Any]:
+        """Convenience detector for PR gate."""
+        deterministic, quarantined = cls.check_test_stability(workspace_root, runs=iterations)
+        return {
+            'is_deterministic': deterministic,
+            'quarantined_tests': quarantined,
+            'status': 'OK' if deterministic else 'QUARANTINE_ACTIVE'
+        }

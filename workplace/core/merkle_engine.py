@@ -145,6 +145,7 @@ class MerkleEngine:
             "current_block_hash": current_hash,
             "action": action
         }
+        new_block["block_hash"] = current_hash
         chain.append(new_block)
         data["ledger_chain"] = chain
 
