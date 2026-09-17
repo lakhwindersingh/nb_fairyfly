@@ -230,8 +230,7 @@ Under Anthropic's pricing structure for Claude 3.5 Sonnet:
 | **Blended Cost per Task** | **$1.42** | **$0.40** | **-71.8% Direct Inference Cost Savings** |
 
 ```mermaid
-bar
-  title Blended Cost per Engineering Task (USD)
+pie title Blended Cost per Engineering Task (USD)
   "Baseline (Unmanaged Claude)" : 1.42
   "Percipience Context OS" : 0.40
 ```

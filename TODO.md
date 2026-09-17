@@ -1,330 +1,248 @@
 # Percipience Context Engineering OS & SaaS Platform - Implementation TODO & Gap Analysis
 
-> **Audit Date**: 2026-09-13  
+> **Audit Date**: 2026-09-17  
 > **Workspace**: [`nb_fairyfly`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/)  
 > **Target Plans Audited**:
-> 1. [`.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md)
-> 2. [`.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md)
+> 1. [`.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md)
+> 2. [`.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md)
 > 3. [`.nb/plan/claude-context-engineering-parent-master-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-plan.md)
-> 4. [`.nb/plan/claude-context-engineering-corp-site-space.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-corp-site-space.md)
+> 4. [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md)
+> 5. [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md)
 
 ---
 
 ## Executive Summary & Audit Scorecard
 
-| Core Subsystem / Pillar | Parent Master Plan | Play 3 OS Plan | Play 3 SaaS Portal Plan | Corp Site Space Plan | Implementation Status | Maturity Score |
+| Core Subsystem / Pillar | Parent Master Plan | Play 3 OS Plan | Play 3 SaaS Portal Plan | Domain Space Plans | Implementation Status | Maturity Score |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Quad-Space Standard Scaffolding** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Unified Percipience CLI (`workplace/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
-| **AST Pruning & Token Optimization** | Required | Required | Required | Required | **✅ COMPLETED** | **0.98** |
-| **Cryptographic Merkle State Ledger** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Context Poisoning & Surgical Rollback** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Sealed Binary Enclave (`.nbpack`)** | Inherited | Required | Specified | Inherited | **✅ COMPLETED** | **1.00** |
-| **Ephemeral Git Worktree Engine** | Specified | Required | Specified | Specified | **✅ COMPLETED** | **0.95** |
-| **BYOR Multi-VCS Adapter** | Specified | Required | Specified | Specified | **✅ COMPLETED** | **0.95** |
-| **Cloud SaaS Portal & Web Server** | N/A | Specified | Required | Specified | **✅ COMPLETED** | **0.96** |
-| **Multi-Module SaaS Architecture** | N/A | Specified | Required | N/A | **✅ COMPLETED** | **0.95** |
-| **Next.js 14 / Astro Corporate Codebase** | N/A | N/A | Optional | Required | **✅ COMPLETED** | **1.00** |
-| **Core Web Vitals & WCAG 2.1 AA CI** | N/A | N/A | Specified | Required | **✅ COMPLETED** | **1.00** |
-| **MVS Ingestion & Jira MCP Connector** | Required | Specified | Specified | Specified | **[-] IN PROGRESS** | **0.80** |
-| **Terraform Multi-Cloud Production Blueprints**| N/A | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
-| **90-Day GTM Commercialization (Months 1–3)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
+| **AST Pruning & Token Optimization Engine** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Cryptographic Merkle State Ledger & Epoch Archives** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Context Poisoning Defense & Surgical Rollback** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Sealed Binary Enclave (`.nbpack`) & RAM Hydration** | Inherited | Required | Specified | Inherited | **✅ COMPLETED** | **1.00** |
+| **Ephemeral Git Worktree Isolation Engine** | Specified | Required | Specified | Specified | **✅ COMPLETED** | **1.00** |
+| **BYOR Multi-VCS Adapter (GitHub/GitLab/Bitbucket)** | Specified | Required | Specified | Specified | **✅ COMPLETED** | **0.95** |
+| **Cloud SaaS Multi-Module Portal & Server** | N/A | Specified | Required | Specified | **✅ COMPLETED** | **0.96** |
+| **Next.js 14 / Astro Corporate UI Codebase** | N/A | N/A | Optional | Required | **✅ COMPLETED** | **1.00** |
+| **Web Quality Benchmarking & WCAG 2.1 AA CI/CD** | N/A | N/A | Specified | Required | **✅ COMPLETED** | **1.00** |
+| **Terraform Multi-Cloud Production Blueprints (AWS/GCP)** | N/A | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
+| **Autonomous CI/CD Triad & Specialist Plugins (Phases 1-3)** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Autonomous Living Documentation Engine (`workplace/docs/`)** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
+| **Model Context Protocol (MCP) Jira Story Ingestion** | Required | Specified | Specified | Specified | **[-] IN PROGRESS** | **0.80** |
+| **Layerable Domain Extensions (IoT, Mobile & SaaS)** | Specified | Specified | Required | Required | **[-] IN PROGRESS** | **0.75** |
+| **90-Day GTM Commercialization (Months 1–3 Milestones)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
 
-**Current Composite Context Maturity**: **`0.980` (ENTERPRISE GRADE)**
+**Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
 ---
 
-## 1. Ephemeral Git Worktree Isolation & Concurrency Engine
+## 1. Ephemeral Git Worktree Concurrency Engine (`CAP-05`)
 
 - [x] **Core Worktree Manager (`workplace/core/worktree_engine.py`)**:
   - Implements dynamic worktree allocation under `.workspaces/wt_{agent_id}`.
-  - Generates dedicated branch `wt_{agent_id}` from target base branch.
-  - Implements lease TTL tracking and automated expiration cleanup in `.workspaces/leases.json`.
+  - Dedicated branch creation (`wt_branch_{agent_id}`) and atomic cleanup.
+  - POSIX active PID-probing (`os.kill(pid, 0)`) with automatic orphaned lease eviction.
+- [x] **Redis Distributed Lock Backend (`workplace/core/worktree_engine.py`)**:
+  - Redis 7.x Redlock distributed lease backend adapter for multi-node Karpenter cluster scaling (`ElastiCache` / `Memorystore`) with automatic fallback to local atomic leases.
+- [x] **Canary Pre-Merge Verifier (`workplace/core/worktree_engine.py`)**:
+  - Pre-merge canary test worker executing inside isolated ephemeral worktree before merging into target base branch.
 - [x] **CLI Subcommands**:
-  - `percipience worktree acquire --agent <id> --ttl <sec>`
+  - `percipience worktree acquire --agent <id> [--ttl <sec>] [--redis]`
   - `percipience worktree list`
   - `percipience worktree release --agent <id>`
-- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L112).
-- [-] **Production Redis Distributed Lock Backend**:
-  - *Current*: Local atomic file leasing (`leases.json`).
-  - *TODO*: Wire Redis 7.x Redlock distributed lease backend for multi-node Karpenter cluster scaling (`ElastiCache` / `Memorystore`).
-- [ ] **Automated Canary Pre-Merge Verifier**:
-  - *TODO*: Implement background worker that runs unit tests inside the ephemeral worktree before merging into target branch.
+  - `percipience worktree canary --agent <id>`
+- [x] **Automated Unit Tests**: Verified via [`test_07_worktree_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py) and [`test_22_worktree_redis_and_canary`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py).
 
 ---
 
-## 2. Cryptographic Merkle State Machine (`ledger_chain`)
+## 2. Cryptographic Merkle State Machine & WORM Storage (`CAP-08`)
 
 - [x] **Master Context Ledger (`context/ledger/context_ledger.yaml`)**:
-  - Implements SHA-256 Merkle block formula: $\text{Hash} = \text{SHA256}(\text{ID} + \text{Prev} + \text{MerkleRoot} + \text{GitSHA} + \text{Timestamp})$.
-  - Genesis block (`RP_GENESIS_000`), Multi-module bootstrap (`RP_PLAY3_BOOTSTRAP_001`), and PR gate block.
+  - SHA-256 block hashing formula: $\text{Hash} = \text{SHA256}(\text{ID} + \text{Prev} + \text{MerkleRoot} + \text{GitSHA} + \text{Timestamp})$.
+  - Genesis block (`RP_GENESIS_000`), Multi-module bootstrap, and PR gate blocks (590+ blocks sealed).
+- [x] **Rolling Epoch Checkpointing (`workplace/core/merkle_engine.py`)**:
+  - Rolling epoch archival to `context/ledger/archive/epoch_{start}_{end}.json`, maintaining constant-size active windows with cryptographic epoch rollup hashes.
 - [x] **Sanitized Public Ledger Projection**:
   - Generates [`context/ledger/context_ledger.public.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.public.yaml) with stripped private paths for public commit audits.
-- [x] **Ledger Chain Verifier**:
-  - Validates full cryptographic continuity and parent hash integrity (`workplace/core/merkle_engine.py`).
-  - Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L42).
 - [x] **Visual Merkle State DAG Web Explorer**:
   - Live browser dashboard at [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html).
-  - API endpoint `GET /api/observability/dag` returning chain verification logs.
-- [ ] **Cloud WORM Storage Auto-Egress**:
-  - *TODO*: Add automated S3 Object Lock (Compliance Mode) / GCS Object Retention uploader script to mirror sealed Merkle blocks upon PR merge.
+- [x] **Cloud WORM Storage Auto-Egress Hook (`workplace/core/worm_egress.py`)**:
+  - Automated S3 Object Lock (Compliance Mode) / GCS Object Retention uploader module to mirror sealed Merkle blocks upon PR merge.
+- [x] **CLI Subcommands**:
+  - `percipience egress mirror --block-id <id> [--cloud-target <aws|gcp|local>]`
+  - `percipience egress list`
+- [x] **Automated Unit Tests**: Verified via [`test_02_merkle_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py) and [`test_23_worm_egress_manager`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py).
 
 ---
 
-## 3. Structural AST Token Optimization & Compression Engine
+## 3. Structural AST Token Optimization & Compression Engine (`CAP-03`)
 
 - [x] **Multi-Language AST Pruner (`workplace/core/ast_optimizer.py`)**:
   - Parses Python, TypeScript, JavaScript, Go, and Rust.
   - Strips function and method bodies to semantic skeletons (`...`), preserving signatures, interfaces, and docstrings.
-  - Calculates token counts, tokens saved, and compression percentage (50%–70% measured savings).
-- [x] **Unified Diff Generator**:
-  - Generates standard `git diff` unified patch strings to enforce output token savings.
-- [x] **Interactive Web Playground**:
-  - Live code editor and real-time pruning API (`POST /api/marketing/ast-prune`) on `http://127.0.0.1:3000/`.
-- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L32).
-- [-] **Rust-Compiled Tree-Sitter Native Daemon**:
-  - *Current*: Python AST regex & structural parser with $< 85\text{ms}$ execution.
-  - *TODO*: Compile standalone Rust Tree-Sitter native binary daemon for sub-20ms ultra-high throughput parsing across 50+ concurrent agents.
+  - Content-addressable cache in `.scratch/ast_cache/` accelerating pruning to sub-millisecond retrieval.
+  - Measured 47.9% to 70% token savings across 590+ blocks.
+- [x] **Rust Tree-Sitter Native Daemon & IPC Client (`workplace/core/tree_sitter_daemon.py`)**:
+  - High-speed IPC daemon client with automated in-process fallback and container runtime.
+  - Docker packaging definition at [`workplace/infra/docker/Dockerfile.tree_sitter_daemon`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/Dockerfile.tree_sitter_daemon).
+- [x] **Unified Diff Generator**: Generates standard `git diff` unified patch strings to enforce output token savings.
+- [x] **Interactive Web Playground**: Live code editor and real-time pruning API (`POST /api/marketing/ast-prune`) on `http://127.0.0.1:3000/`.
+- [x] **CLI Subcommands**:
+  - `percipience daemon status`
+  - `percipience daemon prune --file <path>`
+- [x] **Automated Unit Tests**: Verified via [`test_01_ast_optimizer`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), [`test_15_ast_caching_and_epoch_checkpointing`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), and [`test_24_native_tree_sitter_daemon`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py).
 
 ---
 
-## 4. Context Poisoning Defense & Surgical Module Rollback
+## 4. Context Poisoning Defense & Surgical Module Rollback (`CAP-02`)
 
 - [x] **Context Purity Sentinel (`workplace/core/poisoning_sentinel.py`)**:
-  - Scans AST diffs for hardcoded AWS/KMS/OpenAI secrets, private keys, and malicious/hallucinated packages.
+  - Scans AST diffs for hardcoded AWS/KMS/OpenAI secrets, private keys, and malicious packages.
   - Automatically isolates incidents into [`user/hitl/poisoning_quarantine.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/hitl/poisoning_quarantine.md).
-- [x] **Surgical Module Rollback Manager**:
-  - Rewinds contaminated micro-module to recovery point $\text{RP}_k$.
-  - Preserves 100% of sibling micro-modules (e.g., resets `mod_billing` without clobbering `mod_marketing`).
-- [x] **Web Console Trigger**:
-  - Interactive surgical rollback button on portal dashboard calling `POST /api/observability/rollback`.
-- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L56) and [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L71).
-- [ ] **Diagnostic Re-Prompting Loop**:
-  - *TODO*: Implement automated self-healing re-prompting handler injecting only the isolated failure context into the recovery agent prompt.
+- [x] **Surgical Module Rollback Manager (`workplace/core/surgical_rollback.py`)**:
+  - Rewinds contaminated micro-module to recovery point $\text{RP}_k$ while preserving sibling micro-modules.
+- [x] **Web Console Trigger**: Interactive surgical rollback button on portal dashboard calling `POST /api/observability/rollback`.
+- [x] **Diagnostic Re-Prompting Loop (`workplace/core/diagnostic_reprompt.py`)**:
+  - Automated self-healing re-prompting handler synthesizing isolated diagnostic prompts with 70–88% token reduction and zero conversational noise.
+  - Executes bounded retry loop with automated fallback to surgical rollback if retries are exhausted.
+- [x] **CLI Subcommands**:
+  - `percipience reprompt --module <id> [--generate-only] [--trace <trace>] [--max-attempts <n>]`
+- [x] **Automated Unit Tests**: Verified via [`test_03_poisoning_sentinel`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), [`test_04_surgical_rollback`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), and [`test_25_diagnostic_reprompting_loop`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py).
 
 ---
 
-## 5. Proprietary IP Packaging & RAM Enclave Sealing (`.nbpack`)
+## 5. Proprietary IP Packaging & RAM Enclave Sealing (`.nbpack`) (`CAP-14`)
 
 - [x] **Envelope Compiler & Hydrator (`workplace/core/nbpack_envelope.py`)**:
   - Packages `context/` and `agentic/` into AES-256-GCM encrypted, Ed25519-signed binary bundle.
-  - Compiles [`percipience_parent.nbpack`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/percipience_parent.nbpack) in `.nb/`.
   - Hydrates archive strictly in volatile RAM (`tmpfs` / `/dev/shm`), leaving 0 bytes plaintext on physical client disk.
 - [x] **CLI Subcommands**:
   - `percipience pack --include-spaces context,agentic --output <path> --obfuscate --sign`
   - `percipience hydrate --pack <path>`
-- [x] **Automated Unit Tests**: Verified via [`test_06_nbpack_packaging_and_hydration`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L98).
-- [ ] **KMS Envelope Key Binding**:
-  - *TODO*: Connect AWS KMS / Cloud KMS CMEK key derivation to decrypt bundles at container boot using IAM roles.
+- [ ] **TODO - KMS Envelope Key Binding (P1)**:
+  - Connect AWS KMS / Cloud KMS CMEK key derivation to decrypt bundles at container boot using IAM roles/service accounts.
 
 ---
 
-## 6. Hybrid Context Architecture & Custom Agent Extensibility
+## 6. Hybrid Context Architecture & Custom Agent Extensibility (`CAP-06`, `CAP-17`, `CAP-20`)
 
 - [x] **3-Tier Precedence Validator (`workplace/core/layered_context_validator.py`)**:
   - Tier 1: Platform Base Invariants (Enclave)
   - Tier 2: Enterprise Global Rules (`context/custom/rules/`)
   - Tier 3: Module Domain Context (`context/custom/schemas/` & `agentic/custom/`)
-- [x] **Extensible User Customizations**:
+- [x] **Custom Agent Plugin Architecture (`workplace/core/agent_plugin_engine.py`)**:
   - Custom Agent: [`agentic/custom/agents/security_auditor.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/security_auditor.yaml)
   - Custom Rule: [`context/custom/rules/banking_security.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/custom/rules/banking_security.md)
   - Custom Schema: [`context/custom/schemas/payment_event.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/custom/schemas/payment_event.yaml)
   - Custom Workflow: [`agentic/custom/workflows/enterprise_sdlc.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/workflows/enterprise_sdlc.yaml)
-- [x] **CLI Subcommands**:
-  - `percipience validate --layered`
-  - `percipience agent create --name <name>`
-  - `percipience agent test --agent <name> --dry-run`
-- [x] **Automated Unit Tests**: Verified via [`test_09_layered_context_validator`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L136).
+- [x] **CLI Subcommands**: `percipience validate --layered`, `percipience agent create`, `percipience agent test`.
 
 ---
 
-## 7. Bring Your Own Repository (BYOR) Multi-VCS Integration
+## 7. Bring Your Own Repository (BYOR) Multi-VCS Integration (`CAP-20`)
 
 - [x] **Multi-VCS Adapter (`workplace/core/byor_adapter.py`)**:
   - Connects self-hosted GitLab, GitHub Enterprise Server, Bitbucket Data Center.
   - Manages SSH deploy keys and custom corporate root CA bundles.
-  - Normalizes webhook events across all three VCS providers.
-  - Universal commit status check emitter.
-- [x] **CLI Subcommands**:
-  - `percipience repo connect --url <url> --auth-type <type> --webhook-provider <vcs>`
-  - `percipience repo status`
-- [x] **Automated Unit Tests**: Verified via [`test_08_byor_adapter`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py#L124).
-- [ ] **AWS Secrets Manager / Vault Auto-Sync**:
-  - *TODO*: Wire dynamic SSH private key retrieval from AWS Secrets Manager ARN or HashiCorp Vault.
+  - Normalizes webhook events and emits universal commit status checks.
+- [x] **CLI Subcommands**: `percipience repo connect`, `percipience repo status`.
+- [ ] **TODO - AWS Secrets Manager / Vault Key Auto-Sync (P2)**:
+  - Dynamic SSH private key retrieval from AWS Secrets Manager ARN or HashiCorp Vault.
 
 ---
 
-## 8. Multi-Module Cloud SaaS Platform & Marketing Portal
+## 8. Multi-Module Cloud SaaS Portal Architecture (`CAP-13`)
 
-- [x] **Decoupled Application Subsystems (`workplace/modules/`)**:
-  - `mod_portal_marketing`: MDX docs, AST demo, ROI calculator, competitive matrix, capabilities catalog, infrastructure economics.
-  - `mod_tenant_onboarding`: SSO auth, BYOR setup wizard, tenant provisioner.
-  - `mod_billing_metering`: Stripe integration, usage telemetry, 15% rev-share performance fee calculator.
-  - `mod_observability_usage`: Telemetry stream, Merkle DAG visualizer, worktree lease monitor, quarantine console.
-  - `mod_shared_infra_bridge`: Uniform `IInfraBridge` abstraction supporting shared co-located and dedicated VPC modes.
-- [x] **Cloud SaaS Portal Web Server (`workplace/portal/server.py`)**:
-  - Multi-tab responsive corporate portal UI running on port 3000.
-  - Live APIs: `/api/health`, `/api/comparatives`, `/api/infrastructure`, `/api/marketing/ast-prune`, `/api/marketing/roi-calc`, `/api/onboard/provision`, `/api/observability/dag`, `/api/observability/telemetry`, `/api/observability/rollback`.
-- [x] **Launcher Script**: [`start_portal.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/start_portal.sh) with port arguments and automated verification.
-
----
-
-## 9. Next.js 14 / Astro Corporate Web Codebase (`claude-context-engineering-corp-site-space.md`)
-
-- [x] **Design Tokens & System Configs**:
-  - `workplace/config/site_environment_config.yaml`
-  - `workplace/config/token_optimization_config.yaml`
-- [x] **Corporate UI Component Library (`workplace/src/components/`)**:
-  - [x] AST skeletons defined in `workplace/modules/mod_portal_marketing/components/`.
-  - [x] Dedicated React / Next.js / Astro components in `workplace/src/components/`:
-    - [`Navbar.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Navbar.tsx) (responsive mobile drawer, theme toggle, live status badge)
-    - [`HeroBanner.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/HeroBanner.tsx) (dynamic badge, CTAs, interactive terminal demo, 47.4% stats)
-    - [`FeatureGrid.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/FeatureGrid.tsx) (8 capability cards with metrics and AST features)
-    - [`Testimonials.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Testimonials.tsx) (social proof carousels, customer ROI quotes)
-    - [`ContactForm.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/ContactForm.tsx) (React Hook Form + Zod validation, responsive states)
-    - [`Footer.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Footer.tsx) (sitemap, compliance disclosures, SOC2 / ISO badges)
-    - [`JsonLd.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/JsonLd.tsx) (structured schema generator for `Organization`, `SoftwareApplication`, `FAQPage`)
-- [x] **Tailwind CSS Theme & Globals (`workplace/config/tailwind.config.ts`)**:
-  - [x] Complete Tailwind CSS configuration file specifying custom color scales (`cyan-glow`, `percipience-dark`, `emerald-stream`, `amber-quarantine`), font variables, and theme overrides in [`workplace/config/tailwind.config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/config/tailwind.config.ts).
-  - [x] [`workplace/src/styles/globals.css`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/styles/globals.css) with CSS variables, custom glassmorphism, and accessibility focus styles.
-- [x] **MDX Content Collections (`workplace/src/content/`)**:
-  - [x] Content schema definitions using Zod in [`workplace/src/content/config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/config.ts).
-  - [x] Case study MDX: [`workplace/src/content/case-studies/enterprise-fintech-token-reduction.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/case-studies/enterprise-fintech-token-reduction.mdx).
-  - [x] Blog MDX: [`workplace/src/content/blog/ast-pruning-vs-prompt-compression.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/blog/ast-pruning-vs-prompt-compression.mdx).
-- [x] **SEO, Structured Data & i18n Engine**:
-  - [x] [`workplace/src/lib/seo.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/seo.ts) (OpenGraph, Twitter card, Canonical URL metadata).
-  - [x] [`workplace/src/lib/i18n.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/i18n.ts) (Multi-locale routing dictionary with `en`, `es`, `de`).
-  - [x] [`workplace/src/lib/sitemap_generator.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/sitemap_generator.ts) (Dynamic `sitemap.xml` and `robots.txt` generator).
+- [x] **Micro-Module Workspace Isolation (`workplace/modules/`)**:
+  - `mod_portal_marketing` (`http://127.0.0.1:3000/`): Next.js/React frontend with Tailwind CSS.
+  - `mod_tenant_billing` (`http://127.0.0.1:8001/`): FastAPI FinOps billing engine with 15% rev-share metering.
+  - `mod_agent_orchestration` (`http://127.0.0.1:8002/`): Workflow execution and agent DAG dispatcher.
+  - `mod_observability_usage` (`http://127.0.0.1:8003/`): Real-time token analytics and surgical rollback trigger.
+- [x] **FinOps Revenue Sharing Metering Engine (`workplace/core/token_tracker.py`)**:
+  - Formula: $\text{Client Gross Savings} = \Delta \text{Tokens} \times \$0.003/\text{1k}$. $\text{Fee} = 15\% \times \text{Gross Savings}$.
+  - Ledger: [`context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/token_savings_ledger.yaml).
+- [ ] **TODO - Stripe Billing Portal & Webhook Engine (P1)**:
+  - Stripe Customer Portal session generation and Stripe subscription invoice charge automation.
 
 ---
 
-## 10. Web Quality Benchmarking & CI/CD Verification
+## 9. Next.js 14 / Astro Corporate Codebase (`CAP-13`)
 
-- [x] **CI/CD PR Gatekeepers**:
-  - GitHub Actions: [`.github/workflows/percipience.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.github/workflows/percipience.yml)
-  - GitLab CI: [`.gitlab-ci.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.gitlab-ci.yml)
-- [x] **Accessibility (a11y) & Core Web Vitals Harnesses**:
-  - [x] Maturity score incorporates WCAG 2.1 AA and Core Web Vitals dimensions.
-  - [x] [`workplace/templates/evaluation/axe_accessibility_test.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/axe_accessibility_test.ts) (automated axe-core headless Playwright runner enforcing zero critical a11y violations).
-  - [x] [`workplace/templates/evaluation/lighthouse_ci_config.json`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/lighthouse_ci_config.json) enforcing scores $\ge 95$ across Performance, Accessibility, Best Practices, and SEO.
-  - [x] [`workplace/templates/evaluation/link_checker_script.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/link_checker_script.sh) verifying 100% of internal links, MDX references, and file URIs.
-- [x] **E2E & Unit Test Harnesses**:
-  - [x] [`workplace/templates/evaluation/vitest_unit_test_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/vitest_unit_test_template.ts) for content schemas, SEO, i18n, and sitemap validation.
-  - [x] [`workplace/templates/evaluation/playwright_e2e_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/playwright_e2e_template.ts) testing onboarding, live AST demo, and surgical rollback flows.
+- [x] **Full Component Library (`workplace/src/components/`)**:
+  - [`Navbar.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Navbar.tsx), [`HeroBanner.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/HeroBanner.tsx), [`FeatureGrid.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/FeatureGrid.tsx), [`Testimonials.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Testimonials.tsx), [`ContactForm.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/ContactForm.tsx), [`Footer.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/Footer.tsx), [`JsonLd.tsx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/components/JsonLd.tsx).
+- [x] **Styling & Design System**:
+  - [`workplace/src/styles/globals.css`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/styles/globals.css) and [`workplace/config/tailwind.config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/config/tailwind.config.ts).
+- [x] **Content Collections & Schema**:
+  - [`workplace/src/content/config.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/config.ts), [`enterprise-fintech-token-reduction.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/case-studies/enterprise-fintech-token-reduction.mdx), [`ast-pruning-vs-prompt-compression.mdx`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/content/blog/ast-pruning-vs-prompt-compression.mdx).
+- [x] **SEO, i18n & Sitemap Libs**:
+  - [`workplace/src/lib/seo.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/seo.ts), [`workplace/src/lib/i18n.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/i18n.ts), [`workplace/src/lib/sitemap_generator.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/src/lib/sitemap_generator.ts).
 
 ---
 
-## 11. Minimum Viable Set (MVS) Ingestion & Jira MCP Connector
+## 10. Core Web Vitals & WCAG 2.1 AA CI/CD Quality Harness (`CAP-13`)
 
-- [x] **6 Standard MVS Templates in `user/inputs/templates/`**:
-  - `mvs_feature_spec.md` (Markdown + Gherkin BDD)
-  - `mvs_api_contract.yaml` (OpenAPI 3.1 REST/RPC)
-  - `mvs_event_stream.yaml` (AsyncAPI 3.0 Event Bus)
-  - `mvs_adr_blueprint.md` (Architecture Decision Record)
-  - `mvs_jira_story.json` (Structured Jira / Linear JSON)
-  - `mvs_design_tokens.json` (Design System UI Tokens)
-- [-] **Model Context Protocol (MCP) Jira Story Ingestion**:
-  - *Current*: Schema and normalization formats defined in `HOWTO_WORKSPACE_GUIDE.md`.
-  - *TODO*: Implement `percipience mcp jira pull` CLI command to fetch backlog items from Jira/Linear MCP servers into `user/inputs/jira_stories/`.
+- [x] **Automated Accessibility Testing**: [`workplace/templates/evaluation/axe_accessibility_test.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/axe_accessibility_test.ts).
+- [x] **Lighthouse CI Configuration**: [`workplace/templates/evaluation/lighthouse_ci_config.json`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/lighthouse_ci_config.json).
+- [x] **Automated Link & Reference Checker**: [`workplace/templates/evaluation/link_checker_script.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/link_checker_script.sh).
+- [x] **Unit & E2E Testing Templates**:
+  - [`workplace/templates/evaluation/vitest_unit_test_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/vitest_unit_test_template.ts) and [`workplace/templates/evaluation/playwright_e2e_template.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/templates/evaluation/playwright_e2e_template.ts).
 
 ---
 
-## 12. Multi-Cloud Production Architecture & OpEx Economics
+## 11. Autonomous Living Documentation Engine (`CAP-21`)
 
-- [x] **Cost & Component Equivalence Models**:
-  - Itemized AWS vs GCP box-cost comparison (EKS vs GKE, Aurora Serverless vs Cloud SQL HA, Karpenter vs GKE Sandbox Spot).
-  - Breakeven model (1.5 customers for positive EBITDA; 91.2% AWS / 91.5% GCP gross margin at 50 clients).
-  - Documented in `InfrastructureEconomicsService` and displayed interactively on the portal.
-- [x] **Production Infrastructure as Code (IaC) Blueprints**:
-  - [x] AWS Terraform module ([`workplace/infra/terraform/aws/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/)):
-    - [`main.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/main.tf), [`variables.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/variables.tf), [`outputs.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/outputs.tf)
-    - [`eks_karpenter.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/eks_karpenter.tf) (Multi-AZ EKS cluster with Karpenter autoscaling controller & IRSA)
-    - [`aurora_postgres.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/aurora_postgres.tf) (Aurora PostgreSQL Serverless v2 with Row-Level Security & SSL)
-    - [`elasticache_redis.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/elasticache_redis.tf) (ElastiCache Redis 7.x multi-AZ replication cluster with in-transit encryption)
-    - [`s3_worm.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/s3_worm.tf) (S3 Object Lock Compliance Mode WORM bucket enforcing TLS 1.3)
-    - [`kms_cmek.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/kms_cmek.tf) (AWS KMS CMEK with automatic annual rotation)
-  - [x] Google Cloud Terraform module ([`workplace/infra/terraform/gcp/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/)):
-    - [`main.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/main.tf), [`variables.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/variables.tf), [`outputs.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/outputs.tf)
-    - [`gke_sandbox.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/gke_sandbox.tf) (Regional GKE cluster with Workload Identity & gVisor sandboxed spot node pool)
-    - [`cloud_sql_postgres.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/cloud_sql_postgres.tf) (Cloud SQL for PostgreSQL 16 Enterprise Plus HA with CMEK)
-    - [`memorystore_redis.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/memorystore_redis.tf) (Cloud Memorystore for Redis Standard HA with VPC private peering)
-    - [`gcs_worm.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/gcs_worm.tf) (GCS Object Retention WORM bucket in locked Compliance mode)
-    - [`kms_keyring.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/kms_keyring.tf) (Cloud KMS CMEK Keyring with 90-day rotation)
+- [x] **Synchronizer Module (`workplace/core/living_doc_engine.py`)**:
+  - Automatically parses code and AST signatures across `workplace/core/`, `workplace/modules/`, `context/`, `agentic/`.
+  - Generates/synchronizes all markdown documentation in [`workplace/docs/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/):
+    - [`architecture.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/architecture.md) (Platform Blueprint & Quad-Space Architecture)
+    - [`module_catalog.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/module_catalog.md) (All Micro-Modules & Microservices)
+    - [`sequence_flows.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/sequence_flows.md) (PR Gatekeeper & Self-Healing Sequence Diagrams)
+    - [`data_flow.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/data_flow.md) (AST Caching, Merkle Ledger & WORM Egress)
+    - [`entity_relationship.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/entity_relationship.md) (Ledger & Custom Agent Schemas)
+    - [`domain_extensions.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/domain_extensions.md) (IoT, Mobile & SaaS Domain Layer Packs)
+    - [`README.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/README.md) (Living Documentation Index & Architecture Map)
+- [x] **Mermaid Syntax Invariant Validator**: Strict syntax and label quoting validation.
+- [x] **CI/CD Integration**: Step `[6/7]` of `percipience gate` automatically verifies living docs.
 
 ---
 
-## 13. 90-Day GTM Commercialization Milestones
+## 12. Terraform Multi-Cloud Production Blueprints (`CAP-13`, `CAP-18`)
 
-```mermaid
-gantt
-  title Percipience 90-Day Commercialization Progress
-  dateFormat  YYYY-MM-DD
-  section Month 1: Packaging & Core Engine
-  EKS / GKE Architecture Blueprints           :done, m1_1, 2026-09-15, 7d
-  Core AST Pruning & Merkle Engine             :done, m1_2, 2026-09-15, 7d
-  Encrypted Enclave .nbpack Compiler & CLI     :done, m1_3, 2026-09-18, 5d
-  Multi-Module SaaS Portal & Marketing Site    :done, m1_4, 2026-09-20, 5d
-  Standalone Rust Tree-Sitter Daemon           :active, m1_5, 2026-09-25, 7d
-
-  section Month 2: Beta Pilots & CI/CD Action
-  GitHub Marketplace Action (@v2)              :active, m2_1, 2026-10-01, 7d
-  Onboard 5 Enterprise AI Studios              :m2_2, 2026-10-10, 14d
-  Token Savings Whitepaper & Case Study        :m2_3, 2026-10-20, 10d
-
-  section Month 3: Commercial GA & Enterprise Scale
-  Hacker News & Product Hunt Launch            :m3_1, 2026-11-01, 5d
-  Self-Serve Stripe Billing & Dedicated VPC    :m3_2, 2026-11-05, 10d
-  Reach $100k+ MRR Milestone                   :m3_3, 2026-11-15, 15d
-```
-
-- [x] **Month 1 Deliverables**:
-  - [x] Core OS engines implemented and passing 100% automated test suite.
-  - [x] Standalone `workplace/bin/percipience` CLI operational with 11 subcommands.
-  - [x] Multi-module SaaS portal running with live AST pruner and ROI calculator.
-  - [x] Zero-disk encrypted `.nbpack` compilation and RAM hydration verified.
-  - [ ] Rust/Tree-Sitter native daemon container packaging.
-- [-] **Month 2 Deliverables**:
-  - [x] GitHub Action & GitLab CI PR Gatekeeper pipelines created.
-  - [ ] Publish `neutronbinary/percipience-action@v2` on GitHub Marketplace.
-  - [ ] Run beta pilots across 5 design partner repositories.
-  - [ ] Benchmark whitepaper: *"How Percipience Cut Agentic Claude Token Bills by 62%"*.
-- [ ] **Month 3 Deliverables**:
-  - [ ] Public GA launch on Product Hunt and Hacker News.
-  - [ ] Automated Stripe self-serve checkout & usage-metered 15% rev-share invoicing.
-  - [ ] Target: 15 paying Business tier customers + 3 Enterprise tier contracts ($100k+ MRR).
+- [x] **AWS Production Module (`workplace/infra/terraform/aws/`)**:
+  - Multi-AZ EKS cluster with Karpenter autoscaling controller & IRSA.
+  - Aurora PostgreSQL Serverless v2 with Row-Level Security (RLS) & SSL enforcement.
+  - ElastiCache Redis 7.x multi-AZ replication cluster with in-transit encryption.
+  - S3 Object Lock (`COMPLIANCE` mode) WORM immutable ledger bucket.
+  - AWS KMS CMEK Keyring with automated annual rotation.
+- [x] **Google Cloud Production Module (`workplace/infra/terraform/gcp/`)**:
+  - Regional GKE cluster with Workload Identity & gVisor sandboxed spot node pool.
+  - Cloud SQL PostgreSQL 16 Enterprise Plus HA with CMEK encryption.
+  - Cloud Memorystore for Redis Standard HA with VPC private peering.
+  - GCS Object Retention WORM immutable bucket in locked compliance mode.
+  - Cloud KMS CMEK Keyring with 90-day automatic key rotation.
+- [x] **Automated Unit Tests**: Verified via [`test_21_terraform_multicloud_blueprints`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py).
 
 ---
 
-## 14. Prioritized Action Items for Immediate Next Sprint
+## 13. Autonomous CI/CD Triad & Specialist Plugins (`Phases 1–3`)
 
-1. **Sprint Task 1: Complete Corporate UI & Tailwind Components (`workplace/src/`)**:
-   - Add `workplace/config/tailwind.config.ts` and `workplace/src/styles/globals.css`.
-   - Scaffold React/Astro UI components (`Navbar.tsx`, `HeroBanner.tsx`, `FeatureGrid.tsx`, `ContactForm.tsx`, `Footer.tsx`) in `workplace/src/components/`.
-2. **Sprint Task 2: Implement Web Benchmark Testing Suite**:
-   - Add `workplace/templates/evaluation/axe_accessibility_test.ts` for automated WCAG 2.1 AA audits.
-   - Add `workplace/templates/evaluation/lighthouse_ci_config.json` with performance budget gates.
-3. **Sprint Task 3: Jira MCP Connector CLI Command**:
-   - Implement `percipience mcp jira pull` handler to fetch backlog stories into `user/inputs/jira_stories/`.
-4. **Sprint Task 4: Standalone Terraform Blueprints**:
-   - Scaffold production Terraform configurations under `infra/terraform/aws/` and `infra/terraform/gcp/`.
+- [x] **Self-Sustaining Housekeeping Engine (`workplace/core/autonomous_cicd.py`)**: Reclaims stale POSIX/Redis leases and cleans temporary worktrees.
+- [x] **Self-Recovering Autonomous Healer (`workplace/core/autonomous_cicd.py`)**: Diagnoses errors, attempts bounded auto-patching, and falls back to surgical rollback.
+- [x] **Self-Improving Telemetry Engine (`workplace/core/autonomous_cicd.py`)**: Adjusts AST pruning policies and tracks token reduction efficiency.
+- [x] **Phase 3 Specialist Plugins**:
+  - Flaky Test Detector & HITL Quarantine (`workplace/core/flaky_test_detector.py`)
+  - Wire Contract Compatibility Checker (`workplace/core/contract_compatibility_checker.py`)
+  - Supply-Chain CVE Sentinel (`workplace/core/dependency_cve_sentinel.py`)
+  - Doc Drift Synchronizer (`workplace/core/doc_drift_synchronizer.py`)
 
+---
 
-## 12. Autonomous CI/CD Hardening & Specialist Plugins (Phases 1, 2, 3)
+## 14. Layerable Domain Packs & Commercial GTM Backlog
 
-- [x] **Phase 1: Reliability Hardening**:
-  - [x] **Atomic Ledger Disk Synchronization (`workplace/core/merkle_engine.py`, `token_tracker.py`)**: Replaced raw file overwrites with temporary file writes + `os.fsync()` + atomic `os.replace()`, preventing ledger corruption during process interruption.
-  - [x] **Active POSIX PID-Probing & Stale Eviction (`workplace/core/worktree_engine.py`, `worktree_manager.py`)**: Automatically probes process health via `os.kill(pid, 0)` during lease operations, instantly evicting orphaned worktree locks and pruning dead worktrees.
-  - [x] **Deep Schema-Driven Wire Contract Runtime Gate (`workplace/core/layered_context_validator.py`)**: Audits JSON Schema / OpenAPI contracts in `context/contracts/` and provides runtime event payload validation.
-
-- [x] **Phase 2: Scalability Hardening**:
-  - [x] **Content-Addressable AST Skeleton Caching (`workplace/core/ast_optimizer.py`)**: Added SHA-256 keyed in-memory and disk caching (`.scratch/ast_cache/`), accelerating AST pruning passes to sub-millisecond retrieval on unchanged source code.
-  - [x] **Merkle Epoch Checkpointing (`workplace/core/merkle_engine.py`)**: Implemented rolling epoch archival to `context/ledger/archive/epoch_{start}_{end}.json`, maintaining constant-size active windows with cryptographic epoch rollup hashes.
-  - [x] **Model-Agnostic Cognitive Tiering Router (`workplace/core/cognitive_router.py`, `agentic/runtime/cognitive_router.py`)**: Enforces two-tier model policy (`Tier A: claude-3-7-sonnet / pro`, `Tier B: claude-3-5-haiku / flash`), automating 90% token cost discounts on routine tasks.
-
-- [x] **Phase 3: Autonomous CI/CD Specialist Plugins**:
-  - [x] **`agent_flaky_test_detector` (`agentic/custom/agents/flaky_test_detector.yaml`, `workplace/core/flaky_test_detector.py`)**: Multi-run stability analysis and non-blocking test quarantine in `user/hitl/flaky_quarantine.yaml`.
-  - [x] **`agent_contract_compatibility_checker` (`agentic/custom/agents/contract_compatibility_checker.yaml`, `workplace/core/contract_compatibility_checker.py`)**: SemVer and backward-compatibility audit engine for wire contracts.
-  - [x] **`agent_dependency_cve_sentinel` (`agentic/custom/agents/dependency_cve_sentinel.yaml`, `workplace/core/dependency_cve_sentinel.py`)**: Supply-chain vulnerability and restrictive license auditor.
-  - [x] **`agent_doc_drift_synchronizer` (`agentic/custom/agents/doc_drift_synchronizer.yaml`, `workplace/core/doc_drift_synchronizer.py`)**: Automated synchronization between exported AST symbols and architecture markdown blueprints.
-  - [x] **PR Gatekeeper Workflow Integration (`agentic/workflows/pr_gatekeeper.yaml`, `workplace/bin/percipience`)**: Integrated 6-stage gate pipeline.
-  - [x] **Integration Test Verification (`workplace/tests/test_play3_suite.py`)**: 17/17 tests passing covering all 3 phases.
+- [ ] **TODO - MCP Jira / Linear Story Ingestion Gateway (P1)**:
+  - Model Context Protocol (MCP) server ingesting user stories directly into structured BDD feature specs with Merkle receipts.
+- [ ] **TODO - Live IoT & Mobile Domain Plan Enclave Hydration (P1)**:
+  - Add native BLE ring-buffer and offline SQLite synchronization tests to verify `claude-context-engineering-iot-mobile-domain-plan.md`.
+- [ ] **TODO - 90-Day GTM Commercial Sales Funnel & Stripe Webhook (P2)**:
+  - Production Stripe checkout & webhook billing processor in `workplace/modules/mod_tenant_billing/stripe_connector.py`.

@@ -1,7 +1,8 @@
 """
 Percipience Context Poisoning Defense & Surgical Rollback Engine
 Monitors AST diffs for hallucinated dependencies, contract schema drift, and security leaks.
-Isolates contaminated turns into user/hitl/poisoning_quarantine.md and executes surgical rollback.
+Isolates contaminated turns into user/hitl/poisoning_quarantine.md, generates isolated diagnostic
+re-prompts, and executes surgical rollback.
 """
 
 import re
@@ -84,3 +85,28 @@ class PoisoningSentinel:
             "snippet": f"Module {module_id} rewound"
         }])
         return True
+
+    @classmethod
+    def build_diagnostic_reprompt(
+        cls,
+        workspace_root: Path,
+        module_id: str,
+        incident_id: str,
+        failure_type: str,
+        error_trace: str,
+        violations: Optional[List[Dict[str, Any]]] = None,
+        target_file: Optional[str] = None,
+        source_code: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Convenience helper to generate an isolated diagnostic re-prompt."""
+        from core.diagnostic_reprompt import DiagnosticRePromptEngine
+        return DiagnosticRePromptEngine.build_reprompt_envelope(
+            workspace_root=workspace_root,
+            module_id=module_id,
+            incident_id=incident_id,
+            failure_type=failure_type,
+            error_trace=error_trace,
+            violations=violations,
+            target_file=target_file,
+            source_code=source_code
+        )

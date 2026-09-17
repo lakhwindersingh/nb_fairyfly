@@ -31,6 +31,9 @@ from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
 from core.context_gateway import ContextGateway
 from core.living_doc_engine import LivingDocEngine
+from core.worm_egress import WORMEgressManager
+from core.tree_sitter_daemon import TreeSitterDaemonClient
+from core.diagnostic_reprompt import DiagnosticRePromptEngine
 
 class TestPlay3Subsystems(unittest.TestCase):
 
@@ -590,6 +593,125 @@ class TestPlay3Subsystems(unittest.TestCase):
         gke_content = (gcp_dir / "gke_sandbox.tf").read_text()
         self.assertIn("gvisor", gke_content)
         self.assertIn("workload_identity_config", gke_content)
+
+
+    def test_22_worktree_redis_and_canary(self):
+        """Test Section 1: Redis Redlock distributed leasing and Pre-Merge Canary Verifier."""
+        # 1. Acquire with Redis distributed backend
+        agent_id = "test_redlock_canary_agent"
+        lease = WorktreeEngine.acquire(REPO_ROOT, agent_id, ttl_seconds=120, use_redis=True)
+        self.assertEqual(lease["agent_id"], agent_id)
+        self.assertEqual(lease["backend"], "redis_redlock")
+        self.assertIsNotNone(lease.get("distributed_redlock_token"))
+
+        # 2. Run Canary verification
+        canary = WorktreeEngine.verify_canary(REPO_ROOT, agent_id)
+        self.assertTrue(canary["canary_passed"])
+        self.assertEqual(canary["status"], "CANARY_VERIFIED")
+        self.assertGreaterEqual(canary["duration_ms"], 0.0)
+
+        # 3. Release and verify redlock cleanup
+        released = WorktreeEngine.release(REPO_ROOT, agent_id)
+        self.assertTrue(released)
+
+    def test_23_worm_egress_manager(self):
+        """Test Section 2: Immutable WORM Cloud Egress Mirroring (AWS S3 Compliance / GCP GCS WORM)."""
+        # 1. Mirror block
+        res = WORMEgressManager.mirror_block(
+            workspace_root=REPO_ROOT,
+            block_id=999,
+            block_hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            merkle_root="5c719875152a5592bbdd300b1a067ffccb60bb4a94200424564c7ca9ea5e5ec0",
+            cloud_target="local",
+            retention_days=365
+        )
+        self.assertEqual(res["block_id"], 999)
+        self.assertEqual(res["status"], "MIRRORED_IMMUTABLE")
+        self.assertIn("worm_vault", res["vault_uri"])
+
+        # 2. List records
+        records = WORMEgressManager.list_egress_records(REPO_ROOT)
+        self.assertGreater(len(records), 0)
+        self.assertTrue(any(r["block_id"] == 999 for r in records))
+
+    def test_24_native_tree_sitter_daemon(self):
+        """Test Section 3: Native Tree-Sitter Daemon Client & High-Throughput Parsing."""
+        client = TreeSitterDaemonClient()
+        # 1. Check health
+        health = client.check_health()
+        self.assertEqual(health["status"], "READY_STANDALONE")
+        self.assertIn("rust", health["supported_languages"])
+
+        # 2. High-speed AST prune
+        sample_code = """
+def process_pipeline(events: list) -> dict:
+    # Detailed inner calculation
+    total = sum(e.get("val", 0) for e in events)
+    return {"total": total, "count": len(events)}
+"""
+        res = client.prune_code(sample_code, language="python", file_path="worker.py")
+        self.assertIn("def process_pipeline(events: list) -> dict:", res["pruned_code"])
+        self.assertIn("...", res["pruned_code"])
+        self.assertNotIn("sum(e.get", res["pruned_code"])
+        self.assertGreater(res["reduction_pct"], 25.0)
+
+
+    def test_25_diagnostic_reprompting_loop(self):
+        """Test Section 4: Diagnostic Re-Prompting Loop (CAP-02) and Bounded Self-Healing."""
+        # 1. Test isolated prompt envelope generation & token reduction
+        violations = [{
+            "type": "SECRET_LEAK",
+            "severity": "CRITICAL",
+            "description": "Plaintext secret detected",
+            "snippet": "const apiKey = \"AKIA1234567890\""
+        }]
+        envelope = DiagnosticRePromptEngine.build_reprompt_envelope(
+            workspace_root=REPO_ROOT,
+            module_id="mod_portal_marketing",
+            incident_id="INC_TEST_DIAG_001",
+            failure_type="SECRET_AND_CONTRACT_VIOLATION",
+            error_trace="Error: credential leak in auth handler",
+            violations=violations,
+            source_code="export function authenticate() { const apiKey = \"AKIA1234567890\"; return true; }"
+        )
+        self.assertEqual(envelope["incident_id"], "INC_TEST_DIAG_001")
+        self.assertEqual(envelope["violations_count"], 1)
+        self.assertIn("NEVER hardcode API keys", envelope["isolated_prompt"])
+        self.assertGreater(envelope["token_reduction_pct"], 70.0)
+
+        # 2. Test successful recovery within bounded SLA
+        heal_res = DiagnosticRePromptEngine.execute_healing_loop(
+            workspace_root=REPO_ROOT,
+            module_id="mod_portal_marketing",
+            incident_id="INC_TEST_DIAG_001",
+            failure_type="SECRET_AND_CONTRACT_VIOLATION",
+            error_trace="Error: credential leak in auth handler",
+            violations=violations,
+            max_attempts=3
+        )
+        self.assertTrue(heal_res["healed"])
+        self.assertEqual(heal_res["action_taken"], "HEALED_VIA_DIAGNOSTIC_REPROMPT")
+        self.assertIsNotNone(heal_res["merkle_block_id"])
+        self.assertIsNotNone(heal_res["merkle_block_hash"])
+
+        # 3. Test exhausted attempts fallback to surgical rollback
+        def failing_patch_generator(attempt: int, prompt: str) -> str:
+            return "const apiKey = \"AKIA_STILL_LEAKING_KEY_123456\";"
+
+        fail_res = DiagnosticRePromptEngine.execute_healing_loop(
+            workspace_root=REPO_ROOT,
+            module_id="mod_portal_marketing",
+            incident_id="INC_TEST_FAIL_002",
+            failure_type="PERSISTENT_LEAK",
+            error_trace="Error: continuous secret leak",
+            violations=violations,
+            max_attempts=2,
+            candidate_patch_fn=failing_patch_generator
+        )
+        self.assertFalse(fail_res["healed"])
+        self.assertEqual(fail_res["attempts_used"], 2)
+        self.assertEqual(fail_res["action_taken"], "SURGICALLY_ROLLED_BACK")
+        self.assertIsNotNone(fail_res["merkle_block_id"])
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

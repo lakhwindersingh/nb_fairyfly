@@ -8,6 +8,7 @@ import os
 import sys
 import argparse
 import json
+import time
 from pathlib import Path
 
 # Add workplace to sys.path to load core modules
@@ -36,6 +37,9 @@ from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.dependency_cve_sentinel import DependencyCVESentinel
 from core.doc_drift_synchronizer import DocDriftSynchronizer
 from core.living_doc_engine import LivingDocEngine
+from core.worm_egress import WORMEgressManager
+from core.tree_sitter_daemon import TreeSitterDaemonClient
+from core.diagnostic_reprompt import DiagnosticRePromptEngine
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -117,6 +121,15 @@ def cmd_gate(args):
     # Seal state block atomically
     block = MerkleEngine.seal_block(REPO_ROOT, "PR_GATE_VERIFICATION_PASS")
     print(f"   [7/7] Merkle Block {block['block_id']} sealed atomically! Hash: {block['current_block_hash'][:16]}...")
+    
+    # Auto-mirror to immutable WORM storage
+    egress_rec = WORMEgressManager.mirror_block(
+        workspace_root=REPO_ROOT,
+        block_id=block["block_id"],
+        block_hash=block["current_block_hash"],
+        merkle_root=block.get("merkle_root", "")
+    )
+    print(f"   [WORM] Mirrored to immutable vault: {egress_rec['provider']} ({egress_rec['compliance_mode']})")
     print("✅ All 7 Gatekeeper verification stages PASSED. Token report emitted to workplace/docs/reports/token_savings_report.md. Safe to merge.")
 
 def cmd_rollback(args):
@@ -131,9 +144,11 @@ def cmd_rollback(args):
 def cmd_worktree(args):
     action = args.worktree_action
     if action == "acquire":
-        lease = WorktreeEngine.acquire(REPO_ROOT, args.agent, ttl_seconds=args.ttl)
+        use_redis = getattr(args, "redis", False)
+        lease = WorktreeEngine.acquire(REPO_ROOT, args.agent, ttl_seconds=args.ttl, use_redis=use_redis)
         print(f"✅ Acquired worktree for agent: {args.agent}")
         print(f"   Path: {lease['path']}")
+        print(f"   Backend: {lease.get('backend', 'posix_atomic_fs')}")
         print(f"   Expires at (UTC timestamp): {lease['expires_at']}")
     elif action == "list":
         leases = WorktreeEngine.list_leases(REPO_ROOT)
@@ -146,6 +161,94 @@ def cmd_worktree(args):
             print(f"✅ Worktree for agent {args.agent} released and pruned.")
         else:
             print(f"ℹ️ No active worktree found for agent {args.agent}.")
+    elif action == "canary":
+        print(f"🧪 Running pre-merge canary verification in worktree for agent '{args.agent}'...")
+        res = WorktreeEngine.verify_canary(REPO_ROOT, args.agent)
+        if res.get("canary_passed"):
+            print(f"✅ Canary test PASSED in {res.get('duration_ms')}ms. Safe to merge into main.")
+        else:
+            print(f"❌ Canary test FAILED: {res.get('error', res.get('stderr'))}")
+            sys.exit(1)
+
+def cmd_egress(args):
+    action = args.egress_action
+    if action == "mirror":
+        res = WORMEgressManager.mirror_block(
+            workspace_root=REPO_ROOT,
+            block_id=args.block_id,
+            block_hash=args.hash or "manual_block_hash",
+            merkle_root=args.merkle_root or "manual_merkle_root",
+            cloud_target=args.cloud_target,
+            retention_days=args.retention_days
+        )
+        print(f"✅ Block {res['block_id']} mirrored to immutable WORM vault!")
+        print(f"   Provider: {res['provider']}")
+        print(f"   Vault URI: {res['vault_uri']}")
+        print(f"   Compliance Mode: {res['compliance_mode']} ({res['retention_days']} days)")
+    elif action == "list":
+        records = WORMEgressManager.list_egress_records(REPO_ROOT)
+        print(f"📋 WORM Egress Audit Trail ({len(records)} records):")
+        for r in records[-10:]:
+            print(f"   • Block {r['block_id']:04d} | {r['provider']} | {r['compliance_mode']} | {r['egress_timestamp']}")
+
+def cmd_daemon(args):
+    client = TreeSitterDaemonClient(endpoint_url=args.endpoint)
+    action = args.daemon_action
+    if action == "status":
+        health = client.check_health()
+        print(f"⚡ Native Tree-Sitter Daemon Status:")
+        print(f"   Endpoint: {health['daemon_endpoint']}")
+        print(f"   Status: {health['status']}")
+        print(f"   Languages: {', '.join(health['supported_languages'])}")
+        print(f"   Target Latency: {health['target_latency']}")
+    elif action == "prune":
+        p = Path(args.file)
+        if not p.exists():
+            print(f"❌ File not found: {args.file}")
+            sys.exit(1)
+        code = p.read_text(encoding="utf-8", errors="ignore")
+        res = client.prune_code(code, language="python", file_path=str(p))
+        print(f"✅ High-Speed AST Pruned in {res['execution_ms']}ms ({res['engine']})")
+        print(f"   Original: {res['original_tokens']} tokens | Pruned: {res['pruned_tokens']} tokens ({res['reduction_pct']}% reduction)")
+
+
+def cmd_reprompt(args):
+    incident_id = args.incident or f"INC_DIAG_{int(time.time())}"
+    if args.generate_only:
+        envelope = DiagnosticRePromptEngine.build_reprompt_envelope(
+            workspace_root=REPO_ROOT,
+            module_id=args.module,
+            incident_id=incident_id,
+            failure_type=args.failure_type or "SYNTAX_OR_CONTRACT_VIOLATION",
+            error_trace=args.trace or "Uncaught exception: contract invariant broken in module handler.",
+            target_file=args.file
+        )
+        print(f"📋 Generated Isolated Diagnostic Re-Prompt Envelope:")
+        print(f"   Incident ID: {envelope['incident_id']}")
+        print(f"   Target Module: {envelope['module_id']}")
+        print(f"   Estimated Prompt Tokens: {envelope['estimated_prompt_tokens']} (Reduction: {envelope['token_reduction_pct']}%)")
+        print("------------------------------------------------------------")
+        print(envelope["isolated_prompt"])
+        print("------------------------------------------------------------")
+    else:
+        print(f"🩹 Executing Diagnostic Re-Prompting Healing Loop on {args.module}...")
+        res = DiagnosticRePromptEngine.execute_healing_loop(
+            workspace_root=REPO_ROOT,
+            module_id=args.module,
+            incident_id=incident_id,
+            failure_type=args.failure_type or "SYNTAX_OR_CONTRACT_VIOLATION",
+            error_trace=args.trace or "Uncaught exception: contract invariant broken in module handler.",
+            target_file=args.file,
+            max_attempts=args.max_attempts
+        )
+        if res["healed"]:
+            print(f"✅ Self-healing succeeded via diagnostic re-prompting! (Attempts used: {res['attempts_used']}/{res['max_attempts']})")
+            print(f"   Action: {res['action_taken']}")
+            print(f"   Merkle Block Sealed: {res['merkle_block_id']} ({res['merkle_block_hash'][:16]}...)")
+        else:
+            print(f"⚠️ Re-prompting attempts exhausted. Triggered surgical rollback!")
+            print(f"   Action: {res['action_taken']}")
+            print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
 
 def cmd_agent(args):
     action = args.agent_action
@@ -334,7 +437,6 @@ def cmd_tokens(args):
         dest = out_path or (REPO_ROOT / "workplace/docs/reports/token_savings_report.md")
         print(f"✅ Token savings scorecard emitted to: {dest}")
 
-
 def cmd_cicd(args):
     action = args.action or "run"
     if action == "run":
@@ -373,7 +475,6 @@ def cmd_cicd(args):
         for r in res["recommendations"]:
             print(f"     • {r}")
         print("✅ Self-improving ledger updated: context/ledger/self_improving_ledger.yaml")
-
 
 def cmd_layer(args):
     action = args.layer_action
@@ -495,10 +596,35 @@ def main():
     p_wt_acq = p_wt_subs.add_parser("acquire")
     p_wt_acq.add_argument("--agent", required=True)
     p_wt_acq.add_argument("--ttl", type=int, default=3600)
+    p_wt_acq.add_argument("--redis", action="store_true", help="Use Redis Redlock distributed lease backend")
     p_wt_list = p_wt_subs.add_parser("list")
     p_wt_rel = p_wt_subs.add_parser("release")
     p_wt_rel.add_argument("--agent", required=True)
+    p_wt_canary = p_wt_subs.add_parser("canary", help="Run pre-merge canary verification in worktree")
+    p_wt_canary.add_argument("--agent", required=True)
     p_wt.set_defaults(func=cmd_worktree)
+
+    # egress (WORM)
+    p_egress = subparsers.add_parser("egress", help="Manage immutable WORM cloud egress")
+    p_egress_subs = p_egress.add_subparsers(dest="egress_action", required=True)
+    p_egress_mirror = p_egress_subs.add_parser("mirror", help="Mirror block to immutable WORM vault")
+    p_egress_mirror.add_argument("--block-id", type=int, required=True)
+    p_egress_mirror.add_argument("--hash", default="")
+    p_egress_mirror.add_argument("--merkle-root", default="")
+    p_egress_mirror.add_argument("--cloud-target", default="auto", choices=["auto", "aws", "gcp", "local"])
+    p_egress_mirror.add_argument("--retention-days", type=int, default=365)
+    p_egress_list = p_egress_subs.add_parser("list", help="List WORM egress audit trail")
+    p_egress.set_defaults(func=cmd_egress)
+
+    # daemon (Native Tree-Sitter)
+    p_daemon = subparsers.add_parser("daemon", help="Manage Native Tree-Sitter AST daemon")
+    p_daemon_subs = p_daemon.add_subparsers(dest="daemon_action", required=True)
+    p_daemon_stat = p_daemon_subs.add_parser("status", help="Check daemon health and latency")
+    p_daemon_stat.add_argument("--endpoint", default="http://127.0.0.1:8585")
+    p_daemon_prune = p_daemon_subs.add_parser("prune", help="High-speed AST prune a source file")
+    p_daemon_prune.add_argument("--file", required=True)
+    p_daemon_prune.add_argument("--endpoint", default="http://127.0.0.1:8585")
+    p_daemon.set_defaults(func=cmd_daemon)
 
     # agent
     p_ag = subparsers.add_parser("agent", help="Manage custom agents and autonomous CI/CD plugins")
@@ -563,7 +689,7 @@ def main():
     p_run.add_argument("--dry-run", action="store_true")
     p_run.set_defaults(func=cmd_run)
 
-        # tokens
+    # tokens
     p_tok = subparsers.add_parser("tokens", help="Capture, track, and meter context token savings")
     p_tok_subs = p_tok.add_subparsers(dest="tokens_action", required=True)
     
@@ -578,56 +704,56 @@ def main():
     p_tok_scan.add_argument("--model", default="claude-3-5-sonnet-20241022")
 
     p_tok_sum = p_tok_subs.add_parser("summary", help="Display token savings ledger summary")
-
-    p_tok_rep = p_tok_subs.add_parser("report", help="Generate markdown token savings report")
-    p_tok_rep.add_argument("--output", default="")
     p_tok.set_defaults(func=cmd_tokens)
 
     # cicd
-    p_cicd = subparsers.add_parser("cicd", help="Autonomous CI/CD control plane commands")
-    p_cicd.add_argument("action", nargs="?", default="run", choices=["run", "heal", "sustain", "optimize"])
+    p_cicd = subparsers.add_parser("cicd", help="Autonomous CI/CD Triad (sustain, heal, optimize)")
+    p_cicd.add_argument("action", nargs="?", choices=["run", "heal", "sustain", "optimize"], default="run")
     p_cicd.add_argument("--target-module", default="mod_portal_marketing")
     p_cicd.add_argument("--no-heal", action="store_true")
     p_cicd.add_argument("--no-optimize", action="store_true")
     p_cicd.set_defaults(func=cmd_cicd)
 
-    
     # layer
-    p_layer = subparsers.add_parser("layer", help="Package, consume, and manage encrypted .nbpack domain layers")
+    p_layer = subparsers.add_parser("layer", help="Manage modular domain layers (.nbpack or plaintext plans)")
     p_layer_subs = p_layer.add_subparsers(dest="layer_action", required=True)
 
-    # layer pack
-    p_lp = p_layer_subs.add_parser("pack", help="Compile layerable domain plan into sealed .nbpack envelope")
-    p_lp.add_argument("--plan", required=True, help="Path to domain plan markdown file")
-    p_lp.add_argument("--output", default="", help="Output path for .nbpack file")
-    p_lp.add_argument("--include-spaces", default="context/contracts,context/rules,agentic/custom", help="Comma-separated spaces to bundle")
+    p_l_pack = p_layer_subs.add_parser("pack", help="Compile a domain plan and custom spaces into .nbpack layer")
+    p_l_pack.add_argument("--plan", required=True, help="Path to domain plan markdown file")
+    p_l_pack.add_argument("--output", default="", help="Output path for .nbpack bundle")
+    p_l_pack.add_argument("--include-spaces", default="", help="Comma-separated spaces (e.g. context,agentic,workplace)")
 
-    # layer apply
-    p_la = p_layer_subs.add_parser("apply", help="Apply and hydrate encrypted domain layer")
-    p_la.add_argument("--pack", default="", help="Path to sealed .nbpack file")
-    p_la.add_argument("--plan", default="", help="Path to plaintext domain plan markdown")
-    p_la.add_argument("--in-memory-only", action="store_true", default=True, help="Mount strictly in RAM without disk plaintext")
-    p_la.add_argument("--write-disk", action="store_true", help="Unpack components onto disk")
+    p_l_apply = p_layer_subs.add_parser("apply", help="Apply domain layer to workspace")
+    p_l_apply.add_argument("--pack", default="", help="Path to .nbpack domain bundle")
+    p_l_apply.add_argument("--plan", default="", help="Path to plaintext domain plan")
+    p_l_apply.add_argument("--write-disk", action="store_true", help="Persist to physical disk instead of RAM")
 
-    # layer list
-    p_ll = p_layer_subs.add_parser("list", help="List registered and mounted domain layers")
-
-    # layer remove / rollback
-    p_lr = p_layer_subs.add_parser("remove", help="Roll back and remove an applied domain layer")
-    p_lr.add_argument("--layer", default="", help="Layer ID or slug (e.g. iot_mobile_domain)")
-    p_lr.add_argument("--pack", default="", help="Path to sealed .nbpack or package file")
-
-    p_lrb = p_layer_subs.add_parser("rollback", help="Alias for layer remove")
-    p_lrb.add_argument("--layer", default="", help="Layer ID or slug (e.g. iot_mobile_domain)")
-    p_lrb.add_argument("--pack", default="", help="Path to sealed .nbpack or package file")
+    p_l_list = p_layer_subs.add_parser("list", help="List applied domain layers")
+    
+    p_l_rm = p_layer_subs.add_parser("remove", help="Roll back and evict domain layer")
+    p_l_rm.add_argument("--layer", default="", help="Layer ID or slug")
+    p_l_rm.add_argument("--pack", default="", help="Path to .nbpack file")
 
     p_layer.set_defaults(func=cmd_layer)
 
+
+    # reprompt (Diagnostic Re-Prompting Loop)
+    p_rep = subparsers.add_parser("reprompt", help="Execute isolated diagnostic re-prompting or generate prompt envelope")
+    p_rep.add_argument("--module", default="mod_portal_marketing", help="Target module ID")
+    p_rep.add_argument("--incident", default="", help="Optional incident ID")
+    p_rep.add_argument("--failure-type", default="CONTRACT_VIOLATION", help="Failure classification")
+    p_rep.add_argument("--trace", default="", help="Error trace / diagnostic logs")
+    p_rep.add_argument("--file", default="", help="Target file path")
+    p_rep.add_argument("--max-attempts", type=int, default=3, help="Max healing attempts before surgical rollback")
+    p_rep.add_argument("--generate-only", action="store_true", help="Only output the generated isolated prompt without applying patches")
+    p_rep.set_defaults(func=cmd_reprompt)
+
     args = parser.parse_args()
-    if hasattr(args, "func"):
-        args.func(args)
-    else:
+    if not args.subcommand:
         parser.print_help()
+        sys.exit(1)
+
+    args.func(args)
 
 if __name__ == "__main__":
     main()
