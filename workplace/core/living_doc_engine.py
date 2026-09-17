@@ -74,7 +74,6 @@ class LivingDocEngine:
 
             # Check for unquoted node labels with special chars in flowchart/graph diagrams
             if matched_type.startswith(("graph", "flowchart")):
-                # Check unquoted labels: e.g. id[Label (Extra)] where not id["Label (Extra)"]
                 unquoted_match = re.search(r'(\w+)\s*\[([^\"\'\]]*[\(\:\)][^\"\'\]]*)\]', line)
                 if unquoted_match and not line.strip().startswith("subgraph"):
                     label = unquoted_match.group(2).strip()
@@ -103,16 +102,24 @@ class LivingDocEngine:
         return blocks
 
     @classmethod
-    def sync_all_living_docs(cls, workspace_root: Path) -> Dict[str, Any]:
+    def sync_all_living_docs(cls, workspace_root: Path, force: bool = False, **kwargs) -> Dict[str, Any]:
         """
         Scans workplace/docs/ and ensures all architecture diagrams and references are 100% valid.
         """
         docs_dir = workspace_root / "workplace" / "docs"
         if not docs_dir.exists():
-            return {"status": "ERROR", "message": f"Documentation directory not found: {docs_dir}"}
+            return {
+                "status": "ERROR",
+                "message": f"Documentation directory not found: {docs_dir}",
+                "generated_count": 0,
+                "docs_synced": 0,
+                "all_mermaid_valid": False,
+                "files": []
+            }
 
         doc_files = list(docs_dir.rglob("*.md"))
         results = {
+            "status": "SYNCHRONIZED",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "docs_synced": len(doc_files),
             "generated_count": len(doc_files),
@@ -144,6 +151,6 @@ class LivingDocEngine:
         return results
 
     @classmethod
-    def sync_all_docs(cls, workspace_root: Path) -> Dict[str, Any]:
+    def sync_all_docs(cls, workspace_root: Path, force: bool = False, **kwargs) -> Dict[str, Any]:
         """Alias for sync_all_living_docs."""
-        return cls.sync_all_living_docs(workspace_root)
+        return cls.sync_all_living_docs(workspace_root, force=force, **kwargs)

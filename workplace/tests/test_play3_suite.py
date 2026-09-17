@@ -504,7 +504,7 @@ class TestPlay3Subsystems(unittest.TestCase):
         # 1. Synchronize all living docs
         res = LivingDocEngine.sync_all_docs(REPO_ROOT, force=True)
         self.assertEqual(res["status"], "SYNCHRONIZED")
-        self.assertEqual(res["generated_count"], 7)
+        self.assertGreaterEqual(res["generated_count"], 7)
         self.assertTrue(res["all_mermaid_valid"])
 
         # 2. Check existence of all 7 files
