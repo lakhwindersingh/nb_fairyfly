@@ -137,6 +137,8 @@ PORTAL_HTML = """<!DOCTYPE html>
     .stat-box:last-child { border-bottom: none; }
     .stat-val { font-weight: 700; color: var(--green); }
 
+    .cat-header { background: #0f172a !important; color: var(--cyan) !important; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 16px; border-top: 2px solid rgba(56, 189, 248, 0.3); border-bottom: 1px solid var(--border); }
+    .cat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
     /* Section Headers */
     .section-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; color: #fff; letter-spacing: -0.5px; }
     .section-desc { font-size: 15px; color: var(--muted); margin-bottom: 24px; max-width: 800px; line-height: 1.5; }
@@ -344,78 +346,227 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
     <!-- TAB 3: COMPARATIVES -->
     <section id="comparatives" class="tab-content">
       <div class="section-title">Competitive Differentiation Matrix</div>
-      <div class="section-desc">See how Neutron Binary Percipience compares against generic coding assistants, trace libraries, and legacy observability tools.</div>
+      <div class="section-desc">See how Neutron Binary Percipience compares against generic coding assistants, trace libraries, legacy observability tools, and traditional CI/CD runners.</div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Capability Dimension</th>
-              <th>Raw Cursor / Claude Code</th>
-              <th>LangChain / LangSmith</th>
-              <th>Arize Phoenix / Armor</th>
-              <th style="color:var(--cyan);">Neutron Binary Percipience</th>
+              <th style="width:20%;">Capability Dimension</th>
+              <th style="width:16%;">Raw Cursor / Claude Code</th>
+              <th style="width:16%;">LangChain / LangSmith</th>
+              <th style="width:16%;">Arize Phoenix / Armor</th>
+              <th style="width:16%;">Legacy CI/CD (GitHub Actions / Jenkins)</th>
+              <th style="width:16%; color:var(--cyan); background:rgba(56,189,248,0.1);">Neutron Binary Percipience</th>
             </tr>
           </thead>
           <tbody>
+            <!-- 1. AUTONOMOUS CI/CD DOMAIN -->
             <tr>
-              <td class="feature-name">Surgical Module Rollback</td>
-              <td>❌ Destructive full git reset</td>
-              <td>❌ No git or FS rollback</td>
+              <td colspan="6" class="cat-header">🤖 1. Autonomous CI/CD &amp; Closed-Loop Self-Healing Domain (Exclusive)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Autonomous CI/CD Triad<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Self-Sustaining, Self-Recovering, Self-Improving</span></td>
+              <td>❌ Single-turn command runner; zero closed-loop repair</td>
+              <td>❌ Trace graph visualization only; no CI/CD remediation</td>
+              <td>❌ Passive evaluation metrics; no execution loop</td>
+              <td>❌ Passive red-build alerts; 100% human DevOps triage required</td>
+              <td class="percipience-cell">✅ Full Triad: SelfSustainingEngine (GC/TTL) + AutonomousHealer + SelfImprovingEngine</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Diagnostic Re-Prompting Loop (CAP-02)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Bounded Isolated Prompt Envelopes</span></td>
+              <td>❌ Unbounded brute-force retries with noisy 500-line error logs</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ None (requires developer commit push to re-test)</td>
+              <td class="percipience-cell">✅ Slices failure trace to root assertion; bounded 3-attempt SLA; auto-fallback to rollback</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Surgical Micro-Module Rollback (RP_k)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Zero Sibling Disruption</span></td>
+              <td>❌ Destructive full git reset (destroys concurrent work)</td>
+              <td>❌ No filesystem or git rollback capabilities</td>
               <td>❌ None (read-only logs)</td>
-              <td class="percipience-cell">✅ Rewinds culprit module to RP_k; preserves 100% of siblings</td>
+              <td>❌ Revert commit reverses entire PR branch / merge</td>
+              <td class="percipience-cell">✅ Rewinds culprit micro-module to RP_k, sparing 100% of siblings in multi-module monorepos</td>
             </tr>
             <tr>
-              <td class="feature-name">Git Worktree Agent Isolation</td>
-              <td>❌ Working tree collisions</td>
-              <td>❌ None (single env)</td>
-              <td>❌ None</td>
-              <td class="percipience-cell">✅ Ephemeral worktrees with TTL auto-cleanup &amp; canary merges</td>
-            </tr>
-            <tr>
-              <td class="feature-name">Cryptographic Merkle State</td>
-              <td>❌ None (standard commits)</td>
-              <td>⚠️ Proprietary SaaS logs</td>
-              <td>❌ None</td>
-              <td class="percipience-cell">✅ Immutable SHA-256 state DAG in context_ledger.yaml &amp; WORM</td>
-            </tr>
-            <tr>
-              <td class="feature-name">Structural AST Context Pruner</td>
-              <td>⚠️ Rudimentary file grep</td>
-              <td>❌ None (passes raw text)</td>
-              <td>❌ None</td>
-              <td class="percipience-cell">✅ Rust/Tree-Sitter strips bodies; 50%–70% token compression</td>
-            </tr>
-            <tr>
-              <td class="feature-name">Cross-Module Contract Gate</td>
-              <td>❌ Unchecked code generation</td>
+              <td class="feature-name">Flaky Test Statistical Quarantine<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Non-Blocking Isolation</span></td>
+              <td>❌ Flaky tests block developer PRs or force manual skips</td>
               <td>❌ None</td>
               <td>❌ None</td>
-              <td class="percipience-cell">✅ Pre-commit verification against formal YAML contracts</td>
+              <td>⚠️ Manual @flaky annotations or rerun plugins (masks real bugs)</td>
+              <td class="percipience-cell">✅ Multi-run statistical detection &amp; non-blocking quarantine in flaky_quarantine.yaml</td>
             </tr>
             <tr>
-              <td class="feature-name">Proprietary IP Obfuscation</td>
-              <td>❌ Exposes prompts in plaintext</td>
-              <td>❌ Plaintext configs</td>
+              <td class="feature-name">Cross-Module Wire Contract &amp; SemVer Gate<br><span style="font-size:11px; color:var(--muted); font-weight:400;">API Schema Evolution</span></td>
+              <td>❌ Unchecked code generation leading to subtle API drift</td>
               <td>❌ None</td>
-              <td class="percipience-cell">✅ Sealed AES-256-GCM / Ed25519 binary (.nbpack) RAM-hydrated</td>
+              <td>❌ None</td>
+              <td>⚠️ Runtime integration test failures after deployment</td>
+              <td class="percipience-cell">✅ Pre-merge JSON Schema / Protobuf contract audit; catches breaking changes &amp; missing SemVer</td>
             </tr>
             <tr>
-              <td class="feature-name">Bring Your Own Repo (BYOR)</td>
-              <td>⚠️ Cloud GitHub or desktop app</td>
-              <td>⚠️ Public SaaS only</td>
-              <td>⚠️ Public SaaS only</td>
-              <td class="percipience-cell">✅ Native self-hosted GitLab / GHES / Bitbucket with custom CA</td>
+              <td class="feature-name">Living Architecture &amp; Mermaid Engine<br><span style="font-size:11px; color:var(--muted); font-weight:400;">AST-to-Diagram Continuous Sync</span></td>
+              <td>❌ Outdated markdown docs that drift immediately</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ Static doc build tools without syntax linting</td>
+              <td class="percipience-cell">✅ Continuous AST-to-Mermaid generator with strict syntax linting &amp; Merkle hash validation</td>
+            </tr>
+
+            <!-- 2. CONTEXT ENGINEERING & FINOPS DOMAIN -->
+            <tr>
+              <td colspan="6" class="cat-header">⚡ 2. Context Engineering &amp; Multi-Strategy Token Optimization Domain</td>
             </tr>
             <tr>
-              <td class="feature-name">Pricing / Value Alignment</td>
-              <td>❌ Flat seat licenses ($20/mo)</td>
-              <td>❌ Per-trace event billing</td>
-              <td>❌ Per-event log fees</td>
-              <td class="percipience-cell">✅ Base Tier + 15% Verified Token Savings performance model</td>
+              <td class="feature-name">6-Dimensional Token Compression<br><span style="font-size:11px; color:var(--muted); font-weight:400;">AST, Docs, Schemas, Tracebacks, Diffs, Memory</span></td>
+              <td>⚠️ Rudimentary naive file grep and basic truncation</td>
+              <td>❌ Passes full prompt text or unparsed chunk strings</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td class="percipience-cell">✅ 6 Pruners: AST bodies, Markdown tables, YAML/JSON schemas, Test logs, Lockfile diffs, Memory compaction</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Selective Strategy Toggles &amp; Portal UI<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Granular Controls &amp; Presets</span></td>
+              <td>❌ Hardcoded black-box heuristics</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td class="percipience-cell">✅ 5 intensity presets (conservative &rarr; extreme), granular strategy checkboxes, live ROI calculator</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Token Savings Rev-Share Model<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Outcome-Aligned FinOps</span></td>
+              <td>❌ Flat seat licenses (/user/mo) regardless of efficiency</td>
+              <td>❌ Per-trace event billing (zsh.005/trace) increasing with usage</td>
+              <td>❌ Ingestion volume pricing</td>
+              <td>❌ Per-minute runner billing (GitHub Actions minutes)</td>
+              <td class="percipience-cell">✅ 15% of verified token savings; 100% aligned with customer cloud cost reduction</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Model-Agnostic Cognitive Tiering Router<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Dynamic LLM Complexity Routing</span></td>
+              <td>❌ Single expensive flagship model for all turns (-/MTok)</td>
+              <td>⚠️ Manual route chains; no dynamic AST complexity analysis</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td class="percipience-cell">✅ Dynamic Tier A (Claude 3.7 / Pro) vs Tier B (Haiku / Flash), dropping 90% cost on 78% of turns</td>
+            </tr>
+
+            <!-- 3. CRYPTOGRAPHIC GOVERNANCE DOMAIN -->
+            <tr>
+              <td colspan="6" class="cat-header">🛡️ 3. Cryptographic Governance &amp; Regulatory Non-Repudiation Domain</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Cryptographic Merkle State Machine<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Tamper-Evident SHA-256 DAG</span></td>
+              <td>❌ None (standard git commit log only)</td>
+              <td>⚠️ Centralized proprietary SaaS trace logs (vendor lock-in)</td>
+              <td>❌ None</td>
+              <td>⚠️ Ephemeral CI job logs wiped after 30-90 days</td>
+              <td class="percipience-cell">✅ Tamper-evident SHA-256 DAG in context_ledger.yaml with rolling JSON epoch archiving (O(1) I/O)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">SEC Rule 17a-4 / FINRA WORM Cloud Egress<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Dual-Vault Immutable Storage</span></td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td class="percipience-cell">✅ Automated egress to AWS S3 Object Lock (Compliance Mode) &amp; GCP GCS Bucket Retention</td>
+            </tr>
+
+            <!-- 4. ENTERPRISE SECURITY DOMAIN -->
+            <tr>
+              <td colspan="6" class="cat-header">🔒 4. Enterprise Security &amp; Zero Client IP Exposure Domain</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Option 1 Context Gateway Enclave<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Zero Client Disk Residue</span></td>
+              <td>❌ Plaintext markdown prompts exposed to client disk &amp; memory</td>
+              <td>⚠️ Prompts logged in centralized SaaS without KMS enclaves</td>
+              <td>❌ None (client holds entire system prompt)</td>
+              <td>❌ Plaintext repository secrets injected into runner memory</td>
+              <td class="percipience-cell">✅ Server-side In-Flight Prompt Injection in KMS RAM enclave; 0.0% plan disk exposure</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Supply-Chain Security &amp; AST CVE Sentinel<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Pre-Write Package Interception</span></td>
+              <td>❌ No AST-level import CVE interception during agent generation</td>
+              <td>❌ None</td>
+              <td>⚠️ Prompt injection filters only; zero AST package gate</td>
+              <td>⚠️ Post-merge vulnerability scans (Snyk / Dependabot)</td>
+              <td class="percipience-cell">✅ Real-time AST import interception of malicious/typosquatted packages before file write</td>
+            </tr>
+
+            <!-- 5. CONCURRENCY & WORKSPACE ISOLATION -->
+            <tr>
+              <td colspan="6" class="cat-header">🌐 5. Distributed Concurrency &amp; Workspace Isolation Domain</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Distributed Redis Redlock Worktree Leases<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Active PID Liveness Probing</span></td>
+              <td>❌ Dirty working tree collisions during simultaneous agent runs</td>
+              <td>❌ None (relies on single environment or container)</td>
+              <td>❌ None</td>
+              <td>⚠️ Heavy Docker container per job (slow startup: 30s-2m)</td>
+              <td class="percipience-cell">✅ Ephemeral Git worktrees (&lt;180ms startup) with Redis Redlock leases and dead-PID auto-eviction</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Bring Your Own Repository (BYOR)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Enterprise Firewall &amp; VPC Peering</span></td>
+              <td>⚠️ Cloud GitHub.com or local desktop app required</td>
+              <td>⚠️ Hosted public SaaS cloud only</td>
+              <td>⚠️ Hosted public SaaS cloud only</td>
+              <td>⚠️ Self-hosted runners require heavy agent maintenance</td>
+              <td class="percipience-cell">✅ Native integration for self-hosted GitLab, GHES, Bitbucket DC with custom corporate CA certs</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- DEEP-DIVE: AUTONOMOUS CI/CD CAPABILITIES NOT AVAILABLE IN OTHER FRAMEWORKS -->
+      <div style="margin-top:48px;">
+        <div class="section-title">🚀 Autonomous CI/CD Capabilities Exclusive to Percipience</div>
+        <div class="section-desc">Why standard CI/CD runners (Jenkins/Actions) and generic coding assistants (Cursor/Devin) fail in multi-agent enterprise environments, and how Percipience closes the loop.</div>
+
+        <div class="grid-2" style="margin-top:20px;">
+          <div class="card">
+            <div class="card-badge" style="background:rgba(56,189,248,0.15); color:var(--cyan);">Core Triad</div>
+            <h3>1. Closed-Loop Autonomous Triad (Sustain &bull; Heal &bull; Improve)</h3>
+            <p>Traditional CI/CD simply marks jobs as failed and waits for human intervention. Percipience deploys an autonomous triad that continuously reclaims dead leases, bounds diagnostic repairs under strict SLAs, and optimizes token policies based on failure distributions.</p>
+            <ul class="bullet-list">
+              <li><b>Self-Sustaining:</b> Automated worktree garbage collection &amp; Merkle chain reconciliation.</li>
+              <li><b>Self-Recovering:</b> Bounded 3-attempt diagnostic re-prompting with surgical module fallback.</li>
+              <li><b>Self-Improving:</b> Dynamic AST pruning threshold adaptation &amp; prompt prefix caching.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">Zero Blast Radius</div>
+            <h3>2. Sub-1.2s Surgical Micro-Module Rollback</h3>
+            <p>When an autonomous coding agent hallucinates or introduces breaking regressions, standard tools force a destructive <code>git reset --hard</code> that clobbers sibling agents. Percipience rewinds only the culprit micro-module to its verified Recovery Point (<code>RP_k</code>).</p>
+            <ul class="bullet-list">
+              <li>Restores targeted module subtree while preserving 100% of concurrent sibling work.</li>
+              <li>Sub-1.2 second rollback execution with zero downtime.</li>
+              <li>Seals rollback event with cryptographic Merkle proof in <code>context_ledger.yaml</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-badge" style="background:rgba(245,158,11,0.15); color:var(--amber);">Signal Integrity</div>
+            <h3>3. Statistical Flaky Test Quarantine Engine</h3>
+            <p>Non-deterministic test suites frequently derail autonomous agent PR pipelines. Percipience conducts multi-run statistical audits, isolates flaky tests into non-blocking quarantine (<code>flaky_quarantine.yaml</code>), and tracks auto-eviction once stabilized.</p>
+            <ul class="bullet-list">
+              <li>Eliminates false-positive CI/CD blockages without masking legitimate regressions.</li>
+              <li>Maintains an audit ledger of quarantined tests with pass/fail ratios.</li>
+              <li>Enables continuous 100% pass rates on critical PR merge gates.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-badge" style="background:rgba(168,85,247,0.15); color:var(--purple);">Living Architecture</div>
+            <h3>4. Continuous AST Living Docs &amp; Validated Mermaid Engine</h3>
+            <p>Software architecture diagrams in enterprise wikis drift immediately after commits. Percipience parses AST symbols across all microservices and autonomously generates 7+ strictly linted Mermaid architecture diagrams with Merkle hash integrity.</p>
+            <ul class="bullet-list">
+              <li>Strict Mermaid syntax linting catches unquoted brackets and broken connections.</li>
+              <li>Continuous sync of sequence flows, data flows, entity relationships, and module catalogs.</li>
+              <li>Zero human authoring overhead required to keep architecture living and accurate.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 

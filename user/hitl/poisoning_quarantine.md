@@ -442,3 +442,33 @@
 > - **Attempts Used**: `2`
 > - **Merkle Seal**: Block `696`
 > - **Resolved At**: `2026-09-17T18:16:46.350697+00:00`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T18:23:24.951401+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T18:23:25.513194+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+> **Resolution Update** (`INC_TEST_DIAG_001`):
+> - **Status**: `RESOLVED_VIA_DIAGNOSTIC_REPROMPT`
+> - **Attempts Used**: `1`
+> - **Merkle Seal**: Block `705`
+> - **Resolved At**: `2026-09-17T18:23:26.161037+00:00`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T18:23:26.161184+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+> **Resolution Update** (`INC_TEST_FAIL_002`):
+> - **Status**: `SURGICALLY_ROLLED_BACK`
+> - **Attempts Used**: `2`
+> - **Merkle Seal**: Block `706`
+> - **Resolved At**: `2026-09-17T18:23:26.166532+00:00`

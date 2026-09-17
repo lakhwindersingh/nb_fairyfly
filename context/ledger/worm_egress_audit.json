@@ -363,6 +363,39 @@
       "retention_days": 365,
       "egress_timestamp": "2026-09-17T18:16:46Z",
       "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 697,
+      "block_hash": "a6a1bf200216b6f8435b368bbea174c10bd9c5cc58db982dfc21db314b03223d",
+      "merkle_root": "11f9bca8d368dec765417b56e051612d6a30f26e481e2666c8692aecf74f41ec",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.workspaces/worm_vault/block_000697_a6a1bf200216b6f8.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-09-17T18:22:10Z",
+      "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 999,
+      "block_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "merkle_root": "5c719875152a5592bbdd300b1a067ffccb60bb4a94200424564c7ca9ea5e5ec0",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.workspaces/worm_vault/block_000999_e3b0c44298fc1c14.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-09-17T18:23:26Z",
+      "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 707,
+      "block_hash": "eb65e48c8655f2feba054ec712d1a93b9bd057093ec2e9bed9b548c0543b7f10",
+      "merkle_root": "11f9bca8d368dec765417b56e051612d6a30f26e481e2666c8692aecf74f41ec",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.workspaces/worm_vault/block_000707_eb65e48c8655f2fe.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-09-17T18:23:28Z",
+      "status": "MIRRORED_IMMUTABLE"
     }
   ]
 }
