@@ -1,0 +1,82 @@
+{
+  "epoch_id": "epoch_0342_0349",
+  "archived_at": "2026-09-17T01:29:52.165461+00:00",
+  "start_block_id": 342,
+  "end_block_id": 349,
+  "block_count": 8,
+  "epoch_rollup_hash": "bc8e98183e3357a2453b2e85193ee64778da6c9180151d169d72cbd47cd9982e",
+  "blocks": [
+    {
+      "block_id": 342,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "af6adcb90c20bfa9ccb5bef44281584f0767de3775fc7e8371b881cb7d021440",
+      "timestamp": "2026-09-16T21:16:44.973824+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "a85f7fd65f301bacd3ee382da2261d574462cdb67142d4495b26a15e3393ef01",
+      "action": "PR_GATE_VERIFICATION_PASS"
+    },
+    {
+      "block_id": 343,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "a85f7fd65f301bacd3ee382da2261d574462cdb67142d4495b26a15e3393ef01",
+      "timestamp": "2026-09-16T21:16:46.672213+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "2e1c979ffd4a672464f82e5ce51d21b8ec4fcae631bfa019841fafd9eea80cd7",
+      "action": "AGENT_TASK_VERIFIED (agent_quality_guard)"
+    },
+    {
+      "block_id": 344,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "2e1c979ffd4a672464f82e5ce51d21b8ec4fcae631bfa019841fafd9eea80cd7",
+      "timestamp": "2026-09-16T21:16:47.147766+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "c401e46df57d27eeb11dab209fdaf3ee1f1cc125075d487073847ffd1816e726",
+      "action": "AUTONOMOUS_CICD_PIPELINE_COMPLETE"
+    },
+    {
+      "block_id": 345,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "c401e46df57d27eeb11dab209fdaf3ee1f1cc125075d487073847ffd1816e726",
+      "timestamp": "2026-09-16T21:16:47.261758+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "2a7d07f25a04632aac06a12c09e05e9b20a1acc701f4e0114b7200e0cc686585",
+      "action": "AGENT_REGISTERED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 346,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "2a7d07f25a04632aac06a12c09e05e9b20a1acc701f4e0114b7200e0cc686585",
+      "timestamp": "2026-09-16T21:16:47.378591+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "c05d51b85cb6068cc6af744e697f928641913064195a07c407398996ef41ce7d",
+      "action": "WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)"
+    },
+    {
+      "block_id": 347,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "c05d51b85cb6068cc6af744e697f928641913064195a07c407398996ef41ce7d",
+      "timestamp": "2026-09-16T21:16:50.132650+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "500dbbbc2a19a4a33d7c307ee3abcbf8f0c77e87b331eb8c8997b04a973b020e",
+      "action": "AGENT_TASK_VERIFIED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 348,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "500dbbbc2a19a4a33d7c307ee3abcbf8f0c77e87b331eb8c8997b04a973b020e",
+      "timestamp": "2026-09-16T21:16:50.247956+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "b61d3014be9e32f902ccd34dbe161021ac28657ab0a0026133f1a4089b0ea2a4",
+      "action": "AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)"
+    },
+    {
+      "block_id": 349,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "b61d3014be9e32f902ccd34dbe161021ac28657ab0a0026133f1a4089b0ea2a4",
+      "timestamp": "2026-09-16T21:16:50.556862+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "009eac0646edeedbd45a3d7cad1aaeb319b4e6bd5521f71402e7effe0937c6e8",
+      "action": "LAYER_APPLIED:claude-context-engineering-saas-portal-domain-plan"
+    }
+  ]
+}

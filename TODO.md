@@ -27,7 +27,7 @@
 | **Next.js 14 / Astro Corporate Codebase** | N/A | N/A | Optional | Required | **✅ COMPLETED** | **1.00** |
 | **Core Web Vitals & WCAG 2.1 AA CI** | N/A | N/A | Specified | Required | **✅ COMPLETED** | **1.00** |
 | **MVS Ingestion & Jira MCP Connector** | Required | Specified | Specified | Specified | **[-] IN PROGRESS** | **0.80** |
-| **Terraform Multi-Cloud Production Blueprints**| N/A | Required | Specified | N/A | **[ ] PENDING** | **0.50** |
+| **Terraform Multi-Cloud Production Blueprints**| N/A | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
 | **90-Day GTM Commercialization (Months 1–3)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
 
 **Current Composite Context Maturity**: **`0.980` (ENTERPRISE GRADE)**
@@ -235,19 +235,21 @@
   - Itemized AWS vs GCP box-cost comparison (EKS vs GKE, Aurora Serverless vs Cloud SQL HA, Karpenter vs GKE Sandbox Spot).
   - Breakeven model (1.5 customers for positive EBITDA; 91.2% AWS / 91.5% GCP gross margin at 50 clients).
   - Documented in `InfrastructureEconomicsService` and displayed interactively on the portal.
-- [ ] **Production Infrastructure as Code (IaC) Blueprints**:
-  - [ ] AWS Terraform module (`infra/terraform/aws/`):
-    - Multi-AZ EKS cluster with Karpenter autoscaling
-    - Aurora PostgreSQL Serverless v2 with Row-Level Security
-    - ElastiCache Redis 7.x cluster
-    - S3 Object Lock (Compliance Mode) WORM bucket
-    - AWS KMS CMK with automatic rotation
-  - [ ] Google Cloud Terraform module (`infra/terraform/gcp/`):
-    - Regional GKE Autopilot / Sandbox cluster
-    - Cloud SQL for PostgreSQL Enterprise Plus HA
-    - Cloud Memorystore for Redis Cluster
-    - Cloud Storage Object Retention WORM bucket
-    - Cloud KMS CMEK keyring
+- [x] **Production Infrastructure as Code (IaC) Blueprints**:
+  - [x] AWS Terraform module ([`workplace/infra/terraform/aws/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/)):
+    - [`main.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/main.tf), [`variables.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/variables.tf), [`outputs.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/outputs.tf)
+    - [`eks_karpenter.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/eks_karpenter.tf) (Multi-AZ EKS cluster with Karpenter autoscaling controller & IRSA)
+    - [`aurora_postgres.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/aurora_postgres.tf) (Aurora PostgreSQL Serverless v2 with Row-Level Security & SSL)
+    - [`elasticache_redis.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/elasticache_redis.tf) (ElastiCache Redis 7.x multi-AZ replication cluster with in-transit encryption)
+    - [`s3_worm.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/s3_worm.tf) (S3 Object Lock Compliance Mode WORM bucket enforcing TLS 1.3)
+    - [`kms_cmek.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/aws/kms_cmek.tf) (AWS KMS CMEK with automatic annual rotation)
+  - [x] Google Cloud Terraform module ([`workplace/infra/terraform/gcp/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/)):
+    - [`main.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/main.tf), [`variables.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/variables.tf), [`outputs.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/outputs.tf)
+    - [`gke_sandbox.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/gke_sandbox.tf) (Regional GKE cluster with Workload Identity & gVisor sandboxed spot node pool)
+    - [`cloud_sql_postgres.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/cloud_sql_postgres.tf) (Cloud SQL for PostgreSQL 16 Enterprise Plus HA with CMEK)
+    - [`memorystore_redis.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/memorystore_redis.tf) (Cloud Memorystore for Redis Standard HA with VPC private peering)
+    - [`gcs_worm.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/gcs_worm.tf) (GCS Object Retention WORM bucket in locked Compliance mode)
+    - [`kms_keyring.tf`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/terraform/gcp/kms_keyring.tf) (Cloud KMS CMEK Keyring with 90-day rotation)
 
 ---
 

@@ -1,0 +1,118 @@
+{
+  "epoch_id": "epoch_0400_0411",
+  "archived_at": "2026-09-17T01:48:03.427073+00:00",
+  "start_block_id": 400,
+  "end_block_id": 411,
+  "block_count": 12,
+  "epoch_rollup_hash": "4d99ed5c70b93226cf91c0590190e8630e409de361fa2b29667dd9d4119c67f6",
+  "blocks": [
+    {
+      "block_id": 400,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "08907d29564a80fb0a9b1e3724ec185eb806f98ff53a7eb5ae1b413ec50ca08e",
+      "timestamp": "2026-09-16T21:37:47.042990+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "8fbdf58df0bca19329d5d9068b18d3b19af37fe0117a18ed015d483a51169904",
+      "action": "AUTONOMOUS_SELF_HEAL_PATCH_APPLIED (mod_portal_marketing)"
+    },
+    {
+      "block_id": 401,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "8fbdf58df0bca19329d5d9068b18d3b19af37fe0117a18ed015d483a51169904",
+      "timestamp": "2026-09-16T21:38:18.250459+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "c532af63b53acdaae77396e43590ff2fc2b34c948e7f81a2aa81e89f5807328a",
+      "action": "AGENT_TASK_VERIFIED (agent_living_doc_architect)"
+    },
+    {
+      "block_id": 402,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "c532af63b53acdaae77396e43590ff2fc2b34c948e7f81a2aa81e89f5807328a",
+      "timestamp": "2026-09-16T21:38:21.765337+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "276d8baee60ff3bd37949cfc973e71f1c3d5f49b88999f13b07b356e25fd359d",
+      "action": "AGENT_TASK_VERIFIED (agent_contract_compatibility_checker)"
+    },
+    {
+      "block_id": 403,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "276d8baee60ff3bd37949cfc973e71f1c3d5f49b88999f13b07b356e25fd359d",
+      "timestamp": "2026-09-16T21:38:25.284421+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "14b05b6e7ca6bc1c361c395764ba33ba5222d6b6da2f7bee220aacde050d3be1",
+      "action": "AGENT_TASK_VERIFIED (agent_dependency_cve_sentinel)"
+    },
+    {
+      "block_id": 404,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "14b05b6e7ca6bc1c361c395764ba33ba5222d6b6da2f7bee220aacde050d3be1",
+      "timestamp": "2026-09-16T21:38:27.171447+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "43b5b79bf9add5db4a3c7c7dca7552e2220da9a42dcdf51b499e76cbf5410c6b",
+      "action": "PR_GATE_VERIFICATION_PASS"
+    },
+    {
+      "block_id": 405,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "43b5b79bf9add5db4a3c7c7dca7552e2220da9a42dcdf51b499e76cbf5410c6b",
+      "timestamp": "2026-09-16T21:38:28.796974+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "7ffda509ed72e7a714646d356a89a6d149595ca89835fc63952da65ca1b96494",
+      "action": "AGENT_TASK_VERIFIED (agent_doc_drift_synchronizer)"
+    },
+    {
+      "block_id": 406,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "7ffda509ed72e7a714646d356a89a6d149595ca89835fc63952da65ca1b96494",
+      "timestamp": "2026-09-16T21:38:32.334484+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "f5c89c9b7b25491730b94c541886297b1a5f80dda1399957f99a965f2238b00a",
+      "action": "AGENT_TASK_VERIFIED (agent_flaky_test_detector)"
+    },
+    {
+      "block_id": 407,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "f5c89c9b7b25491730b94c541886297b1a5f80dda1399957f99a965f2238b00a",
+      "timestamp": "2026-09-16T21:38:35.837216+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "f06f14c290c21b9c04e8b1f4b10ed1efc22a259088fd0f1a78cfa58ff066366a",
+      "action": "AGENT_TASK_VERIFIED (agent_quality_guard)"
+    },
+    {
+      "block_id": 408,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "f06f14c290c21b9c04e8b1f4b10ed1efc22a259088fd0f1a78cfa58ff066366a",
+      "timestamp": "2026-09-16T21:38:36.435561+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "c57902f6905f9aa00ee680155dc5fe27b6998559007a3ed54b82d3750d053dfc",
+      "action": "AUTONOMOUS_CICD_PIPELINE_COMPLETE"
+    },
+    {
+      "block_id": 409,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "c57902f6905f9aa00ee680155dc5fe27b6998559007a3ed54b82d3750d053dfc",
+      "timestamp": "2026-09-16T21:38:36.565590+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "3c8867d1e3eae6769f1e44b46f253025a3134cc3828b35ddd95ec34e6f5f7b1d",
+      "action": "AGENT_REGISTERED (agent_test_perf_guard)"
+    },
+    {
+      "block_id": 410,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "3c8867d1e3eae6769f1e44b46f253025a3134cc3828b35ddd95ec34e6f5f7b1d",
+      "timestamp": "2026-09-16T21:38:36.697478+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "4c0665fc68a60f39dbf7d8bbb0660c4872eefd63cc26f3c0cb7ab60ea92a24b0",
+      "action": "WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)"
+    },
+    {
+      "block_id": 411,
+      "block_type": "STATE_UPDATE",
+      "prev_block_hash": "4c0665fc68a60f39dbf7d8bbb0660c4872eefd63cc26f3c0cb7ab60ea92a24b0",
+      "timestamp": "2026-09-16T21:38:40.207550+00:00",
+      "merkle_root": "f64874809ff463e47498a4941db915417bc4a7b1fb86bb60f4a2f82c3c89cca5",
+      "current_block_hash": "7487985d868289b00eb1cfdeee1610bfa6c26c37acdf0a4d5b16287eb305c11f",
+      "action": "AGENT_TASK_VERIFIED (agent_test_perf_guard)"
+    }
+  ]
+}

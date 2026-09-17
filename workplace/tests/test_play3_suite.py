@@ -1,4 +1,5 @@
 import sys
+import os
 import unittest
 import json
 import time
@@ -549,6 +550,46 @@ class TestPlay3Subsystems(unittest.TestCase):
         link_res = subprocess.run(["bash", str(eval_dir / "link_checker_script.sh")], capture_output=True, text=True)
         self.assertEqual(link_res.returncode, 0, f"Link checker failed: {link_res.stdout} {link_res.stderr}")
         self.assertIn("All internal links, MDX references, and file URIs verified successfully!", link_res.stdout)
+
+    def test_21_terraform_multicloud_blueprints(self):
+        """Test AWS and GCP Production Terraform Blueprints structure and critical configurations."""
+        aws_dir = REPO_ROOT / "workplace" / "infra" / "terraform" / "aws"
+        gcp_dir = REPO_ROOT / "workplace" / "infra" / "terraform" / "gcp"
+
+        # 1. Check AWS files
+        aws_files = ["main.tf", "variables.tf", "outputs.tf", "eks_karpenter.tf", "aurora_postgres.tf", "elasticache_redis.tf", "s3_worm.tf", "kms_cmek.tf"]
+        for f in aws_files:
+            p = aws_dir / f
+            self.assertTrue(p.exists(), f"Missing AWS terraform file {f}")
+            self.assertGreater(p.stat().st_size, 100)
+
+        # 2. Check GCP files
+        gcp_files = ["main.tf", "variables.tf", "outputs.tf", "gke_sandbox.tf", "cloud_sql_postgres.tf", "memorystore_redis.tf", "gcs_worm.tf", "kms_keyring.tf"]
+        for f in gcp_files:
+            p = gcp_dir / f
+            self.assertTrue(p.exists(), f"Missing GCP terraform file {f}")
+            self.assertGreater(p.stat().st_size, 100)
+
+        # 3. Validate AWS content specifics
+        s3_content = (aws_dir / "s3_worm.tf").read_text()
+        self.assertIn("COMPLIANCE", s3_content)
+        self.assertIn("object_lock_enabled", s3_content)
+
+        aurora_content = (aws_dir / "aurora_postgres.tf").read_text()
+        self.assertIn("serverlessv2_scaling_configuration", aurora_content)
+        self.assertIn("aurora-postgresql", aurora_content)
+
+        karpenter_content = (aws_dir / "eks_karpenter.tf").read_text()
+        self.assertIn("karpenter_controller", karpenter_content)
+
+        # 4. Validate GCP content specifics
+        gcs_content = (gcp_dir / "gcs_worm.tf").read_text()
+        self.assertIn("retention_policy", gcs_content)
+        self.assertIn("is_locked", gcs_content)
+
+        gke_content = (gcp_dir / "gke_sandbox.tf").read_text()
+        self.assertIn("gvisor", gke_content)
+        self.assertIn("workload_identity_config", gke_content)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
