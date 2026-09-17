@@ -472,3 +472,87 @@
 > - **Attempts Used**: `2`
 > - **Merkle Seal**: Block `706`
 > - **Resolved At**: `2026-09-17T18:23:26.166532+00:00`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T19:15:51.233649+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:15:51.791707+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T19:16:18.055819+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:16:18.614316+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:16:19.231043+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T19:17:38.445623+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:17:39.006007+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:17:39.618358+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T19:38:22.257788+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:38:22.808699+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:38:23.499883+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_observability_usage` (2026-09-17T19:38:38.768451+00:00)
+- **Target Module**: `mod_observability_usage`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_observability_usage rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:38:39.306200+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`
+
+### Incident: `Q_INC_ROLLBACK_mod_portal_marketing` (2026-09-17T19:38:39.918880+00:00)
+- **Target Module**: `mod_portal_marketing`
+- **Status**: `QUARANTINED`
+- **Violations**:
+  - [SURGICAL_ROLLBACK] (INFO): Surgically restored to recovery point RP_PLAY3_BOOTSTRAP_001 -> `Module mod_portal_marketing rewound`

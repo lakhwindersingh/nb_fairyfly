@@ -286,36 +286,89 @@ class ConfigSchemaPruner:
 
 
 class DiagnosticLogPruner:
-    """Slices massive test logs, tracebacks, and compiler outputs to minimal failure frames."""
+    """
+    Advanced Multi-Dialect Diagnostic Log & Traceback Slicer.
+    Slices massive test outputs, stack traces, and compiler errors down to minimal failure frames.
+    Filters out-of-tree noise (site-packages, node_modules) and auto-hydrates surrounding source AST snippets.
+    Supports SLA-aware tiered prompt generation for bounded 3-attempt healing loops.
+    """
+
+    OUT_OF_TREE_NOISE_PATTERNS = [
+        "site-packages/",
+        "_pytest/",
+        "lib/python",
+        "node_modules/",
+        "<frozen ",
+        "internal/process/",
+        "target/debug/build/",
+        "/usr/lib/",
+        "/Library/Frameworks/"
+    ]
+
+    FRAMEWORK_FAILURE_KEYWORDS = [
+        "FAILED", "ERROR", "Traceback (most recent call last):",
+        "AssertionError", "SyntaxError", "KeyError", "TypeError",
+        "ValueError", "InvalidTokenError", "NullPointer",
+        "expect(received).toEqual(expected)", "● ", "panic:",
+        "goroutine ", "assertion failed:", "error[E", "error TS"
+    ]
 
     @classmethod
-    def prune_traceback(cls, raw_log: str, max_frames: int = 3) -> Tuple[str, Dict[str, int]]:
+    def prune_traceback(
+        cls,
+        raw_log: str,
+        max_frames: int = 3,
+        filter_out_of_tree: bool = True
+    ) -> Tuple[str, Dict[str, Any]]:
+        """
+        Multi-language and framework-aware traceback slicer with out-of-tree noise filtering.
+        """
         original_tokens = max(1, len(raw_log) // 4)
         lines = raw_log.splitlines()
 
         failure_lines = []
         in_failure_block = False
         captured_frames = 0
+        detected_language = "generic"
+
+        # Detect dialect / framework
+        if any("pytest" in l or "Traceback" in l or "AssertionError" in l for l in lines):
+            detected_language = "python_pytest"
+        elif any("jest" in l or "vitest" in l or "●" in l or "expect(" in l for l in lines):
+            detected_language = "typescript_jest"
+        elif any("panic:" in l or "goroutine " in l for l in lines):
+            detected_language = "go_panic"
+        elif any("error[E" in l or "panicked at" in l for l in lines):
+            detected_language = "rust_compiler"
+        elif any("error TS" in l for l in lines):
+            detected_language = "typescript_compiler"
 
         for line in lines:
-            # Capture failure headers, assertion lines, and exception types
-            if any(k in line for k in ["FAILED", "ERROR", "Traceback (most recent call last):", "AssertionError", "SyntaxError", "KeyError", "TypeError", "ValueError"]):
+            line_str = line.strip()
+            # 1. Capture failure headers, assertion lines, and exception types
+            if any(k in line for k in cls.FRAMEWORK_FAILURE_KEYWORDS):
                 in_failure_block = True
                 failure_lines.append(line)
                 continue
 
             if in_failure_block:
-                if line.strip().startswith("File ") or line.strip().startswith("E   "):
+                # Filter out-of-tree runner frames if requested
+                if filter_out_of_tree and any(np in line for np in cls.OUT_OF_TREE_NOISE_PATTERNS):
+                    continue
+
+                if line_str.startswith("File ") or line_str.startswith("E   ") or line_str.startswith("at ") or line_str.startswith("--> "):
                     failure_lines.append(line)
                     captured_frames += 1
-                elif line.strip().startswith("===") or line.strip().startswith("---"):
+                elif line_str.startswith("===") or line_str.startswith("---") or line_str.startswith("Expected:") or line_str.startswith("Received:"):
                     failure_lines.append(line)
                     if captured_frames >= max_frames:
                         in_failure_block = False
 
         if not failure_lines:
-            # Fallback to last 15 lines
-            failure_lines = lines[-15:]
+            # Fallback to last 15 lines if no structured failure blocks matched
+            failure_lines = [l for l in lines[-15:] if not (filter_out_of_tree and any(np in l for np in cls.OUT_OF_TREE_NOISE_PATTERNS))]
+            if not failure_lines:
+                failure_lines = lines[-10:]
 
         pruned_text = "\n".join(failure_lines)
         pruned_tokens = max(1, len(pruned_text) // 4)
@@ -325,7 +378,217 @@ class DiagnosticLogPruner:
             "uncompressed_tokens": original_tokens,
             "pruned_tokens": pruned_tokens,
             "saved_tokens": saved_tokens,
-            "reduction_pct": round(saved_tokens / original_tokens * 100.0, 1)
+            "reduction_pct": round(saved_tokens / original_tokens * 100.0, 1),
+            "dialect": detected_language,
+            "captured_frames": captured_frames
+        }
+
+    @classmethod
+    def extract_failure_site(cls, raw_log: str) -> Optional[Dict[str, Any]]:
+        """
+        Extracts the target file path, line number, and root error message from a raw log.
+        """
+        lines = raw_log.splitlines()
+
+        # 1. Python Pytest / Traceback: File "workplace/core/auth.py", line 42, in check_jwt_signature
+        for line in reversed(lines):
+            if any(np in line for np in cls.OUT_OF_TREE_NOISE_PATTERNS):
+                continue
+            py_match = re.search(r'File "([^"]+)", line (\d+)(?:, in (\w+))?', line)
+            if py_match:
+                return {
+                    "file_path": py_match.group(1),
+                    "line_number": int(py_match.group(2)),
+                    "function_name": py_match.group(3) or "",
+                    "dialect": "python"
+                }
+
+        # 2. TypeScript / Jest: at Object.<anonymous> (src/app.ts:45:10)
+        for line in reversed(lines):
+            if any(np in line for np in cls.OUT_OF_TREE_NOISE_PATTERNS):
+                continue
+            ts_match = re.search(r'at (?:.*? )?\(?([^:\s\(\)]+):(\d+)(?::\d+)?\)?', line)
+            if ts_match:
+                return {
+                    "file_path": ts_match.group(1),
+                    "line_number": int(ts_match.group(2)),
+                    "function_name": "",
+                    "dialect": "typescript"
+                }
+
+        # 3. Compiler Error: src/index.ts:12:5 - error TS2322
+        for line in lines:
+            comp_match = re.search(r'^([^:\s]+):(\d+):?(?:\d+)?\s*(?:-\s*error|error)', line)
+            if comp_match:
+                return {
+                    "file_path": comp_match.group(1),
+                    "line_number": int(comp_match.group(2)),
+                    "function_name": "",
+                    "dialect": "compiler"
+                }
+
+        return None
+
+    @classmethod
+    def hydrate_source_snippet(
+        cls,
+        workspace_root: Path,
+        file_path: str,
+        line_number: int,
+        context_lines: int = 4
+    ) -> Optional[str]:
+        """
+        Auto-hydrates surrounding source code snippet (±context_lines) with the failure line highlighted.
+        """
+        target_path = Path(file_path)
+        if not target_path.is_absolute():
+            target_path = workspace_root / target_path
+
+        if not target_path.exists() or not target_path.is_file():
+            return None
+
+        try:
+            content = target_path.read_text(encoding="utf-8", errors="ignore")
+            all_lines = content.splitlines()
+            total_lines = len(all_lines)
+
+            start_idx = max(0, line_number - 1 - context_lines)
+            end_idx = min(total_lines, line_number + context_lines)
+
+            snippet_lines = []
+            for i in range(start_idx, end_idx):
+                curr_line_no = i + 1
+                prefix = ">> " if curr_line_no == line_number else "   "
+                snippet_lines.append(f"{prefix}{curr_line_no:4d} | {all_lines[i]}")
+
+            return "\n".join(snippet_lines)
+        except Exception:
+            return None
+
+    @classmethod
+    def build_tiered_diagnostic_envelope(
+        cls,
+        workspace_root: Path,
+        raw_log: str,
+        attempt: int = 1,
+        max_attempts: int = 3,
+        module_id: str = "mod_default",
+        invariants: Optional[List[str]] = None,
+        source_code: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Constructs an SLA-aware tiered diagnostic prompt envelope:
+        - Attempt 1: Minimal leaf frame + root diff (Fast surgical repair).
+        - Attempt 2: Leaf frame + wire contract invariants + AST signatures (Method-level refactor).
+        - Attempt 3: Full diagnostic envelope + invariants + Final SLA Escalation Warning before surgical rollback.
+        """
+        invariants = invariants or [
+            "NEVER hardcode API keys, tokens, or plaintext secrets. Use process.env or os.environ.",
+            "DO NOT import unverified third-party dependencies.",
+            "Ensure backwards compatibility with existing wire contracts.",
+            "Return ONLY the unified patch diff or clean replacement function."
+        ]
+        pruned_trace, stats = cls.prune_traceback(raw_log, max_frames=2 if attempt == 1 else 4, filter_out_of_tree=True)
+        failure_site = cls.extract_failure_site(raw_log)
+
+        source_snippet = ""
+        if failure_site:
+            source_snippet = cls.hydrate_source_snippet(
+                workspace_root,
+                failure_site["file_path"],
+                failure_site["line_number"],
+                context_lines=3 if attempt == 1 else 5
+            ) or ""
+
+        envelope_lines = [
+            f"# PERCIPIENCE TIERED DIAGNOSTIC ENVELOPE (ATTEMPT {attempt}/{max_attempts})",
+            f"**Target Module**: `{module_id}` | **SLA Attempt**: {attempt} of {max_attempts}",
+            ""
+        ]
+
+        if attempt == 1:
+            envelope_lines.extend([
+                "### 1. Minimal Failure Trace (Root Assertion):",
+                f"```\n" + pruned_trace + "\n```",
+                ""
+            ])
+            if source_snippet:
+                envelope_lines.extend([
+                    f"### 2. Source Context (`{failure_site['file_path']}:{failure_site['line_number']}`):",
+                    f"```\n" + source_snippet + "\n```",
+                    ""
+                ])
+            envelope_lines.extend([
+                "### 3. Invariant & Security Constraints:",
+                *[f"- {inv}" for inv in invariants],
+                "",
+                "### 4. Repair Directive (Attempt 1 SLA - Fast Surgical Patch):",
+                "- Provide a minimal, isolated patch targeting only the assertion failure above.",
+                "- Do NOT refactor unaffected methods or contracts.",
+                ""
+            ])
+
+        elif attempt == 2:
+            envelope_lines.extend([
+                "### 1. Diagnostic Failure Frame & Traceback:",
+                f"```\n" + pruned_trace + "\n```",
+                ""
+            ])
+            if source_snippet:
+                envelope_lines.extend([
+                    f"### 2. Offending Source Frame (`{failure_site['file_path']}:{failure_site['line_number']}`):",
+                    f"```\n" + source_snippet + "\n```",
+                    ""
+                ])
+            envelope_lines.extend([
+                "### 3. Mandatory Wire Contract & Invariant Constraints:",
+                *[f"- {inv}" for inv in invariants],
+                "",
+                "### 4. Repair Directive (Attempt 2 SLA - Method-Level Invariant Refactor):",
+                "- Attempt 1 did not clear all tests. Refactor the method logic while strictly obeying the wire contract invariants above.",
+                ""
+            ])
+
+        else:  # Attempt 3 (Final SLA Attempt)
+            envelope_lines.extend([
+                "⚠️ **CRITICAL SLA WARNING: FINAL ATTEMPT BEFORE SURGICAL ROLLBACK (RP_k)**",
+                "If this patch fails verification, Percipience will immediately quarantine the turn and rewind the culprit micro-module to the last verified Recovery Point.",
+                "",
+                "### 1. Full Diagnostic Traceback:",
+                f"```\n" + pruned_trace + "\n```",
+                ""
+            ])
+            if source_snippet:
+                envelope_lines.extend([
+                    f"### 2. Offending Code Context (`{failure_site['file_path']}:{failure_site['line_number']}`):",
+                    f"```\n" + source_snippet + "\n```",
+                    ""
+                ])
+            envelope_lines.extend([
+                "### 3. All Module Invariants & Security Rules:",
+                *[f"- {inv}" for inv in invariants],
+                "- NEVER import unpinned or blacklisted dependencies.",
+                "- Maintain 100% backward compatibility with wire contracts.",
+                "",
+                "### 4. Repair Directive (Attempt 3 SLA - Comprehensive Module Recovery):",
+                "- Return a complete, self-contained valid module patch diff.",
+                ""
+            ])
+
+        prompt_str = "\n".join(envelope_lines)
+        envelope_tokens = max(1, len(prompt_str) // 4)
+
+        return {
+            "attempt": attempt,
+            "max_attempts": max_attempts,
+            "module_id": module_id,
+            "failure_site": failure_site,
+            "pruned_trace": pruned_trace,
+            "source_snippet": source_snippet,
+            "prompt_content": prompt_str,
+            "envelope_tokens": envelope_tokens,
+            "token_stats": stats,
+            "sla_status": "FINAL_ATTEMPT_WARNING" if attempt >= max_attempts else f"ATTEMPT_{attempt}_ACTIVE"
         }
 
 

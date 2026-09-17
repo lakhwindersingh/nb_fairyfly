@@ -845,5 +845,114 @@ diff --git a/package-lock.json b/package-lock.json
         self.assertEqual(portal_post["status"], "UPDATED")
         self.assertEqual(portal_post["config"]["mode"], "standard")
 
+    def test_27_enhanced_diagnostic_log_pruner_and_tiered_sla(self):
+        """Test Enhanced DiagnosticLogPruner: multi-dialect slicing, out-of-tree noise filter, source hydration & tiered SLA."""
+        # 1. Multi-Dialect & Out-of-Tree Noise Filtering (Python Pytest)
+        python_trace = """============================= test session starts ==============================
+rootdir: /workspace
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/site-packages/_pytest/runner.py", line 341, in from_call
+    result = func()
+  File "/workspace/node_modules/jest-worker/index.js", line 12, in runner
+    execute()
+  File "workplace/core/auth.py", line 42, in check_jwt_signature
+    raise InvalidTokenError("JWT Signature expired at timestamp 1726000000")
+E   InvalidTokenError: JWT Signature expired at timestamp 1726000000
+=========================== short test summary info ============================
+FAILED workplace/core/auth.py::check_jwt_signature - InvalidTokenError
+"""
+        pruned_py, stats_py = DiagnosticLogPruner.prune_traceback(python_trace, filter_out_of_tree=True)
+        self.assertEqual(stats_py["dialect"], "python_pytest")
+        self.assertNotIn("site-packages/_pytest", pruned_py)
+        self.assertNotIn("node_modules/jest-worker", pruned_py)
+        self.assertIn("workplace/core/auth.py", pruned_py)
+        self.assertIn("InvalidTokenError", pruned_py)
+
+        # 2. Multi-Dialect Slicing (TypeScript / Jest & Compiler Diagnostics)
+        ts_jest_trace = """● AuthModule > should reject expired token
+    expect(received).toEqual(expected)
+    Expected: 200
+    Received: 401
+      at Object.<anonymous> (workplace/modules/mod_auth/handler.ts:35:12)
+      at /workspace/node_modules/jest-runner/build/index.js:50:20
+"""
+        pruned_ts, stats_ts = DiagnosticLogPruner.prune_traceback(ts_jest_trace, filter_out_of_tree=True)
+        self.assertEqual(stats_ts["dialect"], "typescript_jest")
+        self.assertNotIn("node_modules/jest-runner", pruned_ts)
+        self.assertIn("mod_auth/handler.ts", pruned_ts)
+
+        # 3. Target Failure Site Extraction
+        site_py = DiagnosticLogPruner.extract_failure_site(python_trace)
+        self.assertIsNotNone(site_py)
+        self.assertEqual(site_py["file_path"], "workplace/core/auth.py")
+        self.assertEqual(site_py["line_number"], 42)
+
+        # 4. Surrounding Source AST Snippet Auto-Hydration
+        # Create a sample file in user/scratch to test snippet hydration
+        sample_file = REPO_ROOT / "user" / "scratch" / "test_sample_module.py"
+        sample_file.parent.mkdir(parents=True, exist_ok=True)
+        sample_file.write_text("""# Header
+def authenticate(token: str) -> bool:
+    if not token:
+        raise ValueError("Token is required")
+    # Offending logic
+    is_valid = verify_jwt(token)
+    return is_valid
+""", encoding="utf-8")
+
+        snippet = DiagnosticLogPruner.hydrate_source_snippet(
+            REPO_ROOT,
+            str(sample_file),
+            line_number=6,
+            context_lines=2
+        )
+        self.assertIsNotNone(snippet)
+        self.assertIn(">>    6 |     is_valid = verify_jwt(token)", snippet)
+        self.assertIn("   5 |     # Offending logic", snippet)
+
+        # 5. Tiered SLA Diagnostic Prompt Envelopes (Attempts 1 -> 3)
+        # Attempt 1: Fast Minimal Diff
+        env_1 = DiagnosticLogPruner.build_tiered_diagnostic_envelope(
+            workspace_root=REPO_ROOT,
+            raw_log=python_trace,
+            attempt=1,
+            max_attempts=3,
+            module_id="mod_auth"
+        )
+        self.assertEqual(env_1["attempt"], 1)
+        self.assertEqual(env_1["sla_status"], "ATTEMPT_1_ACTIVE")
+        self.assertIn("Attempt 1 SLA - Fast Surgical Patch", env_1["prompt_content"])
+
+        # Attempt 2: Wire Contract Invariants & Method Refactor
+        env_2 = DiagnosticLogPruner.build_tiered_diagnostic_envelope(
+            workspace_root=REPO_ROOT,
+            raw_log=python_trace,
+            attempt=2,
+            max_attempts=3,
+            module_id="mod_auth",
+            invariants=["Enforce Bearer prefix", "Token expiry <= 3600s"]
+        )
+        self.assertEqual(env_2["attempt"], 2)
+        self.assertEqual(env_2["sla_status"], "ATTEMPT_2_ACTIVE")
+        self.assertIn("Attempt 2 SLA - Method-Level Invariant Refactor", env_2["prompt_content"])
+        self.assertIn("Enforce Bearer prefix", env_2["prompt_content"])
+
+        # Attempt 3: Final SLA Warning Before Surgical Rollback
+        env_3 = DiagnosticLogPruner.build_tiered_diagnostic_envelope(
+            workspace_root=REPO_ROOT,
+            raw_log=python_trace,
+            attempt=3,
+            max_attempts=3,
+            module_id="mod_auth"
+        )
+        self.assertEqual(env_3["attempt"], 3)
+        self.assertEqual(env_3["sla_status"], "FINAL_ATTEMPT_WARNING")
+        self.assertIn("FINAL ATTEMPT BEFORE SURGICAL ROLLBACK", env_3["prompt_content"])
+        self.assertIn("RP_k", env_3["prompt_content"])
+
+        # Clean scratch file
+        sample_file.unlink(missing_ok=True)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

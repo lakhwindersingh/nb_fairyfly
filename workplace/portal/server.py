@@ -238,7 +238,7 @@ PORTAL_HTML = """<!DOCTYPE html>
 
     <!-- TAB 2: CAPABILITIES -->
     <section id="capabilities" class="tab-content">
-      <div class="section-title">8 Deep Technical Subsystems</div>
+      <div class="section-title">13 Deep Technical Subsystems</div>
       <div class="section-desc">Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, and model drift in mission-critical codebases.</div>
 
       <div class="grid-2">
@@ -335,10 +335,18 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
 
         <div class="card">
           <div class="card-badge">Autonomous CI/CD</div>
-          <h3>12. Specialist Agent Fleet &amp; 6-Stage Gatekeeper</h3>
-          <p>Extensible fleet of autonomous specialist agents (Flaky Test Detector, Contract Compatibility Checker, CVE Sentinel, Doc Drift Synchronizer) operating under an automated 6-stage PR gate.</p>
-          <pre>./workplace/bin/percipience gate  # Executes complete 6-stage verification gate</pre>
-          <div class="stat-box"><span>Verification Suite:</span><span class="stat-val">17/17 Tests Green | 0 Flaky Blockers</span></div>
+          <h3>12. Specialist Agent Fleet &amp; 7-Stage Gatekeeper</h3>
+          <p>Extensible fleet of autonomous specialist agents (Flaky Test Detector, Contract Compatibility Checker, CVE Sentinel, Doc Drift Synchronizer, Living Doc Engine) operating under an automated 7-stage PR gate with WORM cloud vault egress.</p>
+          <pre>./workplace/bin/percipience gate  # Executes complete 7-stage verification gate</pre>
+          <div class="stat-box"><span>Verification Suite:</span><span class="stat-val">31/31 Tests Green | 0 Flaky Blockers</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge" style="background:rgba(245,158,11,0.15); color:var(--amber);">Self-Healing SLA</div>
+          <h3>13. Enhanced Diagnostic Log Slicer (DiagnosticLogPruner)</h3>
+          <p>Multi-dialect trace slicer (Pytest, Jest, Rust, TSC) with out-of-tree noise filtering (drops site-packages / node_modules). Auto-hydrates target AST source snippets (&plusmn;4 lines) with line highlighting (<code>&gt;&gt;</code>) and generates SLA-aware tiered prompt envelopes across 3 bounded healing attempts before triggering surgical rollback (RP_k).</p>
+          <pre>DiagnosticLogPruner.build_tiered_diagnostic_envelope(root, raw_log, attempt=1, max_attempts=3)</pre>
+          <div class="stat-box"><span>Diagnostic Token Reduction:</span><span class="stat-val">80% – 95% Drop | 3-Attempt SLA</span></div>
         </div>
       </div>
     </section>

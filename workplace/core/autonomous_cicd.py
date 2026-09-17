@@ -76,8 +76,30 @@ class AutonomousHealer:
     ) -> Dict[str, Any]:
         """
         Analyzes failure log or module state, isolates AST diff or contract mismatch,
-        and applies bounded surgical auto-repair attempts.
+        and applies bounded surgical auto-repair attempts under the 3-attempt SLA.
         """
+        if failure_log:
+            from core.diagnostic_reprompt import DiagnosticRePromptEngine
+            incident_id = f"INC_HEAL_{target_module}_{int(datetime.now(timezone.utc).timestamp())}"
+            heal_res = DiagnosticRePromptEngine.execute_healing_loop(
+                workspace_root=repo_root,
+                module_id=target_module,
+                incident_id=incident_id,
+                failure_type="CI_TEST_OR_CONTRACT_FAILURE",
+                error_trace=failure_log,
+                max_attempts=cls.MAX_RETRIES
+            )
+            return {
+                "status": "HEALED" if heal_res.get("healed") else "ROLLED_BACK",
+                "healed": heal_res.get("healed", False),
+                "target_module": target_module,
+                "attempts": heal_res.get("attempts_used", 1),
+                "action_taken": heal_res.get("action_taken"),
+                "merkle_block": heal_res.get("merkle_block_id"),
+                "token_reduction_pct": heal_res.get("token_reduction_pct", 0.0),
+                "incident_id": incident_id
+            }
+
         attempts = 1
         action_taken = "AUTO_PATCH_VERIFIED_AND_SEALED"
         healed = True
@@ -95,7 +117,6 @@ class AutonomousHealer:
         }
 
 
-# Alias for backward compatibility
 SelfRecoveringEngine = AutonomousHealer
 
 
