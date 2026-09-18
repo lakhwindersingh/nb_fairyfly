@@ -61,6 +61,59 @@ class TestPlay3Subsystems(unittest.TestCase):
         self.assertIn("...", pruned)
         self.assertGreater(stats["reduction_percentage"], 0.0)
 
+    
+    def test_01b_intelligent_html_template_pruning(self):
+        """Test Intelligent HTML & Template Pruning (CAP-40) with DOM skeletonization and focus slicing."""
+        sample_html = """
+<div class="app-layout">
+  <header>
+    <nav class="nav">
+      <button class="nav-btn" id="btnOverview">Overview</button>
+      <button class="nav-btn" id="btnObservability">Observability</button>
+    </nav>
+  </header>
+  <main>
+    <section id="tab-overview">
+      <p>This is a long static paragraph that is over one hundred and twenty characters long and has no buttons or inputs or interactive controls whatsoever.</p>
+    </section>
+    <section id="tab-observability">
+      <div class="metric-card">
+        <div class="metric-val" id="gevalScore">0.962</div>
+        <button onclick="refresh()">Refresh</button>
+      </div>
+    </section>
+  </main>
+</div>
+"""
+        # 1. Prune with focused section
+        pruned, stats = ASTOptimizer.prune_source(sample_html, language="html", focus_symbols=["tab-observability"])
+        self.assertIn('id="tab-observability"', pruned)
+        self.assertIn('id="btnObservability"', pruned)
+        self.assertIn('id="gevalScore"', pruned)
+        self.assertIn('STATIC_PROSE_PRUNED', pruned)
+        self.assertGreater(stats["tokens_saved"], 0)
+
+    def test_01c_python_embedded_html_template_pruning(self):
+        """Test Python file containing embedded multiline HTML templates."""
+        py_code = """PORTAL_HTML = '''<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+  <nav><button id="navLogin">Login</button></nav>
+  <section id="hero">
+    <p>A very lengthy introductory text block that goes on and on without interactive elements to test static prose skeletonization.</p>
+  </section>
+</body>
+</html>'''
+
+def handle_request(req: dict) -> dict:
+    return {"status": "ok"}
+"""
+        pruned, stats = ASTOptimizer.prune_source(py_code, language="python")
+        self.assertIn('def handle_request(req: dict) -> dict:', pruned)
+        self.assertIn('id="navLogin"', pruned)
+        self.assertIn('...', pruned)
+
     def test_02_merkle_engine(self):
         """Test cryptographic Merkle hash calculation and ledger continuity."""
         chain_ok, logs = MerkleEngine.verify_chain(REPO_ROOT)
