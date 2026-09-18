@@ -1,19 +1,16 @@
-#!/usr/bin/env python3
 """
-Atomic Verification Gate Merger
-Enforces verification gate passes before merging subagent worktree branches back into main.
+Percipience Atomic Gate Merger (Declarative Facade)
+Imports from workplace/core/autonomous_cicd.py and worktree_engine.py.
 """
 
 import sys
+from pathlib import Path
 
-def verify_and_merge(branch_name: str) -> bool:
-    print(f"Running atomic gate checks on branch: {branch_name}...")
-    print("  [✓] gate_contract_compatibility: PASS")
-    print("  [✓] gate_test_verification (100% pass): PASS")
-    print("  [✓] gate_security_audit (no hardcoded secrets): PASS")
-    print(f"Executing atomic fast-forward merge of {branch_name} into main...")
-    print("SUCCESS: Branch merged cleanly. Merkle state block ready to be sealed.")
-    return True
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT / "workplace") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "workplace"))
 
-if __name__ == "__main__":
-    verify_and_merge("feature/subagent_dev_01")
+from core.worktree_engine import WorktreeEngine
+from core.autonomous_cicd import AutonomousCICDOrchestrator
+
+__all__ = ["WorktreeEngine", "AutonomousCICDOrchestrator"]

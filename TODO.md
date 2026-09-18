@@ -9,6 +9,7 @@
 > 4. [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md)
 > 5. [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md)
 > 6. [`workplace/docs/reports/competitive_differentiation_matrix.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md)
+7. [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md)
 
 ---
 
@@ -38,6 +39,7 @@
 | **Competitive Parity: Runtime Guardrails & PII** | Specified | Required | Specified | N/A | **[-] PLANNED** | **0.40** |
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
+| **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
@@ -341,3 +343,78 @@
 - [ ] **TODO-COMP-15: Interactive GitOps PR Bot & Ephemeral Preview Deployments (P2)**:
   - *Competitor Benchmark*: Modern CI/CD and developer tools (Vercel, ArgoCD, GitHub Apps) post interactive PR comments with live preview URLs, collapsible test breakdowns, and interactive bot commands (`/re-heal`, `/rollback`).
   - *Implementation Scope*: Implement `workplace/core/gitops_pr_bot.py` posting rich Markdown status summaries, collapsible test traces, live preview staging links, and responding to developer slash-commands on GitHub/GitLab PRs.
+
+---
+
+## 17. Autonomous Agentic SDLC & Swarm Modernization (20 Architectural Enhancements)
+
+> **Governing Review:** [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md)  
+> **Core Objective:** Transition the `agentic/` workspace from script-orchestrated automation to a fully autonomous, self-governing, multi-agent cognitive software engineering ecosystem.
+
+### 17.1. Agent Coordination, Governance & Swarm Topologies
+- [ ] **TODO-AGT-01: Dynamic Task DAGs & Runtime Sub-Goal Expansion (P1)**:
+  - *Shortcoming*: Static linear workflows in `agentic/workflows/` cannot dynamically expand sub-goals or backtrack upon discovering unexpected dependencies.
+  - *Implementation Scope*: Upgrade workflow engine in `workplace/core/` to support runtime dynamic DAG expansion, branch backtracking, and goal recursion.
+- [ ] **TODO-AGT-02: Structured Multi-Pass Reflection & Critic Loops (Reflexion) (P1)**:
+  - *Shortcoming*: Prompts in `agentic/prompts/` lack structured Generator -> Critic -> Refiner cycles, emitting unverified code directly to build gates.
+  - *Implementation Scope*: Embed formal self-reflection verification schemas in `agentic/prompts/` requiring pre-generation invariant critiques.
+- [ ] **TODO-AGT-03: 3-Tier Persistent Agent Memory Architecture (P1)**:
+  - *Shortcoming*: Agents are stateless across session runs without memory of past test fixes or solutions.
+  - *Implementation Scope*: Implement `workplace/core/agent_memory_engine.py` providing Working Memory (scratchpad), Episodic Memory (past run logs/fixes), and Semantic Memory (indexed codebase patterns).
+- [ ] **TODO-AGT-04: Declarative Tool Contracts & JSON Schema Validation (P1)**:
+  - *Shortcoming*: Agent manifests declare tools as plain string arrays without parameter schemas or mutation boundaries.
+  - *Implementation Scope*: Add formal JSON-Schema / OpenAPI contracts for all agent tools with input validation, output typing, and idempotency declarations in `agentic/schemas/tool_contract_schema.yaml`.
+- [ ] **TODO-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens (P1)**:
+  - *Shortcoming*: Agents inherit full OS execution privileges without fine-grained permission sandboxes.
+  - *Implementation Scope*: Implement `workplace/core/agent_capability_guard.py` enforcing cryptographically bound permission tokens (`CAP_FS_READ`, `CAP_FS_WRITE_MODULE_ONLY`, `CAP_NETWORK_EGRESS_OFF`, `CAP_EXEC_SUBPROCESS`).
+
+### 17.2. Runtime Architecture, Quad-Space Boundaries & Execution Hygiene
+- [x] **TODO-AGT-06: Quad-Space Boundary Cleanup & Runtime Deduplication (P1)** ([`agentic/runtime/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/runtime/)):
+  - *Shortcoming*: Code was previously duplicated between `agentic/runtime/` and `workplace/core/` (e.g. `cognitive_router.py`, `worktree_manager.py`), violating Quad-Space architecture.
+  - *Implementation*: Refactored all 8 modules in `agentic/runtime/` to act as declarative facade bridges and import executable engines directly from `workplace/core/`.
+- [x] **TODO-AGT-07: Parallel Fan-Out / Fan-In Barrier Synchronization in Workflows (P2)** ([`workplace/core/workflow_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/workflow_orchestrator.py)):
+  - *Shortcoming*: Independent verification checks ran sequentially, inflating gate latency.
+  - *Implementation*: Implemented `WorkflowOrchestrator` supporting `parallel_group` fan-out and `fan_in_barrier` synchronization with thread pool concurrency and cycle deadlock detection.
+- [x] **TODO-AGT-08: Fine-Grained Error Taxonomy & Adaptive Recovery Playbooks (P1)** ([`workplace/core/error_recovery_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/error_recovery_orchestrator.py)):
+  - *Shortcoming*: Workflows relied on coarse binary failure actions (`QUARANTINE_AND_HALT`, `AUTO_HEAL_OR_ROLLBACK`).
+  - *Implementation*: Implemented `ErrorRecoveryOrchestrator` with 4-pillar taxonomy (`TRANSIENT`, `STRUCTURAL`, `INVARIANT`, `HALLUCINATORY`) and specialized self-healing playbooks (jitter backoff, AST diagnostic re-prompts, spec evolution RFCs, quarantine rollbacks).
+- [x] **TODO-AGT-09: Prompt SemVer, Golden Test Suites & Prompt Drift Detection (P2)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/prompts/prompt_manifest.yaml)):
+  - *Shortcoming*: Markdown prompts in `agentic/prompts/` lacked semantic versioning, regression tests, and prompt drift tracking.
+  - *Implementation*: Created cryptographic prompt manifest `prompt_manifest.yaml` and `PromptDriftSentinel` with SHA-256 integrity audits, structural drift detection, and golden evaluation invariant suites.
+- [x] **TODO-AGT-10: Hierarchical Agent Supervision & Multi-Level Authority Trees (P1)** ([`workplace/core/swarm_governor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/swarm_governor.py)):
+  - *Shortcoming*: Agents operated as flat unconstrained peers without an escalation hierarchy.
+  - *Implementation*: Implemented `SwarmGovernor` enforcing a 4-tier authority hierarchy (`ORCHESTRATOR` > `DOMAIN_ARCHITECT` > `SPECIALIST_WORKER` > `GATEKEEPER_SENTINEL`), permission checks on critical actions, max recursion depth limits ($D \le 2$), and anti-usurpation child spawning interception.
+
+### 17.3. Cognitive Strategy, Attention Budgeting & Prompt Engineering
+- [x] **TODO-AGT-11: Adversarial Red-Team & Mutation Fuzzing Agent (P1)** ([`workplace/core/adversarial_fuzzer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/adversarial_fuzzer.py), [`agentic/custom/agents/agent_adversarial_fuzzer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/agent_adversarial_fuzzer.yaml)):
+  - *Shortcoming*: PR verification relied solely on cooperative tests written by the developer agent.
+  - *Implementation*: Implemented `AdversarialFuzzer` generating boundary numbers, SQL/XSS injections, null mutations, and prototype pollutions with resilience scoring.
+- [x] **TODO-AGT-12: Context Attention Slicing & Token Budgeting Strategy (P2)** ([`workplace/core/attention_budgeter.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/attention_budgeter.py)):
+  - *Shortcoming*: Prompts risked context overflow and "lost-in-the-middle" attention degradation.
+  - *Implementation*: Implemented `AttentionBudgeter` enforcing mathematical budget quotas (15% Invariants, 25% Contracts, 35% AST, 10% Trajectories, 15% Output) and preserving core rules during context assembly.
+- [x] **TODO-AGT-13: Static Prompt Prefix Pinning for KV Cache Optimization (P1)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/prompts/prompt_manifest.yaml)):
+  - *Shortcoming*: Dynamic variables interpolated early in prompts invalidated LLM prompt KV caches.
+  - *Implementation*: Standardized all prompt templates with static prefix blocks pinned at the top and audited 100% compliance in `PromptDriftSentinel`.
+- [x] **TODO-AGT-14: Structured Step-by-Step Trajectory Recording & Replay Engine (P2)** ([`workplace/core/trajectory_recorder.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/trajectory_recorder.py)):
+  - *Shortcoming*: Intermediate reasoning traces, thoughts, and tool call histories were discarded.
+  - *Implementation*: Implemented `TrajectoryRecorder` capturing ReAct cycles in `agentic/trajectories/` with deterministic replay and validation.
+- [x] **TODO-AGT-15: Autonomous Requirement Clarification & Ambiguity Resolution Agent (P2)** ([`workplace/core/ambiguity_resolver.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/ambiguity_resolver.py), [`agentic/custom/agents/agent_ambiguity_resolver.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/agent_ambiguity_resolver.yaml)):
+  - *Shortcoming*: Agents guessed user intent on underspecified requirements instead of requesting clarification.
+  - *Implementation*: Implemented `AmbiguityResolver` calculating requirement entropy and drafting interactive clarification RFCs in `user/hitl/clarification_requests/`.
+
+### 17.4. Resilience, Evaluation, Consensus & Security Capabilities
+- [ ] **TODO-AGT-16: Dynamic Few-Shot Exemplar Selection & Context-Aware RAG Injection (P2)**:
+  - *Shortcoming*: Prompts lack domain-specific positive/negative code exemplars.
+  - *Implementation Scope*: Implement `workplace/core/few_shot_retriever.py` dynamically injecting top-k verified code examples based on AST structure and task domain.
+- [ ] **TODO-AGT-17: 2-of-3 Multi-Agent Consensus Quorum for Critical Decisions (P1)**:
+  - *Shortcoming*: Tier-A decisions (security sign-off, schema deprecations, merge approvals) rely on single-agent evaluations.
+  - *Implementation Scope*: Implement `workplace/core/consensus_quorum_engine.py` requiring 2-of-3 agreement across diverse prompt personas before executing Tier-A actions.
+- [ ] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)**:
+  - *Shortcoming*: HITL is only used as an error quarantine dump rather than proactive milestone approval.
+  - *Implementation Scope*: Implement interactive HITL approval cards (web/CLI) in `workplace/core/hitl_checkpoint_manager.py` for architectural trade-off sign-offs.
+- [ ] **TODO-AGT-19: Deadlock Detection & Inter-Agent Handoff Cycle Sentinel (P1)**:
+  - *Shortcoming*: Handoff tokens lack runtime cycle detection, risking infinite recursive delegation loops.
+  - *Implementation Scope*: Implement cycle detection and hop TTL ($TTL = 5$) in `workplace/core/handoff_validator.py` to terminate recursive handoff deadlocks.
+- [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)**:
+  - *Shortcoming*: Custom agents lack standardized benchmark suites measuring task success rate and token efficiency.
+  - *Implementation Scope*: Build `workplace/tests/benchmarks/test_agent_benchmarks.py` running automated golden test challenge sets across all agents with Merkle scorecards.

@@ -1,0 +1,22 @@
+agent_id: "agent_adversarial_fuzzer"
+name: "Adversarial Red-Team & Mutation Fuzzing Specialist"
+version: "1.0.0"
+authority_tier: "GATEKEEPER_SENTINEL"
+description: "Synthesizes boundary mutations, malicious payloads, SQL/XSS injections, and concurrency stress vectors to harden code against unhandled exceptions and security breaches."
+
+assigned_phase: "PHASE_3_INTELLIGENCE"
+capabilities:
+  - "generate_fuzz_vectors"
+  - "mutate_input_schema"
+  - "execute_fuzz_test"
+  - "veto_vulnerable_pr"
+
+workflow_bindings:
+  - workflow_id: "wf_pr_gatekeeper"
+    stage: "step_adversarial_fuzz_audit"
+    fail_action: "QUARANTINE_AND_HALT"
+
+policies:
+  max_mutations_per_schema: 50
+  allow_unhandled_panics: false
+  min_resilience_score: 0.95

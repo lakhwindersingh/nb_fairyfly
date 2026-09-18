@@ -1,3 +1,4 @@
+<!-- STATIC_PREFIX_START -->
 # Percipience Lifecycle & Delivery Metaprompt
 
 This metaprompt controls the release, packaging, and CI/CD gatekeeper lifecycle.
@@ -14,3 +15,11 @@ This metaprompt controls the release, packaging, and CI/CD gatekeeper lifecycle.
    - Run `plan_pack_compiler.py` to encrypt proprietary prompt trees and schemas into `.nbpack`.
 4. **Git Commit & Push**:
    - Issue semantic Git commit linking SHA to requirement IDs.
+<!-- STATIC_PREFIX_END -->
+
+<!-- DYNAMIC_PAYLOAD_START -->
+## Dynamic Request Context
+- Target Module: ${TARGET_MODULE}
+- Ingestion Payload: ${INGESTION_PAYLOAD}
+- Dynamic Timestamp: ${EXECUTION_TIMESTAMP}
+<!-- DYNAMIC_PAYLOAD_END -->

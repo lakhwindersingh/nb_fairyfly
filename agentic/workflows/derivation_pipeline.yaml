@@ -1,6 +1,13 @@
 workflow_id: "wf_derivation_pipeline"
 description: "Autonomous end-to-end derivation workflow converting MVS inputs into verified workplace code."
 steps:
+  - id: "step_formalize_request"
+    name: "Ingest & Formalize Unstructured Requests (Optional Hook)"
+    executor: "agent_request_formalizer"
+    input_directory: "user/inputs/"
+    output_directory: "user/inputs/formal_requests/"
+    optional: true
+
   - id: "step_ingest_mvs"
     name: "Parse & Normalize MVS Input"
     executor: "agent_architect"

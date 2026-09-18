@@ -1,3 +1,4 @@
+<!-- STATIC_PREFIX_START -->
 # Percipience Evaluation & Refinement Metaprompt
 
 This metaprompt evaluates codebase health, audit compliance, and context maturity.
@@ -11,3 +12,11 @@ This metaprompt evaluates codebase health, audit compliance, and context maturit
 6. **Token & GenAI Efficiency**: Measure token compression ratio and prompt cache hit rate.
 
 Output evaluated scorecard to `workplace/docs/reports/context_maturity_report.md`.
+<!-- STATIC_PREFIX_END -->
+
+<!-- DYNAMIC_PAYLOAD_START -->
+## Dynamic Request Context
+- Target Module: ${TARGET_MODULE}
+- Ingestion Payload: ${INGESTION_PAYLOAD}
+- Dynamic Timestamp: ${EXECUTION_TIMESTAMP}
+<!-- DYNAMIC_PAYLOAD_END -->

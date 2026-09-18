@@ -5,7 +5,7 @@ sessionId: session-260913-master-parent-plan
 # Requirements
 
 ### Overview & Goals
-The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces **twenty-seven (27)** core foundational capabilities (each referenced by a stable identifier `CAP-01` through `CAP-21`, in list order below) required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
+The objective is to establish an enterprise-grade, generic, mature, domain-agnostic **Parent Master Context Engineering Framework** that synthesizes and elevates domain-specific plans (such as IoT, GenAI, Neural Networks, Database Migration, Mobile, Web, and Robotics spaces) into a unified, scalable agentic orchestration standard. This parent plan introduces **thirty-five (35)** core foundational capabilities (each referenced by a stable identifier `CAP-01` through `CAP-35`, in list order below) required for high-efficiency, zero-drift, tamper-evident, multi-module scalable, and cost-optimized AI-driven software engineering:
 
 1. **Autonomous Operations on Multi-Format Minimum Viable Set (MVS) Inputs**: An auto-intelligent derivation engine that consumes sparse initial user inputs across multiple standardized formats (Markdown feature specifications, OpenAPI contracts, AsyncAPI event streams, ADR blueprints, structured Jira/Linear issue exports, and UI/UX design tokens) in `user/inputs/` (or `input/templates/`), normalizing them into a canonical Abstract Semantic Graph (ASG) to autonomously bootstrap, derive, scaffold, test, build, and document the complete project without human intervention unless explicit ambiguity gates are triggered.
 2. **Context Poisoning Detection, Recovery Point Rollback & Incremental Replay Engine**: A resilient state control engine that continuously audits context purity. If context poisoning, hallucination drift, or invalid state propagation occurs, the engine rewinds project artifacts, git commit history, and agent state to a verified clean recovery point (`recovery_point`), quarantines and removes the poisoning culprit in `user/hitl/poisoning_quarantine.md`, and replays subsequent valid incremental enhancements seamlessly.
@@ -44,6 +44,15 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 24. **High-Throughput Tree-Sitter AST Daemon & Polyglot Parsing Engine**: A high-speed, native AST parsing daemon (`TreeSitterDaemonClient`) utilizing Rust/C bindings to parse TypeScript, JavaScript, Python, Go, Rust, and C++ at >10,000 LOC/sec. Extracts public interface skeletons, docstrings, type invariants, and symbol dependency graphs with sub-millisecond latency.
 25. **Multi-Dimensional 6D Token Compression Suite & Interactive Portal FinOps Engine**: A comprehensive context compression suite (`workplace/core/token_optimizer_suite.py`) featuring six discrete compression pruners (`ASTSkeletonPruner`, `DocPruner`, `ConfigSchemaPruner`, `DiagnosticLogPruner`, `GitDiffPruner`, `ConversationMemoryCompactor`). Delivers 50%–75% net token savings with granular per-strategy switches in `workplace/config/token_compression_rules.yaml` and interactive browser toggles on the Web Portal.
 26. **Multi-Dialect Diagnostic Log & Traceback Slicing Engine (`DiagnosticLogPruner`) with Out-of-Tree Noise Filtering, Source AST Snippet Auto-Hydration & 3-Attempt Tiered SLA Envelopes**: An intelligent test and compiler error pruner that slices multi-language tracebacks (Pytest, Jest, Vitest, Go panics, Rust errors, and TypeScript/Mypy diagnostics), eliminates out-of-tree runtime noise (`site-packages/`, `node_modules/`), auto-hydrates offending source code context (line ±4) with line highlighting (`>>`), and constructs SLA-aware tiered prompt envelopes across 3 bounded healing attempts before triggering surgical micro-module rollback (`RP_k`).
+27. **Declarative Quad-Space Runtime Boundary & Deduplication Facade Pattern (`CAP-27`)**: Strict architectural isolation separating customer-owned mutable directories (`workplace/`, `user/`) from proprietary execution logic (`context/`, `agentic/`). Eliminates implementation duplication by ensuring `agentic/runtime/` strictly serves as declarative, zero-logic facade wrappers importing core execution engines directly from `workplace/core/`.
+28. **Parallel Fan-Out / Fan-In Barrier Synchronization Engine (`CAP-28`) (`WorkflowOrchestrator`)**: High-throughput multi-agent execution orchestrator (`workplace/core/workflow_orchestrator.py`) supporting declarative `parallel_group` step dispatching, dependency DAG resolution, cycle/deadlock detection, and barrier join synchronization for concurrent gates, multi-linter scans, and security verifications.
+29. **4-Pillar Fine-Grained Error Taxonomy & Adaptive Recovery Playbooks (`CAP-29`) (`ErrorRecoveryOrchestrator`)**: Granular runtime failure classification system (`workplace/core/error_recovery_orchestrator.py`) categorizing errors into 4 distinct pillars (`TRANSIENT`, `STRUCTURAL`, `INVARIANT`, `HALLUCINATORY`) and dispatching specialized recovery playbooks (exponential jitter retry, AST diagnostic re-prompts, spec evolution RFCs, quarantine rollbacks).
+30. **Cryptographic Prompt SemVer Manifest, Golden Invariant Evals & Static Prefix Pinning (`CAP-30`) (`PromptDriftSentinel`)**: Cryptographic SHA-256 integrity verification of all prompt templates (`prompt_manifest.yaml`), structural drift detection, golden invariant assertions, and strict static prefix pinning (`<!-- STATIC_PREFIX_START -->` preceding dynamic payloads) for maximum LLM KV-cache reuse.
+31. **4-Tier Hierarchical Swarm Authority Tree & Anti-Usurpation Spawning Interception (`CAP-31`) (`SwarmGovernor`)**: Formal agent authorization hierarchy (`ORCHESTRATOR` > `DOMAIN_ARCHITECT` > `SPECIALIST_WORKER` > `GATEKEEPER_SENTINEL`), action permission matrix, bounded recursion depth ($D_{\max} = 2$), and anti-usurpation spawning validation preventing worker agents from launching unconstrained shadow subagents.
+32. **Adversarial Red-Team & Mutation Fuzzing Engine (`CAP-32`) (`AdversarialFuzzer`)**: Proactive security and resilience testing generating boundary numbers ($\pm \infty$, NaN, $2^{63}-1$), SQL/XSS injections, null/empty mutations, prototype pollution, and AST branch mutations to verify software resilience before PR merge.
+33. **Context Attention Slicing & Proportional Token Budgeting (`CAP-33`) (`AttentionBudgeter`)**: Mathematical budget quota partitioning across prompt sections (15% Invariants, 25% Contracts, 35% AST, 10% Memory/Trajectories, 15% Output) preventing context overflow and mitigating lost-in-the-middle degradation.
+34. **Structured Step-by-Step ReAct Trajectory Recording & Replay Engine (`CAP-34`) (`TrajectoryRecorder`)**: Deterministic capture of agent reasoning cycles (Thought $ightarrow$ Action $ightarrow$ Observation $ightarrow$ Reflection) persisted in `agentic/trajectories/` for post-mortem debugging and verification replay.
+35. **Autonomous Requirement Ambiguity Resolution & Interactive Clarification RFCs (`CAP-35`) (`AmbiguityResolver`)**: Quantitative entropy analysis of input requests detecting vague buzzwords, missing technical anchors, and drafting structured clarification RFCs in `user/hitl/clarification_requests/` before unblocking autonomous implementation.
 
 ### Scope
 #### In Scope
@@ -1156,7 +1165,20 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Data Flow & Pipeline Document | `workplace/docs/data_flow.md` | Markdown + Mermaid | Ingestion DAGs, Event Streams & State Machines | **Planned** |
 | **`workplace/`**| Entity-Relationship Document | `workplace/docs/entity_relationship.md` | Markdown + Mermaid | DDL Relations, Data Models & Schema Mappings | **Planned** |
 | **`workplace/`**| Domain Layer Extensions Document| `workplace/docs/domain_extensions.md` | Markdown + Mermaid | Active Layered Domain Deep Dive Visuals | **Planned** |
-| **`platform`** | Standardized Integration Test Suite | `workplace/tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Planned** |
+| **`workplace/`**| Parallel Workflow Orchestrator | `workplace/core/workflow_orchestrator.py` | Python 3 Module | Concurrent Fan-Out & Barrier Sync DAG Engine | **Implemented** |
+| **`workplace/`**| Error Recovery Orchestrator | `workplace/core/error_recovery_orchestrator.py` | Python 3 Module | 4-Pillar Taxonomy & Adaptive Recovery Playbooks | **Implemented** |
+| **`workplace/`**| Prompt Drift Sentinel | `workplace/core/prompt_drift_sentinel.py` | Python 3 Module | SHA-256 Manifest & Prefix Pinning Auditor | **Implemented** |
+| **`workplace/`**| Swarm Governor & Authority Tree | `workplace/core/swarm_governor.py` | Python 3 Module | 4-Tier Authority & Anti-Usurpation Interceptor | **Implemented** |
+| **`workplace/`**| Adversarial Mutation Fuzzer | `workplace/core/adversarial_fuzzer.py` | Python 3 Module | Boundary & Security Injection Red-Team Fuzzer | **Implemented** |
+| **`workplace/`**| Context Attention Budgeter | `workplace/core/attention_budgeter.py` | Python 3 Module | 5-Slice Proportional Context Quota Enforcer | **Implemented** |
+| **`workplace/`**| Trajectory Recorder & Replayer | `workplace/core/trajectory_recorder.py` | Python 3 Module | ReAct Trajectory Serialization & Determinism Replay | **Implemented** |
+| **`workplace/`**| Ambiguity Resolver & RFC Engine | `workplace/core/ambiguity_resolver.py` | Python 3 Module | Requirement Entropy & HITL Clarification RFCs | **Implemented** |
+| **`agentic/`** | Prompt SemVer Manifest | `agentic/prompts/prompt_manifest.yaml` | YAML Specification | Cryptographic Hash Baseline for All Prompts | **Implemented** |
+| **`agentic/`** | Adversarial Fuzzer Agent Manifest | `agentic/custom/agents/agent_adversarial_fuzzer.yaml` | YAML Specification | Autonomous Red-Team Fuzzing Sentinel | **Implemented** |
+| **`agentic/`** | Ambiguity Resolver Agent Manifest | `agentic/custom/agents/agent_ambiguity_resolver.yaml` | YAML Specification | Requirement Entropy & Ambiguity Gate Specialist | **Implemented** |
+| **`platform`** | Standardized Integration Test Suite | `workplace/tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Implemented** |
+| **`platform`** | Section 17.2 SDLC Test Suite | `workplace/tests/test_agentic_sdlc_suite.py` | Python 3 Unittest | 16-Test Swarm & Workflow Governance Suite | **Implemented** |
+| **`platform`** | Section 17.3 Cognitive Test Suite | `workplace/tests/test_section_17_3_suite.py` | Python 3 Unittest | 10-Test Fuzzing & Attention Budget Suite | **Implemented** |
 
 ---
 
@@ -1171,7 +1193,9 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Consumer module; verify that only the Consumer module rolls back to its recovery point (`RP_CONS_004`), leaving the Provider Service builds (`RP_PROV_003`) completely untouched.
 6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the client application simulator interacts with the mock service daemon over loopback, confirming request routing, payload rendering, and event streaming.
 7. **Living Documentation & Mermaid Visualizer Verification Test**: Run `workplace/core/living_doc_engine.py` across derived multi-module repositories; verify that `workplace/docs/` contains complete, non-empty Markdown files (`architecture.md`, `module_catalog.md`, `sequence_flows.md`, `data_flow.md`, `entity_relationship.md`, `domain_extensions.md`), that all embedded Mermaid blocks pass syntax parsing, and that AST-to-doc hash synchronization avoids unnecessary token burn on unchanged files.
-8. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
+8. **Autonomous SDLC & Swarm Governance Verification Test**: Run `workplace/tests/test_agentic_sdlc_suite.py` to verify declarative Quad-Space facade boundaries, multi-threaded parallel fan-out/fan-in barriers with cycle detection, 4-pillar error recovery playbooks, prompt manifest cryptographic integrity, and 4-tier swarm authority anti-usurpation spawning constraints.
+9. **Cognitive Attention, Prefix Pinning, Fuzzing & Ambiguity Verification Test**: Run `workplace/tests/test_section_17_3_suite.py` to verify adversarial red-team fuzzing resilience, 5-slice attention quota enforcement, static prefix pinning KV-cache compliance across all prompts, ReAct trajectory recording & replay determinism, and requirement ambiguity entropy scoring with interactive clarification RFC generation.
+10. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
 
 ---
 
@@ -1282,6 +1306,17 @@ Build and integrate the autonomous in-workflow documentation engine and Mermaid 
 - Implement automated verification test in `workplace/tests/test_living_doc_engine.py` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
 
 ---
+
+
+
+### Step 16: Autonomous SDLC, Cognitive Strategy & Swarm Governance Suite
+Implement the advanced autonomous engineering governance triad spanning execution synchronization, prompt hardening, and cognitive attention controls.
+
+- Implement `WorkflowOrchestrator` (`CAP-28`) and `ErrorRecoveryOrchestrator` (`CAP-29`) in `workplace/core/`.
+- Deploy cryptographic prompt manifest `agentic/prompts/prompt_manifest.yaml` and `PromptDriftSentinel` (`CAP-30`) enforcing static prefix pinning for KV-cache reuse.
+- Enforce 4-tier authority hierarchy and anti-usurpation spawning interception via `SwarmGovernor` (`CAP-31`).
+- Embed proactive resilience hardening with `AdversarialFuzzer` (`CAP-32`) and attention quota budgeting via `AttentionBudgeter` (`CAP-33`).
+- Serialize ReAct trajectories via `TrajectoryRecorder` (`CAP-34`) and automate requirement ambiguity gating via `AmbiguityResolver` (`CAP-35`).
 
 ### Domain-Specific Layering Architecture
 The Parent Master Plan deliberately provides universal, domain-agnostic abstractions (`mod_service_provider`, `mod_service_consumer`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific software systems are decoupled into dedicated **Layerable Context Engineering Plans** that overlay on top of this framework via Tier 2 (Enterprise Domain Rules & Wire Contracts) and Tier 3 (Specialist Subagents & Workflow Plugins):

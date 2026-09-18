@@ -1,0 +1,38 @@
+manifest_version: 1.0.0
+prompts:
+  bootstrapping_prompt.md:
+    has_prefix_pinning: true
+    role: bootstrapping
+    sha256: 05db52a192ec920f23d60a207c26b04b744c8bfae159f4e108e96e48f375819f
+    size_bytes: 975
+    version: 1.0.0
+  derivation_prompt.md:
+    has_prefix_pinning: true
+    role: derivation
+    sha256: 993661d05bd7e610faee086c2c6ba44e4ff690ab6d462cdb99c2c4084fed0f47
+    size_bytes: 1107
+    version: 1.0.0
+  evaluation_refinement_prompt.md:
+    has_prefix_pinning: true
+    role: evaluation_refinement
+    sha256: ead6b21160eeab76ef23004784141c23d57094da0c5d798a34c788f27c090034
+    size_bytes: 1143
+    version: 1.0.0
+  lifecycle_delivery_prompt.md:
+    has_prefix_pinning: true
+    role: lifecycle_delivery
+    sha256: 243f6eb04f89e90ab58af89866c2b0b9c793130ae13783c7aee0887fc756d9c2
+    size_bytes: 1130
+    version: 1.0.0
+  system_prompt.md:
+    has_prefix_pinning: true
+    role: system
+    sha256: 1118bc69600c7935c49b956b0ca057ee5f96c0b4198964e91dc2642a2657b9a9
+    size_bytes: 1869
+    version: 1.0.0
+  workflow_orchestration_prompt.md:
+    has_prefix_pinning: true
+    role: workflow_orchestration
+    sha256: e441f43e8fbaeb3cd72c8e38021f7b9059a01bf4529bc15e913e6620df830fcb
+    size_bytes: 971
+    version: 1.0.0

@@ -44,6 +44,11 @@ from core.token_optimizer_suite import TokenOptimizationConfig, UnifiedTokenOpti
 from core.handoff_validator import HandoffValidator
 from core.semantic_parity_engine import SemanticParityEngine
 from core.reconciliation_engine import DualReconciliationEngine
+from core.request_formalizer import RequestFormalizerEngine
+from core.swarm_governor import SwarmGovernor
+from core.prompt_drift_sentinel import PromptDriftSentinel
+from core.workflow_orchestrator import WorkflowOrchestrator
+from core.error_recovery_orchestrator import ErrorRecoveryOrchestrator
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -86,6 +91,10 @@ def cmd_audit(args):
     if not chain_ok and args.enforce_merkle_chain:
         print("❌ CRITICAL: Merkle chain continuity violation! Halting CI/CD pipeline.")
         sys.exit(1)
+
+    # 1b. Audit Prompt SemVer & Drift Integrity
+    prompt_res = PromptDriftSentinel.audit_prompt_integrity()
+    print(f"   Prompt Manifest Integrity: {prompt_res['verified_count']}/{prompt_res['total_prompts']} verified ({prompt_res['status']})")
 
     # 2. Evaluate Maturity
     report = MaturityEvaluator.generate_report(REPO_ROOT)
@@ -686,9 +695,47 @@ def cmd_swarm(args):
         print(f"   Active Subagent Worktrees: {len(leases)}/4 concurrent ceiling")
         for lease in leases:
             print(f"   • Agent: {lease.get('agent_id')} | Branch: {lease.get('branch_name')} | Path: {lease.get('worktree_path')}")
-        print("   Swarm Recursion Depth: D = 1 (Max Allowed: 2)")
+        print(f"   Swarm Recursion Depth: D = 1 (Max Allowed: {SwarmGovernor.MAX_SWARM_DEPTH})")
+        print("   Authority Tiers Active: Orchestrator, DomainArchitect, SpecialistWorker, GatekeeperSentinel")
         print("   Rogue Dynamic Subagents Detected: 0 (All processes verified in DAG)")
         print("✅ Swarm integrity verified: No shadow processes or lease leaks.")
+
+
+def cmd_formalize(args):
+    print(f"📝 Formalizing unstructured engineering request...")
+    print(f"   Input: {args.input}")
+    print(f"   Target Format: {args.format}")
+    out_dir = Path(args.out_dir) if args.out_dir else None
+
+    try:
+        res = RequestFormalizerEngine.formalize(
+            input_data=args.input,
+            target_format=args.format,
+            out_dir=out_dir,
+            workspace_root=REPO_ROOT
+        )
+        print(f"✅ Request formalized successfully!")
+        print(f"   Request ID: {res['request_id']}")
+        print(f"   Title: {res['title']}")
+        print(f"   Format Type: {res['format_type']}")
+        print(f"   Target Module: {res['target_module']}")
+        print(f"   Captured At: {res['relative_file_path']}")
+        print(f"   SHA-256: {res['content_sha256'][:16]}...")
+
+        if args.run_workflow:
+            print(f"🚀 Running formalized request through derivation workflow: {args.workflow}...")
+            wf_res = RequestFormalizerEngine.run_through_workflow(
+                formal_file_path=res['formal_file_path'],
+                workflow_name=args.workflow,
+                workspace_root=REPO_ROOT
+            )
+            print(f"✅ Derivation workflow execution completed!")
+            print(f"   Workflow: {wf_res['workflow']}")
+            print(f"   Merkle Block Sealed: {wf_res['merkle_block_id']} ({wf_res['merkle_block_hash'][:16]}...)")
+            print(f"   Ledger Updated: context/ledger/context_ledger.yaml")
+    except Exception as e:
+        print(f"❌ Formalization failed: {e}")
+        sys.exit(1)
 
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
@@ -926,6 +973,15 @@ def main():
     p_rep.add_argument("--max-attempts", type=int, default=3, help="Max healing attempts before surgical rollback")
     p_rep.add_argument("--generate-only", action="store_true", help="Only output the generated isolated prompt without applying patches")
     p_rep.set_defaults(func=cmd_reprompt)
+
+    # formalize
+    p_formal = subparsers.add_parser("formalize", help="Ingest and formalize unstructured requests into MVS formats")
+    p_formal.add_argument("--input", required=True, help="Path to input markdown/text file or raw request string")
+    p_formal.add_argument("--format", default="auto", choices=["auto", "jira", "jira_story", "api", "api_contract", "tokens", "design_tokens", "event", "event_stream"], help="Target MVS specification format")
+    p_formal.add_argument("--run-workflow", action="store_true", help="Run formalized request through derivation workflow and seal Merkle block")
+    p_formal.add_argument("--workflow", default="wf_derivation_pipeline", help="Target workflow name")
+    p_formal.add_argument("--out-dir", default="", help="Custom output directory for formal specifications")
+    p_formal.set_defaults(func=cmd_formalize)
 
     args = parser.parse_args()
     if not args.subcommand:

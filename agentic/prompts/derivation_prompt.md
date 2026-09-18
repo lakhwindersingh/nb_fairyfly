@@ -1,3 +1,4 @@
+<!-- STATIC_PREFIX_START -->
 # Percipience Autonomous Derivation Metaprompt
 
 This metaprompt orchestrates the transformation of sparse Minimum Viable Set (MVS) inputs into fully typed, production-grade implementations.
@@ -13,3 +14,11 @@ This metaprompt orchestrates the transformation of sparse Minimum Viable Set (MV
    - Synthesize implementation source in `workplace/src/` or `workplace/modules/` with zero hallucination.
 5. **Test Harness Generation**:
    - Scaffold automated unit, integration, and E2E contract test suites in `workplace/`.
+<!-- STATIC_PREFIX_END -->
+
+<!-- DYNAMIC_PAYLOAD_START -->
+## Dynamic Request Context
+- Target Module: ${TARGET_MODULE}
+- Ingestion Payload: ${INGESTION_PAYLOAD}
+- Dynamic Timestamp: ${EXECUTION_TIMESTAMP}
+<!-- DYNAMIC_PAYLOAD_END -->
