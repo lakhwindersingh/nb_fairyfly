@@ -1,5 +1,37 @@
-schema_version: "2.0.0"
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PsiAstBridgeContract"
+description: "PSI symbol extraction schema and real-time token calculation interfaces for JetBrains IDEs."
+type: "object"
 contract_id: "psi_ast_bridge_contract"
+schema_version: "2.0.0"
+required:
+  - "supported_languages"
+  - "performance_targets"
+properties:
+  supported_languages:
+    type: "array"
+    items:
+      type: "object"
+      required: ["id", "psi_root", "prunable_elements"]
+      properties:
+        id:
+          type: "string"
+        psi_root:
+          type: "string"
+        prunable_elements:
+          type: "array"
+          items:
+            type: "string"
+  performance_targets:
+    type: "object"
+    required: ["max_psi_traversal_ms", "max_memory_per_file_kb", "min_token_reduction_ratio"]
+    properties:
+      max_psi_traversal_ms:
+        type: "integer"
+      max_memory_per_file_kb:
+        type: "integer"
+      min_token_reduction_ratio:
+        type: "number"
 supported_languages:
   - id: "python"
     psi_root: "com.jetbrains.python.psi.PyFile"

@@ -11,3 +11,12 @@ features:
   psi_ast_pruning_preview: true
   live_contract_annotator: true
   jcef_control_plane: true
+  auto_bootstrap_free_workspace: true
+  sandbox_permission_broker: true
+  enforce_token_pruning_for_sandboxed_llms: true
+sandbox_policies:
+  default_read_level: "READ_PRUNED_AST"
+  target_token_reduction_pct: 70.0
+  protected_paths:
+    - ".nb/context/ledger/"
+    - ".nb/context/invariants/"

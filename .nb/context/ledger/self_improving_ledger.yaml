@@ -1,4 +1,4 @@
-current_avg_reduction_pct: 36.71
+current_avg_reduction_pct: 47.83
 policy_adjustments:
 - rule: AST_PRUNING_AGGRESSIVENESS
   status: OPTIMAL
@@ -16,7 +16,7 @@ recommendations:
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
 timestamp: '2026-09-17T13:22:03.097963+00:00'
-last_optimized: '2026-09-19T10:25:02.112888+00:00'
+last_optimized: '2026-09-19T14:44:22.414193+00:00'
 optimizations:
 - timestamp: '2026-09-17T18:08:09.748421+00:00'
   avg_reduction_pct: 48.92
@@ -323,4 +323,58 @@ optimizations:
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
 - timestamp: '2026-09-19T10:25:02.112892+00:00'
   avg_reduction_pct: 36.71
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:55:45.134665+00:00'
+  avg_reduction_pct: 48.83
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:55:45.168876+00:00'
+  avg_reduction_pct: 48.83
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:56:37.158080+00:00'
+  avg_reduction_pct: 49.57
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:56:37.223114+00:00'
+  avg_reduction_pct: 49.57
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:56:52.666699+00:00'
+  avg_reduction_pct: 49.31
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:56:52.703183+00:00'
+  avg_reduction_pct: 49.31
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:58:31.085867+00:00'
+  avg_reduction_pct: 49.04
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T12:58:31.120632+00:00'
+  avg_reduction_pct: 49.04
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:05:12.529767+00:00'
+  avg_reduction_pct: 48.79
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:05:12.566456+00:00'
+  avg_reduction_pct: 48.79
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:06:59.010262+00:00'
+  avg_reduction_pct: 48.54
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:06:59.045919+00:00'
+  avg_reduction_pct: 48.54
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:16:15.900226+00:00'
+  avg_reduction_pct: 48.3
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T13:16:15.937263+00:00'
+  avg_reduction_pct: 48.3
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T14:42:13.082258+00:00'
+  avg_reduction_pct: 48.06
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T14:42:13.118082+00:00'
+  avg_reduction_pct: 48.06
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T14:44:22.375630+00:00'
+  avg_reduction_pct: 47.83
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-09-19T14:44:22.414201+00:00'
+  avg_reduction_pct: 47.83
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS

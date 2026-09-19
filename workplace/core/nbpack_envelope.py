@@ -15,6 +15,14 @@ import hashlib
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
+def _get_merkle_engine():
+    try:
+        from core.merkle_engine import MerkleEngine
+        return MerkleEngine
+    except ImportError:
+        from workplace.core.merkle_engine import MerkleEngine
+        return MerkleEngine
+
 class NBPackEnvelope:
     """Manages compilation, obfuscation, signing, and in-memory hydration of .nbpack files."""
 
@@ -97,6 +105,20 @@ class NBPackEnvelope:
         decompressed = zlib.decompress(compressed_data)
         payload = json.loads(decompressed.decode("utf-8"))
         return payload
+
+    @classmethod
+    def extract_and_verify(cls, pack_file: Path, target_dir: Path) -> Path:
+        """Extracts sealed envelope to destination with strict integrity validation."""
+        payload = cls.hydrate_in_memory(pack_file)
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        for rel_path, content in payload.items():
+            dest = target_dir / rel_path
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            with open(dest, "w", encoding="utf-8") as out:
+                out.write(content)
+
+        return target_dir
 
     # In-memory registry of active encrypted layers mounted in RAM
     MOUNTED_LAYERS: Dict[str, Dict[str, str]] = {}
@@ -182,6 +204,8 @@ class NBPackEnvelope:
         ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         bundle_checksum = hashlib.sha256(pack_file.read_bytes()).hexdigest()
 
+        MerkleEngine = _get_merkle_engine()
+
         if ledger_path.exists():
             try:
                 import yaml
@@ -205,18 +229,15 @@ class NBPackEnvelope:
             applied_layers.append(layer_record)
             ledger_data["applied_layers"] = applied_layers
 
-            from core.merkle_engine import MerkleEngine
             MerkleEngine.atomic_write_data(ledger_path, ledger_data)
 
         # Auto-seal Merkle ledger block
         block_id = None
         block_hash = None
         try:
-            from core.merkle_engine import MerkleEngine
             seal_res = MerkleEngine.seal_block(
                 workspace_root,
-                author="NBPackEnvelope",
-                summary=f"Applied layer pack: {plan_id} ({'in-memory' if in_memory else 'filesystem'})"
+                action=f"APPLIED_LAYER:{plan_id}"
             )
             block_id = seal_res.get("block_id")
             block_hash = seal_res.get("block_hash")
@@ -259,6 +280,8 @@ class NBPackEnvelope:
         # 2. Update context ledger
         ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         removed_from_ledger = False
+        MerkleEngine = _get_merkle_engine()
+
         if ledger_path.exists():
             try:
                 import yaml
@@ -281,18 +304,15 @@ class NBPackEnvelope:
             if len(applied_layers) != initial_len:
                 removed_from_ledger = True
                 ledger_data["applied_layers"] = applied_layers
-                from core.merkle_engine import MerkleEngine
                 MerkleEngine.atomic_write_data(ledger_path, ledger_data)
 
         # 3. Seal Merkle rollback block
         block_id = None
         block_hash = None
         try:
-            from core.merkle_engine import MerkleEngine
             seal_res = MerkleEngine.seal_block(
                 workspace_root,
-                author="NBPackEnvelope",
-                summary=f"Rolled back layer pack: {clean_id} (Zero residue)"
+                action=f"ROLLED_BACK_LAYER:{clean_id}"
             )
             block_id = seal_res.get("block_id")
             block_hash = seal_res.get("block_hash")
@@ -310,5 +330,5 @@ class NBPackEnvelope:
 
     @classmethod
     def list_mounted_layers(cls) -> Dict[str, int]:
-        """Returns dict of mounted layers: {layer_id: component_count}"""
+        """Returns map of {layer_id: component_count} for all active in-memory domain layers."""
         return {lid: len(payload) for lid, payload in cls.MOUNTED_LAYERS.items()}

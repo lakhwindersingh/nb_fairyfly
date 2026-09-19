@@ -1,4 +1,18 @@
 plans:
+  plan_free:
+    id: "plan_free"
+    name: "Free Community Tier"
+    base_price_monthly_usd: 0
+    included_seats: 1
+    included_concurrent_worktrees: 1
+    included_pr_audits_monthly: 500
+    features:
+      ast_token_pruning: true
+      merkle_chain_audit: true
+      basic_autonomous_cicd: true
+      nbpack_obfuscation: false
+      private_vpc_deploy: false
+
   plan_team:
     id: "plan_team"
     name: "Team Tier"
@@ -9,6 +23,7 @@ plans:
     features:
       ast_token_pruning: true
       merkle_chain_audit: true
+      basic_autonomous_cicd: true
       nbpack_obfuscation: false
       private_vpc_deploy: false
 
@@ -22,6 +37,7 @@ plans:
     features:
       ast_token_pruning: true
       merkle_chain_audit: true
+      basic_autonomous_cicd: true
       nbpack_obfuscation: true
       private_vpc_deploy: false
 
@@ -35,6 +51,7 @@ plans:
     features:
       ast_token_pruning: true
       merkle_chain_audit: true
+      basic_autonomous_cicd: true
       nbpack_obfuscation: true
       private_vpc_deploy: true
       dedicated_slack_sla: true

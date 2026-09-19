@@ -1,5 +1,35 @@
-schema_version: "3.17.0"
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "LspProtocolContract"
+description: "Language Server Protocol (LSP 3.17) methods, notifications, and diagnostic interfaces for VSCode."
+type: "object"
 contract_id: "lsp_protocol_contract"
+schema_version: "3.17.0"
+required:
+  - "capabilities"
+  - "performance_benchmarks"
+properties:
+  capabilities:
+    type: "object"
+    required: ["textDocumentSync", "codeLensProvider", "hoverProvider", "diagnosticProvider"]
+    properties:
+      textDocumentSync:
+        type: "integer"
+      codeLensProvider:
+        type: "object"
+      hoverProvider:
+        type: "boolean"
+      diagnosticProvider:
+        type: "object"
+  performance_benchmarks:
+    type: "object"
+    required: ["max_diagnostic_latency_ms", "max_hover_latency_ms", "memory_limit_mb"]
+    properties:
+      max_diagnostic_latency_ms:
+        type: "integer"
+      max_hover_latency_ms:
+        type: "integer"
+      memory_limit_mb:
+        type: "integer"
 capabilities:
   textDocumentSync: 2 # Incremental
   codeLensProvider:
