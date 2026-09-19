@@ -24,7 +24,7 @@ class NBPackEnvelope:
     def compile_package(cls, workspace_root: Path, output_file: Path, include_spaces: List[str] = None) -> Path:
         """Collects proprietary files, minifies AST, compresses, and generates sealed package."""
         if include_spaces is None:
-            include_spaces = ["context", "agentic", ".nb/plan"]
+            include_spaces = [".nb/context", ".nb/agentic", ".nb/plan"]
 
         payload: Dict[str, str] = {}
         for space in include_spaces:
@@ -105,7 +105,7 @@ class NBPackEnvelope:
     def compile_layer_pack(cls, workspace_root: Path, plan_path: Path, output_file: Path, include_spaces: List[str] = None) -> Path:
         """Compiles a specific layerable domain plan and its associated contracts/agents into a sealed .nbpack envelope."""
         if include_spaces is None:
-            include_spaces = ["context/contracts", "context/rules", "agentic/custom", "workplace/templates/bridge"]
+            include_spaces = [".nb/context/contracts", ".nb/context/rules", ".nb/agentic/custom", "workplace/templates/bridge"]
 
         payload: Dict[str, str] = {}
         
@@ -179,7 +179,7 @@ class NBPackEnvelope:
                 written_files.append(rel_path)
 
         # Update context_ledger.yaml with the applied layer record
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         bundle_checksum = hashlib.sha256(pack_file.read_bytes()).hexdigest()
 
         if ledger_path.exists():
@@ -257,7 +257,7 @@ class NBPackEnvelope:
             evicted_ram = True
 
         # 2. Update context ledger
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         removed_from_ledger = False
         if ledger_path.exists():
             try:

@@ -40,7 +40,7 @@ Percipience achieved:
 
 ## 1. Executive Summary & Key Benchmark Findings
 
-Across 250 standardized software engineering tasks executed on production codebases, combined with continuous live telemetry recorded in [`context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/token_savings_ledger.yaml) and verified via [`workplace/tests/test_play3_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), Percipience demonstrated transformative improvements across token consumption, inference cost, multi-agent stability, operational autonomy, and recovery speed.
+Across 250 standardized software engineering tasks executed on production codebases, combined with continuous live telemetry recorded in [`.nb/context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/token_savings_ledger.yaml) and verified via [`workplace/tests/test_play3_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), Percipience demonstrated transformative improvements across token consumption, inference cost, multi-agent stability, operational autonomy, and recovery speed.
 
 ### Summary Comparison Table: Baseline vs. Percipience
 
@@ -137,7 +137,7 @@ Every context modification, test outcome, agent registration, layer hydration, a
 ### 3.6. Sub-1.2s Surgical Module Rollback & Poisoning Defense ($\text{RP}_k$)
 If an agent introduces context poisoning (e.g., hardcoded secrets, cyclic dependencies, or broken wire contracts), the `PoisoningSentinel` intercepts the defect before commit:
 1. Offending code is quarantined into [`user/hitl/poisoning_quarantine.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/hitl/poisoning_quarantine.md).
-2. The engine executes surgical rollback via [`agentic/runtime/recovery/surgical_rollback_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/runtime/recovery/surgical_rollback_manager.py), rewinding solely the contaminated module to recovery point $\text{RP}_k$.
+2. The engine executes surgical rollback via [`agentic/runtime/recovery/surgical_rollback_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/runtime/recovery/surgical_rollback_manager.py), rewinding solely the contaminated module to recovery point $\text{RP}_k$.
 3. Sibling modules (`mod_portal_marketing`, `mod_portal_admin`) continue executing with zero disruption.
 4. **Empirical Recovery Latency**: Completed in **< 1.2 seconds**, compared to 45+ minutes in manual git triage.
 
@@ -277,7 +277,7 @@ To measure the operational impact of the Autonomous CI/CD Triad, we injected 40 
 
 ### 5.6. Live Production Workspace Ledger Telemetry & Empirical Scaling
 
-In addition to controlled benchmarks, Percipience continuously captures every live repository event into an append-only cryptographic ledger ([`context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/token_savings_ledger.yaml)). The live operational metrics from this active workspace validate the benchmark model:
+In addition to controlled benchmarks, Percipience continuously captures every live repository event into an append-only cryptographic ledger ([`.nb/context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/token_savings_ledger.yaml)). The live operational metrics from this active workspace validate the benchmark model:
 
 ```yaml
 version: 1.0.0

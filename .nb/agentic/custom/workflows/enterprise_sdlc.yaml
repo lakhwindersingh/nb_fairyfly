@@ -13,7 +13,7 @@ steps:
     executor: "agent_token_finops_auditor"
     depends_on: ["ast_prune"]
     inputs:
-      - "context/ledger/token_savings_ledger.yaml"
+      - ".nb/context/ledger/token_savings_ledger.yaml"
     failure_action: "warn_and_meter"
 
   - step_id: "custom_security_audit"
@@ -22,7 +22,7 @@ steps:
     depends_on: ["token_savings_audit"]
     inputs:
       - "workplace/"
-      - "context/custom/rules/banking_security.md"
+      - ".nb/context/custom/rules/banking_security.md"
     failure_action: "quarantine_and_pause"
 
   - step_id: "contract_verification"
@@ -30,8 +30,8 @@ steps:
     executor: "platform.contract_verifier"
     depends_on: ["custom_security_audit"]
     inputs:
-      - "context/contracts/"
-      - "context/custom/schemas/"
+      - ".nb/context/contracts/"
+      - ".nb/context/custom/schemas/"
 
   - step_id: "merkle_seal"
     name: "Merkle State DAG Block Sealer"

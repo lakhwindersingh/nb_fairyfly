@@ -146,7 +146,7 @@ export const CAPABILITIES_CATALOG: SystemCapability[] = [
     title: "Scalability Architecture: Content-Addressable AST Caching & Epoch Archiving",
     tagline: "Sub-Millisecond Syntax Retrieval & O(1) Constant-Time Merkle Sealing",
     badge: "Scalability Engine",
-    description: "Computes SHA-256 content hashes of source code to cache stripped AST skeletons across in-memory and disk caches (.scratch/ast_cache/). Automatically checkpoints historical Merkle blocks into immutable JSON epoch archives (context/ledger/archive/), bounding active ledger height.",
+    description: "Computes SHA-256 content hashes of source code to cache stripped AST skeletons across in-memory and disk caches (.scratch/ast_cache/). Automatically checkpoints historical Merkle blocks into immutable JSON epoch archives (.nb/context/ledger/archive/), bounding active ledger height.",
     technicalDetails: [
       "Content-addressable caching eliminates >85% of redundant AST parsing overhead (<0.1ms hits)",
       "Rolling Merkle epoch checkpointing preserves constant O(1) read/write ledger speed",

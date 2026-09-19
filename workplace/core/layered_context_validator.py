@@ -29,7 +29,7 @@ class LayeredContextValidator:
         }
 
         # 1. Audit Tier 2: Enterprise Global Context
-        rules_dir = workspace_root / "context" / "custom" / "rules"
+        rules_dir = (workspace_root / ".nb" / "context" / "custom" / "rules" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "custom" / "rules")
         if rules_dir.exists():
             for rf in rules_dir.glob("*.md"):
                 content = rf.read_text(encoding="utf-8")
@@ -41,13 +41,13 @@ class LayeredContextValidator:
                     results["tier2_global_rules"].append(rf.name)
 
         # 2. Audit Tier 3: Custom Domain Schemas
-        schemas_dir = workspace_root / "context" / "custom" / "schemas"
+        schemas_dir = (workspace_root / ".nb" / "context" / "custom" / "schemas" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "custom" / "schemas")
         if schemas_dir.exists():
             for sf in schemas_dir.glob("*.yaml"):
                 results["tier3_custom_schemas"].append(sf.name)
 
         # 3. Audit Custom Agents
-        agents_dir = workspace_root / "agentic" / "custom" / "agents"
+        agents_dir = (workspace_root / ".nb" / "agentic" / "custom" / "agents" if (workspace_root / ".nb" / "agentic").exists() else workspace_root / "agentic" / "custom" / "agents")
         if agents_dir.exists():
             for af in agents_dir.glob("*.yaml"):
                 results["custom_agents"].append(af.name)
@@ -64,7 +64,7 @@ class LayeredContextValidator:
     @classmethod
     def validate_wire_contracts(cls, workspace_root: Path) -> Dict[str, Any]:
         """Audits context/contracts/ schemas for required specification fields and valid syntax."""
-        contracts_dir = workspace_root / "context" / "contracts"
+        contracts_dir = (workspace_root / ".nb" / "context" / "contracts" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "contracts")
         res = {
             "valid": True,
             "contracts": [],

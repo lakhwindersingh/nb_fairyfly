@@ -31,14 +31,14 @@ module_scope:
     - "workplace/modules/mod_portal_marketing"
     - "workplace/modules/mod_observability_usage"
   denied_paths:
-    - "context/invariants"
+    - ".nb/context/invariants"
     - ".git"
     - ".workspaces"
 
 contracts_and_invariants:
   enforce_tiered_hierarchy: true
   target_contracts:
-    - "context/contracts/contract_schema_v2.json"
+    - ".nb/context/contracts/contract_schema_v2.json"
   min_maturity_threshold: 0.85
 
 tools_and_capabilities:

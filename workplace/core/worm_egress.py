@@ -16,7 +16,7 @@ class WORMEgressManager:
 
     @staticmethod
     def _audit_file(workspace_root: Path) -> Path:
-        p = workspace_root / "context" / "ledger" / "worm_egress_audit.json"
+        p = (workspace_root / ".nb" / "context" / "ledger" / "worm_egress_audit.json" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "worm_egress_audit.json")
         p.parent.mkdir(parents=True, exist_ok=True)
         if not p.exists():
             with open(p, "w", encoding="utf-8") as f:

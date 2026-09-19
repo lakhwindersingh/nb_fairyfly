@@ -702,7 +702,7 @@ class RequestFormalizerEngine:
                     pass
 
         # 1. Update context_ledger.yaml
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         if ledger_path.exists():
             with open(ledger_path, "r", encoding="utf-8") as f:
                 if yaml and SafeLoader:

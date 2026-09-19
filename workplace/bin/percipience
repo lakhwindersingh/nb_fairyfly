@@ -63,7 +63,7 @@ def cmd_init(args):
         print("   Using plaintext specification mode.")
 
     # Ensure Quad-Space directory tree exists
-    for d in ["context/contracts", "context/ledger", "agentic/prompts", "agentic/workflows", "workplace/modules", "user/inputs"]:
+    for d in [".nb/context/contracts", ".nb/context/ledger", ".nb/agentic/prompts", ".nb/agentic/workflows", "workplace/modules", "user/inputs"]:
         (REPO_ROOT / d).mkdir(parents=True, exist_ok=True)
 
     print("✅ Workspace successfully initialized into Quad-Space architecture.")
@@ -515,7 +515,7 @@ def cmd_tokens(args):
         print(f"   Gross Financial Savings: ${s.get('total_gross_savings_usd', 0.0):.4f} USD")
         print(f"   15% Performance Fee: ${s.get('total_rev_share_fee_usd', 0.0):.4f} USD")
         print(f"   Net Customer Cash Saved: ${s.get('total_net_savings_usd', 0.0):.4f} USD")
-        print(f"   Ledger: context/ledger/token_savings_ledger.yaml")
+        print(f"   Ledger: .nb/context/ledger/token_savings_ledger.yaml")
 
     elif action == "report":
         out_path = Path(args.output) if args.output else None
@@ -602,7 +602,7 @@ def cmd_layer(args):
             print(f"   Merkle Block Sealed: {block['block_id']}")
 
     elif action == "list":
-        ledger_path = REPO_ROOT / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (REPO_ROOT / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "context_ledger.yaml")
         applied = []
         if ledger_path.exists():
             try:

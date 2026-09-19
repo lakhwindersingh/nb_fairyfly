@@ -25,7 +25,7 @@ class MaturityEvaluator:
         req_score = min(1.0, 0.70 + (len(mvs_templates) * 0.04) + (len(user_inputs) * 0.03))
 
         # 2. Architecture Grounding: Check Quad-Space dirs, contracts, config
-        contracts = list((workspace_root / "context" / "contracts").glob("*.yaml"))
+        contracts = list(((workspace_root / ".nb" / "context" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context") / "contracts").glob("*.yaml"))
         modules = list((workspace_root / "workplace" / "modules").glob("*"))
         arch_score = min(1.0, 0.75 + (len(contracts) * 0.05) + (len(modules) * 0.03))
 
@@ -34,14 +34,14 @@ class MaturityEvaluator:
 
         # 4. Test Coverage: Check automated tests, core engines, and runtime verification
         test_files = list((workspace_root / "workplace" / "tests").glob("*.py")) or list((workspace_root / "tests").glob("*.py"))
-        runtime_files = list((workspace_root / "agentic" / "runtime").rglob("*.py"))
+        runtime_files = list(((workspace_root / ".nb" / "agentic" if (workspace_root / ".nb" / "agentic").exists() else workspace_root / "agentic") / "runtime").rglob("*.py"))
         core_files = list((workspace_root / "workplace" / "core").glob("*.py"))
         total_test_assets = len(test_files) + len(runtime_files) + len(core_files)
         test_score = min(1.0, 0.85 + (total_test_assets * 0.015))
 
         # 5. Security & Compliance: Check Merkle chain, quarantine ledger, encryption
         quarantine = workspace_root / "workplace" / "docs" / "hitl" / "poisoning_quarantine.md"
-        ledger = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger = ((workspace_root / ".nb" / "context" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context") / "ledger" / "context_ledger.yaml")
         sec_score = 0.99 if ((quarantine.exists() or (workspace_root / "user" / "hitl" / "flaky_quarantine.yaml").exists()) and ledger.exists()) else 0.80
 
         # 6. Token Efficiency: AST rules and optimization

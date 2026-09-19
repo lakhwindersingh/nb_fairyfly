@@ -40,6 +40,7 @@
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
+| **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] PLANNED** | **0.50** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
@@ -72,7 +73,7 @@
 - [x] **Rolling Epoch Checkpointing (`workplace/core/merkle_engine.py`)**:
   - Rolling epoch archival to `context/ledger/archive/epoch_{start}_{end}.json`, maintaining constant-size active windows with cryptographic epoch rollup hashes.
 - [x] **Sanitized Public Ledger Projection**:
-  - Generates [`context/ledger/context_ledger.public.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.public.yaml) with stripped private paths for public commit audits.
+  - Generates [`context/ledger/context_ledger.public.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/context_ledger.public.yaml) with stripped private paths for public commit audits.
 - [x] **Visual Merkle State DAG Web Explorer**:
   - Live browser dashboard at [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html).
 - [x] **Cloud WORM Storage Auto-Egress Hook (`workplace/core/worm_egress.py`)**:
@@ -140,10 +141,10 @@
   - Tier 2: Enterprise Global Rules (`context/custom/rules/`)
   - Tier 3: Module Domain Context (`context/custom/schemas/` & `agentic/custom/`)
 - [x] **Custom Agent Plugin Architecture (`workplace/core/agent_plugin_engine.py`)**:
-  - Custom Agent: [`agentic/custom/agents/security_auditor.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/security_auditor.yaml)
-  - Custom Rule: [`context/custom/rules/banking_security.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/custom/rules/banking_security.md)
-  - Custom Schema: [`context/custom/schemas/payment_event.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/custom/schemas/payment_event.yaml)
-  - Custom Workflow: [`agentic/custom/workflows/enterprise_sdlc.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/workflows/enterprise_sdlc.yaml)
+  - Custom Agent: [`agentic/custom/agents/security_auditor.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/security_auditor.yaml)
+  - Custom Rule: [`context/custom/rules/banking_security.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/custom/rules/banking_security.md)
+  - Custom Schema: [`context/custom/schemas/payment_event.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/custom/schemas/payment_event.yaml)
+  - Custom Workflow: [`agentic/custom/workflows/enterprise_sdlc.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/workflows/enterprise_sdlc.yaml)
 - [x] **CLI Subcommands**: `percipience validate --layered`, `percipience agent create`, `percipience agent test`.
 
 ---
@@ -169,7 +170,7 @@
   - `mod_observability_usage` (`http://127.0.0.1:8003/`): Real-time token analytics and surgical rollback trigger.
 - [x] **FinOps Revenue Sharing Metering Engine (`workplace/core/token_tracker.py`)**:
   - Formula: $\text{Client Gross Savings} = \Delta \text{Tokens} \times \$0.003/\text{1k}$. $\text{Fee} = 15\% \times \text{Gross Savings}$.
-  - Ledger: [`context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/token_savings_ledger.yaml).
+  - Ledger: [`.nb/context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/token_savings_ledger.yaml).
 - [ ] **TODO - Stripe Billing Portal & Webhook Engine (P1)**:
   - Stripe Customer Portal session generation and Stripe subscription invoice charge automation.
 
@@ -369,7 +370,7 @@
   - *Implementation Scope*: Implement `workplace/core/agent_capability_guard.py` enforcing cryptographically bound permission tokens (`CAP_FS_READ`, `CAP_FS_WRITE_MODULE_ONLY`, `CAP_NETWORK_EGRESS_OFF`, `CAP_EXEC_SUBPROCESS`).
 
 ### 17.2. Runtime Architecture, Quad-Space Boundaries & Execution Hygiene
-- [x] **TODO-AGT-06: Quad-Space Boundary Cleanup & Runtime Deduplication (P1)** ([`agentic/runtime/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/runtime/)):
+- [x] **TODO-AGT-06: Quad-Space Boundary Cleanup & Runtime Deduplication (P1)** ([`agentic/runtime/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/runtime/)):
   - *Shortcoming*: Code was previously duplicated between `agentic/runtime/` and `workplace/core/` (e.g. `cognitive_router.py`, `worktree_manager.py`), violating Quad-Space architecture.
   - *Implementation*: Refactored all 8 modules in `agentic/runtime/` to act as declarative facade bridges and import executable engines directly from `workplace/core/`.
 - [x] **TODO-AGT-07: Parallel Fan-Out / Fan-In Barrier Synchronization in Workflows (P2)** ([`workplace/core/workflow_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/workflow_orchestrator.py)):
@@ -378,7 +379,7 @@
 - [x] **TODO-AGT-08: Fine-Grained Error Taxonomy & Adaptive Recovery Playbooks (P1)** ([`workplace/core/error_recovery_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/error_recovery_orchestrator.py)):
   - *Shortcoming*: Workflows relied on coarse binary failure actions (`QUARANTINE_AND_HALT`, `AUTO_HEAL_OR_ROLLBACK`).
   - *Implementation*: Implemented `ErrorRecoveryOrchestrator` with 4-pillar taxonomy (`TRANSIENT`, `STRUCTURAL`, `INVARIANT`, `HALLUCINATORY`) and specialized self-healing playbooks (jitter backoff, AST diagnostic re-prompts, spec evolution RFCs, quarantine rollbacks).
-- [x] **TODO-AGT-09: Prompt SemVer, Golden Test Suites & Prompt Drift Detection (P2)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/prompts/prompt_manifest.yaml)):
+- [x] **TODO-AGT-09: Prompt SemVer, Golden Test Suites & Prompt Drift Detection (P2)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/prompts/prompt_manifest.yaml)):
   - *Shortcoming*: Markdown prompts in `agentic/prompts/` lacked semantic versioning, regression tests, and prompt drift tracking.
   - *Implementation*: Created cryptographic prompt manifest `prompt_manifest.yaml` and `PromptDriftSentinel` with SHA-256 integrity audits, structural drift detection, and golden evaluation invariant suites.
 - [x] **TODO-AGT-10: Hierarchical Agent Supervision & Multi-Level Authority Trees (P1)** ([`workplace/core/swarm_governor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/swarm_governor.py)):
@@ -386,19 +387,19 @@
   - *Implementation*: Implemented `SwarmGovernor` enforcing a 4-tier authority hierarchy (`ORCHESTRATOR` > `DOMAIN_ARCHITECT` > `SPECIALIST_WORKER` > `GATEKEEPER_SENTINEL`), permission checks on critical actions, max recursion depth limits ($D \le 2$), and anti-usurpation child spawning interception.
 
 ### 17.3. Cognitive Strategy, Attention Budgeting & Prompt Engineering
-- [x] **TODO-AGT-11: Adversarial Red-Team & Mutation Fuzzing Agent (P1)** ([`workplace/core/adversarial_fuzzer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/adversarial_fuzzer.py), [`agentic/custom/agents/agent_adversarial_fuzzer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/agent_adversarial_fuzzer.yaml)):
+- [x] **TODO-AGT-11: Adversarial Red-Team & Mutation Fuzzing Agent (P1)** ([`workplace/core/adversarial_fuzzer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/adversarial_fuzzer.py), [`agentic/custom/agents/agent_adversarial_fuzzer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/agent_adversarial_fuzzer.yaml)):
   - *Shortcoming*: PR verification relied solely on cooperative tests written by the developer agent.
   - *Implementation*: Implemented `AdversarialFuzzer` generating boundary numbers, SQL/XSS injections, null mutations, and prototype pollutions with resilience scoring.
 - [x] **TODO-AGT-12: Context Attention Slicing & Token Budgeting Strategy (P2)** ([`workplace/core/attention_budgeter.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/attention_budgeter.py)):
   - *Shortcoming*: Prompts risked context overflow and "lost-in-the-middle" attention degradation.
   - *Implementation*: Implemented `AttentionBudgeter` enforcing mathematical budget quotas (15% Invariants, 25% Contracts, 35% AST, 10% Trajectories, 15% Output) and preserving core rules during context assembly.
-- [x] **TODO-AGT-13: Static Prompt Prefix Pinning for KV Cache Optimization (P1)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/prompts/prompt_manifest.yaml)):
+- [x] **TODO-AGT-13: Static Prompt Prefix Pinning for KV Cache Optimization (P1)** ([`workplace/core/prompt_drift_sentinel.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/prompt_drift_sentinel.py), [`agentic/prompts/prompt_manifest.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/prompts/prompt_manifest.yaml)):
   - *Shortcoming*: Dynamic variables interpolated early in prompts invalidated LLM prompt KV caches.
   - *Implementation*: Standardized all prompt templates with static prefix blocks pinned at the top and audited 100% compliance in `PromptDriftSentinel`.
 - [x] **TODO-AGT-14: Structured Step-by-Step Trajectory Recording & Replay Engine (P2)** ([`workplace/core/trajectory_recorder.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/trajectory_recorder.py)):
   - *Shortcoming*: Intermediate reasoning traces, thoughts, and tool call histories were discarded.
   - *Implementation*: Implemented `TrajectoryRecorder` capturing ReAct cycles in `agentic/trajectories/` with deterministic replay and validation.
-- [x] **TODO-AGT-15: Autonomous Requirement Clarification & Ambiguity Resolution Agent (P2)** ([`workplace/core/ambiguity_resolver.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/ambiguity_resolver.py), [`agentic/custom/agents/agent_ambiguity_resolver.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/agent_ambiguity_resolver.yaml)):
+- [x] **TODO-AGT-15: Autonomous Requirement Clarification & Ambiguity Resolution Agent (P2)** ([`workplace/core/ambiguity_resolver.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/ambiguity_resolver.py), [`agentic/custom/agents/agent_ambiguity_resolver.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/agent_ambiguity_resolver.yaml)):
   - *Shortcoming*: Agents guessed user intent on underspecified requirements instead of requesting clarification.
   - *Implementation*: Implemented `AmbiguityResolver` calculating requirement entropy and drafting interactive clarification RFCs in `user/hitl/clarification_requests/`.
 
@@ -418,3 +419,71 @@
 - [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)**:
   - *Shortcoming*: Custom agents lack standardized benchmark suites measuring task success rate and token efficiency.
   - *Implementation Scope*: Build `workplace/tests/benchmarks/test_agent_benchmarks.py` running automated golden test challenge sets across all agents with Merkle scorecards.
+
+---
+
+---
+
+## 18. Multi-Tenant Project Provisioning, Fleet Workspaces & Enterprise Admin Control Plane (`CAP-40` to `CAP-45`)
+
+### 18.1. Secure Multi-Tenant Project Provisioning & IAM (`CAP-40`)
+- [ ] **TODO-PRT-01: Multi-Tenant Organization & Project Hierarchy (P1)**:
+  - *Shortcoming*: Portal currently functions under a single default workspace without organizational multi-tenancy and project isolation.
+  - *Implementation Scope*: Implement `workplace/core/tenant_manager.py` with hierarchical tenant isolation: `Organization (Tenant) -> Projects -> Repositories -> Workspaces / Nodes`. Add tenant-scoped PostgreSQL RLS schemas and RBAC authorization (`Enterprise Super Admin`, `Project Lead`, `Security Auditor`, `Agent Worker`).
+- [ ] **TODO-PRT-02: One-Click Project Scaffolding Wizard (P1)**:
+  - *Shortcoming*: New customer projects require manual directory structure setup.
+  - *Implementation Scope*: Implement `workplace/core/project_scaffolder.py` generating standard Quad-Space layouts (`context/`, `agentic/`, `workplace/`, `user/`), initializing isolated `context_ledger.yaml`, and minting genesis cryptographic recovery block `RP_GENESIS_000`.
+- [ ] **TODO-PRT-03: Automated KMS Key Broker & Sealed Enclave Provisioning (P1)**:
+  - *Shortcoming*: Blueprint envelope keys are manually provisioned per instance.
+  - *Implementation Scope*: Implement `workplace/core/kms_broker.py` for automated per-project Ed25519 signing keypairs and AES-256-GCM symmetric keys, supporting self-serve `.nbpack` domain layer packaging with zero client disk exposure.
+
+### 18.2. Minute Project Control & Policy Configuration (`CAP-41`)
+- [ ] **TODO-PRT-04: Granular Context Engineering Tuning Sliders (P2)**:
+  - *Shortcoming*: Token optimization, cognitive routing, and attention budget quotas are globally configured.
+  - *Implementation Scope*: Add per-project policy configuration UI:
+    - **Attention Slicing Quotas**: Dynamic ratio customization (default `15/25/35/10/15`).
+    - **Cognitive Router Tiering Rules**: Project-level complexity thresholds for Tier A vs. Tier B routing.
+    - **AST Pruning Limits**: Language-specific AST body stripping depth and decorator preservation rules.
+- [ ] **TODO-PRT-05: PR Gate & Self-Healing SLA Policies (P1)**:
+  - *Shortcoming*: PR verification gates and healing retries use static hardcoded bounds.
+  - *Implementation Scope*: Add per-project SLA policies: configurable diagnostic re-prompt attempts (1–5 turns), statistical flaky test quarantine thresholds (e.g. failure variance > 15%), and cross-module wire contract breaking-change rules.
+
+### 18.3. Workstation & Node Fleet Telemetry (Individual Machines) (`CAP-42`)
+- [ ] **TODO-PRT-06: Lightweight Workstation Agent Daemon (`percipience-agent`) (P1)**:
+  - *Shortcoming*: Enterprise admins have no visibility into active subagents running on local developer laptops or distributed CI/CD runner nodes.
+  - *Implementation Scope*: Build background agent daemon (`workplace/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
+    - **Machine Identity**: Hostname, Machine UUID, OS version, Local User/Agent ID.
+    - **Active Workspaces**: Path, Active Worktree (`.workspaces/wt_*`), Local Git Branch, Commit SHA.
+    - **Process & Task State**: Active PID, Task Name, Progress Percentage (0–100%), Step Status (e.g. *AST Pruning*, *Running Fuzzer*, *Awaiting Review*).
+    - **Local Token Savings**: Input/Output tokens consumed, Tokens saved via AST/Cache, Net financial savings ($).
+- [ ] **TODO-PRT-07: Secure Fleet Ingestion Endpoint (P1)**:
+  - *Shortcoming*: Portal lacks dedicated telemetry ingestion endpoints for distributed workstations.
+  - *Implementation Scope*: Implement `POST /api/fleet/heartbeat` and `POST /api/fleet/telemetry` in `workplace/portal/server.py` with mTLS / bearer node-token authentication, tracking machine health status (`HEALTHY`, `HEALING`, `OFFLINE`, `QUARANTINED`).
+
+### 18.4. Enterprise Admin Consolidated Fleet Monitoring & FinOps Dashboard (`CAP-43`)
+- [ ] **TODO-PRT-08: Enterprise Fleet Machine Grid & Live Workspaces Map (P1)**:
+  - *Shortcoming*: Enterprise admins cannot view all distributed developer machines and subagent nodes from a single pane.
+  - *Implementation Scope*: Add **Enterprise Fleet Monitor** tab to the portal and standalone dashboard:
+    - Interactive machine grid filterable by Org, Project, and Status.
+    - Columns: `Machine / Host`, `Developer / Subagent`, `Active Project`, `Worktree / Branch`, `Current Task & Progress Bar`, `Tokens Saved ($)`, `Actions`.
+- [ ] **TODO-PRT-09: Machine-Level & Project-Level Token Savings Rollup (P1)**:
+  - *Shortcoming*: FinOps accounting only calculates global mock ledger values.
+  - *Implementation Scope*: Aggregate verified token savings across all connected machines and projects:
+    - Gross Cloud LLM Savings ($) across the enterprise.
+    - 15% Percipience Rev-Share Fee vs. 85% Net Customer Retained Savings.
+    - Machine-level and project-level savings leaderboards.
+- [ ] **TODO-PRT-10: Real-Time Task Progression & Milestone Tracker (P2)**:
+  - *Shortcoming*: Long-running subagent tasks provide no step-by-step progress metrics.
+  - *Implementation Scope*: Visualize live agent execution trajectories with step-by-step progress bars, task ETAs based on historical runtimes, and alerts for stuck subagents.
+
+### 18.5. Remote Machine Interventions & Governance Actions (`CAP-44`)
+- [ ] **TODO-PRT-11: Remote Admin Actions on Individual Machines (P1)**:
+  - *Shortcoming*: Stopping a malfunctioning agent or evicting a dead lease requires local terminal access on that machine.
+  - *Implementation Scope*: Allow Enterprise Admins and Project Leads to trigger authenticated remote actions from the portal UI:
+    - **Emergency Pause / Resume**: Freeze rogue subagent loops on a specific machine.
+    - **Surgical Rollback Trigger**: Remotely rewind a specific machine's micro-module to Recovery Point `RP_k`.
+    - **Force Worktree Lease Eviction**: Clean up dead leases on crashed or orphaned nodes.
+    - **Flush Local AST Cache**: Invalidate and refresh local Tree-Sitter caches.
+- [ ] **TODO-PRT-12: Enterprise Security & Quarantine Central Command (P1)**:
+  - *Shortcoming*: Poisoning alerts and quarantined diffs are stored in local markdown files on each machine.
+  - *Implementation Scope*: Centralize fleet-wide context poisoning incidents, AST dependency CVE blocks, and drift evolutions in an interactive single-pane triage workflow, sealing all admin resolutions into the immutable SHA-256 Merkle ledger.

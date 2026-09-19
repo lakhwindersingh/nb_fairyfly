@@ -18,8 +18,8 @@ class PromptDriftSentinel:
     verifies static prefix pinning for KV-cache optimization, and detects drift.
     """
 
-    DEFAULT_MANIFEST_PATH = REPO_ROOT / "agentic" / "prompts" / "prompt_manifest.yaml"
-    PROMPTS_DIR = REPO_ROOT / "agentic" / "prompts"
+    DEFAULT_MANIFEST_PATH = (REPO_ROOT / ".nb" / "agentic" / "prompts" / "prompt_manifest.yaml" if (REPO_ROOT / ".nb" / "agentic").exists() else REPO_ROOT / "agentic" / "prompts" / "prompt_manifest.yaml")
+    PROMPTS_DIR = (REPO_ROOT / ".nb" / "agentic" / "prompts" if (REPO_ROOT / ".nb" / "agentic").exists() else REPO_ROOT / "agentic" / "prompts")
 
     @classmethod
     def load_manifest(cls, manifest_path: Optional[Path] = None) -> Dict[str, Any]:
@@ -156,7 +156,7 @@ class PromptDriftSentinel:
             content = deriv_file.read_text(encoding="utf-8")
             has_mvs = "MVS" in content
             has_workplace = "workplace/" in content
-            has_contracts = "context/contracts/" in content
+            has_contracts = "context/contracts/" in content or ".nb/context/contracts/" in content
             eval_results["derivation_prompt"] = {
                 "passed": has_mvs and has_workplace and has_contracts,
                 "has_quad_space_references": True

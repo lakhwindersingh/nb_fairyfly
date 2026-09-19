@@ -19,8 +19,8 @@ flowchart TD
 
   Worktree --> Gatekeeper["PR Verification Gatekeeper<br/>(6-Stage Security, Contract, & Flaky Checks)"]
   Gatekeeper --> LivingDoc["Living Doc Engine<br/>(Mermaid Synthesis into workplace/docs/)"]
-  LivingDoc --> MerkleSeal["Merkle Hash Chain & Atomic Replace<br/>(context/ledger/context_ledger.yaml)"]
-  MerkleSeal --> EpochArchive["Rolling Epoch Checkpointer<br/>(context/ledger/archive/epoch_*.json)"]
+  LivingDoc --> MerkleSeal["Merkle Hash Chain & Atomic Replace<br/>(.nb/context/ledger/context_ledger.yaml)"]
+  MerkleSeal --> EpochArchive["Rolling Epoch Checkpointer<br/>(.nb/context/ledger/archive/epoch_*.json)"]
 ```
 
 ## Artifact State Lifecycle

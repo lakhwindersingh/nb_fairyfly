@@ -28,7 +28,7 @@ graph TD
     Gatekeeper["PR Verification Gatekeeper<br/>(6-Stage AST & Contract Gate)"]
   end
 
-  subgraph Specialist_Fleet["Specialist Agent Plugins (agentic/custom/agents/)"]
+  subgraph Specialist_Fleet["Specialist Agent Plugins (.nb/agentic/custom/agents/)"]
     FlakyAgent["Flaky Test Detector<br/>(agent_flaky_test_detector)"]
     ContractAgent["Contract Compatibility Guard<br/>(agent_contract_compatibility_checker)"]
     CVEAgent["Supply-Chain Sentinel<br/>(agent_dependency_cve_sentinel)"]
@@ -45,7 +45,7 @@ graph TD
 
   subgraph Enclave_Ledger["Cryptographic Merkle Enclave & Sealed State"]
     MerkleChain["Linear Merkle Hash Chain<br/>(SHA-256 Block Continuity)"]
-    EpochArchive["Rolling Epoch Checkpoints<br/>(context/ledger/archive/)"]
+    EpochArchive["Rolling Epoch Checkpoints<br/>(.nb/context/ledger/archive/)"]
     TokenLedger["Token FinOps Ledger<br/>(token_savings_ledger.yaml)"]
     HITLStores["Append-Only HITL Stores<br/>(user/hitl/poisoning/, user/hitl/flaky/)"]
   end

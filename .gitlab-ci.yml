@@ -24,4 +24,4 @@ percipience_gatekeeper:
     paths:
       - workplace/docs/reports/token_savings_report.md
       - workplace/docs/reports/context_maturity_report.md
-      - context/ledger/token_savings_ledger.yaml
+      - .nb/context/ledger/token_savings_ledger.yaml

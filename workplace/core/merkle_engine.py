@@ -97,7 +97,7 @@ class MerkleEngine:
     def compute_workspace_merkle_root(cls, workspace_root: Path) -> str:
         """Gathers files from context/contracts/, user/inputs/, and workplace/config/ to compute Merkle root."""
         key_files = []
-        for rel_dir in ["context/contracts", "user/inputs", "workplace/config"]:
+        for rel_dir in [".nb/context/contracts", "context/contracts", "user/inputs", "workplace/config"]:
             dir_path = workspace_root / rel_dir
             if dir_path.exists():
                 for p in dir_path.rglob("*"):
@@ -113,8 +113,8 @@ class MerkleEngine:
     @classmethod
     def seal_block(cls, workspace_root: Path, action: str, git_sha: str = "HEAD", recovery_point_id: Optional[str] = None) -> Dict[str, Any]:
         """Appends a new verified Merkle block to context/ledger/context_ledger.yaml using atomic write."""
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
-        public_ledger_path = workspace_root / "context" / "ledger" / "context_ledger.public.yaml"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
+        public_ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.public.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.public.yaml")
 
         if not ledger_path.exists():
             raise FileNotFoundError(f"Ledger not found at {ledger_path}")
@@ -197,8 +197,8 @@ class MerkleEngine:
         Scalability Checkpoint: Archives older blocks and recovery points into context/ledger/archive/
         while keeping the active rolling window in context_ledger.yaml, sealed with an epoch rollup hash.
         """
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
-        archive_dir = workspace_root / "context" / "ledger" / "archive"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
+        archive_dir = (workspace_root / ".nb" / "context" / "ledger" / "archive" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "archive")
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         with open(ledger_path, "r", encoding="utf-8") as f:
@@ -289,7 +289,7 @@ class MerkleEngine:
     @classmethod
     def verify_chain(cls, workspace_root: Path) -> Tuple[bool, List[str]]:
         """Verifies 100% cryptographic continuity across archived epochs and the active rolling chain."""
-        ledger_path = workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "ledger" / "context_ledger.yaml")
         if not ledger_path.exists():
             return False, [f"Ledger file missing at {ledger_path}"]
 
@@ -308,7 +308,12 @@ class MerkleEngine:
         for ep in data.get("epoch_rollups", []):
             archive_file = workspace_root / ep["archive_path"]
             if not archive_file.exists():
-                return False, [f"Missing epoch archive: {archive_file}"]
+                if (workspace_root / ".nb" / ep["archive_path"]).exists():
+                    archive_file = workspace_root / ".nb" / ep["archive_path"]
+                elif ep["archive_path"].startswith(".nb/") and (workspace_root / ep["archive_path"][4:]).exists():
+                    archive_file = workspace_root / ep["archive_path"][4:]
+                else:
+                    return False, [f"Missing epoch archive: {archive_file}"]
             with open(archive_file, "r", encoding="utf-8") as f:
                 ep_data = json.load(f)
             for b in ep_data.get("blocks", []):

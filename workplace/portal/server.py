@@ -1,4 +1,3 @@
-from typing import Dict, Any, List, Optional, Tuple
 #!/usr/bin/env python3
 """
 Neutron Binary Percipience - Enterprise Product Site & Cloud SaaS Portal
@@ -13,6 +12,7 @@ Detailed Multi-Section Product Platform featuring:
 - Self-Serve Quad-Space Provisioning & 15% Rev-Share Metering Engine
 """
 
+from typing import Dict, Any, List, Optional, Tuple
 import sys
 import os
 import json
@@ -85,6 +85,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       --gradient-card: linear-gradient(180deg, rgba(17, 28, 51, 0.8) 0%, rgba(13, 21, 39, 0.95) 100%);
       --green: #10B981;
       --green-glow: rgba(16, 185, 129, 0.18);
+      --emerald: #10B981;
       --purple: #A855F7;
       --amber: #F59E0B;
       --red: #F43F5E;
@@ -94,6 +95,11 @@ PORTAL_HTML = """<!DOCTYPE html>
       --toggle-bg: #1A263F;
       --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
       --shadow-glow: 0 0 20px rgba(0, 242, 254, 0.15);
+      /* Compatibility aliases */
+      --text-muted: var(--muted);
+      --text-color: var(--text);
+      --card-bg: var(--bg-card);
+      --border-color: var(--border);
     }
 
     [data-theme="light"] {
@@ -114,6 +120,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
       --green: #059669;
       --green-glow: rgba(5, 150, 105, 0.12);
+      --emerald: #059669;
       --purple: #9333EA;
       --amber: #D97706;
       --red: #E11D48;
@@ -123,6 +130,11 @@ PORTAL_HTML = """<!DOCTYPE html>
       --toggle-bg: #E2E8F0;
       --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
       --shadow-glow: 0 0 16px rgba(2, 132, 199, 0.1);
+      /* Compatibility aliases */
+      --text-muted: var(--muted);
+      --text-color: var(--text);
+      --card-bg: var(--bg-card);
+      --border-color: var(--border);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease; }
@@ -141,39 +153,71 @@ PORTAL_HTML = """<!DOCTYPE html>
     .theme-toggle-btn { background: var(--toggle-bg); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin-left: 8px; }
 
     /* Main Container */
-    main { flex: 1; max-width: 1320px; margin: 0 auto; width: 100%; padding: 28px 20px; }
+    main { flex: 1; max-width: 1320px; margin: 0 auto; width: 100%; padding: 24px 20px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Section Typography */
-    .section-title { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; color: var(--text); }
-    .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.55; max-width: 860px; }
+    .section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; color: var(--text); }
+    .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.55; max-width: 860px; }
 
     /* Hero */
-    .hero { text-align: center; padding: 36px 16px 28px; max-width: 980px; margin: 0 auto 28px; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--cyan-glow); border: 1px solid var(--border-accent); color: var(--cyan); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
-    .hero h1 { font-size: 38px; font-weight: 800; line-height: 1.18; letter-spacing: -0.03em; margin-bottom: 14px; }
-    .hero p { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 780px; margin: 0 auto 24px; }
-    .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 24px; }
-    .hero-stat-item { background: var(--gradient-card); border: 1px solid var(--border); padding: 16px 12px; border-radius: 10px; text-align: center; box-shadow: var(--shadow-card); }
-    .hero-stat-val { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin-bottom: 4px; }
-    .hero-stat-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .hero { text-align: center; padding: 32px 16px 24px; max-width: 980px; margin: 0 auto 24px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--cyan-glow); border: 1px solid var(--border-accent); color: var(--cyan); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 12px; }
+    .hero p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 780px; margin: 0 auto 20px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+    .hero-stat-item { background: var(--gradient-card); border: 1px solid var(--border); padding: 14px 12px; border-radius: 10px; text-align: center; box-shadow: var(--shadow-card); }
+    .hero-stat-val { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin-bottom: 3px; letter-spacing: -0.02em; }
+    .hero-stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
     /* Cards & Grids */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 20px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 20px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-    .card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; box-shadow: var(--shadow-card); transition: transform 0.2s ease, border-color 0.2s ease; margin-bottom: 18px; }
-    .card:hover { border-color: var(--border-accent); transform: translateY(-1px); }
-    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--text); }
-    .card-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 5px; background: var(--cyan-glow); color: var(--cyan); margin-bottom: 10px; }
-    .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-    .card p { font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
-    .metric-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 12px; text-align: center; box-shadow: var(--shadow-card); }
-    .metric-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
-    .metric-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+    
+    .card, .panel-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; position: relative; box-shadow: var(--shadow-card); transition: transform 0.2s ease, border-color 0.2s ease; margin-bottom: 18px; }
+    .card:hover, .panel-card:hover { border-color: var(--border-accent); transform: translateY(-1px); }
+    .card-title, .panel-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--text); line-height: 1.35; }
+    .card-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 5px; background: var(--cyan-glow); color: var(--cyan); margin-bottom: 8px; }
+    .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); line-height: 1.35; }
+    .card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-top: 14px; margin-bottom: 6px; }
+    .card p, .panel-card p { font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
+    
+    .metric-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; text-align: center; box-shadow: var(--shadow-card); }
+    .metric-val { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; letter-spacing: -0.02em; line-height: 1.2; }
+    .metric-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .metric-sub { font-size: 10.5px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+
+    /* Stat Box Component */
+    .stat-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      margin-top: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    [data-theme="light"] .stat-box {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* Price Component */
+    .price-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin: 8px 0 10px; }
+    .price-period { font-size: 11.5px; font-weight: 500; color: var(--muted); }
 
     /* Bullet Lists */
     ul, ol, .bullet-list { list-style: none; padding-left: 0; margin: 8px 0; }
@@ -181,7 +225,7 @@ PORTAL_HTML = """<!DOCTYPE html>
     li::before { content: "▪"; color: var(--cyan); position: absolute; left: 0; top: -1px; font-size: 13px; }
 
     /* Tables & Table Wrapper */
-    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-panel); box-shadow: var(--shadow-card); margin-top: 12px; margin-bottom: 24px; }
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-panel); box-shadow: var(--shadow-card); margin-top: 12px; margin-bottom: 22px; }
     table, .table { width: 100%; border-collapse: collapse; text-align: left; }
     th, .table th { background: var(--table-th); color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
     td, .table td { padding: 9px 14px; font-size: 12px; line-height: 1.45; border-bottom: 1px solid var(--border); color: var(--text); }
@@ -192,7 +236,7 @@ PORTAL_HTML = """<!DOCTYPE html>
     .percipience-cell { background: rgba(0, 242, 254, 0.05); border-left: 1px solid rgba(0, 242, 254, 0.2); border-right: 1px solid rgba(0, 242, 254, 0.2); font-weight: 600; color: #E0F2FE; }
 
     /* Badges & Status Pills */
-    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 5px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .badge-cyan { background: var(--cyan-glow); color: var(--cyan); border: 1px solid var(--border-accent); }
     .badge-purple { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid var(--purple); }
     .badge-emerald { background: var(--green-glow); color: var(--green); border: 1px solid var(--green); }
@@ -205,7 +249,7 @@ PORTAL_HTML = """<!DOCTYPE html>
     .form-group { margin-bottom: 14px; display: flex; flex-direction: column; gap: 5px; }
     .form-label { font-size: 11px; font-weight: 700; color: var(--text); display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.02em; }
     .form-hint { font-size: 10px; color: var(--muted); font-weight: 400; }
-    .input, input[type="text"], input[type="password"], input[type="number"], select, textarea {
+    .input, input[type="text"], input[type="password"], input[type="number"], input[type="email"], select, textarea {
       background: var(--code-bg);
       border: 1px solid var(--border);
       color: var(--text);
@@ -217,7 +261,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       font-family: inherit;
       transition: all 0.2s ease;
     }
-    .input:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+    .input:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
       border-color: var(--cyan);
       box-shadow: 0 0 0 3px var(--cyan-glow);
     }
@@ -225,11 +269,62 @@ PORTAL_HTML = """<!DOCTYPE html>
     textarea { min-height: 80px; font-family: 'JetBrains Mono', monospace; font-size: 11px; resize: vertical; }
 
     /* Buttons */
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease; text-decoration: none; }
-    .btn-primary { background: var(--gradient-brand); color: #070B14; box-shadow: var(--shadow-glow); }
-    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
-    .btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-accent); }
+    .btn, .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .action-btn, .btn-primary {
+      background: var(--gradient-brand);
+      color: #070B14;
+      box-shadow: var(--shadow-glow);
+    }
+    .action-btn:hover, .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      color: #070B14;
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+    }
+    .btn-cyan { background: var(--cyan-glow); color: var(--cyan); border-color: var(--border-accent); }
+    .btn-emerald { background: var(--green-glow); color: var(--green); border-color: var(--green); }
+    .btn-purple { background: rgba(168, 85, 247, 0.15); color: var(--purple); border-color: var(--purple); }
+    .btn-cyan:hover, .btn-emerald:hover, .btn-purple:hover { transform: translateY(-1px); }
+
+    /* Utility Colors & Progress Bars */
+    .text-emerald, .text-green { color: var(--green); }
+    .text-cyan { color: var(--cyan); }
+    .text-purple { color: var(--purple); }
+    .text-amber { color: var(--amber); }
+    .text-red { color: var(--red); }
+    .bg-emerald, .bg-green { background: var(--green); }
+    .bg-cyan { background: var(--cyan); }
+    .bg-purple { background: var(--purple); }
+    .bg-amber { background: var(--amber); }
+    .bg-red { background: var(--red); }
+
+    .vector-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .vector-item { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+    .vector-header { display: flex; justify-content: space-between; align-items: center; }
+    .bar-track { background: var(--code-bg); height: 6px; border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
 
     pre, code { font-family: 'JetBrains Mono', monospace; }
     pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 11px; color: var(--cyan); overflow-x: auto; margin: 8px 0; }
@@ -258,7 +353,6 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('reports')">📑 Deep Reports</button>
       <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔐 Client Space</button>
-      <a href="/dashboard" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--cyan); color:#070B14; font-size:12px; font-weight:700; padding:7px 12px; border-radius:6px; text-decoration:none; margin-left:8px;">📊 Dashboard &rarr;</a>
       <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
@@ -308,8 +402,8 @@ PORTAL_HTML = """<!DOCTYPE html>
           <h3>Quad-Space Standard</h3>
           <p>Strict structural partitioning of enterprise repositories into four immutable quadrants with deterministic boundary enforcement.</p>
           <ul class="bullet-list">
-            <li><code>context/</code>: Formal contracts &amp; SHA-256 state ledger</li>
-            <li><code>agentic/</code>: Bounded prompts &amp; verification DAGs</li>
+            <li><code>.nb/context/</code>: Formal contracts &amp; SHA-256 state ledger</li>
+            <li><code>.nb/agentic/</code>: Bounded prompts &amp; verification DAGs</li>
             <li><code>workplace/</code>: Decoupled application source code</li>
             <li><code>user/</code>: Minimum Viable Sets &amp; quarantine sentinels</li>
           </ul>
@@ -340,7 +434,7 @@ PORTAL_HTML = """<!DOCTYPE html>
           <p>Assigns each autonomous coding subagent its own isolated git worktree backed by a pre-warmed gVisor microVM sandbox. Prevents branch locks and dirty working tree overwrites.</p>
           <pre>git worktree add -b wt_agent_04 .workspaces/wt_agent_04 main
 percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>SLA Allocation Latency:</span><span style="color:var(--cyan); font-weight:700;">&lt; 180ms</span></div>
+          <div class="stat-box"><span>SLA Allocation Latency:</span><span class="stat-val text-cyan">&lt; 180ms</span></div>
         </div>
 
         <div class="card">
@@ -348,31 +442,31 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <h3>2. Polyglot Tree-Sitter 6D AST Body Pruning</h3>
           <p>Replaces internal method bodies with syntactic placeholders (<code>... [AST_PRUNED]</code>), cutting prompt token overhead by 50%–75% while preserving 100% of public interface contracts.</p>
           <pre>percipience optimize --file payment_service.py --dialect python --preserve-types</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Measured Token Drop:</span><span style="color:var(--emerald); font-weight:700;">50.3% ($15.69 Gross Saved)</span></div>
+          <div class="stat-box"><span>Measured Token Drop:</span><span class="stat-val text-emerald">50.3% ($15.69 Gross Saved)</span></div>
         </div>
 
         <div class="card">
           <div class="card-badge">Anti-Drift (CAP-03)</div>
           <h3>3. Semantic Parity &amp; Reverse AST Reconciliation</h3>
-          <p>Computes mathematical semantic parity score ($S_{SP} \in [0.0, 1.0]$) comparing generated code against ground-truth specifications. Generates surgical reverse AST diffs to revert unauthorized edits.</p>
+          <p>Computes mathematical semantic parity score comparing generated code against ground-truth specifications. Generates surgical reverse AST diffs to revert unauthorized edits.</p>
           <pre>percipience drift reconcile --mode revert --module mod_auth</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Parity Score:</span><span style="color:var(--emerald); font-weight:700;">0.9960 (ALIGNED)</span></div>
+          <div class="stat-box"><span>Parity Score:</span><span class="stat-val text-emerald">0.9960 (ALIGNED)</span></div>
         </div>
 
         <div class="card">
           <div class="card-badge">Governance (CAP-31)</div>
           <h3>4. 4-Tier Swarm Authority &amp; Anti-Usurpation Tree</h3>
-          <p>Enforces strict role hierarchies (<code>ORCHESTRATOR &gt; DOMAIN_ARCHITECT &gt; SPECIALIST_WORKER &gt; GATEKEEPER</code>) and intercepts rogue subagent spawning beyond recursion depth ceiling $D_{\max}=2$.</p>
+          <p>Enforces strict role hierarchies (<code>ORCHESTRATOR &gt; DOMAIN_ARCHITECT &gt; SPECIALIST_WORKER &gt; GATEKEEPER</code>) and intercepts rogue subagent spawning beyond recursion depth ceiling D=2.</p>
           <pre>percipience swarm audit --depth-ceiling 2 --verify-leases</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Rogue Spawns Blocked:</span><span style="color:var(--cyan); font-weight:700;">100% Intercepted</span></div>
+          <div class="stat-box"><span>Rogue Spawns Blocked:</span><span class="stat-val text-cyan">100% Intercepted</span></div>
         </div>
 
         <div class="card">
           <div class="card-badge">Resilience (CAP-29)</div>
           <h3>5. 4-Pillar Error Taxonomy &amp; Self-Healing Playbooks</h3>
-          <p>Classifies agent failures into <code>TRANSIENT</code> (rate limits), <code>STRUCTURAL</code> (syntax errors), <code>INVARIANT</code> (test failures), and <code>HALLUCINATORY</code> (invented symbols), routing each to specialized self-healing playbooks.</p>
+          <p>Classifies agent failures into TRANSIENT (rate limits), STRUCTURAL (syntax errors), INVARIANT (test failures), and HALLUCINATORY (invented symbols), routing each to specialized self-healing playbooks.</p>
           <pre>percipience heal --error-type STRUCTURAL --target-file gateway.py</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>MTTR Remediation:</span><span style="color:var(--purple); font-weight:700;">&lt; 3 Bounded Iterations</span></div>
+          <div class="stat-box"><span>MTTR Remediation:</span><span class="stat-val text-purple">&lt; 3 Bounded Iterations</span></div>
         </div>
 
         <div class="card">
@@ -380,7 +474,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <h3>6. Mathematical Attention Slicing (15/25/35/10/15)</h3>
           <p>Enforces strict proportional token budget quotas: 15% System Invariants, 25% Schemas/Contracts, 35% AST Skeletons, 10% ReAct Trajectories, 15% LLM Generation Target Space.</p>
           <pre>percipience budget --allocate-quotas --window-size 32000</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Attention Degradation:</span><span style="color:var(--emerald); font-weight:700;">0% Lost-in-Middle</span></div>
+          <div class="stat-box"><span>Attention Degradation:</span><span class="stat-val text-emerald">0% Lost-in-Middle</span></div>
         </div>
 
         <div class="card">
@@ -388,7 +482,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <h3>7. Adversarial Mutation Fuzzer &amp; Chaos Injection</h3>
           <p>Subjecting generated code to boundary condition fuzzing, SQL/XSS injections, schema mutations, and chaos faults to guarantee zero unhandled runtime exceptions before PR merging.</p>
           <pre>percipience fuzz --target mod_billing --vectors numerical,sql,schema</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Fuzz Mutation Coverage:</span><span style="color:var(--cyan); font-weight:700;">100% Passing</span></div>
+          <div class="stat-box"><span>Fuzz Mutation Coverage:</span><span class="stat-val text-cyan">100% Passing</span></div>
         </div>
 
         <div class="card">
@@ -396,16 +490,15 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <h3>8. OpenTelemetry GenAI &amp; 5D G-Eval Radar</h3>
           <p>Streams standardized W3C <code>traceparent</code> headers, TTFT waterfalls, and multi-dimensional G-Eval quality scores (Faithfulness, Hallucination Freedom, Code Correctness) to enterprise APMs.</p>
           <pre>percipience otel export --target datadog --w3c-traceparent 00-4bf92...</pre>
-          <div class="stat-box" style="display:flex; justify-content:space-between; font-size:12px; margin-top:8px;"><span>Composite G-Eval Score:</span><span style="color:var(--emerald); font-weight:700;">0.962 / 1.00 (PASSED)</span></div>
+          <div class="stat-box"><span>Composite G-Eval Score:</span><span class="stat-val text-emerald">0.962 / 1.00 (PASSED)</span></div>
         </div>
       </div>
-
     </section>
 
     <!-- TAB 3: COMPARATIVES -->
     <section id="comparatives" class="tab-content">
-      <div class="section-title">Competitive Differentiation Matrix</div>
-      <div class="section-desc">See how Neutron Binary Percipience compares against generic coding assistants, trace libraries, legacy observability tools, and traditional CI/CD runners.</div>
+      <div class="section-title">Competitive Differentiation Matrix &amp; Autonomous CI/CD Analysis</div>
+      <div class="section-desc">See how Neutron Binary Percipience compares against generic coding assistants (Cursor / Claude Code), trace libraries (LangSmith), legacy observability (Arize Phoenix), and traditional CI/CD runners (GitHub Actions / Jenkins).</div>
 
       <div class="table-wrap">
         <table>
@@ -416,7 +509,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <th style="width:16%;">LangChain / LangSmith</th>
               <th style="width:16%;">Arize Phoenix / Armor</th>
               <th style="width:16%;">Legacy CI/CD (GitHub Actions / Jenkins)</th>
-              <th style="width:16%; color:var(--cyan); background:rgba(56,189,248,0.1);">Neutron Binary Percipience</th>
+              <th style="width:16%; color:var(--cyan); background:rgba(0,242,254,0.08);">⚡ Neutron Binary Percipience</th>
             </tr>
           </thead>
           <tbody>
@@ -430,7 +523,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td>❌ Trace graph visualization only; no CI/CD remediation</td>
               <td>❌ Passive evaluation metrics; no execution loop</td>
               <td>❌ Passive red-build alerts; 100% human DevOps triage required</td>
-              <td class="percipience-cell">✅ Full Triad: SelfSustainingEngine (GC/TTL) + AutonomousHealer + SelfImprovingEngine</td>
+              <td class="percipience-cell">✅ <strong>Full Triad:</strong> SelfSustainingEngine (GC/TTL) + AutonomousHealer + SelfImprovingEngine</td>
             </tr>
             <tr>
               <td class="feature-name">Diagnostic Re-Prompting Loop (CAP-02)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Bounded Isolated Prompt Envelopes</span></td>
@@ -483,7 +576,15 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td>❌ Passes full prompt text or unparsed chunk strings</td>
               <td>❌ None</td>
               <td>❌ None</td>
-              <td class="percipience-cell">✅ 6 Pruners: AST bodies, Markdown tables, YAML/JSON schemas, Test logs, Lockfile diffs, Memory compaction</td>
+              <td class="percipience-cell">✅ <strong>6 Pruners:</strong> AST bodies, Markdown tables, YAML/JSON schemas, Test logs, Lockfile diffs, Memory compaction</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Prompt Prefix Cache Pinning<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Bit-for-Bit Deterministic Anchoring</span></td>
+              <td>⚠️ Best-effort prompt prefix; high miss rate</td>
+              <td>⚠️ Unpinned template variables invalidate KV cache</td>
+              <td>❌ No prompt restructuring</td>
+              <td>❌ N/A</td>
+              <td class="percipience-cell">✅ Bit-for-Bit Static Prefix Invariant Ordering (88%+ KV Cache Hit Rate)</td>
             </tr>
             <tr>
               <td class="feature-name">Selective Strategy Toggles &amp; Portal UI<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Granular Controls &amp; Presets</span></td>
@@ -503,7 +604,7 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
             </tr>
             <tr>
               <td class="feature-name">Model-Agnostic Cognitive Tiering Router<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Dynamic LLM Complexity Routing</span></td>
-              <td>❌ Single expensive flagship model for all turns (-/MTok)</td>
+              <td>❌ Single expensive flagship model for all turns (–/MTok)</td>
               <td>⚠️ Manual route chains; no dynamic AST complexity analysis</td>
               <td>❌ None</td>
               <td>❌ None</td>
@@ -521,6 +622,14 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td>❌ None</td>
               <td>⚠️ Ephemeral CI job logs wiped after 30-90 days</td>
               <td class="percipience-cell">✅ Tamper-evident SHA-256 DAG in context_ledger.yaml with rolling JSON epoch archiving (O(1) I/O)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Semantic Parity &amp; 6-Vector Alignment<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Anti-Drift Dual Reconciliation</span></td>
+              <td>❌ No contract alignment tracking</td>
+              <td>❌ Basic trace latency logging</td>
+              <td>❌ Drift alerts without remediation</td>
+              <td>⚠️ Static unit test assertions</td>
+              <td class="percipience-cell">✅ Dual-Reconciliation Engine (Revert Unprompted Edits vs Evolve RFC Contracts)</td>
             </tr>
             <tr>
               <td class="feature-name">SEC Rule 17a-4 / FINRA WORM Cloud Egress<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Dual-Vault Immutable Storage</span></td>
@@ -544,12 +653,28 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td class="percipience-cell">✅ Server-side In-Flight Prompt Injection in KMS RAM enclave; 0.0% plan disk exposure</td>
             </tr>
             <tr>
+              <td class="feature-name">Proprietary IP Obfuscation (.nbpack)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Sealed Binary Envelopes</span></td>
+              <td>❌ Exposes raw system prompts in plaintext configs</td>
+              <td>❌ Plaintext python/typescript configs</td>
+              <td>❌ Plaintext prompt logs</td>
+              <td>❌ Plaintext repository files</td>
+              <td class="percipience-cell">✅ Sealed AES-256-GCM / Ed25519 binary (.nbpack) RAM-hydrated with KMS broker</td>
+            </tr>
+            <tr>
               <td class="feature-name">Supply-Chain Security &amp; AST CVE Sentinel<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Pre-Write Package Interception</span></td>
               <td>❌ No AST-level import CVE interception during agent generation</td>
               <td>❌ None</td>
               <td>⚠️ Prompt injection filters only; zero AST package gate</td>
               <td>⚠️ Post-merge vulnerability scans (Snyk / Dependabot)</td>
               <td class="percipience-cell">✅ Real-time AST import interception of malicious/typosquatted packages before file write</td>
+            </tr>
+            <tr>
+              <td class="feature-name">4-Tier Swarm Authority &amp; Anti-Usurpation Tree<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Recursion Ceiling Enforcement</span></td>
+              <td>❌ Unrestricted rogue subagent spawning</td>
+              <td>⚠️ Memory limits only</td>
+              <td>❌ No enforcement</td>
+              <td>❌ None</td>
+              <td class="percipience-cell">✅ 4-Tier Authority (Orchestrator &gt; Architect &gt; Worker &gt; Gatekeeper) with D_max = 2 ceiling</td>
             </tr>
 
             <!-- 5. CONCURRENCY & WORKSPACE ISOLATION -->
@@ -577,14 +702,14 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
       </div>
 
       <!-- DEEP-DIVE: AUTONOMOUS CI/CD CAPABILITIES NOT AVAILABLE IN OTHER FRAMEWORKS -->
-      <div style="margin-top:48px;">
+      <div style="margin-top:36px; margin-bottom:28px;">
         <div class="section-title">🚀 Autonomous CI/CD Capabilities Exclusive to Percipience</div>
         <div class="section-desc">Why standard CI/CD runners (Jenkins/Actions) and generic coding assistants (Cursor/Devin) fail in multi-agent enterprise environments, and how Percipience closes the loop.</div>
 
-        <div class="grid-2" style="margin-top:20px;">
+        <div class="grid-2">
           <div class="card">
-            <div class="card-badge" style="background:rgba(56,189,248,0.15); color:var(--cyan);">Core Triad</div>
-            <h3>1. Closed-Loop Autonomous Triad (Sustain &bull; Heal &bull; Improve)</h3>
+            <div class="card-badge" style="background:rgba(0,242,254,0.15); color:var(--cyan);">Core Triad</div>
+            <h3>1. Closed-Loop Autonomous Triad (Sustain • Heal • Improve)</h3>
             <p>Traditional CI/CD simply marks jobs as failed and waits for human intervention. Percipience deploys an autonomous triad that continuously reclaims dead leases, bounds diagnostic repairs under strict SLAs, and optimizes token policies based on failure distributions.</p>
             <ul class="bullet-list">
               <li><b>Self-Sustaining:</b> Automated worktree garbage collection &amp; Merkle chain reconciliation.</li>
@@ -627,98 +752,111 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           </div>
         </div>
       </div>
-    
-      <!-- GRAPHIFY VS PERCIPIENCE 6D AST DEEP-DIVE -->
-      <div class="card" style="margin-top:28px; border-left:4px solid var(--cyan);">
-        <div class="card-badge">Architectural Benchmark</div>
-        <h3>Knowledge Graph / Graphify (CodeKG) vs. Percipience 6D AST Compression</h3>
-        <p style="font-size:13px; color:var(--muted); line-height:1.6;">A rigorous engineering breakdown of why Percipience outperforms generic Graph RAG &amp; Knowledge Graph code ingestion tools in autonomous agentic loops:</p>
-        
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:14px;">
-          <div style="background:var(--bg-card); padding:16px; border-radius:10px; border:1px solid var(--border);">
-            <div style="font-weight:700; color:var(--amber); margin-bottom:8px;">🕸️ Knowledge Graph / Graphify Paradigm</div>
-            <ul style="font-size:12px; color:var(--muted); padding-left:18px; line-height:1.6;">
-              <li><strong>Extraction:</strong> $O(V+E)$ graph builds with external graph DB (Neo4j / Memgraph).</li>
-              <li><strong>Token Efficiency:</strong> 40%–60% reduction; JSON/DOT graph serialization adds meta-syntax token overhead.</li>
-              <li><strong>Syntactic Integrity:</strong> Loss of intra-function types, invariants, and local variable context.</li>
-              <li><strong>Latency:</strong> Multi-second graph rebuild bottlenecks on dynamic agent code mutations.</li>
-            </ul>
-          </div>
 
-          <div style="background:var(--bg-card); padding:16px; border-radius:10px; border:1px solid var(--border-accent);">
-            <div style="font-weight:700; color:var(--cyan); margin-bottom:8px;">⚡ Percipience 6D AST Compression Suite</div>
-            <ul style="font-size:12px; color:var(--muted); padding-left:18px; line-height:1.6;">
-              <li><strong>Extraction:</strong> Sub-millisecond native Tree-Sitter C/Rust daemon (&gt;10,000 LOC/sec, 0 DB dependencies).</li>
-              <li><strong>Token Efficiency:</strong> <strong>50%–75% reduction</strong> with exact public API &amp; type preservation.</li>
-              <li><strong>Cache Alignment:</strong> 100% Static KV-Cache prefix pinning (<code>&lt;!-- STATIC_PREFIX_START --&gt;</code>).</li>
-              <li><strong>Unified Hybrid Vision:</strong> Graphify for coarse $k$-hop subgraph routing + Percipience for fine-grained in-file AST body pruning.</li>
-            </ul>
-          </div>
+      <!-- DEEP-DIVE: TOKEN REDUCTION ARCHITECTURE (AST VS GRAPH RAG / GRAPHIFY) -->
+      <div style="margin-top:36px; margin-bottom:12px;">
+        <div class="section-title">⚡ Deep-Dive Token Reduction: Percipience 6D AST Compression vs. Knowledge Graphs (Graphify / CodeKG)</div>
+        <div class="section-desc">Comparing high-overhead Knowledge Graph serialization (Neo4j / Graph RAG) with Tree-Sitter AST Skeletonization and Bit-for-Bit Static Prefix Caching.</div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:22%;">Architectural Dimension</th>
+                <th style="width:39%;">Knowledge Graph / Graph RAG (Graphify / CodeKG)</th>
+                <th style="width:39%; color:var(--cyan); background:rgba(0,242,254,0.08);">⚡ Percipience 6D AST Compression (Tree-Sitter)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature-name">Parsing Latency &amp; CPU Overhead</td>
+                <td>⚠️ 5s–30s heavy AST graph indexing &amp; k-hop ego-network query extraction</td>
+                <td class="percipience-cell">✅ <strong>&lt; 85ms</strong> native Tree-Sitter C/Rust daemon (>10,000 LOC/sec in memory)</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Token Payload &amp; Metadata Overhead</td>
+                <td>❌ <strong>+20% to +40% token inflation</strong> from serialized graph edges, JSON schemas &amp; node IDs</td>
+                <td class="percipience-cell">✅ <strong>50% to 75% token reduction</strong> via syntactic method body placeholders (<code>... [AST_PRUNED]</code>)</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Prompt Prefix KV-Cache Pinning</td>
+                <td>❌ Dynamic graph neighbor queries create random token ordering, invalidating LLM prefix cache</td>
+                <td class="percipience-cell">✅ <strong>Deterministic static invariant sorting</strong> ensures 88%+ KV-Cache hit rate across LLM providers</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Syntactic &amp; Type Completeness</td>
+                <td>⚠️ Graph entity hops lose line-level AST context, decorator invariants, and type signatures</td>
+                <td class="percipience-cell">✅ <strong>100% syntactic preservation</strong> of type signatures, docstrings, classes, interfaces, and decorators</td>
+              </tr>
+              <tr>
+                <td class="feature-name">Infrastructure &amp; Database Footprint</td>
+                <td>❌ Requires running Neo4j / NetworkX graph server + external Vector DB cluster</td>
+                <td class="percipience-cell">✅ <strong>Zero external DB dependency</strong>; runs completely ephemeral in-memory tmpfs / CLI runtime</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
     </section>
 
-    <!-- TAB: CONTEXT GATEWAY (OPTION 1) -->
+    <!-- TAB 4: CONTEXT GATEWAY (OPTION 1) -->
     <section id="gateway" class="tab-content">
-      <div class="hero" style="margin-bottom:32px; padding:16px 0;">
-        <div class="hero-badge">🛡️ Zero Client IP Exposure Standard</div>
-        <h1>Context Gateway (Option 1)<br>&amp; Sealed Plan Bundles</h1>
-        <p>Enforces the fundamental law of client security: Proprietary plans and KMS decryption keys reside strictly inside the Gateway server-side volatile RAM. Local client subagents receive zero plaintext blueprint files while executing in full architectural compliance via In-Flight Prompt Injection and Sealed Binary Envelopes (.nbpack).</p>
-        <div class="hero-stats">
-          <div class="hero-stat-item">
-            <div class="hero-stat-val">0.0%</div>
-            <div class="hero-stat-label">Client Plan Exposure</div>
-          </div>
-          <div class="hero-stat-item">
-            <div class="hero-stat-val">100%</div>
-            <div class="hero-stat-label">Invariant Enforcement</div>
-          </div>
-          <div class="hero-stat-item">
-            <div class="hero-stat-val">AES-256-GCM</div>
-            <div class="hero-stat-label">Binary Envelope Seal</div>
-          </div>
-          <div class="hero-stat-item">
-            <div class="hero-stat-val">&lt; 25ms</div>
-            <div class="hero-stat-label">In-Flight Enclave Latency</div>
-          </div>
+      <div class="section-title">Context Gateway (Option 1) &amp; Sealed Plan Bundles</div>
+      <div class="section-desc">Enforces zero plaintext blueprint leakage. Proprietary plans and KMS decryption keys reside strictly inside the Gateway server-side RAM enclave with in-flight prompt injection and sealed binary envelopes (.nbpack).</div>
+
+      <div class="grid-4" style="margin-bottom:22px;">
+        <div class="metric-card">
+          <div class="metric-val text-emerald">0.0%</div>
+          <div class="metric-label">Client Plan Exposure</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-cyan">100%</div>
+          <div class="metric-label">Invariant Enforcement</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-purple">AES-256-GCM</div>
+          <div class="metric-label">Binary Envelope Seal</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-amber">&lt; 25ms</div>
+          <div class="metric-label">In-Flight Enclave Latency</div>
         </div>
       </div>
 
       <!-- Core Security Pillars -->
-      <div class="grid-3" style="margin-bottom:28px;">
+      <div class="grid-3" style="margin-bottom:22px;">
         <div class="card">
-          <div class="card-badge" style="background:rgba(56,189,248,0.1); color:var(--cyan);">Architecture</div>
+          <div class="card-badge">Architecture</div>
           <h3>1. Server-Side RAM Enclave</h3>
           <p>Domain blueprints, wire contracts, and KMS decryption keys reside strictly in ephemeral Gateway memory. No plaintext plan file is ever shipped or exposed to client developer workstations.</p>
-          <div class="stat-box"><span>KMS Key Broker:</span><span class="stat-val" style="font-size:11px; font-family:monospace; color:var(--cyan);">CMEK-Vault-Enclave</span></div>
-          <div class="stat-box"><span>Plaintext Residue:</span><span class="stat-val" style="color:var(--green);">0.0% Disk Residue</span></div>
+          <div class="stat-box"><span>KMS Key Broker:</span><span class="stat-val text-cyan" style="font-size:11px;">CMEK-Vault-Enclave</span></div>
+          <div class="stat-box"><span>Plaintext Residue:</span><span class="stat-val text-emerald">0.0% Disk Residue</span></div>
         </div>
 
         <div class="card">
-          <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">Runtime Interception</div>
+          <div class="card-badge">Runtime Interception</div>
           <h3>2. In-Flight Prompt Injection</h3>
           <p>The Gateway transparently intercepts LLM completions, injects architectural constraints and invariants into the provider context in-flight, and sanitizes output before streaming code back to the client.</p>
-          <div class="stat-box"><span>Drop-in Compatibility:</span><span class="stat-val" style="color:var(--cyan);">OpenAI / Claude API</span></div>
-          <div class="stat-box"><span>Sanitization Guard:</span><span class="stat-val" style="color:var(--green);">100% Redacted Invariants</span></div>
+          <div class="stat-box"><span>Drop-in Compatibility:</span><span class="stat-val text-cyan">OpenAI / Claude API</span></div>
+          <div class="stat-box"><span>Sanitization Guard:</span><span class="stat-val text-emerald">100% Redacted Invariants</span></div>
         </div>
 
         <div class="card">
-          <div class="card-badge" style="background:rgba(245,158,11,0.15); color:var(--amber);">Distribution</div>
+          <div class="card-badge">Distribution</div>
           <h3>3. Encrypted .nbpack Bundles</h3>
           <p>Encrypted domain layers (e.g. <code>iot_mobile_domain.nbpack</code>) can be downloaded and bootstrapped via <code>npm / npx</code> or native CLI into RAM with zero client filesystem exposure.</p>
-          <div class="stat-box"><span>Cryptographic Format:</span><span class="stat-val" style="color:var(--cyan);">NBPACK_V2_SEALED</span></div>
-          <div class="stat-box"><span>Space Hydration:</span><span class="stat-val" style="color:var(--green);">Volatile Memory Only</span></div>
+          <div class="stat-box"><span>Cryptographic Format:</span><span class="stat-val text-cyan">NBPACK_V2_SEALED</span></div>
+          <div class="stat-box"><span>Space Hydration:</span><span class="stat-val text-emerald">Volatile Memory Only</span></div>
         </div>
       </div>
 
       <!-- ENCRYPTED BUNDLES DOWNLOAD & SPACE BOOTSTRAPPING CENTER -->
-      <div class="card" style="margin-bottom:28px;">
-        <div class="card-badge" style="background:rgba(56,189,248,0.15); color:var(--cyan);">Distribution Center</div>
+      <div class="card" style="margin-bottom:22px;">
+        <div class="card-badge">Distribution Center</div>
         <h3>📦 Encrypted Plan Bundles (.nbpack) &amp; Zero-Exposure Space Bootstrapping</h3>
         <p>Download pre-compiled, Ed25519-signed AES-256-GCM binary envelopes. Developers and autonomous subagents can install and hydrate these sealed packages directly in volatile memory via <code>npm / npx</code> or the native Percipience CLI without exposing the proprietary blueprint content.</p>
 
-        <div class="table-wrap" style="margin:16px 0;">
+        <div class="table-wrap" style="margin:14px 0;">
           <table>
             <thead>
               <tr>
@@ -733,54 +871,54 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
             <tbody id="gatewayBundlesTableBody">
               <tr>
                 <td class="feature-name">
-                  <div style="font-weight:700; color:#fff;">IoT Edge &amp; Mobile Domain</div>
+                  <div style="font-weight:700; color:var(--text);">IoT Edge &amp; Mobile Domain</div>
                   <code style="font-size:11px; color:var(--cyan);">iot_mobile_domain.nbpack</code>
                 </td>
                 <td>Embedded FreeRTOS, BLE GATT telemetry, ring-buffer concurrency &amp; dual-bank OTA invariants.</td>
-                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
                 <td>8.2 KB</td>
-                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
                 <td style="text-align:right;">
-                  <a href="/api/gateway/bundles/iot_mobile_domain.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                  <a href="/api/gateway/bundles/iot_mobile_domain.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
                 </td>
               </tr>
               <tr>
                 <td class="feature-name">
-                  <div style="font-weight:700; color:#fff;">Enterprise SaaS &amp; Cloud Portal</div>
+                  <div style="font-weight:700; color:var(--text);">Enterprise SaaS &amp; Cloud Portal</div>
                   <code style="font-size:11px; color:var(--cyan);">saas_portal_domain.nbpack</code>
                 </td>
                 <td>Multi-tenant RBAC, PostgreSQL RLS, Stripe 15% FinOps billing &amp; portal UI design tokens.</td>
-                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
                 <td>7.8 KB</td>
-                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
                 <td style="text-align:right;">
-                  <a href="/api/gateway/bundles/saas_portal_domain.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                  <a href="/api/gateway/bundles/saas_portal_domain.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
                 </td>
               </tr>
               <tr>
                 <td class="feature-name">
-                  <div style="font-weight:700; color:#fff;">Context Engineering OS Kernel</div>
+                  <div style="font-weight:700; color:var(--text);">Context Engineering OS Kernel</div>
                   <code style="font-size:11px; color:var(--cyan);">percipience_parent.nbpack</code>
                 </td>
                 <td>Complete Quad-Space kernel, Merkle state chain DAG, active PID worktrees &amp; CI/CD gatekeeper.</td>
-                <td><span class="badge" style="background:rgba(56,189,248,0.1); color:var(--cyan); padding:3px 6px; border-radius:4px; font-size:10px;">AES-256-GCM / Ed25519</span></td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
                 <td>70.2 KB</td>
-                <td><span style="color:var(--green); font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
                 <td style="text-align:right;">
-                  <a href="/api/gateway/bundles/percipience_parent.nbpack" download class="action-btn" style="padding:6px 12px; font-size:11px; text-decoration:none;">⬇️ Download</a>
+                  <a href="/api/gateway/bundles/percipience_parent.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <h4 style="color:#fff; margin-top:20px; font-size:15px; margin-bottom:8px;">Zero-Exposure Space Bootstrapping Quickstart</h4>
-        <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">Choose your preferred toolchain to bootstrap and hydrate domain quad-spaces in volatile memory:</p>
+        <h4>Zero-Exposure Space Bootstrapping Quickstart</h4>
+        <p>Choose your preferred toolchain to bootstrap and hydrate domain quad-spaces in volatile memory:</p>
 
         <div class="grid-2">
           <div>
-            <label style="font-size:12px; color:var(--cyan); font-weight:700;">Option A: npm / npx Developer CLI Quickstart</label>
-            <pre style="margin-top:6px;"># 1. Download sealed bundle via Gateway (Zero Plaintext Exposure)
+            <div class="form-label" style="color:var(--cyan);">Option A: npm / npx Developer CLI Quickstart</div>
+            <pre># 1. Download sealed bundle via Gateway (Zero Plaintext Exposure)
 curl -fsSL https://portal.percipience.dev/api/gateway/bundles/iot_mobile_domain.nbpack -o ./iot_mobile_domain.nbpack
 
 # 2. Bootstrap workspace in volatile RAM (0% disk residue)
@@ -791,8 +929,8 @@ npm install --save-dev @percipience/context-gateway</pre>
           </div>
 
           <div>
-            <label style="font-size:12px; color:var(--green); font-weight:700;">Option B: Native Percipience Control Plane &amp; Proxy</label>
-            <pre style="margin-top:6px;"># 1. Mount encrypted layer directly into volatile memory
+            <div class="form-label" style="color:var(--green);">Option B: Native Percipience Control Plane &amp; Proxy</div>
+            <pre># 1. Mount encrypted layer directly into volatile memory
 ./workplace/bin/percipience layer apply --pack .nb/bundles/iot_mobile_domain.nbpack
 
 # 2. Verify active in-memory mounts
@@ -811,27 +949,33 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
         <h3>⚡ Drop-in Proxy Playground (In-Flight Invariant Injection)</h3>
         <p>Simulate an autonomous coding subagent querying the Context Gateway. Watch how proprietary invariants are injected in-flight server-side, while only sanitized, compliant code is streamed back to the client.</p>
 
-        <div class="grid-2" style="margin-top:16px;">
+        <div class="grid-2" style="margin-top:14px;">
           <div>
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Governing Proprietary Plan:</label>
-            <select id="gwPlanSelect" style="margin-bottom:10px;">
-              <option value="plan_iot_mobile">IoT Edge &amp; Mobile Plan (BLE GATT &amp; Ring-Buffer Mutex)</option>
-              <option value="plan_saas_portal">SaaS Cloud Portal Plan (Multi-Tenant &amp; 15% FinOps)</option>
-              <option value="plan_parent_master">Parent Master Plan (Quad-Space OS &amp; Merkle Ledger)</option>
-            </select>
+            <div class="form-group">
+              <label class="form-label">Governing Proprietary Plan:</label>
+              <select id="gwPlanSelect">
+                <option value="plan_iot_mobile">IoT Edge &amp; Mobile Plan (BLE GATT &amp; Ring-Buffer Mutex)</option>
+                <option value="plan_saas_portal">SaaS Cloud Portal Plan (Multi-Tenant &amp; 15% FinOps)</option>
+                <option value="plan_parent_master">Parent Master Plan (Quad-Space OS &amp; Merkle Ledger)</option>
+              </select>
+            </div>
 
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Client Context / Local Error Trace (Repo State):</label>
-            <textarea id="gwRepoState" rows="3" style="margin-bottom:10px;">{"module": "mod_telemetry_stream", "test_error": "AssertionError: ring-buffer mutex lock violated on characteristic 0xFF01"}</textarea>
+            <div class="form-group">
+              <label class="form-label">Client Context / Local Error Trace (Repo State):</label>
+              <textarea id="gwRepoState" rows="3">{"module": "mod_telemetry_stream", "test_error": "AssertionError: ring-buffer mutex lock violated on characteristic 0xFF01"}</textarea>
+            </div>
 
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Client Subagent Query Prompt:</label>
-            <textarea id="gwPrompt" rows="3" style="margin-bottom:12px;">Fix the ring-buffer mutex lock violation in the telemetry characteristic and ensure process liveness.</textarea>
+            <div class="form-group">
+              <label class="form-label">Client Subagent Query Prompt:</label>
+              <textarea id="gwPrompt" rows="3">Fix the ring-buffer mutex lock violation in the telemetry characteristic and ensure process liveness.</textarea>
+            </div>
 
             <button class="action-btn" onclick="runContextGatewayDemo()">🚀 Route Through Context Gateway</button>
           </div>
 
           <div>
-            <label style="font-size:12px; color:var(--cyan); font-weight:700;">Live Gateway Execution &amp; Sanitization Audit:</label>
-            <div id="gwDemoResults" style="background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px; min-height:240px; font-family:monospace; font-size:12px; color:var(--muted); line-height:1.5;">
+            <div class="form-label" style="color:var(--cyan);">Live Gateway Execution &amp; Sanitization Audit:</div>
+            <div id="gwDemoResults" style="background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px; min-height:240px; font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted); line-height:1.5;">
               <span style="color:var(--muted);">Click "Route Through Context Gateway" to execute in-flight prompt injection...</span>
             </div>
           </div>
@@ -839,65 +983,65 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
       </div>
     </section>
 
-
-    <!-- TAB 4: ROI & BENEFITS -->
+    <!-- TAB 5: ROI & BENEFITS -->
     <section id="roi-calculator" class="tab-content">
       <div class="section-title">Quantified Customer ROI &amp; ICP Value Models</div>
       <div class="section-desc">Percipience delivers concrete, audited cost reductions and risk elimination across three core target enterprise segments.</div>
 
-      <div class="grid-3" style="margin-bottom:28px;">
+      <div class="grid-3" style="margin-bottom:22px;">
         <div class="card">
           <div class="card-badge">ICP 1</div>
           <h3>AI Dev Agencies &amp; Studios</h3>
           <p>Enables 20+ autonomous subagents to write code concurrently without git locks. Cuts client token pass-through costs by 60%, expanding agency margins from 30% to 55%.</p>
-          <div class="stat-box"><span>Key Metric:</span><span class="stat-val">3.5x Faster Delivery</span></div>
+          <div class="stat-box"><span>Key Metric:</span><span class="stat-val text-cyan">3.5x Faster Delivery</span></div>
         </div>
 
         <div class="card">
           <div class="card-badge">ICP 2</div>
           <h3>Mid-Market &amp; Enterprise Orgs</h3>
           <p>50–500 engineer organizations burning $15k–$100k/mo on LLMs. Eliminates 12+ hours/week per senior engineer spent untangling agent hallucination drift and broken APIs.</p>
-          <div class="stat-box"><span>Annual Net ROI:</span><span class="stat-val">$118,800 / year</span></div>
+          <div class="stat-box"><span>Annual Net ROI:</span><span class="stat-val text-emerald">$118,800 / year</span></div>
         </div>
 
         <div class="card">
           <div class="card-badge">ICP 3</div>
           <h3>Regulated FinTech &amp; HealthTech</h3>
           <p>Banks and healthcare platforms requiring strict SOC 2, HIPAA, and EU AI Act compliance. Tamper-proof WORM Merkle logs provide non-repudiable proof for compliance auditors.</p>
-          <div class="stat-box"><span>Audit Readiness:</span><span class="stat-val">100% Non-Repudiable</span></div>
+          <div class="stat-box"><span>Audit Readiness:</span><span class="stat-val text-purple">100% Non-Repudiable</span></div>
         </div>
       </div>
 
       <div class="card" style="max-width:800px; margin:0 auto;">
-        <h3>Interactive Enterprise Token Savings &amp; ROI Calculator</h3>
+        <div class="card-badge">Interactive FinOps Calculator</div>
+        <h3>Enterprise Token Savings &amp; ROI Calculator</h3>
         <p>Adjust team size, monthly model API spend, and daily PR volume to calculate projected monthly and annualized net financial returns.</p>
         
-        <div class="grid-3" style="margin-bottom:12px;">
-          <div>
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Engineers:</label>
-            <input type="number" id="calcEngineers" value="50" oninput="recalcRoi()">
+        <div class="grid-3" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Engineers:</label>
+            <input type="number" id="calcEngineers" class="input" value="50" oninput="recalcRoi()">
           </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Monthly LLM Spend ($):</label>
-            <input type="number" id="calcSpend" value="18000" oninput="recalcRoi()">
+          <div class="form-group">
+            <label class="form-label">Monthly LLM Spend ($):</label>
+            <input type="number" id="calcSpend" class="input" value="18000" oninput="recalcRoi()">
           </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted); font-weight:600;">Daily PR Count:</label>
-            <input type="number" id="calcPrs" value="45" oninput="recalcRoi()">
+          <div class="form-group">
+            <label class="form-label">Daily PR Count:</label>
+            <input type="number" id="calcPrs" class="input" value="45" oninput="recalcRoi()">
           </div>
         </div>
 
-        <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:18px;">
-          <div class="stat-box"><span>Gross Monthly Token Savings (55% AST Reduction):</span><span id="roiGrossVal" class="stat-val">$9,900 / mo</span></div>
-          <div class="stat-box"><span>15% Percipience Verified Performance Fee:</span><span id="roiFeeVal" class="stat-val" style="color:var(--cyan);">$1,485 / mo</span></div>
-          <div class="stat-box"><span>Net Monthly Customer Savings (Post-Fee):</span><span id="roiNetVal" class="stat-val" style="color:var(--green); font-size:16px;">$8,415 / mo</span></div>
-          <div class="stat-box"><span>Annualized Net Financial Savings:</span><span id="roiAnnualVal" class="stat-val" style="color:var(--green); font-size:18px;">$100,980 / yr</span></div>
-          <div class="stat-box"><span>Engineering Hours Reclaimed (Eliminated Drift):</span><span class="stat-val">520 hrs / mo</span></div>
+        <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <div class="stat-box"><span>Gross Monthly Token Savings (55% AST Reduction):</span><span id="roiGrossVal" class="stat-val text-emerald">$9,900 / mo</span></div>
+          <div class="stat-box"><span>15% Percipience Verified Performance Fee:</span><span id="roiFeeVal" class="stat-val text-cyan">$1,485 / mo</span></div>
+          <div class="stat-box"><span>Net Monthly Customer Savings (Post-Fee):</span><span id="roiNetVal" class="stat-val text-emerald">$8,415 / mo</span></div>
+          <div class="stat-box"><span>Annualized Net Financial Savings:</span><span id="roiAnnualVal" class="stat-val text-emerald" style="font-weight:800;">$100,980 / yr</span></div>
+          <div class="stat-box"><span>Engineering Hours Reclaimed (Eliminated Drift):</span><span class="stat-val text-purple">520 hrs / mo</span></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 5: LIVE SANDBOXES -->
+    <!-- TAB 6: LIVE SANDBOXES -->
     <section id="sandboxes" class="tab-content">
       <div class="section-title">Live Interactive Sandboxes &amp; Consoles</div>
       <div class="section-desc">Test real AST symbol extraction, verify live cryptographic Merkle DAG blocks, and execute simulated surgical module rollbacks.</div>
@@ -907,7 +1051,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
           <div class="card-badge">Live AST Demo</div>
           <h3>Structural AST Pruner Playground</h3>
           <p>Paste any TypeScript or Python snippet below and click Prune to see how internal method bodies are stripped into semantic skeletons:</p>
-          <textarea id="astInput" rows="7">export class PaymentProcessor {
+          <textarea id="astInput" rows="7" style="margin-bottom:10px;">export class PaymentProcessor {
   private secretKey: string;
   constructor(key: string) {
     this.secretKey = key;
@@ -921,7 +1065,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
 }</textarea>
           <button class="action-btn" onclick="runAstPruner()">Prune AST Skeleton</button>
           <div style="margin-top:14px;">
-            <div class="stat-box"><span>Token Compression Ratio:</span><span id="astSavings" class="stat-val">0%</span></div>
+            <div class="stat-box"><span>Token Compression Ratio:</span><span id="astSavings" class="stat-val text-emerald">0%</span></div>
             <pre id="astOutput">// Output AST skeleton will appear here...</pre>
           </div>
         </div>
@@ -929,104 +1073,109 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
         <div class="card">
           <div class="card-badge">Cryptographic DAG</div>
           <h3>Merkle State Explorer &amp; Rollback</h3>
-          <p>Current verifiable SHA-256 state chain from <code>context/ledger/context_ledger.yaml</code>:</p>
+          <p>Current verifiable SHA-256 state chain from <code>.nb/context/ledger/context_ledger.yaml</code>:</p>
           <div id="dagBlocks">
-            <div class="stat-box"><span>Block 0 (GENESIS):</span><span style="font-family:monospace; font-size:11px;">7f8b9e4a3d2c1b0a...</span></div>
-            <div class="stat-box"><span>Block 1 (BOOTSTRAP):</span><span style="font-family:monospace; font-size:11px;">a3b2c1d0e9f8a7b6...</span></div>
-            <div class="stat-box"><span>Block 2 (PR_GATE_PASS):</span><span style="font-family:monospace; font-size:11px;">f881b2be129be959...</span></div>
+            <div class="stat-box"><span>Block 0 (GENESIS):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">7f8b9e4a3d2c1b0a...</span></div>
+            <div class="stat-box"><span>Block 1 (BOOTSTRAP):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">a3b2c1d0e9f8a7b6...</span></div>
+            <div class="stat-box"><span>Block 2 (PR_GATE_PASS):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">f881b2be129be959...</span></div>
           </div>
-          <div style="margin-top:16px; display:flex; gap:12px;">
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
             <button class="action-btn" onclick="loadDag()">Verify Merkle Chain</button>
             <button class="action-btn" style="background:var(--red); color:#fff;" onclick="triggerRollback()">Test Surgical Rollback</button>
           </div>
-          <div style="margin-top:14px;">
-            <div class="stat-box"><span>Prompt Cache Hit Rate:</span><span class="stat-val">88.4%</span></div>
-            <div class="stat-box"><span>Context Poisoning Incidents:</span><span class="stat-val" style="color:var(--green);">0 Active</span></div>
+          <div style="margin-top:12px;">
+            <div class="stat-box"><span>Prompt Cache Hit Rate:</span><span class="stat-val text-cyan">88.4%</span></div>
+            <div class="stat-box"><span>Context Poisoning Incidents:</span><span class="stat-val text-emerald">0 Active</span></div>
           </div>
         </div>
       </div>
-      <div class="card" style="margin-top:20px; border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+
+      <div class="card" style="margin-top:18px; border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
         <div class="card-badge" style="background:var(--cyan); color:#000;">Live FinOps Telemetry</div>
         <h3>Repository Token Savings &amp; Metering Ledger</h3>
-        <p>Continuous context token reduction metrics calculated from <code>context/ledger/token_savings_ledger.yaml</code>:</p>
-        <div class="grid-3" style="margin-top:14px;">
-          <div class="stat-box"><span>Tokens Saved:</span><span id="portalTokensSaved" class="stat-val" style="color:var(--cyan);">46,169</span></div>
-          <div class="stat-box"><span>Gross Bill Savings:</span><span id="portalGrossSaved" class="stat-val" style="color:var(--green);">$0.1385</span></div>
-          <div class="stat-box"><span>15% Performance Fee:</span><span id="portalFee" class="stat-val">$0.0208</span></div>
+        <p>Continuous context token reduction metrics calculated from <code>.nb/context/ledger/token_savings_ledger.yaml</code>:</p>
+        <div class="grid-3" style="margin-top:12px;">
+          <div class="stat-box"><span>Tokens Saved:</span><span id="portalTokensSaved" class="stat-val text-cyan">46,169</span></div>
+          <div class="stat-box"><span>Gross Bill Savings:</span><span id="portalGrossSaved" class="stat-val text-emerald">$0.1385</span></div>
+          <div class="stat-box"><span>15% Performance Fee:</span><span id="portalFee" class="stat-val text-purple">$0.0208</span></div>
         </div>
-        <div class="grid-3" style="margin-top:10px;">
-          <div class="stat-box"><span>Net Client Retained:</span><span id="portalNetSaved" class="stat-val" style="color:var(--green);">$0.1177</span></div>
-          <div class="stat-box"><span>Avg Token Reduction:</span><span id="portalReductionPct" class="stat-val">39.3%</span></div>
-          <div class="stat-box"><span>Pruning Events:</span><span id="portalEventsCount" class="stat-val">113</span></div>
+        <div class="grid-3" style="margin-top:8px;">
+          <div class="stat-box"><span>Net Client Retained:</span><span id="portalNetSaved" class="stat-val text-emerald">$0.1177</span></div>
+          <div class="stat-box"><span>Avg Token Reduction:</span><span id="portalReductionPct" class="stat-val text-cyan">39.3%</span></div>
+          <div class="stat-box"><span>Pruning Events:</span><span id="portalEventsCount" class="stat-val text-amber">113</span></div>
         </div>
-        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <a href="/api/tokens/savings" target="_blank" style="color:var(--cyan); font-size:12px; font-weight:600; text-decoration:none;">View Raw YAML/JSON Ledger &rarr;</a>
-          <button class="action-btn" style="padding:6px 14px; font-size:12px;" onclick="fetchPortalTokenSavings()">Refresh FinOps Telemetry</button>
+          <button class="action-btn" style="padding:6px 12px; font-size:11px;" onclick="fetchPortalTokenSavings()">Refresh FinOps Telemetry</button>
         </div>
       </div>
 
-      <!-- Additional Consoles for Phases 1-3 Enhancements -->
-      <div class="grid-2" style="margin-top:20px;">
+      <!-- Additional Consoles for Cognitive Router & Specialist Fleet -->
+      <div class="grid-2" style="margin-top:18px;">
         <!-- Cognitive Router Interactive Simulator -->
         <div class="card">
-          <div class="card-badge" style="background:rgba(168,85,247,0.15); color:var(--purple);">Model-Agnostic Router</div>
+          <div class="card-badge">Model-Agnostic Router</div>
           <h3>Cognitive Tiering Router Simulator</h3>
           <p>Test dynamic cognitive tier dispatch based on prompt complexity, target scope, and AST risk profile:</p>
-          <select id="routerPromptSelect" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:12px;" onchange="updateCustomPromptText()">
-            <option value="Verify unit test assertions and check for flaky retries in test suite">Verify unit test assertions &amp; flaky retries (Routine Task)</option>
-            <option value="Scan AST imports and third-party dependencies for CVE supply-chain risks">Scan AST imports for dependency CVEs (Routine Security)</option>
-            <option value="Synchronize architectural blueprint with live exported AST symbol signatures">Synchronize doc drift against AST exports (Routine Documentation)</option>
-            <option value="Evolve cross-module RPC schema contract and verify backward compatibility">Evolve wire contract &amp; SemVer breaking change analysis (Complex Reasoning)</option>
-            <option value="Perform multi-module context security audit and investigate hardcoded secrets">Infosec audit &amp; hardcoded secrets quarantine (High Risk)</option>
-          </select>
-          <textarea id="routerPromptText" rows="3" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:8px; border-radius:6px; font-size:12px; margin-bottom:10px;">Verify unit test assertions and check for flaky retries in test suite</textarea>
+          <div class="form-group">
+            <select id="routerPromptSelect" onchange="updateCustomPromptText()">
+              <option value="Verify unit test assertions and check for flaky retries in test suite">Verify unit test assertions &amp; flaky retries (Routine Task)</option>
+              <option value="Scan AST imports and third-party dependencies for CVE supply-chain risks">Scan AST imports for dependency CVEs (Routine Security)</option>
+              <option value="Synchronize architectural blueprint with live exported AST symbol signatures">Synchronize doc drift against AST exports (Routine Documentation)</option>
+              <option value="Evolve cross-module RPC schema contract and verify backward compatibility">Evolve wire contract &amp; SemVer breaking change analysis (Complex Reasoning)</option>
+              <option value="Perform multi-module context security audit and investigate hardcoded secrets">Infosec audit &amp; hardcoded secrets quarantine (High Risk)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea id="routerPromptText" rows="3">Verify unit test assertions and check for flaky retries in test suite</textarea>
+          </div>
           <button class="action-btn" onclick="simulateCognitiveRoute()">Dispatch Cognitive Route</button>
-          <div id="routerResultBox" style="margin-top:14px; display:none; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:6px; padding:12px;">
-            <div class="stat-box"><span>Selected Tier:</span><span id="routeTierVal" class="stat-val" style="color:var(--cyan);">Tier B</span></div>
-            <div class="stat-box"><span>Dispatched Model:</span><span id="routeModelVal" style="font-weight:600;">claude-3-5-haiku / flash</span></div>
-            <div class="stat-box"><span>Estimated Cost Savings:</span><span id="routeSavingsVal" class="stat-val" style="color:var(--green);">90.0% Cost Discount</span></div>
+          <div id="routerResultBox" style="margin-top:14px; display:none; background:var(--code-bg); border:1px solid var(--border); border-radius:6px; padding:12px;">
+            <div class="stat-box"><span>Selected Tier:</span><span id="routeTierVal" class="stat-val text-cyan">Tier B</span></div>
+            <div class="stat-box"><span>Dispatched Model:</span><span id="routeModelVal" class="stat-val" style="font-weight:600;">claude-3-5-haiku / flash</span></div>
+            <div class="stat-box"><span>Estimated Cost Savings:</span><span id="routeSavingsVal" class="stat-val text-emerald">90.0% Cost Discount</span></div>
             <p id="routeRationale" style="font-size:11px; color:var(--muted); margin-top:8px;"></p>
           </div>
         </div>
 
         <!-- Flaky Test & Specialist Agent Fleet Console -->
         <div class="card">
-          <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">Autonomous CI/CD Fleet</div>
+          <div class="card-badge">Autonomous CI/CD Fleet</div>
           <h3>Specialist Plugins &amp; Quarantine Console</h3>
           <p>Inspect the status of the 4 autonomous CI/CD specialist plugins and active quarantine ledgers:</p>
           <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+            <div class="stat-box">
               <div><strong style="color:var(--cyan); font-size:12px;">agent_flaky_test_detector</strong><br><span style="font-size:11px; color:var(--muted);">Non-blocking quarantine (user/hitl/flaky_quarantine.yaml)</span></div>
-              <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:3px 8px; border-radius:4px; font-weight:700;">ACTIVE</span>
+              <span class="badge badge-emerald">ACTIVE</span>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+            <div class="stat-box">
               <div><strong style="color:var(--cyan); font-size:12px;">agent_contract_compatibility_checker</strong><br><span style="font-size:11px; color:var(--muted);">JSON Schema Draft-07 &amp; SemVer guard (Tier A)</span></div>
-              <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:3px 8px; border-radius:4px; font-weight:700;">ACTIVE</span>
+              <span class="badge badge-emerald">ACTIVE</span>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+            <div class="stat-box">
               <div><strong style="color:var(--cyan); font-size:12px;">agent_dependency_cve_sentinel</strong><br><span style="font-size:11px; color:var(--muted);">Supply-chain AST import auditor &amp; license guard</span></div>
-              <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:3px 8px; border-radius:4px; font-weight:700;">ACTIVE</span>
+              <span class="badge badge-emerald">ACTIVE</span>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:6px; border:1px solid var(--border);">
+            <div class="stat-box">
               <div><strong style="color:var(--cyan); font-size:12px;">agent_doc_drift_synchronizer</strong><br><span style="font-size:11px; color:var(--muted);">Verifies exported AST symbols against architecture plans</span></div>
-              <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:3px 8px; border-radius:4px; font-weight:700;">ACTIVE</span>
+              <span class="badge badge-emerald">ACTIVE</span>
             </div>
           </div>
-          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; color:var(--muted);">Active Flaky Quarantine Blockers: <strong style="color:var(--green);">0 Active</strong></span>
+          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <span style="font-size:11px; color:var(--muted);">Active Flaky Quarantine Blockers: <strong class="text-emerald">0 Active</strong></span>
             <button class="action-btn" style="padding:6px 12px; font-size:11px;" onclick="runFlakyCheckSimulation()">Run Determinism Check</button>
           </div>
-          <div id="flakyCheckResult" style="display:none; font-size:11px; color:var(--green); margin-top:8px; font-family:monospace;"></div>
+          <div id="flakyCheckResult" style="display:none; font-size:11px; color:var(--green); margin-top:8px; font-family:'JetBrains Mono', monospace;"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 6: CLOUD & OPEX -->
+    <!-- TAB 7: CLOUD & OPEX -->
     <section id="infrastructure" class="tab-content">
       <div class="section-title">Target Hosting Infrastructure &amp; Economics</div>
       <div class="section-desc">Production-grade Multi-AZ / Multi-Zone deployment blueprints for AWS and Google Cloud with itemized box costs and margin models.</div>
 
-      <div class="table-wrap" style="margin-bottom:28px;">
+      <div class="table-wrap" style="margin-bottom:22px;">
         <table>
           <thead>
             <tr>
@@ -1108,12 +1257,12 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
               <td>$767 / $750</td>
               <td>HKDF key derivation for .nbpack RAM decryption</td>
             </tr>
-            <tr style="background:#0b1222; font-weight:700;">
+            <tr style="background:var(--bg-panel); font-weight:700;">
               <td class="feature-name" style="color:var(--cyan);">Total Monthly OpEx</td>
-              <td style="color:#fff;">$12,980 / mo</td>
-              <td style="color:#fff;">$12,468 / mo</td>
-              <td style="color:var(--green); font-weight:800;">$225,000 MRR</td>
-              <td style="color:var(--green);">91.2% / 91.5% Gross Margin</td>
+              <td>$12,980 / mo</td>
+              <td>$12,468 / mo</td>
+              <td class="text-emerald" style="font-weight:800;">$225,000 MRR</td>
+              <td class="text-emerald">91.2% / 91.5% Gross Margin</td>
             </tr>
           </tbody>
         </table>
@@ -1138,12 +1287,12 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
       </div>
     </section>
 
-    <!-- TAB 7: PRICING & ONBOARDING -->
+    <!-- TAB 8: PRICING & ONBOARDING -->
     <section id="pricing" class="tab-content">
       <div class="section-title">Licensing Tiers &amp; Instant Self-Serve Provisioning</div>
       <div class="section-desc">Choose your licensing tier or deploy directly inside your own private AWS or GCP VPC.</div>
 
-      <div class="grid-3" style="margin-bottom:36px;">
+      <div class="grid-3" style="margin-bottom:28px;">
         <div class="card">
           <div class="card-badge">Team Tier</div>
           <h3>Developer</h3>
@@ -1193,25 +1342,32 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
       </div>
 
       <div class="card" style="max-width:700px; margin:0 auto;">
+        <div class="card-badge">Instant Provisioning</div>
         <h3>Instant Self-Serve Quad-Space Provisioning</h3>
         <p>Register your organization to provision an isolated tenant partition (Postgres RLS), register a KMS CMEK key, and receive an instant API key:</p>
         
-        <label style="font-size:12px; color:var(--muted); font-weight:600;">Organization Name:</label>
-        <input type="text" id="onboardOrg" value="Acme Financial Engineering">
-        <label style="font-size:12px; color:var(--muted); font-weight:600;">Admin Work Email:</label>
-        <input type="email" id="onboardEmail" value="lead.architect@acme-fin.com">
-        <label style="font-size:12px; color:var(--muted); font-weight:600;">Subscription Tier:</label>
-        <select id="onboardTier">
-          <option value="plan_business">Business Tier ($4,499/mo)</option>
-          <option value="plan_team">Developer Team ($1,499/mo)</option>
-          <option value="plan_enterprise">Enterprise Dedicated VPC ($9,999+/mo)</option>
-        </select>
+        <div class="form-group">
+          <label class="form-label">Organization Name:</label>
+          <input type="text" id="onboardOrg" class="input" value="Acme Financial Engineering">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Admin Work Email:</label>
+          <input type="email" id="onboardEmail" class="input" value="lead.architect@acme-fin.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subscription Tier:</label>
+          <select id="onboardTier" class="input">
+            <option value="plan_business">Business Tier ($4,499/mo)</option>
+            <option value="plan_team">Developer Team ($1,499/mo)</option>
+            <option value="plan_enterprise">Enterprise Dedicated VPC ($9,999+/mo)</option>
+          </select>
+        </div>
         <button class="action-btn" onclick="submitOnboard()">Provision Workspace &amp; Issue API Key</button>
-        <pre id="onboardResult" style="margin-top:16px; display:none;"></pre>
+        <pre id="onboardResult" style="margin-top:14px; display:none;"></pre>
       </div>
     </section>
 
-    <!-- TAB 8: DOCS -->
+    <!-- TAB 9: DOCS -->
     <section id="docs" class="tab-content">
       <div class="section-title">Documentation Hub</div>
       <div class="section-desc">Comprehensive technical integration guides covering CLI, CI/CD Gatekeepers, .nbpack Enclaves, and Surgical Rollback.</div>
@@ -1246,7 +1402,7 @@ percipience audit --enforce-merkle-chain</pre>
           <p>Compile and sign proprietary context plans with zero disk leakage:</p>
           <pre>percipience pack \
   --input parent_master.md \
-  --include-spaces context,agentic \
+  --include-spaces .nb/context,.nb/agentic \
   --output .percipience/parent.nbpack \
   --obfuscate \
   --sign</pre>
@@ -1259,11 +1415,11 @@ percipience audit --enforce-merkle-chain</pre>
           <ul class="bullet-list">
             <li><b>-62.4% Context Tokens</b> via Tree-Sitter AST body stripping</li>
             <li><b>88.6% Prompt Cache Hit Rate</b> via static invariant alignment</li>
-            <li><b>-71.8% Direct Cost Drop</b> ($1.42 -&gt; $0.40 blended cost per task)</li>
+            <li><b>-71.8% Direct Cost Drop</b> ($1.42 -> $0.40 blended cost per task)</li>
             <li><b>0% Workspace Collisions</b> across 10 concurrent agent worktrees</li>
           </ul>
-          <div style="margin-top:14px;">
-            <a href="/api/docs/whitepaper" target="_blank" style="color:var(--cyan); font-weight:700; text-decoration:none;">Download / View Full Whitepaper Markdown &rarr;</a>
+          <div style="margin-top:12px;">
+            <a href="/api/docs/whitepaper" target="_blank" style="color:var(--cyan); font-weight:700; text-decoration:none; font-size:12px;">Download / View Full Whitepaper Markdown &rarr;</a>
           </div>
         </div>
 
@@ -1278,42 +1434,80 @@ percipience rollback \
         </div>
       </div>
     </section>
-  
-    <!-- TAB: OBSERVABILITY DASHBOARD -->
-    <section id="observability" class="tab-content">
-      <div class="hero">
-        <div class="hero-badge">📈 Live Observability &amp; Distributed Tracing</div>
-        <h1>OpenTelemetry GenAI &amp; Quantitative Quality Hub</h1>
-        <p>Enterprise telemetry streaming OpenTelemetry GenAI spans, 5-dimensional G-Eval quality scores, semantic prompt caching FinOps, and attention budget quotas.</p>
-      </div>
 
-      <div class="grid-cards" style="margin-bottom:24px;">
+    <!-- TAB 10: DEEP REPORTS & WHITE PAPERS -->
+    <section id="reports" class="tab-content">
+      <div class="section-title">Engineering Whitepapers, Audits &amp; Formal Reports</div>
+      <div class="section-desc">Authoritative technical reports generated by the Percipience control plane, covering token reduction mathematics, 20-point SDLC drift audits, context maturity evaluations, and competitive benchmarks.</div>
+
+      <div class="grid-3" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-badge">Mathematical Whitepaper</div>
+          <h3>Token Reduction &amp; Attention Slicing</h3>
+          <p>Formal mathematical proof of 50%–75% prompt context reduction using 6D AST skeletonization and Static Prefix KV-Cache pinning.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>T_opt = ∑ AST(m) + Prefix + Diag</div>
+            <div class="text-emerald" style="margin-top:4px; font-weight:700;">Savings: 5.45M Tokens ($16.36 Saved)</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('docs')" style="width:100%; font-size:11px;">View Full Whitepaper &rarr;</button>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">SDLC Governance Review</div>
+          <h3>20-Point Autonomous SDLC Audit</h3>
+          <p>Comprehensive architectural analysis of shortcomings, drifts, and fixes across Swarm governance, D_max=2 anti-usurpation, and ReAct trajectory recording.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>Shortcomings Identified: 20</div>
+            <div class="text-cyan" style="margin-top:4px; font-weight:700;">Remediation Status: 100% Implemented</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('capabilities')" style="width:100%; font-size:11px;">Explore SDLC Subsystems &rarr;</button>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Autonomous Maturity Scorecard</div>
+          <h3>Context Maturity Evaluation (Level 5)</h3>
+          <p>Scoring the repository across 5 maturity tiers (Ad-hoc to Level 5 Self-Sustaining Autonomous OS) with 100% Quad-Space boundary compliance.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>Maturity Score: <strong>100.0 / 100 (Level 5)</strong></div>
+            <div class="text-purple" style="margin-top:4px; font-weight:700;">Merkle Blocks: 1007 Continuous</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('observability')" style="width:100%; font-size:11px;">Open Observability Radar &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 11: OBSERVABILITY DASHBOARD -->
+    <section id="observability" class="tab-content">
+      <div class="section-title">OpenTelemetry GenAI &amp; Quantitative Quality Hub</div>
+      <div class="section-desc">Enterprise telemetry streaming OpenTelemetry GenAI spans, 5-dimensional G-Eval quality scores, semantic prompt caching FinOps, and attention budget quotas.</div>
+
+      <div class="grid-cards" style="margin-bottom:22px;">
         <div class="metric-card">
-          <div class="metric-val" style="color:var(--cyan);">W3C Standard</div>
+          <div class="metric-val text-cyan">W3C Standard</div>
           <div class="metric-label">Distributed Tracing (OTel GenAI)</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" style="color:var(--emerald);" id="gevalScoreVal">0.962 / 1.00</div>
+          <div class="metric-val text-emerald" id="gevalScoreVal">0.962 / 1.00</div>
           <div class="metric-label">Composite G-Eval Quality Score</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" style="color:var(--purple);" id="cacheHitRateVal">64.8%</div>
+          <div class="metric-val text-purple" id="cacheHitRateVal">64.8%</div>
           <div class="metric-label">Semantic Prompt Cache Hit Rate</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" style="color:var(--amber);">100% Pinned</div>
+          <div class="metric-val text-amber">100% Pinned</div>
           <div class="metric-label">Static Prefix KV-Cache Alignment</div>
         </div>
       </div>
 
       <!-- OTEL SPANS TABLE -->
-      <div class="card" style="margin-bottom:24px;">
-        <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="card" style="margin-bottom:22px;">
+        <div class="card-title">
           <span>⚡ Real-Time OpenTelemetry GenAI Spans</span>
           <button class="btn btn-secondary" onclick="fetchOtelSpans()" style="padding:4px 10px; font-size:11px;">🔄 Refresh Spans</button>
         </div>
-        <div style="overflow-x:auto;">
-          <table class="table" style="width:100%; font-size:12px;">
+        <div class="table-wrap" style="margin:8px 0 0;">
+          <table class="table">
             <thead>
               <tr>
                 <th>Traceparent / Span Name</th>
@@ -1355,123 +1549,123 @@ percipience rollback \
       </div>
 
       <!-- 5D QUALITY & ATTENTION SLICING GRID -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
+      <div class="grid-2" style="margin-bottom:22px;">
         <div class="card">
           <div class="card-title">🎯 5-Dimensional Quantitative Evals &amp; Hallucination Radar</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Automated G-Eval rubric evaluations across code correctness, hallucination freedom, and ground-truth parity.</p>
-          <div style="font-size:13px; display:flex; flex-direction:column; gap:10px;">
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Faithfulness (Grounding):</span><strong style="color:var(--emerald);">0.980 / 1.00</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--emerald); width:98%; height:100%; border-radius:3px;"></div></div>
+          <p>Automated G-Eval rubric evaluations across code correctness, hallucination freedom, and ground-truth parity.</p>
+          <div class="vector-list">
+            <div class="vector-item">
+              <div class="vector-header"><span>Faithfulness (Grounding):</span><strong class="text-emerald">0.980 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:98%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Hallucination Freedom:</span><strong style="color:var(--emerald);">0.995 / 1.00</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--emerald); width:99.5%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Hallucination Freedom:</span><strong class="text-emerald">0.995 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:99.5%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Context Relevancy:</span><strong style="color:var(--cyan);">0.940 / 1.00</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--cyan); width:94%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Context Relevancy:</span><strong class="text-cyan">0.940 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:94%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Code Correctness &amp; Syntax:</span><strong style="color:var(--purple);">1.000 / 1.00</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--purple); width:100%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Code Correctness &amp; Syntax:</span><strong class="text-purple">1.000 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-purple" style="width:100%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Semantic Parity vs Spec:</span><strong style="color:var(--amber);">0.996 / 1.00</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--amber); width:99.6%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Semantic Parity vs Spec:</span><strong class="text-amber">0.996 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-amber" style="width:99.6%;"></div></div>
             </div>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">🧠 Context Attention Slicing &amp; Token Budget Quotas</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Mathematical quota budgeting preventing context overflow and lost-in-the-middle attention degradation.</p>
-          <div style="font-size:13px; display:flex; flex-direction:column; gap:10px;">
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>1. System Persona &amp; Invariants (15%):</span><strong>15.0% (Protected)</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--cyan); width:15%; height:100%; border-radius:3px;"></div></div>
+          <p>Mathematical quota budgeting preventing context overflow and lost-in-the-middle attention degradation.</p>
+          <div class="vector-list">
+            <div class="vector-item">
+              <div class="vector-header"><span>1. System Persona &amp; Invariants (15%):</span><strong>15.0% (Protected)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:15%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>2. Schemas &amp; Wire Contracts (25%):</span><strong>25.0% (Active)</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--purple); width:25%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>2. Schemas &amp; Wire Contracts (25%):</span><strong>25.0% (Active)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-purple" style="width:25%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>3. AST Codebase Skeleton (35%):</span><strong>35.0% (Tree-Sitter)</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--emerald); width:35%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>3. AST Codebase Skeleton (35%):</span><strong>35.0% (Tree-Sitter)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:35%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>4. Memory &amp; ReAct Trajectories (10%):</span><strong>10.0% (Serialized)</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--amber); width:10%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>4. Memory &amp; ReAct Trajectories (10%):</span><strong>10.0% (Serialized)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-amber" style="width:10%;"></div></div>
             </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>5. LLM Generation Target Space (15%):</span><strong>15.0% (Reserved)</strong></div>
-              <div style="background:var(--card-bg); height:6px; border-radius:3px;"><div style="background:var(--cyan); width:15%; height:100%; border-radius:3px;"></div></div>
+            <div class="vector-item">
+              <div class="vector-header"><span>5. LLM Generation Target Space (15%):</span><strong>15.0% (Reserved)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:15%;"></div></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB: SECURE CLIENT SPACE -->
+    <!-- TAB 12: SECURE CLIENT SPACE -->
     <section id="client" class="tab-content">
       <!-- UNAUTHENTICATED LOGIN CARD -->
-      <div id="clientLoginCard" class="card" style="max-width:560px; margin:40px auto; padding:32px; border:1px solid var(--border-color);">
-        <div style="font-size:28px; margin-bottom:8px;">🔐 Secure Client Space</div>
-        <p style="color:var(--text-muted); font-size:13px; margin-bottom:24px;">Access confidential project telemetry, itemized FinOps rev-share invoices, recovery points, and WORM compliance audit proofs.</p>
+      <div id="clientLoginCard" class="card" style="max-width:540px; margin:32px auto; padding:28px;">
+        <div class="card-title" style="font-size:18px;">🔐 Secure Client Space</div>
+        <p style="margin-bottom:18px;">Access confidential project telemetry, itemized FinOps rev-share invoices, recovery points, and WORM compliance audit proofs.</p>
         
-        <div class="form-group" style="margin-bottom:16px;">
-          <label class="form-label" style="display:block; margin-bottom:6px; font-weight:600; font-size:12px;">Client ID / Organization</label>
-          <input type="text" id="loginClientId" class="input" placeholder="e.g. acme_corp_fintech" value="acme_corp_fintech" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-color);">
+        <div class="form-group">
+          <label class="form-label">Client ID / Organization</label>
+          <input type="text" id="loginClientId" class="input" placeholder="e.g. acme_corp_fintech" value="acme_corp_fintech">
         </div>
 
-        <div class="form-group" style="margin-bottom:20px;">
-          <label class="form-label" style="display:block; margin-bottom:6px; font-weight:600; font-size:12px;">API Key / Secret Token</label>
-          <input type="password" id="loginApiKey" class="input" placeholder="e.g. nb_sec_client_9948" value="nb_sec_client_9948" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-color);">
+        <div class="form-group">
+          <label class="form-label">API Key / Secret Token</label>
+          <input type="password" id="loginApiKey" class="input" placeholder="e.g. nb_sec_client_9948" value="nb_sec_client_9948">
         </div>
 
-        <div style="display:flex; gap:12px;">
-          <button class="btn btn-primary" onclick="loginClient(false)" style="flex:1; padding:12px; font-weight:700;">🔐 Sign In to Client Workspace</button>
-          <button class="btn btn-secondary" onclick="loginClient(true)" style="padding:12px; font-size:12px;">⚡ Demo Enterprise Login</button>
+        <div style="display:flex; gap:10px; margin-top:16px;">
+          <button class="btn btn-primary" onclick="loginClient(false)" style="flex:1;">🔐 Sign In to Client Workspace</button>
+          <button class="btn btn-secondary" onclick="loginClient(true)">⚡ Demo Login</button>
         </div>
         <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:12px; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
       </div>
 
       <!-- AUTHENTICATED CLIENT CONSOLE -->
       <div id="clientAuthConsole" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
-            <div style="font-size:24px; font-weight:800; color:var(--cyan);" id="clientOrgName">Acme Global Financial Technologies</div>
-            <div style="font-size:13px; color:var(--text-muted);">Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; Project: <strong id="clientProjectName">NB Fairyfly Core</strong> &bull; Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span></div>
+            <div style="font-size:20px; font-weight:800; color:var(--cyan);" id="clientOrgName">Acme Global Financial Technologies</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:3px;">Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span></div>
           </div>
-          <button class="btn btn-secondary" onclick="logoutClient()" style="padding:8px 16px;">🚪 Sign Out</button>
+          <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 14px; font-size:11px;">🚪 Sign Out</button>
         </div>
 
         <!-- CLIENT CARDS -->
-        <div class="grid-cards" style="margin-bottom:24px;">
+        <div class="grid-cards" style="margin-bottom:22px;">
           <div class="metric-card">
-            <div class="metric-val" style="color:var(--emerald);" id="clientGrossSavings">$15.6974</div>
+            <div class="metric-val text-emerald" id="clientGrossSavings">$15.6974</div>
             <div class="metric-label">Verified Gross Token Savings</div>
           </div>
           <div class="metric-card">
-            <div class="metric-val" style="color:var(--cyan);" id="clientRevShareDue">$2.3546</div>
+            <div class="metric-val text-cyan" id="clientRevShareDue">$2.3546</div>
             <div class="metric-label">15% Rev-Share Performance Fee Due</div>
           </div>
           <div class="metric-card">
-            <div class="metric-val" style="color:var(--purple);">multi_module</div>
+            <div class="metric-val text-purple">multi_module</div>
             <div class="metric-label">Active Workspace Mode</div>
           </div>
           <div class="metric-card">
-            <div class="metric-val" style="color:var(--amber);" id="clientWormStatus">LOCKED (S3 WORM)</div>
+            <div class="metric-val text-amber" id="clientWormStatus">LOCKED (S3 WORM)</div>
             <div class="metric-label">SEC 17a-4 / FINRA Compliance Vault</div>
           </div>
         </div>
 
         <!-- MODULES & SURGICAL ROLLBACK CONTROL -->
-        <div class="card" style="margin-bottom:24px;">
+        <div class="card" style="margin-bottom:22px;">
           <div class="card-title">🛡️ Project Micro-Modules &amp; Surgical Recovery Points</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Isolated module recovery points allow surgical rollback of individual sub-modules without disturbing sibling services.</p>
-          <div style="overflow-x:auto;">
-            <table class="table" style="width:100%; font-size:12px;">
+          <p style="margin-bottom:14px;">Isolated module recovery points allow surgical rollback of individual sub-modules without disturbing sibling services.</p>
+          <div class="table-wrap" style="margin:8px 0 0;">
+            <table class="table">
               <thead>
                 <tr>
                   <th>Module Identifier</th>
@@ -1518,56 +1712,14 @@ percipience rollback \
         <!-- ITEMIZED FINOPS INVOICE -->
         <div class="card">
           <div class="card-title">🧾 Itemized FinOps Rev-Share Accounting Invoice</div>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Transparent, zero-risk performance fee billing: You pay only 15% of verified cloud token cost reductions.</p>
-          <div style="background:var(--card-bg); padding:16px; border-radius:8px; border:1px solid var(--border-color); font-family:'JetBrains Mono', monospace; font-size:12px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Raw Base Tokens Processed:</span><strong>5,232,080 tokens</strong></div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>AST Pruning Reduction (50.3%):</span><strong style="color:var(--emerald);">-2,631,736 tokens</strong></div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Semantic Cache Hits Reduction:</span><strong style="color:var(--emerald);">-1,240,000 tokens</strong></div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-top:1px solid var(--border-color); padding-top:8px;"><span>Gross Client Cloud Savings ($0.003/1K tok):</span><strong style="color:var(--emerald);">$15.6974 USD</strong></div>
-            <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border-color); padding-top:8px; font-size:14px; font-weight:700;"><span>Percipience Performance Fee (15%):</span><strong style="color:var(--cyan);">$2.3546 USD</strong></div>
+          <p style="margin-bottom:14px;">Transparent, zero-risk performance fee billing: You pay only 15% of verified cloud token cost reductions.</p>
+          <div style="background:var(--code-bg); padding:16px; border-radius:8px; border:1px solid var(--border); font-family:'JetBrains Mono', monospace; font-size:12px;">
+            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Raw Base Tokens Processed:</span><strong style="color:var(--text);">5,232,080 tokens</strong></div>
+            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>AST Pruning Reduction (50.3%):</span><strong class="text-emerald">-2,631,736 tokens</strong></div>
+            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Semantic Cache Hits Reduction:</span><strong class="text-emerald">-1,240,000 tokens</strong></div>
+            <div class="stat-box" style="background:transparent; border:none; padding:6px 0 3px; border-top:1px solid var(--border); margin-top:6px;"><span>Gross Client Cloud Savings ($0.003/1K tok):</span><strong class="text-emerald">$15.6974 USD</strong></div>
+            <div class="stat-box" style="background:transparent; border:none; padding:6px 0 0; border-top:1px dashed var(--border); font-size:13px; font-weight:700; margin-top:6px;"><span>Percipience Performance Fee (15%):</span><strong class="text-cyan">$2.3546 USD</strong></div>
           </div>
-        </div>
-      </div>
-    </section>
-
-  
-    <!-- TAB: DEEP REPORTS & WHITE PAPERS -->
-    <section id="reports" class="tab-content">
-      <div class="section-title">Engineering Whitepapers, Audits &amp; Formal Reports</div>
-      <div class="section-desc">Authoritative technical reports generated by the Percipience control plane, covering token reduction mathematics, 20-point SDLC drift audits, context maturity evaluations, and competitive benchmarks.</div>
-
-      <div class="grid-3" style="margin-bottom:24px;">
-        <div class="card">
-          <div class="card-badge">Mathematical Whitepaper</div>
-          <h3>Token Reduction &amp; Attention Slicing</h3>
-          <p>Formal mathematical proof of 50%–75% prompt context reduction using 6D AST skeletonization and Static Prefix KV-Cache pinning.</p>
-          <div style="background:var(--code-bg); padding:10px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; margin-bottom:12px;">
-            <div>$T_{opt} = \sum_{m} 	ext{AST}(m) + 	ext{Prefix} + 	ext{Diag}$</div>
-            <div style="color:var(--emerald); margin-top:4px;">Savings: 5.45M Tokens ($16.36 Saved)</div>
-          </div>
-          <button class="btn btn-secondary" onclick="showTab('docs')" style="width:100%; font-size:11px;">View Full Whitepaper &rarr;</button>
-        </div>
-
-        <div class="card">
-          <div class="card-badge">SDLC Governance Review</div>
-          <h3>20-Point Autonomous SDLC Audit</h3>
-          <p>Comprehensive architectural analysis of shortcomings, drifts, and fixes across Swarm governance, $D_{\max}=2$ anti-usurpation, and ReAct trajectory recording.</p>
-          <div style="background:var(--code-bg); padding:10px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; margin-bottom:12px;">
-            <div>Shortcomings Identified: 20</div>
-            <div style="color:var(--cyan); margin-top:4px;">Remediation Status: 100% Implemented</div>
-          </div>
-          <button class="btn btn-secondary" onclick="showTab('capabilities')" style="width:100%; font-size:11px;">Explore SDLC Subsystems &rarr;</button>
-        </div>
-
-        <div class="card">
-          <div class="card-badge">Autonomous Maturity Scorecard</div>
-          <h3>Context Maturity Evaluation (Level 5)</h3>
-          <p>Scoring the repository across 5 maturity tiers (Ad-hoc to Level 5 Self-Sustaining Autonomous OS) with 100% Quad-Space boundary compliance.</p>
-          <div style="background:var(--code-bg); padding:10px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:11px; margin-bottom:12px;">
-            <div>Maturity Score: <strong>100.0 / 100 (Level 5)</strong></div>
-            <div style="color:var(--purple); margin-top:4px;">Merkle Blocks: 1007 Continuous</div>
-          </div>
-          <button class="btn btn-secondary" onclick="showTab('observability')" style="width:100%; font-size:11px;">Open Observability Radar &rarr;</button>
         </div>
       </div>
     </section>
@@ -1618,8 +1770,11 @@ percipience rollback \
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      if (window.event && window.event.target && window.event.target.classList.contains('nav-btn')) {
+        window.event.target.classList.add('active');
+      }
     }
 
     async function runContextGatewayDemo() {
@@ -1984,15 +2139,6 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
-            dash_path = REPO_ROOT / "user" / "outputs" / "dashboard" / "index.html"
-            if dash_path.exists():
-                body = dash_path.read_text(encoding="utf-8").encode("utf-8")
-                self.send_response(200)
-                self.send_header("Content-Type", "text/html; charset=utf-8")
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
-                return
 
         if parsed.path in ("/", "/app"):
             body = PORTAL_HTML.encode("utf-8")
@@ -2185,20 +2331,20 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "agent_id": "agent_token_finops_auditor",
                     "name": "Autonomous Token FinOps & Metering Auditor",
-                    "type": "Custom Agent (agentic/custom/agents/)",
+                    "type": "Custom Agent (.nb/agentic/custom/agents/)",
                     "model": "claude-3-5-sonnet-20241022",
                     "role": "Token FinOps, Budget Enforcement & Rev-Share Metering",
-                    "scope": "workplace/ & context/ledger/",
+                    "scope": "workplace/ & .nb/context/ledger/",
                     "sandboxing": "Ephemeral Git Worktree Isolation",
                     "status": "ACTIVE"
                 },
                 {
                     "agent_id": "agent_security_auditor",
                     "name": "Enterprise Infosec & Invariant Auditor",
-                    "type": "Custom Agent (agentic/custom/agents/)",
+                    "type": "Custom Agent (.nb/agentic/custom/agents/)",
                     "model": "claude-3-5-sonnet-20241022",
                     "role": "Hardcoded Secret Interception & Anti-Poisoning Quarantine",
-                    "scope": "workplace/ & context/custom/rules/",
+                    "scope": "workplace/ & .nb/context/custom/rules/",
                     "sandboxing": "Isolated AST Scan Sandbox",
                     "status": "ACTIVE"
                 },
@@ -2208,7 +2354,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "type": "System Agent (Platform)",
                     "model": "claude-3-5-sonnet-20241022",
                     "role": "Cross-Module Schema Verification & Contract Integrity",
-                    "scope": "context/contracts/ & context/custom/schemas/",
+                    "scope": ".nb/context/contracts/ & .nb/context/custom/schemas/",
                     "sandboxing": "Read-Only Worktree Mount",
                     "status": "ACTIVE"
                 },
@@ -2225,7 +2371,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "agent_id": "agent_flaky_test_detector",
                     "name": "Autonomous Flaky Test Quarantine Auditor",
-                    "type": "Specialist Plugin (agentic/custom/agents/)",
+                    "type": "Specialist Plugin (.nb/agentic/custom/agents/)",
                     "model": "Tier B (claude-3-5-haiku / flash)",
                     "role": "Multi-Run Statistical Variance Detection & Non-Blocking Isolation",
                     "scope": "tests/ & user/hitl/flaky_quarantine.yaml",
@@ -2235,17 +2381,17 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "agent_id": "agent_contract_compatibility_checker",
                     "name": "Wire Contract Evolution & SemVer Guard",
-                    "type": "Specialist Plugin (agentic/custom/agents/)",
+                    "type": "Specialist Plugin (.nb/agentic/custom/agents/)",
                     "model": "Tier A (claude-3-7-sonnet / pro)",
                     "role": "Deep JSON Schema Draft-07 & Backward-Compatibility Verification",
-                    "scope": "context/contracts/",
+                    "scope": ".nb/context/contracts/",
                     "sandboxing": "Read-Only Contract Mount",
                     "status": "ACTIVE"
                 },
                 {
                     "agent_id": "agent_dependency_cve_sentinel",
                     "name": "Supply-Chain CVE & Restrictive License Sentinel",
-                    "type": "Specialist Plugin (agentic/custom/agents/)",
+                    "type": "Specialist Plugin (.nb/agentic/custom/agents/)",
                     "model": "Tier B (claude-3-5-haiku / flash)",
                     "role": "AST Import Scanning, Hallucination Interception & CVE Audits",
                     "scope": "workplace/modules/ & pyproject.toml",
@@ -2255,7 +2401,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "agent_id": "agent_doc_drift_synchronizer",
                     "name": "Architectural Blueprint & AST Doc Drift Synchronizer",
-                    "type": "Specialist Plugin (agentic/custom/agents/)",
+                    "type": "Specialist Plugin (.nb/agentic/custom/agents/)",
                     "model": "Tier B (claude-3-5-haiku / flash)",
                     "role": "Exported AST Interface vs Markdown Plan Alignment",
                     "scope": "workplace/ & .nb/plan/",
@@ -2269,7 +2415,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/observability/prompts":
             prompts = [
                 {
-                    "file": "agentic/prompts/system_prompt.md",
+                    "file": ".nb/agentic/prompts/system_prompt.md",
                     "name": "Platform System Prompt",
                     "role": "Global Invariants & Quad-Space Architecture Constraints",
                     "cache_alignment": "100% Invariant (Bit-for-Bit Cache Prefix)",
@@ -2277,7 +2423,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "tokens": 420
                 },
                 {
-                    "file": "agentic/prompts/derivation_prompt.md",
+                    "file": ".nb/agentic/prompts/derivation_prompt.md",
                     "name": "Plan Derivation Prompt",
                     "role": "AST Skeleton to Implementation Code Synthesis",
                     "cache_alignment": "Static Prefix Aligned",
@@ -2285,7 +2431,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "tokens": 680
                 },
                 {
-                    "file": "agentic/prompts/evaluation_refinement_prompt.md",
+                    "file": ".nb/agentic/prompts/evaluation_refinement_prompt.md",
                     "name": "Context Maturity Prompt",
                     "role": "6-Dimensional Context Scoring & Gap Analysis",
                     "cache_alignment": "Static Prefix Aligned",
@@ -2293,7 +2439,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "tokens": 510
                 },
                 {
-                    "file": "agentic/prompts/bootstrapping_prompt.md",
+                    "file": ".nb/agentic/prompts/bootstrapping_prompt.md",
                     "name": "Quad-Space Bootstrapping Prompt",
                     "role": "Directory Tree Generation & Genesis Merkle Block Sealing",
                     "cache_alignment": "Static Prefix Aligned",
@@ -2301,7 +2447,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "tokens": 390
                 },
                 {
-                    "file": "agentic/prompts/workflow_orchestration_prompt.md",
+                    "file": ".nb/agentic/prompts/workflow_orchestration_prompt.md",
                     "name": "Workflow Orchestrator Prompt",
                     "role": "Multi-Agent DAG Dependency Execution & Quarantine Intercept",
                     "cache_alignment": "Static Prefix Aligned",
@@ -2309,7 +2455,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     "tokens": 590
                 },
                 {
-                    "file": "agentic/prompts/lifecycle_delivery_prompt.md",
+                    "file": ".nb/agentic/prompts/lifecycle_delivery_prompt.md",
                     "name": "Lifecycle Delivery Prompt",
                     "role": "PR Gatekeeping, Rollback Recovery & Release Audits",
                     "cache_alignment": "Static Prefix Aligned",
@@ -2325,7 +2471,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "workflow_id": "wf_pr_gatekeeper",
                     "name": "PR Gatekeeper & Token Metering Pipeline",
-                    "source": "agentic/workflows/pr_gatekeeper.yaml",
+                    "source": ".nb/agentic/workflows/pr_gatekeeper.yaml",
                     "trigger": "GitHub PR / GitLab Merge Request / Local Pre-Commit",
                     "steps": [
                         {"id": "step_ast_prune", "name": "[1/6] Content-Addressable AST Pruning & Token Metering", "executor": "platform.ast_pruner"},
@@ -2339,7 +2485,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "workflow_id": "wf_enterprise_pr_gate",
                     "name": "Enterprise PR Gate with Infosec & FinOps Audit",
-                    "source": "agentic/custom/workflows/enterprise_sdlc.yaml",
+                    "source": ".nb/agentic/custom/workflows/enterprise_sdlc.yaml",
                     "trigger": "Enterprise Branch Merge Event",
                     "steps": [
                         {"id": "ast_prune", "name": "Structural AST Token Pruner", "executor": "platform.ast_pruner"},
@@ -2352,7 +2498,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 {
                     "workflow_id": "wf_derivation_pipeline",
                     "name": "Quad-Space Plan-to-Code Derivation Pipeline",
-                    "source": "agentic/workflows/derivation_pipeline.yaml",
+                    "source": ".nb/agentic/workflows/derivation_pipeline.yaml",
                     "trigger": "Plan Ingestion Event (.nbpack or Markdown Plan)",
                     "steps": [
                         {"id": "step_hydrate_plan", "name": "In-Memory Enclave Hydration", "executor": "platform.nbpack_envelope"},
@@ -2543,7 +2689,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/observability/plugins":
-            custom_agents_dir = REPO_ROOT / "agentic" / "custom" / "agents"
+            custom_agents_dir = (REPO_ROOT / ".nb" / "agentic" / "custom" / "agents" if (REPO_ROOT / ".nb" / "agentic").exists() else REPO_ROOT / "agentic" / "custom" / "agents")
             plugins = []
             if custom_agents_dir.exists():
                 for yf in sorted(custom_agents_dir.glob("*.yaml")):
@@ -2641,7 +2787,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/merkle/epochs":
-            archive_dir = REPO_ROOT / "context" / "ledger" / "archive"
+            archive_dir = (REPO_ROOT / ".nb" / "context" / "ledger" / "archive" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "archive")
             archives = []
             if archive_dir.exists():
                 for af in sorted(archive_dir.glob("epoch_*.json")):
@@ -2650,7 +2796,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                         "size_bytes": af.stat().st_size,
                         "relative_path": str(af.relative_to(REPO_ROOT))
                     })
-            ledger_path = REPO_ROOT / "context" / "ledger" / "context_ledger.yaml"
+            ledger_path = (REPO_ROOT / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "context_ledger.yaml")
             active_height = 0
             if ledger_path.exists():
                 try:
@@ -2661,7 +2807,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 except Exception:
                     pass
             self._send_json({
-                "archive_directory": "context/ledger/archive/",
+                "archive_directory": ".nb/context/ledger/archive/",
                 "total_archived_epochs": len(archives),
                 "archives": archives,
                 "active_block_height": active_height

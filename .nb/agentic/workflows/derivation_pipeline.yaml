@@ -17,7 +17,7 @@ steps:
     name: "Synthesize Inter-Module Contracts"
     executor: "agent_architect"
     depends_on: ["step_ingest_mvs"]
-    output_directory: "context/contracts/"
+    output_directory: ".nb/context/contracts/"
 
   - id: "step_scaffold_workplace"
     name: "Scaffold Source & Configs"

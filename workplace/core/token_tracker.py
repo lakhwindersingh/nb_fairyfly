@@ -2,7 +2,7 @@
 """
 Neutron Binary Percipience - Token Savings Tracker & Ledger Engine
 Captures, persists, meters, and reports context token reduction across AST pruning runs.
-Stores immutable records in context/ledger/token_savings_ledger.yaml and calculates
+Stores immutable records in .nb/context/ledger/token_savings_ledger.yaml and calculates
 gross savings, 15% rev-share performance fees, and net customer ROI.
 Includes auto-compaction and rolling archive epochs for ultra-fast I/O.
 """
@@ -51,7 +51,7 @@ DEFAULT_MODEL_RATES = {
 
 
 class TokenTracker:
-    LEDGER_FILE = "context/ledger/token_savings_ledger.yaml"
+    LEDGER_FILE = ".nb/context/ledger/token_savings_ledger.yaml"
     REPORT_FILE = "workplace/docs/reports/token_savings_report.md"
 
     AUTO_CHECKPOINT_THRESHOLD = 50
@@ -141,7 +141,7 @@ class TokenTracker:
         if len(events) <= cls.AUTO_CHECKPOINT_THRESHOLD:
             return
 
-        archive_dir = repo_root / "context" / "ledger" / "archive"
+        archive_dir = (repo_root / ".nb" / "context" / "ledger" / "archive" if (repo_root / ".nb" / "context").exists() else repo_root / "context" / "ledger" / "archive")
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         split_idx = len(events) - cls.RETAIN_ACTIVE_EVENTS
@@ -236,7 +236,7 @@ class TokenTracker:
 
         # Auto-checkpoint if rolling event log exceeds threshold
         if len(ledger.get("events", [])) >= cls.AUTO_CHECKPOINT_THRESHOLD:
-            archive_dir = repo_root / "context" / "ledger" / "archive"
+            archive_dir = (repo_root / ".nb" / "context" / "ledger" / "archive" if (repo_root / ".nb" / "context").exists() else repo_root / "context" / "ledger" / "archive")
             archive_dir.mkdir(parents=True, exist_ok=True)
             events = ledger["events"]
             split_idx = len(events) - cls.RETAIN_ACTIVE_EVENTS
@@ -378,7 +378,7 @@ pie title Token Consumption vs Savings
 
 ## 3. Cryptographic State Machine Anchoring
 
-- **Audited Ledger Path**: `context/ledger/token_savings_ledger.yaml`
+- **Audited Ledger Path**: `.nb/context/ledger/token_savings_ledger.yaml`
 - **Merkle Ledger Seal**: Synchronized with `context/ledger/context_ledger.yaml`
 - **Verification Engine**: `workplace/core/token_tracker.py`
 """

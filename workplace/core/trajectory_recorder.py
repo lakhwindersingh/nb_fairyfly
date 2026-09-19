@@ -18,7 +18,7 @@ class TrajectoryRecorder:
     Captures reasoning traces, tool invocations, execution outputs, and self-critiques.
     """
 
-    TRAJECTORY_DIR = REPO_ROOT / "agentic" / "trajectories"
+    TRAJECTORY_DIR = (REPO_ROOT / ".nb" / "agentic" / "trajectories" if (REPO_ROOT / ".nb" / "agentic").exists() else REPO_ROOT / "agentic" / "trajectories")
 
     @classmethod
     def _ensure_dir(cls) -> Path:

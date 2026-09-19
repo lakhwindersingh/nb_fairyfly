@@ -69,7 +69,7 @@ class ContractCompatibilityChecker:
         """Audits all contracts in context/contracts directory for backward compatibility."""
         from pathlib import Path
         root = Path(workspace_root)
-        contract_dir = root / 'context' / 'contracts'
+        contract_dir = (root / '.nb' / 'context' / 'contracts' if (root / '.nb' / 'context').exists() else root / 'context' / 'contracts')
         contracts_found = list(contract_dir.glob('*.json')) if contract_dir.exists() else []
         return {
             'all_compatible': True,

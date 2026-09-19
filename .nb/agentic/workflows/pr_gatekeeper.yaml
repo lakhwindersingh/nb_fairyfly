@@ -19,7 +19,7 @@ steps:
   depends_on:
   - step_cve_sentinel
   action: RECORD_SAVINGS_LEDGER
-  output_ledger: context/ledger/token_savings_ledger.yaml
+  output_ledger: .nb/context/ledger/token_savings_ledger.yaml
 - id: step_contract_compat
   name: Cross-Module Contract & SemVer Verification (agent_contract_compatibility_checker)
   executor: agent_contract_compatibility_checker

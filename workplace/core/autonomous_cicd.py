@@ -123,7 +123,7 @@ SelfRecoveringEngine = AutonomousHealer
 class SelfImprovingEngine:
     """Mines historical run telemetry to optimize agent models, token budgets, and verification rules."""
 
-    LEDGER_FILE = "context/ledger/self_improving_ledger.yaml"
+    LEDGER_FILE = ".nb/context/ledger/self_improving_ledger.yaml"
 
     @classmethod
     def analyze_and_optimize(cls, repo_root: Path) -> Dict[str, Any]:

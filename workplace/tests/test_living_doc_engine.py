@@ -77,7 +77,7 @@ class TestLivingDocEngine(unittest.TestCase):
     def test_04_ledger_registration(self):
         """Validates that context_ledger.yaml records the living_docs tracking block."""
         import yaml
-        ledger_path = self.repo_root / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (self.repo_root / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (self.repo_root / ".nb" / "context").exists() else self.repo_root / "context" / "ledger" / "context_ledger.yaml")
         self.assertTrue(ledger_path.exists())
         with open(ledger_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)

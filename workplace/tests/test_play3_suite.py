@@ -141,7 +141,7 @@ def handle_request(req: dict) -> dict:
     def test_06_nbpack_packaging_and_hydration(self):
         """Test .nbpack compilation, signature seal, and zero-disk in-memory hydration."""
         out_pack = REPO_ROOT / ".workspaces" / "test_bundle.nbpack"
-        compiled_file = NBPackEnvelope.compile_package(REPO_ROOT, out_pack, include_spaces=["context/contracts"])
+        compiled_file = NBPackEnvelope.compile_package(REPO_ROOT, out_pack, include_spaces=[".nb/context/contracts"])
         self.assertTrue(compiled_file.exists())
         
         # Hydrate strictly in memory
@@ -218,7 +218,7 @@ def handle_request(req: dict) -> dict:
         # 3. Self-Improving feedback optimization
         improve_res = SelfImprovingEngine.analyze_and_optimize(REPO_ROOT)
         self.assertIn("current_avg_reduction_pct", improve_res)
-        self.assertTrue((REPO_ROOT / "context" / "ledger" / "self_improving_ledger.yaml").exists())
+        self.assertTrue(((REPO_ROOT / ".nb" / "context" / "ledger" / "self_improving_ledger.yaml" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "self_improving_ledger.yaml")).exists())
 
         # 4. End-to-end Autonomous CI/CD Orchestrator pipeline
         pipeline_res = AutonomousCICDOrchestrator.run_autonomous_pipeline(REPO_ROOT, auto_heal=True, optimize=True)
@@ -293,7 +293,7 @@ def handle_request(req: dict) -> dict:
         test_file = REPO_ROOT / reg_res["manifest_path"]
         if test_file.exists():
             test_file.unlink()
-        wf_file = REPO_ROOT / "agentic" / "workflows" / "pr_gatekeeper.yaml"
+        wf_file = (REPO_ROOT / ".nb" / "agentic" / "workflows" / "pr_gatekeeper.yaml" if (REPO_ROOT / ".nb" / "agentic").exists() else REPO_ROOT / "agentic" / "workflows" / "pr_gatekeeper.yaml")
         if wf_file.exists():
             import yaml
             with open(wf_file, "r", encoding="utf-8") as f:
@@ -395,7 +395,7 @@ def handle_request(req: dict) -> dict:
         self.assertEqual(p1, p2)
         
         # 3. Epoch checkpointing test
-        ledger_path = REPO_ROOT / "context" / "ledger" / "context_ledger.yaml"
+        ledger_path = (REPO_ROOT / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "context_ledger.yaml")
         self.assertTrue(ledger_path.exists())
         # Retain active window of 100 blocks, archive older
         res = MerkleEngine.checkpoint_epoch(REPO_ROOT, retain_active_blocks=100)

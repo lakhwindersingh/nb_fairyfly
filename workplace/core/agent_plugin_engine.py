@@ -27,9 +27,9 @@ from core.layered_context_validator import LayeredContextValidator
 class AgentPluginEngine:
     """Manages the full lifecycle of custom agent plugins for Autonomous CI/CD."""
 
-    AGENTS_DIR = "agentic/custom/agents"
-    WORKFLOWS_DIR = "agentic/workflows"
-    TEMPLATES_DIR = "agentic/templates"
+    AGENTS_DIR = ".nb/agentic/custom/agents"
+    WORKFLOWS_DIR = ".nb/agentic/workflows"
+    TEMPLATES_DIR = ".nb/agentic/templates"
 
     @classmethod
     def get_agents_dir(cls, workspace_root: Path = REPO_ROOT) -> Path:
@@ -94,11 +94,11 @@ class AgentPluginEngine:
             },
             "module_scope": {
                 "allowed_modules": modules,
-                "denied_paths": ["context/invariants", ".git", ".workspaces"]
+                "denied_paths": [".nb/context/invariants", "context/invariants", ".git", ".workspaces"]
             },
             "contracts_and_invariants": {
                 "enforce_tiered_hierarchy": True,
-                "target_contracts": ["context/contracts/contract_schema_v2.json"],
+                "target_contracts": [".nb/context/contracts/contract_schema_v2.json"],
                 "min_maturity_threshold": 0.85
             },
             "tools_and_capabilities": [

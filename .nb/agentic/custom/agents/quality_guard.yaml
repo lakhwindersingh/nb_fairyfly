@@ -1,15 +1,15 @@
 metadata:
-  agent_id: agent_test_finops_auditor
-  name: Test Finops Auditor
+  agent_id: agent_quality_guard
+  name: Quality Guard
   version: 1.0.0
-  category: finops
-  created_at: '2026-09-17T13:18:38.356923+00:00'
+  category: cicd_quality
+  created_at: '2026-09-15T20:47:42.659458+00:00'
   author: Autonomous Platform Engineer
-  description: Autonomous CI/CD agent specialist for finops and invariant enforcement.
+  description: Autonomous CI/CD agent specialist for cicd_quality and invariant enforcement.
 model_profile:
   model: claude-3-5-sonnet-20241022
   temperature: 0.1
-  role: Token FinOps Auditor
+  role: Code Quality & Invariant Enforcer
   context_budget_tokens: 12000
   cache_prefix_alignment: true
 isolation_and_sandboxing:
@@ -22,13 +22,13 @@ module_scope:
   - workplace/core
   - workplace/modules/mod_portal_marketing
   denied_paths:
-  - context/invariants
+  - .nb/context/invariants
   - .git
   - .workspaces
 contracts_and_invariants:
   enforce_tiered_hierarchy: true
   target_contracts:
-  - context/contracts/contract_schema_v2.json
+  - .nb/context/contracts/contract_schema_v2.json
   min_maturity_threshold: 0.85
 tools_and_capabilities:
 - name: read_ast_skeleton
@@ -44,8 +44,8 @@ autonomous_cicd_hooks:
   target_workflows:
   - workflow_id: wf_pr_gatekeeper
     insertion_point: after:step_contract_compat
-    step_id: step_test_finops_auditor
-    step_name: Run Test Finops Auditor Step
+    step_id: step_quality_guard
+    step_name: Run Quality Guard Step
     fail_action: AUTO_HEAL_OR_ROLLBACK
   bounded_sla:
     max_retries: 3
@@ -53,13 +53,13 @@ autonomous_cicd_hooks:
     allow_hypothesis_patching: true
 cryptographic_governance:
   seal_merkle_block_on_success: true
-  merkle_action_label: AGENT_PLUGIN_VERIFIED (agent_test_finops_auditor)
-  recovery_point_prefix: RP_AGENT_TEST_FINOPS_AUDITOR
+  merkle_action_label: AGENT_PLUGIN_VERIFIED (agent_quality_guard)
+  recovery_point_prefix: RP_AGENT_QUALITY_GUARD
   rollback_policy:
     enabled: true
     fallback_recovery_point: RP_PLAY3_BOOTSTRAP_001
     target_module: mod_portal_marketing
     auto_isolate_on_poisoning: true
     quarantine_file: user/hitl/poisoning_quarantine.md
-system_prompt: You are the Token FinOps Auditor for this workspace. Enforce quality,
-  contracts, and zero context leakage.
+system_prompt: You are the Code Quality & Invariant Enforcer for this workspace. Enforce
+  quality, contracts, and zero context leakage.

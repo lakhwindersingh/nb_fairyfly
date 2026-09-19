@@ -150,7 +150,10 @@ graph TD
 #### 3.7.3. Strengths, Limitations & Deep-Dive Analysis
 
 ##### Where Knowledge Graph Frameworks (Graphify / CodeKG) Excel:
-- **Broad Multi-Repository Call Graph Discovery**: Knowledge graph approaches shine when navigating gigantic, legacy multi-repo architectures where an engineer or agent must discover indirect call paths (e.g. `ServiceA.Controller` $ightarrow$ `ServiceB.Client` $ightarrow$ `ServiceC.EventBus` $ightarrow$ `ServiceD.Database`).
+- **Broad Multi-Repository Call Graph Discovery**: Knowledge graph approaches shine when navigating gigantic, legacy multi-repo architectures where an engineer or agent must discover indirect call paths (e.g. `ServiceA.Controller` $
+ightarrow$ `ServiceB.Client` $
+ightarrow$ `ServiceC.EventBus` $
+ightarrow$ `ServiceD.Database`).
 - **Topological Impact & Blast Radius Analysis**: Directed graphs allow exact graph traversal algorithms ($k$-hop breadth-first search, PageRank centrality) to determine which downstream services are affected by a function signature modification.
 
 ##### Where Graphify / Knowledge Graph Frameworks Fall Short in Autonomous Agentic SDLC:
@@ -169,7 +172,7 @@ graph TD
 To achieve the optimal balance between global multi-hop discovery and local token minimization, Percipience implements a **2-Stage Hybrid Architecture**:
 
 1. **Stage 1 (Coarse-Grained Topological Graph Filter)**: When an agent requests context across dozens of microservices, Graphify/CodeKG algorithms extract the minimal $k$-hop subgraph ($k \le 2$) of directly coupled modules.
-2. **Stage 2 (Fine-Grained AST Skeleton & Attention Budget Slicing)**: Percipience passes the selected module candidate files through the Tree-Sitter AST Pruner, applies the 15/25/35/10/15 attention budget quotas, pins the static KV-cache prefix, and seals cryptographic savings receipts into `context/ledger/token_savings_ledger.yaml`.
+2. **Stage 2 (Fine-Grained AST Skeleton & Attention Budget Slicing)**: Percipience passes the selected module candidate files through the Tree-Sitter AST Pruner, applies the 15/25/35/10/15 attention budget quotas, pins the static KV-cache prefix, and seals cryptographic savings receipts into `.nb/context/ledger/token_savings_ledger.yaml`.
 
 ---
 

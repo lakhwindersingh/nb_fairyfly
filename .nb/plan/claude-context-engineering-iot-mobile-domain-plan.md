@@ -4,8 +4,8 @@ plan_id: "domain_iot_mobile"
 name: "Connected IoT, Embedded Hardware & Mobile Management Ecosystem"
 parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
 tier_mapping:
-  tier_2: "Enterprise Domain Rules & Wire Contracts (context/contracts/, context/rules/)"
-  tier_3: "Specialist Subagents & Delivery Workflows (agentic/custom/agents/, agentic/custom/workflows/)"
+  tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, context/rules/)"
+  tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, agentic/custom/workflows/)"
 model_tiering_policy:
   provider_agnostic: true
   tier_a_model: "claude-3-7-sonnet / pro"

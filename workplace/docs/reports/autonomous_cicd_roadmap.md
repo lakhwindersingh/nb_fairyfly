@@ -205,4 +205,4 @@ Ran 11 tests in 0.212s
 OK
 ```
 
-All state transitions, auto-heal patches, and optimization events are sealed with cryptographic SHA-256 integrity in [`context/ledger/context_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.yaml) and [`context/ledger/self_improving_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/self_improving_ledger.yaml).
+All state transitions, auto-heal patches, and optimization events are sealed with cryptographic SHA-256 integrity in [`context/ledger/context_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/context_ledger.yaml) and [`context/ledger/self_improving_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/self_improving_ledger.yaml).

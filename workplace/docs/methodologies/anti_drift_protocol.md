@@ -147,7 +147,7 @@ sequenceDiagram
         HandoverGate-->>Dev: Reject: Unauthorized Successor or Schema Mutation
     end
 
-    Dev->>WireGate: Validate Wire Contracts (context/contracts/)
+    Dev->>WireGate: Validate Wire Contracts (.nb/context/contracts/)
     WireGate->>WireGate: Deep JSON Schema Draft-07 & SemVer Check
     alt Breaking Field Removal / Type Mutation
         WireGate-->>Dev: Reject: Breaking contract change requires Evolve Mode RFC

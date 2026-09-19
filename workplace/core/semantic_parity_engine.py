@@ -36,7 +36,7 @@ class SemanticParityEngine:
     @classmethod
     def evaluate_wire_contracts(cls, workspace_root: Path) -> float:
         """Evaluates OpenAPI/AsyncAPI wire contracts for breaking changes."""
-        contracts_dir = workspace_root / "context" / "contracts"
+        contracts_dir = (workspace_root / ".nb" / "context" / "contracts" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "contracts")
         if not contracts_dir.exists():
             return 1.0
         # If contracts exist, check baseline compatibility

@@ -1,7 +1,7 @@
 # Percipience Custom Agent Plugin Architecture & Healthy Integration Guide
 
 > **Standard:** Enterprise Autonomous CI/CD Plugin Specification  
-> **Schema:** [`agentic/templates/custom_agent_template.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/templates/custom_agent_template.yaml)  
+> **Schema:** [`agentic/templates/custom_agent_template.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/templates/custom_agent_template.yaml)  
 > **Engine:** [`workplace/core/agent_plugin_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_plugin_engine.py)  
 > **Control Plane Subcommand:** `./workplace/workplace/bin/percipience agent {create, integrate, run, rollback, list}`  
 
@@ -45,7 +45,7 @@ Custom agents must explicitly declare `allowed_modules` in their YAML manifest. 
 Custom agents **never** touch the active developer working directory. The `AgentPluginEngine` requests an isolated ephemeral Git worktree via `WorktreeEngine.acquire()`. If the agent crashes or fails, its worktree is pruned (`WorktreeEngine.release()`), leaving the main working tree pristine.
 
 ### Pillar 3: AST Skeletonization & Token FinOps Metering
-Rather than ingesting multi-thousand-line source files, the plugin receives structural AST skeletons pruned by `ASTOptimizer`. Every token consumed and saved is measured and recorded in `context/ledger/token_savings_ledger.yaml` via `TokenTracker`.
+Rather than ingesting multi-thousand-line source files, the plugin receives structural AST skeletons pruned by `ASTOptimizer`. Every token consumed and saved is measured and recorded in `.nb/context/ledger/token_savings_ledger.yaml` via `TokenTracker`.
 
 ### Pillar 4: Bounded TDD Self-Healing ($\le 3$ Retries)
 If the custom agent encounters test or contract errors during execution, it is granted a maximum of **3 bounded hypothesis attempts** to auto-heal. Unchecked recursive hallucination is mathematically prevented.
@@ -131,13 +131,13 @@ Every custom agent plugin engineered according to this guide is guaranteed to sa
 
 ## 5. Built-in Autonomous CI/CD Specialist Plugins
 
-The Percipience platform ships with four pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/):
+The Percipience platform ships with four pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/):
 
 | Agent Plugin ID | Manifest File | Cognitive Tier | Primary Responsibility |
 | :--- | :--- | :---: | :--- |
-| **`agent_flaky_test_detector`** | [`flaky_test_detector.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/flaky_test_detector.yaml) | **Tier B** | Multi-run stability analysis, quarantines non-deterministic tests into `user/hitl/flaky_quarantine.yaml` without halting CI. |
-| **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
-| **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
-| **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
+| **`agent_flaky_test_detector`** | [`flaky_test_detector.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/flaky_test_detector.yaml) | **Tier B** | Multi-run stability analysis, quarantines non-deterministic tests into `user/hitl/flaky_quarantine.yaml` without halting CI. |
+| **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
+| **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
+| **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
 
-All specialist plugins are integrated into the 6-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/workflows/pr_gatekeeper.yaml).
+All specialist plugins are integrated into the 6-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/workflows/pr_gatekeeper.yaml).

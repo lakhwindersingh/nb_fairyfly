@@ -70,7 +70,7 @@ stateDiagram-v2
 
 ## 3. Cryptographic Handoff Verification Protocol
 
-Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation from preceding verification gates.
+Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation from preceding verification gates.
 
 ```mermaid
 sequenceDiagram

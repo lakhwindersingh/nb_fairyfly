@@ -16,6 +16,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 if str(REPO_ROOT / "workplace") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "workplace"))
+if str(REPO_ROOT / ".nb") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / ".nb"))
 
 import pytest
 import time

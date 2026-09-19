@@ -203,7 +203,7 @@ If an autonomous agent hallucinates a non-existent API, breaks typing, or introd
 ### Step 5: Authoring Custom Agents & Layering Custom Context
 You can extend the workspace with your organization's own agents and domain rules without modifying platform core files:
 
-#### 1. Define a Custom Agent ([`agentic/custom/agents/security_auditor.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/agents/security_auditor.yaml))
+#### 1. Define a Custom Agent ([`agentic/custom/agents/security_auditor.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/security_auditor.yaml))
 ```yaml
 agent_id: "agent_security_auditor"
 name: "Enterprise Infosec & Compliance Auditor"
@@ -218,7 +218,7 @@ tools:
   - name: "flag_quarantine_issue"
 ```
 
-#### 2. Define Custom Domain Rules ([`context/custom/rules/banking_security.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/custom/rules/banking_security.md))
+#### 2. Define Custom Domain Rules ([`context/custom/rules/banking_security.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/custom/rules/banking_security.md))
 ```markdown
 # Banking Domain Security Rules
 - Amounts must be stored as 64-bit integer cents (no floating-point rounding errors).
@@ -226,7 +226,7 @@ tools:
 - Personally Identifiable Information (PII) must be masked before logging.
 ```
 
-#### 3. Wire into Multi-Agent Workflows ([`agentic/custom/workflows/enterprise_sdlc.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/agentic/custom/workflows/enterprise_sdlc.yaml))
+#### 3. Wire into Multi-Agent Workflows ([`agentic/custom/workflows/enterprise_sdlc.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/workflows/enterprise_sdlc.yaml))
 ```yaml
 workflow_id: "wf_enterprise_pr_gate"
 steps:
@@ -265,7 +265,7 @@ If your team uses self-hosted GitLab, GitHub Enterprise Server, Bitbucket Data C
 
 ## 4. Inspection, Auditing & Evaluation Tools
 
-### 1. Master Context Ledger ([`context/ledger/context_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/context/ledger/context_ledger.yaml))
+### 1. Master Context Ledger ([`context/ledger/context_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/context_ledger.yaml))
 The central state machine tracking:
 - **`ledger_chain`**: Tamper-evident cryptographic SHA-256 block chain.
 - **`recovery_points`**: Catalog of clean rollback snapshots (`RP_GENESIS_000`, `RP_PLAY3_BOOTSTRAP_001`).
