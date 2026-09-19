@@ -3,6 +3,8 @@ package com.neutronbinary.percipience.services
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.neutronbinary.percipience.bootstrap.WorkspaceBootstrapper
+import com.neutronbinary.percipience.ledger.WorkspaceLedgerReader
+import com.neutronbinary.percipience.ledger.WorkspaceMetrics
 import com.neutronbinary.percipience.security.SandboxPermissionBroker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,10 @@ class PercipienceProjectService(private val project: Project, private val cs: Co
         // Simulated non-blocking daemon health probe
         isDaemonConnected = true
         return isDaemonConnected
+    }
+
+    fun getMetrics(): WorkspaceMetrics {
+        return WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
     }
 
     fun ensureWorkspaceBootstrapped(): Boolean {
