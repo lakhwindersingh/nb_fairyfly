@@ -1,0 +1,8 @@
+extension_id: "percipience-context-os"
+lsp_server_enabled: true
+auto_prune_on_save: true
+daemon_socket_path: "/tmp/percipience_daemon.sock"
+webview:
+  enable_mermaid_dag: true
+  enable_speedometer: true
+  telemetry_refresh_interval_ms: 2500

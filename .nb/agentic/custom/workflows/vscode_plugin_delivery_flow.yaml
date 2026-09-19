@@ -1,0 +1,35 @@
+workflow_id: vscode_plugin_delivery_flow
+name: Visual Studio Code Extension End-to-End Delivery Flow
+version: "1.0.0"
+description: Multi-stage automated delivery pipeline for Visual Studio Code VSIX Extension & LSP Client
+stages:
+  - id: stage_1_manifest_and_activation
+    name: Package Manifest & Lazy Activation Gate
+    agent: agent_vscode_extension_architect
+    tasks:
+      - validate_package_json_manifest
+      - verify_zero_wildcard_activation
+      - check_secret_storage_invariants
+
+  - id: stage_2_lsp_subsystem
+    name: LSP 3.17 Server & Diagnostic Verification
+    agent: agent_lsp_language_features_specialist
+    tasks:
+      - test_lsp_incremental_sync
+      - benchmark_diagnostic_latency
+      - verify_codelens_providers
+
+  - id: stage_3_webview_dashboard
+    name: Webview Dashboard & Theme Sync
+    agent: agent_vscode_webview_ux_engineer
+    tasks:
+      - verify_nonce_csp_security
+      - test_theme_color_synchronization
+      - benchmark_mermaid_render_fps
+
+  - id: stage_4_ipc_and_gate_seal
+    name: Socket IPC Bridge & Merkle Seal
+    agent: agent_vscode_extension_architect
+    tasks:
+      - test_socket_ipc_throughput
+      - seal_merkle_recovery_block

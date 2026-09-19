@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WebviewMessageRpcContract",
+  "type": "object",
+  "required": ["command", "requestId"],
+  "properties": {
+    "command": {
+      "type": "string",
+      "enum": [
+        "fetch_merkle_state",
+        "execute_workflow",
+        "fetch_token_savings",
+        "inspect_ast_diff",
+        "open_documentation"
+      ]
+    },
+    "requestId": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}
