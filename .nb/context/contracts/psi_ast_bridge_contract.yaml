@@ -1,0 +1,16 @@
+schema_version: "2.0.0"
+contract_id: "psi_ast_bridge_contract"
+supported_languages:
+  - id: "python"
+    psi_root: "com.jetbrains.python.psi.PyFile"
+    prunable_elements: ["PyFunction", "PyClass", "PyDocStringExpression"]
+  - id: "kotlin"
+    psi_root: "org.jetbrains.kotlin.psi.KtFile"
+    prunable_elements: ["KtNamedFunction", "KtClass", "KtProperty"]
+  - id: "java"
+    psi_root: "com.intellij.psi.PsiJavaFile"
+    prunable_elements: ["PsiMethod", "PsiClass"]
+performance_targets:
+  max_psi_traversal_ms: 35
+  max_memory_per_file_kb: 512
+  min_token_reduction_ratio: 0.60

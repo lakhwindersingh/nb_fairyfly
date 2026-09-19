@@ -1,0 +1,13 @@
+ide_target: "intellij_pycharm"
+supported_editions:
+  - "PyCharm Professional"
+  - "PyCharm Community"
+  - "IntelliJ IDEA Ultimate"
+  - "IntelliJ IDEA Community"
+since_build: "241.0"
+until_build: "262.*"
+daemon_endpoint: "http://127.0.0.1:8585"
+features:
+  psi_ast_pruning_preview: true
+  live_contract_annotator: true
+  jcef_control_plane: true

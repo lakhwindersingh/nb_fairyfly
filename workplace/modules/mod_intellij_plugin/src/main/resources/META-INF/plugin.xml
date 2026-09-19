@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>com.neutronbinary.percipience</id>
+    <name>Percipience Context Engineering OS</name>
+    <version>1.0.0</version>
+    <vendor email="support@percipience.dev" url="https://percipience.dev">Neutron Binary</vendor>
+
+    <description><![CDATA[
+    Autonomous Context Engineering, PSI AST Analysis, and Multi-Agent SDLC Control Plane for JetBrains IDEs.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Percipience OS"
+                    anchor="right"
+                    icon="/icons/percipience_icon.svg"
+                    factoryClass="com.neutronbinary.percipience.toolwindow.PercipienceToolWindowFactory"/>
+        <projectService serviceImplementation="com.neutronbinary.percipience.services.PercipienceProjectService"/>
+        <externalAnnotator language="TEXT"
+                           implementationClass="com.neutronbinary.percipience.annotators.ContractInspectionAnnotator"/>
+    </extensions>
+
+    <actions>
+        <action id="com.neutronbinary.percipience.InspectAstPruning"
+                class="com.neutronbinary.percipience.actions.InspectAstPruningAction"
+                text="Inspect Percipience AST Token Pruning"
+                description="Visualizes raw vs. pruned AST tokens for active file">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,14 @@
+schema_version: "3.17.0"
+contract_id: "lsp_protocol_contract"
+capabilities:
+  textDocumentSync: 2 # Incremental
+  codeLensProvider:
+    resolveProvider: true
+  hoverProvider: true
+  diagnosticProvider:
+    interFileDependencies: true
+    workspaceDiagnostics: true
+performance_benchmarks:
+  max_diagnostic_latency_ms: 50
+  max_hover_latency_ms: 20
+  memory_limit_mb: 256

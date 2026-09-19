@@ -1,0 +1,35 @@
+workflow_id: intellij_pycharm_plugin_delivery_flow
+name: IntelliJ IDEA & PyCharm Plugin End-to-End Delivery Flow
+version: "1.0.0"
+description: Multi-stage automated delivery pipeline for JetBrains IntelliJ & PyCharm IDE plugins
+stages:
+  - id: stage_1_manifest_and_contracts
+    name: Manifest & Wire Contract Validation
+    agent: agent_jetbrains_plugin_architect
+    tasks:
+      - validate_plugin_xml_manifest
+      - verify_psi_ast_bridge_contract
+      - check_compatibility_matrix
+
+  - id: stage_2_psi_engine_and_token_meter
+    name: PSI AST Engine & Token Compression
+    agent: agent_psi_ast_bridge_specialist
+    tasks:
+      - test_psi_symbol_extraction
+      - benchmark_token_reduction_ratio
+      - verify_contract_annotator_diagnostics
+
+  - id: stage_3_toolwindow_and_ui
+    name: ToolWindow, JCEF & Action Integration
+    agent: agent_intellij_ui_ux_engineer
+    tasks:
+      - verify_toolwindow_registration
+      - audit_jcef_csp_compliance
+      - test_gutter_linemarkers_and_actions
+
+  - id: stage_4_daemon_rpc_and_merkle_seal
+    name: Daemon IPC Bridge & Merkle Seal
+    agent: agent_jetbrains_plugin_architect
+    tasks:
+      - test_daemon_json_rpc_latency
+      - seal_merkle_recovery_block

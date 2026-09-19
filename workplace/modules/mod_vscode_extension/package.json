@@ -1,0 +1,74 @@
+{
+  "name": "percipience-context-os",
+  "displayName": "Percipience Context Engineering OS",
+  "description": "Visual Studio Code Extension for Autonomous Context Engineering & Multi-Agent SDLC",
+  "version": "1.0.0",
+  "publisher": "neutronbinary",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "workspaceContains:.nb",
+    "onCommand:percipience.openDashboard",
+    "onCommand:percipience.executeWorkflow",
+    "onLanguage:yaml",
+    "onLanguage:json"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "percipience-explorer",
+          "title": "Percipience OS",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "percipience-explorer": [
+        {
+          "id": "percipience.workflowsView",
+          "name": "Active Workflows"
+        },
+        {
+          "id": "percipience.agentsView",
+          "name": "Agent Registry"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "percipience.openDashboard",
+        "title": "Open Percipience Control Plane",
+        "category": "Percipience"
+      },
+      {
+        "command": "percipience.executeWorkflow",
+        "title": "Execute Delivery Workflow",
+        "category": "Percipience"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node esbuild.js --production",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "bundle": "node esbuild.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.90.0",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1"
+  }
+}

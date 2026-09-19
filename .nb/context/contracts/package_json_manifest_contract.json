@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VSCodePackageManifestContract",
+  "type": "object",
+  "required": [
+    "name",
+    "displayName",
+    "version",
+    "publisher",
+    "engines",
+    "activationEvents",
+    "contributes",
+    "main"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "example": "percipience-context-os"
+    },
+    "displayName": {
+      "type": "string",
+      "example": "Percipience Context Engineering OS"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "publisher": {
+      "type": "string",
+      "example": "neutronbinary"
+    },
+    "main": {
+      "type": "string",
+      "example": "./dist/extension.js"
+    },
+    "engines": {
+      "type": "object",
+      "required": ["vscode"],
+      "properties": {
+        "vscode": {
+          "type": "string",
+          "example": "^1.90.0"
+        }
+      }
+    },
+    "activationEvents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contributes": {
+      "type": "object",
+      "required": ["viewsContainers", "views", "commands"],
+      "properties": {
+        "viewsContainers": {
+          "type": "object"
+        },
+        "views": {
+          "type": "object"
+        },
+        "commands": {
+          "type": "array"
+        }
+      }
+    }
+  }
+}
