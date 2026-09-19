@@ -66,6 +66,12 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │       └── workflows/
 │           └── intellij_pycharm_plugin_delivery_flow.yaml # Manifest -> PSI Engine -> ToolWindow -> Daemon Bridge -> Verifier
 ├── workplace/
+│   ├── docs/
+│   │   ├── intellij_pycharm_plugin_architecture.md           # System C4 component topologies & module interfaces (Mermaid)
+│   │   ├── intellij_pycharm_plugin_sequence.md               # End-to-end execution sequence flows (Mermaid)
+│   │   ├── intellij_pycharm_plugin_data_flow.md              # Topological data flow & contract exchange DAGs (Mermaid)
+│   │   ├── intellij_pycharm_plugin_entity_relation.md        # Entity-relationship & state transition models (Mermaid)
+│   │   └── intellij_pycharm_plugin_contracts_registry.md     # Machine-readable contract registry & artifact handoff matrix
 │   ├── modules/
 │   │   └── mod_intellij_plugin/
 │   │       ├── build.gradle.kts                       # Gradle IntelliJ Platform plugin configuration
@@ -167,6 +173,14 @@ performance_targets:
    - Java Chromium Embedded Framework (JCEF) browser instances hosting the Percipience Dashboard must enforce strict Content-Security-Policy (CSP) with \`script-src 'self'\`.
    - Communication between JCEF JavaScript and the Kotlin plugin layer must use asynchronous query handlers (\`CefMessageRouterHandlerAdapter\`) with verified request nonce validation.
 ```
+
+---
+
+### Contract & Artifact Standardization & Successor Consumption Rules
+In accordance with the Parent Master Plan governance framework:
+1. **Contract Invariants**: All domain wire contracts in `.nb/context/contracts/` must strictly adhere to JSON Schema Draft-07, OpenAPI 3.1, or AsyncAPI 3.0 standards with explicit versioning (`MAJOR.MINOR.PATCH`).
+2. **Artifact Standards**: Every step in the domain workflow produces explicitly typed, schema-validated artifacts stored in canonical paths (`workplace/modules/`, `workplace/docs/`, `.nb/context/ledger/`).
+3. **Deterministic Successor Handoffs**: Successor agents consume predecessor outputs through contract-guaranteed schema keys. No runtime parameter guessing or unvalidated data propagation is permitted.
 
 ---
 

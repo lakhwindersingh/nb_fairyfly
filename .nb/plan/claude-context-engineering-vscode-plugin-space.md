@@ -67,6 +67,12 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │       └── workflows/
 │           └── vscode_plugin_delivery_flow.yaml   # Manifest -> LSP Server -> Webview Dashboard -> IPC -> Gate
 ├── workplace/
+│   ├── docs/
+│   │   ├── vscode_plugin_architecture.md           # System C4 component topologies & module interfaces (Mermaid)
+│   │   ├── vscode_plugin_sequence.md               # End-to-end execution sequence flows (Mermaid)
+│   │   ├── vscode_plugin_data_flow.md              # Topological data flow & contract exchange DAGs (Mermaid)
+│   │   ├── vscode_plugin_entity_relation.md        # Entity-relationship & state transition models (Mermaid)
+│   │   └── vscode_plugin_contracts_registry.md     # Machine-readable contract registry & artifact handoff matrix
 │   ├── modules/
 │   │   └── mod_vscode_extension/
 │   │       ├── package.json                       # Extension manifest & contribution points
@@ -174,6 +180,14 @@ performance_benchmarks:
    - The extension must NEVER activate globally on `*`.
    - Activation must strictly bind to precise triggers: `workspaceContains:.nb`, `onCommand:percipience.*`, and language IDs (`onLanguage:yaml`, `onLanguage:json`, `onLanguage:python`).
 ```
+
+---
+
+### Contract & Artifact Standardization & Successor Consumption Rules
+In accordance with the Parent Master Plan governance framework:
+1. **Contract Invariants**: All domain wire contracts in `.nb/context/contracts/` must strictly adhere to JSON Schema Draft-07, OpenAPI 3.1, or AsyncAPI 3.0 standards with explicit versioning (`MAJOR.MINOR.PATCH`).
+2. **Artifact Standards**: Every step in the domain workflow produces explicitly typed, schema-validated artifacts stored in canonical paths (`workplace/modules/`, `workplace/docs/`, `.nb/context/ledger/`).
+3. **Deterministic Successor Handoffs**: Successor agents consume predecessor outputs through contract-guaranteed schema keys. No runtime parameter guessing or unvalidated data propagation is permitted.
 
 ---
 

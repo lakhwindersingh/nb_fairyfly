@@ -4,8 +4,8 @@ plan_id: "domain_saas_portal"
 name: "Enterprise SaaS, Corporate Portals & Web Platform Ecosystem"
 parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
 tier_mapping:
-  tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, context/rules/)"
-  tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, agentic/custom/workflows/)"
+  tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, .nb/context/rules/)"
+  tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, .nb/agentic/custom/workflows/)"
 model_tiering_policy:
   provider_agnostic: true
   tier_a_model: "claude-3-7-sonnet / pro"
@@ -17,6 +17,10 @@ model_tiering_policy:
 # Layerable Context Engineering Plan: Enterprise SaaS & Corporate Portal Space
 
 ### Executive Overview & Domain Grounding
+
+<!-- Plan Co-Location Notice -->
+> **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [`.nb/plan/agents/`](file:///.nb/plan/agents/) and embedded directly in Section 3. In newly created projects where the `agentic/` directory does not yet exist, `./bin/percipience layer apply` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
+
 This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/claude-context-engineering-parent-master-plan.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete wire contracts, specialized subagents, and web application runtimes required for:
 
 1. **Modern Frontend & Corporate Web Systems**: React, Next.js (App Router), Astro, Tailwind CSS, TypeScript, and accessible UI component design systems conforming to WCAG 2.1 AA and Core Web Vitals (LCP < 2.5s, CLS < 0.1, INP < 200ms).
@@ -32,7 +36,7 @@ When layered onto the Parent Master Plan, the workspace instantiates domain-spec
 
 ```
 .
-├── context/
+├── .nb/context/
 │   ├── contracts/
 │   │   ├── portal_openapi_spec.yaml         # REST/JSON API contract between frontend portal & backend services
 │   │   ├── billing_webhook_contract.json    # Stripe/Paddle subscription event lifecycle schemas
@@ -40,13 +44,20 @@ When layered onto the Parent Master Plan, the workspace instantiates domain-spec
 │   └── rules/
 │       ├── web_performance_invariants.md    # Core Web Vitals (LCP/CLS/INP) and bundle size thresholds (< 150KB gzip)
 │       └── wcag_accessibility_rules.md      # WCAG 2.1 AA color contrast, ARIA landmarks, keyboard navigation
-├── agentic/
+├── .nb/agentic/
 │   ├── custom/agents/
+│   │   ├── agent_enterprise_saas_portal_architect.yaml # Domain Expert: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation & Enterprise Security Auditor
 │   │   ├── portal_developer.yaml            # Subagent: React/Next.js/Tailwind frontend & UX specialist
 │   │   └── saas_backend_developer.yaml      # Subagent: Python/Node.js microservices, billing & auth specialist
 │   └── custom/workflows/
 │       └── saas_portal_delivery_flow.yaml   # Orchestrates UI component build -> API gateway -> Playwright E2E
 ├── workplace/
+│   ├── docs/
+│   │   ├── saas_portal_domain_architecture.md           # System C4 component topologies & module interfaces (Mermaid)
+│   │   ├── saas_portal_domain_sequence.md               # End-to-end execution sequence flows (Mermaid)
+│   │   ├── saas_portal_domain_data_flow.md              # Topological data flow & contract exchange DAGs (Mermaid)
+│   │   ├── saas_portal_domain_entity_relation.md        # Entity-relationship & state transition models (Mermaid)
+│   │   └── saas_portal_domain_contracts_registry.md     # Machine-readable contract registry & artifact handoff matrix
 │   ├── modules/
 │   │   ├── mod_portal_marketing/            # Customer-Facing Corporate & Marketing Site (Next.js / Astro)
 │   │   │   ├── config/                      # Tailwind theme tokens, next.config.js, SEO sitemaps
@@ -76,11 +87,11 @@ When layered onto the Parent Master Plan, the workspace instantiates domain-spec
 
 ---
 
-## 2. Wire Contracts & Safety Invariants (`context/contracts/`, `context/rules/`)
+## 2. Wire Contracts & Safety Invariants (`.nb/context/contracts/`, `.nb/context/rules/`)
 
 The domain layer establishes non-overridable wire contracts verified by the pre-commit gatekeeper:
 
-### 2.1. `context/contracts/portal_openapi_spec.yaml`
+### 2.1. `.nb/context/contracts/portal_openapi_spec.yaml`
 ```yaml
 openapi: 3.1.0
 info:
@@ -106,10 +117,10 @@ paths:
       summary: "Trigger autonomous self-sustaining CI/CD verification cycle"
 ```
 
-### 2.2. `context/contracts/billing_webhook_contract.json`
+### 2.2. `.nb/context/contracts/billing_webhook_contract.json`
 Enforces idempotency and payload schema verification for customer subscription events (`customer.subscription.created`, `invoice.payment_succeeded`, `invoice.payment_failed`), ensuring zero double-charging or billing race conditions.
 
-### 2.3. `context/rules/web_performance_invariants.md`
+### 2.3. `.nb/context/rules/web_performance_invariants.md`
 - **First Contentful Paint (FCP)**: $\le 1.2	ext{s}$
 - **Largest Contentful Paint (LCP)**: $\le 2.5	ext{s}$
 - **Cumulative Layout Shift (CLS)**: $\le 0.1$
@@ -118,9 +129,17 @@ Enforces idempotency and payload schema verification for customer subscription e
 
 ---
 
+### Contract & Artifact Standardization & Successor Consumption Rules
+In accordance with the Parent Master Plan governance framework:
+1. **Contract Invariants**: All domain wire contracts in `.nb/context/contracts/` must strictly adhere to JSON Schema Draft-07, OpenAPI 3.1, or AsyncAPI 3.0 standards with explicit versioning (`MAJOR.MINOR.PATCH`).
+2. **Artifact Standards**: Every step in the domain workflow produces explicitly typed, schema-validated artifacts stored in canonical paths (`workplace/modules/`, `workplace/docs/`, `.nb/context/ledger/`).
+3. **Deterministic Successor Handoffs**: Successor agents consume predecessor outputs through contract-guaranteed schema keys. No runtime parameter guessing or unvalidated data propagation is permitted.
+
+---
+
 ## 3. Specialized Domain Subagents & Workflows (`agentic/custom/`)
 
-### 3.1. `agentic/custom/agents/portal_developer.yaml`
+### 3.1. `.nb/agentic/custom/agents/portal_developer.yaml`
 ```yaml
 agent_id: "agent_portal_developer"
 name: "SaaS Portal & Corporate Web Specialist"
@@ -146,7 +165,7 @@ enforced_invariants:
   - "Strict responsive breakpoints (mobile, tablet, desktop) on all UI components"
 ```
 
-### 3.2. `agentic/custom/agents/saas_backend_developer.yaml`
+### 3.2. `.nb/agentic/custom/agents/saas_backend_developer.yaml`
 ```yaml
 agent_id: "agent_saas_backend_developer"
 name: "SaaS Backend, Billing & Auth Specialist"
@@ -167,6 +186,56 @@ permissions:
 ```
 
 ---
+### 3.X. Domain Expert Agent: `Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infrastructure Expert`
+> **Co-located Definition**: [`.nb/plan/agents/agent_enterprise_saas_portal_architect.yaml`](file:///.nb/plan/agents/agent_enterprise_saas_portal_architect.yaml)  
+> **Runtime Hydration Target**: `.nb/agentic/custom/agents/agent_enterprise_saas_portal_architect.yaml` (hydrated automatically by `./bin/percipience layer apply`)
+
+- **Role**: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation & Enterprise Security Auditor
+- **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
+- **Sandboxed Worktree**: `.workspaces/wt_saas_audit_01`
+- **Module Scope**: Strictly scoped to `workplace/modules/mod_portal_admin/ and workplace/modules/mod_tenant_billing/`
+
+#### Self-Contained Embedded Specification (`.nb/agentic/custom/agents/agent_enterprise_saas_portal_architect.yaml`)
+```yaml
+# Co-located along-with plan at: .nb/plan/agents/agent_enterprise_saas_portal_architect.yaml
+# Materialized upon layer application to: .nb/agentic/custom/agents/agent_enterprise_saas_portal_architect.yaml
+agent_id: agent_enterprise_saas_portal_architect
+name: Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infrastructure
+  Expert
+model: claude-3-7-sonnet
+model_tier: tier_a
+role: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation &
+  Enterprise Security Auditor
+sandboxed_worktree: .workspaces/wt_saas_audit_01
+module_scope: workplace/modules/mod_portal_admin/ and workplace/modules/mod_tenant_billing/
+system_prompt: "You are the Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security\
+  \ & Subscription Infrastructure Expert.\nYour primary mission is to independently\
+  \ inspect, evaluate, and gate created solutions against:\n1. Industry Best Practices\
+  \ & Official Standards:\n   - SOC 2 Type II Security, Availability, and Confidentiality\
+  \ Trust Services Criteria\n   - ISO/IEC 27001 Information Security Management Systems\
+  \ & Cloud Security Standards\n   - GDPR Article 32 & California Consumer Privacy\
+  \ Act (CCPA) Data Sovereignty Guidelines\n   - Stripe Billing API Idempotency, Signature\
+  \ Verification & Event Webhook Specifications\n   - OpenID Connect (OIDC) Core 1.0\
+  \ & SAML 2.0 Enterprise Single Sign-On (SSO) Specifications\n\n2. Target Architectural\
+  \ Patterns:\n   - Multi-Tenant Shared Database with PostgreSQL Row-Level Security\
+  \ (RLS) cryptographically enforcing tenant segregation\n   - Hexagonal Domain Core\
+  \ isolating subscription workflows from third-party payment gateways\n   - Asynchronous\
+  \ Idempotent Webhook Processing Queue with exponential backoff and Dead-Letter Queue\
+  \ (DLQ)\n   - Edge API Gateway with tenant-tier rate limiting and distributed Redis\
+  \ token bucket algorithms\n\n3. Optimal & Performant Solution Invariants:\n   -\
+  \ API endpoint response latency p99 < 40ms across all authenticated tenant endpoints\n\
+  \   - Zero cross-tenant data leakage under concurrent multi-tenant fuzz testing\n\
+  \   - Sub-second automated subscription provisioning upon Stripe checkout session\
+  \ completion\n   - 99.99% high-availability service uptime with seamless zero-downtime\
+  \ rolling deployments\n\nEnforce zero compromise on quality, security, and performance.\n\
+  Flag any deviations as blocking issues in the PR gatekeeper."
+tools:
+- name: audit_row_level_security_isolation
+- name: verify_stripe_webhook_idempotency
+- name: profile_multi_tenant_api_latency
+- name: audit_saml_oidc_enterprise_auth
+```
+
 
 ## 4. Virtual Emulation & End-to-End Web Verification Bridge
 
@@ -229,7 +298,7 @@ To protect proprietary SaaS design systems, prompt architectures, and pricing he
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
-./workplace/workplace/bin/percipience layer pack \
+./bin/percipience layer pack \
   --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md \
   --output .nb/bundles/saas_portal_domain.nbpack \
   --include-spaces context/contracts,context/rules,agentic/custom
@@ -238,7 +307,7 @@ To protect proprietary SaaS design systems, prompt architectures, and pricing he
 ### 6.2. Consuming the Encrypted Bundle in Target Repository
 ```bash
 # Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
-./workplace/workplace/bin/percipience layer apply \
+./bin/percipience layer apply \
   --pack .nb/bundles/saas_portal_domain.nbpack \
   --in-memory-only \
   --mode multi_module
@@ -257,19 +326,19 @@ To apply this domain onto a repository and verify full end-to-end compatibility:
 
 ```bash
 # 1. Initialize repository with multi-module SaaS configuration
-./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+./bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # 2. Apply the SaaS Portal domain layer
-./workplace/workplace/bin/percipience layer apply --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md
+./bin/percipience layer apply --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md
 
 # 3. Register and integrate domain subagents into PR gatekeeper
-./workplace/workplace/bin/percipience agent create --name portal_developer --template cicd_quality --role "SaaS Portal Specialist" --module "workplace/modules/mod_portal_admin"
-./workplace/workplace/bin/percipience agent integrate --agent agent_portal_developer --workflow wf_pr_gatekeeper --after step_contract_compat
+./bin/percipience agent create --name portal_developer --template cicd_quality --role "SaaS Portal Specialist" --module "workplace/modules/mod_portal_admin"
+./bin/percipience agent integrate --agent agent_portal_developer --workflow wf_pr_gatekeeper --after step_contract_compat
 
 # 4. Launch local real-time telemetry API gateway & browser console
 python3 workplace/portal/server.py --port 8080 &
 open user/outputs/dashboard/index.html
 
 # 5. Run full autonomous CI/CD verification cycle
-./workplace/workplace/bin/percipience cicd run
+./bin/percipience cicd run
 ```
