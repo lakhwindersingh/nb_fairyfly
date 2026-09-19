@@ -51,7 +51,10 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
 31. **4-Tier Hierarchical Swarm Authority Tree & Anti-Usurpation Spawning Interception (`CAP-31`) (`SwarmGovernor`)**: Formal agent authorization hierarchy (`ORCHESTRATOR` > `DOMAIN_ARCHITECT` > `SPECIALIST_WORKER` > `GATEKEEPER_SENTINEL`), action permission matrix, bounded recursion depth ($D_{\max} = 2$), and anti-usurpation spawning validation preventing worker agents from launching unconstrained shadow subagents.
 32. **Adversarial Red-Team & Mutation Fuzzing Engine (`CAP-32`) (`AdversarialFuzzer`)**: Proactive security and resilience testing generating boundary numbers ($\pm \infty$, NaN, $2^{63}-1$), SQL/XSS injections, null/empty mutations, prototype pollution, and AST branch mutations to verify software resilience before PR merge.
 33. **Context Attention Slicing & Proportional Token Budgeting (`CAP-33`) (`AttentionBudgeter`)**: Mathematical budget quota partitioning across prompt sections (15% Invariants, 25% Contracts, 35% AST, 10% Memory/Trajectories, 15% Output) preventing context overflow and mitigating lost-in-the-middle degradation.
-34. **Structured Step-by-Step ReAct Trajectory Recording & Replay Engine (`CAP-34`) (`TrajectoryRecorder`)**: Deterministic capture of agent reasoning cycles (Thought $ightarrow$ Action $ightarrow$ Observation $ightarrow$ Reflection) persisted in `agentic/trajectories/` for post-mortem debugging and verification replay.
+34. **Structured Step-by-Step ReAct Trajectory Recording & Replay Engine (`CAP-34`) (`TrajectoryRecorder`)**: Deterministic capture of agent reasoning cycles (Thought $
+ightarrow$ Action $
+ightarrow$ Observation $
+ightarrow$ Reflection) persisted in `agentic/trajectories/` for post-mortem debugging and verification replay.
 35. **Autonomous Requirement Ambiguity Resolution & Interactive Clarification RFCs (`CAP-35`) (`AmbiguityResolver`)**: Quantitative entropy analysis of input requests detecting vague buzzwords, missing technical anchors, and drafting structured clarification RFCs in `user/hitl/clarification_requests/` before unblocking autonomous implementation.
 
 ### Scope
@@ -1326,3 +1329,26 @@ The Parent Master Plan deliberately provides universal, domain-agnostic abstract
 - **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](./claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](./CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
 - **Standardized Custom Layer Template**: Reusable domain authoring blueprint defined in [`.nb/plan/templates/custom_domain_layer_template.md`](./templates/custom_domain_layer_template.md) and [`agentic/templates/custom_domain_layer_template.md`](../../agentic/templates/custom_domain_layer_template.md) for scaffolding domain wire contracts, specialist agents, and virtual simulator bridges.
 - **Encrypted Layer Packaging & In-Memory Enclave Consumption (`.nbpack`)**: Proprietary domain layers are compiled and sealed via `./workplace/workplace/bin/percipience layer pack` and consumed directly into volatile memory (zero disk plaintext residue) with Merkle state transitions via `./workplace/workplace/bin/percipience layer apply`.
+
+
+---
+
+## 36. Free Community Plan Architecture (plan_free)
+
+### 36.1 Purpose & Watered-Down Scope
+The **Free Community Plan (plan_free)** provides a zero-cost, single-seat developer tier that incorporates core **AST Token Reduction** and **Cryptographic Merkle State Chain** capabilities alongside a streamlined **Basic Autonomous CI/CD Pipeline** (basic_autonomous_cicd.yaml).
+
+### 36.2 Free Tier Feature Set & Boundary Ceilings
+- **Pricing**: $0.00 / month (plan_free)
+- **Seats**: 1 Local Developer
+- **AST Token Reduction**: 60%-80% PSI / AST Skeletonization
+- **Proportional Attention**: 15/25/35/10/15 Budget Allocation
+- **Merkle Chain Ledger**: Continuous Local SHA-256 Merkle Chain
+- **Autonomous CI/CD**: Basic 4-Stage Pipeline with basic_autonomous_cicd.yaml
+
+### 36.3 Basic Autonomous CI/CD Pipeline (basic_autonomous_cicd.yaml)
+The free edition executes a 4-step linear autonomous pipeline:
+1. **sustain_maintenance**: Cleans local ephemeral branches, reclaims locks, and checks ledger continuity.
+2. **ast_token_reduction**: Prunes source bodies to AST signatures for local and API-based agents.
+3. **contract_and_test_gate**: Verifies schema wire contracts and test suites.
+4. **bounded_auto_heal & merkle_state_seal**: Bounded 1-attempt repair, appending a verified SHA-256 Merkle state block to context_ledger.yaml.
