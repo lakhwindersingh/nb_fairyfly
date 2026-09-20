@@ -8,6 +8,7 @@ tier: plan_free
 ## 1. Executive Summary & Free Plan Scope
 
 The **Percipience Parent Master Context Engineering Plan (Free Community Edition)** delivers a deterministic, tamper-evident, and token-efficient AI-driven software engineering framework. Tailored for individual developers, open-source maintainers, and community teams, this watered-down edition retains the essential core foundations:
+- **Unified Agentic CI/CD Platform in `.nb/`**: The complete platform engine, gatekeeper CLI, configuration files, and test suites are housed inside `.nb/`, establishing a clean, self-contained Agentic CI/CD System independent of user project code.
 - **High-Efficiency Token Reduction**: 60%–80% context compression via AST skeletonization, attention budgeting, and static prefix pinning.
 - **Cryptographic Merkle State Chain**: Continuous SHA-256 tamper-evident ledger tracking all artifact modifications, agent actions, and recovery snapshots.
 - **Basic Autonomous CI/CD Setup**: Lightweight self-sustaining workspace hygiene, single-attempt bounded self-repair, contract verification, and automated Merkle state sealing.
@@ -15,27 +16,29 @@ The **Percipience Parent Master Context Engineering Plan (Free Community Edition
 
 ```mermaid
 graph TD
-  subgraph Free_Plan_Workspace["Free Plan Quad-Space Workspace"]
+  subgraph Free_Plan_Workspace["Free Plan Quad-Space Architecture"]
     UserSpace["user/<br/>(MVS Inputs, HITL Logs, Reports)"]
-    WorkplaceSpace["workplace/<br/>(Source Code, Tests, Configs)"]
-    ContextSpace[".nb/context/<br/>(Contracts, Invariants, Merkle Ledger)"]
-    AgenticSpace[".nb/agentic/<br/>(Prompts, Workflows, Local Agents)"]
+    WorkplaceSpace["workplace/<br/>(Project Code, Layered Modules, Portal)"]
+    
+    subgraph Agentic_CICD_Platform[".nb/ — Agentic CI/CD Platform System"]
+      NBCli[".nb/bin/percipience<br/>(Gatekeeper & Orchestrator CLI)"]
+      NBConfig[".nb/config/<br/>(billing_plans, token_compression, byor)"]
+      NBCore[".nb/core/<br/>(38 Platform Engines: AST, Merkle, CI/CD)"]
+      NBContext[".nb/context/<br/>(Contracts, Invariants, Merkle Ledger)"]
+      NBAgentic[".nb/agentic/<br/>(Prompts, Workflows, Local Agents)"]
+      NBScripts[".nb/scripts/<br/>(Pre-commit & CI/CD Hooks)"]
+      NBTests[".nb/tests/<br/>(Platform CI/CD Verification Suites)"]
+    end
   end
 
-  subgraph Free_Core_Capabilities["Free Plan Core Engines"]
-    TokenEngine["AST Token Reduction Engine<br/>(60-80% Pruning & Attention Budgeting)"]
-    MerkleEngine["SHA-256 Merkle Ledger<br/>(Linear Chain & Recovery Points)"]
-    BasicCICD["Basic Autonomous CI/CD<br/>(Sustain -> Gate -> Heal -> Merkle Seal)"]
-    SandboxBroker["IntelliJ Sandbox Permission Broker<br/>(Token Pruned Source Access)"]
-  end
-
-  UserSpace --> TokenEngine
-  WorkplaceSpace --> TokenEngine
-  TokenEngine --> AgenticSpace
-  AgenticSpace --> BasicCICD
-  BasicCICD --> MerkleEngine
-  MerkleEngine --> ContextSpace
-  SandboxBroker --> WorkplaceSpace
+  NBCli --> NBCore
+  NBConfig --> NBCore
+  NBCore --> NBContext
+  NBAgentic --> NBCore
+  NBScripts --> NBCli
+  NBCli --> WorkplaceSpace
+  UserSpace --> NBCli
+  NBTests --> NBCore
 ```
 
 ---
@@ -114,20 +117,20 @@ The Free Plan enforces zero-tamper auditability and state recovery through a det
 
 ## 5. Core Capability 3: Basic Autonomous CI/CD Setup
 
-The Free Plan provides an out-of-the-box, lightweight autonomous CI/CD setup (`basic_autonomous_cicd.yaml`) designed for single-seat local development.
+The Free Plan provides an out-of-the-box, lightweight autonomous CI/CD setup driven by `.nb/bin/percipience` and configured in `.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml` designed for single-seat local development.
 
 ### 5.1 The 4-Stage Lightweight Pipeline
 1. **Stage 1: Self-Sustaining Maintenance (`platform.self_sustaining_engine`)**:
    - Reclaims expired ephemeral worktree locks (`.workspaces/`).
    - Cleans temporary scratch diffs and test artifacts (`user/scratch/`).
-   - Verifies Merkle chain continuity ($100\%$ linear validity check).
+   - Verifies Merkle chain continuity ($100\%$ linear validity check via `.nb/core/merkle_engine.py`).
 2. **Stage 2: AST Token Reduction (`platform.ast_pruner`)**:
-   - Analyzes project source directories.
+   - Analyzes project source directories using rules in `.nb/config/token_compression_rules.yaml`.
    - Slices ASTs to generate symbol skeletons for prompt contexts.
-   - Logs token savings to `token_savings_ledger.yaml`.
+   - Logs token savings to `.nb/context/ledger/token_savings_ledger.yaml`.
 3. **Stage 3: Basic Contract & Test Verification Gate (`platform.contract_verifier`)**:
    - Verifies wire contracts under `.nb/context/contracts/`.
-   - Runs local test suites (`workplace/tests/`).
+   - Runs local test suites (`workplace/tests/` and `.nb/tests/`).
 4. **Stage 4: Bounded Auto-Heal & Merkle Seal (`platform.autonomous_healer` & `platform.merkle_ledger`)**:
    - Single-attempt bounded diagnostic reprompt for failing tests.
    - If healed, seals state with a new verified Merkle block.
@@ -137,37 +140,80 @@ The Free Plan provides an out-of-the-box, lightweight autonomous CI/CD setup (`b
 
 ## 6. Quad-Space Partitioning for Free Plan
 
-The workspace maintains strict separation across four distinct directories:
+The workspace maintains strict separation across four distinct directories, distinguishing between the parent platform's Agentic CI/CD system (`.nb/`) and project-specific layered plan implementations (`workplace/`):
 
 ```text
 nb_fairyfly/ (Workspace Root)
-├── .nb/                                      # Governing plans, contracts & agent configurations
+├── .nb/                                      # [PLATFORM AGENTIC CI/CD SYSTEM]
+│   ├── bin/
+│   │   └── percipience                       # Unified Agentic CI/CD CLI & Gatekeeper
+│   ├── config/                               # Platform Configurations
+│   │   ├── billing_plans.yaml                # Free & Paid tier configuration
+│   │   ├── byor_config.json                  # Multi-VCS BYOR Adapter config
+│   │   ├── issue_tracker_mcp.yaml            # Issue tracker MCP config
+│   │   └── token_compression_rules.yaml      # AST pruning & attention budget thresholds
+│   ├── core/                                 # Platform Engines (38 Python modules)
+│   │   ├── ast_optimizer.py                  # Structural AST skeletonizer
+│   │   ├── autonomous_cicd.py                # Self-sustaining CI/CD Triad
+│   │   ├── merkle_engine.py                  # Cryptographic SHA-256 state chain
+│   │   ├── token_tracker.py                  # Token FinOps & savings ledger
+│   │   └── workflow_orchestrator.py          # DAG & step execution engine
+│   ├── scripts/
+│   │   └── install_git_hook.sh               # Pre-commit hook invoking .nb/bin/percipience
+│   ├── tests/                                # Platform CI/CD Verification Suites
+│   │   ├── test_agentic_sdlc_suite.py
+│   │   ├── test_living_doc_engine.py
+│   │   ├── test_request_formalizer.py
+│   │   ├── test_section_16_1_suite.py
+│   │   └── test_section_17_3_suite.py
 │   ├── plan/
-│   │   └── claude-context-engineering-parent-master-plan.md  # This governing plan
+│   │   ├── claude-context-engineering-parent-master-plan.md      # Governing enterprise master plan
+│   │   └── claude-context-engineering-parent-master-free_plan.md # This free community plan
 │   ├── context/
 │   │   ├── contracts/                        # JSON Schema / YAML wire contracts
 │   │   ├── invariants/                       # Non-overridable security invariants
 │   │   └── ledger/
 │   │       ├── context_ledger.yaml           # Master Merkle DAG ledger
-│   │       └── context_ledger.public.yaml    # Public sanitized projection
+│   │       ├── context_ledger.public.yaml    # Public sanitized projection
+│   │       └── token_savings_ledger.yaml     # Token savings & metering ledger
 │   └── agentic/
 │       ├── custom/
 │       │   ├── agents/                       # Local agent specialist definitions
 │       │   └── workflows/
 │       │       └── basic_autonomous_cicd.yaml# Basic Autonomous CI/CD workflow
-│       └── prompts/                          # Six-phase prompt suite
-├── workplace/                                # Application source code & configuration
-│   ├── config/
-│   │   ├── billing_plans.yaml                # Free & Paid tier configuration
-│   │   └── token_compression_rules.yaml      # AST pruning & attention budget thresholds
-│   ├── core/                                 # Platform engines (Merkle, AST, CI/CD)
-│   ├── modules/                              # Feature modules & IDE plugins
-│   └── tests/                                # Test suites
-└── user/                                     # User-owned inputs & outputs
+│       ├── prompts/                          # Six-phase prompt suite
+│       └── runtime/                          # Declarative runtime schemas & facades
+├── workplace/                                # [PROJECT-SPECIFIC LAYERED PLAN IMPLEMENTATIONS]
+│   ├── config/                               # Project-Specific Configuration
+│   │   ├── site_config.yaml                  # SaaS Portal Web configuration
+│   │   └── tailwind.config.ts                # Marketing & Portal styling config
+│   ├── modules/                              # Layered Plan Domain Modules
+│   │   ├── mod_intellij_plugin/              # JetBrains IDE integration module
+│   │   ├── mod_vscode_extension/             # VSCode LSP & extension module
+│   │   └── mod_portal_marketing/             # Web Portal marketing module
+│   ├── portal/                               # Project Web Portal backend (server.py)
+│   ├── src/                                  # Project Frontend (components, styles, content)
+│   ├── shared/                               # Project Shared DTOs, protos, primitives
+│   ├── templates/                            # Project Evaluation harnesses & bridge mocks
+│   ├── docs/                                 # Project Living Documentation (Mermaid diagrams)
+│   └── tests/                                # Project-Specific Layered Plan Tests
+│       ├── test_ide_plugins_space.py
+│       ├── test_play3_suite.py
+│       └── test_portal_observability_auth.py
+└── user/                                     # [USER / DEVELOPER ENCLAVE]
     ├── inputs/                               # Minimum Viable Set (MVS) specifications
     ├── hitl/                                 # Human-In-The-Loop logs & quarantines
     └── outputs/                              # Maturity reports & dashboard
 ```
+
+### 6.1 Architectural Differentiation: Platform vs. Layered Plans
+- **Parent Master Platform (`.nb/`)**:
+  - Owns all context engineering machinery, AST pruning algorithms, token metering, cryptographic state ledgers, autonomous repair loops, and the unified CLI (`percipience`).
+  - Contains **zero application-specific logic**. It acts as the immutable operating system and agentic CI/CD infrastructure for any repository.
+- **Layered Plans (`workplace/`)**:
+  - Owns customer-facing business logic, user interfaces, microservices, domain modules, and project-specific test suites.
+  - Examples include SaaS web portals (`workplace/portal/`), JetBrains plugins (`workplace/modules/mod_intellij_plugin/`), VSCode extensions (`workplace/modules/mod_vscode_extension/`), and UI styling (`workplace/config/site_config.yaml`, `workplace/src/`).
+  - Layered plans consume platform facilities via `.nb/bin/percipience` and the contracts in `.nb/context/contracts/`, maintaining total isolation from the underlying CI/CD engine.
 
 ---
 
@@ -182,7 +228,7 @@ The Percipience IntelliJ / PyCharm Plugin (`mod_intellij_plugin`) acts as the ID
 
 ### 7.2 Ensuring Local Agents Use Token Reduction
 - Local IDE agents query context through `LocalAgentTokenOptimizer` and `PsiAstBridge`.
-- Method and function bodies are stripped in memory (&lt;35ms) before streaming to local or API-based LLMs, guaranteeing 60%–80% token savings.
+- Method and function bodies are stripped in memory (<35ms) before streaming to local or API-based LLMs, guaranteeing 60%–80% token savings.
 
 ### 7.3 Source Permissions for Sandboxed Plugins & LLMs
 When other LLM plugins (e.g., JetBrains AI Assistant, GitHub Copilot, Continue, Cody) run in separate sandboxes or classloaders within IntelliJ:
@@ -196,40 +242,40 @@ When other LLM plugins (e.g., JetBrains AI Assistant, GitHub Copilot, Continue, 
 
 ## 8. Capability Mapping (CAP-01 through CAP-35)
 
-| ID | Foundational Capability | Free Community Tier Status |
-| :--- | :--- | :--- |
-| `CAP-01` | Multi-Format MVS Ingestion | Supported (Markdown & OpenAPI) |
-| `CAP-02` | Context Poisoning Detection & Rollback | Supported (Local Recovery Points) |
-| `CAP-03` | Context Compression & GenAI Optimization | Supported (60%–80% AST Pruning) |
-| `CAP-04` | Dynamic Multi-Model Cascading & Tiering | Supported (Local / BYO API Key) |
-| `CAP-05` | Git Worktree Workspace Isolation | Supported (Single Local Worktree) |
-| `CAP-06` | Automated Spec-to-Code Semantic Parity | Supported (AST Parity Verification) |
-| `CAP-07` | Bounded TDD Self-Healing | Supported (1 Retry Auto-Repair) |
-| `CAP-08` | Cryptographic Ledger Hash-Chain | Supported (SHA-256 `context_ledger.yaml`) |
-| `CAP-09` | Time-Travel Debugging & Visual DAG | Supported (Static HTML Dashboard) |
-| `CAP-10` | Context Maturity Evaluation Scorecard | Supported (Standard 6D Scorecard) |
-| `CAP-11` | Master Context Ledger & Commit Traceability | Supported (Full Traceability) |
-| `CAP-12` | Universal Quad-Space Clean Bootstrapping | Supported (Automated in IDE Plugin) |
-| `CAP-13` | Zero-Overhead Dual-Mode Architecture | Supported (Single & Multi-Module) |
-| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Paid Tier Only (Enterprise) |
-| `CAP-15` | External Issue Tracker & Jira MCP Server | Paid Tier Only (Team / Enterprise) |
-| `CAP-16` | Autonomous CI/CD Triad | Supported (`basic_autonomous_cicd.yaml`) |
-| `CAP-17` | Extensible Custom Agent Plugins | Supported (Local Custom Agents) |
-| `CAP-18` | Production Token FinOps & Metering | Supported (Local Token Ledger) |
-| `CAP-19` | Enterprise Observability Hub & Telemetry | Supported (Local Web Dashboard) |
-| `CAP-20` | 3-Tier Layered Context & BYOR | Supported (Local Git & SSH) |
-| `CAP-21` | Autonomous Living Documentation Engine | Supported (Markdown + Mermaid) |
-| `CAP-22` | Distributed Redis Redlock Concurrency | Paid Tier Only (Enterprise) |
-| `CAP-23` | SEC 17a-4 / FINRA WORM Cloud Vault Egress | Paid Tier Only (Enterprise) |
-| `CAP-24` | High-Throughput Tree-Sitter AST Daemon | Paid Tier Only (Enterprise) |
-| `CAP-25` | Multi-Dimensional 6D Token Compression Suite | Supported (AST + Doc + Config) |
-| `CAP-26` | Multi-Dialect Diagnostic Log Slicing | Supported (Standard Traceback Slicer) |
-| `CAP-27` | Declarative Quad-Space Runtime Boundary | Supported (Zero-Logic Facade) |
-| `CAP-28` | Barrier Join Synchronization Engine | Supported (Local Step DAG) |
-| `CAP-29` | 4-Pillar Error Taxonomy & Playbooks | Supported (Basic Healing Playbooks) |
-| `CAP-30` | Cryptographic Prompt Manifest & Static Pinning | Supported (`prompt_manifest.yaml`) |
-| `CAP-31` | Hierarchical Swarm Authority Tree | Supported (Local Agent Hierarchy) |
-| `CAP-32` | Adversarial Red-Team Fuzzing Engine | Supported (Standard Test Fuzzing) |
-| `CAP-33` | Proportional Attention Budgeting | Supported (15/25/35/10/15 Rule) |
-| `CAP-34` | ReAct Trajectory Recording & Replay | Supported (`agentic/trajectories/`) |
-| `CAP-35` | Ambiguity Resolution & Clarification RFCs | Supported (`user/hitl/`) |
+| ID | Foundational Capability | Free Community Tier Status | Platform Implementation Location |
+| :--- | :--- | :--- | :--- |
+| `CAP-01` | Multi-Format MVS Ingestion | Supported (Markdown & OpenAPI) | `.nb/core/request_formalizer.py` |
+| `CAP-02` | Context Poisoning Detection & Rollback | Supported (Local Recovery Points) | `.nb/core/poisoning_sentinel.py`, `.nb/core/surgical_rollback.py` |
+| `CAP-03` | Context Compression & GenAI Optimization | Supported (60%–80% AST Pruning) | `.nb/core/ast_optimizer.py`, `.nb/core/token_optimizer_suite.py` |
+| `CAP-04` | Dynamic Multi-Model Cascading & Tiering | Supported (Local / BYO API Key) | `.nb/core/cognitive_router.py` |
+| `CAP-05` | Git Worktree Workspace Isolation | Supported (Single Local Worktree) | `.nb/core/worktree_engine.py` |
+| `CAP-06` | Automated Spec-to-Code Semantic Parity | Supported (AST Parity Verification) | `.nb/core/living_doc_engine.py` |
+| `CAP-07` | Bounded TDD Self-Healing | Supported (1 Retry Auto-Repair) | `.nb/core/error_recovery_orchestrator.py` |
+| `CAP-08` | Cryptographic Ledger Hash-Chain | Supported (SHA-256 `context_ledger.yaml`) | `.nb/core/merkle_engine.py` |
+| `CAP-09` | Time-Travel Debugging & Visual DAG | Supported (Static HTML Dashboard) | `user/outputs/dashboard/index.html` |
+| `CAP-10` | Context Maturity Evaluation Scorecard | Supported (Standard 6D Scorecard) | `.nb/core/maturity_evaluator.py` |
+| `CAP-11` | Master Context Ledger & Commit Traceability | Supported (Full Traceability) | `.nb/context/ledger/context_ledger.yaml` |
+| `CAP-12` | Universal Quad-Space Clean Bootstrapping | Supported (Automated in IDE Plugin) | `.nb/bin/percipience init` |
+| `CAP-13` | Zero-Overhead Dual-Mode Architecture | Supported (Single & Multi-Module) | `.nb/bin/percipience` |
+| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Paid Tier Only (Enterprise) | `.nb/core/nbpack_envelope.py` |
+| `CAP-15` | External Issue Tracker & Jira MCP Server | Paid Tier Only (Team / Enterprise) | `.nb/config/issue_tracker_mcp.yaml` |
+| `CAP-16` | Autonomous CI/CD Triad | Supported (`basic_autonomous_cicd.yaml`) | `.nb/core/autonomous_cicd.py` |
+| `CAP-17` | Extensible Custom Agent Plugins | Supported (Local Custom Agents) | `.nb/core/agent_plugin_engine.py` |
+| `CAP-18` | Production Token FinOps & Metering | Supported (Local Token Ledger) | `.nb/core/token_tracker.py` |
+| `CAP-19` | Enterprise Observability Hub & Telemetry | Supported (Local Web Dashboard) | `.nb/core/open_telemetry_exporter.py` |
+| `CAP-20` | 3-Tier Layered Context & BYOR | Supported (Local Git & SSH) | `.nb/core/byor_adapter.py`, `.nb/core/layered_context_validator.py` |
+| `CAP-21` | Autonomous Living Documentation Engine | Supported (Markdown + Mermaid) | `.nb/core/living_doc_engine.py` |
+| `CAP-22` | Distributed Redis Redlock Concurrency | Paid Tier Only (Enterprise) | `.nb/core/worktree_engine.py` |
+| `CAP-23` | SEC 17a-4 / FINRA WORM Cloud Vault Egress | Paid Tier Only (Enterprise) | `.nb/core/worm_egress.py` |
+| `CAP-24` | High-Throughput Tree-Sitter AST Daemon | Paid Tier Only (Enterprise) | `.nb/core/native_tree_sitter_daemon.py` |
+| `CAP-25` | Multi-Dimensional 6D Token Compression Suite | Supported (AST + Doc + Config) | `.nb/core/token_optimizer_suite.py` |
+| `CAP-26` | Multi-Dialect Diagnostic Log Slicing | Supported (Standard Traceback Slicer) | `.nb/core/diagnostic_log_pruner.py` |
+| `CAP-27` | Declarative Quad-Space Runtime Boundary | Supported (Zero-Logic Facade) | `.nb/agentic/runtime/` |
+| `CAP-28` | Barrier Join Synchronization Engine | Supported (Local Step DAG) | `.nb/core/workflow_orchestrator.py` |
+| `CAP-29` | 4-Pillar Error Taxonomy & Playbooks | Supported (Basic Healing Playbooks) | `.nb/core/error_recovery_orchestrator.py` |
+| `CAP-30` | Cryptographic Prompt Manifest & Static Pinning | Supported (`prompt_manifest.yaml`) | `.nb/core/prompt_drift_sentinel.py`, `.nb/core/prompt_prefix_pinning.py` |
+| `CAP-31` | Hierarchical Swarm Authority Tree | Supported (Local Agent Hierarchy) | `.nb/core/swarm_governor.py` |
+| `CAP-32` | Adversarial Red-Team Fuzzing Engine | Supported (Standard Test Fuzzing) | `.nb/core/adversarial_fuzzer.py` |
+| `CAP-33` | Proportional Attention Budgeting | Supported (15/25/35/10/15 Rule) | `.nb/core/attention_budgeter.py` |
+| `CAP-34` | ReAct Trajectory Recording & Replay | Supported (`agentic/trajectories/`) | `.nb/core/trajectory_recorder.py` |
+| `CAP-35` | Ambiguity Resolution & Clarification RFCs | Supported (`user/hitl/`) | `.nb/core/ambiguity_resolver.py` |
