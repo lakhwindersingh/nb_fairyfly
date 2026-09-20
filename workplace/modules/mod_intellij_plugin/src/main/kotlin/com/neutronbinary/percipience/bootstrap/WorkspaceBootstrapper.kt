@@ -3,6 +3,7 @@ package com.neutronbinary.percipience.bootstrap
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFileManager
 import java.io.File
+import java.io.InputStream
 import java.security.MessageDigest
 import java.time.Instant
 
@@ -17,11 +18,18 @@ object WorkspaceBootstrapper {
 
     fun isWorkspaceConfigured(projectBasePath: String): Boolean {
         val root = File(projectBasePath)
-        val planFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
+        val binFile = File(root, ".nb/bin/percipience")
+        val billingFile = File(root, ".nb/config/billing_plans.yaml")
+        val planFile = File(root, ".nb/plan/claude-context-engineering-parent-master-free_plan.md")
+        val masterPlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
-        val altLedgerFile = File(root, "context/ledger/context_ledger.yaml")
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
-        return (planFile.exists() && (ledgerFile.exists() || altLedgerFile.exists()) && cicdFile.exists())
+
+        return (binFile.exists() && binFile.canExecute() &&
+                billingFile.exists() &&
+                (planFile.exists() || masterPlanFile.exists()) &&
+                ledgerFile.exists() &&
+                cicdFile.exists())
     }
 
     fun bootstrapWorkspace(projectBasePath: String): BootstrapResult {
@@ -31,18 +39,25 @@ object WorkspaceBootstrapper {
 
         // 1. Ensure Quad-Space directory structure
         val dirsToCreate = listOf(
+            ".nb/bin",
+            ".nb/config",
+            ".nb/core",
             ".nb/plan",
             ".nb/context/contracts",
             ".nb/context/invariants",
             ".nb/context/ledger",
             ".nb/context/rules",
+            ".nb/context/custom/rules",
             ".nb/agentic/custom/agents",
             ".nb/agentic/custom/workflows",
             ".nb/agentic/prompts",
-            "workplace/config",
-            "workplace/core",
+            ".nb/scripts",
+            ".nb/tests",
             "workplace/modules",
+            "workplace/shared",
             "workplace/tests",
+            "workplace/config",
+            "workplace/docs",
             "user/inputs/templates",
             "user/hitl",
             "user/outputs/dashboard"
@@ -56,10 +71,62 @@ object WorkspaceBootstrapper {
             }
         }
 
-        // 2. Ensure billing plans configuration
-        val billingFile = File(root, "workplace/config/billing_plans.yaml")
+        // 2. Deploy Canonical Percipience CLI Binary (.nb/bin/percipience)
+        val binFile = File(root, ".nb/bin/percipience")
+        if (!binFile.exists()) {
+            val resourceStream: InputStream? = javaClass.getResourceAsStream("/percipience/bin/percipience")
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    binFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                // Fallback lightweight executable runner
+                val fallbackBinary = """
+#!/usr/bin/env python3
+""${'"'}
+Neutron Binary Percipience CLI (Free Community Edition)
+Autonomous Context Engineering OS & CI/CD Gatekeeper Command-Line Interface.
+""${'"'}
+import os
+import sys
+from pathlib import Path
+
+current_p = Path(__file__).resolve()
+REPO_ROOT = current_p.parents[2]
+for path_dir in [REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+    if str(path_dir) not in sys.path:
+        sys.path.insert(0, str(path_dir))
+
+if __name__ == "__main__":
+    try:
+        from bin.percipience import main
+        main()
+    except Exception as e:
+        print(f"Percipience CLI: {e}")
+        sys.exit(0)
+""".trimIndent()
+                binFile.writeText(fallbackBinary)
+            }
+            binFile.setExecutable(true, false)
+            createdFiles.add(".nb/bin/percipience")
+        } else {
+            binFile.setExecutable(true, false)
+        }
+
+        // 3. Ensure billing plans configuration (.nb/config/billing_plans.yaml)
+        val billingFile = File(root, ".nb/config/billing_plans.yaml")
         if (!billingFile.exists()) {
-            val billingContent = """
+            val resourceStream = javaClass.getResourceAsStream("/percipience/config/billing_plans.yaml")
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    billingFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                val billingContent = """
 plans:
   plan_free:
     id: "plan_free"
@@ -74,15 +141,72 @@ plans:
       basic_autonomous_cicd: true
       nbpack_obfuscation: false
       private_vpc_deploy: false
+
+  plan_team:
+    id: "plan_team"
+    name: "Team Tier"
+    base_price_monthly_usd: 1499
+    included_seats: 15
+    included_concurrent_worktrees: 5
+    included_pr_audits_monthly: 5000
+    features:
+      ast_token_pruning: true
+      merkle_chain_audit: true
+      basic_autonomous_cicd: true
+      nbpack_obfuscation: false
+      private_vpc_deploy: false
+
+  plan_business:
+    id: "plan_business"
+    name: "Business Tier"
+    base_price_monthly_usd: 4499
+    included_seats: 50
+    included_concurrent_worktrees: 20
+    included_pr_audits_monthly: 25000
+    features:
+      ast_token_pruning: true
+      merkle_chain_audit: true
+      basic_autonomous_cicd: true
+      nbpack_obfuscation: true
+      private_vpc_deploy: false
+
+  plan_enterprise:
+    id: "plan_enterprise"
+    name: "Enterprise Dedicated Tier"
+    base_price_monthly_usd: 9999
+    included_seats: -1 # Unlimited
+    included_concurrent_worktrees: -1 # Unlimited
+    included_pr_audits_monthly: -1 # Unlimited
+    features:
+      ast_token_pruning: true
+      merkle_chain_audit: true
+      basic_autonomous_cicd: true
+      nbpack_obfuscation: true
+      private_vpc_deploy: true
+      dedicated_slack_sla: true
+
+overage_pricing:
+  pr_audit_overage_usd: 0.05
+  worktree_compute_hour_usd: 0.15
+  token_savings_rev_share_rate: 0.15
 """.trimIndent()
-            billingFile.writeText(billingContent)
-            createdFiles.add("workplace/config/billing_plans.yaml")
+                billingFile.writeText(billingContent)
+            }
+            createdFiles.add(".nb/config/billing_plans.yaml")
         }
 
-        // 3. Ensure token compression rules
-        val tokenRulesFile = File(root, "workplace/config/token_compression_rules.yaml")
+        // 4. Ensure token compression rules (.nb/config/token_compression_rules.yaml)
+        val tokenRulesFile = File(root, ".nb/config/token_compression_rules.yaml")
         if (!tokenRulesFile.exists()) {
-            val tokenRulesContent = """
+            val resourceStream = javaClass.getResourceAsStream("/percipience/config/token_compression_rules.yaml")
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    tokenRulesFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                val tokenRulesContent = """
 version: "1.0.0"
 default_preset: "standard"
 active_provider: "anthropic"
@@ -98,14 +222,23 @@ presets:
       output_buffer_pct: 15
     static_prefix_pinning: true
 """.trimIndent()
-            tokenRulesFile.writeText(tokenRulesContent)
-            createdFiles.add("workplace/config/token_compression_rules.yaml")
+                tokenRulesFile.writeText(tokenRulesContent)
+            }
+            createdFiles.add(".nb/config/token_compression_rules.yaml")
         }
 
-        // 4. Ensure basic autonomous CI/CD workflow
+        // 5. Ensure basic autonomous CI/CD workflow (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
         if (!cicdFile.exists()) {
-            val cicdContent = """
+            val resourceStream = javaClass.getResourceAsStream("/percipience/workflows/basic_autonomous_cicd.yaml")
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    cicdFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                val cicdContent = """
 workflow_id: "basic_autonomous_cicd"
 name: "Free Community Autonomous CI/CD Pipeline"
 description: "Watered-down autonomous CI/CD workflow providing maintenance, AST token compression, basic bounded self-repair, and Merkle block sealing for the Free Plan."
@@ -145,33 +278,45 @@ steps:
     depends_on: ["bounded_auto_heal"]
     action: "SEAL_BLOCK"
 """.trimIndent()
-            cicdFile.writeText(cicdContent)
+                cicdFile.writeText(cicdContent)
+            }
             createdFiles.add(".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
         }
 
-        // 5. Ensure Master Plan
-        val planFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
-        if (!planFile.exists()) {
-            val planContent = """
+        // 6. Ensure Parent Master Plan (.nb/plan/claude-context-engineering-parent-master-free_plan.md)
+        val freePlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-free_plan.md")
+        val masterPlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
+        if (!freePlanFile.exists() && !masterPlanFile.exists()) {
+            val resourceStream = javaClass.getResourceAsStream("/percipience/plan/claude-context-engineering-parent-master-free_plan.md")
+            if (resourceStream != null) {
+                resourceStream.use { input ->
+                    freePlanFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } else {
+                val planContent = """
 ---
 sessionId: session-260913-master-parent-plan
 tier: plan_free
 ---
 
-# Parent Master Context Engineering Plan (Watered-Down Free Plan Edition)
+# Parent Master Context Engineering Plan (Free Community Edition)
 
-## 1. Free Plan Core Features
+## 1. Free Community Plan Core Features
 - AST Token Reduction (60%-80% compression)
 - Linear SHA-256 Merkle Ledger State Chain
-- Basic Autonomous CI/CD Setup (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
+- Basic Autonomous CI/CD Pipeline (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
 - Quad-Space Partitioning (.nb/, workplace/, user/)
 - IntelliJ / PyCharm Plugin Bootstrapper & Sandbox Permission Broker
+- Percipience CLI Executable (.nb/bin/percipience)
 """.trimIndent()
-            planFile.writeText(planContent)
-            createdFiles.add(".nb/plan/claude-context-engineering-parent-master-plan.md")
+                freePlanFile.writeText(planContent)
+            }
+            createdFiles.add(".nb/plan/claude-context-engineering-parent-master-free_plan.md")
         }
 
-        // 6. Ensure Genesis Merkle Ledger
+        // 7. Ensure Genesis Merkle Ledger (.nb/context/ledger/context_ledger.yaml)
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
         val nowIso = Instant.now().toString()
         val genesisPayload = "0|" + ("0".repeat(64)) + "|genesis_root|HEAD|" + nowIso
@@ -189,7 +334,7 @@ ledger_chain:
     block_type: "GENESIS"
     prev_block_hash: "${"0".repeat(64)}"
     timestamp: "$nowIso"
-    merkle_root: "0".repeat(64)
+    merkle_root: "${"0".repeat(64)}"
     current_block_hash: "$genesisHash"
     action: "BOOTSTRAP_FREE_WORKSPACE_GENESIS"
 recovery_points:

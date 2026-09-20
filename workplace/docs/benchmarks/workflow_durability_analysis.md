@@ -193,7 +193,7 @@ flowchart TD
   - Automated compile-time verification of wire payloads before pull request gate clearance.
 
 ### 6. Mobile-Edge & Offline BLE Mesh Durability (`DIM-14`)
-- **Objective**: Extend workflow durability to edge IoT and disconnected mobile environments (`claude-context-engineering-iot-mobile-domain-plan.md`).
+- **Objective**: Extend workflow durability to edge IoT and disconnected mobile environments.
 - **Mechanism**:
   - Local SQLite transaction queues with conflict-free replicated data types (CRDTs).
   - Merkle reconciliation over low-bandwidth BLE / MQTT channels upon network re-attachment.

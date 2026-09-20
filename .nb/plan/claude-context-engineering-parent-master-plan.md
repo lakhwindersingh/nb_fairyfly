@@ -183,7 +183,7 @@ The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reducti
 
 #### Out of Scope
 - Direct cloud infrastructure runtime deployment execution inside the agentic AI engine's immediate inference loop (the AI engine provides full deployment manifests, CI/CD scripts, Dockerfiles, and provisioning manifests; Claude, Gemini, or GPT can be used as the reference reasoning engine).
-- Physical hardware or bare-metal environment execution (automated integration testing is executed via containerized virtual bridges and loopback mock daemons; specialized hardware/embedded firmware concerns are encapsulated in layerable domain plans such as `.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`).
+- Physical hardware or bare-metal environment execution (automated integration testing is executed via containerized virtual bridges and loopback mock daemons; specialized hardware/embedded firmware concerns are encapsulated in layerable domain plans).
 
 ### User Stories
 - **As a Commercial Software Vendor & Enterprise Architect**, I want to obfuscate and cryptographically compile parent master plans, `context/` governance schemas, and `agentic/` prompt suites into signed `.nbpack` bundles so that client installations (`percipience init`) run securely without exposing proprietary architecture IP, recovery state algorithms, or risking prompt exfiltration.
@@ -1126,7 +1126,7 @@ The `WorkflowEngine` executes Kahn’s algorithm to analyze and validate workflo
 4. **Contract-Bound Handoffs**: Maps predecessor output artifacts directly to successor input parameters, verifying schema conformity before triggering successor agents.
 
 #### 3. Co-Located & Embedded Agent Specifications
-Every executor referenced in a workflow must be specified in the plan’s co-located agent directory (`.nb/plan/agents/<agent_id>.yaml`) and embedded in Section 3 of the plan. When a layer is applied via `./bin/percipience layer apply`, the hydration engine automatically instantiates these agents into `.nb/agentic/custom/agents/` with full role, model tier (`tier_a` vs `tier_b`), sandboxed worktree, module scope, and specialized tool bindings.
+Every executor referenced in a workflow must be specified in the plan’s co-located agent directory (`.nb/plan/agents/<agent_id>.yaml`) and embedded in Section 3 of the plan. When a layer is applied via `./.nb/bin/percipience layer apply`, the hydration engine automatically instantiates these agents into `.nb/agentic/custom/agents/` with full role, model tier (`tier_a` vs `tier_b`), sandboxed worktree, module scope, and specialized tool bindings.
 
 ---
 
@@ -1340,7 +1340,7 @@ A fundamental architectural mandate of the Percipience framework is the complete
 1. **The Platform Agentic CI/CD System (`.nb/`)**:
    - **Scope**: Contains the parent operating system, the 38 Python execution engines (`.nb/core/`), platform configuration files (`.nb/config/`), the unified CLI (`.nb/bin/percipience`), cryptographic Merkle state ledgers (`.nb/context/ledger/`), wire contracts (`.nb/context/contracts/`), prompt and workflow suites (`.nb/agentic/`), CI/CD git hooks (`.nb/scripts/`), and platform verification test suites (`.nb/tests/`).
    - **Invariance**: Contains **zero application-specific business logic**. It provides general-purpose context optimization, AST skeletonization, Merkle integrity verification, token FinOps accounting, autonomous self-healing, and PR gatekeeping for any software codebase.
-   - **Forward Compatibility**: Invocable from the repository root via `./.nb/bin/percipience` (with root forwarder `./bin/percipience` provided for backward compatibility).
+   - **Canonical Execution**: Invocable from the repository root exclusively via `./.nb/bin/percipience`, with all symbolic links completely eliminated across the workspace to preserve absolute deterministic execution across platforms.
 
 2. **Project-Specific Layered Plans (`workplace/`)**:
    - **Scope**: Strictly houses customer application source code, domain-specific modules (`workplace/modules/`), SaaS web portals (`workplace/portal/`), UI frontends (`workplace/src/`), project configurations (`workplace/config/site_config.yaml`, `workplace/config/tailwind.config.ts`), shared cross-boundary schemas (`workplace/shared/`), living documentation (`workplace/docs/`), and application domain test suites (`workplace/tests/`).
@@ -1348,6 +1348,30 @@ A fundamental architectural mandate of the Percipience framework is the complete
 
 3. **User Enclave (`user/`)**:
    - Houses developer requirements, unstructured specifications, and Jira inputs (`user/inputs/`), human-in-the-loop audit logs and quarantined tests (`user/hitl/`), and compiled visual artifacts including the HTML DAG dashboard and maturity reports (`user/outputs/`).
+
+### IntelliJ IDEA & PyCharm Plugin Integration & Free Community Tier Bundling
+
+The framework integrates natively with JetBrains IDEs via the `mod_intellij_plugin` module, providing developers with zero-friction onboarding, live execution, and sandbox governance aligned with `.nb/config/billing_plans.yaml`:
+
+1. **Free Community Tier (`plan_free`) Asset Bundling**:
+   - The plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) directly packages canonical platform templates under its internal JAR resources (`percipience/`):
+     - `bin/percipience`: Canonical CLI binary orchestrator and gatekeeper.
+     - `config/billing_plans.yaml`: Free Community tier configuration enabling AST token pruning, Merkle chain audit, and basic autonomous CI/CD (1 seat, 1 worktree, 500 PR audits/mo).
+     - `config/token_compression_rules.yaml`: AST skeletonization rules preserving function/class signatures while stripping internal implementations.
+     - `workflows/basic_autonomous_cicd.yaml`: Free edition self-healing continuous delivery workflow.
+     - `plan/claude-context-engineering-parent-master-free_plan.md`: Free community master plan template.
+2. **Automated New Workspace Detection & Interactive Startup Prompt**:
+   - `PercipienceProjectStartupActivity` (implementing `com.intellij.openapi.startup.ProjectActivity`) runs automatically upon project opening.
+   - If the workspace lacks `.nb/bin/percipience`, `.nb/config/billing_plans.yaml`, or `.nb/context/ledger/context_ledger.yaml`, it raises a non-intrusive interactive balloon notification prompting the user: `"🚀 Initialize Free Workspace"`.
+   - Bootstrapping unpacks all essential templates, ensures `0755` executable permissions on `.nb/bin/percipience`, scaffolds the standard Quad-Space directories, and initializes the Genesis Merkle block (`RP_GENESIS_000`).
+3. **Asynchronous Process Execution Service (`PercipienceExecutionService`)**:
+   - Project-level service that automatically locates Python 3 (`.venv`, `venv`, Homebrew, system) and executes `.nb/bin/percipience` CLI subcommands (`gate`, `audit`, `cicd run`, `validate --layered`, `tokens summary`).
+   - Streams live output asynchronously, tracks exit codes, and triggers `VirtualFileManager.asyncRefresh()` to sync modified files with the IDE in real time.
+4. **Interactive Control Plane & Tools Menu**:
+   - The Percipience Tool Window and `Tools -> Percipience OS` menu expose buttons directly invoking the execution service with background progress indicators and desktop notifications.
+5. **Zero Symlinks Invariant**:
+   - All symbolic links (`bin/percipience`, `workplace/bin/percipience`, etc.) have been removed repository-wide.
+   - `./.nb/bin/percipience` serves as the sole, canonical executable platform binary across all tools, scripts, workflows, and IDE actions.
 
 ---
 
@@ -1593,7 +1617,7 @@ Implement the advanced autonomous engineering governance triad spanning executio
 The Parent Master Plan deliberately provides universal, domain-agnostic abstractions (`mod_service_provider`, `mod_service_consumer`, `service_contract.yaml`, `virtual_service_bridge.py`). Domain-specific software systems are decoupled into dedicated **Layerable Context Engineering Plans** that overlay on top of this framework via Tier 2 (Enterprise Domain Rules & Wire Contracts) and Tier 3 (Specialist Subagents & Workflow Plugins):
 
 - **Decentralized Audio Streaming, P2P Swarms & Capability Loans**: Defined in [`.nb/plan/claude-context-engineering-blockchained-audio-streamer-space.md`](./claude-context-engineering-blockchained-audio-streamer-space.md) (encapsulates Web3 EIP-712 capability loans, P2P audio chunks, BitTorrent swarm mesh routing, IPFS content-addressed manifests, tokenized royalty splitters, and dynamic domain extensions in `workplace/docs/domain_extensions.md`).
-- **Connected IoT, Embedded Hardware & Mobile Systems**: Defined in [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](./claude-context-engineering-iot-mobile-domain-plan.md) (encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests).
+- **Connected IoT, Embedded Hardware & Mobile Systems**: Encapsulates BLE GATT tables, FreeRTOS/Zephyr C/C++, QEMU emulation, mTLS CSR handshakes, and dual-bank A/B OTA manifests.
 - **Enterprise SaaS, Corporate Portals & Web Platforms**: Defined in [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](./claude-context-engineering-saas-portal-domain-plan.md) and [`.nb/plan/CEaasS/play_3_corp_site_saas_portal_plan.md`](./CEaasS/play_3_corp_site_saas_portal_plan.md) (encapsulates Next.js/React frontend portals, Tailwind CSS design tokens, WCAG 2.1 AA accessibility, multi-tenant RBAC policies, and Stripe/Paddle billing webhooks).
 - **Standardized Custom Layer Template**: Reusable domain authoring blueprint defined in [`.nb/plan/templates/custom_domain_layer_template.md`](./templates/custom_domain_layer_template.md) and [`.nb/agentic/templates/custom_domain_layer_template.md`](../../.nb/agentic/templates/custom_domain_layer_template.md) for scaffolding domain wire contracts, specialist agents, and virtual simulator bridges.
 - **Encrypted Layer Packaging & In-Memory Enclave Consumption (`.nbpack`)**: Proprietary domain layers are compiled and sealed via `./.nb/bin/percipience layer pack` and consumed directly into volatile memory (zero disk plaintext residue) with Merkle state transitions via `./.nb/bin/percipience layer apply`.
