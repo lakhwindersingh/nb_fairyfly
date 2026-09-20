@@ -1,5 +1,8 @@
 package com.neutronbinary.percipience.toolwindow
 
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ToolWindow
@@ -14,6 +17,8 @@ import com.neutronbinary.percipience.bootstrap.WorkspaceBootstrapper
 import com.neutronbinary.percipience.ledger.WorkspaceLedgerReader
 import com.neutronbinary.percipience.ledger.WorkspaceMetrics
 import com.neutronbinary.percipience.security.SandboxPermissionBroker
+import com.neutronbinary.percipience.services.PercipienceExecutionService
+import kotlinx.coroutines.runBlocking
 import java.awt.*
 import java.net.URI
 import javax.swing.*
@@ -36,8 +41,6 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     /**
      * Returns Swing-safe HTML 3.2 / CSS 1.0 compatible stylesheet rules.
-     * Prevents java.lang.NullPointerException in javax.swing.text.html.CSS$CssValue.parseCssValue
-     * by avoiding unsupported CSS properties (border-collapse, border-radius, line-height, complex font-family lists).
      */
     private fun getThemeCss(isDark: Boolean): String {
         val bodyBg = if (isDark) "#1e293b" else "#ffffff"
@@ -93,54 +96,59 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         mainPanel.border = EmptyBorder(12, 12, 12, 12)
         mainPanel.background = UIUtil.getPanelBackground()
 
-        // Theme-compliant colors using JBColor
         val headerBg = JBColor(Color(241, 245, 249), Color(24, 33, 47))
         val headerBorder = JBColor(Color(203, 213, 225), Color(51, 65, 85))
         val titleCyan = JBColor(Color(3, 105, 161), Color(0, 210, 255))
         val statusGreen = JBColor(Color(16, 149, 103), Color(16, 185, 129))
-        val finopsPrimary = JBColor(Color(30, 41, 59), Color(248, 250, 252))
-        val cicdBlue = JBColor(Color(2, 132, 199), Color(56, 189, 248))
-        val secondaryMuted = JBColor(Color(100, 116, 139), Color(148, 163, 184))
 
-        val headerPanel = JPanel(GridLayout(6, 1, 6, 6))
+        val headerPanel = JPanel(GridLayout(7, 1, 4, 4))
         headerPanel.background = headerBg
         headerPanel.border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(headerBorder, 1),
-            EmptyBorder(10, 10, 10, 10)
+            EmptyBorder(10, 12, 10, 12)
         )
 
-        val titleLabel = JLabel("⚡ Percipience Context Engineering OS (Free Community)")
-        titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 13)
+        val titleLabel = JLabel("⚡ PERCIPIENCE CONTROL PLANE")
+        titleLabel.font = titleLabel.font.deriveFont(Font.BOLD, 13.0f)
         titleLabel.foreground = titleCyan
 
-        val statusLabel = JLabel()
+        val planTierLabel = JLabel("💳 Tier: Free Community Tier (Included: 1 Seat | 1 Worktree | 500 Audits/mo)")
+        planTierLabel.font = planTierLabel.font.deriveFont(Font.BOLD, 11.5f)
+        planTierLabel.foreground = JBColor(Color(100, 116, 139), Color(148, 163, 184))
+
+        val statusLabel = JLabel("● Status: Initializing...")
+        statusLabel.font = statusLabel.font.deriveFont(Font.BOLD, 12.0f)
         statusLabel.foreground = statusGreen
 
-        val finopsLabel = JLabel()
-        finopsLabel.foreground = finopsPrimary
+        val finopsLabel = JLabel("💰 Token Compression: Calculating...")
+        finopsLabel.font = finopsLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val savingsUsdLabel = JLabel()
-        savingsUsdLabel.foreground = finopsPrimary
+        val savingsUsdLabel = JLabel("💵 Value Saved: Calculating...")
+        savingsUsdLabel.font = savingsUsdLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val cicdLabel = JLabel("🔄 Basic Autonomous CI/CD: Ready (basic_autonomous_cicd.yaml)")
-        cicdLabel.foreground = cicdBlue
+        val cicdLabel = JLabel("🔄 CI/CD Engine: Basic Autonomous CI/CD (Free Edition)")
+        cicdLabel.font = cicdLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val layerLabel = JLabel("🔌 Active Layers: IntelliJ/PyCharm Plugin + Sandbox Permission Broker")
-        layerLabel.foreground = secondaryMuted
+        val layerLabel = JLabel("🌐 Active Binary: .nb/bin/percipience (Executable Workspace-Wide)")
+        layerLabel.font = layerLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
         fun updateLabels() {
-            val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
+            val basePath = project.basePath
+            val isConfigured = if (basePath != null) WorkspaceBootstrapper.isWorkspaceConfigured(basePath) else false
+
+            val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(basePath)
             val tok = metrics.tokenSavings
             val mer = metrics.merkleLedger
 
             val merkleHeightStr = if (mer.exists && mer.merkleBlockHeight > 0) "#${mer.merkleBlockHeight}" else "Genesis"
-            statusLabel.text = "● Status: Connected | Merkle Chain: $merkleHeightStr Verified (Free Edition)"
+            val configStr = if (isConfigured) "Active" else "Not Initialized"
+            statusLabel.text = "● Workspace: $configStr | Merkle Chain: $merkleHeightStr Verified (Free Edition)"
 
             if (tok.exists && tok.totalTokensSaved > 0) {
                 finopsLabel.text = "💰 Token Compression: ${tok.formatReductionPct()} Reduction (${tok.formatTokensSaved()} Tokens Saved)"
                 savingsUsdLabel.text = "💵 Gross Value Saved: ${tok.formatGrossSavingsUsd()} | Net FinOps: ${tok.formatNetSavingsUsd()} (${tok.totalEvents} Events)"
             } else {
-                finopsLabel.text = "💰 Token Compression: ~70.0% Reduction | AST Skeletonizer Active"
+                finopsLabel.text = "💰 Token Compression: ~70.0% Target Reduction | AST Skeletonizer Active"
                 savingsUsdLabel.text = "💵 Gross Value Saved: $0.0000 | Net FinOps: $0.0000 (0 Events)"
             }
         }
@@ -148,15 +156,18 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         updateLabels()
 
         headerPanel.add(titleLabel)
+        headerPanel.add(planTierLabel)
         headerPanel.add(statusLabel)
         headerPanel.add(finopsLabel)
         headerPanel.add(savingsUsdLabel)
         headerPanel.add(cicdLabel)
         headerPanel.add(layerLabel)
 
-        val actionsPanel = JPanel(GridLayout(6, 1, 8, 8))
+        val actionsPanel = JPanel(GridLayout(8, 1, 8, 8))
         actionsPanel.background = UIUtil.getPanelBackground()
         actionsPanel.border = EmptyBorder(10, 0, 10, 0)
+
+        val execService = PercipienceExecutionService.getInstance(project)
 
         val btnBootstrap = JButton("🚀 Bootstrap / Verify Free Workspace Setup")
         btnBootstrap.addActionListener {
@@ -164,52 +175,136 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
             if (res.alreadyConfigured) {
                 Messages.showInfoMessage(
-                    "Workspace is already fully bootstrapped with Master Plan, Merkle ledger, and Basic CI/CD.",
+                    "Workspace is already fully bootstrapped with Free Master Plan, Merkle ledger, .nb/bin/percipience binary, and Basic CI/CD.",
                     "Percipience Workspace Status"
                 )
             } else {
                 Messages.showInfoMessage(
-                    "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully.",
+                    "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully for Free Community Tier.\n\nPercipience CLI executable (.nb/bin/percipience) is now installed.",
                     "Percipience Bootstrap Complete"
                 )
             }
             updateLabels()
         }
 
+        val btnGate = JButton("🚦 Run PR Gatekeeper (`.nb/bin/percipience gate`)")
+        btnGate.addActionListener {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Percipience PR Gatekeeper...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    indicator.text = "Executing .nb/bin/percipience gate..."
+                    val res = runBlocking { execService.runGatekeeper() }
+                    updateLabels()
+                    if (res.success) {
+                        Messages.showInfoMessage(
+                            project,
+                            "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
+                            "Gatekeeper Passed"
+                        )
+                    } else {
+                        Messages.showErrorDialog(
+                            project,
+                            "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                            "Gatekeeper Failed"
+                        )
+                    }
+                }
+            })
+        }
+
+        val btnVerifyChain = JButton("🛡️ Verify Merkle Chain (`.nb/bin/percipience audit`)")
+        btnVerifyChain.addActionListener {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Merkle Ledger...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    indicator.text = "Executing .nb/bin/percipience audit..."
+                    val res = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
+                    updateLabels()
+                    if (res.success) {
+                        Messages.showInfoMessage(
+                            project,
+                            "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
+                            "Merkle Audit"
+                        )
+                    } else {
+                        Messages.showErrorDialog(
+                            project,
+                            "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                            "Merkle Audit Error"
+                        )
+                    }
+                }
+            })
+        }
+
+        val btnRunWorkflow = JButton("▶ Execute Basic CI/CD Pipeline (`.nb/bin/percipience cicd run`)")
+        btnRunWorkflow.addActionListener {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Basic Autonomous CI/CD...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    indicator.text = "Executing .nb/bin/percipience cicd run..."
+                    val res = runBlocking { execService.runBasicCicd() }
+                    updateLabels()
+                    if (res.success) {
+                        Messages.showInfoMessage(
+                            project,
+                            "Basic CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
+                            "Basic CI/CD Pipeline"
+                        )
+                    } else {
+                        Messages.showErrorDialog(
+                            project,
+                            "Basic CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                            "CI/CD Failure"
+                        )
+                    }
+                }
+            })
+        }
+
+        val btnValidateLayered = JButton("🔍 Validate Layered Context (`.nb/bin/percipience validate --layered`)")
+        btnValidateLayered.addActionListener {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Validating Layered Context...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    indicator.text = "Executing .nb/bin/percipience validate --layered..."
+                    val res = runBlocking { execService.runValidateLayered() }
+                    if (res.success) {
+                        Messages.showInfoMessage(
+                            project,
+                            "Layered Context Validation Passed:\n\n${res.stdout}",
+                            "Layered Context Valid"
+                        )
+                    } else {
+                        Messages.showErrorDialog(
+                            project,
+                            "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
+                            "Validation Failed"
+                        )
+                    }
+                }
+            })
+        }
+
+        val btnTokensSummary = JButton("⚡ Token Savings Summary (`.nb/bin/percipience tokens summary`)")
+        btnTokensSummary.addActionListener {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Token Savings Summary...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = true
+                    val res = runBlocking { execService.runTokensSummary() }
+                    if (res.success) {
+                        Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
+                    } else {
+                        Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
+                    }
+                }
+            })
+        }
+
         val btnRefresh = JButton("🔄 Refresh Metrics from Workspace Ledger")
         btnRefresh.addActionListener {
             updateLabels()
             Messages.showInfoMessage("Workspace metrics successfully reloaded from ledger files.", "Ledger Re-synced")
-        }
-
-        val btnInspectAst = JButton("🌲 Inspect Active File AST Pruning (Shift+Alt+P)")
-        btnInspectAst.addActionListener {
-            val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-            val tok = metrics.tokenSavings
-            val redPct = if (tok.exists && tok.averageReductionPct > 0) tok.formatReductionPct() else "68.5%"
-            Messages.showInfoMessage(
-                "AST Pruning Engine active.\nWorkspace Average: $redPct\nIn-memory traversal latency: < 35ms per source file.",
-                "Percipience AST Analyzer"
-            )
-        }
-
-        val btnVerifyChain = JButton("🛡️ Verify Merkle Cryptographic Chain")
-        btnVerifyChain.addActionListener {
-            val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-            val mer = metrics.merkleLedger
-            Messages.showInfoMessage(
-                "Merkle DAG verified successfully.\nBlock Height: #${mer.merkleBlockHeight}\nRecovery Point: ${mer.activeRecoveryPoint}\nContinuous SHA-256 integrity: 100% Valid\nZero tampering detected.",
-                "Merkle Engine Audit"
-            )
-        }
-
-        val btnRunWorkflow = JButton("▶ Execute Basic Autonomous CI/CD Pipeline")
-        btnRunWorkflow.addActionListener {
-            Messages.showInfoMessage(
-                "Basic CI/CD pipeline 'basic_autonomous_cicd' executed successfully:\n1. Self-sustaining hygiene\n2. AST token reduction\n3. Contract & test gate\n4. Bounded repair & Merkle seal.",
-                "Basic CI/CD Workflow Engine"
-            )
-            updateLabels()
         }
 
         val btnOpenPortal = JButton("🌐 Open Percipience Observability Portal")
@@ -222,10 +317,12 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         }
 
         actionsPanel.add(btnBootstrap)
-        actionsPanel.add(btnRefresh)
-        actionsPanel.add(btnInspectAst)
+        actionsPanel.add(btnGate)
         actionsPanel.add(btnVerifyChain)
         actionsPanel.add(btnRunWorkflow)
+        actionsPanel.add(btnValidateLayered)
+        actionsPanel.add(btnTokensSummary)
+        actionsPanel.add(btnRefresh)
         actionsPanel.add(btnOpenPortal)
 
         mainPanel.add(headerPanel, BorderLayout.NORTH)
@@ -237,59 +334,38 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
     private fun createSandboxPermissionsPanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
         val broker = SandboxPermissionBroker.instance
-        val policies = broker.getAllPolicies()
-        val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-        val tok = metrics.tokenSavings
+        val policies = broker.getAllPolicies().values
         val borderColor = if (isDark) "#475569" else "#cbd5e1"
-        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
 
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
         sb.append("<h2>🛡️ Sandbox &amp; LLM Plugin Permissions</h2>")
         sb.append("<p>Governs access rights when LLM agents or third-party AI plugins run in separate sandboxes within IntelliJ.</p>")
 
-        sb.append("""
-            <table border="1" cellpadding="6" cellspacing="0" width="100%" bordercolor="$borderColor">
-                <tr>
-                    <th>Plugin ID / Agent</th>
-                    <th>Sandbox Status</th>
-                    <th>Read Level</th>
-                    <th>Token Pruning</th>
-                    <th>Write Access</th>
-                </tr>
-        """.trimIndent())
+        sb.append("<table border='1' cellspacing='0' cellpadding='5' style='border-color: $borderColor; width: 100%;'>")
+        sb.append("<tr><th>Plugin ID</th><th>Name</th><th>Read Level</th><th>AST Token Pruning</th><th>Direct Write</th></tr>")
 
-        policies.values.forEach { p ->
-            val pruningBadge = if (p.enforceTokenPruning) "<span class='badge-success'>ENFORCED (${tok.formatReductionPct()})</span>" else "<span class='muted'>RAW</span>"
-            val writeBadge = if (p.canWriteDirect) "<span class='badge-info'>DIRECT</span>" else "<span class='muted'>SANDBOXED</span>"
-            sb.append("""
-                <tr>
-                    <td><b>${p.pluginName}</b><br/><small class='muted'>${p.pluginId}</small></td>
-                    <td>${if (p.isSandboxed) "Sandboxed" else "Direct"}</td>
-                    <td><code>${p.defaultReadLevel}</code></td>
-                    <td>$pruningBadge</td>
-                    <td>$writeBadge</td>
-                </tr>
-            """.trimIndent())
+        for (p in policies) {
+            val badge = if (p.enforceTokenPruning) "<span class='badge-success'>Active (60-80% saved)</span>" else "<span class='muted'>Disabled</span>"
+            val writeBadge = if (p.canWriteDirect) "<span class='badge-info'>Allowed</span>" else "<span class='muted'>Blocked (WORM)</span>"
+            sb.append("<tr>")
+            sb.append("<td><code>${p.pluginId}</code></td>")
+            sb.append("<td>${p.pluginName}</td>")
+            sb.append("<td><b>${p.defaultReadLevel}</b></td>")
+            sb.append("<td>$badge</td>")
+            sb.append("<td>$writeBadge</td>")
+            sb.append("</tr>")
         }
+        sb.append("</table>")
 
-        sb.append("""
-            </table>
-            
-            <h3>🔒 Security Policies Enforced</h3>
-            <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor">
-                <tr>
-                    <td>
-                        <ul>
-                            <li><b>AST Token Pruning by Default</b>: Sandboxed LLMs receive skeletonized code signatures, stripping implementation bodies to prevent token waste and IP leaks.</li>
-                            <li><b>Merkle Ledger WORM Protection</b>: Modifications to <code>.nb/context/ledger/</code> and invariant rules are strictly blocked.</li>
-                            <li><b>Sandboxed Write Isolation</b>: Sandboxed agent edits are isolated into ephemeral review worktrees before merging.</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-            </body></html>
-        """.trimIndent())
+        sb.append("<h3>⚡ Real-Time Invariant Enforcement</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>In-Memory PSI Pruning:</b> Compresses AST syntax trees to function signatures, docstrings, and contracts in &lt;35ms before feeding to sandboxed plugins.</li>")
+        sb.append("<li><b>Cryptographic Immutability:</b> Every generation, prompt diff, and action is hashed into SHA-256 Merkle chain blocks.</li>")
+        sb.append("<li><b>Free Plan Sandbox SLA:</b> Unlimited local PSI AST token pruning and Merkle chain auditing included.</li>")
+        sb.append("</ul>")
+
+        sb.append("</body></html>")
 
         val editorPane = JEditorPane("text/html", sb.toString())
         editorPane.isEditable = false
@@ -299,49 +375,30 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createCapabilitiesPanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
-        val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-        val tok = metrics.tokenSavings
-        val mer = metrics.merkleLedger
-        val borderColor = if (isDark) "#475569" else "#cbd5e1"
-        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
+        val sb = StringBuilder()
+        sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
+        sb.append("<h2>🚀 Percipience OS Capabilities (Free Community Tier)</h2>")
+        sb.append("<p>Engineered context operating system built for JetBrains IDEs and autonomous LLM agent execution.</p>")
 
-        val html = """
-            <html><head>${getThemeCss(isDark)}</head><body>
-                <h2>🚀 System Capabilities (Free Community Edition)</h2>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>1. 🌲 JetBrains PSI AST Token Pruning</h3>
-                        <p>Traverses native IntelliJ/PyCharm Program Structure Interface (PSI) trees in memory (&lt;35ms) to skeletonize code files before dispatching to local or API-based LLMs.</p>
-                        <p><b>Current Workspace Savings:</b> <span class="badge-success">${tok.formatReductionPct()} compression</span> (${tok.formatTokensSaved()} tokens saved across ${tok.totalEvents} events).</p>
-                    </td></tr>
-                </table>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>2. 🛡️ Cryptographic Merkle Ledger</h3>
-                        <p>Every prompt, contract check, agent step, and file modification is sealed into an immutable SHA-256 hash chain with automated recovery points and zero-residue rollback guarantees.</p>
-                        <p><b>Current Ledger Height:</b> <span class="badge-info">#${mer.merkleBlockHeight}</span> (Active: <code>${mer.activeRecoveryPoint}</code>).</p>
-                    </td></tr>
-                </table>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>3. 🔄 Basic Autonomous CI/CD Pipeline</h3>
-                        <p>Out-of-the-box autonomous CI/CD setup (<code>basic_autonomous_cicd.yaml</code>) executing self-sustaining workspace hygiene, AST pruning, contract verification, single-attempt bounded repair, and Merkle block sealing.</p>
-                    </td></tr>
-                </table>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>4. 🛡️ Sandbox Source Permission Broker</h3>
-                        <p>Brokers and enforces source permissions for third-party LLMs and sandboxed plugins inside IntelliJ, ensuring token reduction is enforced and critical ledgers remain immutable.</p>
-                    </td></tr>
-                </table>
-            </body></html>
-        """.trimIndent()
+        sb.append("<h3>🌟 Included Free Features (billing_plans.yaml)</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>AST Token Pruning:</b> 60%–80% context reduction via AST traversal.</li>")
+        sb.append("<li><b>Merkle Chain Audit:</b> Real-time linear SHA-256 cryptographic chain continuity.</li>")
+        sb.append("<li><b>Basic Autonomous CI/CD:</b> Bounded auto-healing and hygiene workflows.</li>")
+        sb.append("<li><b>Percipience CLI:</b> Direct execution in workspace via <code>.nb/bin/percipience</code>.</li>")
+        sb.append("<li><b>Included Quota:</b> 1 Seat | 1 Concurrent Worktree | 500 PR Audits/mo.</li>")
+        sb.append("</ul>")
 
-        val editorPane = JEditorPane("text/html", html)
+        sb.append("<h3>🔒 Enterprise Features (Available on Upgrade)</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>Encrypted NBPack Distribution:</b> Proprietary plan and schema bytecode obfuscation.</li>")
+        sb.append("<li><b>Private VPC & Cloud Gatekeeper:</b> Air-gapped on-premise infrastructure.</li>")
+        sb.append("<li><b>Dedicated Slack Support & SLA:</b> 15-minute response time.</li>")
+        sb.append("</ul>")
+
+        sb.append("</body></html>")
+
+        val editorPane = JEditorPane("text/html", sb.toString())
         editorPane.isEditable = false
         editorPane.background = UIUtil.getPanelBackground()
         return JBScrollPane(editorPane)
@@ -349,51 +406,28 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createAgentsAndFlowsPanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
-        val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-        val mer = metrics.merkleLedger
-        val borderColor = if (isDark) "#475569" else "#cbd5e1"
-        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
+        val sb = StringBuilder()
+        sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
+        sb.append("<h2>🤖 Specialist Agents &amp; Delivery Flows</h2>")
+        sb.append("<p>Pre-configured agents and workflows active for the Free Community Tier:</p>")
 
-        val html = """
-            <html><head>${getThemeCss(isDark)}</head><body>
-                <h2>🤖 Registered Agents &amp; Workflows</h2>
-                
-                <table border="1" cellpadding="6" cellspacing="0" width="100%" bordercolor="$borderColor">
-                    <tr>
-                        <th>Agent ID</th>
-                        <th>Tier</th>
-                        <th>Specialty</th>
-                    </tr>
-                    <tr>
-                        <td><code>agent_jetbrains_plugin_architect</code></td>
-                        <td>Tier A</td>
-                        <td>IntelliJ Platform SDK 2.x &amp; Lifecycle</td>
-                    </tr>
-                    <tr>
-                        <td><code>agent_psi_ast_bridge_specialist</code></td>
-                        <td>Tier B</td>
-                        <td>PSI Tree Traversal &amp; AST Pruning</td>
-                    </tr>
-                    <tr>
-                        <td><code>local_agent_runner</code></td>
-                        <td>Local</td>
-                        <td>Local Token-Optimized Autonomous Agent</td>
-                    </tr>
-                </table>
-                
-                <h3>🔄 Active Delivery Flows</h3>
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor">
-                    <tr><td>
-                        <ul>
-                            <li><b><code>basic_autonomous_cicd</code></b>: Free Community autonomous hygiene, AST pruning, test verification, and Merkle seal (Block #${mer.merkleBlockHeight}).</li>
-                            <li><b><code>intellij_pycharm_plugin_delivery_flow</code></b>: Multi-stage build, AST validation, and packaging pipeline.</li>
-                        </ul>
-                    </td></tr>
-                </table>
-            </body></html>
-        """.trimIndent()
+        sb.append("<h3>Active Agents</h3>")
+        sb.append("<ul>")
+        sb.append("<li><code>agent_psi_ast_bridge_specialist</code> - Fast AST skeletonization</li>")
+        sb.append("<li><code>agent_jetbrains_plugin_architect</code> - Plugin structure and threading</li>")
+        sb.append("<li><code>agent_autonomous_healer</code> - Bounded TDD auto-healing</li>")
+        sb.append("<li><code>agent_merkle_ledger</code> - Cryptographic state blocks</li>")
+        sb.append("</ul>")
 
-        val editorPane = JEditorPane("text/html", html)
+        sb.append("<h3>Active Workflows</h3>")
+        sb.append("<ul>")
+        sb.append("<li><code>basic_autonomous_cicd.yaml</code> - Free community autonomous CI/CD</li>")
+        sb.append("<li><code>intellij_pycharm_plugin_delivery_flow.yaml</code> - IDE plugin delivery pipeline</li>")
+        sb.append("</ul>")
+
+        sb.append("</body></html>")
+
+        val editorPane = JEditorPane("text/html", sb.toString())
         editorPane.isEditable = false
         editorPane.background = UIUtil.getPanelBackground()
         return JBScrollPane(editorPane)
@@ -401,34 +435,19 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createUserGuidePanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
-        val borderColor = if (isDark) "#475569" else "#cbd5e1"
-        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
+        val sb = StringBuilder()
+        sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
+        sb.append("<h2>📖 Percipience User Guide &amp; Quickstart</h2>")
+        sb.append("<h3>1. Running Commands</h3>")
+        sb.append("<p>You can execute commands either through the Control Plane buttons above or directly from the terminal:</p>")
+        sb.append("<pre><code># Run PR Gatekeeper\n./.nb/bin/percipience gate\n\n# Audit Merkle Ledger\n./.nb/bin/percipience audit --enforce-merkle-chain\n\n# Run Basic CI/CD\n./.nb/bin/percipience cicd run\n\n# Validate Layered Context\n./.nb/bin/percipience validate --layered\n\n# View Token Savings\n./.nb/bin/percipience tokens summary</code></pre>")
 
-        val html = """
-            <html><head>${getThemeCss(isDark)}</head><body>
-                <h2>📖 User Quick-Start Guide</h2>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>Keyboard Shortcuts &amp; Quick Actions</h3>
-                        <ul>
-                            <li><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>P</kbd>: <b>Inspect AST Token Pruning</b> for current active file.</li>
-                            <li>Click <b>"🚀 Bootstrap Free Workspace"</b> in the Control Plane to auto-scaffold plans, Merkle ledgers, and CI/CD pipelines.</li>
-                            <li>Click <b>"🔄 Refresh Metrics"</b> to immediately pull latest savings from the workspace ledger.</li>
-                        </ul>
-                    </td></tr>
-                </table>
-                
-                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
-                    <tr><td>
-                        <h3>Sandboxed LLM Plugins</h3>
-                        <p>When using JetBrains AI Assistant, GitHub Copilot, Continue, or Cody, Percipience automatically brokers source requests and supplies token-pruned AST skeletons.</p>
-                    </td></tr>
-                </table>
-            </body></html>
-        """.trimIndent()
+        sb.append("<h3>2. New Workspace Initialization</h3>")
+        sb.append("<p>When creating or opening a new project, Percipience prompts you to initialize the workspace with the Free Community Tier. You can also click <b>Bootstrap / Verify Free Workspace</b> at any time.</p>")
 
-        val editorPane = JEditorPane("text/html", html)
+        sb.append("</body></html>")
+
+        val editorPane = JEditorPane("text/html", sb.toString())
         editorPane.isEditable = false
         editorPane.background = UIUtil.getPanelBackground()
         return JBScrollPane(editorPane)

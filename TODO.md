@@ -7,9 +7,8 @@
 > 2. [`.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_corp_site_saas_portal_plan.md)
 > 3. [`.nb/plan/claude-context-engineering-parent-master-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-plan.md)
 > 4. [`.nb/plan/claude-context-engineering-saas-portal-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-saas-portal-domain-plan.md)
-> 5. [`.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-iot-mobile-domain-plan.md)
-> 6. [`workplace/docs/reports/competitive_differentiation_matrix.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md)
-7. [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md)
+> 5. [`workplace/docs/reports/competitive_differentiation_matrix.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md)
+> 6. [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md)
 
 ---
 
@@ -252,7 +251,7 @@
 - [ ] **TODO - MCP Jira / Linear Story Ingestion Gateway (P1)**:
   - Model Context Protocol (MCP) server ingesting user stories directly into structured BDD feature specs with Merkle receipts.
 - [ ] **TODO - Live IoT & Mobile Domain Plan Enclave Hydration (P1)**:
-  - Add native BLE ring-buffer and offline SQLite synchronization tests to verify `claude-context-engineering-iot-mobile-domain-plan.md`.
+  - Add native BLE ring-buffer and offline SQLite synchronization tests.
 - [ ] **TODO - 90-Day GTM Commercial Sales Funnel & Stripe Webhook (P2)**:
   - Production Stripe checkout & webhook billing processor in `workplace/modules/mod_tenant_billing/stripe_connector.py`.
 

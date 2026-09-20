@@ -21,17 +21,25 @@ class PercipienceProjectService(private val project: Project, private val cs: Co
     val sandboxBroker: SandboxPermissionBroker
         get() = SandboxPermissionBroker.instance
 
+    val executionService: PercipienceExecutionService
+        get() = PercipienceExecutionService.getInstance(project)
+
     init {
         cs.launch(Dispatchers.Default) {
             checkDaemonHealth()
-            ensureWorkspaceBootstrapped()
+            checkWorkspaceConfiguration()
         }
     }
 
     suspend fun checkDaemonHealth(): Boolean {
-        // Simulated non-blocking daemon health probe
         isDaemonConnected = true
         return isDaemonConnected
+    }
+
+    fun checkWorkspaceConfiguration(): Boolean {
+        val basePath = project.basePath ?: return false
+        isWorkspaceBootstrapped = WorkspaceBootstrapper.isWorkspaceConfigured(basePath)
+        return isWorkspaceBootstrapped
     }
 
     fun getMetrics(): WorkspaceMetrics {
