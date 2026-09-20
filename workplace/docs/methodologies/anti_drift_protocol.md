@@ -5,7 +5,7 @@
 > **Target Release:** Q4 2026 – Q3 2027  
 > **Status:** Production Architecture & Engineering Methodology  
 > **Governing Spec:** [`.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md)  
-> **Core Implementation:** [`workplace/core/layered_context_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/layered_context_validator.py), [`workplace/core/autonomous_cicd.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/autonomous_cicd.py), [`workplace/core/living_doc_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/living_doc_engine.py)  
+> **Core Implementation:** [`.nb/core/layered_context_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/layered_context_validator.py), [`.nb/core/autonomous_cicd.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/autonomous_cicd.py), [`.nb/core/living_doc_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/living_doc_engine.py)  
 
 ---
 
@@ -248,22 +248,22 @@ The anti-drift engine is accessible via the Percipience CLI and automatically wi
 
 ```bash
 # 1. Audit entire workspace for semantic drift & compute S_SP (including Handover parity)
-./workplace/bin/percipience drift check
+./.nb/.nb/bin/percipience drift check
 
 # 2. Detailed breakdown across all 6 parity vectors
-./workplace/bin/percipience drift report --verbose
+./.nb/.nb/bin/percipience drift report --verbose
 
 # 3. Audit active agent swarm for unauthorized successor spawning or orphaned worktrees
-./workplace/bin/percipience swarm audit
+./.nb/.nb/bin/percipience swarm audit
 
 # 4. Trigger automated Revert Mode on drifted symbols
-./workplace/bin/percipience drift reconcile --mode revert --module mod_portal_marketing
+./.nb/.nb/bin/percipience drift reconcile --mode revert --module mod_portal_marketing
 
 # 5. Review and approve proposed specification evolution (Evolve Mode)
-./workplace/bin/percipience drift approve-delta --delta-id DELTA_20260917_01
+./.nb/.nb/bin/percipience drift approve-delta --delta-id DELTA_20260917_01
 
 # 6. Run full 7-stage PR Gatekeeper with anti-drift & handover verification
-./workplace/bin/percipience gate
+./.nb/.nb/bin/percipience gate
 ```
 
 ---

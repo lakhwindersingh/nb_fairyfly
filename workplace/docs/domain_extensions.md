@@ -1,12 +1,22 @@
 # Active Layered Domain Extensions
 
-> **Autonomously Synchronized**: 2026-09-17T14:43:42.017830+00:00  
+> **Autonomously Synchronized**: 2026-09-19T16:00:00+00:00  
 > **Engine**: `agent_living_doc_architect` (CAP-21)  
 > **Diagram Validation**: ✅ Valid Mermaid
 
 ## Multi-Domain Deep Dives
 ```mermaid
 graph TD
+  subgraph IDE_Plugins_Space["IDE Plugins Layer (IntelliJ / PyCharm & VSCode)"]
+    PsiBridge["PsiAstBridge<br/>(In-Memory PSI Tree Traversal &lt; 35ms)"]
+    SandboxBroker["SandboxPermissionBroker<br/>(Classloader Security & Token Pruning)"]
+    StatusBarWidget["PercipienceStatusBarWidget<br/>(Live Token Savings & Merkle Seal Display)"]
+    ZeroClickBoot["WorkspaceBootstrapper<br/>(Zero-Click Free Community Auto-Scaffolding)"]
+    PsiBridge --> SandboxBroker
+    SandboxBroker --> StatusBarWidget
+    StatusBarWidget --> ZeroClickBoot
+  end
+
   subgraph Blockchained_Audio_P2P["Decentralized Audio Streaming & Capability Loans"]
     EIP712["EIP-712 Loan Vault<br/>(Ephemeral Capability Delegation)"]
     SwarmMesh["BitTorrent P2P Swarm Mesh<br/>(Distributed Audio Chunk Streaming)"]
@@ -26,9 +36,11 @@ graph TD
   end
 
   subgraph SaaS_Portal_Cloud["Enterprise SaaS Multi-Tenant Cloud"]
+    TierMatrix["Plan Tier Matrix (Section 2)<br/>(Free, Team, Business, Enterprise)"]
     RBAC["Multi-Tenant RBAC Hierarchy<br/>(Owner, Admin, Operator, Auditor)"]
     StripeWebhook["Stripe & Paddle Webhook Reconciler<br/>(Automated 15% Rev-Share Billing)"]
-    WCAG["WCAG 2.1 AA Design Tokens<br/>(Dark-Mode High-Contrast CSS Primitives)"]
+    WCAG["WCAG 2.1 AA Design Tokens<br/>(Dark/Light High-Contrast CSS Primitives)"]
+    TierMatrix --> RBAC
     RBAC --> StripeWebhook
     StripeWebhook --> WCAG
   end

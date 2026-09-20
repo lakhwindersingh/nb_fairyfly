@@ -18,7 +18,7 @@
 | Core Subsystem / Pillar | Parent Master Plan | Play 3 OS Plan | Play 3 SaaS Portal Plan | Domain Space Plans | Implementation Status | Maturity Score |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Quad-Space Standard Scaffolding** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Unified Percipience CLI (`workplace/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
+| **Unified Percipience CLI (`.nb/.nb/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
 | **AST Pruning & Token Optimization Engine** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Cryptographic Merkle State Ledger & Epoch Archives** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Context Poisoning Defense & Surgical Rollback** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
@@ -451,7 +451,7 @@
 ### 18.3. Workstation & Node Fleet Telemetry (Individual Machines) (`CAP-42`)
 - [ ] **TODO-PRT-06: Lightweight Workstation Agent Daemon (`percipience-agent`) (P1)**:
   - *Shortcoming*: Enterprise admins have no visibility into active subagents running on local developer laptops or distributed CI/CD runner nodes.
-  - *Implementation Scope*: Build background agent daemon (`workplace/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
+  - *Implementation Scope*: Build background agent daemon (`.nb/.nb/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
     - **Machine Identity**: Hostname, Machine UUID, OS version, Local User/Agent ID.
     - **Active Workspaces**: Path, Active Worktree (`.workspaces/wt_*`), Local Git Branch, Commit SHA.
     - **Process & Task State**: Active PID, Task Name, Progress Percentage (0–100%), Step Status (e.g. *AST Pruning*, *Running Fuzzer*, *Awaiting Review*).

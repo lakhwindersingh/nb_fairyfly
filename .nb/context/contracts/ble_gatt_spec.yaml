@@ -1,0 +1,27 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "BLEGATTServiceSpecification"
+type: "object"
+protocol: "BLE_GATT_v5.2"
+service_uuid: "0000FEAA-0000-1000-8000-00805F9B34FB"
+service_name: "SensorTelemetryAndControlService"
+required:
+  - "protocol"
+  - "service_uuid"
+  - "service_name"
+  - "characteristics"
+characteristics:
+  - id: "char_telemetry_stream"
+    uuid: "0000FEA1-0000-1000-8000-00805F9B34FB"
+    properties: ["READ", "NOTIFY"]
+    payload_format: "NANOPB_BINARY"
+    max_payload_bytes: 244
+    schema_ref: "workplace/shared/protos/sensor_data.proto"
+  - id: "char_command_inbox"
+    uuid: "0000FEA2-0000-1000-8000-00805F9B34FB"
+    properties: ["WRITE_NO_RESPONSE", "WRITE"]
+    max_payload_bytes: 64
+    encryption_required: true
+  - id: "char_ota_control"
+    uuid: "0000FEA3-0000-1000-8000-00805F9B34FB"
+    properties: ["WRITE", "INDICATE"]
+    max_payload_bytes: 512

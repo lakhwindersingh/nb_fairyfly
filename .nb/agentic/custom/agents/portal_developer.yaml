@@ -1,0 +1,22 @@
+agent_id: "agent_portal_developer"
+name: "SaaS Portal & Corporate Web Specialist"
+version: "1.0.0"
+category: "frontend_engineering"
+model_tiering:
+  active_tier: "Tier_A"
+  tier_a_model: "claude-3-7-sonnet / pro"
+  tier_b_model: "claude-3-5-haiku / flash"
+system_prompt_ref: "agentic/prompts/portal_developer_prompt.md"
+budget_limits:
+  max_tokens_per_turn: 25000
+  max_ast_pruned_tokens: 12000
+permissions:
+  allow_worktree_isolation: true
+  allowed_module_paths:
+    - "workplace/modules/mod_portal_marketing"
+    - "workplace/modules/mod_portal_admin"
+    - "user/outputs/dashboard"
+enforced_invariants:
+  - "Zero uncompressed context leaks (> 50% AST compression required)"
+  - "Lighthouse Performance Score >= 90 / Accessibility Score >= 95"
+  - "Strict responsive breakpoints (mobile, tablet, desktop) on all UI components"

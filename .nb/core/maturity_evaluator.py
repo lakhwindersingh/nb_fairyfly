@@ -33,9 +33,9 @@ class MaturityEvaluator:
         code_score = 0.95
 
         # 4. Test Coverage: Check automated tests, core engines, and runtime verification
-        test_files = list((workspace_root / "workplace" / "tests").glob("*.py")) or list((workspace_root / "tests").glob("*.py"))
+        test_files = list((workspace_root / ".nb" / "tests").glob("*.py")) + list((workspace_root / "workplace" / "tests").glob("*.py")) or list((workspace_root / "tests").glob("*.py"))
         runtime_files = list(((workspace_root / ".nb" / "agentic" if (workspace_root / ".nb" / "agentic").exists() else workspace_root / "agentic") / "runtime").rglob("*.py"))
-        core_files = list((workspace_root / "workplace" / "core").glob("*.py"))
+        core_files = list((workspace_root / ".nb" / "core").glob("*.py")) or list((workspace_root / "workplace" / "core").glob("*.py"))
         total_test_assets = len(test_files) + len(runtime_files) + len(core_files)
         test_score = min(1.0, 0.85 + (total_test_assets * 0.015))
 
@@ -45,7 +45,7 @@ class MaturityEvaluator:
         sec_score = 0.99 if ((quarantine.exists() or (workspace_root / "user" / "hitl" / "flaky_quarantine.yaml").exists()) and ledger.exists()) else 0.80
 
         # 6. Token Efficiency: AST rules and optimization
-        rules_file = workspace_root / "workplace" / "config" / "token_compression_rules.yaml"
+        rules_file = (workspace_root / ".nb" / "config" / "token_compression_rules.yaml" if (workspace_root / ".nb" / "config" / "token_compression_rules.yaml").exists() else workspace_root / "workplace" / "config" / "token_compression_rules.yaml")
         token_score = 0.94 if rules_file.exists() else 0.75
 
         composite = round((req_score + arch_score + code_score + test_score + sec_score + token_score) / 6.0, 3)

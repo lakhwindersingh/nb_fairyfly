@@ -34,69 +34,56 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         toolWindow.contentManager.addContent(content)
     }
 
+    /**
+     * Returns Swing-safe HTML 3.2 / CSS 1.0 compatible stylesheet rules.
+     * Prevents java.lang.NullPointerException in javax.swing.text.html.CSS$CssValue.parseCssValue
+     * by avoiding unsupported CSS properties (border-collapse, border-radius, line-height, complex font-family lists).
+     */
     private fun getThemeCss(isDark: Boolean): String {
         val bodyBg = if (isDark) "#1e293b" else "#ffffff"
         val textColor = if (isDark) "#f8fafc" else "#1e293b"
         val headerColor = if (isDark) "#38bdf8" else "#0369a1"
         val tableHeaderBg = if (isDark) "#334155" else "#f1f5f9"
-        val tableBorder = if (isDark) "#475569" else "#cbd5e1"
         val codeBg = if (isDark) "#0f172a" else "#f1f5f9"
         val codeColor = if (isDark) "#38bdf8" else "#0f766e"
         val mutedColor = if (isDark) "#94a3b8" else "#64748b"
-        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
+        val successColor = if (isDark) "#34d399" else "#059669"
+        val infoColor = if (isDark) "#38bdf8" else "#0284c7"
 
         return """
             <style>
                 body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    font-family: sans-serif;
                     background-color: $bodyBg;
                     color: $textColor;
-                    padding: 12px;
+                    padding: 8px;
                     margin: 0;
-                    font-size: 12px;
-                    line-height: 1.5;
+                    font-size: 11pt;
                 }
-                h2 { color: $headerColor; margin-top: 0; margin-bottom: 8px; font-size: 16px; }
-                h3 { color: $headerColor; margin-top: 14px; margin-bottom: 6px; font-size: 13px; }
-                p, li { color: $textColor; }
-                table {
-                    border-collapse: collapse;
-                    width: 100%;
-                    margin-top: 8px;
-                    margin-bottom: 12px;
-                    border: 1px solid $tableBorder;
-                }
+                h2 { color: $headerColor; margin-top: 0; margin-bottom: 6px; font-size: 14pt; }
+                h3 { color: $headerColor; margin-top: 10px; margin-bottom: 4px; font-size: 12pt; }
+                p, li { color: $textColor; font-size: 11pt; margin-top: 3px; margin-bottom: 3px; }
                 th {
                     background-color: $tableHeaderBg;
                     color: $headerColor;
                     font-weight: bold;
-                    padding: 8px;
+                    padding: 6px;
                     text-align: left;
-                    border: 1px solid $tableBorder;
                 }
                 td {
-                    padding: 7px 8px;
-                    border: 1px solid $tableBorder;
+                    padding: 6px;
                     color: $textColor;
+                    font-size: 11pt;
                 }
                 code {
                     background-color: $codeBg;
                     color: $codeColor;
-                    padding: 2px 4px;
-                    font-family: monospace;
-                    font-size: 11px;
-                    border-radius: 3px;
+                    font-family: monospaced;
+                    font-size: 10pt;
                 }
                 .muted { color: $mutedColor; }
-                .card {
-                    background-color: $cardBg;
-                    border: 1px solid $tableBorder;
-                    border-radius: 6px;
-                    padding: 10px;
-                    margin-bottom: 10px;
-                }
-                .badge-success { color: ${if (isDark) "#34d399" else "#059669"}; font-weight: bold; }
-                .badge-info { color: ${if (isDark) "#38bdf8" else "#0284c7"}; font-weight: bold; }
+                .badge-success { color: $successColor; font-weight: bold; }
+                .badge-info { color: $infoColor; font-weight: bold; }
             </style>
         """.trimIndent()
     }
@@ -253,14 +240,16 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val policies = broker.getAllPolicies()
         val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
         val tok = metrics.tokenSavings
+        val borderColor = if (isDark) "#475569" else "#cbd5e1"
+        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
 
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
-        sb.append("<h2>🛡️ Sandbox & LLM Plugin Permissions</h2>")
+        sb.append("<h2>🛡️ Sandbox &amp; LLM Plugin Permissions</h2>")
         sb.append("<p>Governs access rights when LLM agents or third-party AI plugins run in separate sandboxes within IntelliJ.</p>")
 
         sb.append("""
-            <table>
+            <table border="1" cellpadding="6" cellspacing="0" width="100%" bordercolor="$borderColor">
                 <tr>
                     <th>Plugin ID / Agent</th>
                     <th>Sandbox Status</th>
@@ -288,11 +277,17 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             </table>
             
             <h3>🔒 Security Policies Enforced</h3>
-            <ul>
-                <li><b>AST Token Pruning by Default</b>: Sandboxed LLMs receive skeletonized code signatures, stripping implementation bodies to prevent token waste and IP leaks.</li>
-                <li><b>Merkle Ledger WORM Protection</b>: Modifications to <code>.nb/context/ledger/</code> and invariant rules are strictly blocked.</li>
-                <li><b>Sandboxed Write Isolation</b>: Sandboxed agent edits are isolated into ephemeral review worktrees before merging.</li>
-            </ul>
+            <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor">
+                <tr>
+                    <td>
+                        <ul>
+                            <li><b>AST Token Pruning by Default</b>: Sandboxed LLMs receive skeletonized code signatures, stripping implementation bodies to prevent token waste and IP leaks.</li>
+                            <li><b>Merkle Ledger WORM Protection</b>: Modifications to <code>.nb/context/ledger/</code> and invariant rules are strictly blocked.</li>
+                            <li><b>Sandboxed Write Isolation</b>: Sandboxed agent edits are isolated into ephemeral review worktrees before merging.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
             </body></html>
         """.trimIndent())
 
@@ -307,32 +302,42 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
         val tok = metrics.tokenSavings
         val mer = metrics.merkleLedger
+        val borderColor = if (isDark) "#475569" else "#cbd5e1"
+        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
 
         val html = """
             <html><head>${getThemeCss(isDark)}</head><body>
                 <h2>🚀 System Capabilities (Free Community Edition)</h2>
                 
-                <div class="card">
-                    <h3>1. 🌲 JetBrains PSI AST Token Pruning</h3>
-                    <p>Traverses native IntelliJ/PyCharm Program Structure Interface (PSI) trees in memory (&lt;35ms) to skeletonize code files before dispatching to local or API-based LLMs.</p>
-                    <p><b>Current Workspace Savings:</b> <span class="badge-success">${tok.formatReductionPct()} compression</span> (${tok.formatTokensSaved()} tokens saved across ${tok.totalEvents} events).</p>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>1. 🌲 JetBrains PSI AST Token Pruning</h3>
+                        <p>Traverses native IntelliJ/PyCharm Program Structure Interface (PSI) trees in memory (&lt;35ms) to skeletonize code files before dispatching to local or API-based LLMs.</p>
+                        <p><b>Current Workspace Savings:</b> <span class="badge-success">${tok.formatReductionPct()} compression</span> (${tok.formatTokensSaved()} tokens saved across ${tok.totalEvents} events).</p>
+                    </td></tr>
+                </table>
                 
-                <div class="card">
-                    <h3>2. 🛡️ Cryptographic Merkle Ledger</h3>
-                    <p>Every prompt, contract check, agent step, and file modification is sealed into an immutable SHA-256 hash chain with automated recovery points and zero-residue rollback guarantees.</p>
-                    <p><b>Current Ledger Height:</b> <span class="badge-info">#${mer.merkleBlockHeight}</span> (Active: <code>${mer.activeRecoveryPoint}</code>).</p>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>2. 🛡️ Cryptographic Merkle Ledger</h3>
+                        <p>Every prompt, contract check, agent step, and file modification is sealed into an immutable SHA-256 hash chain with automated recovery points and zero-residue rollback guarantees.</p>
+                        <p><b>Current Ledger Height:</b> <span class="badge-info">#${mer.merkleBlockHeight}</span> (Active: <code>${mer.activeRecoveryPoint}</code>).</p>
+                    </td></tr>
+                </table>
                 
-                <div class="card">
-                    <h3>3. 🔄 Basic Autonomous CI/CD Pipeline</h3>
-                    <p>Out-of-the-box autonomous CI/CD setup (<code>basic_autonomous_cicd.yaml</code>) executing self-sustaining workspace hygiene, AST pruning, contract verification, single-attempt bounded repair, and Merkle block sealing.</p>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>3. 🔄 Basic Autonomous CI/CD Pipeline</h3>
+                        <p>Out-of-the-box autonomous CI/CD setup (<code>basic_autonomous_cicd.yaml</code>) executing self-sustaining workspace hygiene, AST pruning, contract verification, single-attempt bounded repair, and Merkle block sealing.</p>
+                    </td></tr>
+                </table>
                 
-                <div class="card">
-                    <h3>4. 🛡️ Sandbox Source Permission Broker</h3>
-                    <p>Brokers and enforces source permissions for third-party LLMs and sandboxed plugins inside IntelliJ, ensuring token reduction is enforced and critical ledgers remain immutable.</p>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>4. 🛡️ Sandbox Source Permission Broker</h3>
+                        <p>Brokers and enforces source permissions for third-party LLMs and sandboxed plugins inside IntelliJ, ensuring token reduction is enforced and critical ledgers remain immutable.</p>
+                    </td></tr>
+                </table>
             </body></html>
         """.trimIndent()
 
@@ -346,12 +351,14 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val isDark = UIUtil.isUnderDarcula()
         val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
         val mer = metrics.merkleLedger
+        val borderColor = if (isDark) "#475569" else "#cbd5e1"
+        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
 
         val html = """
             <html><head>${getThemeCss(isDark)}</head><body>
-                <h2>🤖 Registered Agents & Workflows</h2>
+                <h2>🤖 Registered Agents &amp; Workflows</h2>
                 
-                <table>
+                <table border="1" cellpadding="6" cellspacing="0" width="100%" bordercolor="$borderColor">
                     <tr>
                         <th>Agent ID</th>
                         <th>Tier</th>
@@ -360,12 +367,12 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     <tr>
                         <td><code>agent_jetbrains_plugin_architect</code></td>
                         <td>Tier A</td>
-                        <td>IntelliJ Platform SDK 2.x & Lifecycle</td>
+                        <td>IntelliJ Platform SDK 2.x &amp; Lifecycle</td>
                     </tr>
                     <tr>
                         <td><code>agent_psi_ast_bridge_specialist</code></td>
                         <td>Tier B</td>
-                        <td>PSI Tree Traversal & AST Pruning</td>
+                        <td>PSI Tree Traversal &amp; AST Pruning</td>
                     </tr>
                     <tr>
                         <td><code>local_agent_runner</code></td>
@@ -375,10 +382,14 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                 </table>
                 
                 <h3>🔄 Active Delivery Flows</h3>
-                <ul>
-                    <li><b><code>basic_autonomous_cicd</code></b>: Free Community autonomous hygiene, AST pruning, test verification, and Merkle seal (Block #${mer.merkleBlockHeight}).</li>
-                    <li><b><code>intellij_pycharm_plugin_delivery_flow</code></b>: Multi-stage build, AST validation, and packaging pipeline.</li>
-                </ul>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor">
+                    <tr><td>
+                        <ul>
+                            <li><b><code>basic_autonomous_cicd</code></b>: Free Community autonomous hygiene, AST pruning, test verification, and Merkle seal (Block #${mer.merkleBlockHeight}).</li>
+                            <li><b><code>intellij_pycharm_plugin_delivery_flow</code></b>: Multi-stage build, AST validation, and packaging pipeline.</li>
+                        </ul>
+                    </td></tr>
+                </table>
             </body></html>
         """.trimIndent()
 
@@ -390,23 +401,30 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createUserGuidePanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
+        val borderColor = if (isDark) "#475569" else "#cbd5e1"
+        val cardBg = if (isDark) "#0f172a" else "#f8fafc"
+
         val html = """
             <html><head>${getThemeCss(isDark)}</head><body>
                 <h2>📖 User Quick-Start Guide</h2>
                 
-                <div class="card">
-                    <h3>Keyboard Shortcuts & Quick Actions</h3>
-                    <ul>
-                        <li><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>P</kbd>: <b>Inspect AST Token Pruning</b> for current active file.</li>
-                        <li>Click <b>"🚀 Bootstrap Free Workspace"</b> in the Control Plane to auto-scaffold plans, Merkle ledgers, and CI/CD pipelines.</li>
-                        <li>Click <b>"🔄 Refresh Metrics"</b> to immediately pull latest savings from the workspace ledger.</li>
-                    </ul>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>Keyboard Shortcuts &amp; Quick Actions</h3>
+                        <ul>
+                            <li><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>P</kbd>: <b>Inspect AST Token Pruning</b> for current active file.</li>
+                            <li>Click <b>"🚀 Bootstrap Free Workspace"</b> in the Control Plane to auto-scaffold plans, Merkle ledgers, and CI/CD pipelines.</li>
+                            <li>Click <b>"🔄 Refresh Metrics"</b> to immediately pull latest savings from the workspace ledger.</li>
+                        </ul>
+                    </td></tr>
+                </table>
                 
-                <div class="card">
-                    <h3>Sandboxed LLM Plugins</h3>
-                    <p>When using JetBrains AI Assistant, GitHub Copilot, Continue, or Cody, Percipience automatically brokers source requests and supplies token-pruned AST skeletons.</p>
-                </div>
+                <table border="1" cellpadding="8" cellspacing="0" width="100%" bgcolor="$cardBg" bordercolor="$borderColor" style="margin-bottom: 8px;">
+                    <tr><td>
+                        <h3>Sandboxed LLM Plugins</h3>
+                        <p>When using JetBrains AI Assistant, GitHub Copilot, Continue, or Cody, Percipience automatically brokers source requests and supplies token-pruned AST skeletons.</p>
+                    </td></tr>
+                </table>
             </body></html>
         """.trimIndent()
 

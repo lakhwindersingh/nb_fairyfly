@@ -23,7 +23,7 @@ class BYORAdapter:
         ca_bundle_path: Optional[str] = None,
         webhook_provider: str = "generic"
     ) -> Dict[str, Any]:
-        config_dir = workspace_root / "workplace" / "config"
+        config_dir = workspace_root / ".nb" / "config" if (workspace_root / ".nb").exists() else workspace_root / "workplace" / "config"
         config_dir.mkdir(parents=True, exist_ok=True)
         byor_config_path = config_dir / "byor_config.json"
 

@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mTLS_Device_Provisioning_Payload",
+  "type": "object",
+  "required": ["device_eui", "csr_pem", "nonce", "device_signature"],
+  "properties": {
+    "device_eui": {
+      "type": "string",
+      "pattern": "^[0-9A-Fa-f]{16}$"
+    },
+    "csr_pem": {
+      "type": "string",
+      "description": "PKCS#10 Certificate Signing Request in PEM format"
+    },
+    "nonce": {
+      "type": "string",
+      "minLength": 32
+    },
+    "device_signature": {
+      "type": "string",
+      "description": "ECDSA signature over nonce using factory private key"
+    }
+  }
+}

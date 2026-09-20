@@ -1,0 +1,20 @@
+agent_id: "agent_saas_backend_developer"
+name: "SaaS Backend, Billing & Auth Specialist"
+version: "1.0.0"
+category: "backend_engineering"
+model_tiering:
+  active_tier: "Tier_A"
+  tier_a_model: "claude-3-7-sonnet / pro"
+  tier_b_model: "claude-3-5-haiku / flash"
+budget_limits:
+  max_tokens_per_turn: 30000
+permissions:
+  allow_worktree_isolation: true
+  allowed_module_paths:
+    - "workplace/modules/mod_billing_metering"
+    - "workplace/modules/mod_tenant_onboarding"
+    - "workplace/portal"
+    - "context/contracts"
+enforced_invariants:
+  - "Row-Level Security on all tenant SQL queries"
+  - "Stripe webhook signature validation and idempotency key checks"

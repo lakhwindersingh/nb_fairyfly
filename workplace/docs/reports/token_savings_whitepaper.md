@@ -143,12 +143,12 @@ If an agent introduces context poisoning (e.g., hardcoded secrets, cyclic depend
 
 ### 3.7. Decoupled Layerable Domain Plans & Sealed `.nbpack` Envelopes
 To keep the core operating system universal and generic, domain-specific extensions (such as Connected IoT/Mobile systems and Cloud SaaS Portals) are decoupled into layerable plans. Proprietary domain contracts and specialist agents are compiled into Ed25519-signed, AES-256 encrypted binary `.nbpack` envelopes (`.nb/bundles/`):
-- **Zero-Disk Plaintext Residue**: Consumed directly into an in-memory volatile RAM enclave (`MOUNTED_LAYERS`) via `./workplace/workplace/bin/percipience layer apply --in-memory-only`.
+- **Zero-Disk Plaintext Residue**: Consumed directly into an in-memory volatile RAM enclave (`MOUNTED_LAYERS`) via `./.nb/.nb/bin/percipience layer apply --in-memory-only`.
 - **Cryptographic State Continuity**: Automatically seals a new Merkle block (`LAYER_APPLIED:<plan_id>`) upon mounting.
 - **Custom Scaffolding**: Standardized templates in [`.nb/plan/templates/custom_domain_layer_template.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md) allow enterprises to create domain layers for FinTech, Healthcare, AI/ML, and Web3 systems.
 
 ### 3.8. The Autonomous CI/CD Triad: Beyond the Passive Gatekeeper
-Recognizing that enterprise agent swarms require continuous operations, Percipience introduces the **Autonomous CI/CD Triad** ([`workplace/core/autonomous_cicd.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/autonomous_cicd.py)), making delivery self-sustaining, self-recovering, and self-improving:
+Recognizing that enterprise agent swarms require continuous operations, Percipience introduces the **Autonomous CI/CD Triad** ([`.nb/core/autonomous_cicd.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/autonomous_cicd.py)), making delivery self-sustaining, self-recovering, and self-improving:
 
 ```mermaid
 graph TD
@@ -348,13 +348,13 @@ Deploying Percipience into an existing development workflow requires zero altera
 ### Step 1: Install Unified Percipience CLI
 ```bash
 # Verify standalone executable binary directly from repository:
-./workplace/workplace/bin/percipience --help
+./.nb/.nb/bin/percipience --help
 ```
 
 ### Step 2: Initialize Quad-Space Standard
 ```bash
 # Bootstrap Quad-Space with Merkle ledger state machine:
-./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/percipience_parent.nbpack
+./.nb/.nb/bin/percipience init --mode multi_module --parent-plan .nb/percipience_parent.nbpack
 ```
 
 ### Step 3: Install Autonomous Pre-Commit Gatekeeper
@@ -366,21 +366,21 @@ bash workplace/scripts/install_git_hook.sh
 ### Step 4: Execute Autonomous CI/CD Pipeline
 ```bash
 # Execute the complete autonomous delivery loop (Sustain -> Prune -> Auto-Heal -> Optimize -> Seal):
-./workplace/workplace/bin/percipience cicd run
+./.nb/.nb/bin/percipience cicd run
 
 # Or run targeted operational passes:
-./workplace/workplace/bin/percipience cicd sustain                       # Lease GC & Merkle reconciliation
-./workplace/workplace/bin/percipience cicd heal --target-module <module> # Bounded TDD auto-healing
-./workplace/workplace/bin/percipience cicd optimize                     # Telemetry-driven AST calibration
+./.nb/.nb/bin/percipience cicd sustain                       # Lease GC & Merkle reconciliation
+./.nb/.nb/bin/percipience cicd heal --target-module <module> # Bounded TDD auto-healing
+./.nb/.nb/bin/percipience cicd optimize                     # Telemetry-driven AST calibration
 ```
 
 ### Step 5: Package & Consume Layerable Domain Plans (.nbpack)
 ```bash
 # Compile domain-specific extensions into sealed binary envelopes:
-./workplace/workplace/bin/percipience layer pack --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md --output .nb/bundles/saas_portal_domain.nbpack
+./.nb/.nb/bin/percipience layer pack --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md --output .nb/bundles/saas_portal_domain.nbpack
 
 # Mount and hydrate directly into zero-disk RAM enclave:
-./workplace/workplace/bin/percipience layer apply --pack .nb/bundles/saas_portal_domain.nbpack --in-memory-only
+./.nb/.nb/bin/percipience layer apply --pack .nb/bundles/saas_portal_domain.nbpack --in-memory-only
 ```
 
 ### Step 6: Integrate CI/CD PR Gatekeeper

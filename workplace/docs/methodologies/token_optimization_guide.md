@@ -5,7 +5,7 @@
 > **Target Release:** Q4 2026 – Q3 2027  
 > **Status:** Production Architecture & Engineering Methodology  
 > **Governing Spec:** [`.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md)  
-> **Core Engine:** [`workplace/core/token_optimizer_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/token_optimizer_suite.py)  
+> **Core Engine:** [`.nb/core/token_optimizer_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/token_optimizer_suite.py)  
 
 ---
 
@@ -90,7 +90,7 @@ sequenceDiagram
 
 ## 3. Configuration & Granular Toggles
 
-Token compression settings are centrally configured in [`workplace/config/token_compression_rules.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/config/token_compression_rules.yaml) and can be modified via CLI or the Web Portal.
+Token compression settings are centrally configured in [`.nb/config/token_compression_rules.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/config/token_compression_rules.yaml) and can be modified via CLI or the Web Portal.
 
 ### 3.1. Compression Modes
 - `disabled`: Raw passthrough (0% optimization).
@@ -102,17 +102,17 @@ Token compression settings are centrally configured in [`workplace/config/token_
 ### 3.2. CLI Management Commands
 ```bash
 # Check current configuration and active strategies
-./workplace/bin/percipience tokens status
+./.nb/.nb/bin/percipience tokens status
 
 # Switch compression preset mode
-./workplace/bin/percipience tokens set-mode aggressive
+./.nb/.nb/bin/percipience tokens set-mode aggressive
 
 # Enable / Disable specific strategy
-./workplace/bin/percipience tokens set-strategy diagnostic_log_slicing on
-./workplace/bin/percipience tokens set-strategy git_diff_pruning on
+./.nb/.nb/bin/percipience tokens set-strategy diagnostic_log_slicing on
+./.nb/.nb/bin/percipience tokens set-strategy git_diff_pruning on
 
 # Optimize a single file or diff payload
-./workplace/bin/percipience tokens optimize --file workplace/core/auth.py
+./.nb/.nb/bin/percipience tokens optimize --file .nb/core/auth.py
 ```
 
 ### 3.3. Web Portal Interactive Controls

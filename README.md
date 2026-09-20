@@ -22,18 +22,22 @@
 
 ```text
 nb_fairyfly/
-├── .nb/           # Governing parent plans (.nb/plan/) and execution plays (.nb/play/)
-├── context/       # Governance, schemas, contracts, Merkle ledger & recovery points
-├── agentic/       # 6-phase prompt suites, workflows, custom agents & cognitive router
-├── workplace/     # Application source code, configs, shared DTOs, tools & canonical documentation
-│   ├── bin/       # Unified Percipience CLI executable (workplace/bin/percipience)
+├── .nb/           # Platform Agentic CI/CD System (Context Engineering OS)
+│   ├── bin/       # Unified Percipience CLI executable (.nb/.nb/bin/percipience)
+│   ├── config/    # Platform configurations (billing_plans, token_compression_rules, byor, mcp)
+│   ├── core/      # Platform engines (38 modules: Merkle, AST, Poisoning Sentinel, Living Docs, etc.)
+│   ├── context/   # Governance, schemas, wire contracts, Merkle ledger & recovery points
+│   ├── agentic/   # Prompt suites, workflows, custom agents & declarative runtime
 │   ├── scripts/   # Operational hooks & developer automation (install_git_hook.sh)
-│   ├── tests/     # Automated unit & integration test suites (pytest)
-│   ├── node_modules/ # Local dependencies & packaged enclave distributions
-│   ├── core/      # Platform engines (Merkle, AST, Poisoning Sentinel, Living Docs)
-│   ├── modules/   # mod_portal_marketing, mod_tenant_onboarding, mod_billing_metering, etc.
-│   ├── shared/    # DTOs, Merkle crypto verification & headless UI primitives
-│   ├── config/    # Runtime configuration, billing plans, token compression rules
+│   ├── tests/     # Platform CI/CD verification suites
+│   └── plan/      # Governing parent plans and modular domain layer plans
+├── workplace/     # Project-Specific Source Code & Layered Plan Implementations
+│   ├── modules/   # Layered domain modules (mod_intellij_plugin, mod_vscode_extension, etc.)
+│   ├── portal/    # Cloud SaaS Portal web server
+│   ├── src/       # Web application frontend
+│   ├── shared/    # DTOs, cross-module protocols & primitives
+│   ├── config/    # Project configurations (site_config.yaml, tailwind.config.ts)
+│   ├── tests/     # Project-specific domain test suites
 │   └── docs/      # 📂 CANONICAL DOCUMENTATION LOCATION
 │       ├── architecture.md       # Living system architecture & C4 topologies
 │       ├── module_catalog.md     # Poly-module interface catalog & contracts
@@ -53,4 +57,8 @@ nb_fairyfly/
     └── outputs/   # Browser observability dashboard (user/outputs/dashboard/index.html)
 ```
 
+```bash
+
+kill -9 $(lsof -t -i :3000) && ./start_portal.sh
+```
 For quickstart commands and execution workflows, see [HOWTO_WORKSPACE_GUIDE.md](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md).

@@ -1,18 +1,18 @@
 version: 1.0.0
-last_updated: '2026-09-19T15:42:45.154172+00:00'
+last_updated: '2026-09-20T05:17:09.850638+00:00'
 performance_rev_share_pct: 15.0
 summary:
-  total_events: 610
-  total_uncompressed_tokens: 412252
-  total_pruned_tokens: 211059
-  total_tokens_saved: 201193
-  average_reduction_pct: 48.8
-  total_gross_savings_usd: 0.603
-  total_rev_share_fee_usd: 0.0909
-  total_net_savings_usd: 0.5123
+  total_events: 1172
+  total_uncompressed_tokens: 779835
+  total_pruned_tokens: 405037
+  total_tokens_saved: 374798
+  average_reduction_pct: 48.06
+  total_gross_savings_usd: 1.1235
+  total_rev_share_fee_usd: 0.1694
+  total_net_savings_usd: 0.9539
 events:
-- event_id: tok_evt_20260919_154245_152739
-  timestamp: '2026-09-19T15:42:45.152741+00:00'
+- event_id: tok_evt_20260920_051709_849907
+  timestamp: '2026-09-20T05:17:09.849908+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/providers/workflowTreeProvider.ts
   model_id: claude-3-5-sonnet-20241022
@@ -23,8 +23,8 @@ events:
   gross_savings_usd: 0.000135
   rev_share_fee_usd: 2.0e-05
   net_savings_usd: 0.000115
-- event_id: tok_evt_20260919_154245_152743
-  timestamp: '2026-09-19T15:42:45.152745+00:00'
+- event_id: tok_evt_20260920_051709_849910
+  timestamp: '2026-09-20T05:17:09.849911+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/providers/diagnosticProvider.ts
   model_id: claude-3-5-sonnet-20241022
@@ -35,8 +35,8 @@ events:
   gross_savings_usd: 0.000183
   rev_share_fee_usd: 2.7e-05
   net_savings_usd: 0.000156
-- event_id: tok_evt_20260919_154245_152747
-  timestamp: '2026-09-19T15:42:45.152749+00:00'
+- event_id: tok_evt_20260920_051709_849913
+  timestamp: '2026-09-20T05:17:09.849915+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/providers/codeLensProvider.ts
   model_id: claude-3-5-sonnet-20241022
@@ -47,8 +47,8 @@ events:
   gross_savings_usd: 0.000126
   rev_share_fee_usd: 1.9e-05
   net_savings_usd: 0.000107
-- event_id: tok_evt_20260919_154245_152751
-  timestamp: '2026-09-19T15:42:45.152753+00:00'
+- event_id: tok_evt_20260920_051709_849916
+  timestamp: '2026-09-20T05:17:09.849918+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/providers/agentTreeProvider.ts
   model_id: claude-3-5-sonnet-20241022
@@ -59,8 +59,8 @@ events:
   gross_savings_usd: 0.000126
   rev_share_fee_usd: 1.9e-05
   net_savings_usd: 0.000107
-- event_id: tok_evt_20260919_154245_152756
-  timestamp: '2026-09-19T15:42:45.152759+00:00'
+- event_id: tok_evt_20260920_051709_849920
+  timestamp: '2026-09-20T05:17:09.849921+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/webview/dashboardPanel.ts
   model_id: claude-3-5-sonnet-20241022
@@ -71,8 +71,8 @@ events:
   gross_savings_usd: 0.000744
   rev_share_fee_usd: 0.000112
   net_savings_usd: 0.000632
-- event_id: tok_evt_20260919_154245_152761
-  timestamp: '2026-09-19T15:42:45.152764+00:00'
+- event_id: tok_evt_20260920_051709_849923
+  timestamp: '2026-09-20T05:17:09.849924+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/lsp/lspClient.ts
   model_id: claude-3-5-sonnet-20241022
@@ -83,8 +83,8 @@ events:
   gross_savings_usd: 0.000255
   rev_share_fee_usd: 3.8e-05
   net_savings_usd: 0.000217
-- event_id: tok_evt_20260919_154245_152767
-  timestamp: '2026-09-19T15:42:45.152769+00:00'
+- event_id: tok_evt_20260920_051709_849926
+  timestamp: '2026-09-20T05:17:09.849927+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/lsp/lspServer.ts
   model_id: claude-3-5-sonnet-20241022
@@ -95,8 +95,8 @@ events:
   gross_savings_usd: 4.2e-05
   rev_share_fee_usd: 6.0e-06
   net_savings_usd: 3.6e-05
-- event_id: tok_evt_20260919_154245_152773
-  timestamp: '2026-09-19T15:42:45.152775+00:00'
+- event_id: tok_evt_20260920_051709_849929
+  timestamp: '2026-09-20T05:17:09.849930+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_vscode_extension/src/ipc/daemonClient.ts
   model_id: claude-3-5-sonnet-20241022
@@ -107,8 +107,8 @@ events:
   gross_savings_usd: 6.0e-05
   rev_share_fee_usd: 9.0e-06
   net_savings_usd: 5.1e-05
-- event_id: tok_evt_20260919_154245_152777
-  timestamp: '2026-09-19T15:42:45.152779+00:00'
+- event_id: tok_evt_20260920_051709_849932
+  timestamp: '2026-09-20T05:17:09.849933+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -119,8 +119,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20260919_154245_152781
-  timestamp: '2026-09-19T15:42:45.152783+00:00'
+- event_id: tok_evt_20260920_051709_849935
+  timestamp: '2026-09-20T05:17:09.849936+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -131,8 +131,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20260919_154245_152786
-  timestamp: '2026-09-19T15:42:45.152788+00:00'
+- event_id: tok_evt_20260920_051709_849938
+  timestamp: '2026-09-20T05:17:09.849939+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -143,8 +143,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20260919_154245_152790
-  timestamp: '2026-09-19T15:42:45.152792+00:00'
+- event_id: tok_evt_20260920_051709_849941
+  timestamp: '2026-09-20T05:17:09.849942+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -155,8 +155,8 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20260919_154245_152794
-  timestamp: '2026-09-19T15:42:45.152796+00:00'
+- event_id: tok_evt_20260920_051709_849943
+  timestamp: '2026-09-20T05:17:09.849944+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_tenant_onboarding/provisioner.ts
   model_id: claude-3-5-sonnet-20241022
@@ -167,8 +167,8 @@ events:
   gross_savings_usd: 0.00012
   rev_share_fee_usd: 1.8e-05
   net_savings_usd: 0.000102
-- event_id: tok_evt_20260919_154245_152798
-  timestamp: '2026-09-19T15:42:45.152800+00:00'
+- event_id: tok_evt_20260920_051709_849946
+  timestamp: '2026-09-20T05:17:09.849947+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_tenant_onboarding/byor_wizard.ts
   model_id: claude-3-5-sonnet-20241022
@@ -179,8 +179,8 @@ events:
   gross_savings_usd: 3.3e-05
   rev_share_fee_usd: 5.0e-06
   net_savings_usd: 2.8e-05
-- event_id: tok_evt_20260919_154245_152802
-  timestamp: '2026-09-19T15:42:45.152804+00:00'
+- event_id: tok_evt_20260920_051709_849949
+  timestamp: '2026-09-20T05:17:09.849950+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_tenant_onboarding/auth.ts
   model_id: claude-3-5-sonnet-20241022
@@ -191,8 +191,8 @@ events:
   gross_savings_usd: 7.8e-05
   rev_share_fee_usd: 1.2e-05
   net_savings_usd: 6.6e-05
-- event_id: tok_evt_20260919_154245_152807
-  timestamp: '2026-09-19T15:42:45.152808+00:00'
+- event_id: tok_evt_20260920_051709_849951
+  timestamp: '2026-09-20T05:17:09.849953+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_intellij_plugin/package_plugin.py
   model_id: claude-3-5-sonnet-20241022
@@ -203,8 +203,8 @@ events:
   gross_savings_usd: 0.001371
   rev_share_fee_usd: 0.000206
   net_savings_usd: 0.001165
-- event_id: tok_evt_20260919_154245_152811
-  timestamp: '2026-09-19T15:42:45.152813+00:00'
+- event_id: tok_evt_20260920_051709_849954
+  timestamp: '2026-09-20T05:17:09.849955+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_intellij_plugin/templates/bridge/virtual_psi_fixture.py
   model_id: claude-3-5-sonnet-20241022
@@ -215,8 +215,8 @@ events:
   gross_savings_usd: 0.000216
   rev_share_fee_usd: 3.2e-05
   net_savings_usd: 0.000184
-- event_id: tok_evt_20260919_154245_152815
-  timestamp: '2026-09-19T15:42:45.152817+00:00'
+- event_id: tok_evt_20260920_051709_849957
+  timestamp: '2026-09-20T05:17:09.849958+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_intellij_plugin/templates/bridge/mock_jetbrains_daemon.py
   model_id: claude-3-5-sonnet-20241022
@@ -227,8 +227,8 @@ events:
   gross_savings_usd: 0.000285
   rev_share_fee_usd: 4.3e-05
   net_savings_usd: 0.000242
-- event_id: tok_evt_20260919_154245_152819
-  timestamp: '2026-09-19T15:42:45.152821+00:00'
+- event_id: tok_evt_20260920_051709_849960
+  timestamp: '2026-09-20T05:17:09.849961+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_observability_usage/telemetry_stream.ts
   model_id: claude-3-5-sonnet-20241022
@@ -239,8 +239,8 @@ events:
   gross_savings_usd: 8.1e-05
   rev_share_fee_usd: 1.2e-05
   net_savings_usd: 6.9e-05
-- event_id: tok_evt_20260919_154245_152824
-  timestamp: '2026-09-19T15:42:45.152826+00:00'
+- event_id: tok_evt_20260920_051709_849962
+  timestamp: '2026-09-20T05:17:09.849963+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_observability_usage/merkle_explorer.ts
   model_id: claude-3-5-sonnet-20241022
@@ -251,8 +251,8 @@ events:
   gross_savings_usd: 0.000267
   rev_share_fee_usd: 4.0e-05
   net_savings_usd: 0.000227
-- event_id: tok_evt_20260919_154245_152828
-  timestamp: '2026-09-19T15:42:45.152831+00:00'
+- event_id: tok_evt_20260920_051709_849965
+  timestamp: '2026-09-20T05:17:09.849966+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_observability_usage/lease_monitor.ts
   model_id: claude-3-5-sonnet-20241022
@@ -263,8 +263,8 @@ events:
   gross_savings_usd: 7.5e-05
   rev_share_fee_usd: 1.1e-05
   net_savings_usd: 6.4e-05
-- event_id: tok_evt_20260919_154245_152833
-  timestamp: '2026-09-19T15:42:45.152836+00:00'
+- event_id: tok_evt_20260920_051709_849968
+  timestamp: '2026-09-20T05:17:09.849969+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/modules/mod_observability_usage/quarantine_console.ts
   model_id: claude-3-5-sonnet-20241022
@@ -275,8 +275,8 @@ events:
   gross_savings_usd: 6.0e-05
   rev_share_fee_usd: 9.0e-06
   net_savings_usd: 5.1e-05
-- event_id: tok_evt_20260919_154245_152839
-  timestamp: '2026-09-19T15:42:45.152841+00:00'
+- event_id: tok_evt_20260920_051709_849970
+  timestamp: '2026-09-20T05:17:09.849971+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/src/lib/i18n.ts
   model_id: claude-3-5-sonnet-20241022
@@ -287,8 +287,8 @@ events:
   gross_savings_usd: 9.0e-06
   rev_share_fee_usd: 1.0e-06
   net_savings_usd: 8.0e-06
-- event_id: tok_evt_20260919_154245_152844
-  timestamp: '2026-09-19T15:42:45.152846+00:00'
+- event_id: tok_evt_20260920_051709_849973
+  timestamp: '2026-09-20T05:17:09.849974+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/src/lib/sitemap_generator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -299,8 +299,8 @@ events:
   gross_savings_usd: 0.000141
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.00012
-- event_id: tok_evt_20260919_154245_152848
-  timestamp: '2026-09-19T15:42:45.152850+00:00'
+- event_id: tok_evt_20260920_051709_849976
+  timestamp: '2026-09-20T05:17:09.849977+00:00'
   session_or_pr: pr_gatekeeper
   file_path: workplace/src/lib/seo.ts
   model_id: claude-3-5-sonnet-20241022

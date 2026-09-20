@@ -97,7 +97,7 @@ class MerkleEngine:
     def compute_workspace_merkle_root(cls, workspace_root: Path) -> str:
         """Gathers files from context/contracts/, user/inputs/, and workplace/config/ to compute Merkle root."""
         key_files = []
-        for rel_dir in [".nb/context/contracts", "context/contracts", "user/inputs", "workplace/config"]:
+        for rel_dir in [".nb/context/contracts", "context/contracts", "user/inputs", ".nb/config", "workplace/config"]:
             dir_path = workspace_root / rel_dir
             if dir_path.exists():
                 for p in dir_path.rglob("*"):

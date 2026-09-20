@@ -2,8 +2,8 @@
 
 > **Standard:** Enterprise Autonomous CI/CD Plugin Specification  
 > **Schema:** [`agentic/templates/custom_agent_template.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/templates/custom_agent_template.yaml)  
-> **Engine:** [`workplace/core/agent_plugin_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_plugin_engine.py)  
-> **Control Plane Subcommand:** `./workplace/workplace/bin/percipience agent {create, integrate, run, rollback, list}`  
+> **Engine:** [`.nb/core/agent_plugin_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_plugin_engine.py)  
+> **Control Plane Subcommand:** `./.nb/.nb/bin/percipience agent {create, integrate, run, rollback, list}`  
 
 ---
 
@@ -63,7 +63,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 ### 3.1. Scaffolding a New Agent Plugin
 ```bash
 # Scaffold a custom quality agent from the healthy template:
-./workplace/workplace/bin/percipience agent create \
+./.nb/.nb/bin/percipience agent create \
   --name custom_quality_guard \
   --template cicd_quality \
   --role "Code Quality & Invariant Enforcer" \
@@ -74,7 +74,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 ### 3.2. Integrating into an Existing Workflow DAG
 ```bash
 # Injects the agent into the PR Gatekeeper workflow directly after contract verification:
-./workplace/workplace/bin/percipience agent integrate \
+./.nb/.nb/bin/percipience agent integrate \
   --agent agent_custom_quality_guard \
   --workflow wf_pr_gatekeeper \
   --after step_contract_compat
@@ -84,7 +84,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 ### 3.3. Executing the Agent in Sandboxed Isolation
 ```bash
 # Run the custom agent in an isolated worktree with token metering:
-./workplace/workplace/bin/percipience agent run \
+./.nb/.nb/bin/percipience agent run \
   --agent agent_custom_quality_guard \
   --task "Analyze AST complexity across workplace/modules/mod_portal_marketing"
 ```
@@ -93,7 +93,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 ### 3.4. Surgically Rolling Back an Agent or Affected Module
 ```bash
 # Rewind changes introduced by an agent to a clean recovery point:
-./workplace/workplace/bin/percipience agent rollback \
+./.nb/.nb/bin/percipience agent rollback \
   --agent agent_custom_quality_guard \
   --module mod_portal_marketing \
   --recovery-point RP_PLAY3_BOOTSTRAP_001
@@ -101,7 +101,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 
 ### 3.5. Listing Registered Custom Agents
 ```bash
-./workplace/workplace/bin/percipience agent list
+./.nb/.nb/bin/percipience agent list
 ```
 
 ---

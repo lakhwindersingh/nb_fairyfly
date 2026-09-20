@@ -9,7 +9,7 @@
 flowchart TD
   MVS["MVS Input Specs<br/>(user/inputs/templates/)"] --> Derivation["ASG Derivation Engine<br/>(Normalize into Canonical Graph)"]
   Derivation --> ASTPruner["Tree-Sitter AST Pruner<br/>(50%-70% Target Token Reduction)"]
-  ASTPruner --> TierRouter{"Cognitive Router<br/>(workplace/config/token_compression_rules.yaml)"}
+  ASTPruner --> TierRouter{"Cognitive Router<br/>(.nb/config/token_compression_rules.yaml)"}
   
   TierRouter -->|"High Reasoning (Architecture / Security)"| TierA["Tier A (Frontier)<br/>Claude-3-7-Sonnet / Gemini-2.0-Pro"]
   TierRouter -->|"Fast / High Throughput (Diffs / Scaffolding)"| TierB["Tier B (Compact)<br/>Claude-3-5-Haiku / Gemini-2.0-Flash"]

@@ -7,8 +7,9 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-if str(REPO_ROOT / "workplace") not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT / "workplace"))
+for p_dir in [REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+    if str(p_dir) not in sys.path:
+        sys.path.insert(0, str(p_dir))
 
 from core.nbpack_envelope import NBPackEnvelope
 

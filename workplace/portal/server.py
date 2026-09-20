@@ -22,7 +22,9 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT / "workplace"))
+for p_dir in [REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+    if str(p_dir) not in sys.path:
+        sys.path.insert(0, str(p_dir))
 
 from core.ast_optimizer import ASTOptimizer
 from core.merkle_engine import MerkleEngine
@@ -344,6 +346,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
       <button class="nav-btn" onclick="showTab('capabilities')">Capabilities</button>
       <button class="nav-btn" onclick="showTab('comparatives')">Comparatives</button>
+      <button class="nav-btn" onclick="showTab('tier-matrix')">📊 Plan Matrix &amp; Ceilings</button>
       <button class="nav-btn" onclick="showTab('gateway')">Context Gateway</button>
       <button class="nav-btn" onclick="showTab('roi-calculator')">ROI &amp; Benefits</button>
       <button class="nav-btn" onclick="showTab('sandboxes')">Live Sandboxes</button>
@@ -796,6 +799,295 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <!-- TAB: PLAN TIER MATRIX & BOUNDARY CEILINGS (Section 2 of Parent Master Plan) -->
+    <section id="tier-matrix" class="tab-content">
+      <div class="section-title">2. Plan Tier Matrix &amp; Boundary Ceilings</div>
+      <div class="section-desc">Comprehensive architectural entitlement matrix, boundary ceilings, concurrency quotas, security enclaves, and full 35-capability mapping across Free Community, Team, Business, and Enterprise tiers (governed by <code>.nb/plan/claude-context-engineering-parent-master-free_plan.md</code>).</div>
+
+      <div class="grid-4" style="margin-bottom:22px;">
+        <div class="metric-card">
+          <div class="metric-val text-emerald">Free Forever</div>
+          <div class="metric-label">Community Plan (plan_free)</div>
+          <div class="metric-sub">1 Seat &bull; 1 Local Worktree &bull; 500 Audits</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-cyan">$1,499 / mo</div>
+          <div class="metric-label">Team Plan (plan_team)</div>
+          <div class="metric-sub">15 Seats &bull; 5 Worktrees &bull; 5,000 Audits</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-purple">$4,499 / mo</div>
+          <div class="metric-label">Business Plan (plan_business)</div>
+          <div class="metric-sub">50 Seats &bull; 20 Worktrees &bull; .nbpack AES-256</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--amber);">$9,999+ / mo</div>
+          <div class="metric-label">Enterprise Dedicated (plan_enterprise)</div>
+          <div class="metric-sub">Unlimited &bull; RAM Enclave &bull; Dedicated VPC</div>
+        </div>
+      </div>
+
+      <!-- CORE MATRIX TABLE (Section 2 from Plan) -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-badge">Section 2 Specification</div>
+        <h3>Plan Tier Matrix &amp; Core Boundary Ceilings</h3>
+        <p>Direct comparison of infrastructural ceilings, token reduction engines, cryptographic verification, and deployment boundaries:</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:22%;">Feature / Dimension</th>
+                <th style="width:19%; background:rgba(16,185,129,0.08); color:var(--green);">Free Community Plan (<code>plan_free</code>)</th>
+                <th style="width:19%;">Team Plan (<code>plan_team</code>)</th>
+                <th style="width:20%; background:rgba(0,242,254,0.06); color:var(--cyan);">Business Plan (<code>plan_business</code>)</th>
+                <th style="width:20%; background:rgba(168,85,247,0.08); color:var(--purple);">Enterprise Dedicated (<code>plan_enterprise</code>)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature-name">Monthly Base Price</td>
+                <td style="background:rgba(16,185,129,0.03);"><strong class="text-emerald">$0.00 / Free Forever</strong></td>
+                <td><strong>$1,499 / mo</strong></td>
+                <td style="background:rgba(0,242,254,0.03);"><strong class="text-cyan">$4,499 / mo</strong></td>
+                <td style="background:rgba(168,85,247,0.03);"><strong class="text-purple">$9,999 / mo</strong></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Included Seats</td>
+                <td style="background:rgba(16,185,129,0.03);"><strong>1 Developer Seat</strong></td>
+                <td>15 Seats</td>
+                <td style="background:rgba(0,242,254,0.03);">50 Seats</td>
+                <td style="background:rgba(168,85,247,0.03);"><strong class="text-purple">Unlimited Seats</strong></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Concurrent Worktrees</td>
+                <td style="background:rgba(16,185,129,0.03);"><strong>1 Local Worktree</strong></td>
+                <td>5 Worktrees</td>
+                <td style="background:rgba(0,242,254,0.03);">20 Worktrees</td>
+                <td style="background:rgba(168,85,247,0.03);"><strong class="text-purple">Unlimited Distributed</strong></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Monthly PR Audits</td>
+                <td style="background:rgba(16,185,129,0.03);"><strong>500 Audits / mo</strong></td>
+                <td>5,000 Audits / mo</td>
+                <td style="background:rgba(0,242,254,0.03);">25,000 Audits / mo</td>
+                <td style="background:rgba(168,85,247,0.03);"><strong class="text-purple">Unlimited Audits</strong></td>
+              </tr>
+              <tr>
+                <td class="feature-name">AST Token Reduction</td>
+                <td style="background:rgba(16,185,129,0.03);"><span class="badge badge-emerald">&#x2705; Full (60%&ndash;80%)</span></td>
+                <td><span class="badge badge-cyan">&#x2705; Full (60%&ndash;80%)</span></td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; Full (60%&ndash;80%)</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; Full + Tree-Sitter Daemon</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Cryptographic Merkle Chain</td>
+                <td style="background:rgba(16,185,129,0.03);"><span class="badge badge-emerald">&#x2705; Local Linear SHA-256</span></td>
+                <td><span class="badge badge-cyan">&#x2705; Local + Remote Sync</span></td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; Local + Remote Sync</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; Multi-Region WORM S3/GCS</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Autonomous CI/CD</td>
+                <td style="background:rgba(16,185,129,0.03);"><span class="badge badge-emerald">&#x2705; Basic Setup (1-Retry Heal)</span></td>
+                <td><span class="badge badge-cyan">&#x2705; Advanced (3-Retry)</span></td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; Full Multi-Stage</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; Closed-Loop Swarm Triad</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Packaging &amp; Obfuscation</td>
+                <td style="background:rgba(16,185,129,0.03); color:var(--muted);">&#x274C; Plaintext / Open Repo</td>
+                <td style="color:var(--muted);">&#x274C; Plaintext</td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; <code>.nbpack</code> AES-256</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; <code>.nbpack</code> RAM Enclave</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Deployment Model</td>
+                <td style="background:rgba(16,185,129,0.03);"><strong>Local IDE &amp; Git Worktree</strong></td>
+                <td>Cloud Shared Gateway</td>
+                <td style="background:rgba(0,242,254,0.03);">Cloud Shared Gateway</td>
+                <td style="background:rgba(168,85,247,0.03);"><strong class="text-purple">Dedicated Private VPC</strong></td>
+              </tr>
+              <tr>
+                <td class="feature-name">IDE Plugin Support</td>
+                <td style="background:rgba(16,185,129,0.03);"><span class="badge badge-emerald">&#x2705; IntelliJ &amp; VSCode</span></td>
+                <td><span class="badge badge-cyan">&#x2705; IntelliJ &amp; VSCode</span></td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; IntelliJ &amp; VSCode</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; IntelliJ &amp; VSCode + JCEF</span></td>
+              </tr>
+              <tr>
+                <td class="feature-name">Sandbox Source Permissions</td>
+                <td style="background:rgba(16,185,129,0.03);"><span class="badge badge-emerald">&#x2705; Local Sandbox Broker</span></td>
+                <td><span class="badge badge-cyan">&#x2705; Team RBAC</span></td>
+                <td style="background:rgba(0,242,254,0.03);"><span class="badge badge-cyan">&#x2705; Enterprise RBAC</span></td>
+                <td style="background:rgba(168,85,247,0.03);"><span class="badge badge-purple">&#x2705; Zero-Trust Fine-Grained</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6 BOUNDARY CEILINGS ARCHITECTURAL BREAKDOWN -->
+      <div class="grid-3" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-badge">Boundary 1</div>
+          <h3>🌲 AST Token Reduction Engine</h3>
+          <p>Enforces surgical skeletonization across Python, Kotlin, TypeScript, Go, and Rust in &lt;35ms before streaming context to LLMs.</p>
+          <ul class="bullet-list">
+            <li><strong>Free Tier</strong>: Local in-process AST parser (60%&ndash;80% reduction)</li>
+            <li><strong>Team/Business</strong>: Multi-file dependency graph pruning</li>
+            <li><strong>Enterprise</strong>: Dedicated Tree-Sitter daemon with sub-millisecond AST streaming</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Boundary 2</div>
+          <h3>🛡️ Cryptographic Merkle Ledger</h3>
+          <p>Every prompt, contract check, agent step, and file modification is sealed into an immutable SHA-256 hash chain with instant rollback.</p>
+          <ul class="bullet-list">
+            <li><strong>Free Tier</strong>: Local linear <code>context_ledger.yaml</code></li>
+            <li><strong>Team/Business</strong>: Centralized team sync &amp; multi-branch DAG</li>
+            <li><strong>Enterprise</strong>: SEC 17a-4 / FINRA WORM immutable storage (AWS S3 Object Lock / GCP Bucket Lock)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Boundary 3</div>
+          <h3>🔄 Autonomous CI/CD Self-Healing</h3>
+          <p>Automated Closed-Loop Triad: Self-Sustaining Hygiene + Autonomous Healer + Self-Improving Engine.</p>
+          <ul class="bullet-list">
+            <li><strong>Free Tier</strong>: 1-attempt bounded diagnostic reprompt &amp; quarantine</li>
+            <li><strong>Team</strong>: 3-attempt bounded reprompt with traceback slicing</li>
+            <li><strong>Business/Enterprise</strong>: Full multi-agent swarm triage &amp; surgical micro-module rollback (RP_k)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Boundary 4</div>
+          <h3>🔒 Packaging &amp; Obfuscation Enclaves</h3>
+          <p>Protects proprietary architecture plans and agent instructions from client extraction or prompt injection leakage.</p>
+          <ul class="bullet-list">
+            <li><strong>Free/Team</strong>: Plaintext in repository (Open / Inner-Source)</li>
+            <li><strong>Business</strong>: <code>.nbpack</code> AES-256 encrypted archive envelopes</li>
+            <li><strong>Enterprise</strong>: Ephemeral RAM Enclave execution + AWS KMS CMEK hardware isolation</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Boundary 5</div>
+          <h3>⚙️ Concurrency &amp; Worktree Isolation</h3>
+          <p>Ensures concurrent subagents operate in strict isolation without clobbering developer working directories or sibling tasks.</p>
+          <ul class="bullet-list">
+            <li><strong>Free Tier</strong>: 1 Local active worktree sandbox</li>
+            <li><strong>Team/Business</strong>: 5 to 20 concurrent Git worktree sandboxes</li>
+            <li><strong>Enterprise</strong>: Unlimited distributed microVM / container worktrees with Redis Redlock</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Boundary 6</div>
+          <h3>🔌 IDE &amp; Sandboxed LLM Permissions</h3>
+          <p>Brokers source file requests from external LLMs (Copilot, Cody, JetBrains AI) to enforce token reduction and protect ledgers.</p>
+          <ul class="bullet-list">
+            <li><strong>Free Tier</strong>: Local <code>SandboxPermissionBroker</code> (READ_PRUNED_AST by default)</li>
+            <li><strong>Team</strong>: Shared team policy manifests</li>
+            <li><strong>Enterprise</strong>: Zero-Trust fine-grained RBAC with hardware key signing</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CAPABILITY MAPPING TABLE (CAP-01 to CAP-35) -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-badge">CAP-01 through CAP-35</div>
+        <h3>Foundational Capability Entitlement Mapping</h3>
+        <p>Granular breakdown of all 35 architectural capabilities specified in Section 8 of the Master Plan:</p>
+
+        <div class="table-wrap" style="max-height:450px; overflow-y:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:12%;">Capability ID</th>
+                <th style="width:38%;">Foundational Capability Name</th>
+                <th style="width:25%;">Free Community Tier (<code>plan_free</code>)</th>
+                <th style="width:25%;">Enterprise Commercial Tier (<code>plan_enterprise</code>)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>CAP-01</code></td><td>Multi-Format MVS Ingestion</td><td><span class="badge badge-emerald">&#x2705; Supported (Markdown &amp; OpenAPI)</span></td><td><span class="badge badge-purple">&#x2705; Universal (GraphQL/Protobuf/AsyncAPI)</span></td></tr>
+              <tr><td><code>CAP-02</code></td><td>Context Poisoning Detection &amp; Rollback</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Recovery Points)</span></td><td><span class="badge badge-purple">&#x2705; Distributed Surgical Rollback (RP_k)</span></td></tr>
+              <tr><td><code>CAP-03</code></td><td>Context Compression &amp; GenAI Optimization</td><td><span class="badge badge-emerald">&#x2705; Supported (60%&ndash;80% AST Pruning)</span></td><td><span class="badge badge-purple">&#x2705; Tree-Sitter Daemon + 6D Suite</span></td></tr>
+              <tr><td><code>CAP-04</code></td><td>Dynamic Multi-Model Cascading &amp; Tiering</td><td><span class="badge badge-emerald">&#x2705; Supported (Local / BYO API Key)</span></td><td><span class="badge badge-purple">&#x2705; Automated Cost/Latency Router</span></td></tr>
+              <tr><td><code>CAP-05</code></td><td>Git Worktree Workspace Isolation</td><td><span class="badge badge-emerald">&#x2705; Supported (Single Local Worktree)</span></td><td><span class="badge badge-purple">&#x2705; Unlimited Distributed Sandboxes</span></td></tr>
+              <tr><td><code>CAP-06</code></td><td>Automated Spec-to-Code Semantic Parity</td><td><span class="badge badge-emerald">&#x2705; Supported (AST Parity Verification)</span></td><td><span class="badge badge-purple">&#x2705; Reverse AST Diff Reconciliation</span></td></tr>
+              <tr><td><code>CAP-07</code></td><td>Bounded TDD Self-Healing</td><td><span class="badge badge-emerald">&#x2705; Supported (1-Retry Auto-Repair)</span></td><td><span class="badge badge-purple">&#x2705; 3-Attempt SLA + Swarm Triage</span></td></tr>
+              <tr><td><code>CAP-08</code></td><td>Cryptographic Ledger Hash-Chain</td><td><span class="badge badge-emerald">&#x2705; Supported (SHA-256 Linear Ledger)</span></td><td><span class="badge badge-purple">&#x2705; Multi-Region WORM S3/GCS DAG</span></td></tr>
+              <tr><td><code>CAP-09</code></td><td>Time-Travel Debugging &amp; Visual DAG</td><td><span class="badge badge-emerald">&#x2705; Supported (Static HTML Dashboard)</span></td><td><span class="badge badge-purple">&#x2705; Real-Time Reactive Visualizer</span></td></tr>
+              <tr><td><code>CAP-10</code></td><td>Context Maturity Evaluation Scorecard</td><td><span class="badge badge-emerald">&#x2705; Supported (Standard 6D Scorecard)</span></td><td><span class="badge badge-purple">&#x2705; Automated Continuous G-Eval Radar</span></td></tr>
+              <tr><td><code>CAP-11</code></td><td>Master Context Ledger &amp; Commit Traceability</td><td><span class="badge badge-emerald">&#x2705; Supported (Full Traceability)</span></td><td><span class="badge badge-purple">&#x2705; Monorepo Micro-Module Traceability</span></td></tr>
+              <tr><td><code>CAP-12</code></td><td>Universal Quad-Space Clean Bootstrapping</td><td><span class="badge badge-emerald">&#x2705; Supported (Automated in IDE Plugin)</span></td><td><span class="badge badge-purple">&#x2705; Multi-Tenant Cloud Provisioning</span></td></tr>
+              <tr><td><code>CAP-13</code></td><td>Zero-Overhead Dual-Mode Architecture</td><td><span class="badge badge-emerald">&#x2705; Supported (Single &amp; Multi-Module)</span></td><td><span class="badge badge-purple">&#x2705; Monorepo MicroVM Dynamic Scaling</span></td></tr>
+              <tr><td><code>CAP-14</code></td><td>Proprietary Obfuscation &amp; .nbpack Enclaves</td><td><span class="badge badge-amber">&#x274C; Paid Tier Only</span></td><td><span class="badge badge-purple">&#x2705; RAM Enclaves + KMS CMEK Vault</span></td></tr>
+              <tr><td><code>CAP-15</code></td><td>External Issue Tracker &amp; Jira MCP Server</td><td><span class="badge badge-amber">&#x274C; Paid Tier Only</span></td><td><span class="badge badge-purple">&#x2705; Bi-directional Jira/Linear MCP</span></td></tr>
+              <tr><td><code>CAP-16</code></td><td>Autonomous CI/CD Triad</td><td><span class="badge badge-emerald">&#x2705; Supported (basic_autonomous_cicd.yaml)</span></td><td><span class="badge badge-purple">&#x2705; Full Triad + SelfImprovingEngine</span></td></tr>
+              <tr><td><code>CAP-17</code></td><td>Extensible Custom Agent Plugins</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Custom Agents)</span></td><td><span class="badge badge-purple">&#x2705; Swarm Registry &amp; Version Leases</span></td></tr>
+              <tr><td><code>CAP-18</code></td><td>Production Token FinOps &amp; Metering</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Token Ledger)</span></td><td><span class="badge badge-purple">&#x2705; 15% Rev-Share Invoicing &amp; APM</span></td></tr>
+              <tr><td><code>CAP-19</code></td><td>Enterprise Observability Hub &amp; Telemetry</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Web Dashboard)</span></td><td><span class="badge badge-purple">&#x2705; OpenTelemetry W3C GenAI Exporter</span></td></tr>
+              <tr><td><code>CAP-20</code></td><td>3-Tier Layered Context &amp; BYOR</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Git &amp; SSH)</span></td><td><span class="badge badge-purple">&#x2705; Self-Hosted GitLab / GHES VPC</span></td></tr>
+              <tr><td><code>CAP-21</code></td><td>Autonomous Living Documentation Engine</td><td><span class="badge badge-emerald">&#x2705; Supported (Markdown + Mermaid)</span></td><td><span class="badge badge-purple">&#x2705; AST-to-Mermaid Continuous Lint</span></td></tr>
+              <tr><td><code>CAP-22</code></td><td>Distributed Redis Redlock Concurrency</td><td><span class="badge badge-amber">&#x274C; Paid Tier Only</span></td><td><span class="badge badge-purple">&#x2705; Cluster-Wide Ephemeral Mutexes</span></td></tr>
+              <tr><td><code>CAP-23</code></td><td>SEC 17a-4 / FINRA WORM Cloud Vault Egress</td><td><span class="badge badge-amber">&#x274C; Paid Tier Only</span></td><td><span class="badge badge-purple">&#x2705; S3 Object Lock &amp; Audit Egress</span></td></tr>
+              <tr><td><code>CAP-24</code></td><td>High-Throughput Tree-Sitter AST Daemon</td><td><span class="badge badge-amber">&#x274C; Paid Tier Only</span></td><td><span class="badge badge-purple">&#x2705; Multi-Language In-Memory Daemon</span></td></tr>
+              <tr><td><code>CAP-25</code></td><td>Multi-Dimensional 6D Token Compression Suite</td><td><span class="badge badge-emerald">&#x2705; Supported (AST + Doc + Config)</span></td><td><span class="badge badge-purple">&#x2705; Full 6D Pruner Suite</span></td></tr>
+              <tr><td><code>CAP-26</code></td><td>Multi-Dialect Diagnostic Log Slicing</td><td><span class="badge badge-emerald">&#x2705; Supported (Traceback Slicer)</span></td><td><span class="badge badge-purple">&#x2705; Polyglot Multi-Dialect Slicer</span></td></tr>
+              <tr><td><code>CAP-27</code></td><td>Declarative Quad-Space Runtime Boundary</td><td><span class="badge badge-emerald">&#x2705; Supported (Zero-Logic Facade)</span></td><td><span class="badge badge-purple">&#x2705; Monorepo Boundary Enforcement</span></td></tr>
+              <tr><td><code>CAP-28</code></td><td>Barrier Join Synchronization Engine</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Step DAG)</span></td><td><span class="badge badge-purple">&#x2705; Distributed Swarm Synchronizer</span></td></tr>
+              <tr><td><code>CAP-29</code></td><td>4-Pillar Error Taxonomy &amp; Playbooks</td><td><span class="badge badge-emerald">&#x2705; Supported (Basic Playbooks)</span></td><td><span class="badge badge-purple">&#x2705; Autonomous Playbook Router</span></td></tr>
+              <tr><td><code>CAP-30</code></td><td>Cryptographic Prompt Manifest &amp; Static Pinning</td><td><span class="badge badge-emerald">&#x2705; Supported (prompt_manifest.yaml)</span></td><td><span class="badge badge-purple">&#x2705; Bit-for-Bit KV Cache Anchoring</span></td></tr>
+              <tr><td><code>CAP-31</code></td><td>Hierarchical Swarm Authority Tree</td><td><span class="badge badge-emerald">&#x2705; Supported (Local Hierarchy)</span></td><td><span class="badge badge-purple">&#x2705; 4-Tier Anti-Usurpation Tree</span></td></tr>
+              <tr><td><code>CAP-32</code></td><td>Adversarial Red-Team Fuzzing Engine</td><td><span class="badge badge-emerald">&#x2705; Supported (Standard Fuzzing)</span></td><td><span class="badge badge-purple">&#x2705; Chaos &amp; Security Mutation Suite</span></td></tr>
+              <tr><td><code>CAP-33</code></td><td>Proportional Attention Budgeting</td><td><span class="badge badge-emerald">&#x2705; Supported (15/25/35/10/15 Rule)</span></td><td><span class="badge badge-purple">&#x2705; Dynamic KV Attention Balancer</span></td></tr>
+              <tr><td><code>CAP-34</code></td><td>ReAct Trajectory Recording &amp; Replay</td><td><span class="badge badge-emerald">&#x2705; Supported (agentic/trajectories/)</span></td><td><span class="badge badge-purple">&#x2705; Vectorized Trajectory Search</span></td></tr>
+              <tr><td><code>CAP-35</code></td><td>Ambiguity Resolution &amp; Clarification RFCs</td><td><span class="badge badge-emerald">&#x2705; Supported (user/hitl/)</span></td><td><span class="badge badge-purple">&#x2705; Automated RFC Collaboration Gate</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE TIER & CEILING CALCULATOR -->
+      <div class="card" style="max-width:800px; margin:0 auto;">
+        <div class="card-badge">Interactive Tool</div>
+        <h3>Live Boundary Ceiling &amp; Tier Validator</h3>
+        <p>Simulate your organization requirements to see boundary ceiling compliance and recommended deployment model:</p>
+        
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div class="form-group">
+            <label class="form-label">Developer Seats:</label>
+            <input type="number" id="simSeats" class="input" value="1" min="1" max="500" oninput="calculateCeilings()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Concurrent Worktrees:</label>
+            <input type="number" id="simWorktrees" class="input" value="1" min="1" max="100" oninput="calculateCeilings()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly PR Audits:</label>
+            <input type="number" id="simAudits" class="input" value="450" min="50" max="100000" oninput="calculateCeilings()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Security &amp; Enclave Requirement:</label>
+            <select id="simEnclave" class="input" onchange="calculateCeilings()">
+              <option value="plaintext">Local IDE / Open Repo (Plaintext)</option>
+              <option value="cloud">Cloud Shared Gateway</option>
+              <option value="nbpack">Encrypted .nbpack AES-256</option>
+              <option value="enclave">RAM Enclave + KMS CMEK Vault</option>
+              <option value="vpc">Dedicated Private VPC</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="simResult" style="margin-top:12px;"></div>
       </div>
     </section>
 
@@ -2022,6 +2314,68 @@ percipience rollback \
         });
       }
     } catch(e) {}
+  }
+
+  function calculateCeilings() {
+    const seats = parseInt(document.getElementById(simSeats)?.value) || 1;
+    const worktrees = parseInt(document.getElementById(simWorktrees)?.value) || 1;
+    const audits = parseInt(document.getElementById(simAudits)?.value) || 100;
+    const enc = document.getElementById(simEnclave)?.value || plaintext;
+    
+    let recTier = "plan_free";
+    let tierName = "Free Community Plan";
+    let basePrice = "$0.00 / mo";
+    let badgeClass = "badge-emerald";
+    let reasons = [];
+
+    if (seats > 50 || worktrees > 20 || audits > 25000 || enc === enclave || enc === vpc) {
+      recTier = "plan_enterprise";
+      tierName = "Enterprise Dedicated VPC";
+      basePrice = "$9,999+ / mo";
+      badgeClass = "badge-purple";
+      if (seats > 50) reasons.push(`Seat count (${seats}) exceeds Business ceiling (50 seats)`);
+      if (worktrees > 20) reasons.push(`Concurrency (${worktrees}) requires distributed cluster`);
+      if (audits > 25000) reasons.push(`Audits/mo (${audits}) requires dedicated ingress`);
+      if (enc === enclave || enc === vpc) reasons.push(`Requires Hardware KMS CMEK RAM Enclave & Private VPC`);
+    } else if (seats > 15 || worktrees > 5 || audits > 5000 || enc === nbpack) {
+      recTier = "plan_business";
+      tierName = "Business Plan";
+      basePrice = "$4,499 / mo";
+      badgeClass = "badge-cyan";
+      if (seats > 15) reasons.push(`Seat count (${seats}) exceeds Team ceiling (15 seats)`);
+      if (worktrees > 5) reasons.push(`Concurrency (${worktrees}) requires high-throughput scheduler`);
+      if (audits > 5000) reasons.push(`Audits/mo (${audits}) exceeds Team ceiling (5,000/mo)`);
+      if (enc === nbpack) reasons.push(`Requires AES-256 .nbpack domain obfuscation`);
+    } else if (seats > 1 || worktrees > 1 || audits > 500 || enc === cloud) {
+      recTier = "plan_team";
+      tierName = "Team Plan";
+      basePrice = "$1,499 / mo";
+      badgeClass = "badge-cyan";
+      if (seats > 1) reasons.push(`Seat count (${seats}) requires Team multi-seat licensing`);
+      if (worktrees > 1) reasons.push(`Concurrency (${worktrees}) requires multi-worktree sync`);
+      if (audits > 500) reasons.push(`Audits/mo (${audits}) exceeds Free ceiling (500/mo)`);
+    } else {
+      reasons.push(`Within Free Community Plan boundary ceilings (1 Seat, 1 Worktree, <=500 Audits/mo)`);
+    }
+
+    const resBox = document.getElementById(simResult);
+    if (resBox) {
+      resBox.innerHTML = `
+        <div style="padding:12px; background:rgba(0,0,0,0.2); border:1px solid var(--border-accent); border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-weight:800; font-size:14px; color:var(--text);">${tierName}</span>
+            <span class="badge ${badgeClass}">${basePrice}</span>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">
+            <b>Enforcement Rationale:</b>
+            <ul style="margin-top:4px; padding-left:16px;">
+              ${reasons.map(r => `<li>${r}</li>`).join("")}
+            </ul>
+          </div>
+          <button class="action-btn" style="width:100%; font-size:11px; padding:6px;" onclick="showTab('pricing')">Proceed to Provisioning &rarr;</button>
+        </div>
+      `;
+    }
   }
 
   // Check session on load

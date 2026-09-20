@@ -37,7 +37,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 class TokenOptimizationConfig:
     """Manages workspace and portal token optimization configuration."""
 
-    CONFIG_FILE = "workplace/config/token_compression_rules.yaml"
+    CONFIG_FILE = ".nb/config/token_compression_rules.yaml"
 
     DEFAULT_CONFIG = {
         "token_optimization": {
@@ -77,6 +77,12 @@ class TokenOptimizationConfig:
 
     @classmethod
     def get_config_path(cls, repo_root: Path = REPO_ROOT) -> Path:
+        nb_p = repo_root / ".nb" / "config" / "token_compression_rules.yaml"
+        if nb_p.exists():
+            return nb_p
+        wp_p = repo_root / "workplace" / "config" / "token_compression_rules.yaml"
+        if wp_p.exists():
+            return wp_p
         p = repo_root / cls.CONFIG_FILE
         p.parent.mkdir(parents=True, exist_ok=True)
         return p

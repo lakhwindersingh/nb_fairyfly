@@ -220,8 +220,8 @@ gantt
 ---
 
 ## 6. Benchmark Provenance & References
-- **Audit Verification Engine**: `workplace/core/maturity_evaluator.py`
-- **Living Documentation Engine**: `workplace/core/living_doc_engine.py`
-- **WORM Storage Egress Vault**: `workplace/core/worm_egress.py`
-- **Diagnostic Re-Prompt Engine**: `workplace/core/diagnostic_reprompt.py`
+- **Audit Verification Engine**: `.nb/core/maturity_evaluator.py`
+- **Living Documentation Engine**: `.nb/core/living_doc_engine.py`
+- **WORM Storage Egress Vault**: `.nb/core/worm_egress.py`
+- **Diagnostic Re-Prompt Engine**: `.nb/core/diagnostic_reprompt.py`
 - **Ledger Block Anchor**: Merkle Block `600+` (`context/ledger/context_ledger.yaml`)

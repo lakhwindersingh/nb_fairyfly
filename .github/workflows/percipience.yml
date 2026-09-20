@@ -26,17 +26,17 @@ jobs:
 
       - name: Run Percipience PR Gatekeeper & AST Token Pruning
         run: |
-          chmod +x bin/percipience
-          ./bin/percipience gate
-          ./bin/percipience tokens summary
+          chmod +x .nb/bin/percipience
+          ./.nb/bin/percipience gate
+          ./.nb/bin/percipience tokens summary
 
       - name: Enforce Merkle Chain Continuity & Context Maturity
         run: |
-          ./bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+          ./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
 
       - name: Validate Layered Context Hierarchy & Invariants
         run: |
-          ./bin/percipience validate --layered
+          ./.nb/bin/percipience validate --layered
 
       - name: Post Reports to GitHub Actions Step Summary
         if: always()

@@ -84,10 +84,10 @@ graph TD
 
 ### Pillar II: Runtime Architecture, Quad-Space Boundaries & Execution Hygiene
 
-#### 6. Architectural Drift & Code Duplication between `agentic/runtime/` and `workplace/core/` (`GAP-AGT-06`)
-- **Current Defect:** Multiple runtime execution modules exist duplicated across both `agentic/runtime/` and `workplace/core/` (e.g. `cognitive_router.py`, `worktree_manager.py`, `token_savings_meter.py`).
+#### 6. Architectural Drift & Code Duplication between `agentic/runtime/` and `.nb/core/` (`GAP-AGT-06`)
+- **Current Defect:** Multiple runtime execution modules exist duplicated across both `agentic/runtime/` and `.nb/core/` (e.g. `cognitive_router.py`, `worktree_manager.py`, `token_savings_meter.py`).
 - **SDLC Impact:** Violates the fundamental Quad-Space separation of concerns (`agentic/` = declarative prompts, workflows, and manifests; `workplace/` = executable implementations). Creates maintenance divergence and packaging bloat.
-- **Target Redesign:** Refactor `agentic/runtime/` to strictly contain declarative orchestration schemas, bindings, and manifest definitions, importing execution engines directly from `workplace/core/`.
+- **Target Redesign:** Refactor `agentic/runtime/` to strictly contain declarative orchestration schemas, bindings, and manifest definitions, importing execution engines directly from `.nb/core/`.
 
 #### 7. Lack of Parallel Fan-Out / Fan-In Barrier Synchronization in Workflows (`GAP-AGT-07`)
 - **Current Defect:** Workflow engines execute pipeline steps sequentially. Independent tasks (e.g. CVE supply-chain scanning, AST symbol pruning, and style linting) run one after another.
@@ -165,7 +165,7 @@ graph TD
 #### 19. Deadlock Detection & Cycle Prevention in Inter-Agent Handoffs (`GAP-AGT-19`)
 - **Current Defect:** `handoff_schema.yaml` validates message payloads but provides no runtime protection against circular handoff loops (Agent A $\to$ Agent B $\to$ Agent A).
 - **SDLC Impact:** Risk of infinite recursive token burn and workflow deadlocks during complex multi-agent handoffs.
-- **Target Redesign:** Implement a Swarm Graph Cycle Sentinel enforcing max hop TTL ($TTL = 5$) and topological loop detection in `workplace/core/handoff_validator.py`.
+- **Target Redesign:** Implement a Swarm Graph Cycle Sentinel enforcing max hop TTL ($TTL = 5$) and topological loop detection in `.nb/core/handoff_validator.py`.
 
 #### 20. Automated Agent Benchmark & Continuous Quality Evaluation Harness (`GAP-AGT-20`)
 - **Current Defect:** Custom agents in `agentic/custom/agents/` are evaluated ad-hoc without standardized benchmark suites.
