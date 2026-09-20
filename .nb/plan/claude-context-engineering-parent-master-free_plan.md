@@ -115,26 +115,57 @@ The Free Plan enforces zero-tamper auditability and state recovery through a det
 
 ---
 
-## 5. Core Capability 3: Basic Autonomous CI/CD Setup
+## 5. Core Capability 3: Basic Autonomous CI/CD Setup & Hook Architecture
 
-The Free Plan provides an out-of-the-box, lightweight autonomous CI/CD setup driven by `.nb/bin/percipience` and configured in `.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml` designed for single-seat local development.
+The Free Plan provides an out-of-the-box, lightweight autonomous CI/CD setup driven by `bin/percipience` and configured in `.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml` designed for single-seat local development and layered domain extension.
 
-### 5.1 The 4-Stage Lightweight Pipeline
-1. **Stage 1: Self-Sustaining Maintenance (`platform.self_sustaining_engine`)**:
-   - Reclaims expired ephemeral worktree locks (`.workspaces/`).
+### 5.1 The 5-Step Continuous Workflow & Lifecycle Hooks
+The pipeline topologically links platform engines and specialized agents through deterministic handoff hooks:
+1. **Step 1: Self-Sustaining Hygiene (`platform.self_sustaining_engine`)**:
+   - Reclaims expired ephemeral worktree locks (`.workspaces/subagent_*`).
    - Cleans temporary scratch diffs and test artifacts (`user/scratch/`).
-   - Verifies Merkle chain continuity ($100\%$ linear validity check via `.nb/core/merkle_engine.py`).
-2. **Stage 2: AST Token Reduction (`platform.ast_pruner`)**:
-   - Analyzes project source directories using rules in `.nb/config/token_compression_rules.yaml`.
-   - Slices ASTs to generate symbol skeletons for prompt contexts.
-   - Logs token savings to `.nb/context/ledger/token_savings_ledger.yaml`.
-3. **Stage 3: Basic Contract & Test Verification Gate (`platform.contract_verifier`)**:
+   - Verifies Merkle chain continuity ($100\%$ linear validity check).
+   - *Handoff Hook*: `hook_hygiene_to_pruner` -> transfers `hygiene_clean_receipt`.
+2. **Step 2: AST Token Reduction (`platform.ast_pruner`)**:
+   - Analyzes project source directories using `.nb/config/token_compression_rules.yaml`.
+   - Prunes ASTs to generate symbol skeletons for prompt context window optimization.
+   - *Handoff Hook*: `hook_pruner_to_verifier` -> transfers `token_savings_receipt`.
+3. **Step 3: Contract & Test Verification Gate (`platform.contract_verifier`)**:
    - Verifies wire contracts under `.nb/context/contracts/`.
-   - Runs local test suites (`workplace/tests/` and `.nb/tests/`).
-4. **Stage 4: Bounded Auto-Heal & Merkle Seal (`platform.autonomous_healer` & `platform.merkle_ledger`)**:
-   - Single-attempt bounded diagnostic reprompt for failing tests.
-   - If healed, seals state with a new verified Merkle block.
-   - If still failing, quarantines test to `quarantined_tests` and halts safely at `user/hitl/`.
+   - Runs hermetic unit and integration tests under `workplace/modules/*/tests/`.
+   - *Handoff Hook*: `hook_verifier_to_docs` -> transfers `test_and_contract_receipt`.
+4. **Step 4: Living Documentation Synthesis (`agent_living_doc_architect`)**:
+   - Synchronizes architectural markdown and Mermaid sequence diagrams in `workplace/docs/`.
+   - Ensures AST symbol changes and schema revisions are documented without drift.
+   - *Handoff Hook*: `hook_docs_to_merkle` -> transfers `workplace_docs_updated`.
+5. **Step 5: Merkle State Commit & Seal (`platform.merkle_ledger`)**:
+   - Appends verified block to `.nb/context/ledger/context_ledger.yaml`.
+   - Anchors recovery point and updates public sanitized projection.
+
+### 5.2 Git Hook Architecture & Automated Installation
+- **Automated Hook Installer**: Located at `.nb/scripts/install_git_hook.sh` and invocable via `bin/percipience hook install`.
+- **Pre-Commit Hook**: Evaluates git staged status. If modifications are non-code/documentation-only, skips subagent execution; if source/contract deltas exist, triggers PR Gatekeeper verification.
+- **Pre-Push Hook**: Runs full multi-stage contract, AST, and Merkle ledger integrity audit before remote transmission.
+
+### 5.3 Layered Plan Agent Hook Integration & Reliable Spawning
+To ensure subagents spawn reliably across complex workflows:
+- **Multi-Tier Agent Registry**: The engine automatically discovers and indexes agent specifications across `.nb/agentic/custom/agents/`, `.nb/plan/agents/`, `.nb/plan/packages/*/agents/`, and `user/hitl/orphaned_context_files/agents/`.
+- **Pre-Flight Contract Validation**: Prior to process spawning, input artifacts, schemas, and runtime dependencies are verified.
+- **Isolated Ephemeral Sandboxes**: Subagents execute in dedicated workspace directories (`.workspaces/subagent_<executor>/`), preventing concurrent file lock conflicts.
+- **Supervised Bounded Retries**: Transient failures (e.g. process aborts or timeout errors) are automatically retried up to $N_{\max} = 3$ times with exponential backoff before escalating.
+
+### 5.4 Intelligent Skippability Assessment & Verbose Output
+Hooks incorporate a differential state evaluation engine:
+- **Deterministic SHA-256 Fingerprinting**: Computes digests of all declared input files, contracts, and upstream receipts.
+- **Persistent Ledger Receipt Cache**: Stored at `.nb/context/ledger/step_cache.json`.
+- **Smart Skip Determination**: If input fingerprints match the cached receipt and output artifacts exist on disk, the step execution is skipped.
+- **Verbose Reporting**: Emits structured console telemetry:
+  ```text
+  [HOOK_ASSESSMENT][SKIPPABLE] Step 'step_update_living_docs' [agent_living_doc_architect]: SKIPPED
+    - Reason: Input artifacts and contracts unchanged (SHA-256: 1bccd9af4fbf matches receipt). Output verified.
+    - Action: Reusing cached output artifacts; skipping agent spawn.
+    - Resource Conservation: ~4,500 tokens saved.
+  ```
 
 ---
 

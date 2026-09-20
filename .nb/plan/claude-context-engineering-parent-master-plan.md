@@ -838,6 +838,16 @@ workflow:
       verifier_agent: "agent_verifier"
       checks: ["schema_validity", "token_budget_passed", "zero_drift", "poisoning_check"]
       result: "Passed"
+    - id: "gate_provider_review"
+      type: "ServiceVerification"
+      verifier_agent: "agent_verifier"
+      checks: ["contract_implementation_valid", "unit_test_coverage", "no_quarantine_breach"]
+      result: "Passed"
+    - id: "gate_consumer_review"
+      type: "ClientVerification"
+      verifier_agent: "agent_verifier"
+      checks: ["mock_provider_e2e_pass", "schema_validation_strict", "ast_type_valid"]
+      result: "Passed"
     - id: "gate_cross_module_compatibility"
       type: "CrossModuleCompatibility"
       verifier_agent: "agent_integration_verifier"
@@ -855,13 +865,86 @@ workflow:
       to_agents: ["agent_provider_developer", "agent_consumer_developer"]
       payload_artifact: "art_contract_api_01"
       status: "Fired"
+    - id: "hook_provider_to_integration"
+      trigger: "on_gate_pass:gate_provider_review"
+      from_agent: "agent_provider_developer"
+      to_agents: ["agent_integration_verifier"]
+      payload_artifact: "art_provider_service_01"
+      status: "Fired"
+    - id: "hook_consumer_to_integration"
+      trigger: "on_gate_pass:gate_consumer_review"
+      from_agent: "agent_consumer_developer"
+      to_agents: ["agent_integration_verifier"]
+      payload_artifact: "art_consumer_client_01"
+      status: "Fired"
     - id: "hook_integration_to_docs"
       trigger: "on_gate_pass:gate_cross_module_compatibility"
       from_agent: "agent_integration_verifier"
       to_agents: ["agent_living_doc_architect"]
       payload_artifact: "art_provider_service_01"
       status: "Fired"
+    - id: "hook_docs_to_eval"
+      trigger: "on_gate_pass:gate_doc_drift_verification"
+      from_agent: "agent_living_doc_architect"
+      to_agents: ["platform.merkle_ledger"]
+      payload_artifact: "art_living_docs_bundle"
+      status: "Fired"
 ```
+
+### Standardized Workflow Hook Lifecycle, Layered Plan Integration & Skippability Engine
+
+To ensure continuous, deterministic execution across platform and layered domain workflows, Percipience implements a standardized five-stage hook lifecycle, multi-tier agent discovery, reliable supervisor spawning, and differential skippability assessment:
+
+#### 1. Five-Stage Hook Lifecycle Taxonomy
+```mermaid
+graph LR
+  A["pre_step_hook<br/>(Differential State Fingerprinting)"] --> B{"Assessment"}
+  B -- "Unchanged (Hash Match)" --> S["[SKIPPABLE]<br/>Reuse Cached Outputs<br/>Zero Compute/Tokens"]
+  B -- "Delta Detected" --> C["spawn_hook<br/>(Pre-flight & Worktree Isolation)"]
+  C --> D["step_execution<br/>(Supervised Worker N_max=3)"]
+  D --> E["handoff_hook<br/>(Cryptographic HandoffToken)"]
+  E --> F["post_step_hook / gate<br/>(Schema Invariant Validation)"]
+  F --> G["sealing_hook<br/>(Merkle Ledger Block Append)"]
+```
+
+1. **`pre_step_hook` (Differential State Fingerprinting)**:
+   - Computes deterministic SHA-256 digest of input artifacts, contract schemas, and AST symbols.
+   - Evaluates `.nb/context/ledger/step_cache.json`.
+   - If inputs match cached receipt and declared outputs exist on disk, step is marked `SKIPPABLE`.
+   - Emits verbose output:
+     ```text
+     [HOOK_ASSESSMENT][SKIPPABLE] Step '<step_id>' [Executor: <executor>]: SKIPPED
+       - Reason: Input artifacts and contracts unchanged (SHA-256: <hash> matches receipt). Output verified.
+       - Action: Reusing cached output artifacts; skipping agent spawn.
+       - Resource Conservation: ~4,500 tokens saved.
+     ```
+2. **`spawn_hook` (Reliable Agent Sandbox Provisioning)**:
+   - Resolves agent specifications across multi-tier search paths (`.nb/agentic/custom/agents/`, `.nb/plan/agents/`, `.nb/plan/packages/*/agents/`, `user/hitl/orphaned_context_files/agents/`).
+   - Provisions isolated ephemeral worktree sandbox (`.workspaces/subagent_<executor>/`).
+   - Asserts concurrency lease lock, preventing race conditions.
+3. **`handoff_hook` (Cross-Agent Cryptographic Continuity)**:
+   - Encapsulates inter-agent artifacts within a signed `HandoffToken` containing predecessor block hash, artifact Merkle root, and schema version.
+   - Successor agent validates token signature before ingesting payloads, eliminating context poisoning.
+4. **`post_step_hook` / `verification_gate_hook`**:
+   - Executes independent verification gates (`gate_arch_review`, `gate_provider_review`, `gate_consumer_review`, `gate_cross_module_compatibility`, `gate_doc_drift_verification`).
+   - Rejects unverified artifacts and triggers bounded auto-healing ($N \le 3$).
+5. **`sealing_hook` (Merkle State Sealing)**:
+   - Appends verified block to `.nb/context/ledger/context_ledger.yaml`.
+   - Updates `step_cache.json` with execution receipt and input/output fingerprints.
+
+#### 2. Cross-Layer Agent Hook Setup
+Workflows dynamically orchestrate agents defined in domain-specific layered plans without manual registration:
+- **JetBrains IDE Domain**: `agent_jetbrains_plugin_architect`, `agent_psi_ast_bridge_specialist`, `agent_intellij_ui_ux_engineer`.
+- **VSCode Extension Domain**: `agent_vscode_extension_architect`, `agent_lsp_language_features_specialist`, `agent_vscode_webview_ux_engineer`.
+- **Morphogenetic MoE Domain**: `agent_moe_evolution_architect`, `agent_expert_training_specialist`, `agent_morphogenesis_engineer`.
+- **Decentralized Audio & Crypto Domain**: `agent_blockchain_audio_streaming_architect`, `agent_crypto_defi_risk_architect`.
+- **Platform & Living Docs**: `agent_living_doc_architect`, `agent_verifier`, `platform.self_sustaining_engine`, `platform.ast_pruner`, `platform.contract_verifier`, `platform.merkle_ledger`.
+
+#### 3. Reliable Subagent Spawning & Supervisor Protocol
+To eliminate agent spawn and runtime unreliability:
+- **Pre-Flight Contract Assertion**: Verifies all input files, contract schemas, and directory mounts exist prior to spawning the process or subagent session.
+- **Hermetic Worktree Sandbox**: Each spawned agent operates in an isolated worktree directory (`.workspaces/subagent_<id>`), preventing concurrent filesystem collisions.
+- **Bounded Supervisor Retry Loop**: If an agent process fails due to transient API timeouts or memory spikes, the supervisor retries up to $N_{\max} = 3$ times with exponential backoff before escalating to HITL quarantine (`user/hitl/`).
 
 ---
 
