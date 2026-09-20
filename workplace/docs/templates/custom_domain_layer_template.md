@@ -158,7 +158,7 @@ To protect proprietary domain intellectual property, contracts, and prompt trees
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
-./workplace/workplace/bin/percipience layer pack \
+./.nb/bin/percipience layer pack \
   --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md \
   --output .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack \
   --include-spaces context/contracts,context/rules,agentic/custom
@@ -167,7 +167,7 @@ To protect proprietary domain intellectual property, contracts, and prompt trees
 ### 6.2. Consuming the Encrypted Bundle in Target Repository
 ```bash
 # Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
-./workplace/workplace/bin/percipience layer apply \
+./.nb/bin/percipience layer apply \
   --pack .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack \
   --in-memory-only \
   --mode multi_module
@@ -186,15 +186,15 @@ To apply this custom domain layer onto a fresh or existing repository:
 
 ```bash
 # 1. Initialize repository using Parent Master Plan
-./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
 
 # 2. Apply this domain layer
-./workplace/workplace/bin/percipience layer apply --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md
+./.nb/bin/percipience layer apply --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md
 
 # 3. Scaffold and integrate domain subagents
-./workplace/workplace/bin/percipience agent create --name {{SPECIALIST_AGENT_1}} --template cicd_quality --role "{{DOMAIN_NAME}} Specialist"
-./workplace/workplace/bin/percipience agent integrate --agent agent_{{SPECIALIST_AGENT_1}} --workflow wf_pr_gatekeeper --after step_contract_compat
+./.nb/bin/percipience agent create --name {{SPECIALIST_AGENT_1}} --template cicd_quality --role "{{DOMAIN_NAME}} Specialist"
+./.nb/bin/percipience agent integrate --agent agent_{{SPECIALIST_AGENT_1}} --workflow wf_pr_gatekeeper --after step_contract_compat
 
 # 4. Run PR Gatekeeper verification
-./workplace/workplace/bin/percipience gate
+./.nb/bin/percipience gate
 ```

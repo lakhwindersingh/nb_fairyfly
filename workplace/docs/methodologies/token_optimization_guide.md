@@ -102,17 +102,17 @@ Token compression settings are centrally configured in [`.nb/config/token_compre
 ### 3.2. CLI Management Commands
 ```bash
 # Check current configuration and active strategies
-./.nb/.nb/bin/percipience tokens status
+./.nb/bin/percipience tokens status
 
 # Switch compression preset mode
-./.nb/.nb/bin/percipience tokens set-mode aggressive
+./.nb/bin/percipience tokens set-mode aggressive
 
 # Enable / Disable specific strategy
-./.nb/.nb/bin/percipience tokens set-strategy diagnostic_log_slicing on
-./.nb/.nb/bin/percipience tokens set-strategy git_diff_pruning on
+./.nb/bin/percipience tokens set-strategy diagnostic_log_slicing on
+./.nb/bin/percipience tokens set-strategy git_diff_pruning on
 
 # Optimize a single file or diff payload
-./.nb/.nb/bin/percipience tokens optimize --file .nb/core/auth.py
+./.nb/bin/percipience tokens optimize --file .nb/core/auth.py
 ```
 
 ### 3.3. Web Portal Interactive Controls

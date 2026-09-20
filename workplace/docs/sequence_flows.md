@@ -25,7 +25,7 @@ sequenceDiagram
   Gateway-->>Dev: Clean code diff & Merkle execution receipt
 
   Note over Dev,Gate: Subagent executes local bounded TDD in worktree
-  Dev->>Gate: Trigger PR Gatekeeper verification (bin/percipience gate)
+  Dev->>Gate: Trigger PR Gatekeeper verification (.nb/bin/percipience gate)
   Gate->>Gate: Stage 1: Content-addressable AST diff & token savings
   Gate->>Gate: Stage 2: Supply-chain CVE & license audit (agent_dependency_cve_sentinel)
   Gate->>Gate: Stage 3: Wire contract backward-compatibility check (agent_contract_compatibility_checker)

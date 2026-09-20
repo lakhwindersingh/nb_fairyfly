@@ -248,22 +248,22 @@ The anti-drift engine is accessible via the Percipience CLI and automatically wi
 
 ```bash
 # 1. Audit entire workspace for semantic drift & compute S_SP (including Handover parity)
-./.nb/.nb/bin/percipience drift check
+./.nb/bin/percipience drift check
 
 # 2. Detailed breakdown across all 6 parity vectors
-./.nb/.nb/bin/percipience drift report --verbose
+./.nb/bin/percipience drift report --verbose
 
 # 3. Audit active agent swarm for unauthorized successor spawning or orphaned worktrees
-./.nb/.nb/bin/percipience swarm audit
+./.nb/bin/percipience swarm audit
 
 # 4. Trigger automated Revert Mode on drifted symbols
-./.nb/.nb/bin/percipience drift reconcile --mode revert --module mod_portal_marketing
+./.nb/bin/percipience drift reconcile --mode revert --module mod_portal_marketing
 
 # 5. Review and approve proposed specification evolution (Evolve Mode)
-./.nb/.nb/bin/percipience drift approve-delta --delta-id DELTA_20260917_01
+./.nb/bin/percipience drift approve-delta --delta-id DELTA_20260917_01
 
 # 6. Run full 7-stage PR Gatekeeper with anti-drift & handover verification
-./.nb/.nb/bin/percipience gate
+./.nb/bin/percipience gate
 ```
 
 ---

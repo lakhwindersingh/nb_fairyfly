@@ -104,7 +104,7 @@ When a turn exhibits minor drift ($0.85 \le S_{SP} < 0.95$), Percipience execute
 | Strategy | Trigger Condition | Execution Latency | Blast Radius Impact | Human-in-the-Loop Gate |
 | :--- | :--- | :---: | :---: | :---: |
 | **Revert Mode** | Unprompted helper functions, dead code, or redundant utility libraries. | $< 50\text{ms}$ | $0.0\%$ (Strictly isolated to culprit symbols) | Fully automated |
-| **Evolve Mode** | Legitimate architectural requirement discovered during execution (e.g. pagination or rate limiting). | Instant RFC draft | Computed dynamically across all downstream consumers | **Required** (CLI `./workplace/bin/percipience drift approve-delta`) |
+| **Evolve Mode** | Legitimate architectural requirement discovered during execution (e.g. pagination or rate limiting). | Instant RFC draft | Computed dynamically across all downstream consumers | **Required** (CLI `./.nb/bin/percipience drift approve-delta`) |
 
 ---
 

@@ -54,6 +54,6 @@ jobs:
       - name: Execute Autonomous CI/CD Gate
         run: |
           chmod +x .nb/.nb/bin/percipience
-          ./.nb/.nb/bin/percipience gate
-          ./.nb/.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+          ./.nb/bin/percipience gate
+          ./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
 ```

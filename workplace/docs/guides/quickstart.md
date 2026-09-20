@@ -26,24 +26,24 @@ Get up and running with Percipience in less than 90 seconds using either your fa
 ```bash
 # Verify CLI execution
 chmod +x .nb/.nb/bin/percipience
-./.nb/.nb/bin/percipience --help
+./.nb/bin/percipience --help
 ```
 
 ### Bootstrapping Your Repository (Quad-Space Architecture)
 ```bash
 # Initialize workspace into Quad-Space structure with Master Plan:
-./.nb/.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-free_plan.md
+./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-free_plan.md
 ```
 
 ### Auditing Context Health & Merkle Chain
 ```bash
-./.nb/.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
 ```
 
 ### Running Autonomous CI/CD Gates
 ```bash
 # Execute PR gatekeeper and verify AST signatures:
-./.nb/.nb/bin/percipience gate
+./.nb/bin/percipience gate
 ```
 
 ---

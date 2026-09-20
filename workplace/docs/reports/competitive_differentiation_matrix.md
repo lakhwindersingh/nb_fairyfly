@@ -178,7 +178,7 @@ To achieve the optimal balance between global multi-hop discovery and local toke
 
 ## 4. Verification & Validation Status
 
-- **Automated PR Gatekeeper:** Fully integrated and validated across 7 verification stages (`./workplace/bin/percipience gate`).
+- **Automated PR Gatekeeper:** Fully integrated and validated across 7 verification stages (`./.nb/bin/percipience gate`).
 - **Test Suite Pass Rate:** 100% across 30 comprehensive unit and integration tests (`pytest workplace/tests`).
 - **Interactive Web Portal:** Live and navigable under Tab 3 (`Comparatives`) of the Percipience Portal server.
 
