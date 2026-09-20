@@ -71,12 +71,13 @@ ightarrow$ Reflection) persisted in `agentic/trajectories/` for post-mortem debu
 | **AST Token Reduction** | **✅ Full (60%–80% savings)** | ✅ Full | ✅ Full | ✅ Full + Tree-Sitter Daemon |
 | **Cryptographic Merkle Chain** | **✅ Local Linear SHA-256** | ✅ Local + Remote Sync | ✅ Local + Remote Sync | ✅ Multi-Region WORM S3/GCS |
 | **Autonomous CI/CD** | **✅ Basic Setup (`basic_autonomous_cicd.yaml`)** | ✅ Advanced (3-Retry) | ✅ Full Multi-Stage | ✅ Closed-Loop Swarm Triad |
-| **Packaging & Obfuscation** | ❌ Plaintext / Open Repo | ❌ Plaintext | ✅ `.nbpack` AES-256 | ✅ `.nbpack` RAM Enclave |
+| **Packaging & Obfuscation** | 🔒 Platform Core Encrypted (percipience readable) / User Plans Plaintext (Non-Encryptable) | 🔒 Platform Core Encrypted / User Plans Plaintext | ✅ `.nbpack` AES-256 (Platform & User Plans) | ✅ `.nbpack` RAM Enclave (Zero-Disk Plaintext) |
+| **Basic Platform Tools Exposure** | ❌ Unexposed (No Plan to Expose Basic Tools) | ❌ Unexposed | ✅ Standard Tool Access | ✅ Full Unrestricted Platform SDK & Tool APIs |
 | **Deployment Model** | **Local IDE & Git Worktree** | Cloud Shared Gateway | Cloud Shared Gateway | Dedicated Private VPC |
 | **IDE Plugin Support** | **✅ IntelliJ & VSCode** | ✅ IntelliJ & VSCode | ✅ IntelliJ & VSCode | ✅ IntelliJ & VSCode + JCEF |
 | **Sandbox Source Permissions** | **✅ Local Sandbox Broker** | ✅ Team RBAC | ✅ Enterprise RBAC | ✅ Zero-Trust Fine-Grained |
 
-The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reduction, a local cryptographic Merkle state ledger (`context_ledger.yaml`), and basic autonomous CI/CD via `basic_autonomous_cicd.yaml`.
+The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reduction, a local cryptographic Merkle state ledger (`context_ledger.yaml`), and basic autonomous CI/CD via `basic_autonomous_cicd.yaml`. Platform core components (`.nb/context/`, `.nb/config/`, `.nb/core/`, and master plans) stay encrypted and readable by the canonical `percipience` command, while free tier users' custom plans remain plaintext (non-encryptable), and basic platform tools remain unexposed to free tier users.
 
 ### Scope
 #### In Scope

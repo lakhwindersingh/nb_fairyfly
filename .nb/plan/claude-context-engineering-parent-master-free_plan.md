@@ -58,11 +58,27 @@ graph TD
 | **AST Token Reduction** | **✅ Full (60%–80% savings)** | ✅ Full | ✅ Full | ✅ Full + Tree-Sitter Daemon |
 | **Cryptographic Merkle Chain** | **✅ Local Linear SHA-256** | ✅ Local + Remote Sync | ✅ Local + Remote Sync | ✅ Multi-Region WORM S3/GCS |
 | **Autonomous CI/CD** | **✅ Basic Setup (1-Retry Heal)** | ✅ Advanced (3-Retry) | ✅ Full Multi-Stage | ✅ Closed-Loop Swarm Triad |
-| **Packaging & Obfuscation** | ❌ Plaintext / Open Repo | ❌ Plaintext | ✅ `.nbpack` AES-256 | ✅ `.nbpack` RAM Enclave |
+| **Packaging & Obfuscation** | 🔒 Platform Core Encrypted (percipience readable) / User Plans Plaintext (Non-Encryptable) | 🔒 Platform Core Encrypted / User Plans Plaintext | ✅ `.nbpack` AES-256 (Platform & User Plans) | ✅ `.nbpack` RAM Enclave (Zero-Disk Plaintext) |
+| **Basic Platform Tools Exposure** | ❌ Unexposed (No Plan to Expose Basic Tools) | ❌ Unexposed | ✅ Standard Tool Access | ✅ Full Unrestricted Platform SDK & Tool APIs |
 | **Deployment Model** | **Local IDE & Git Worktree** | Cloud Shared Gateway | Cloud Shared Gateway | Dedicated Private VPC |
 | **IDE Plugin Support** | **✅ IntelliJ & VSCode** | ✅ IntelliJ & VSCode | ✅ IntelliJ & VSCode | ✅ IntelliJ & VSCode + JCEF |
 | **Startup Workspace Prompt** | **✅ Interactive Balloon Prompt** | ✅ Interactive + SSO | ✅ Interactive + SSO | ✅ Zero-Touch Managed Policy |
 | **Sandbox Source Permissions** | **✅ Local Sandbox Broker** | ✅ Team RBAC | ✅ Enterprise RBAC | ✅ Zero-Trust Fine-Grained |
+
+### 2.1 Encryption, Obfuscation & Tooling Exposure Boundaries for Free Tier
+
+1. **Platform Core Infrastructure Encryption Invariant (`.nb/` & Master Plans)**:
+   - All platform governance components — `.nb/context/` (wire contracts, non-overridable security invariants, Merkle state ledgers), `.nb/config/` (billing tiers, AST compression thresholds, BYOR configuration), `.nb/core/` (all 38 platform execution engines), and master engineering plans (including both the enterprise master plan `claude-context-engineering-parent-master-plan.md` and this Free Community Edition `claude-context-engineering-parent-master-free_plan.md`) — **stay encrypted, obfuscated, and cryptographically sealed**.
+   - These platform assets are packaged within authenticated `.nbpack` / encrypted distribution envelopes and are **strictly readable and executable via the canonical `./.nb/bin/percipience` command** (and its companion JetBrains / PyCharm IDE execution service). Under no circumstance are internal platform engines, governance rules, or master plan assets exposed in unauthenticated or unencrypted formats.
+
+2. **Free Tier User Plans Invariant (Strictly Plaintext & Non-Encryptable)**:
+   - Custom layered plans, domain specifications, architecture blueprints, and prompts authored by Free Tier users within `workplace/` remain strictly **plaintext**.
+   - Free Tier users are restricted from packaging, obfuscating, or encrypting their user plans. Free tier user plans are **non-encryptable**; `.nbpack` compilation, AES-256 envelope sealing, and in-memory RAM enclave execution are reserved exclusively for higher commercial tiers (`plan_business` and `plan_enterprise`).
+
+3. **No Exposure of Basic Platform Tools to Free Tier Users**:
+   - There is **no plan to expose basic platform tools** or internal developer utilities to Free Tier users.
+   - Low-level compilation tools, raw packaging binaries (such as `percipience pack` or `NBPackEnvelope` compilers), AST rule modification tools, internal subagent toolkits, and raw cryptographic signing harnesses are **not exposed** to Free Tier users.
+   - Free Tier users interact with the system strictly through standard high-level gatekeeper actions (`gate`, `audit`, `cicd run`, `validate --layered`, `tokens summary`) and the IntelliJ / PyCharm plugin UI. The underlying basic engineering tools remain sealed and unexposed.
 
 ---
 
@@ -321,7 +337,7 @@ When other LLM plugins (e.g., JetBrains AI Assistant, GitHub Copilot, Continue, 
 | `CAP-11` | Master Context Ledger & Commit Traceability | Supported (Full Traceability) | `.nb/context/ledger/context_ledger.yaml` |
 | `CAP-12` | Universal Quad-Space Clean Bootstrapping | Supported (Automated in IDE Plugin) | `.nb/bin/percipience init` |
 | `CAP-13` | Zero-Overhead Dual-Mode Architecture | Supported (Single & Multi-Module) | `.nb/bin/percipience` |
-| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Paid Tier Only (Enterprise) | `.nb/core/nbpack_envelope.py` |
+| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Platform Assets (`.nb/` & Master Plans) Stay Encrypted & Readable by `percipience`; User Plan Packaging Paid Tier Only (Free User Plans Non-Encryptable) | `.nb/core/nbpack_envelope.py` |
 | `CAP-15` | External Issue Tracker & Jira MCP Server | Paid Tier Only (Team / Enterprise) | `.nb/config/issue_tracker_mcp.yaml` |
 | `CAP-16` | Autonomous CI/CD Triad | Supported (`basic_autonomous_cicd.yaml`) | `.nb/core/autonomous_cicd.py` |
 | `CAP-17` | Extensible Custom Agent Plugins | Supported (Local Custom Agents) | `.nb/core/agent_plugin_engine.py` |
