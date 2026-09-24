@@ -1,0 +1,35 @@
+workflow_id: wf_saas_portal_delivery
+name: Enterprise SaaS & Portal Multi-Module Delivery Flow
+description: Orchestrates Next.js/Tailwind frontend, API gateway, Stripe billing webhooks, and Playwright verification
+version: 1.0.0
+
+steps:
+  - id: step_openapi_contract_gate
+    name: OpenAPI 3.1 Contract Compatibility Gate
+    agent: agent_contract_compatibility_checker
+    inputs:
+      contract_path: .nb/context/contracts/portal_openapi_spec.yaml
+    enforce_merkle_seal: true
+
+  - id: step_portal_frontend_scaffold
+    name: Build Responsive React/Tailwind Frontend
+    agent: agent_portal_developer
+    inputs:
+      target_module: workplace/modules/mod_portal_marketing
+      theme_tokens: workplace/modules/mod_portal_marketing/config/tailwind.config.js
+    enforce_merkle_seal: true
+
+  - id: step_saas_backend_gateway
+    name: Gateway & Stripe Webhook Integration
+    agent: agent_saas_backend_developer
+    inputs:
+      target_module: workplace/portal
+      webhook_contract: .nb/context/contracts/billing_webhook_contract.json
+    enforce_merkle_seal: true
+
+  - id: step_saas_security_audit
+    name: Multi-Tenant SOC 2 & RLS Security Audit
+    agent: agent_enterprise_saas_portal_architect
+    inputs:
+      scope: workplace/modules/mod_portal_admin
+    enforce_merkle_seal: true

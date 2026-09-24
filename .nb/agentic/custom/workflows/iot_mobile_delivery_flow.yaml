@@ -1,0 +1,35 @@
+workflow_id: wf_iot_mobile_delivery
+name: Connected IoT, Embedded Firmware & Mobile Delivery Flow
+description: Orchestrates BLE GATT contract verification, FreeRTOS/Zephyr firmware, KMP mobile client, and virtual loopback bridge
+version: 1.0.0
+
+steps:
+  - id: step_ble_gatt_contract_gate
+    name: BLE GATT Service Contract Compatibility Gate
+    agent: agent_contract_compatibility_checker
+    inputs:
+      contract_path: .nb/context/contracts/ble_gatt_spec.yaml
+    enforce_merkle_seal: true
+
+  - id: step_embedded_firmware_build
+    name: FreeRTOS / Zephyr MCU Firmware Verification
+    agent: agent_iot_developer
+    inputs:
+      target_module: workplace/modules/iot_node
+      rules_ref: .nb/context/custom/rules/embedded_c_safety_rules.md
+    enforce_merkle_seal: true
+
+  - id: step_mobile_kmp_client
+    name: KMP Shared BLE Client & UI Verification
+    agent: agent_mobile_developer
+    inputs:
+      target_module: workplace/modules/mobile_app
+      rules_ref: .nb/context/custom/rules/mobile_ble_lifecycle_rules.md
+    enforce_merkle_seal: true
+
+  - id: step_iot_ecosystem_audit
+    name: BLE Mesh, Power & Security Invariant Audit
+    agent: agent_iot_mobile_ecosystem_architect
+    inputs:
+      scope: workplace/modules/iot_node,workplace/modules/mobile_app
+    enforce_merkle_seal: true
