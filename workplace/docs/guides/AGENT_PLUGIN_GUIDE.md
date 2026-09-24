@@ -21,7 +21,7 @@ The **Percipience Healthy Integration Pattern** solves this by establishing a co
 flowchart TD
   Register["1. Plugin Registration<br/>(Scaffold from Template & Seal Merkle DAG)"]
   Integrate["2. Workflow DAG Integration<br/>(Insert step into pr_gatekeeper.yaml)"]
-  AcquireWT["3. Ephemeral Worktree Isolation<br/>(.workspaces/wt_{agent_id})"]
+  AcquireWT["3. Ephemeral Worktree Isolation<br/>(.nb/workspaces/wt_{agent_id})"]
   ASTExec["4. AST Pruned Execution<br/>(Token Tracking & Budget Enforced)"]
   SentCheck{"5. Sentinel Security &<br/>Contract Verification"}
   SealMerkle["6. Merkle DAG Block Sealed<br/>(Generate New Recovery Point RP_k)"]
@@ -88,7 +88,7 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
   --agent agent_custom_quality_guard \
   --task "Analyze AST complexity across workplace/modules/mod_portal_marketing"
 ```
-*Output:* Provisions `.workspaces/wt_agent_custom_quality_guard`, enforces AST pruning, verifies contracts, and seals Merkle Block upon pass.
+*Output:* Provisions `.nb/workspaces/wt_agent_custom_quality_guard`, enforces AST pruning, verifies contracts, and seals Merkle Block upon pass.
 
 ### 3.4. Surgically Rolling Back an Agent or Affected Module
 ```bash

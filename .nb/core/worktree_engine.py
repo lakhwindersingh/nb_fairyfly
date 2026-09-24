@@ -1,6 +1,6 @@
 """
 Percipience Ephemeral Git Worktree & Subagent Lease Manager
-Provisions isolated worktrees under .workspaces/wt_{agent_id}
+Provisions isolated worktrees under .nb/workspaces/wt_{agent_id}
 with time-bound TTL leases, active POSIX PID probing, optional
 Redis 7.x Redlock distributed lease backend, and pre-merge canary verification.
 """
@@ -57,7 +57,7 @@ class WorktreeEngine:
 
     @staticmethod
     def _lease_file(workspace_root: Path) -> Path:
-        p = workspace_root / ".workspaces" / "leases.json"
+        p = workspace_root / ".nb" / "workspaces" / "leases.json"
         p.parent.mkdir(parents=True, exist_ok=True)
         if not p.exists():
             with open(p, "w", encoding="utf-8") as f:
@@ -66,7 +66,7 @@ class WorktreeEngine:
 
     @classmethod
     def acquire(cls, workspace_root: Path, agent_id: str, base_branch: str = "main", ttl_seconds: int = 3600, use_redis: bool = False) -> Dict[str, Any]:
-        wt_dir = workspace_root / ".workspaces" / f"wt_{agent_id}"
+        wt_dir = workspace_root / ".nb" / "workspaces" / f"wt_{agent_id}"
         branch_name = f"wt_branch_{agent_id}"
         lease_path = cls._lease_file(workspace_root)
 
@@ -213,7 +213,7 @@ class WorktreeEngine:
         Executes an automated canary test pass inside the isolated ephemeral worktree
         before allowing atomic branch merging into main.
         """
-        wt_dir = workspace_root / ".workspaces" / f"wt_{agent_id}"
+        wt_dir = workspace_root / ".nb" / "workspaces" / f"wt_{agent_id}"
         if not wt_dir.exists():
             return {
                 "agent_id": agent_id,

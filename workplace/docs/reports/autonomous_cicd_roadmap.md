@@ -35,7 +35,7 @@ graph TD
 
 ### 2.1. Pillar 1: Self-Sustaining Engine (`SelfSustainingEngine`)
 The self-sustaining subsystem eliminates operational toil and guarantees that the CI/CD environment remains healthy indefinitely without human DevOps intervention:
-- **Autonomous Worktree Lease Reclamation**: Tracks all ephemeral subagent worktrees (`.workspaces/wt_*`). Reclaims expired leases immediately, releasing system file handles, ports, and memory.
+- **Autonomous Worktree Lease Reclamation**: Tracks all ephemeral subagent worktrees (`.nb/workspaces/wt_*`). Reclaims expired leases immediately, releasing system file handles, ports, and memory.
 - **Context Garbage Collection**: Cleans orphaned temporary diffs, test traces, and stale AST caches while preserving cryptographic Merkle audit records.
 - **Continuous Merkle Ledger Reconciliation**: Automatically verifies SHA-256 state chain continuity (`context/ledger/context_ledger.yaml`) and syncs sanitized public projections (`context_ledger.public.yaml`).
 - **Token FinOps Quota Auto-Throttling**: Monitors token burn rates against predefined enterprise velocity thresholds. If an agent swarm exhibits runaway recursion, it auto-downshifts reasoning tiers from Tier A (Opus/Sonnet) to Tier B (Haiku/Flash) before budget exhaustion.

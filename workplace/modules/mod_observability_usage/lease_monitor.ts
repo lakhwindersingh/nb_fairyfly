@@ -15,14 +15,14 @@ export class LeaseMonitorService {
     return [
       {
         agentId: "subagent_architect_01",
-        sandboxPath: ".workspaces/wt_architect_01",
+        sandboxPath: ".nb/workspaces/wt_architect_01",
         branch: "wt_branch_architect_01",
         remainingTtlSec: 1840,
         status: "ACTIVE",
       },
       {
         agentId: "subagent_dev_gate_02",
-        sandboxPath: ".workspaces/wt_dev_02",
+        sandboxPath: ".nb/workspaces/wt_dev_02",
         branch: "wt_branch_dev_02",
         remainingTtlSec: 3290,
         status: "ACTIVE",

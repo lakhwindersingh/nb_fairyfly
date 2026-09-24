@@ -24,6 +24,7 @@ module_scope:
   denied_paths:
   - .nb/context/invariants
   - .git
+  - .nb/workspaces
   - .workspaces
 contracts_and_invariants:
   enforce_tiered_hierarchy: true

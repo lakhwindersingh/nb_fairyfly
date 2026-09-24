@@ -66,7 +66,7 @@ graph TD
 ### 3.1. Closed-Loop Autonomous CI/CD Triad (Sustain • Heal • Improve)
 - **Problem with Legacy Frameworks:** When a GitHub Actions or Jenkins workflow fails, execution terminates. A human DevOps engineer or software developer must manually read the logs, replicate locally, create a fix, and push a commit.
 - **The Percipience Advantage:** Percipience treats CI/CD as an autonomous, self-healing execution loop.
-  - **Self-Sustaining:** Automatically reclaims expired worktree leases (`.workspaces/wt_*`), purges orphaned diffs, and checks Merkle state chain continuity.
+  - **Self-Sustaining:** Automatically reclaims expired worktree leases (`.nb/workspaces/wt_*`), purges orphaned diffs, and checks Merkle state chain continuity.
   - **Self-Recovering:** Deploys bounded diagnostic subagent repairs in isolated worktrees with an automatic fallback to sub-1.2s surgical rollback (`RP_k`) if healing exceeds SLAs.
   - **Self-Improving:** Tracks failure recurrence distributions and dynamically tunes AST compression thresholds and cognitive routing tiers.
 

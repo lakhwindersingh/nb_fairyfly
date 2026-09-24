@@ -94,7 +94,7 @@ class AgentPluginEngine:
             },
             "module_scope": {
                 "allowed_modules": modules,
-                "denied_paths": [".nb/context/invariants", "context/invariants", ".git", ".workspaces"]
+                "denied_paths": [".nb/context/invariants", "context/invariants", ".git", ".nb/workspaces", ".workspaces"]
             },
             "contracts_and_invariants": {
                 "enforce_tiered_hierarchy": True,

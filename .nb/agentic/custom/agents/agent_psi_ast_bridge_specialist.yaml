@@ -3,7 +3,7 @@ name: JetBrains PSI Visitor, AST Token Compression & Wire Contract Inspection Sp
 model: claude-3-5-haiku
 model_tier: tier_b
 role: PSI Visitor, AST Token Compression & Wire Contract Inspection Annotator
-sandboxed_worktree: .workspaces/wt_psi_bridge_01
+sandboxed_worktree: .nb/workspaces/wt_psi_bridge_01
 module_scope: workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/psi/
 system_prompt: |
   You are the PSI AST Bridge Specialist.

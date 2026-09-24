@@ -201,19 +201,19 @@ performance_targets:
 ### 3.1. `.nb/agentic/custom/agents/agent_vscode_extension_architect.yaml`
 - **Role**: VSCode Extension API, TypeScript, esbuild Bundler & VSIX Packaging Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_vscode_arch_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_vscode_arch_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/`
 
 ### 3.2. `.nb/agentic/custom/agents/agent_lsp_language_features_specialist.yaml`
 - **Role**: LSP 3.17 Protocol Implementation, JSON-RPC, CodeLens & Diagnostic Annotations
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
-- **Sandboxed Worktree**: `.workspaces/wt_lsp_spec_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_lsp_spec_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/lsp/`, `workplace/modules/mod_vscode_extension/src/providers/`
 
 ### 3.3. `.nb/agentic/custom/agents/agent_vscode_webview_ux_engineer.yaml`
 - **Role**: Webview Panel UI, Nonce CSP Security, Mermaid Graph Renderer & Dynamic Action Buttons
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_vscode_ui_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_vscode_ui_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/webview/`, `user/outputs/dashboard/`
 
 ---
@@ -284,7 +284,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant Agent as agent_lsp_language_features_specialist
-  participant WT as Ephemeral Worktree (.workspaces/mod_vscode_extension)
+  participant WT as Ephemeral Worktree (.nb/workspaces/mod_vscode_extension)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as CSP & Threading Sentinel
   participant Ledger as Context Ledger (.nb/context/ledger)

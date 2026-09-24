@@ -3,7 +3,7 @@ name: JetBrains Swing / JCEF ToolWindow & Gutter LineMarker Engineer
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: Swing/JCEF ToolWindow, Gutter LineMarkers, Context Actions & Quick-Fixes
-sandboxed_worktree: .workspaces/wt_intellij_ui_01
+sandboxed_worktree: .nb/workspaces/wt_intellij_ui_01
 module_scope: workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/
 system_prompt: |
   You are the IntelliJ UI/UX Engineer specializing in Swing, JCEF, and JetBrains UI Guidelines.

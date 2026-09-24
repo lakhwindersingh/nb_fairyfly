@@ -156,19 +156,19 @@ required_fields:
 ### 3.1. `.nb/agentic/custom/agents/agent_saas_portal_architect.yaml`
 - **Role**: Next.js App Router, Gateway Architecture, RBAC & Multi-Tenant Security Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_saas_arch_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_saas_arch_01`
 - **Module Scope**: `workplace/modules/mod_saas_portal/`, `workplace/modules/mod_api_gateway/`
 
 ### 3.2. `.nb/agentic/custom/agents/agent_billing_integration_engineer.yaml`
 - **Role**: Stripe/Paddle Subscriptions, Usage-Based Metering & Rev-Share Ledger Engineer
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
-- **Sandboxed Worktree**: `.workspaces/wt_billing_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_billing_01`
 - **Module Scope**: `workplace/modules/mod_billing_engine/`
 
 ### 3.3. `.nb/agentic/custom/agents/agent_observability_frontend_specialist.yaml`
 - **Role**: Tailwind CSS, 5-Tab Observability Hub UI & Real-Time WebSocket Telemetry Specialist
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_observability_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_observability_01`
 - **Module Scope**: `workplace/modules/mod_corp_site/`, `user/outputs/dashboard/`
 
 ---
@@ -213,7 +213,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant Agent as agent_saas_portal_architect
-  participant WT as Ephemeral Worktree (.workspaces/mod_saas_portal)
+  participant WT as Ephemeral Worktree (.nb/workspaces/mod_saas_portal)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as RLS & Accessibility Sentinel
   participant Ledger as Context Ledger (.nb/context/ledger)

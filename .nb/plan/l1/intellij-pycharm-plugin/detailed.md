@@ -215,19 +215,19 @@ performance_targets:
 ### 3.1. `.nb/agentic/custom/agents/agent_jetbrains_plugin_architect.yaml`
 - **Role**: JetBrains Platform SDK, Gradle IntelliJ Plugin, PSI Navigation & ToolWindow Architecture Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_jetbrains_arch_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_jetbrains_arch_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/`
 
 ### 3.2. `.nb/agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml`
 - **Role**: PSI Visitor, AST Token Compression & Wire Contract Inspection Annotator
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
-- **Sandboxed Worktree**: `.workspaces/wt_psi_bridge_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_psi_bridge_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/psi/`
 
 ### 3.3. `.nb/agentic/custom/agents/agent_intellij_ui_ux_engineer.yaml`
 - **Role**: Swing/JCEF ToolWindow, Gutter LineMarkers, Context Actions & Quick-Fixes
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_intellij_ui_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_intellij_ui_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/`
 
 ---\n
@@ -343,7 +343,7 @@ graph TD
 sequenceDiagram
   autonumber
   participant Agent as agent_jetbrains_plugin_architect
-  participant WT as Ephemeral Worktree (.workspaces/mod_intellij_plugin)
+  participant WT as Ephemeral Worktree (.nb/workspaces/mod_intellij_plugin)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as Poisoning & Threading Sentinel
   participant Ledger as Context Ledger (.nb/context/ledger)

@@ -100,7 +100,7 @@ The repository provides the unified [`.nb/.nb/bin/percipience`](file:///Users/la
 flowchart TD
   MVS["<b>1. Author MVS Inputs</b><br/>Drop sparse requirements, schemas, or sketches into <code>user/inputs/</code>"]
   Derive["<b>2. Trigger Autonomous Derivation</b><br/>Percipience infers configs, wire contracts, and code skeletons into <code>workplace/</code>"]
-  Worktree["<b>3. Ephemeral Worktree Isolation</b><br/>Subagents claim isolated sandboxes (<code>.workspaces/wt_*</code>) with AST token pruning"]
+  Worktree["<b>3. Ephemeral Worktree Isolation</b><br/>Subagents claim isolated sandboxes (<code>.nb/workspaces/wt_*</code>) with AST token pruning"]
   Verify["<b>4. Independent Verification Gates</b><br/>Validate AST schemas, test coverage, and contract compatibility"]
   
   MVS --> Derive --> Worktree --> Verify
@@ -162,7 +162,7 @@ When multiple autonomous subagents work concurrently (e.g., frontend developer, 
 ./.nb/.nb/bin/percipience worktree acquire --agent agent_dev_01 --ttl 3600
 
 # The subagent executes inside:
-# .workspaces/wt_agent_dev_01/
+# .nb/workspaces/wt_agent_dev_01/
 # All file modifications are isolated from the main branch.
 
 # List active leases

@@ -39,7 +39,7 @@ graph TD
    - **Tier A (High-Reasoning)**: Architecture, cross-module contracts, security audits (`claude-3-7-sonnet`, `gemini-2.0-pro`, `gpt-4o`, `deepseek-r1`).
    - **Tier B (High-Throughput)**: AST extraction, test scaffolding, diff application (`claude-3-5-haiku`, `gemini-2.0-flash`, `gpt-4o-mini`).
    - **Tier C (Deterministic/Offline)**: AST pruning, SHA-256 Merkle chain verification, regex scanning.
-5. **CAP-05: Git Worktree Workspace Isolation**: Ephemeral worktrees (`.workspaces/subagent_<id>/`) preventing concurrent file conflicts during parallel swarm execution.
+5. **CAP-05: Git Worktree Workspace Isolation**: Ephemeral worktrees (`.nb/workspaces/subagent_<id>/`) preventing concurrent file conflicts during parallel swarm execution.
 6. **CAP-06: Spec-to-Code Semantic Parity & Anti-Drift Engine**: Mathematical vector similarity and AST contract scoring (0.00–1.00) with Revert and Evolve modes.
 7. **CAP-07: Bounded TDD Self-Healing & Test Quarantine**: Maximum 3 self-repair retries before quarantining failing tests in `context_ledger.yaml`.
 8. **CAP-08: Cryptographic Ledger Hash-Chain (Merkle Engine)**: Immutable SHA-256 chaining of all artifact diffs, test evidence, and state transitions.

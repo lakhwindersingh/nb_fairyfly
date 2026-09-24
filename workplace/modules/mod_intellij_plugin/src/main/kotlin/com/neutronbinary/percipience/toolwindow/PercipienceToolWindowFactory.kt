@@ -1,5 +1,6 @@
 package com.neutronbinary.percipience.toolwindow
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
@@ -191,18 +192,20 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                         indicator.isIndeterminate = true
                         indicator.text = "Executing .nb/bin/percipience gate..."
                         val res = runBlocking { execService.runGatekeeper() }
-                        if (res.success) {
-                            Messages.showInfoMessage(
-                                project,
-                                "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
-                                "Gatekeeper Passed"
-                            )
-                        } else {
-                            Messages.showErrorDialog(
-                                project,
-                                "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                "Gatekeeper Failed"
-                            )
+                        ApplicationManager.getApplication().invokeLater {
+                            if (res.success) {
+                                Messages.showInfoMessage(
+                                    project,
+                                    "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                    "Gatekeeper Passed"
+                                )
+                            } else {
+                                Messages.showErrorDialog(
+                                    project,
+                                    "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                    "Gatekeeper Failed"
+                                )
+                            }
                         }
                     }
                 })
@@ -216,18 +219,20 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                         indicator.isIndeterminate = true
                         indicator.text = "Executing .nb/bin/percipience audit..."
                         val res = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
-                        if (res.success) {
-                            Messages.showInfoMessage(
-                                project,
-                                "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
-                                "Merkle Audit"
-                            )
-                        } else {
-                            Messages.showErrorDialog(
-                                project,
-                                "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                "Merkle Audit Error"
-                            )
+                        ApplicationManager.getApplication().invokeLater {
+                            if (res.success) {
+                                Messages.showInfoMessage(
+                                    project,
+                                    "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
+                                    "Merkle Audit"
+                                )
+                            } else {
+                                Messages.showErrorDialog(
+                                    project,
+                                    "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                    "Merkle Audit Error"
+                                )
+                            }
                         }
                     }
                 })
@@ -241,18 +246,20 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                         indicator.isIndeterminate = true
                         indicator.text = "Executing .nb/bin/percipience cicd run..."
                         val res = runBlocking { execService.runBasicCicd() }
-                        if (res.success) {
-                            Messages.showInfoMessage(
-                                project,
-                                "CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
-                                "Autonomous CI/CD Pipeline"
-                            )
-                        } else {
-                            Messages.showErrorDialog(
-                                project,
-                                "CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                "CI/CD Failure"
-                            )
+                        ApplicationManager.getApplication().invokeLater {
+                            if (res.success) {
+                                Messages.showInfoMessage(
+                                    project,
+                                    "CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                    "Autonomous CI/CD Pipeline"
+                                )
+                            } else {
+                                Messages.showErrorDialog(
+                                    project,
+                                    "CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                    "CI/CD Failure"
+                                )
+                            }
                         }
                     }
                 })
@@ -266,18 +273,20 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                         indicator.isIndeterminate = true
                         indicator.text = "Executing .nb/bin/percipience validate --layered..."
                         val res = runBlocking { execService.runValidateLayered() }
-                        if (res.success) {
-                            Messages.showInfoMessage(
-                                project,
-                                "Layered Context Validation Passed:\n\n${res.stdout}",
-                                "Layered Context Valid"
-                            )
-                        } else {
-                            Messages.showErrorDialog(
-                                project,
-                                "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
-                                "Validation Failed"
-                            )
+                        ApplicationManager.getApplication().invokeLater {
+                            if (res.success) {
+                                Messages.showInfoMessage(
+                                    project,
+                                    "Layered Context Validation Passed:\n\n${res.stdout}",
+                                    "Layered Context Valid"
+                                )
+                            } else {
+                                Messages.showErrorDialog(
+                                    project,
+                                    "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
+                                    "Validation Failed"
+                                )
+                            }
                         }
                     }
                 })
@@ -290,10 +299,12 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     override fun run(indicator: ProgressIndicator) {
                         indicator.isIndeterminate = true
                         val res = runBlocking { execService.runTokensSummary() }
-                        if (res.success) {
-                            Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
-                        } else {
-                            Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
+                        ApplicationManager.getApplication().invokeLater {
+                            if (res.success) {
+                                Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
+                            } else {
+                                Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
+                            }
                         }
                     }
                 })
@@ -307,7 +318,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Worktrees...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runWorktreeList() }
-                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "No active worktrees" }, "Worktree Manager")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout.ifEmpty { "No active worktrees" }, "Worktree Manager")
+                            }
                         }
                     })
                 }
@@ -318,7 +331,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Agents...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runAgentList() }
-                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "Registered agents active" }, "Agent Registry")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout.ifEmpty { "Registered agents active" }, "Agent Registry")
+                            }
                         }
                     })
                 }
@@ -329,7 +344,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Checking Semantic Parity...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runDriftCheck() }
-                            Messages.showInfoMessage(project, res.stdout, "Anti-Drift Parity Check")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Anti-Drift Parity Check")
+                            }
                         }
                     })
                 }
@@ -345,10 +362,12 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                             val planPath = ".nb/plan/l1/intellij-pycharm-plugin/detailed.md"
                             val outPath = ".nb/bundles/intellij_pycharm_plugin_domain.nbpack"
                             val res = runBlocking { execService.runLayerPack(planPath, outPath) }
-                            if (res.success) {
-                                Messages.showInfoMessage(project, "Layer package compiled successfully!\n\n${res.stdout}", "NBPack Sealed")
-                            } else {
-                                Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Packaging Error")
+                            ApplicationManager.getApplication().invokeLater {
+                                if (res.success) {
+                                    Messages.showInfoMessage(project, "Layer package compiled successfully!\n\n${res.stdout}", "NBPack Sealed")
+                                } else {
+                                    Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Packaging Error")
+                                }
                             }
                         }
                     })
@@ -360,7 +379,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Provisioning Gateway...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runProvisionPortal("all") }
-                            Messages.showInfoMessage(project, res.stdout, "Gateway Provisioning")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Gateway Provisioning")
+                            }
                         }
                     })
                 }
@@ -371,7 +392,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Generating Parity Report...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runDriftReport() }
-                            Messages.showInfoMessage(project, res.stdout, "Cognitive Parity Breakdown")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Cognitive Parity Breakdown")
+                            }
                         }
                     })
                 }
@@ -385,7 +408,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Swarm Triad...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runSwarmAudit() }
-                            Messages.showInfoMessage(project, res.stdout, "Swarm Triad Governance")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Swarm Triad Governance")
+                            }
                         }
                     })
                 }
@@ -396,7 +421,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing Private VPC Enclave...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runRepoStatus() }
-                            Messages.showInfoMessage(project, res.stdout, "Private VPC Enclave Status")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Private VPC Enclave Status")
+                            }
                         }
                     })
                 }
@@ -407,7 +434,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                     ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Fetching WORM Egress Audit...", false) {
                         override fun run(indicator: ProgressIndicator) {
                             val res = runBlocking { execService.runEgressList() }
-                            Messages.showInfoMessage(project, res.stdout, "Immutable WORM Audit Trail")
+                            ApplicationManager.getApplication().invokeLater {
+                                Messages.showInfoMessage(project, res.stdout, "Immutable WORM Audit Trail")
+                            }
                         }
                     })
                 }
@@ -653,7 +682,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Claude Code AST Context...", false) {
                 override fun run(indicator: ProgressIndicator) {
                     val res = runBlocking { execService.runContextExport("claude-code", ".percipience_claude_context.md") }
-                    Messages.showInfoMessage(project, res.stdout, "Claude Code Context Export")
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage(project, res.stdout, "Claude Code Context Export")
+                    }
                 }
             })
         }
@@ -664,7 +695,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Gemini CLI AST Context...", false) {
                 override fun run(indicator: ProgressIndicator) {
                     val res = runBlocking { execService.runContextExport("gemini-cli", ".percipience_gemini_context.md") }
-                    Messages.showInfoMessage(project, res.stdout, "Gemini CLI Context Export")
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage(project, res.stdout, "Gemini CLI Context Export")
+                    }
                 }
             })
         }
@@ -675,7 +708,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Terminal FinOps Status...", false) {
                 override fun run(indicator: ProgressIndicator) {
                     val res = runBlocking { execService.runTerminalStatus() }
-                    Messages.showInfoMessage(project, res.stdout, "Terminal Agent FinOps Status")
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage(project, res.stdout, "Terminal Agent FinOps Status")
+                    }
                 }
             })
         }

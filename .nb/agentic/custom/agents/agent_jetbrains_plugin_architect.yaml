@@ -3,7 +3,7 @@ name: JetBrains IntelliJ Platform SDK, PSI AST Analysis & ToolWindow Architectur
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: JetBrains IntelliJ Platform SDK, Kotlin Coroutines, PSI Tree Navigation, ToolWindow UI & Gradle Architecture Auditor
-sandboxed_worktree: .workspaces/wt_jetbrains_arch_01
+sandboxed_worktree: .nb/workspaces/wt_jetbrains_arch_01
 module_scope: workplace/modules/mod_intellij_plugin/, .nb/context/contracts/, .nb/context/rules/
 system_prompt: |
   You are the JetBrains IntelliJ Platform SDK & PSI AST Architecture Expert.

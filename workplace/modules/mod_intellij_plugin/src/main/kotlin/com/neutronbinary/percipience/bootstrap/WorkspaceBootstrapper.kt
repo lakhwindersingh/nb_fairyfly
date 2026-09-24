@@ -323,7 +323,7 @@ steps:
   - step_id: "sustain_maintenance"
     name: "Self-Sustaining Workspace Hygiene"
     executor: "platform.self_sustaining_engine"
-    inputs: ["user/scratch/", ".workspaces/"]
+    inputs: ["user/scratch/", ".nb/workspaces/"]
     failure_action: "warn_and_continue"
 
   - step_id: "ast_token_reduction"

@@ -3,7 +3,7 @@ name: Terminal Mode Agent Interceptor, AST Context Optimizer & FinOps Telemetry 
 model: claude-3-5-haiku
 model_tier: tier_b
 role: Terminal Mode Agent Interceptor, Shell Environment Customizer & Token FinOps Sentinel
-sandboxed_worktree: .workspaces/wt_terminal_agent_01
+sandboxed_worktree: .nb/workspaces/wt_terminal_agent_01
 module_scope: workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/terminal/,workplace/core/terminal_agent_ast_proxy.py
 system_prompt: |
   You are the Terminal Mode Agent Specialist.

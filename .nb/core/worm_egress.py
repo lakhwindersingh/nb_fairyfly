@@ -53,7 +53,7 @@ class WORMEgressManager:
             compliance_mode = "LOCKED_RETENTION"
         else:
             provider = "LOCAL_WORM_VAULT_EMULATION"
-            vault_dir = workspace_root / ".workspaces" / "worm_vault"
+            vault_dir = workspace_root / ".nb" / "workspaces" / "worm_vault"
             vault_dir.mkdir(parents=True, exist_ok=True)
             vault_uri = f"file://{vault_dir}/block_{block_id:06d}_{block_hash[:16]}.json"
             compliance_mode = "ENFORCE_IMMUTABLE_MODE"

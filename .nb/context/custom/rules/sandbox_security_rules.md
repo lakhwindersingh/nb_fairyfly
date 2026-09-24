@@ -12,4 +12,4 @@
 - Any attempt to modify ledger files from a sandboxed plugin is immediately blocked (`DENIED`) and recorded as a security audit violation.
 
 ## 3. Sandboxed Worktree Isolation for Agent Writes
-- Sandboxed LLM agents generating code modifications must write to isolated ephemeral review worktrees (`.workspaces/`) or provide unified diffs, never mutating main branch files directly without verification gate approval.
+- Sandboxed LLM agents generating code modifications must write to isolated ephemeral review worktrees (`.nb/workspaces/`) or provide unified diffs, never mutating main branch files directly without verification gate approval.

@@ -41,7 +41,7 @@
       "slug": "tenant-provision-test",
       "tier": "plan_team",
       "status": "ACTIVE",
-      "created_at": "2026-09-24T17:59:57.898284+00:00",
+      "created_at": "2026-09-24T19:30:10.900811+00:00",
       "settings": {
         "max_concurrent_worktrees": 5,
         "monthly_pr_audits_quota": 5000
@@ -57,7 +57,33 @@
           "basic_platform_tools_exposure": false,
           "private_vpc_deploy": false
         },
-        "provisioned_at": "2026-09-24T17:59:57.898291+00:00"
+        "provisioned_at": "2026-09-24T19:30:10.900818+00:00"
+      }
+    },
+    "tenant_community_default": {
+      "tenant_id": "tenant_community_default",
+      "name": "Tenant Community Default",
+      "slug": "tenant-community-default",
+      "tier": "plan_enterprise",
+      "status": "ACTIVE",
+      "created_at": "2026-09-24T19:30:03.571793+00:00",
+      "settings": {
+        "max_concurrent_worktrees": -1,
+        "monthly_pr_audits_quota": -1
+      },
+      "metadata": {
+        "entitlements": {
+          "ast_token_pruning": true,
+          "merkle_chain_audit": true,
+          "basic_autonomous_cicd": true,
+          "platform_core_encryption": true,
+          "nbpack_obfuscation": true,
+          "user_plan_encryption": true,
+          "basic_platform_tools_exposure": true,
+          "private_vpc_deploy": true,
+          "dedicated_slack_sla": true
+        },
+        "provisioned_at": "2026-09-24T19:30:03.571799+00:00"
       }
     }
   },
@@ -128,7 +154,7 @@
       "hostname": "MacBook-Pro-4.local",
       "ip_address": "127.0.0.1",
       "os_info": "macOS/Linux",
-      "worktree_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.workspaces/scaffold_proj_crypto_arbitrage_01",
+      "worktree_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/scaffold_proj_crypto_arbitrage_01",
       "status": "HEALTHY",
       "last_heartbeat": "2026-09-21T01:33:22.907038+00:00",
       "metadata": {

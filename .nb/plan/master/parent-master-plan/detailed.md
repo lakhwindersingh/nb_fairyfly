@@ -15,7 +15,7 @@ The objective is to establish an enterprise-grade, generic, mature, domain-agnos
     - **Tier B (Fast / Compact / High-Throughput)**: AST symbol extraction, unified diff application, test scaffolding, commit drafting, and dashboard JSON serialization. Reference models: `claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`.
     - **Tier C (Deterministic / Offline Rules Engine)**: Local AST pruning, cryptographic SHA-256 Merkle chain verification, and offline regex sentinel scanning.
     - Backed by hard budget ceilings, token burn monitoring, and automatic throttle/down-shift policies.
-5. **Git Worktree Workspace Isolation for Concurrent Subagents**: An isolated concurrent execution engine leveraging ephemeral Git worktrees (`.workspaces/subagent_<id>/`). Subagents develop in sandboxed worktrees with independent working directories, preventing concurrent file merge collisions and ledger write races, backed by atomic verification gate merges back to `main`.
+5. **Git Worktree Workspace Isolation for Concurrent Subagents**: An isolated concurrent execution engine leveraging ephemeral Git worktrees (`.nb/workspaces/subagent_<id>/`). Subagents develop in sandboxed worktrees with independent working directories, preventing concurrent file merge collisions and ledger write races, backed by atomic verification gate merges back to `main`.
 6. **Automated Spec-to-Code Semantic Parity & Anti-Drift Engine**: A quantitative anti-drift subsystem measuring semantic parity (0.00 to 1.00) between `user/inputs/` specs and `workplace/src/` implementations via AST contract analysis and semantic embeddings. Features a bi-directional reconciliation protocol supporting both *Revert Mode* (restoring drifted code to spec) and *Evolve Mode* (updating the specification delta via HITL approval).
 7. **Bounded TDD Self-Healing Engine with Test Quarantine Ledger**: A strictly bounded self-healing loop (configurable max retry attempts, default: 3) for test failures. Prevents infinite looping and token thrashing by automatically quarantining persistently failing or flaky tests into `quarantined_tests` in `context_ledger.yaml`, auto-filing high-priority tickets in `remaining_issues`, and safely pausing at `user/hitl/`.
 8. **Cryptographic Ledger Hash-Chain & Tamper-Evident Audit Trail**: A tamper-evident Merkle block chaining mechanism (`ledger_chain`) securing every transition in `context_ledger.yaml`. Each ledger block records `{ block_id, prev_block_hash, current_block_hash, merkle_root, timestamp }`, guaranteeing non-repudiation and enterprise regulatory auditability (SOC2 Type II, ISO 27001, HIPAA).
@@ -113,7 +113,7 @@ The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reducti
   - Configurable increment budget limits (e.g., maximum dollar/token cap per milestone).
   - Spend velocity monitoring with automatic down-shifting to Tier B when approaching 85% budget threshold.
 - **Git Worktree Concurrency Engine**:
-  - Ephemeral branch and worktree provisioning under `.workspaces/subagent_<id>/`.
+  - Ephemeral branch and worktree provisioning under `.nb/workspaces/subagent_<id>/`.
   - Concurrency locks protecting `context_ledger.yaml` writes.
   - Atomic merge verification gate merging completed subagent worktrees into `main`.
 - **Automated Spec-to-Code Semantic Parity & Anti-Drift Engine**:
@@ -261,7 +261,7 @@ The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reducti
   - Automatically route tasks: Tier A (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`) for complex derivation, verification gates, and security audits; Tier B (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`) for AST parsing, diff updates, docstrings, and commit formatting.
   - Enforce token budget limits per sprint milestone; pause or down-shift when spend exceeds 85% of ceiling.
 - **Git Worktree Isolation & Atomic Merging**:
-  - Automatically spin up isolated ephemeral worktrees in `.workspaces/subagent_<id>/` for concurrent tasks.
+  - Automatically spin up isolated ephemeral worktrees in `.nb/workspaces/subagent_<id>/` for concurrent tasks.
   - Require verification gate pass before executing atomic merge back to `main`.
 - **Automated Spec-to-Code Semantic Parity & Drift Reconciliation**:
   - Compute a continuous semantic parity score ($0.00 - 1.00$).
@@ -400,12 +400,12 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
   - `.nb/` (Platform Agentic CI/CD System): Houses the complete context engineering operating system, execution engines (`.nb/core/`), gatekeeper CLI (`.nb/bin/percipience`), platform configurations (`.nb/config/`), contracts and Merkle state chain ledgers (`.nb/context/`), declarative workflows and prompt suites (`.nb/agentic/`), CI/CD git hooks (`.nb/scripts/`), and platform verification suites (`.nb/tests/`).
   - `workplace/` (Project-Specific Layered Plan Implementations): Strictly reserved for customer project source code, layered domain modules (`workplace/modules/mod_*`), SaaS web portals (`workplace/portal/`), UI source trees (`workplace/src/`), project configurations (`workplace/config/site_config.yaml`), cross-module shared DTOs/primitives (`workplace/shared/`), living documentation (`workplace/docs/`), and project-specific tests (`workplace/tests/`). Zero platform execution engine logic lives in `workplace/`.
   - `user/` (User Enclave): Dedicated input/output/HITL directory (`user/inputs/` for MVS specifications, `user/hitl/` for human review/quarantines, and `user/outputs/` for generated dashboards and maturity reports).
-  - `.workspaces/` (Ephemeral Concurrency Enclave): Isolated subagent git worktrees and process lease locks managed by `.nb/core/worktree_engine.py`.
+  - `.nb/workspaces/` (Ephemeral Concurrency Enclave): Isolated subagent git worktrees and process lease locks managed by `.nb/core/worktree_engine.py`.
 - **Dynamic Model Tier Router**:
   - Tier A (Frontier / High Reasoning): Complex MVS derivation, cross-module contract validation, architectural verification gates, security audits, context poisoning diagnosis.
   - Tier B (Fast / Compact): AST symbol extraction, unified diff application, test scaffolding, commit drafting, dashboard data serialization, routine living documentation extraction.
 - **Git Worktree Isolation Engine**:
-  - Ephemeral subagent working directories created via `git worktree add .workspaces/<agent_id> -b feature/<task>`.
+  - Ephemeral subagent working directories created via `git worktree add .nb/workspaces/<agent_id> -b feature/<task>`.
   - Atomic verification gate checks out isolated branch, executes test suite, and merges to `main` upon approval.
 - **Semantic Parity & Anti-Drift Engine**:
   - Quantitative contract matching between input specs and code symbols.
@@ -441,7 +441,7 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
   - Eliminates file truncation risks via write-to-temp, `os.fsync()`, and atomic `os.replace()` in `MerkleEngine` and `TokenTracker`.
   - Checkpoints historical Merkle blocks into `.nb/context/ledger/archive/epoch_{start}_{end}.json` once chain height reaches scale thresholds, sealing an `epoch_rollup_hash` in `context_ledger.yaml` to maintain $O(1)$ disk/memory access times while guaranteeing 100% cryptographic audit continuity.
 - **Active POSIX PID-Probing & Worktree Lease Lifecycle Engine (Reliability)**:
-  - Attaches OS process IDs to worktree leases in `.workspaces/leases.json`. Actively probes `os.kill(pid, 0)` upon lease acquisition, listing, and maintenance. Automatically purges dead leases and invokes `git worktree remove --force` to eliminate zombie worktree deadlocks without human intervention.
+  - Attaches OS process IDs to worktree leases in `.nb/workspaces/leases.json`. Actively probes `os.kill(pid, 0)` upon lease acquisition, listing, and maintenance. Automatically purges dead leases and invokes `git worktree remove --force` to eliminate zombie worktree deadlocks without human intervention.
 - **Deep Schema-Driven Wire Contract Runtime Gate (Reliability)**:
   - Wire contracts under `.nb/context/contracts/` strictly conform to JSON Schema Draft-07 specs. `LayeredContextValidator` and `pr_gatekeeper.yaml` enforce runtime event and payload validation, preventing cross-module interface drift.
 - **Content-Addressable AST Skeleton Caching (Scalability)**:
@@ -649,14 +649,14 @@ worktrees:
     subagent_role: "agent_provider_developer"
     module_scope: "mod_service_provider"
     branch: "feature/provider-service"
-    path: ".workspaces/provider_dev_01"
+    path: ".nb/workspaces/provider_dev_01"
     status: "Active"
     isolated_commits: 4
   - worktree_id: "wt_consumer_dev_01"
     subagent_role: "agent_consumer_developer"
     module_scope: "mod_service_consumer"
     branch: "feature/consumer-service"
-    path: ".workspaces/consumer_dev_01"
+    path: ".nb/workspaces/consumer_dev_01"
     status: "Active"
     isolated_commits: 3
 
@@ -927,7 +927,7 @@ graph LR
      ```
 2. **`spawn_hook` (Reliable Agent Sandbox Provisioning)**:
    - Resolves agent specifications across multi-tier search paths (`.nb/agentic/custom/agents/`, `.nb/plan/agents/`, `.nb/plan/packages/*/agents/`, `user/hitl/orphaned_context_files/agents/`).
-   - Provisions isolated ephemeral worktree sandbox (`.workspaces/subagent_<executor>/`).
+   - Provisions isolated ephemeral worktree sandbox (`.nb/workspaces/subagent_<executor>/`).
    - Asserts concurrency lease lock, preventing race conditions.
 3. **`handoff_hook` (Cross-Agent Cryptographic Continuity)**:
    - Encapsulates inter-agent artifacts within a signed `HandoffToken` containing predecessor block hash, artifact Merkle root, and schema version.
@@ -950,7 +950,7 @@ Workflows dynamically orchestrate agents defined in domain-specific layered plan
 #### 3. Reliable Subagent Spawning & Supervisor Protocol
 To eliminate agent spawn and runtime unreliability:
 - **Pre-Flight Contract Assertion**: Verifies all input files, contract schemas, and directory mounts exist prior to spawning the process or subagent session.
-- **Hermetic Worktree Sandbox**: Each spawned agent operates in an isolated worktree directory (`.workspaces/subagent_<id>`), preventing concurrent filesystem collisions.
+- **Hermetic Worktree Sandbox**: Each spawned agent operates in an isolated worktree directory (`.nb/workspaces/subagent_<id>`), preventing concurrent filesystem collisions.
 - **Bounded Supervisor Retry Loop**: If an agent process fails due to transient API timeouts or memory spikes, the supervisor retries up to $N_{\max} = 3$ times with exponential backoff before escalating to HITL quarantine (`user/hitl/`).
 
 ---
@@ -981,7 +981,7 @@ sequenceDiagram
   Note over Ingest,Worktree: 3. Execution & Progress Update
   Ingest->>MCP: call_tool: jira_transition_issue(issue_key='PERC-1042', status='In Progress')
   MCP->>Jira: Update Issue Status to "In Progress"
-  Ingest->>Worktree: Mount .workspaces/subagent_PERC_1042/ & Derivation
+  Ingest->>Worktree: Mount .nb/workspaces/subagent_PERC_1042/ & Derivation
   Worktree->>Worktree: Generate workplace/ code, configs & tests
 
   Note over Worktree,Verifier: 4. Verification & Self-Healing
@@ -1025,8 +1025,8 @@ graph TD
   end
 
   subgraph Concurrent Sandboxed Worktrees
-    TR --> WT1["Worktree 1 (.workspaces/provider_dev): agent_provider_developer"]
-    TR --> WT2["Worktree 2 (.workspaces/consumer_dev): agent_consumer_developer"]
+    TR --> WT1["Worktree 1 (.nb/workspaces/provider_dev): agent_provider_developer"]
+    TR --> WT2["Worktree 2 (.nb/workspaces/consumer_dev): agent_consumer_developer"]
     WT1 --> G1["Provider Gate (FastAPI / Contract Unit Tests)"]
     WT2 --> G2["Consumer Gate (Client / Interface Contract Tests)"]
   end
@@ -1129,7 +1129,7 @@ steps:
 The `WorkflowEngine` executes Kahn’s algorithm to analyze and validate workflow execution trees:
 1. **Acyclicity Assertion**: Validates that no cyclic dependencies exist ($\mathcal{O}(V + E)$).
 2. **Predecessor & Successor Resolution**: Automatically computes the explicit `_predecessors` (via `depends_on`) and `_successors` (via adjacency inverse mapping) for every step.
-3. **Execution Depth & Concurrency Partitioning**: Assigns topological depth indices to each step, allowing independent parallel subagent tasks at the same depth to execute concurrently within isolated worktrees (`.workspaces/subagent_<id>/`).
+3. **Execution Depth & Concurrency Partitioning**: Assigns topological depth indices to each step, allowing independent parallel subagent tasks at the same depth to execute concurrently within isolated worktrees (`.nb/workspaces/subagent_<id>/`).
 4. **Contract-Bound Handoffs**: Maps predecessor output artifacts directly to successor input parameters, verifying schema conformity before triggering successor agents.
 
 #### 3. Co-Located & Embedded Agent Specifications

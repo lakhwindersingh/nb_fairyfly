@@ -625,7 +625,7 @@ PORTAL_HTML = """<!DOCTYPE html>
           <div class="card-badge">Concurrency (CAP-01)</div>
           <h3>1. Ephemeral Git Worktree Isolation</h3>
           <p>Assigns each autonomous coding subagent its own isolated git worktree backed by a pre-warmed gVisor microVM sandbox. Prevents branch locks and dirty working tree overwrites.</p>
-          <pre>git worktree add -b wt_agent_04 .workspaces/wt_agent_04 main
+          <pre>git worktree add -b wt_agent_04 .nb/workspaces/wt_agent_04 main
 percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <div class="stat-box"><span>SLA Allocation Latency:</span><span class="stat-val text-cyan">&lt; 180ms</span></div>
         </div>
@@ -4406,7 +4406,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             if not p_id or not p_name:
                 self._send_json({"error": "project_id and name are required"}, status=400)
                 return
-            target_path = Path(target_dir_str) if target_dir_str else (REPO_ROOT / ".workspaces" / f"scaffold_{p_id}")
+            target_path = Path(target_dir_str) if target_dir_str else (REPO_ROOT / ".nb" / "workspaces" / f"scaffold_{p_id}")
             try:
                 res = GLOBAL_SCAFFOLDER.scaffold_project(
                     tenant_id=t_id,

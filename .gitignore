@@ -45,6 +45,7 @@ venv/
 ENV/
 
 # Percipience Ephemeral Workspaces & Sandboxes
+.nb/workspaces/
 .workspaces/
 .scratch/
 tmp/
@@ -59,3 +60,4 @@ tmp/
 
 # Log files
 *.log
+/.nb/context/ledger/archive/

@@ -14,7 +14,7 @@ flowchart TD
   TierRouter -->|"High Reasoning (Architecture / Security)"| TierA["Tier A (Frontier)<br/>Claude-3-7-Sonnet / Gemini-2.0-Pro"]
   TierRouter -->|"Fast / High Throughput (Diffs / Scaffolding)"| TierB["Tier B (Compact)<br/>Claude-3-5-Haiku / Gemini-2.0-Flash"]
 
-  TierA --> Worktree["Ephemeral Sandboxed Worktree<br/>(.workspaces/subagent_uuid/)"]
+  TierA --> Worktree["Ephemeral Sandboxed Worktree<br/>(.nb/workspaces/subagent_uuid/)"]
   TierB --> Worktree
 
   Worktree --> Gatekeeper["PR Verification Gatekeeper<br/>(6-Stage Security, Contract, & Flaky Checks)"]

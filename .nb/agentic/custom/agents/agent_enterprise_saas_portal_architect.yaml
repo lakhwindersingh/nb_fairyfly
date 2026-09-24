@@ -3,7 +3,7 @@ name: Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infr
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation & Enterprise Security Auditor
-sandboxed_worktree: .workspaces/wt_saas_audit_01
+sandboxed_worktree: .nb/workspaces/wt_saas_audit_01
 module_scope: workplace/modules/mod_portal_admin/ and workplace/modules/mod_portal_marketing/
 system_prompt: |
   You are the Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infrastructure Expert.

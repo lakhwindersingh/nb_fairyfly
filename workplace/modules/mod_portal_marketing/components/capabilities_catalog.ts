@@ -21,7 +21,7 @@ export const CAPABILITIES_CATALOG: SystemCapability[] = [
     badge: "Concurrency Engine",
     description: "Assigns each active coding subagent (Claude Code, Cursor, custom agents) a dedicated ephemeral git worktree linked to a pre-warmed gVisor microVM sandbox. Prevents file overwrites, uncommitted dirty states, and branch locking.",
     technicalDetails: [
-      "Dynamic worktree allocation under .workspaces/wt_{tenant}_{agent_id}",
+      "Dynamic worktree allocation under .nb/workspaces/wt_{tenant}_{agent_id}",
       "Time-bound Redis lease TTLs with automatic teardown and branch pruning",
       "Automated canary merge verification before syncing into target branch"
     ],

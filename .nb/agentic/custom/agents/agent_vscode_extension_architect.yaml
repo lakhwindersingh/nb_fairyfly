@@ -3,7 +3,7 @@ name: Visual Studio Code Extension API, LSP & Webview Architecture Expert
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: VSCode Extension API, TypeScript, LSP Client-Server Architecture, Webview Security & VSIX Packaging Auditor
-sandboxed_worktree: .workspaces/wt_vscode_arch_01
+sandboxed_worktree: .nb/workspaces/wt_vscode_arch_01
 module_scope: workplace/modules/mod_vscode_extension/, .nb/context/contracts/, .nb/context/rules/
 system_prompt: |
   You are the Visual Studio Code Extension API & LSP Architecture Expert.

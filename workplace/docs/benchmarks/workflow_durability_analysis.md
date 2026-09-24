@@ -97,7 +97,7 @@ Each dimension is quantified on a scale of `0.00` to `1.00` against empirical te
 - **Durability Impact**: Prevents breaking schema changes, zero-day dependency attacks, and cross-microservice contract fractures before merge.
 
 ### 6. Ephemeral Worktree Isolation & Concurrency Scaling (`DIM-06` | Score: `0.98`)
-- **Mechanism**: Ephemeral Git worktree engine (`.workspaces/wt_{agent_id}`), POSIX active PID probing, Redis 7.x Redlock distributed lease backend, and pre-merge canary test verifier.
+- **Mechanism**: Ephemeral Git worktree engine (`.nb/workspaces/wt_{agent_id}`), POSIX active PID probing, Redis 7.x Redlock distributed lease backend, and pre-merge canary test verifier.
 - **Durability Impact**: Guarantees zero cross-agent file locks, zero collision in multi-agent parallel execution, and automatic reclamation of orphaned worker leases.
 
 ### 7. Zero-Disk Proprietary IP Enclaves & RAM Hydration (`DIM-07` | Score: `1.00`)
