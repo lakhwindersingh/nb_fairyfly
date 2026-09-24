@@ -26,7 +26,7 @@ Welcome to the **Percipience Centralized Living Documentation Hub**. This direct
 ---
 
 ## 📐 Plan Tier Matrix & Boundary Ceilings
-- [**Parent Master Plan & Free Plan Specification**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-free_plan.md): Complete governing document for Section 2 Plan Tier Matrix, Boundary Ceilings, and 35-capability mapping (CAP-01 through CAP-35).
+- [**Parent Master Plan & Free Plan Specification**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md): Complete governing document for Section 2 Plan Tier Matrix, Boundary Ceilings, and 35-capability mapping (CAP-01 through CAP-35).
 - [**Competitive Differentiation Matrix**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/competitive_differentiation_matrix.md): 5-way comparative analysis vs Cursor, LangSmith, Arize Phoenix, and GitHub Actions.
 
 ---

@@ -32,7 +32,7 @@ chmod +x .nb/.nb/bin/percipience
 ### Bootstrapping Your Repository (Quad-Space Architecture)
 ```bash
 # Initialize workspace into Quad-Space structure with Master Plan:
-./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-free_plan.md
+./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/master/parent-master-free-plan/detailed.md
 ```
 
 ### Auditing Context Health & Merkle Chain

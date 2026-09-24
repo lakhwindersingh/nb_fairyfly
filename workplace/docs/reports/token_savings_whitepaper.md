@@ -7,7 +7,7 @@
 > **Version**: 7.5-Autonomous-CICD-Model-Agnostic  
 > **Target Audience**: Chief Technology Officers, VP of Engineering, AI Platform Leads, FinOps Directors, DevSecOps Architects  
 > **Models & Systems Evaluated**: Anthropic Claude (3.7 Sonnet / 3.5 Sonnet / 3.5 Haiku), OpenAI (GPT-4o / GPT-4o-mini), Google Gemini (2.0 Pro / 2.0 Flash), Neutron Binary Percipience v7.5  
-> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-plan.md) | [Autonomous CI/CD Engineering Roadmap](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md)  
+> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) | [Autonomous CI/CD Engineering Roadmap](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md)  
 > **Live Observability Console**: [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html)  
 
 ---
@@ -377,7 +377,7 @@ bash workplace/scripts/install_git_hook.sh
 ### Step 5: Package & Consume Layerable Domain Plans (.nbpack)
 ```bash
 # Compile domain-specific extensions into sealed binary envelopes:
-./.nb/bin/percipience layer pack --plan .nb/plan/claude-context-engineering-saas-portal-domain-plan.md --output .nb/bundles/saas_portal_domain.nbpack
+./.nb/bin/percipience layer pack --plan .nb/plan/l1/saas-portal-domain/detailed.md --output .nb/bundles/saas_portal_domain.nbpack
 
 # Mount and hydrate directly into zero-disk RAM enclave:
 ./.nb/bin/percipience layer apply --pack .nb/bundles/saas_portal_domain.nbpack --in-memory-only

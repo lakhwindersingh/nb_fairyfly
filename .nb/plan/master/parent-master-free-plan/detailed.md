@@ -83,6 +83,49 @@ graph TD
 
 ---
 
+
+## 2.2 Commercial Pricing Tier Packaging & Permissioning Pipeline
+
+The platform uses `CommercialPackagerProvisioner` to package executables, scripts, core engines, contracts, and workflows according to the Commercial Pricing and Revenue model:
+
+```mermaid
+graph LR
+    subgraph Packaging_Sources[".nb Source Assets"]
+        S1[".nb/bin/percipience"]
+        S2[".nb/config/"]
+        S3[".nb/scripts/"]
+        S4[".nb/core/ (Tier Filtered)"]
+        S5[".nb/context/ (Contracts & Rules)"]
+        S6[".nb/agentic/ (Free Agents & CI/CD)"]
+    end
+
+    subgraph Packaging_Engine["CommercialPackagerProvisioner (.nb/core)"]
+        Pkg["package_tier(tier='plan_free')"]
+        Lic["Generate Signed PERCIPIENCE_LICENSE.json"]
+        Merkle["Seal Merkle State Block"]
+    end
+
+    subgraph Target_Provisioning["Provisioning Targets"]
+        IJ["IntelliJ / PyCharm (src/main/resources/percipience/)"]
+        VS["VSCode Extension (percipience_runtime/)"]
+        Portal["SaaS Portal & Multi-Tenant Gateway (tenant_hierarchy.json)"]
+    end
+
+    Packaging_Sources --> Pkg
+    Pkg --> Lic --> Merkle
+    Merkle --> IJ
+    Merkle --> VS
+    Merkle --> Portal
+```
+
+### Free Tier Distribution Inclusions:
+- **Executable**: `.nb/bin/percipience` with safe gatekeeper subcommands (`gate`, `audit`, `cicd run`, `validate --layered`, `tokens summary`, `terminal`, `context export`, `agent wrap`).
+- **Core Engines**: 25 essential execution engines (AST optimizer, Merkle engine, token tracker, autonomous CI/CD, layered validator, error recovery, etc.). Raw package compiler tools (`NBPackEnvelope`, custom agent creators) are restricted.
+- **Agentic**: Free specialist agents (`agent_psi_ast_bridge_specialist`, `agent_jetbrains_plugin_architect`, `agent_autonomous_healer`, `agent_merkle_ledger`, `agent_terminal_mode_specialist`, `agent_commercial_packager_provisioner`) and `basic_autonomous_cicd.yaml`.
+- **License & Seal**: Cryptographically signed `PERCIPIENCE_LICENSE.json` with SHA-256 integrity digest and Merkle block audit trail.
+
+---
+
 ## 3. Core Capability 1: High-Efficiency Token Reduction
 
 The Free Plan incorporates platform token reduction to cut LLM inference costs and fit large codebases into constrained context windows.

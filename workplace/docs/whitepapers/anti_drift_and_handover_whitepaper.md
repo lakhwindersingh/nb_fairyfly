@@ -5,7 +5,7 @@
 > **Publication Date:** September 2026  
 > **Document Version:** 1.0.0-PROD  
 > **Target Framework:** Neutron Binary Percipience (`CAP-01` through `CAP-27`)  
-> **Governing Spec:** [`.nb/plan/claude-context-engineering-parent-master-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-plan.md)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md)  
 
 ---
 

@@ -1,40 +1,41 @@
 <idea-plugin>
     <id>com.neutronbinary.percipience</id>
     <name>Percipience Context Engineering OS</name>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <vendor email="support@percipience.dev" url="https://percipience.dev">Neutron Binary</vendor>
 
     <description><![CDATA[
     <h1>⚡ Percipience Context Engineering OS (Free Community & Enterprise)</h1>
     <p><b>Autonomous Context Engineering, Real-Time AST Skeletonization, Merkle State Ledger, and Cross-Plugin Sandbox Governance for JetBrains IDEs.</b></p>
     
-    <h3>🌟 Core Capabilities & Features</h3>
+    <h3>🌟 Core Capabilities & Features (Free Community Tier)</h3>
     <ul>
-        <li><b>🚀 Automated Workspace Bootstrapping:</b> Detects unconfigured workspaces on startup and scaffolds the Quad-Space structure, free master plan, token rules, and genesis Merkle ledger.</li>
+        <li><b>🚀 Interactive Workspace Prompt & Bootstrapping:</b> Automatically detects unconfigured workspaces on startup and prompts the user to initialize the Quad-Space structure, Free Master Plan, billing config, and .nb/bin/percipience binary.</li>
+        <li><b>💻 Unified Percipience CLI:</b> Run commands directly in the workspace via <code>./.nb/bin/percipience</code> or interactive IDE Control Plane buttons.</li>
         <li><b>🌲 Real-Time PSI AST Token Pruning:</b> Traverses JetBrains Program Structure Interface (PSI) syntax trees in memory (&lt;35ms) to compress code contexts by 60%–80% before LLM consumption.</li>
         <li><b>🛡️ Cryptographic Merkle Ledger:</b> Continuous SHA-256 hash-chained state tracking for every prompt, code edit, and agent action with automated recovery points.</li>
-        <li><b>🔄 Basic Autonomous CI/CD Pipeline:</b> Out-of-the-box self-sustaining hygiene, AST token reduction, contract verification, and bounded auto-repair for the Free Plan.</li>
+        <li><b>🔄 Basic Autonomous CI/CD Pipeline:</b> Out-of-the-box self-sustaining hygiene, AST token reduction, contract verification, and bounded auto-repair for the Free Community Tier.</li>
         <li><b>🔒 Cross-Plugin Sandbox Permission Broker:</b> Brokers source access for third-party LLM plugins (JetBrains AI, GitHub Copilot, Continue, Cody), enforcing AST token reduction and WORM ledger immutability.</li>
         <li><b>📊 Status Bar Metrics Display:</b> Live status bar telemetry widget displaying real-time token savings percentage and Merkle chain health.</li>
     </ul>
 
     <h3>🚀 Quick Start Guide</h3>
     <ol>
-        <li>Click <b>"🚀 Bootstrap Free Workspace"</b> in the Percipience OS sidebar or Tools menu.</li>
+        <li>When creating or opening a new workspace, click <b>"🚀 Initialize Free Workspace"</b> on the notification prompt.</li>
+        <li>Execute commands via the <b>"Percipience OS"</b> Tool Window or the <b>Tools -> Percipience</b> menu.</li>
+        <li>Run commands from the terminal: <code>./.nb/bin/percipience gate</code> or <code>./.nb/bin/percipience audit</code>.</li>
         <li>View live metrics directly in the bottom <b>Status Bar</b> (<code>⚡ Percipience: 70.0% Saved | 🛡️ Merkle: OK</code>).</li>
-        <li>Right-click in any source file and choose <b>"Inspect Percipience AST Token Pruning"</b> to view token reduction benchmarks.</li>
-        <li>Inspect sandboxed LLM policies under the <b>"Sandbox Permissions"</b> tab in the Percipience OS tool window.</li>
     </ol>
     ]]></description>
 
     <change-notes><![CDATA[
-    <h3>Version 1.1.0 Release</h3>
+    <h3>Version 1.2.0 Release</h3>
     <ul>
-        <li>Added automated workspace bootstrapping for the Free Community Plan.</li>
-        <li>Introduced Sandbox Permission Broker for third-party sandboxed LLM plugins.</li>
-        <li>Enhanced local agent token optimizer with static prefix pinning and attention budgeting.</li>
-        <li>Added Basic Autonomous CI/CD pipeline integration and execution actions.</li>
-        <li>Added menu actions for workspace bootstrapping and sandbox permission management.</li>
+        <li>Included canonical .nb/bin/percipience CLI binary, billing plans configuration, and basic CI/CD workflow directly in plugin resources.</li>
+        <li>Added automatic new workspace detection and interactive initialization prompt on project startup.</li>
+        <li>Added PercipienceExecutionService for asynchronous command execution directly inside IntelliJ.</li>
+        <li>Added Control Plane actions for PR Gatekeeper, Merkle Audit, Basic CI/CD, Layer Validation, and Token Savings Summary.</li>
+        <li>Full Free Community Tier compliance matching .nb/config/billing_plans.yaml.</li>
     </ul>
     ]]></change-notes>
 
@@ -47,6 +48,9 @@
                     icon="/icons/percipience_icon.svg"
                     factoryClass="com.neutronbinary.percipience.toolwindow.PercipienceToolWindowFactory"/>
         <projectService serviceImplementation="com.neutronbinary.percipience.services.PercipienceProjectService"/>
+        <projectService serviceImplementation="com.neutronbinary.percipience.services.PercipienceExecutionService"/>
+        <postStartupActivity implementation="com.neutronbinary.percipience.startup.PercipienceProjectStartupActivity"/>
+        <notificationGroup id="Percipience Notifications" displayType="BALLOON"/>
         <externalAnnotator language="TEXT"
                            implementationClass="com.neutronbinary.percipience.annotators.ContractInspectionAnnotator"/>
         <statusBarWidgetFactory id="com.neutronbinary.percipience.statusBarWidget"
@@ -54,24 +58,58 @@
     </extensions>
 
     <actions>
-        <action id="com.neutronbinary.percipience.BootstrapWorkspace"
-                class="com.neutronbinary.percipience.actions.BootstrapWorkspaceAction"
-                text="Bootstrap Percipience Free Workspace"
-                description="Scaffolds Quad-Space folders, Master Plan, Merkle ledger, and basic CI/CD">
+        <group id="com.neutronbinary.percipience.Menu" text="Percipience OS" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
-        <action id="com.neutronbinary.percipience.ManageSandboxPermissions"
-                class="com.neutronbinary.percipience.actions.ManageSandboxPermissionsAction"
-                text="Inspect Sandbox &amp; LLM Permissions"
-                description="Views and manages source access permissions for sandboxed LLM plugins">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
-        <action id="com.neutronbinary.percipience.InspectAstPruning"
+            <action id="com.neutronbinary.percipience.BootstrapWorkspace"
+                    class="com.neutronbinary.percipience.actions.BootstrapWorkspaceAction"
+                    text="Bootstrap / Verify Free Workspace"
+                    description="Scaffolds Quad-Space folders, Master Plan, Merkle ledger, .nb/bin/percipience binary, and basic CI/CD"/>
+            <action id="com.neutronbinary.percipience.RunGatekeeper"
+                    class="com.neutronbinary.percipience.actions.RunGatekeeperAction"
+                    text="Run PR Gatekeeper (.nb/bin/percipience gate)"
+                    description="Executes 7-stage PR gatekeeper verification and Merkle block sealing"/>
+            <action id="com.neutronbinary.percipience.RunMerkleAudit"
+                    class="com.neutronbinary.percipience.actions.RunMerkleAuditAction"
+                    text="Audit Merkle Ledger (.nb/bin/percipience audit)"
+                    description="Verifies cryptographic SHA-256 state continuity and maturity"/>
+            <action id="com.neutronbinary.percipience.RunCicd"
+                    class="com.neutronbinary.percipience.actions.RunCicdAction"
+                    text="Run Basic Autonomous CI/CD (.nb/bin/percipience cicd run)"
+                    description="Executes self-sustaining hygiene, AST pruning, bounded repair, and Merkle seal"/>
+            <action id="com.neutronbinary.percipience.ValidateLayer"
+                    class="com.neutronbinary.percipience.actions.ValidateLayerAction"
+                    text="Validate Layered Context (.nb/bin/percipience validate --layered)"
+                    description="Validates 3-tier layered context and custom platform invariants"/>
+            <action id="com.neutronbinary.percipience.TokensSummary"
+                    class="com.neutronbinary.percipience.actions.TokensSummaryAction"
+                    text="Inspect Token Savings Summary (.nb/bin/percipience tokens summary)"
+                    description="Displays token compression statistics, gross USD saved, and FinOps metrics"/>
+            <separator/>
+            <action id="com.neutronbinary.percipience.LaunchClaudeCode"
+                    class="com.neutronbinary.percipience.actions.LaunchTerminalAgentAction"
+                    text="Prepare Claude Code AST Context (.nb/bin/percipience agent wrap --agent claude)"
+                    description="Wraps Claude Code terminal session with AST token compression"/>
+            <action id="com.neutronbinary.percipience.ExportClaudeContext"
+                    class="com.neutronbinary.percipience.actions.ExportTerminalContextAction"
+                    text="Export AST Context for Terminal Agents (.nb/bin/percipience context export)"
+                    description="Exports AST-pruned structural context to .percipience_claude_context.md"/>
+            <separator/>
+            <action id="com.neutronbinary.percipience.ManageSandboxPermissions" 
+                    class="com.neutronbinary.percipience.actions.ManageSandboxPermissionsAction"
+                    text="Inspect Sandbox &amp; LLM Permissions"
+                    description="Views and manages source access permissions for sandboxed LLM plugins"/>
+            <action id="com.neutronbinary.percipience.InspectAstPruning"
+                    class="com.neutronbinary.percipience.actions.InspectAstPruningAction"
+                    text="Inspect Percipience AST Token Pruning"
+                    description="Visualizes raw vs. pruned AST tokens for active file">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift alt P"/>
+            </action>
+        </group>
+        <action id="com.neutronbinary.percipience.EditorInspectAstPruning"
                 class="com.neutronbinary.percipience.actions.InspectAstPruningAction"
                 text="Inspect Percipience AST Token Pruning"
                 description="Visualizes raw vs. pruned AST tokens for active file">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="shift alt P"/>
         </action>
     </actions>
 </idea-plugin>

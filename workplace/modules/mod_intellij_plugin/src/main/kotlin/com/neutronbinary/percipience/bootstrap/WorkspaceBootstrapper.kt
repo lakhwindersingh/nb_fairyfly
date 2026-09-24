@@ -24,12 +24,15 @@ object WorkspaceBootstrapper {
         val masterPlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
+        val coreDir = File(root, ".nb/core")
+        val coreReady = File(coreDir, "ast_optimizer.py").exists() && File(coreDir, "merkle_engine.py").exists()
 
         return (binFile.exists() && binFile.canExecute() &&
                 billingFile.exists() &&
                 (planFile.exists() || masterPlanFile.exists()) &&
                 ledgerFile.exists() &&
-                cicdFile.exists())
+                cicdFile.exists() &&
+                coreReady)
     }
 
     fun bootstrapWorkspace(projectBasePath: String): BootstrapResult {
@@ -115,7 +118,68 @@ if __name__ == "__main__":
             binFile.setExecutable(true, false)
         }
 
-        // 3. Ensure billing plans configuration (.nb/config/billing_plans.yaml)
+        // 3. Deploy Essential Platform Core Engines (.nb/core/*.py)
+        val coreDir = File(root, ".nb/core")
+        if (!coreDir.exists()) {
+            coreDir.mkdirs()
+        }
+        val essentialCoreFiles = listOf(
+            "__init__.py",
+            "adversarial_fuzzer.py",
+            "agent_plugin_engine.py",
+            "ambiguity_resolver.py",
+            "ast_optimizer.py",
+            "attention_budgeter.py",
+            "autonomous_cicd.py",
+            "byor_adapter.py",
+            "cognitive_router.py",
+            "context_gateway.py",
+            "contract_compatibility_checker.py",
+            "dependency_cve_sentinel.py",
+            "diagnostic_reprompt.py",
+            "doc_drift_synchronizer.py",
+            "error_recovery_orchestrator.py",
+            "eval_scoring_engine.py",
+            "flaky_test_detector.py",
+            "handoff_validator.py",
+            "layered_context_validator.py",
+            "living_doc_engine.py",
+            "maturity_evaluator.py",
+            "merkle_engine.py",
+            "nbpack_envelope.py",
+            "otel_exporter.py",
+            "poisoning_sentinel.py",
+            "prompt_benchmark_engine.py",
+            "prompt_drift_sentinel.py",
+            "reconciliation_engine.py",
+            "request_formalizer.py",
+            "semantic_parity_engine.py",
+            "semantic_prompt_cache.py",
+            "swarm_governor.py",
+            "token_optimizer_suite.py",
+            "token_tracker.py",
+            "trajectory_recorder.py",
+            "tree_sitter_daemon.py",
+            "workflow_orchestrator.py",
+            "worktree_engine.py",
+            "worm_egress.py"
+        )
+        for (coreFileName in essentialCoreFiles) {
+            val targetCoreFile = File(coreDir, coreFileName)
+            if (!targetCoreFile.exists()) {
+                val resourceStream: InputStream? = javaClass.getResourceAsStream("/percipience/core/$coreFileName")
+                if (resourceStream != null) {
+                    resourceStream.use { input ->
+                        targetCoreFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    createdFiles.add(".nb/core/$coreFileName")
+                }
+            }
+        }
+
+        // 4. Ensure billing plans configuration (.nb/config/billing_plans.yaml)
         val billingFile = File(root, ".nb/config/billing_plans.yaml")
         if (!billingFile.exists()) {
             val resourceStream = javaClass.getResourceAsStream("/percipience/config/billing_plans.yaml")
@@ -139,7 +203,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: false
+      user_plan_encryption: false
+      basic_platform_tools_exposure: false
       private_vpc_deploy: false
 
   plan_team:
@@ -153,7 +220,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: false
+      user_plan_encryption: false
+      basic_platform_tools_exposure: false
       private_vpc_deploy: false
 
   plan_business:
@@ -167,7 +237,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: true
+      user_plan_encryption: true
+      basic_platform_tools_exposure: true
       private_vpc_deploy: false
 
   plan_enterprise:
@@ -181,7 +254,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: true
+      user_plan_encryption: true
+      basic_platform_tools_exposure: true
       private_vpc_deploy: true
       dedicated_slack_sla: true
 
@@ -195,7 +271,7 @@ overage_pricing:
             createdFiles.add(".nb/config/billing_plans.yaml")
         }
 
-        // 4. Ensure token compression rules (.nb/config/token_compression_rules.yaml)
+        // 5. Ensure token compression rules (.nb/config/token_compression_rules.yaml)
         val tokenRulesFile = File(root, ".nb/config/token_compression_rules.yaml")
         if (!tokenRulesFile.exists()) {
             val resourceStream = javaClass.getResourceAsStream("/percipience/config/token_compression_rules.yaml")
@@ -227,7 +303,7 @@ presets:
             createdFiles.add(".nb/config/token_compression_rules.yaml")
         }
 
-        // 5. Ensure basic autonomous CI/CD workflow (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
+        // 6. Ensure basic autonomous CI/CD workflow (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
         if (!cicdFile.exists()) {
             val resourceStream = javaClass.getResourceAsStream("/percipience/workflows/basic_autonomous_cicd.yaml")
@@ -283,7 +359,7 @@ steps:
             createdFiles.add(".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
         }
 
-        // 6. Ensure Parent Master Plan (.nb/plan/claude-context-engineering-parent-master-free_plan.md)
+        // 7. Ensure Parent Master Plan (.nb/plan/claude-context-engineering-parent-master-free_plan.md)
         val freePlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-free_plan.md")
         val masterPlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
         if (!freePlanFile.exists() && !masterPlanFile.exists()) {
@@ -310,13 +386,14 @@ tier: plan_free
 - Quad-Space Partitioning (.nb/, workplace/, user/)
 - IntelliJ / PyCharm Plugin Bootstrapper & Sandbox Permission Broker
 - Percipience CLI Executable (.nb/bin/percipience)
+- Essential Platform Core Engines (.nb/core/)
 """.trimIndent()
                 freePlanFile.writeText(planContent)
             }
             createdFiles.add(".nb/plan/claude-context-engineering-parent-master-free_plan.md")
         }
 
-        // 7. Ensure Genesis Merkle Ledger (.nb/context/ledger/context_ledger.yaml)
+        // 8. Ensure Genesis Merkle Ledger (.nb/context/ledger/context_ledger.yaml)
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
         val nowIso = Instant.now().toString()
         val genesisPayload = "0|" + ("0".repeat(64)) + "|genesis_root|HEAD|" + nowIso

@@ -3,7 +3,7 @@
 > **Product Brand:** **Neutron Binary Percipience**  
 > **Target Release:** Q4 2026 – Q3 2027  
 > **Status:** Production Architecture & Engineering Roadmap  
-> **Governing Spec:** [`.nb/plan/claude-context-engineering-parent-master-free_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/claude-context-engineering-parent-master-free_plan.md)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md)  
 > **Live Observability Hub:** [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)  
 
 ---

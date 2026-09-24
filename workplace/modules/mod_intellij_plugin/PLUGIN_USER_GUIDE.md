@@ -8,8 +8,9 @@ The **Percipience Context Engineering OS** plugin bridges JetBrains IDEs (Intell
 
 ### 1.1 Automated Free Workspace Bootstrapping
 - **Zero-Click Onboarding**: Automatically detects unconfigured project workspaces on startup.
-- **Scaffolding**: Sets up the Quad-Space directory structure (`.nb/`, `workplace/`, `user/`), the Free Plan Master Plan (`.nb/plan/claude-context-engineering-parent-master-plan.md`), default token rules, basic CI/CD pipeline, and genesis Merkle state block (`RP_GENESIS_000`).
-- **Manual Trigger**: Available via **Tools → Bootstrap Percipience Free Workspace** or the ToolWindow button.
+- **Scaffolding & Core Engine Hydration**: Automatically deploys the full suite of 38 essential platform core engines (`.nb/core/*.py`), the canonical gatekeeper CLI (`.nb/bin/percipience` with executable `0755` permissions), the Quad-Space directory structure (`.nb/`, `workplace/`, `user/`), the Free Community Master Plan (`.nb/plan/claude-context-engineering-parent-master-free_plan.md`), default token compression rules, basic CI/CD pipeline, and genesis Merkle state block (`RP_GENESIS_000`).
+- **Complete Offline Autonomy**: Because the plugin JAR embeds all platform core files (`percipience/core/`), newly created projects operate fully offline with zero external network downloads.
+- **Manual Trigger**: Available via **Tools → Percipience OS → Bootstrap Free Workspace Setup** or the ToolWindow button.
 
 ### 1.2 Real-Time PSI AST Token Pruning & Local Agent Optimization
 - **Native Program Structure Interface (PSI) Integration**: Traverses the JetBrains PSI in-memory AST in **under 35ms** without writing to disk.

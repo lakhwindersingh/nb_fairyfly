@@ -1,7 +1,7 @@
 # Master Parent Context Engineering Framework (Concise Agentic Specification)
 
 **Plan ID**: `master_parent_framework`  
-**Capability Rating**: `Master (CAP-01 to CAP-35)`  
+**Capability Rating**: `Master (CAP-01 to CAP-36)`  
 **Version**: `7.5.0`  
 **Operating Modes**: `single_module | multi_module`  
 
@@ -30,7 +30,7 @@ graph TD
 
 ---
 
-## 2. Thirty-Five (35) Foundational Capabilities (CAP-01 to CAP-35)
+## 2. Thirty-Six (36) Foundational Capabilities (CAP-01 to CAP-36)
 
 1. **CAP-01: Autonomous MVS Input Derivation**: Auto-normalizes sparse specs (OpenAPI, Markdown, Jira exports) in `user/inputs/` into an Abstract Semantic Graph (ASG) to bootstrap systems without manual boilerplate.
 2. **CAP-02: Context Poisoning Detection & Incremental Replay**: Continuous purity audits; isolates hallucinations into `user/hitl/poisoning_quarantine.md` and rolls back to clean recovery point $RP_k$.
@@ -70,6 +70,7 @@ graph TD
 33. **CAP-33: One-Click Tenant & Project Scaffolding Wizard**: Automated CLI and Web wizard bootstrapping multi-tenant environments in $< 3$ seconds.
 34. **CAP-34: Cross-Plugin IDE Synchronizer**: Seamless state and contract sync across JetBrains (IntelliJ/PyCharm) and VSCode extensions.
 35. **CAP-35: Dual-Format Plan Synchronization Engine**: Automated SHA-256 versioning maintaining bi-directional consistency between concise and detailed specifications.
+36. **CAP-36: Commercial Pricing Tier Packaging & Cross-Platform Provisioning**: End-to-end packaging, filtering, and provisioning of runtime assets and licenses across IntelliJ, VSCode, and SaaS Portal per commercial tiers (`plan_free`, `plan_team`, `plan_business`, `plan_enterprise`).
 
 ---
 

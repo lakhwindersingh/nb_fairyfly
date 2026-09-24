@@ -58,4 +58,9 @@ graph TD
 
 # Token FinOps metrics summary
 ./.nb/bin/percipience tokens summary
+
+# Commercial packaging & provisioning
+./.nb/bin/percipience package --tier free
+./.nb/bin/percipience provision --tenant tenant_community_default --tier free --target all
+./.nb/bin/percipience permission check --tier free --feature basic_platform_tools_exposure
 ```

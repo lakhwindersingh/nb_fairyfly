@@ -2,7 +2,7 @@
 plan_type: "layerable_domain_plan"
 plan_id: "domain_{{DOMAIN_SLUG}}"
 name: "{{DOMAIN_NAME}} Ecosystem Plan"
-parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
+parent_master_plan: ".nb/plan/master/parent-master-plan/detailed.md"
 tier_mapping:
   tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, context/rules/)"
   tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, agentic/custom/workflows/)"
@@ -17,7 +17,7 @@ model_tiering_policy:
 # Layerable Context Engineering Plan: {{DOMAIN_NAME}} Space
 
 ### Executive Overview & Domain Grounding
-This document is a standardized **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/claude-context-engineering-parent-master-plan.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects domain-specific wire contracts, specialized subagents, and verification bridges required for:
+This document is a standardized **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/master/parent-master-plan/detailed.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects domain-specific wire contracts, specialized subagents, and verification bridges required for:
 
 1. **{{DOMAIN_CORE_CAPABILITY_1}}**: Description of core technology stack, target protocols, or runtimes.
 2. **{{DOMAIN_CORE_CAPABILITY_2}}**: Description of domain data structures, state machines, or transactional boundaries.
@@ -186,7 +186,7 @@ To apply this custom domain layer onto a fresh or existing repository:
 
 ```bash
 # 1. Initialize repository using Parent Master Plan
-./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+./.nb/bin/percipience init --mode multi_module --parent-plan .nb/plan/master/parent-master-plan/detailed.md
 
 # 2. Apply this domain layer
 ./.nb/bin/percipience layer apply --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md

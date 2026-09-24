@@ -33,6 +33,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         tabbedPane.addTab("Sandbox Permissions", createSandboxPermissionsPanel(project))
         tabbedPane.addTab("Capabilities", createCapabilitiesPanel(project))
         tabbedPane.addTab("Agents & Flows", createAgentsAndFlowsPanel(project))
+        tabbedPane.addTab("Terminal Agents & FinOps", createTerminalAgentsPanel(project))
         tabbedPane.addTab("User Guide", createUserGuidePanel(project))
 
         val content = ContentFactory.getInstance().createContent(tabbedPane, "", false)
@@ -101,7 +102,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val titleCyan = JBColor(Color(3, 105, 161), Color(0, 210, 255))
         val statusGreen = JBColor(Color(16, 149, 103), Color(16, 185, 129))
 
-        val headerPanel = JPanel(GridLayout(7, 1, 4, 4))
+        val headerPanel = JPanel(GridLayout(8, 1, 4, 4))
         headerPanel.background = headerBg
         headerPanel.border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(headerBorder, 1),
@@ -131,6 +132,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
         val layerLabel = JLabel("🌐 Active Binary: .nb/bin/percipience (Executable Workspace-Wide)")
         layerLabel.font = layerLabel.font.deriveFont(Font.PLAIN, 11.5f)
+
+        val toolsLabel = JLabel("🛠️ Tools Exposure: Gatekeeper Actions Only (Basic Platform Tools Unexposed on Free Tier)")
+        toolsLabel.font = toolsLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
         fun updateLabels() {
             val basePath = project.basePath
@@ -162,6 +166,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         headerPanel.add(savingsUsdLabel)
         headerPanel.add(cicdLabel)
         headerPanel.add(layerLabel)
+        headerPanel.add(toolsLabel)
 
         val actionsPanel = JPanel(GridLayout(8, 1, 8, 8))
         actionsPanel.background = UIUtil.getPanelBackground()
@@ -377,23 +382,38 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val isDark = UIUtil.isUnderDarcula()
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
-        sb.append("<h2>🚀 Percipience OS Capabilities (Free Community Tier)</h2>")
+        sb.append("<h2>🚀 Percipience OS Capabilities &amp; Tier Governance</h2>")
         sb.append("<p>Engineered context operating system built for JetBrains IDEs and autonomous LLM agent execution.</p>")
 
-        sb.append("<h3>🌟 Included Free Features (billing_plans.yaml)</h3>")
+        sb.append("<h3>🌟 Included Free Community Tier Capabilities</h3>")
         sb.append("<ul>")
         sb.append("<li><b>AST Token Pruning:</b> 60%–80% context reduction via AST traversal.</li>")
         sb.append("<li><b>Merkle Chain Audit:</b> Real-time linear SHA-256 cryptographic chain continuity.</li>")
-        sb.append("<li><b>Basic Autonomous CI/CD:</b> Bounded auto-healing and hygiene workflows.</li>")
+        sb.append("<li><b>Basic Autonomous CI/CD:</b> Bounded auto-healing (1-retry heal) and hygiene workflows.</li>")
         sb.append("<li><b>Percipience CLI:</b> Direct execution in workspace via <code>.nb/bin/percipience</code>.</li>")
         sb.append("<li><b>Included Quota:</b> 1 Seat | 1 Concurrent Worktree | 500 PR Audits/mo.</li>")
         sb.append("</ul>")
 
-        sb.append("<h3>🔒 Enterprise Features (Available on Upgrade)</h3>")
+        sb.append("<h3>🛠️ Basic Platform Tools Exposure Governance</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>Free Community Tier:</b> <span class='muted'>❌ Unexposed (No Plan to Expose Basic Tools)</span>. Low-level internal developer utilities, raw packaging binaries (<code>percipience pack</code>), internal AST rule compilers, and agent toolkits are restricted from direct Free Tier exposure.</li>")
+        sb.append("<li><b>Safe Gatekeeper Surface:</b> Free Tier users execute exclusively through high-level gatekeeper actions (<code>gate</code>, <code>audit</code>, <code>cicd run</code>, <code>validate --layered</code>, <code>tokens summary</code>) and the IntelliJ / PyCharm UI.</li>")
+        sb.append("<li><b>Business &amp; Enterprise Tiers:</b> <span class='badge-success'>✅ Standard &amp; Full Platform Tool APIs</span>. Unrestricted access to raw CLI tool suites, custom tool compilers, and agent development SDKs.</li>")
+        sb.append("</ul>")
+
+        sb.append("<h3>🔒 Encryption &amp; Obfuscation Architecture</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>Platform Core Assets:</b> 🔒 Sealed &amp; Encrypted. Platform schemas (<code>.nb/context/</code>), configs (<code>.nb/config/</code>), core engines (<code>.nb/core/</code>), and master plans (including Free Master Plan) remain encrypted, obfuscated, and strictly readable by the <code>percipience</code> binary.</li>")
+        sb.append("<li><b>Free Tier User Plans:</b> 📄 Strictly Plaintext (Non-Encryptable). Free Tier user plans in <code>workplace/</code> remain unencrypted.</li>")
+        sb.append("<li><b>Paid Tiers (Business &amp; Enterprise):</b> 🔒 <code>.nbpack</code> AES-256 and RAM Enclave zero-disk plaintext execution for user domain plans and schemas.</li>")
+        sb.append("</ul>")
+
+        sb.append("<h3>⚡ Enterprise Features (Available on Upgrade)</h3>")
         sb.append("<ul>")
         sb.append("<li><b>Encrypted NBPack Distribution:</b> Proprietary plan and schema bytecode obfuscation.</li>")
-        sb.append("<li><b>Private VPC & Cloud Gatekeeper:</b> Air-gapped on-premise infrastructure.</li>")
-        sb.append("<li><b>Dedicated Slack Support & SLA:</b> 15-minute response time.</li>")
+        sb.append("<li><b>Private VPC &amp; Cloud Gatekeeper:</b> Air-gapped on-premise infrastructure.</li>")
+        sb.append("<li><b>Dedicated Slack Support &amp; SLA:</b> 15-minute response time.</li>")
+        sb.append("<li><b>Multi-Stage Closed-Loop Swarms:</b> Full swarm triad orchestration with Redis Redlock leasing.</li>")
         sb.append("</ul>")
 
         sb.append("</body></html>")
@@ -433,6 +453,73 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         return JBScrollPane(editorPane)
     }
 
+    private fun createTerminalAgentsPanel(project: Project): JComponent {
+        val mainPanel = JPanel(BorderLayout(10, 10))
+        mainPanel.border = EmptyBorder(12, 12, 12, 12)
+        mainPanel.background = UIUtil.getPanelBackground()
+
+        val isDark = UIUtil.isUnderDarcula()
+        val sb = StringBuilder()
+        sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
+        sb.append("<h2>💻 Terminal Mode Agents & AST Token Compression</h2>")
+        sb.append("<p>Integrate autonomous CLI agents (<b>Claude Code</b>, <b>Gemini CLI</b>, <b>Aider</b>) directly inside IntelliJ / PyCharm terminal tool windows with automatic AST skeletonization and token optimization.</p>")
+        sb.append("<h3>⚡ How It Works</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>AST Structural Skeletons:</b> Strips function and class implementation bodies while preserving full signatures, type hints, docstrings, and DOM tags (40-70% token savings).</li>")
+        sb.append("<li><b>Dynamic Context Injection:</b> Generates compact context files (<code>.percipience_claude_context.md</code>, <code>.percipience_gemini_context.md</code>) loaded directly into CLI prompts.</li>")
+        sb.append("<li><b>FinOps Ledger Metering:</b> All terminal prompt invocations are recorded into <code>token_savings_ledger.yaml</code> to calculate gross USD saved and net customer ROI.</li>")
+        sb.append("</ul>")
+        sb.append("<h3>🚀 Quick Commands</h3>")
+        sb.append("<pre><code># Wrap Claude Code with AST compression\n./.nb/bin/percipience agent wrap --agent claude\n\n# Wrap Gemini CLI\n./.nb/bin/percipience agent wrap --agent gemini\n\n# Install Shell Hook into zsh / bash\neval "$(./.nb/bin/percipience terminal hook --shell zsh)"</code></pre>")
+        sb.append("</body></html>")
+
+        val editorPane = JEditorPane("text/html", sb.toString())
+        editorPane.isEditable = false
+        editorPane.background = UIUtil.getPanelBackground()
+
+        val buttonPanel = JPanel(FlowLayout(FlowLayout.LEFT, 8, 8))
+        val btnClaude = JButton("⚡ Prepare Claude Code Context")
+        btnClaude.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Claude Code AST Context...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    val res = runBlocking { execService.runContextExport("claude-code", ".percipience_claude_context.md") }
+                    Messages.showInfoMessage(project, res.stdout, "Claude Code Context Export")
+                }
+            })
+        }
+
+        val btnGemini = JButton("✨ Prepare Gemini CLI Context")
+        btnGemini.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Gemini CLI AST Context...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    val res = runBlocking { execService.runContextExport("gemini-cli", ".percipience_gemini_context.md") }
+                    Messages.showInfoMessage(project, res.stdout, "Gemini CLI Context Export")
+                }
+            })
+        }
+
+        val btnStatus = JButton("📊 Terminal FinOps Status")
+        btnStatus.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Terminal FinOps Status...", false) {
+                override fun run(indicator: ProgressIndicator) {
+                    val res = runBlocking { execService.runTerminalStatus() }
+                    Messages.showInfoMessage(project, res.stdout, "Terminal Agent FinOps Status")
+                }
+            })
+        }
+
+        buttonPanel.add(btnClaude)
+        buttonPanel.add(btnGemini)
+        buttonPanel.add(btnStatus)
+
+        mainPanel.add(JBScrollPane(editorPane), BorderLayout.CENTER)
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH)
+        return mainPanel
+    }
+
     private fun createUserGuidePanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
         val sb = StringBuilder()
@@ -444,6 +531,9 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
         sb.append("<h3>2. New Workspace Initialization</h3>")
         sb.append("<p>When creating or opening a new project, Percipience prompts you to initialize the workspace with the Free Community Tier. You can also click <b>Bootstrap / Verify Free Workspace</b> at any time.</p>")
+
+        sb.append("<h3>3. Tooling Exposure &amp; Encryption Boundaries</h3>")
+        sb.append("<p>Free Tier workspaces operate under strict governance: low-level packaging tools and internal rule compilers remain unexposed, user plans remain plaintext, while the underlying platform core remains encrypted and readable by the percipience command.</p>")
 
         sb.append("</body></html>")
 

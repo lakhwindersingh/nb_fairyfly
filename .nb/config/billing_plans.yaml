@@ -10,7 +10,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: false
+      user_plan_encryption: false
+      basic_platform_tools_exposure: false
       private_vpc_deploy: false
 
   plan_team:
@@ -24,7 +27,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: false
+      user_plan_encryption: false
+      basic_platform_tools_exposure: false
       private_vpc_deploy: false
 
   plan_business:
@@ -38,7 +44,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: true
+      user_plan_encryption: true
+      basic_platform_tools_exposure: true
       private_vpc_deploy: false
 
   plan_enterprise:
@@ -52,7 +61,10 @@ plans:
       ast_token_pruning: true
       merkle_chain_audit: true
       basic_autonomous_cicd: true
+      platform_core_encryption: true
       nbpack_obfuscation: true
+      user_plan_encryption: true
+      basic_platform_tools_exposure: true
       private_vpc_deploy: true
       dedicated_slack_sla: true
 

@@ -11,15 +11,15 @@ file_versions:
     path: concise.md
     version: 7.5.0
     last_modified: '2026-09-24'
-    content_hash: efaa945eeb2f40d617aa8c754549cd95222c9f6a35f42c83879e52aec6e0ffa7
-    line_count: 117
+    content_hash: e1d3a9fccf4645544ccd0e43a67ef22c0b47b909f3d718738f92af6ef223aff0
+    line_count: 118
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 7.5.0
     last_modified: '2026-09-24'
-    content_hash: c9aacc398db5cdbe7108ab8a659dd3897a0fb487a540d0fc133643deedc6a88a
-    line_count: 1624
+    content_hash: ae355f28f12b1c60fbf6ec3fdac2738750c9555a0ca7868a769582f8b759d144
+    line_count: 1630
     primary_purpose: Extended implementation guide with complete capability breakdowns
   readme:
     path: README.md

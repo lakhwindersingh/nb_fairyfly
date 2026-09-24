@@ -56,6 +56,61 @@ from core.swarm_governor import SwarmGovernor
 from core.prompt_drift_sentinel import PromptDriftSentinel
 from core.workflow_orchestrator import WorkflowOrchestrator
 from core.error_recovery_orchestrator import ErrorRecoveryOrchestrator
+from core.terminal_agent_ast_proxy import TerminalAgentASTProxy
+from core.commercial_packager_provisioner import CommercialPackagerProvisioner
+
+def cmd_package(args):
+    tier = getattr(args, "tier", "free")
+    out_dir = Path(args.output) if getattr(args, "output", None) else None
+    tenant = getattr(args, "tenant", "tenant_community_default")
+    print(f"📦 Packaging Percipience assets for tier: {tier} (Tenant: {tenant})...")
+    res = CommercialPackagerProvisioner.package_tier(
+        workspace_root=REPO_ROOT,
+        tier=tier,
+        output_dir=out_dir,
+        tenant_id=tenant
+    )
+    print(f"✅ Packaging complete: {res['status']}")
+    print(f"   Tier: {res['tier_name']} ({res['tier']})")
+    print(f"   Target Bundle: {res['package_dir']}")
+    print(f"   Total Assets Bundled: {res['total_files']}")
+    print(f"   License SHA-256: {res['license_signature'][:16]}...")
+    if res.get("merkle_block_id"):
+        print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
+
+def cmd_provision(args):
+    tenant = args.tenant
+    tier = getattr(args, "tier", "free")
+    target = getattr(args, "target", "all")
+    print(f"🚀 Provisioning runtime bundle and permissions for tenant '{tenant}' ({tier}) -> target: {target}...")
+    res = CommercialPackagerProvisioner.provision_target(
+        workspace_root=REPO_ROOT,
+        tenant_id=tenant,
+        tier=tier,
+        target=target
+    )
+    print(f"✅ Provisioning complete: {res['status']}")
+    print(f"   Tenant ID: {res['tenant_id']}")
+    print(f"   Resolved Tier: {res['tier']}")
+    print(f"   Provisioned Targets: {', '.join(res['provisioned_targets'])}")
+    if res.get("merkle_block_id"):
+        print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
+
+def cmd_permission(args):
+    action = args.permission_action
+    if action == "check":
+        tenant_or_tier = args.tenant or args.tier or "plan_free"
+        feature = args.feature
+        res = CommercialPackagerProvisioner.verify_permissions(
+            workspace_root=REPO_ROOT,
+            tenant_id_or_tier=tenant_or_tier,
+            feature=feature
+        )
+        status_icon = "✅" if res["allowed"] else "❌"
+        print(f"{status_icon} Permission Check [{res['tier_name']}]:")
+        print(f"   Feature: {res['feature']}")
+        print(f"   Allowed: {res['allowed']}")
+        print(f"   Reason: {res['reason']}")
 
 def cmd_init(args):
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
@@ -75,7 +130,48 @@ def cmd_init(args):
 
     print("✅ Workspace successfully initialized into Quad-Space architecture.")
 
+def check_basic_tools_permission() -> bool:
+    """
+    Checks whether the active billing tier permits basic platform tools exposure
+    and proprietary user plan packaging (.nbpack).
+    On Free Community tier (plan_free), basic platform tools are not exposed and
+    user plans remain strictly plaintext (non-encryptable), while platform core
+    assets remain encrypted and readable by the percipience command.
+    """
+    billing_file = REPO_ROOT / ".nb" / "config" / "billing_plans.yaml"
+    if not billing_file.exists():
+        billing_file = REPO_ROOT / "workplace" / "config" / "billing_plans.yaml"
+    if billing_file.exists():
+        try:
+            import yaml
+            data = yaml.safe_load(billing_file.read_text(encoding="utf-8")) or {}
+            active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
+            features = data.get("plans", {}).get(active_plan, {}).get("features", {})
+            return bool(features.get("basic_platform_tools_exposure", False))
+        except Exception:
+            pass
+    return False
+
+def cmd_tools(args):
+    allowed = check_basic_tools_permission()
+    active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
+    print(f"🛠️ Percipience Platform Tools & Capabilities Status [{active_plan}]:")
+    print(f"   • Basic Platform Tools Exposure: {'ENABLED' if allowed else 'UNEXPOSED (Free Tier Restriction)'}")
+    print(f"   • Platform Core Assets (.nb/): ENCRYPTED & READABLE BY PERCIPIENCE CLI")
+    print(f"   • User Plan Encryption (.nbpack): {'ENABLED' if allowed else 'DISABLED (Plaintext Only)'}")
+    print(f"   • High-Level Gatekeeper Actions: ENABLED (gate, audit, cicd, validate, tokens)")
+    if not allowed:
+        print()
+        print("ℹ️ Boundary Policy: There is no plan to expose basic platform tools to Free Tier users.")
+        print("   Free tier user plans remain strictly plaintext. Platform core assets stay encrypted.")
+
 def cmd_pack(args):
+    if not check_basic_tools_permission():
+        print("❌ Access Denied: Basic platform tools exposure and user plan encryption are disabled on Free Community Tier.")
+        print("   Free tier user plans remain strictly plaintext (non-encryptable).")
+        print("   Platform core assets (.nb/context, .nb/config, .nb/core, master plans) stay encrypted and readable by percipience.")
+        print("   Upgrade to Business or Enterprise tier for platform tool APIs and user plan encryption.")
+        sys.exit(1)
     print(f"📦 Compiling and sealing proprietary package (.nbpack)...")
     out_path = Path(args.output) if args.output else (REPO_ROOT / ".nb" / "percipience_parent.nbpack")
     res = NBPackEnvelope.compile_package(REPO_ROOT, out_path)
@@ -191,6 +287,19 @@ def cmd_worktree(args):
     elif action == "release":
         res = WorktreeEngine.release(REPO_ROOT, args.agent)
         print(f"✅ Worktree lease released: {res['status']}")
+    elif action == "wrap":
+        wrapped = TerminalAgentASTProxy.wrap_terminal_agent(
+            agent_cmd=args.agent,
+            agent_args=[],
+            workspace_root=REPO_ROOT,
+            format_type=getattr(args, "format", None)
+        )
+        print(f"✅ Terminal agent '{args.agent}' wrapped with AST compression:")
+        print(f"   Session ID: {wrapped['session_id']}")
+        print(f"   Context File: {wrapped['context_file']}")
+        print(f"   Tokens Saved: {wrapped['tokens_saved']:,} ({wrapped['reduction_pct']}% savings)")
+        print(f"   Injected Env: {list(wrapped['env'].keys())}")
+
     elif action == "list":
         leases = WorktreeEngine.list_leases(REPO_ROOT)
         print(f"📋 Active Worktree Leases ({len(leases)} found):")
@@ -223,6 +332,19 @@ def cmd_egress(args):
         print(f"✅ Block {args.block_id} mirrored to WORM storage: {res['vault_id']}")
         print(f"   Object Key: {res['object_key']}")
         print(f"   Mode: {res['retention_mode']} (Legal Hold: {res['legal_hold']})")
+    elif action == "wrap":
+        wrapped = TerminalAgentASTProxy.wrap_terminal_agent(
+            agent_cmd=args.agent,
+            agent_args=[],
+            workspace_root=REPO_ROOT,
+            format_type=getattr(args, "format", None)
+        )
+        print(f"✅ Terminal agent '{args.agent}' wrapped with AST compression:")
+        print(f"   Session ID: {wrapped['session_id']}")
+        print(f"   Context File: {wrapped['context_file']}")
+        print(f"   Tokens Saved: {wrapped['tokens_saved']:,} ({wrapped['reduction_pct']}% savings)")
+        print(f"   Injected Env: {list(wrapped['env'].keys())}")
+
     elif action == "list":
         records = WORMEgressManager.get_audit_trail(REPO_ROOT)
         print(f"📋 Immutable WORM Cloud Audit Trail ({len(records)} blocks):")
@@ -352,6 +474,19 @@ def cmd_agent(args):
         print(f"   Target Module: {res['target_module']}")
         print(f"   Restored To: {res['target_point']}")
         print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
+
+    elif action == "wrap":
+        wrapped = TerminalAgentASTProxy.wrap_terminal_agent(
+            agent_cmd=args.agent,
+            agent_args=[],
+            workspace_root=REPO_ROOT,
+            format_type=getattr(args, "format", None)
+        )
+        print(f"✅ Terminal agent '{args.agent}' wrapped with AST compression:")
+        print(f"   Session ID: {wrapped['session_id']}")
+        print(f"   Context File: {wrapped['context_file']}")
+        print(f"   Tokens Saved: {wrapped['tokens_saved']:,} ({wrapped['reduction_pct']}% savings)")
+        print(f"   Injected Env: {list(wrapped['env'].keys())}")
 
     elif action == "list":
         agents = AgentPluginEngine.list_agents(REPO_ROOT)
@@ -566,6 +701,11 @@ def cmd_cicd(args):
 def cmd_layer(args):
     action = args.layer_action
     if action == "pack":
+        if not check_basic_tools_permission():
+            print("❌ Access Denied: Basic platform tools exposure and user plan packaging/encryption (.nbpack) are disabled on Free Community Tier.")
+            print("   Free tier user plans remain strictly plaintext (non-encryptable).")
+            print("   Use plaintext plans directly with '.nb/bin/percipience layer apply --plan <path>'.")
+            sys.exit(1)
         plan_path = Path(args.plan)
         if not plan_path.is_absolute():
             plan_path = REPO_ROOT / plan_path
@@ -607,6 +747,19 @@ def cmd_layer(args):
             block = MerkleEngine.seal_block(REPO_ROOT, action=f"LAYER_APPLIED:{plan_path.stem}")
             print(f"✅ Layer '{plan_path.stem}' applied successfully!")
             print(f"   Merkle Block Sealed: {block['block_id']}")
+
+    elif action == "wrap":
+        wrapped = TerminalAgentASTProxy.wrap_terminal_agent(
+            agent_cmd=args.agent,
+            agent_args=[],
+            workspace_root=REPO_ROOT,
+            format_type=getattr(args, "format", None)
+        )
+        print(f"✅ Terminal agent '{args.agent}' wrapped with AST compression:")
+        print(f"   Session ID: {wrapped['session_id']}")
+        print(f"   Context File: {wrapped['context_file']}")
+        print(f"   Tokens Saved: {wrapped['tokens_saved']:,} ({wrapped['reduction_pct']}% savings)")
+        print(f"   Injected Env: {list(wrapped['env'].keys())}")
 
     elif action == "list":
         ledger_path = (REPO_ROOT / ".nb" / "context" / "ledger" / "context_ledger.yaml" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "context_ledger.yaml")
@@ -707,6 +860,50 @@ def cmd_swarm(args):
         print("   Rogue Dynamic Subagents Detected: 0 (All processes verified in DAG)")
         print("✅ Swarm integrity verified: No shadow processes or lease leaks.")
 
+
+
+def cmd_context(args):
+    action = args.context_action
+    if action == "export":
+        modules = [m.strip() for m in args.module.split(",")] if getattr(args, "module", None) else None
+        res = TerminalAgentASTProxy.export_context(
+            workspace_root=REPO_ROOT,
+            format_type=args.format,
+            target_modules=modules
+        )
+        if args.output:
+            out_p = Path(args.output)
+            if not out_p.is_absolute():
+                out_p = REPO_ROOT / out_p
+            out_p.parent.mkdir(parents=True, exist_ok=True)
+            out_p.write_text(res["payload"], encoding="utf-8")
+            print(f"✅ Exported AST context to {out_p} ({res['tokens_saved']:,} tokens saved, {res['reduction_pct']}% reduction)")
+        else:
+            print(res["payload"])
+
+def cmd_terminal(args):
+    action = args.terminal_action
+    if action == "hook":
+        print(TerminalAgentASTProxy.generate_shell_hook(args.shell))
+    elif action in ("status", "summary"):
+        s = TerminalAgentASTProxy.get_terminal_finops_summary(REPO_ROOT)
+        print("💻 Percipience Terminal Mode Agent FinOps Status:")
+        print(f"   • Active Terminal Sessions: {s.get('terminal_sessions_count', 0)}")
+        print(f"   • Terminal Tokens Saved: {s.get('terminal_tokens_saved', 0):,}")
+        print(f"   • Gross Spend Saved: ${s.get('terminal_gross_saved_usd', 0.0):.4f} USD")
+        print(f"   • Status: {s.get('status', 'HEALTHY')}")
+    elif action == "wrap":
+        wrapped = TerminalAgentASTProxy.wrap_terminal_agent(
+            agent_cmd=args.agent,
+            agent_args=[],
+            workspace_root=REPO_ROOT,
+            format_type=args.format
+        )
+        print(f"✅ Wrapped '{args.agent}' for terminal execution:")
+        print(f"   Session ID: {wrapped['session_id']}")
+        print(f"   Context File: {wrapped['context_file']}")
+        print(f"   Tokens Saved: {wrapped['tokens_saved']:,} ({wrapped['reduction_pct']}%)")
+        print(f"   Injected Env: {list(wrapped['env'].keys())}")
 
 def cmd_formalize(args):
     print(f"📝 Formalizing unstructured engineering request...")
@@ -820,12 +1017,34 @@ def main():
     p_daemon_prune.add_argument("--endpoint", default="http://127.0.0.1:8585")
     p_daemon.set_defaults(func=cmd_daemon)
 
+
+    # context
+    p_ctx = subparsers.add_parser("context", help="Export and format AST-pruned context for agents")
+    p_ctx_subs = p_ctx.add_subparsers(dest="context_action", required=True)
+    p_ctx_exp = p_ctx_subs.add_parser("export", help="Export AST-pruned context")
+    p_ctx_exp.add_argument("--format", default="claude-code", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"])
+    p_ctx_exp.add_argument("--module", help="Target modules comma-separated")
+    p_ctx_exp.add_argument("--output", help="Output file path")
+    p_ctx.set_defaults(func=cmd_context)
+
+    # terminal
+    p_term = subparsers.add_parser("terminal", help="Manage terminal mode agents (Claude Code, Gemini CLI, Aider)")
+    p_term_subs = p_term.add_subparsers(dest="terminal_action", required=True)
+    p_t_hook = p_term_subs.add_parser("hook", help="Emit shell integration hook")
+    p_t_hook.add_argument("--shell", default="zsh", choices=["zsh", "bash", "fish"])
+    p_t_stat = p_term_subs.add_parser("status", help="Show terminal agent FinOps status")
+    p_t_wrap = p_term_subs.add_parser("wrap", help="Wrap a terminal agent with AST context injection")
+    p_t_wrap.add_argument("--agent", default="claude", choices=["claude", "gemini", "aider", "cursor"])
+    p_t_wrap.add_argument("--format", default="claude-code", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"])
+    p_term.set_defaults(func=cmd_terminal)
+
     # agent
     p_ag = subparsers.add_parser("agent", help="Manage custom agents and autonomous CI/CD plugins")
     p_ag_subs = p_ag.add_subparsers(dest="agent_action", required=True)
 
     # agent create
     p_ag_create = p_ag_subs.add_parser("create", help="Scaffold a new custom agent from template and seal Merkle block")
+    p_ag_create.set_defaults(func=cmd_agent)
     p_ag_create.add_argument("--name", required=True, help="Agent name or slug")
     p_ag_create.add_argument("--template", default="cicd_quality", choices=["cicd_quality", "security", "finops", "self_healing", "refactor"])
     p_ag_create.add_argument("--role", default="Code Quality & Invariant Enforcer")
@@ -835,6 +1054,7 @@ def main():
 
     # agent integrate
     p_ag_integ = p_ag_subs.add_parser("integrate", help="Integrate custom agent into an existing workflow DAG")
+    p_ag_integ.set_defaults(func=cmd_agent)
     p_ag_integ.add_argument("--agent", required=True, help="Agent ID to integrate")
     p_ag_integ.add_argument("--workflow", default="wf_pr_gatekeeper", help="Workflow ID (e.g. wf_pr_gatekeeper)")
     p_ag_integ.add_argument("--after", default="step_contract_compat", help="Step ID after which to inject")
@@ -842,6 +1062,7 @@ def main():
 
     # agent run
     p_ag_run = p_ag_subs.add_parser("run", help="Run agent inside an isolated ephemeral worktree with Merkle seal")
+    p_ag_run.set_defaults(func=cmd_agent)
     p_ag_run.add_argument("--agent", required=True, help="Agent ID to execute")
     p_ag_run.add_argument("--task", default="Autonomous code analysis & verification", help="Task description")
     p_ag_run.add_argument("--module", default="mod_portal_marketing", help="Target module scope")
@@ -849,12 +1070,20 @@ def main():
 
     # agent rollback
     p_ag_rb = p_ag_subs.add_parser("rollback", help="Surgically rollback an agent's changes to a recovery point")
+    p_ag_rb.set_defaults(func=cmd_agent)
     p_ag_rb.add_argument("--agent", required=True, help="Agent ID")
     p_ag_rb.add_argument("--module", default="mod_portal_marketing", help="Target module")
     p_ag_rb.add_argument("--recovery-point", default="RP_PLAY3_BOOTSTRAP_001", help="Target recovery point")
 
+    # agent wrap
+    p_ag_wrap = p_ag_subs.add_parser("wrap", help="Wrap terminal agent with AST compression")
+    p_ag_wrap.set_defaults(func=cmd_agent)
+    p_ag_wrap.add_argument("--agent", required=True, choices=["claude", "gemini", "aider", "cursor"])
+    p_ag_wrap.add_argument("--format", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"], default=None)
+
     # agent list & test
     p_ag_list = p_ag_subs.add_parser("list", help="List registered custom agents and their workflow bindings")
+    p_ag_list.set_defaults(func=cmd_agent)
     p_ag_test = p_ag_subs.add_parser("test", help="Test custom agent in sandboxed simulation")
     p_ag_test.add_argument("--agent", required=True)
     p_ag_test.add_argument("--dry-run", action="store_true")
@@ -989,6 +1218,35 @@ def main():
     p_formal.add_argument("--workflow", default="wf_derivation_pipeline", help="Target workflow name")
     p_formal.add_argument("--out-dir", default="", help="Custom output directory for formal specifications")
     p_formal.set_defaults(func=cmd_formalize)
+
+    # tools
+    p_tools = subparsers.add_parser("tools", help="Audit platform tools exposure and encryption governance")
+    p_tools.add_argument("tools_action", nargs="?", default="status", choices=["status"], help="Tools action")
+    p_tools.set_defaults(func=cmd_tools)
+
+    # package
+    p_pkg = subparsers.add_parser("package", help="Package config, executables, scripts, and core engines per commercial pricing tier")
+    p_pkg.add_argument("--tier", default="free", choices=["free", "team", "business", "enterprise", "plan_free", "plan_team", "plan_business", "plan_enterprise"])
+    p_pkg.add_argument("--output", help="Output package directory")
+    p_pkg.add_argument("--tenant", default="tenant_community_default", help="Tenant ID for license signing")
+    p_pkg.set_defaults(func=cmd_package)
+
+    # provision
+    p_prov = subparsers.add_parser("provision", help="Provision runtime bundles and permissions across IntelliJ, VSCode, and SaaS Portal")
+    p_prov.add_argument("--tenant", required=True, help="Tenant ID")
+    p_prov.add_argument("--tier", default="free", choices=["free", "team", "business", "enterprise", "plan_free", "plan_team", "plan_business", "plan_enterprise"])
+    p_prov.add_argument("--target", default="all", choices=["all", "intellij", "vscode", "portal"])
+    p_prov.set_defaults(func=cmd_provision)
+
+    # permission
+    p_perm = subparsers.add_parser("permission", help="Verify feature entitlements and RBAC permissions")
+    p_perm_subs = p_perm.add_subparsers(dest="permission_action", required=True)
+    p_perm_chk = p_perm_subs.add_parser("check", help="Check permission for a specific feature")
+    p_perm_chk.add_argument("--tenant", help="Tenant ID")
+    p_perm_chk.add_argument("--tier", choices=["free", "team", "business", "enterprise", "plan_free", "plan_team", "plan_business", "plan_enterprise"], help="Tier ID")
+    p_perm_chk.add_argument("--feature", required=True, help="Feature name to test")
+    p_perm_chk.set_defaults(func=cmd_permission)
+    p_perm.set_defaults(func=cmd_permission)
 
     args = parser.parse_args()
     if not args.subcommand:
