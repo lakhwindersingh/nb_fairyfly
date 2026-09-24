@@ -42,6 +42,14 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
    - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
    - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
 
+5. **Terminal-Mode Autonomous Agent Integration & AST Token Compression (Claude Code, Gemini CLI, Aider, Cursor CLI)**:
+   - Deep integration with terminal-based autonomous AI agents executing inside the embedded IDE terminal tool window or external developer shell.
+   - Transparent interception & environment variable injection (`PERCIPIENCE_TERMINAL_MODE=1`, `PERCIPIENCE_AST_COMPRESSION=1`, `PERCIPIENCE_PROJECT_ROOT`) via `LocalTerminalCustomizer` / `PercipienceTerminalCustomizer`.
+   - Dynamic AST context extraction and skeletonization for Claude Code (`claude-code` / `CLAUDE.md`), Google Gemini CLI (`gemini-cli` / system instructions), and Aider (`aider` repo-map) achieving **40%–75% token reduction** on full repo prompt cycles.
+   - Real-time token metering and gross USD spend tracking recorded directly into the cryptographic `token_savings_ledger.yaml` with ToolWindow FinOps telemetry.
+   - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
+   - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
+
 ---
 
 ## 1. Domain-Specific Quad-Space Mapping
@@ -267,7 +275,7 @@ sequenceDiagram
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
-./bin/percipience layer pack \
+./.nb/bin/percipience layer pack \
   --plan .nb/plan/l1/intellij-pycharm-plugin/concise.md \
   --output .nb/bundles/intellij_pycharm_plugin_domain.nbpack \
   --include-spaces .nb/context/contracts,.nb/context/rules,.nb/agentic/custom
@@ -275,7 +283,7 @@ sequenceDiagram
 
 ### 6.2. Consuming the Encrypted Bundle in Target Repository
 ```bash
-./bin/percipience layer apply \
+./.nb/bin/percipience layer apply \
   --pack .nb/bundles/intellij_pycharm_plugin_domain.nbpack \
   --in-memory-only \
   --mode multi_module
@@ -289,3 +297,57 @@ The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-
 4. `percipience/workflows/` (`basic_autonomous_cicd.yaml`).
 5. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
 6. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).
+
+
+### 4.6. Terminal Mode Agent AST Proxy & JetBrains Shell Hook Architecture
+
+#### 1. Core Problem Addressed
+When developers run terminal-based autonomous coding agents (such as Anthropic's **Claude Code** `claude`, Google's **Gemini CLI** `gemini`, or **Aider**) inside the embedded IDE terminal or a standalone shell session, these agents typically read raw workspace files directly from disk. This results in:
+1. **Severe Token Bloat**: Ingesting raw function bodies and boilerplate burns 50k–150k tokens per prompt cycle.
+2. **Context Window Exhaustion**: Rapidly exhausts context limits on large multi-module repositories.
+3. **Bypassed FinOps Tracking**: Context queries bypass the IDE PSI and token savings ledger.
+
+#### 2. Percipience Terminal Proxy Architecture
+Percipience solves this with a dual-layer interception and compression architecture:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Developer / Terminal User
+    participant Term as IntelliJ Embedded Terminal (PTY)
+    participant Cust as PercipienceTerminalCustomizer
+    participant Proxy as TerminalAgentASTProxy (.nb/core)
+    participant AST as ASTOptimizer (Python/Kotlin/TS)
+    participant Ledger as TokenTracker (token_savings_ledger.yaml)
+    participant Agent as Claude Code / Gemini CLI / Aider
+
+    Dev->>Term: Executes 'percipience agent wrap --agent claude' or 'claude'
+    Cust-->>Term: Injects PERCIPIENCE_TERMINAL_MODE=1, PERCIPIENCE_AST_COMPRESSION=1
+    Term->>Proxy: export_context(workspace_root, format='claude-code')
+    Proxy->>AST: prune_source(raw_code, lang)
+    AST-->>Proxy: AST Skeleton (signatures, types, docstrings)
+    Proxy->>Ledger: record_event(tokens_saved, model='claude-3-5-sonnet')
+    Proxy-->>Term: Writes .percipience_claude_context.md (46%-70% smaller)
+    Term->>Agent: Launches Agent with AST Context injected into system prompt
+    Agent-->>Dev: Autonomous execution completed with minimal token consumption
+```
+
+#### 3. CLI Command Suite for Terminal Agents
+Percipience provides dedicated CLI subcommands for managing terminal agents:
+
+```bash
+# 1. Export AST context for Claude Code, Gemini CLI, or Aider
+./.nb/bin/percipience context export --format claude-code --output .percipience_claude_context.md
+./.nb/bin/percipience context export --format gemini-cli --output .percipience_gemini_context.md
+
+# 2. Wrap and execute an agent with dynamic AST context injection
+./.nb/bin/percipience agent wrap --agent claude
+./.nb/bin/percipience agent wrap --agent gemini
+
+# 3. Generate transparent shell hooks for zsh / bash / fish
+./.nb/bin/percipience terminal hook --shell zsh
+eval "$(/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/bin/percipience terminal hook --shell zsh)"
+
+# 4. Inspect terminal agent FinOps savings in real-time
+./.nb/bin/percipience terminal status
+```

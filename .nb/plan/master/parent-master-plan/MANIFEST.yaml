@@ -18,7 +18,7 @@ file_versions:
     path: detailed.md
     version: 7.5.0
     last_modified: '2026-09-24'
-    content_hash: b7690f3d26aa173b9e245136dc3f662cdd17a834f0e5cd58f1110fc5c5dc95af
+    content_hash: c9aacc398db5cdbe7108ab8a659dd3897a0fb487a540d0fc133643deedc6a88a
     line_count: 1624
     primary_purpose: Extended implementation guide with complete capability breakdowns
   readme:

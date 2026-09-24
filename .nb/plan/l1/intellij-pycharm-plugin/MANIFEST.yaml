@@ -20,8 +20,8 @@ file_versions:
     path: detailed.md
     version: 1.0.0
     last_modified: '2026-09-24'
-    content_hash: 773b1835b30c4bd4e896fee96b2a96886719894bd693847659641c92a45be51e
-    line_count: 291
+    content_hash: 24c52792e4c7e0efc69f6745e927c5bd454d1cb722143cb5ff28dc1f1d9d9e50
+    line_count: 353
     primary_purpose: Extended implementation guide with JetBrains SDK and PSI architecture
   readme:
     path: README.md

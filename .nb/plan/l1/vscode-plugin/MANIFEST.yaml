@@ -20,7 +20,7 @@ file_versions:
     path: detailed.md
     version: 1.0.0
     last_modified: '2026-09-24'
-    content_hash: a1f68fd630a7cebb371332403137d3056f1335e46c3b3852ddac35f18c833984
+    content_hash: 417ea4f23e0bd3620eec2b406c5a90b8baf796659b43d90504f0290f6b22e05e
     line_count: 294
     primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
   readme:

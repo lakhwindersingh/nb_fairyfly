@@ -19,7 +19,7 @@ file_versions:
     path: detailed.md
     version: 1.0.0
     last_modified: '2026-09-24'
-    content_hash: fbce5a2408f971a27fef73125b5ed0190504953f676bdfdaf67d9c2be6ec0207
+    content_hash: e0c8d91cd1196991a63935f957536d16a74cd8a556ab2214a2d460ffd9565a11
     line_count: 250
     primary_purpose: Extended implementation guide with web architecture and multi-tenant
       isolation
