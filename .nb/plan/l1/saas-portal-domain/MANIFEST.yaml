@@ -1,6 +1,6 @@
 plan_id: domain_saas_portal
 plan_name: Enterprise SaaS, Corporate Portals & Web Platform Ecosystem
-version: 1.0.0
+version: 1.1.0
 capability_rating: L1
 plan_type: foundation
 status: active
@@ -10,19 +10,18 @@ dependencies:
 file_versions:
   concise:
     path: concise.md
-    version: 1.0.0
+    version: 1.1.0
     last_modified: '2026-09-24'
-    content_hash: 8f4589add4aa1471d0f602ac890af9bb07a854860fa7a1d606e0e157c93dc03a
-    line_count: 70
+    content_hash: auto
+    line_count: 75
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
-    version: 1.0.0
+    version: 1.1.0
     last_modified: '2026-09-24'
-    content_hash: e0c8d91cd1196991a63935f957536d16a74cd8a556ab2214a2d460ffd9565a11
-    line_count: 250
-    primary_purpose: Extended implementation guide with web architecture and multi-tenant
-      isolation
+    content_hash: auto
+    line_count: 280
+    primary_purpose: Extended implementation guide with web architecture, commercial packager provisioner and multi-tenant isolation
   readme:
     path: README.md
     version: 1.0.0
@@ -33,6 +32,7 @@ file_versions:
 key_capabilities:
 - Modern Frontend & Corporate Web Systems (Next.js 14 App Router)
 - Multi-Tenant SaaS Portals & PostgreSQL Row-Level Security
+- Commercial Packaging, Multi-Tier Provisioner & Ed25519 License Minting
 - Decoupled API Gateways & Stripe Usage Billing Handlers
 - Observability Hub Dashboard & Real-Time Telemetry Feeds
 - WCAG 2.1 AA & Core Web Vitals Quality Harnesses
@@ -40,16 +40,20 @@ implementation_phases:
   phase_1: Wire Contracts & Tenant Schemas
   phase_2: Multi-Tenant RBAC & PostgreSQL RLS Engine
   phase_3: Stripe Usage Metering & Rev-Share Calculation
-  phase_4: Next.js Frontend & 5-Tab Observability Hub
-  phase_5: E2E Playwright & Vitest Quality CI Verification
+  phase_4: Commercial Packaging, License Minting & IDE Provisioner
+  phase_5: Next.js Frontend & 5-Tab Observability Hub
+  phase_6: E2E Playwright & Vitest Quality CI Verification
 success_metrics:
   lcp_performance: <1.2s
   tenant_isolation: 100%
+  commercial_provisioning_latency: <250ms
   test_coverage: 100%
 related_contracts:
 - .nb/context/contracts/onboarding_contract.yaml
 - .nb/context/contracts/billing_meter_contract.yaml
+- .nb/context/contracts/commercial_provisioning_contract.yaml
 - .nb/context/contracts/observability_contract.yaml
 related_rules:
 - .nb/context/rules/web_accessibility_rules.md
 - .nb/context/rules/tenant_isolation_invariants.md
+- .nb/context/rules/commercial_tier_permissioning_rules.md

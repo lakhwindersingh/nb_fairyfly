@@ -33,6 +33,6 @@ prompts:
   workflow_orchestration_prompt.md:
     has_prefix_pinning: true
     role: workflow_orchestration
-    sha256: e441f43e8fbaeb3cd72c8e38021f7b9059a01bf4529bc15e913e6620df830fcb
-    size_bytes: 971
+    sha256: fdae454e9f4cd6614ea7542de18b89ff0393d1506c0bd4bb611d010d5d150872
+    size_bytes: 974
     version: 1.0.0

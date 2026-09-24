@@ -68,6 +68,7 @@ from core.tenant_manager import (
 )
 from core.project_scaffolder import ProjectScaffolder, ScaffoldResult
 from core.kms_broker import KMSBroker, KeyRecord, SealedEnclaveBundle
+from core.commercial_packager_provisioner import CommercialPackagerProvisioner
 from core.project_policy_engine import (
     ProjectPolicyManager,
     ProjectPolicy,
@@ -539,6 +540,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔐 Client Space</button>
       <button class="nav-btn" onclick="showTab('governance'); loadGovernanceTab();" id="govNavBtn" style="border:1px solid var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant &amp; Policies</button>
+      <button class="nav-btn" onclick="showTab('commercial-provisioner'); loadCommercialTab();" id="commercialNavBtn" style="border:1px solid var(--amber); color:var(--amber); font-weight:700;">📦 Commercial Provisioner</button>
       <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
@@ -2426,6 +2428,201 @@ percipience rollback \
 
       </div>
     </section>
+
+    <!-- TAB 14: COMMERCIAL PACKAGE PROVISIONER & TIER LICENSING (CAP-42) -->
+    <section id="commercial-provisioner" class="tab-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--amber); display:flex; align-items:center; gap:8px;">
+            <span>📦</span> Percipience Commercial Packager, Multi-Tier Provisioner &amp; Entitlement Engine
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Automated Tier-Specific Runtime Packaging • Cross-IDE Cryptographic Provisioning • Ed25519 License Minting • RBAC Permission Gate
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge badge-amber" style="font-size:11px;">Zero-Trust Tier Enforcement</span>
+          <span class="badge badge-green" style="font-size:11px;">SHA-256 Merkle Sealed</span>
+          <button class="btn btn-secondary" onclick="loadCommercialTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh Tiers</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4-TIER COMMERCIAL SPECIFICATION MATRIX -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:24px;">
+        <!-- TIER: FREE -->
+        <div class="card" style="border-top: 3px solid var(--muted);">
+          <div class="card-badge" style="background:rgba(148,163,184,0.15); color:var(--muted);">Free Community</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$0 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Solo developers &amp; open-source projects with local AST optimization.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>1 Included Seat</b></div>
+            <div>⚡ <b>1 Concurrent Worktree</b></div>
+            <div>🛡️ <b>500 PR Audits / month</b></div>
+            <div>🔒 Tree-Sitter &amp; Merkle Core</div>
+            <div style="color:var(--muted);">❌ Custom Agents &amp; Enclaves</div>
+          </div>
+        </div>
+
+        <!-- TIER: TEAM -->
+        <div class="card" style="border-top: 3px solid var(--cyan);">
+          <div class="card-badge" style="background:var(--cyan-glow); color:var(--cyan);">Team</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$1,499 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Growing engineering pods with custom agent workflows and prompt drift tracking.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>15 Included Seats</b></div>
+            <div>⚡ <b>5 Concurrent Worktrees</b></div>
+            <div>🛡️ <b>5,000 PR Audits / month</b></div>
+            <div>🤖 Custom Agent Definitions</div>
+            <div style="color:var(--muted);">❌ Private VPC &amp; WORM</div>
+          </div>
+        </div>
+
+        <!-- TIER: BUSINESS -->
+        <div class="card" style="border-top: 3px solid var(--purple);">
+          <div class="card-badge" style="background:var(--purple-glow); color:var(--purple);">Business</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$4,999 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Scale-ups requiring .nbpack enclave compilation &amp; Cognitive Routing.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>50 Included Seats</b></div>
+            <div>⚡ <b>20 Concurrent Worktrees</b></div>
+            <div>🛡️ <b>25,000 PR Audits / month</b></div>
+            <div>📦 .nbpack Enclave Bundling</div>
+            <div>🧠 Cognitive Routing &amp; Gateways</div>
+          </div>
+        </div>
+
+        <!-- TIER: ENTERPRISE -->
+        <div class="card" style="border-top: 3px solid var(--amber);">
+          <div class="card-badge" style="background:var(--amber-glow); color:var(--amber);">Enterprise Dedicated</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$12,499 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Full sovereign compliance, air-gapped VPCs, CMEK, and S3 WORM vaults.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>Unlimited Seats</b></div>
+            <div>⚡ <b>100+ Concurrent Worktrees</b></div>
+            <div>🛡️ <b>Unlimited PR Audits</b></div>
+            <div>🏛️ Air-Gapped VPC &amp; CMEK</div>
+            <div>🔒 S3/GCS Immutable WORM Egress</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: INTERACTIVE PACKAGING & PROVISIONING OPERATIONS -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px; margin-bottom:24px;">
+        
+        <!-- CARD 1: ON-DEMAND COMMERCIAL TIER PACKAGER -->
+        <div class="card">
+          <div class="card-title">🚀 On-Demand Commercial Tier Packager</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Filters core engine modules, CLI binaries, and prompt templates for the selected tier, sealing the bundle with SHA-256 Merkle proofs.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <div class="form-group">
+              <label class="form-label">Select Commercial Plan Tier</label>
+              <select id="commPkgTier" class="select" style="font-size:12px;">
+                <option value="plan_enterprise" selected>Enterprise Dedicated (All engines &amp; capabilities)</option>
+                <option value="plan_business">Business (.nbpack, cognitive routing, plugins)</option>
+                <option value="plan_team">Team (Worktree engine, custom agents, drift sentinels)</option>
+                <option value="plan_free">Free Community (Offline AST optimizer, Merkle core)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tenant ID for Packaging Manifest</label>
+              <input type="text" id="commPkgTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+            </div>
+
+            <button class="btn btn-primary" onclick="packageCommercialTier()" style="font-size:12px; padding:8px 16px;">
+              📦 Assemble &amp; Seal Commercial Bundle
+            </button>
+          </div>
+
+          <div id="commPkgResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- CARD 2: CROSS-PLATFORM TENANT PROVISIONER -->
+        <div class="card">
+          <div class="card-title">🛡️ Cross-Platform Tenant Provisioner &amp; Licensing</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Mints cryptographic Ed25519 licenses and deploys tier-specific runtime configs into IntelliJ, VSCode, or SaaS Gateway.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label class="form-label">Target Tenant ID</label>
+                <input type="text" id="commProvTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Commercial Tier</label>
+                <select id="commProvTier" class="select" style="font-size:12px;">
+                  <option value="plan_enterprise" selected>Enterprise Dedicated</option>
+                  <option value="plan_business">Business</option>
+                  <option value="plan_team">Team</option>
+                  <option value="plan_free">Free Community</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Deployment Target</label>
+              <select id="commProvTarget" class="select" style="font-size:12px;">
+                <option value="all" selected>All Targets (IntelliJ, VSCode &amp; SaaS Gateway)</option>
+                <option value="mod_intellij_plugin">IntelliJ IDEA Plugin Module</option>
+                <option value="mod_vscode_extension">VSCode Extension Module</option>
+                <option value="saas_portal_gateway">Cloud SaaS Portal Gateway</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="provisionCommercialTarget()" style="font-size:12px; padding:8px 16px;">
+              ⚡ Provision Target &amp; Mint License
+            </button>
+          </div>
+
+          <div id="commProvResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <!-- ROW 3: RBAC PERMISSION GATE & ENTITLEMENT AUDITOR -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🔍 Zero-Trust Permission Gate &amp; Entitlement Simulator</div>
+          <button class="btn btn-secondary" onclick="auditCommercialEntitlements()" style="font-size:11px; padding:4px 12px;">📊 Audit Tenant Quotas</button>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Simulates runtime policy evaluation and feature gate enforcement against tenant tier configurations.
+        </p>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:flex-end; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Tenant ID</label>
+            <input type="text" id="commPermTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Capability / Action to Evaluate</label>
+            <select id="commPermAction" class="select" style="font-size:12px;">
+              <option value="allow_worm_egress">allow_worm_egress (S3 Immutable Vault)</option>
+              <option value="allow_nbpack_compilation">allow_nbpack_compilation (.nbpack Enclave)</option>
+              <option value="allow_custom_agent_creation">allow_custom_agent_creation (Agent Workflows)</option>
+              <option value="allow_private_vpc">allow_private_vpc (Air-Gapped Cloud)</option>
+              <option value="allow_multi_tenant_gateway">allow_multi_tenant_gateway (SaaS Gateway)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Target File (Optional)</label>
+            <input type="text" id="commPermFile" class="input" placeholder=".nb/core/worm_egress.py" style="font-size:12px;">
+          </div>
+
+          <button class="btn btn-primary" onclick="verifyCommercialPermission()" style="font-size:12px; height:38px;">
+            🛡️ Verify Permission
+          </button>
+        </div>
+
+        <div id="commPermResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -3262,6 +3459,146 @@ percipience rollback \
         `;
       } else {
         resBox.innerHTML = `<span style="color:var(--red);">PR Gate Evaluation Error: ${data.error}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function loadCommercialTab() {
+    try {
+      const res = await fetch('/api/commercial/packages');
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Commercial packages loaded:', data);
+      }
+    } catch (e) {
+      console.error('Error loading commercial tab:', e);
+    }
+  }
+
+  async function packageCommercialTier() {
+    const tier = document.getElementById('commPkgTier').value;
+    const tenantId = document.getElementById('commPkgTenant').value || 'tenant_acme_fintech';
+    const resBox = document.getElementById('commPkgResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Assembling, filtering core engines, and sealing commercial bundle...</span>';
+
+    try {
+      const res = await fetch('/api/commercial/package', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tier: tier, tenant_id: tenantId})
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const pkg = data.package_result;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Commercial Bundle Packaged &amp; Cryptographically Sealed:</div>
+          <div><b>Tier:</b> <span class="badge badge-cyan">${pkg.tier}</span> (${pkg.canonical_name})</div>
+          <div><b>Output Directory:</b> <code>${pkg.output_directory}</code></div>
+          <div><b>Total Bundled Files:</b> <span class="text-cyan">${pkg.bundled_files_count} files</span></div>
+          <div><b>Merkle Root:</b> <code style="color:var(--purple);">${pkg.merkle_root}</code></div>
+          <div><b>License ID:</b> <code>${pkg.license_id}</code></div>
+          <div style="color:var(--muted); font-size:10px; margin-top:4px;">Sealed at ${pkg.sealed_at}</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Packaging Error: ${data.error || 'Unknown failure'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function provisionCommercialTarget() {
+    const tenantId = document.getElementById('commProvTenant').value || 'tenant_acme_fintech';
+    const tier = document.getElementById('commProvTier').value;
+    const target = document.getElementById('commProvTarget').value;
+    const resBox = document.getElementById('commProvResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Minting Ed25519 license and provisioning target runtimes...</span>';
+
+    try {
+      const res = await fetch('/api/commercial/provision', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tenant_id: tenantId, tier: tier, target: target})
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const prov = data.provision_result;
+        const targetsHtml = (prov.targets || []).map(t => `<span class="badge badge-green">${t}</span>`).join(' ');
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Provisioning Successful Across Targets:</div>
+          <div style="margin-bottom:4px;"><b>Targets Provisioned:</b> ${targetsHtml}</div>
+          <div><b>Tier Entitlement:</b> <span class="badge badge-amber">${prov.tier}</span></div>
+          <div><b>License Token:</b> <code style="color:var(--cyan);">${(prov.license_token || '').substring(0, 32)}...</code></div>
+          <div><b>Merkle Block Sealing:</b> <code style="color:var(--purple);">${prov.merkle_block_id || 'SEALED'}</code></div>
+          <div style="margin-top:6px; font-size:10.5px; color:var(--muted);">All IDE modules and SaaS Gateways refreshed with updated capabilities.</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Provisioning Error: ${data.error || 'Unknown failure'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function verifyCommercialPermission() {
+    const tenantId = document.getElementById('commPermTenant').value || 'tenant_acme_fintech';
+    const action = document.getElementById('commPermAction').value;
+    const targetFile = document.getElementById('commPermFile').value || undefined;
+    const resBox = document.getElementById('commPermResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Evaluating RBAC permission matrix...</span>';
+
+    try {
+      const res = await fetch('/api/commercial/verify-permission', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tenant_id: tenantId, action: action, target_file: targetFile})
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const ver = data.verification;
+        const statusBadge = ver.permitted 
+          ? '<span class="badge badge-green">✓ PERMITTED</span>' 
+          : '<span class="badge badge-red">✗ DENIED</span>';
+        resBox.innerHTML = `
+          <div style="font-weight:700; margin-bottom:4px;">Permission Decision: ${statusBadge}</div>
+          <div><b>Tenant:</b> <code>${ver.tenant_id}</code> (Tier: <span class="badge badge-amber">${ver.tier}</span>)</div>
+          <div><b>Action:</b> <code>${ver.action}</code></div>
+          <div><b>Reason:</b> ${ver.reason}</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Verification Error: ${data.error || 'Unknown failure'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function auditCommercialEntitlements() {
+    const tenantId = document.getElementById('commPermTenant').value || 'tenant_acme_fintech';
+    const resBox = document.getElementById('commPermResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Auditing billing entitlements for tenant...</span>';
+
+    try {
+      const res = await fetch(`/api/commercial/entitlements?tenant_id=${encodeURIComponent(tenantId)}`);
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const ent = data.entitlements;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Billing &amp; Entitlement Audit:</div>
+          <div><b>Tenant ID:</b> <code>${ent.tenant_id}</code> | <b>Tier:</b> <span class="badge badge-amber">${ent.tier}</span></div>
+          <div><b>Monthly Base Price:</b> <span class="text-cyan">$${ent.base_price_monthly_usd}</span></div>
+          <div><b>Seats Limit:</b> ${ent.included_seats === -1 ? 'Unlimited' : ent.included_seats}</div>
+          <div><b>Max Concurrent Worktrees:</b> <span class="text-green">${ent.included_concurrent_worktrees}</span></div>
+          <div><b>Monthly PR Audits Quota:</b> ${ent.included_pr_audits_monthly === -1 ? 'Unlimited' : Number(ent.included_pr_audits_monthly).toLocaleString()}</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Entitlement Audit Error: ${data.error || 'Unknown failure'}</span>`;
       }
     } catch (e) {
       resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
@@ -4142,6 +4479,58 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             })
             return
 
+        if parsed.path == "/api/commercial/tiers":
+            tiers = {}
+            for t in ["plan_free", "plan_team", "plan_business", "plan_enterprise"]:
+                spec = CommercialPackagerProvisioner.get_tier_spec(t, REPO_ROOT)
+                rules = dict(spec.get("rules", {}))
+                if isinstance(rules.get("allowed_engines"), set):
+                    rules["allowed_engines"] = sorted(list(rules["allowed_engines"]))
+                spec["rules"] = rules
+                tiers[t] = spec
+            self._send_json({"status": "SUCCESS", "tiers": tiers})
+            return
+
+        if parsed.path == "/api/commercial/entitlements":
+            query_params = parse_qs(parsed.query)
+            t_id = query_params.get("tenant_id", ["tenant_community_default"])[0]
+            entitlements = CommercialPackagerProvisioner.audit_billing_entitlements(REPO_ROOT, t_id)
+            self._send_json({"status": "SUCCESS", "entitlements": entitlements})
+            return
+
+        if parsed.path == "/api/commercial/packages":
+            bundles_dir = REPO_ROOT / ".nb" / "bundles"
+            packages = []
+            if bundles_dir.exists():
+                for p in sorted(bundles_dir.glob("package_*")):
+                    if p.is_dir():
+                        lic = p / "PERCIPIENCE_LICENSE.json"
+                        lic_data = {}
+                        if lic.exists():
+                            try:
+                                lic_data = json.loads(lic.read_text(encoding="utf-8"))
+                            except Exception:
+                                pass
+                        total_files = len(list(p.rglob("*.*")))
+                        packages.append({
+                            "directory": p.name,
+                            "tier": lic_data.get("tier", p.name.replace("package_", "")),
+                            "total_files": total_files,
+                            "license_id": lic_data.get("license_id"),
+                            "merkle_root": lic_data.get("merkle_root"),
+                            "issued_at": lic_data.get("issued_at")
+                        })
+                for b in sorted(bundles_dir.glob("percipience-*.*")):
+                    if b.is_file():
+                        import hashlib
+                        packages.append({
+                            "filename": b.name,
+                            "size_bytes": b.stat().st_size,
+                            "sha256": hashlib.sha256(b.read_bytes()).hexdigest()
+                        })
+            self._send_json({"status": "SUCCESS", "packages": packages})
+            return
+
         self._send_json({"error": "Not Found"}, 404)
 
     def do_POST(self):
@@ -4384,7 +4773,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/tenant/create":
             t_id = payload.get("tenant_id")
             name = payload.get("name")
-            tier = payload.get("tier", "plan_enterprise")
+            tier = payload.get("tier", "plan_free")
             if not t_id or not name:
                 self._send_json({"error": "tenant_id and name required"}, status=400)
                 return
@@ -4401,7 +4790,7 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             p_name = payload.get("name")
             target_dir_str = payload.get("target_dir")
             mode = payload.get("mode", "multi_module")
-            tier = payload.get("tier", "plan_enterprise")
+            tier = payload.get("tier", "plan_free")
             user_id = payload.get("user_id", "user_super_alice")
             if not p_id or not p_name:
                 self._send_json({"error": "project_id and name are required"}, status=400)
@@ -4489,6 +4878,54 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 self._send_json({"error": str(e)}, status=400)
             return
+
+        if parsed.path == "/api/commercial/package":
+            tier = payload.get("tier", "plan_free")
+            t_id = payload.get("tenant_id", "tenant_community_default")
+            out_dir_str = payload.get("output_dir")
+            out_dir = Path(out_dir_str) if out_dir_str else None
+            try:
+                res = CommercialPackagerProvisioner.package_tier(REPO_ROOT, tier, output_dir=out_dir, tenant_id=t_id)
+                self._send_json({"status": "SUCCESS", "package_result": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/commercial/provision":
+            t_id = payload.get("tenant_id", "tenant_community_default")
+            tier = payload.get("tier", "plan_free")
+            target = payload.get("target", "all")
+            lic_meta = payload.get("license_metadata")
+            try:
+                res = CommercialPackagerProvisioner.provision_target(
+                    REPO_ROOT,
+                    tenant_id=t_id,
+                    tier=tier,
+                    target=target,
+                    license_metadata=lic_meta
+                )
+                self._send_json({"status": "SUCCESS", "provision_result": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/commercial/verify-permission":
+            t_id = payload.get("tenant_id", "tenant_community_default")
+            action = payload.get("action", "allow_worm_egress")
+            target_f = payload.get("target_file")
+            try:
+                res = CommercialPackagerProvisioner.verify_permissions(
+                    REPO_ROOT,
+                    tenant_id=t_id,
+                    action=action,
+                    target_file=target_f
+                )
+                self._send_json({"status": "SUCCESS", "verification": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+
 
         self._send_json({"error": "Not Found"}, 404)
 

@@ -20,7 +20,7 @@ model_profile:
   cache_prefix_alignment: true # Enforces byte-identical prompt prefix for Anthropic 90% discount
 
 isolation_and_sandboxing:
-  worktree_isolation: true # Must execute in an ephemeral isolated Git worktree (.workspaces/wt_{agent_id})
+  worktree_isolation: true # Must execute in an ephemeral isolated Git worktree (.nb/workspaces/wt_{agent_id})
   default_ttl_seconds: 300
   clean_worktree_on_exit: true
   prevent_cross_module_leakage: true
@@ -33,6 +33,7 @@ module_scope:
   denied_paths:
     - ".nb/context/invariants"
     - ".git"
+    - ".nb/workspaces"
     - ".workspaces"
 
 contracts_and_invariants:

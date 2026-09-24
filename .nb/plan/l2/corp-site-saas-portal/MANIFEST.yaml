@@ -1,6 +1,6 @@
 plan_id: play_3_corp_site_saas
 plan_name: Percipience Cloud SaaS Portal & Enterprise Corporate Site
-version: 3.0.0
+version: 3.1.0
 capability_rating: L2
 plan_type: self-evolution
 status: active
@@ -11,19 +11,18 @@ dependencies:
 file_versions:
   concise:
     path: concise.md
-    version: 3.0.0
+    version: 3.1.0
     last_modified: '2026-09-24'
-    content_hash: 77f9f5ca947b35f3e9ab5cd75fe3a8a98c52655674e5bc094de8f4bd96452c26
-    line_count: 66
+    content_hash: auto
+    line_count: 75
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
-    version: 3.0.0
+    version: 3.1.0
     last_modified: '2026-09-24'
-    content_hash: d98660b5d8be89e20e0acc023e1c283975119e0359738d5c6ffca4c2ae6395d2
-    line_count: 467
-    primary_purpose: Extended implementation guide with web architecture, multi-module
-      layout, and billing
+    content_hash: auto
+    line_count: 480
+    primary_purpose: Extended implementation guide with web architecture, multi-module layout, commercial packager provisioner, and billing
   readme:
     path: README.md
     version: 3.0.0
@@ -34,21 +33,26 @@ file_versions:
 key_capabilities:
 - Unified Enterprise Portal & Corporate Brand (Next.js 14)
 - Autonomous Multi-Tenant Onboarding (SSO / WorkOS / Clerk)
+- Commercial Packaging, Multi-Target Provisioning & Ed25519 License Minting
 - Usage-Based Metering & 15% Token Rev-Share Financial Engine
 - Mission-Control Context Observability Dashboard
 - Shared-to-Decoupled Cloud Infrastructure Architecture
 implementation_phases:
   phase_1: Public Brand Pages & Interactive ROI Calculator
-  phase_2: Multi-Tenant Onboarding & CMEK Provisioning
-  phase_3: Stripe Billing & Rev-Share Financial Ledger
-  phase_4: Observability Dashboard & Telemetry Gateway
+  phase_2: Commercial Packager & Provisioning Engine
+  phase_3: Multi-Tenant Onboarding & CMEK Provisioning
+  phase_4: Stripe Billing & Rev-Share Financial Ledger
+  phase_5: Observability Dashboard & Telemetry Gateway
 success_metrics:
   lcp_performance: <1.2s
+  commercial_provisioning_latency: <250ms
   hosting_opex: <$350/mo initial
   test_coverage: 100%
 related_contracts:
 - .nb/context/contracts/onboarding_contract.yaml
 - .nb/context/contracts/billing_meter_contract.yaml
+- .nb/context/contracts/commercial_provisioning_contract.yaml
 - .nb/context/contracts/observability_contract.yaml
 related_rules:
 - .nb/context/rules/web_accessibility_rules.md
+- .nb/context/rules/commercial_tier_permissioning_rules.md

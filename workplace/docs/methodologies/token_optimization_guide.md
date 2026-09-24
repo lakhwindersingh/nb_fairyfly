@@ -4,7 +4,7 @@
 > **Product Brand:** **Neutron Binary Percipience**  
 > **Target Release:** Q4 2026 – Q3 2027  
 > **Status:** Production Architecture & Engineering Methodology  
-> **Governing Spec:** [`.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md)  
+> **Governing Spec:** [`.nb/plan/archive/old_structure/CEaasS/play_3_enterprise_context_engineering_os_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/archive/old_structure/CEaasS/play_3_enterprise_context_engineering_os_plan.md)  
 > **Core Engine:** [`.nb/core/token_optimizer_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/token_optimizer_suite.py)  
 
 ---

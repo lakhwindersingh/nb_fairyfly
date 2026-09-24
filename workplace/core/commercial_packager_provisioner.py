@@ -346,11 +346,53 @@ class CommercialPackagerProvisioner:
             "status": "PACKAGED",
             "tier": tier_id,
             "tier_name": spec["canonical_name"],
+            "canonical_name": spec["canonical_name"],
             "package_dir": str(output_dir),
+            "output_directory": str(output_dir),
             "total_files": len(bundled_files),
+            "bundled_files_count": len(bundled_files),
             "bundled_files": bundled_files,
+            "merkle_root": license_sig,
+            "license_id": manifest_payload.get("license_id"),
             "license_signature": license_sig,
+            "sealed_at": manifest_payload.get("issued_at"),
             "merkle_block_id": merkle_block_id
+        }
+
+    @classmethod
+    def audit_billing_entitlements(
+        cls,
+        workspace_root: Path,
+        tenant_id_or_tier: str = "tenant_community_default",
+        tenant_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Audits billing entitlements and current limits for a tenant.
+        """
+        workspace_root = Path(workspace_root).resolve()
+        t_id = tenant_id or tenant_id_or_tier
+        tenant_tier = t_id
+        tenant_hierarchy_file = workspace_root / ".nb" / "context" / "tenant_hierarchy.json"
+        if tenant_hierarchy_file.exists():
+            try:
+                data = json.loads(tenant_hierarchy_file.read_text(encoding="utf-8"))
+                tenants = data.get("tenants", {})
+                if t_id in tenants:
+                    tenant_tier = tenants[t_id].get("tier", "plan_free")
+            except Exception:
+                pass
+
+        spec = cls.get_tier_spec(tenant_tier, workspace_root)
+        return {
+            "tenant_id": t_id,
+            "tier": spec["tier_id"],
+            "tier_name": spec["canonical_name"],
+            "base_price_monthly_usd": spec["base_price_monthly_usd"],
+            "included_seats": spec["included_seats"],
+            "included_concurrent_worktrees": spec["included_concurrent_worktrees"],
+            "included_pr_audits_monthly": spec["included_pr_audits_monthly"],
+            "features": spec["features"],
+            "rules": spec["rules"]
         }
 
     @classmethod
@@ -359,7 +401,8 @@ class CommercialPackagerProvisioner:
         workspace_root: Path,
         tenant_id: str,
         tier: str,
-        target: str = "all"
+        target: str = "all",
+        license_metadata: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Provisions and permissions packaged artifacts across IntelliJ, VSCode, and SaaS Portal.
@@ -379,7 +422,7 @@ class CommercialPackagerProvisioner:
         provisioned_targets: List[str] = []
 
         # 2. Provision IntelliJ / PyCharm Plugin
-        if target in ["all", "intellij", "pycharm", "ide"]:
+        if target in ["all", "intellij", "pycharm", "ide", "mod_intellij_plugin"]:
             ij_resources = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience"
             ij_resources.mkdir(parents=True, exist_ok=True)
             for item in ["bin", "config", "core", "agentic", "plan"]:
@@ -394,7 +437,7 @@ class CommercialPackagerProvisioner:
             provisioned_targets.append("mod_intellij_plugin")
 
         # 3. Provision VSCode Extension
-        if target in ["all", "vscode"]:
+        if target in ["all", "vscode", "mod_vscode_extension"]:
             vscode_dir = workspace_root / "workplace" / "modules" / "mod_vscode_extension"
             if vscode_dir.exists():
                 vscode_runtime = vscode_dir / "percipience_runtime"
@@ -410,7 +453,7 @@ class CommercialPackagerProvisioner:
                 provisioned_targets.append("mod_vscode_extension")
 
         # 4. Provision SaaS Portal & Gateway Hierarchy
-        if target in ["all", "portal", "saas"]:
+        if target in ["all", "portal", "saas", "saas_portal_gateway"]:
             tenant_hierarchy_file = workspace_root / ".nb" / "context" / "tenant_hierarchy.json"
             hierarchy = {"tenants": {}, "projects": {}, "repositories": {}}
             if tenant_hierarchy_file.exists():
@@ -455,12 +498,16 @@ class CommercialPackagerProvisioner:
             except Exception:
                 pass
 
+        license_token = pkg_res.get("license_token") or pkg_res.get("license_id")
         return {
             "status": "PROVISIONED",
             "tenant_id": tenant_id,
             "tier": tier_id,
+            "targets": provisioned_targets,
             "provisioned_targets": provisioned_targets,
+            "license_token": license_token,
             "package_info": pkg_res,
+            "package_result": pkg_res,
             "merkle_block_id": merkle_block_id
         }
 
@@ -468,43 +515,61 @@ class CommercialPackagerProvisioner:
     def verify_permissions(
         cls,
         workspace_root: Path,
-        tenant_id_or_tier: str,
-        feature: str
+        tenant_id: str = "tenant_community_default",
+        action: str = "",
+        target_file: Optional[str] = None,
+        feature: str = "",
+        tenant_id_or_tier: Optional[str] = None
     ) -> Dict[str, Any]:
+        t_id = tenant_id_or_tier or tenant_id
         """
-        Verifies whether a tenant or tier is permitted to use a specific feature.
+        Verifies whether a tenant or tier is permitted to perform an action or use a feature.
         """
         workspace_root = Path(workspace_root).resolve()
+        evaluated_action = action or feature
 
-        # Check if tenant_id_or_tier is a tenant in hierarchy
-        tenant_tier = tenant_id_or_tier
+        tenant_tier = t_id
         tenant_hierarchy_file = workspace_root / ".nb" / "context" / "tenant_hierarchy.json"
         if tenant_hierarchy_file.exists():
             try:
                 data = json.loads(tenant_hierarchy_file.read_text(encoding="utf-8"))
                 tenants = data.get("tenants", {})
-                if tenant_id_or_tier in tenants:
-                    tenant_tier = tenants[tenant_id_or_tier].get("tier", "plan_free")
+                if t_id in tenants:
+                    tenant_tier = tenants[t_id].get("tier", "plan_free")
             except Exception:
                 pass
 
         spec = cls.get_tier_spec(tenant_tier, workspace_root)
         features = spec.get("features", {})
-        allowed = bool(features.get(feature, False))
+        rules = spec.get("rules", {})
 
-        # Check rule overrides for core tool exposure
-        if feature == "basic_platform_tools_exposure":
-            allowed = spec["rules"].get("expose_basic_platform_tools", False)
-        elif feature == "nbpack_obfuscation":
-            allowed = spec["rules"].get("allow_nbpack_compilation", False)
-        elif feature == "private_vpc_deploy":
-            allowed = spec["rules"].get("allow_private_vpc", False)
+        allowed = bool(features.get(evaluated_action, False))
+
+        # Check rule overrides
+        if evaluated_action in rules:
+            allowed = bool(rules[evaluated_action])
+        elif evaluated_action == "allow_worm_egress":
+            allowed = bool(rules.get("allow_worm_egress", False))
+        elif evaluated_action == "allow_nbpack_compilation":
+            allowed = bool(rules.get("allow_nbpack_compilation", False))
+        elif evaluated_action == "allow_custom_agent_creation":
+            allowed = bool(rules.get("allow_custom_agent_creation", False))
+        elif evaluated_action == "allow_private_vpc":
+            allowed = bool(rules.get("allow_private_vpc", False))
+        elif evaluated_action == "allow_multi_tenant_gateway":
+            allowed = bool(rules.get("allow_multi_tenant_gateway", False))
+        elif evaluated_action == "basic_platform_tools_exposure":
+            allowed = bool(rules.get("expose_basic_platform_tools", False))
 
         return {
-            "tenant_or_tier": tenant_id_or_tier,
+            "tenant_id": t_id,
+            "tenant_or_tier": t_id,
+            "tier": spec["tier_id"],
             "resolved_tier": spec["tier_id"],
             "tier_name": spec["canonical_name"],
-            "feature": feature,
+            "action": evaluated_action,
+            "feature": evaluated_action,
+            "permitted": allowed,
             "allowed": allowed,
-            "reason": "Feature permitted under tier entitlements" if allowed else f"Feature '{feature}' requires tier upgrade from {spec['canonical_name']}"
+            "reason": "Permitted under tier entitlements" if allowed else f"Action/Feature '{evaluated_action}' requires tier upgrade from {spec['canonical_name']}"
         }

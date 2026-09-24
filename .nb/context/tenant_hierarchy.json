@@ -2,15 +2,28 @@
   "tenants": {
     "tenant_acme_fintech": {
       "tenant_id": "tenant_acme_fintech",
-      "name": "Acme Global Financial Technologies",
-      "slug": "acme-global-financial-technologies",
-      "tier": "plan_enterprise",
+      "name": "Tenant Acme Fintech",
+      "slug": "tenant-acme-fintech",
+      "tier": "plan_business",
       "status": "ACTIVE",
-      "created_at": "2026-09-21T01:06:10.688218+00:00",
+      "created_at": "2026-09-24T20:02:54.541568+00:00",
       "settings": {
-        "max_concurrent_nodes": 50
+        "max_concurrent_worktrees": 20,
+        "monthly_pr_audits_quota": 25000
       },
-      "metadata": {}
+      "metadata": {
+        "entitlements": {
+          "ast_token_pruning": true,
+          "merkle_chain_audit": true,
+          "basic_autonomous_cicd": true,
+          "platform_core_encryption": true,
+          "nbpack_obfuscation": true,
+          "user_plan_encryption": true,
+          "basic_platform_tools_exposure": true,
+          "private_vpc_deploy": false
+        },
+        "provisioned_at": "2026-09-24T20:02:54.541577+00:00"
+      }
     },
     "tenant_acme_corp": {
       "tenant_id": "tenant_acme_corp",
@@ -64,12 +77,12 @@
       "tenant_id": "tenant_community_default",
       "name": "Tenant Community Default",
       "slug": "tenant-community-default",
-      "tier": "plan_enterprise",
+      "tier": "plan_free",
       "status": "ACTIVE",
       "created_at": "2026-09-24T19:30:03.571793+00:00",
       "settings": {
-        "max_concurrent_worktrees": -1,
-        "monthly_pr_audits_quota": -1
+        "max_concurrent_worktrees": 1,
+        "monthly_pr_audits_quota": 500
       },
       "metadata": {
         "entitlements": {
@@ -77,11 +90,10 @@
           "merkle_chain_audit": true,
           "basic_autonomous_cicd": true,
           "platform_core_encryption": true,
-          "nbpack_obfuscation": true,
-          "user_plan_encryption": true,
-          "basic_platform_tools_exposure": true,
-          "private_vpc_deploy": true,
-          "dedicated_slack_sla": true
+          "nbpack_obfuscation": false,
+          "user_plan_encryption": false,
+          "basic_platform_tools_exposure": false,
+          "private_vpc_deploy": false
         },
         "provisioned_at": "2026-09-24T19:30:03.571799+00:00"
       }

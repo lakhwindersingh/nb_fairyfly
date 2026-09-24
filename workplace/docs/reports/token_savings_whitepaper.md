@@ -7,7 +7,7 @@
 > **Version**: 7.5-Autonomous-CICD-Model-Agnostic  
 > **Target Audience**: Chief Technology Officers, VP of Engineering, AI Platform Leads, FinOps Directors, DevSecOps Architects  
 > **Models & Systems Evaluated**: Anthropic Claude (3.7 Sonnet / 3.5 Sonnet / 3.5 Haiku), OpenAI (GPT-4o / GPT-4o-mini), Google Gemini (2.0 Pro / 2.0 Flash), Neutron Binary Percipience v7.5  
-> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/play/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) | [Autonomous CI/CD Engineering Roadmap](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md)  
+> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/archive/old_structure/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) | [Autonomous CI/CD Engineering Roadmap](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md)  
 > **Live Observability Console**: [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html)  
 
 ---
@@ -99,7 +99,7 @@ flowchart TD
   Router{"Model Cognitive Tiering<br/>(Policy Router)"}
   TierB["Tier B: Compact / Fast / Flash<br/><i>AST, Diffs, Routine Toil</i>"]
   TierA["Tier A: Frontier / Sonnet / Pro<br/><i>Contracts, Architecture, Security</i>"]
-  Worktree["Ephemeral Git Worktree Lease<br/><i>.workspaces/wt_{agent_id}</i>"]
+  Worktree["Ephemeral Git Worktree Lease<br/><i>.nb/workspaces/wt_{agent_id}</i>"]
   Gate["PR Verification Gatekeeper<br/>(Contracts, Invariants, Bounded TDD)"]
   Triad["Autonomous CI/CD Triad<br/>(Self-Sustaining, Self-Recovering, Self-Improving)"]
   Merkle["Cryptographic SHA-256 Merkle Ledger<br/><i>context/ledger/context_ledger.yaml</i>"]
