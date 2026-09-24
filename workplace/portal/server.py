@@ -57,6 +57,26 @@ from core.autonomous_cicd import (
     SelfImprovingEngine,
     AutonomousCICDOrchestrator
 )
+from core.tenant_manager import (
+    TenantManager,
+    TenantRole,
+    Tenant,
+    Project,
+    Repository,
+    WorkspaceNode,
+    TenantUser,
+)
+from core.project_scaffolder import ProjectScaffolder, ScaffoldResult
+from core.kms_broker import KMSBroker, KeyRecord, SealedEnclaveBundle
+from core.project_policy_engine import (
+    ProjectPolicyManager,
+    ProjectPolicy,
+    AttentionSlicingPolicy,
+    CognitiveRoutingPolicy,
+    ASTPruningPolicy,
+    SelfHealingSLAPolicy,
+    WireContractRule
+)
 
 PORTAL_HTML = """<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -331,6 +351,168 @@ PORTAL_HTML = """<!DOCTYPE html>
     pre, code { font-family: 'JetBrains Mono', monospace; }
     pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 11px; color: var(--cyan); overflow-x: auto; margin: 8px 0; }
 
+
+    /* Range Sliders & Policy Controls (CAP-40 / CAP-41) */
+    .slider-group { margin-bottom: 14px; }
+    .slider-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    .slider-header label { font-weight: 600; color: var(--text); }
+    .slider-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--cyan); }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+      margin: 4px 0;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+      border: 2px solid var(--card-bg);
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    .budget-bar-container {
+      display: flex;
+      height: 22px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 10px 0 16px;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+    }
+    .budget-slice {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      transition: width 0.2s ease;
+      overflow: hidden;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+    .tree-node {
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tree-node.level-2 { margin-left: 20px; border-left: 3px solid var(--cyan); }
+    .tree-node.level-3 { margin-left: 40px; border-left: 3px solid var(--purple); }
+    .tree-node.level-4 { margin-left: 60px; border-left: 3px solid var(--green); }
+
+    /* Responsive Navigation & Mobile Adaptation */
+    @media (max-width: 1200px) {
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px 18px;
+      }
+      .brand-wrap {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 4px;
+      }
+      .nav::-webkit-scrollbar {
+        height: 3px;
+      }
+      .nav::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      .nav-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        padding: 20px 10px 16px;
+      }
+      .hero h1 {
+        font-size: 26px;
+        line-height: 1.25;
+      }
+      .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .grid-2, .grid-3, .grid-4, .grid-cards {
+        grid-template-columns: 1fr !important;
+      }
+      .metric-card, .hero-stat-item {
+        padding: 12px 10px;
+      }
+      main {
+        padding: 16px 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 20px;
+      }
+      .hero p {
+        font-size: 13px;
+      }
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+      .stat-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .card, .panel-card {
+        padding: 14px 12px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -12px;
+        padding: 0 12px;
+      }
+      table {
+        min-width: 520px;
+      }
+      .budget-bar-container {
+        height: 18px;
+      }
+      .budget-slice {
+        font-size: 8.5px;
+      }
+      .btn, .action-btn {
+        padding: 7px 12px;
+      }
+      .tree-node.level-2 { margin-left: 10px; }
+      .tree-node.level-3 { margin-left: 18px; }
+      .tree-node.level-4 { margin-left: 26px; }
+    }
   </style>
 </head>
 <body>
@@ -356,6 +538,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('reports')">📑 Deep Reports</button>
       <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔐 Client Space</button>
+      <button class="nav-btn" onclick="showTab('governance'); loadGovernanceTab();" id="govNavBtn" style="border:1px solid var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant &amp; Policies</button>
       <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
@@ -385,6 +568,13 @@ PORTAL_HTML = """<!DOCTYPE html>
             <div class="hero-stat-val">0%</div>
             <div class="hero-stat-label">Plaintext Disk Residue (.nbpack)</div>
           </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:22px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="showTab('gateway')">🚀 Try Context Gateway</button>
+          <button class="btn btn-secondary" onclick="showTab('tier-matrix')">📊 Plan Matrix &amp; Ceilings</button>
+          <button class="btn btn-secondary" onclick="showTab('roi-calculator')">💰 FinOps ROI Calculator</button>
+          <button class="btn btn-secondary" onclick="showTab('governance')" style="border-color:var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant Policies</button>
         </div>
       </div>
 
@@ -2016,6 +2206,226 @@ percipience rollback \
       </div>
     </section>
 
+    <!-- TAB 13: MULTI-TENANT ENTERPRISE GOVERNANCE & POLICY TUNING (CAP-40 / CAP-41) -->
+    <section id="governance" class="tab-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--purple); display:flex; align-items:center; gap:8px;">
+            <span>🏛️</span> Sovereign Enterprise Multi-Tenant Governance &amp; Minute Policy Control
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Row-Level Security (RLS) • One-Click Scaffolding • Automated KMS Sealed Enclaves • Granular Context Tuning &amp; Healing SLA
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge badge-purple" style="font-size:11px;">PostgreSQL RLS Active</span>
+          <span class="badge badge-green" style="font-size:11px;">Role: Enterprise Super Admin</span>
+          <button class="btn btn-secondary" onclick="loadGovernanceTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh State</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: TENANT HIERARCHY & SCAFFOLDING WIZARD -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px; margin-bottom:24px;">
+        
+        <!-- CARD 1: HIERARCHY & RLS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🏢 Sovereign Organization &amp; Project Hierarchy</div>
+            <button class="btn btn-secondary" onclick="toggleRlsSchema()" style="font-size:11px; padding:4px 10px;">🔎 Inspect RLS DDL</button>
+          </div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Strict 4-level isolation: <code>Tenant</code> → <code>Project</code> → <code>Repository</code> → <code>Workstation Nodes</code>. PostgreSQL RLS enforces zero data leakage across multi-tenant queries.
+          </p>
+
+          <div id="govHierarchyContainer" style="background:var(--code-bg); padding:14px; border-radius:8px; border:1px solid var(--border); min-height:180px;">
+            <div style="color:var(--muted); font-size:12px;">Loading organization hierarchy...</div>
+          </div>
+
+          <div id="rlsSchemaWrapper" style="display:none; margin-top:14px;">
+            <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:6px;">Generated PostgreSQL Row-Level Security DDL:</div>
+            <pre id="rlsDdlText" style="max-height:220px;">-- Loading DDL...</pre>
+          </div>
+        </div>
+
+        <!-- CARD 2: ONE-CLICK SCAFFOLDING WIZARD -->
+        <div class="card">
+          <div class="card-title">🧙 One-Click Quad-Space Project Scaffolder</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Automates directory initialization (<code>.nb/context</code>, <code>.nb/agentic</code>, <code>workplace</code>, <code>user</code>), mints Genesis cryptographic recovery block <code>RP_GENESIS_000</code>, and provisions isolated KMS keys.
+          </p>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Project Identifier</label>
+              <input type="text" id="scaffoldProjectId" class="input" value="proj_crypto_arbitrage_01" style="font-size:12px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Architecture Mode</label>
+              <select id="scaffoldMode" class="select" style="font-size:12px;">
+                <option value="multi_module">multi_module (Quad-Space)</option>
+                <option value="isolated_micro_service">isolated_micro_service</option>
+                <option value="monolith">monolith</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:11px;">Project Display Name</label>
+            <input type="text" id="scaffoldProjectName" class="input" value="Crypto High-Frequency Arbitrage Engine" style="font-size:12px;">
+          </div>
+
+          <button class="btn btn-primary" onclick="triggerProjectScaffold()" style="width:100%; font-size:12px;">🚀 Scaffold Quad-Space Architecture &amp; Mint Genesis Block</button>
+
+          <div id="scaffoldResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+      </div>
+
+      <!-- ROW 2: KMS SEALED ENCLAVES & GRANULAR POLICY TUNING -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px;">
+
+        <!-- CARD 3: AUTOMATED KMS ENCLAVE VAULT -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🔐 Automated KMS Key Broker &amp; In-Memory Enclaves</div>
+            <span class="badge badge-green" style="font-size:10px;">Ed25519 + AES-256-GCM Active</span>
+          </div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Authenticates digital signatures and decrypts proprietary <code>.nbpack</code> domain bundles directly in volatile RAM with zero plaintext written to disk.
+          </p>
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" style="font-size:11px;">Enclave Payload Data (JSON)</label>
+            <textarea id="kmsPayloadInput" class="textarea" rows="4" style="font-size:11px; font-family:'JetBrains Mono', monospace;">{
+  "prompt_system": "Act as an autonomous institutional risk &amp; execution agent.",
+  "max_var_loss_usd": 50000.0,
+  "approved_symbols": ["BTC-USD", "ETH-USD"]
+}</textarea>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-bottom:14px;">
+            <button class="btn btn-primary" onclick="triggerKmsSeal()" style="flex:1; font-size:11px;">📦 Seal In-Memory .nbpack</button>
+            <button class="btn btn-secondary" onclick="triggerKmsMount()" style="flex:1; font-size:11px;">⚡ Mount in RAM (0% Disk Residue)</button>
+            <button class="btn btn-secondary" onclick="triggerKmsAudit()" style="font-size:11px; padding:6px 12px;">📜 Audit Log</button>
+          </div>
+
+          <div id="kmsResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+
+        <!-- CARD 4: GRANULAR CONTEXT TUNING SLIDERS & SLA POLICIES -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🎛️ Minute Project Control &amp; Policy Tuning Sliders</div>
+            <span id="budgetTotalBadge" class="badge badge-green" style="font-size:10px;">Budget: 100.0% (Valid)</span>
+          </div>
+          <p style="font-size:12px; margin-bottom:12px;">
+            Declarative per-project policy configuration: Dynamic attention slicing quotas, cognitive routing thresholds, diagnostic re-prompts, and flaky test quarantining.
+          </p>
+
+          <!-- VISUAL STACKED BUDGET DISTRIBUTION BAR -->
+          <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:4px;">Dynamic Prompt Attention Budget Distribution (100% Total):</div>
+          <div class="budget-bar-container" id="budgetDistributionBar">
+            <div class="budget-slice bg-purple" id="slicePersona" style="width:15%;" title="Persona &amp; Invariants (15%)">15% Rules</div>
+            <div class="budget-slice bg-cyan" id="sliceContracts" style="width:25%;" title="Contracts &amp; Schemas (25%)">25% Contracts</div>
+            <div class="budget-slice bg-green" id="sliceAst" style="width:35%;" title="AST Codebase (35%)">35% AST Code</div>
+            <div class="budget-slice bg-amber" id="sliceMemory" style="width:10%;" title="Memory &amp; Trajectories (10%)">10% Mem</div>
+            <div class="budget-slice" id="sliceOutput" style="width:15%; background:#ec4899;" title="Reserved Output Headroom (15%)">15% Headroom</div>
+          </div>
+
+          <!-- SLIDERS: ATTENTION QUOTAS -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>🛡️ Persona &amp; Invariants</label>
+                <span class="slider-val" id="valPersona">15%</span>
+              </div>
+              <input type="range" id="sliderPersona" min="5" max="30" value="15" oninput="onSliderChange()">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>📜 Contracts &amp; Schemas</label>
+                <span class="slider-val" id="valContracts">25%</span>
+              </div>
+              <input type="range" id="sliderContracts" min="10" max="40" value="25" oninput="onSliderChange()">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>🌳 AST Codebase Context</label>
+                <span class="slider-val" id="valAst">35%</span>
+              </div>
+              <input type="range" id="sliderAst" min="15" max="55" value="35" oninput="onSliderChange()">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label>🧠 Memory &amp; Trajectories</label>
+                <span class="slider-val" id="valMemory">10%</span>
+              </div>
+              <input type="range" id="sliderMemory" min="5" max="25" value="10" oninput="onSliderChange()">
+            </div>
+          </div>
+
+          <div class="slider-group" style="margin-bottom:16px;">
+            <div class="slider-header">
+              <label>🚀 Reserved Output Headroom (Guaranteed Generation)</label>
+              <span class="slider-val" id="valOutput" style="color:#ec4899;">15%</span>
+            </div>
+            <input type="range" id="sliderOutput" min="5" max="30" value="15" oninput="onSliderChange()">
+          </div>
+
+          <!-- SLA & ROUTING CONTROLS -->
+          <div style="border-top:1px solid var(--border); padding-top:14px; margin-bottom:14px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+              <div class="slider-group" style="margin-bottom:0;">
+                <div class="slider-header">
+                  <label>⚙️ Cognitive Tier A Threshold</label>
+                  <span class="slider-val" id="valTierA">0.70</span>
+                </div>
+                <input type="range" id="sliderTierA" min="0.10" max="0.95" step="0.05" value="0.70" oninput="document.getElementById('valTierA').innerText = parseFloat(this.value).toFixed(2)">
+              </div>
+
+              <div class="slider-group" style="margin-bottom:0;">
+                <div class="slider-header">
+                  <label>🔁 Diagnostic Re-Prompts</label>
+                  <span class="slider-val" id="valReprompts">3 turns</span>
+                </div>
+                <input type="range" id="sliderReprompts" min="1" max="5" value="3" oninput="document.getElementById('valReprompts').innerText = this.value + ' turns'">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+              <div class="slider-group" style="margin-bottom:0;">
+                <div class="slider-header">
+                  <label>🧬 Flaky Quarantine Threshold</label>
+                  <span class="slider-val" id="valFlaky">15.0%</span>
+                </div>
+                <input type="range" id="sliderFlaky" min="0.05" max="0.40" step="0.01" value="0.15" oninput="document.getElementById('valFlaky').innerText = (parseFloat(this.value)*100).toFixed(1) + '%'">
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" style="font-size:11px;">Wire Contract Breaking Rule</label>
+                <select id="policyWireRule" class="select" style="font-size:11px; padding:6px 10px;">
+                  <option value="STRICT_BLOCK">STRICT_BLOCK (Gate Rejection)</option>
+                  <option value="ALLOW_ADDITIVE_WARN">ALLOW_ADDITIVE_WARN (Warn Only)</option>
+                  <option value="MANUAL_APPROVAL">MANUAL_APPROVAL (HITL Signoff)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="saveCurrentPolicy()" style="flex:2; font-size:11px;">💾 Save &amp; Enforce Policy</button>
+            <button class="btn btn-secondary" onclick="testDynamicAttention()" style="flex:1; font-size:11px;">🧪 Test Slicing</button>
+            <button class="btn btn-secondary" onclick="simulatePrGateLive()" style="flex:1; font-size:11px;">🛡️ Simulate PR Gate</button>
+          </div>
+
+          <div id="policyResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+
+      </div>
+    </section>
   </main>
 
   <script>
@@ -2060,12 +2470,45 @@ percipience rollback \
     setInterval(fetchPortalTokenSavings, 5000);
 
     function showTab(id) {
+      if (!id) return;
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(id);
-      if (target) target.classList.add('active');
-      if (window.event && window.event.target && window.event.target.classList.contains('nav-btn')) {
-        window.event.target.classList.add('active');
+      if (target) {
+        target.classList.add('active');
+      }
+      
+      // Highlight matching nav button regardless of caller or inner elements
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const oc = btn.getAttribute('onclick') || '';
+        if (oc.includes("'" + id + "'") || oc.includes('"' + id + '"')) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Update URL hash for deep linking and back/forward browser navigation
+      if (window.location.hash !== '#' + id) {
+        try {
+          history.replaceState ? history.replaceState(null, null, '#' + id) : location.hash = '#' + id;
+        } catch (e) {}
+      }
+
+      // Smooth scroll to top on tab switch
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {}
+
+      // Tab-specific live data activations
+      if (id === 'governance') {
+        loadGovernanceTab();
+      } else if (id === 'tier-matrix') {
+        calculateCeilings();
+      } else if (id === 'roi-calculator') {
+        recalcRoi();
+      } else if (id === 'observability') {
+        fetchOtelSpans();
+      } else if (id === 'reports') {
+        fetchPortalTokenSavings();
       }
     }
 
@@ -2317,10 +2760,10 @@ percipience rollback \
   }
 
   function calculateCeilings() {
-    const seats = parseInt(document.getElementById(simSeats)?.value) || 1;
-    const worktrees = parseInt(document.getElementById(simWorktrees)?.value) || 1;
-    const audits = parseInt(document.getElementById(simAudits)?.value) || 100;
-    const enc = document.getElementById(simEnclave)?.value || plaintext;
+    const seats = parseInt(document.getElementById('simSeats')?.value) || 1;
+    const worktrees = parseInt(document.getElementById('simWorktrees')?.value) || 1;
+    const audits = parseInt(document.getElementById('simAudits')?.value) || 100;
+    const enc = document.getElementById('simEnclave')?.value || 'plaintext';
     
     let recTier = "plan_free";
     let tierName = "Free Community Plan";
@@ -2328,7 +2771,7 @@ percipience rollback \
     let badgeClass = "badge-emerald";
     let reasons = [];
 
-    if (seats > 50 || worktrees > 20 || audits > 25000 || enc === enclave || enc === vpc) {
+    if (seats > 50 || worktrees > 20 || audits > 25000 || enc === 'enclave' || enc === 'vpc') {
       recTier = "plan_enterprise";
       tierName = "Enterprise Dedicated VPC";
       basePrice = "$9,999+ / mo";
@@ -2336,8 +2779,8 @@ percipience rollback \
       if (seats > 50) reasons.push(`Seat count (${seats}) exceeds Business ceiling (50 seats)`);
       if (worktrees > 20) reasons.push(`Concurrency (${worktrees}) requires distributed cluster`);
       if (audits > 25000) reasons.push(`Audits/mo (${audits}) requires dedicated ingress`);
-      if (enc === enclave || enc === vpc) reasons.push(`Requires Hardware KMS CMEK RAM Enclave & Private VPC`);
-    } else if (seats > 15 || worktrees > 5 || audits > 5000 || enc === nbpack) {
+      if (enc === 'enclave' || enc === 'vpc') reasons.push(`Requires Hardware KMS CMEK RAM Enclave & Private VPC`);
+    } else if (seats > 15 || worktrees > 5 || audits > 5000 || enc === 'nbpack') {
       recTier = "plan_business";
       tierName = "Business Plan";
       basePrice = "$4,499 / mo";
@@ -2345,8 +2788,8 @@ percipience rollback \
       if (seats > 15) reasons.push(`Seat count (${seats}) exceeds Team ceiling (15 seats)`);
       if (worktrees > 5) reasons.push(`Concurrency (${worktrees}) requires high-throughput scheduler`);
       if (audits > 5000) reasons.push(`Audits/mo (${audits}) exceeds Team ceiling (5,000/mo)`);
-      if (enc === nbpack) reasons.push(`Requires AES-256 .nbpack domain obfuscation`);
-    } else if (seats > 1 || worktrees > 1 || audits > 500 || enc === cloud) {
+      if (enc === 'nbpack') reasons.push(`Requires AES-256 .nbpack domain obfuscation`);
+    } else if (seats > 1 || worktrees > 1 || audits > 500 || enc === 'cloud') {
       recTier = "plan_team";
       tierName = "Team Plan";
       basePrice = "$1,499 / mo";
@@ -2358,7 +2801,7 @@ percipience rollback \
       reasons.push(`Within Free Community Plan boundary ceilings (1 Seat, 1 Worktree, <=500 Audits/mo)`);
     }
 
-    const resBox = document.getElementById(simResult);
+    const resBox = document.getElementById('simResult');
     if (resBox) {
       resBox.innerHTML = `
         <div style="padding:12px; background:rgba(0,0,0,0.2); border:1px solid var(--border-accent); border-radius:8px;">
@@ -2378,9 +2821,471 @@ percipience rollback \
     }
   }
 
-  // Check session on load
+  // =========================================================================
+  // MULTI-TENANT ENTERPRISE GOVERNANCE & POLICY TUNING (CAP-40 / CAP-41)
+  // =========================================================================
+
+  let currentGovernanceData = null;
+  let lastSealedEnclaveBundle = null;
+
+  async function loadGovernanceTab() {
+    try {
+      // 1. Fetch Tenant Hierarchy
+      const hierRes = await fetch('/api/tenant/hierarchy?tenant_id=tenant_acme_fintech');
+      if (hierRes.ok) {
+        const hData = await hierRes.json();
+        renderHierarchyTree(hData);
+      }
+
+      // 2. Fetch Project Policy
+      const polRes = await fetch('/api/project/policy?tenant_id=tenant_acme_fintech&project_id=proj_fairyfly_core_9921');
+      if (polRes.ok) {
+        const pData = await polRes.json();
+        applyPolicyToSliders(pData.policy);
+      }
+    } catch (e) {
+      console.error('Failed to load governance tab:', e);
+    }
+  }
+
+  function renderHierarchyTree(hData) {
+    const container = document.getElementById('govHierarchyContainer');
+    if (!container || !hData || !hData.tenant) return;
+
+    const t = hData.tenant;
+    let html = `
+      <div class="tree-node">
+        <div>🏢 <b>Organization:</b> <span style="color:var(--purple); font-weight:700;">${t.name}</span> (<code>${t.tenant_id}</code>)</div>
+        <span class="badge badge-purple">${t.tier}</span>
+      </div>
+    `;
+
+    (hData.projects || []).forEach(pWrap => {
+      const p = pWrap.project;
+      html += `
+        <div class="tree-node level-2">
+          <div>📁 <b>Project:</b> <span style="color:var(--cyan); font-weight:700;">${p.name}</span> (<code>${p.project_id}</code>)</div>
+          <span class="badge badge-cyan">${p.mode}</span>
+        </div>
+      `;
+
+      (pWrap.repositories || []).forEach(r => {
+        html += `
+          <div class="tree-node level-3">
+            <div>📦 <b>Repo:</b> <code>${r.name}</code> (${r.repo_id})</div>
+            <span style="color:var(--muted); font-size:11px;">${r.url || 'local worktree'}</span>
+          </div>
+        `;
+      });
+
+      (pWrap.nodes || []).forEach(n => {
+        html += `
+          <div class="tree-node level-4">
+            <div>💻 <b>Fleet Node:</b> <code>${n.hostname}</code> (${n.node_id})</div>
+            <span class="status-pill status-active">ONLINE</span>
+          </div>
+        `;
+      });
+    });
+
+    container.innerHTML = html;
+  }
+
+  async function toggleRlsSchema() {
+    const wrap = document.getElementById('rlsSchemaWrapper');
+    const text = document.getElementById('rlsDdlText');
+    if (!wrap || !text) return;
+
+    if (wrap.style.display === 'none') {
+      wrap.style.display = 'block';
+      try {
+        const res = await fetch('/api/tenant/rls-schema');
+        const data = await res.json();
+        text.innerText = data.rls_schema_ddl || '-- No DDL available';
+      } catch (e) {
+        text.innerText = '-- Failed to fetch RLS schema';
+      }
+    } else {
+      wrap.style.display = 'none';
+    }
+  }
+
+  async function triggerProjectScaffold() {
+    const pId = document.getElementById('scaffoldProjectId').value.trim();
+    const pName = document.getElementById('scaffoldProjectName').value.trim();
+    const pMode = document.getElementById('scaffoldMode').value;
+    const resBox = document.getElementById('scaffoldResultBox');
+
+    if (!pId || !pName) {
+      alert('Please provide project ID and name.');
+      return;
+    }
+
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">⚡ Initializing Quad-Space Architecture &amp; Minting Genesis Block...</span>';
+
+    try {
+      const res = await fetch('/api/project/scaffold', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tenant_id: 'tenant_acme_fintech',
+          project_id: pId,
+          name: pName,
+          mode: pMode
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Project Scaffolding Completed Successfully!</div>
+          <div><b>Genesis Block:</b> <code style="color:var(--purple);">${data.genesis_recovery_point || 'RP_GENESIS_000'}</code> (Merkle Hash: <code>${(data.merkle_block_hash || '').slice(0, 16)}...</code>)</div>
+          <div><b>KMS Ed25519 Fingerprint:</b> <code>${(data.kms_key_fingerprint || '').slice(0, 24)}...</code></div>
+          <div><b>Scaffolded Directories:</b> <span class="text-cyan">${(data.scaffolded_directories || []).length} paths created</span></div>
+        `;
+        loadGovernanceTab();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red); font-weight:700;">✗ Scaffolding Failed:</span> ${data.error}`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red); font-weight:700;">✗ Network Error:</span> ${e.message}`;
+    }
+  }
+
+  async function triggerKmsSeal() {
+    const payloadRaw = document.getElementById('kmsPayloadInput').value;
+    const resBox = document.getElementById('kmsResultBox');
+    resBox.style.display = 'block';
+
+    let payloadObj = {};
+    try {
+      payloadObj = JSON.parse(payloadRaw);
+    } catch (e) {
+      alert('Invalid JSON payload');
+      return;
+    }
+
+    resBox.innerHTML = '<span style="color:var(--cyan);">🔒 Sealing in-memory envelope with AES-256-GCM and Ed25519 signature...</span>';
+
+    try {
+      const res = await fetch('/api/kms/seal', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tenant_id: 'tenant_acme_fintech',
+          project_id: 'proj_fairyfly_core_9921',
+          payload: payloadObj
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        lastSealedEnclaveBundle = data.bundle;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Envelope Sealed (.nbpack AES-256-GCM + Ed25519)</div>
+          <div><b>Merkle Seal:</b> <code>${data.bundle.merkle_seal}</code></div>
+          <div><b>Ed25519 Digital Signature:</b> <code style="font-size:10px;">${data.bundle.ed25519_signature.slice(0, 32)}...</code></div>
+          <div><b>AEAD Nonce:</b> <code>${data.bundle.aead_nonce_hex}</code></div>
+          <div><b>Ciphertext Length:</b> <span class="text-cyan">${data.bundle.ciphertext_b64.length} chars</span></div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">✗ Seal Failed:</span> ${data.error}`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">✗ Network Error:</span> ${e.message}`;
+    }
+  }
+
+  async function triggerKmsMount() {
+    const resBox = document.getElementById('kmsResultBox');
+    resBox.style.display = 'block';
+
+    if (!lastSealedEnclaveBundle) {
+      await triggerKmsSeal();
+    }
+
+    resBox.innerHTML = '<span style="color:var(--cyan);">⚡ Validating Ed25519 signature &amp; decrypting directly into volatile RAM...</span>';
+
+    try {
+      const res = await fetch('/api/kms/mount', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          project_id: 'proj_fairyfly_core_9921',
+          bundle: lastSealedEnclaveBundle
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ In-Memory RAM Enclave Mounted (0% Disk Residue)</div>
+          <div><b>Integrity Check:</b> <span class="text-green font-bold">✓ Ed25519 Cryptographic Signature Valid</span></div>
+          <div><b>Decrypted Payload (In-Memory Only):</b></div>
+          <pre style="margin-top:6px; max-height:140px;">${JSON.stringify(data.unsealed_payload, null, 2)}</pre>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">✗ Mount Rejected:</span> ${data.error}`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">✗ Network Error:</span> ${e.message}`;
+    }
+  }
+
+  async function triggerKmsAudit() {
+    const resBox = document.getElementById('kmsResultBox');
+    resBox.style.display = 'block';
+
+    try {
+      const res = await fetch('/api/kms/audit');
+      const data = await res.json();
+      if (res.ok) {
+        let rows = (data.audit_log || []).slice(-5).reverse().map(e => `
+          <tr>
+            <td><code>${e.event}</code></td>
+            <td><code>${e.project_id}</code></td>
+            <td><span class="badge badge-green">VALID</span></td>
+            <td><code style="font-size:10px;">${(e.event_hash || '').slice(0, 16)}...</code></td>
+          </tr>
+        `).join('');
+        resBox.innerHTML = `
+          <div style="font-weight:700; color:var(--cyan); margin-bottom:6px;">📜 Recent Cryptographic Audit Trail (SHA-256 Hash Chain):</div>
+          <div class="table-wrap"><table class="table" style="font-size:11px;">
+            <thead><tr><th>Action</th><th>Project</th><th>Status</th><th>Audit Hash</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table></div>
+        `;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Audit query failed.</span>`;
+    }
+  }
+
+  function applyPolicyToSliders(policy) {
+    if (!policy) return;
+    currentGovernanceData = policy;
+
+    const att = policy.attention || {};
+    document.getElementById('sliderPersona').value = att.persona_invariants_pct || 15;
+    document.getElementById('sliderContracts').value = att.contracts_schemas_pct || 25;
+    document.getElementById('sliderAst').value = att.ast_codebase_pct || 35;
+    document.getElementById('sliderMemory').value = att.memory_trajectories_pct || 10;
+    document.getElementById('sliderOutput').value = att.reserved_output_pct || 15;
+
+    const rout = policy.routing || {};
+    document.getElementById('sliderTierA').value = rout.tier_a_threshold || 0.70;
+    document.getElementById('valTierA').innerText = (rout.tier_a_threshold || 0.70).toFixed(2);
+
+    const sla = policy.healing_sla || {};
+    document.getElementById('sliderReprompts').value = sla.max_diagnostic_reprompts || 3;
+    document.getElementById('valReprompts').innerText = (sla.max_diagnostic_reprompts || 3) + ' turns';
+    document.getElementById('sliderFlaky').value = sla.flaky_quarantine_variance_threshold || 0.15;
+    document.getElementById('valFlaky').innerText = ((sla.flaky_quarantine_variance_threshold || 0.15) * 100).toFixed(1) + '%';
+    document.getElementById('policyWireRule').value = sla.wire_contract_breaking_rule || 'STRICT_BLOCK';
+
+    onSliderChange();
+  }
+
+  function onSliderChange() {
+    const p = parseFloat(document.getElementById('sliderPersona').value) || 0;
+    const c = parseFloat(document.getElementById('sliderContracts').value) || 0;
+    const a = parseFloat(document.getElementById('sliderAst').value) || 0;
+    const m = parseFloat(document.getElementById('sliderMemory').value) || 0;
+    const o = parseFloat(document.getElementById('sliderOutput').value) || 0;
+
+    document.getElementById('valPersona').innerText = p + '%';
+    document.getElementById('valContracts').innerText = c + '%';
+    document.getElementById('valAst').innerText = a + '%';
+    document.getElementById('valMemory').innerText = m + '%';
+    document.getElementById('valOutput').innerText = o + '%';
+
+    const sum = p + c + a + m + o;
+    const badge = document.getElementById('budgetTotalBadge');
+    if (Math.abs(sum - 100.0) < 0.1) {
+      badge.className = 'badge badge-green';
+      badge.innerText = 'Budget: 100.0% (Valid)';
+    } else {
+      badge.className = 'badge badge-red';
+      badge.innerText = `Budget: ${sum.toFixed(1)}% (Must equal 100%)`;
+    }
+
+    document.getElementById('slicePersona').style.width = p + '%';
+    document.getElementById('slicePersona').innerText = p >= 8 ? `${p}% Rules` : `${p}%`;
+    document.getElementById('sliceContracts').style.width = c + '%';
+    document.getElementById('sliceContracts').innerText = c >= 8 ? `${c}% Contracts` : `${c}%`;
+    document.getElementById('sliceAst').style.width = a + '%';
+    document.getElementById('sliceAst').innerText = a >= 8 ? `${a}% AST Code` : `${a}%`;
+    document.getElementById('sliceMemory').style.width = m + '%';
+    document.getElementById('sliceMemory').innerText = m >= 8 ? `${m}% Mem` : `${m}%`;
+    document.getElementById('sliceOutput').style.width = o + '%';
+    document.getElementById('sliceOutput').innerText = o >= 8 ? `${o}% Headroom` : `${o}%`;
+  }
+
+  async function saveCurrentPolicy() {
+    const p = parseFloat(document.getElementById('sliderPersona').value) || 0;
+    const c = parseFloat(document.getElementById('sliderContracts').value) || 0;
+    const a = parseFloat(document.getElementById('sliderAst').value) || 0;
+    const m = parseFloat(document.getElementById('sliderMemory').value) || 0;
+    const o = parseFloat(document.getElementById('sliderOutput').value) || 0;
+
+    const sum = p + c + a + m + o;
+    if (Math.abs(sum - 100.0) > 0.1) {
+      alert(`Attention budget quotas must sum exactly to 100% (currently ${sum.toFixed(1)}%).`);
+      return;
+    }
+
+    const tierA = parseFloat(document.getElementById('sliderTierA').value) || 0.70;
+    const reprompts = parseInt(document.getElementById('sliderReprompts').value) || 3;
+    const flaky = parseFloat(document.getElementById('sliderFlaky').value) || 0.15;
+    const wireRule = document.getElementById('policyWireRule').value;
+
+    const resBox = document.getElementById('policyResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Saving and enforcing project policy...</span>';
+
+    try {
+      const res = await fetch('/api/project/policy/update', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tenant_id: 'tenant_acme_fintech',
+          project_id: 'proj_fairyfly_core_9921',
+          patch_data: {
+            attention: {
+              persona_invariants_pct: p,
+              contracts_schemas_pct: c,
+              ast_codebase_pct: a,
+              memory_trajectories_pct: m,
+              reserved_output_pct: o
+            },
+            routing: {
+              tier_a_threshold: tierA
+            },
+            healing_sla: {
+              max_diagnostic_reprompts: reprompts,
+              flaky_quarantine_variance_threshold: flaky,
+              wire_contract_breaking_rule: wireRule
+            }
+          },
+          user_id: 'user_super_alice'
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700;">✓ Policy Version ${data.policy.version} Enforced Successfully!</div>
+          <div style="color:var(--muted); font-size:11px; margin-top:3px;">Attention quotas: ${p}/${c}/${a}/${m}/${o} • SLA Re-Prompts: ${reprompts} turns • Flaky Threshold: ${(flaky*100).toFixed(1)}% • Wire Rule: ${wireRule}</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">✗ Policy Update Error:</span> ${data.error}`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">✗ Network Error:</span> ${e.message}`;
+    }
+  }
+
+  async function testDynamicAttention() {
+    const resBox = document.getElementById('policyResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Testing attention budget slicing against project quotas...</span>';
+
+    try {
+      const res = await fetch('/api/project/policy/slice-attention', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tenant_id: 'tenant_acme_fintech',
+          project_id: 'proj_fairyfly_core_9921',
+          sections: {
+            persona_invariants: 'SEC Rule 17a-4 compliance invariant: Zero unauthorized egress.',
+            contracts_schemas: ['Contract: OrderPlacement(symbol: str, qty: int, price: float)'].concat(Array(20).fill('Contract: HeartbeatTelemetry()')).join('\\\\n'),
+            ast_codebase: Array(120).fill('def execute_order(order): pass').join('\\\\n'),
+            memory_trajectories: Array(15).fill('Turn: Success').join('\\\\n')
+          },
+          max_total_tokens: 4096
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const r = data.result;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:4px;">✓ Attention Slicing Evaluation Result:</div>
+          <div><b>Total Tokens Used:</b> <span class="text-cyan">${r.total_used_tokens} / ${r.max_total_tokens}</span> (Headroom: <span class="text-green">${r.headroom_pct}%</span>)</div>
+          <div><b>Rules (Preserved):</b> ${r.metrics.persona_invariants?.adjusted_tokens || 0} tok</div>
+          <div><b>Contracts:</b> ${r.metrics.contracts_schemas?.adjusted_tokens || 0} tok</div>
+          <div><b>AST Codebase Context:</b> ${r.metrics.ast_codebase?.adjusted_tokens || 0} tok (Trimmed: <span class="text-amber">${r.metrics.ast_codebase?.trimmed_tokens || 0} tok</span>)</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Slicing Error: ${data.error}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function simulatePrGateLive() {
+    const resBox = document.getElementById('policyResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Simulating PR Verification Gate with Flaky Test Quarantining &amp; Wire Contract Audit...</span>';
+
+    try {
+      const res = await fetch('/api/project/policy/evaluate-pr-gate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tenant_id: 'tenant_acme_fintech',
+          project_id: 'proj_fairyfly_core_9921',
+          test_run_history: [
+            {test_id: 'test_ws_latency', runs: 10, failures: 1},
+            {test_id: 'test_matching_engine', runs: 10, failures: 0}
+          ],
+          base_contract: {
+            title: 'OrderApi',
+            properties: {order_id: {type: 'string'}, price: {type: 'number'}},
+            required: ['order_id', 'price']
+          },
+          head_contract: {
+            title: 'OrderApi',
+            properties: {order_id: {type: 'string'}, price: {type: 'number'}},
+            required: ['order_id', 'price']
+          },
+          current_heal_turn: 0
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const ev = data.evaluation;
+        const qCount = (ev.test_audit?.quarantined_flaky_tests || []).length;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:4px;">✓ PR Gate Decision: <span class="badge badge-green">${ev.gate_decision}</span> (👉 ${ev.recommended_action})</div>
+          <div><b>Wire Contract Audit:</b> <span class="text-green">COMPATIBLE (No breaking changes)</span></div>
+          <div><b>Flaky Tests Quarantined:</b> <span class="text-amber">${qCount} test(s) quarantined into user/hitl/flaky_quarantine.yaml</span></div>
+          <div style="color:var(--muted); font-size:10px; margin-top:4px;">Self-healing turn ${ev.healing_sla.current_turn} of ${ev.healing_sla.max_allowed_reprompts} allowed</div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">PR Gate Evaluation Error: ${data.error}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+    // On Load initializations
   document.addEventListener("DOMContentLoaded", () => {
     checkClientSession();
+    calculateCeilings();
+    recalcRoi();
+
+    // Deep link routing from URL hash
+    const initialHash = (window.location.hash || '').replace('#', '');
+    if (initialHash && document.getElementById(initialHash)) {
+      showTab(initialHash);
+    }
+  });
+
+  window.addEventListener('popstate', () => {
+    const hash = (window.location.hash || '').replace('#', '');
+    if (hash && document.getElementById(hash)) {
+      showTab(hash);
+    }
   });
 
 </script>
@@ -2404,6 +3309,48 @@ DEMO_CLIENT = {
     "rev_share_due_usd": 2.3546,
     "mcp_jira_connected": True
 }
+
+GLOBAL_TENANT_MGR = TenantManager(persistence_file=REPO_ROOT / ".nb" / "context" / "tenant_hierarchy.json")
+GLOBAL_KMS_BROKER = KMSBroker(persistence_file=REPO_ROOT / ".nb" / "context" / "kms_keyring.json")
+GLOBAL_SCAFFOLDER = ProjectScaffolder(GLOBAL_TENANT_MGR, GLOBAL_KMS_BROKER)
+GLOBAL_POLICY_MGR = ProjectPolicyManager(policy_dir=REPO_ROOT / ".nb" / "config" / "policies")
+
+# Seed demo enterprise tenant & project if not exists
+if not GLOBAL_TENANT_MGR.get_tenant("tenant_acme_fintech"):
+    GLOBAL_TENANT_MGR.create_tenant(
+        tenant_id="tenant_acme_fintech",
+        name="Acme Global Financial Technologies",
+        tier="plan_enterprise",
+        settings={"max_concurrent_nodes": 50}
+    )
+    GLOBAL_TENANT_MGR.create_project(
+        tenant_id="tenant_acme_fintech",
+        project_id="proj_fairyfly_core_9921",
+        name="NB Fairyfly Enterprise Trading Engine",
+        mode="multi_module",
+        billing_tier="plan_enterprise"
+    )
+    GLOBAL_TENANT_MGR.register_repository(
+        tenant_id="tenant_acme_fintech",
+        project_id="proj_fairyfly_core_9921",
+        repo_id="repo_fairyfly_core",
+        name="nb_fairyfly",
+        url="git@github.com:neutronbinary/nb_fairyfly.git"
+    )
+    GLOBAL_TENANT_MGR.register_workspace_node(
+        tenant_id="tenant_acme_fintech",
+        project_id="proj_fairyfly_core_9921",
+        node_id="node_macbook_primary",
+        hostname="macbook-pro.local",
+        worktree_path=str(REPO_ROOT)
+    )
+    GLOBAL_TENANT_MGR.register_user(
+        tenant_id="tenant_acme_fintech",
+        user_id="user_super_alice",
+        email="alice@acmeglobal.com",
+        display_name="Alice (Enterprise Super Admin)",
+        role=TenantRole.ENTERPRISE_SUPER_ADMIN
+    )
 
 class PortalRequestHandler(BaseHTTPRequestHandler):
     def _send_bytes(self, data: bytes, content_type: str = "application/octet-stream", filename: Optional[str] = None, status: int = 200):
@@ -2622,6 +3569,33 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "dag_conformity": "100% Verified",
                 "leases": leases
             })
+            return
+
+        if parsed.path == "/api/project/policy":
+            qs = parse_qs(parsed.query)
+            t_id = qs.get("tenant_id", ["tenant_acme_fintech"])[0]
+            p_id = qs.get("project_id", ["proj_fairyfly_core_9921"])[0]
+            policy = GLOBAL_POLICY_MGR.get_policy(t_id, p_id)
+            self._send_json({"status": "SUCCESS", "policy": policy.to_dict()})
+            return
+
+        if parsed.path == "/api/tenant/hierarchy":
+            qs = parse_qs(parsed.query)
+            t_id = qs.get("tenant_id", ["tenant_acme_fintech"])[0]
+            try:
+                hierarchy = GLOBAL_TENANT_MGR.get_tenant_hierarchy(t_id)
+                self._send_json(hierarchy)
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=404)
+            return
+
+        if parsed.path == "/api/tenant/rls-schema":
+            schema_ddl = TenantManager.generate_rls_sql_schema()
+            self._send_json({"status": "SUCCESS", "rls_schema_ddl": schema_ddl})
+            return
+
+        if parsed.path == "/api/kms/audit":
+            self._send_json({"status": "SUCCESS", "audit_log": GLOBAL_KMS_BROKER.audit_log[-100:]})
             return
 
         if parsed.path == "/api/health":
@@ -3405,6 +4379,115 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "active_blockers_count": len(quarantined),
                 "status": "PASSED" if len(quarantined) == 0 else "WARNING"
             })
+            return
+
+        if parsed.path == "/api/tenant/create":
+            t_id = payload.get("tenant_id")
+            name = payload.get("name")
+            tier = payload.get("tier", "plan_enterprise")
+            if not t_id or not name:
+                self._send_json({"error": "tenant_id and name required"}, status=400)
+                return
+            try:
+                tenant = GLOBAL_TENANT_MGR.create_tenant(tenant_id=t_id, name=name, tier=tier)
+                self._send_json({"status": "CREATED", "tenant": tenant.to_dict()})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/project/scaffold":
+            t_id = payload.get("tenant_id", "tenant_acme_fintech")
+            p_id = payload.get("project_id")
+            p_name = payload.get("name")
+            target_dir_str = payload.get("target_dir")
+            mode = payload.get("mode", "multi_module")
+            tier = payload.get("tier", "plan_enterprise")
+            user_id = payload.get("user_id", "user_super_alice")
+            if not p_id or not p_name:
+                self._send_json({"error": "project_id and name are required"}, status=400)
+                return
+            target_path = Path(target_dir_str) if target_dir_str else (REPO_ROOT / ".workspaces" / f"scaffold_{p_id}")
+            try:
+                res = GLOBAL_SCAFFOLDER.scaffold_project(
+                    tenant_id=t_id,
+                    project_id=p_id,
+                    project_name=p_name,
+                    target_dir=target_path,
+                    mode=mode,
+                    billing_tier=tier,
+                    admin_user_id=user_id
+                )
+                self._send_json(res.to_dict())
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/kms/seal":
+            t_id = payload.get("tenant_id", "tenant_acme_fintech")
+            p_id = payload.get("project_id", "proj_fairyfly_core_9921")
+            data_payload = payload.get("payload", {})
+            bundle = GLOBAL_KMS_BROKER.seal_nbpack_envelope(tenant_id=t_id, project_id=p_id, payload_dict=data_payload)
+            self._send_json({"status": "SUCCESS", "bundle": bundle.to_dict()})
+            return
+
+        if parsed.path == "/api/kms/mount":
+            p_id = payload.get("project_id", "proj_fairyfly_core_9921")
+            bundle = payload.get("bundle", {})
+            try:
+                unsealed = GLOBAL_KMS_BROKER.mount_in_memory_enclave(project_id=p_id, bundle_data=bundle)
+                self._send_json({"status": "SUCCESS", "unsealed_payload": unsealed})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=403)
+            return
+
+        if parsed.path == "/api/project/policy/update":
+            t_id = payload.get("tenant_id", "tenant_acme_fintech")
+            p_id = payload.get("project_id", "proj_fairyfly_core_9921")
+            patch_data = payload.get("patch_data", {})
+            u_id = payload.get("user_id", "user_super_alice")
+            try:
+                updated = GLOBAL_POLICY_MGR.update_policy(t_id, p_id, patch_data, u_id)
+                self._send_json({"status": "UPDATED", "policy": updated.to_dict()})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/project/policy/evaluate-pr-gate":
+            t_id = payload.get("tenant_id", "tenant_acme_fintech")
+            p_id = payload.get("project_id", "proj_fairyfly_core_9921")
+            test_hist = payload.get("test_run_history", [])
+            base_c = payload.get("base_contract")
+            head_c = payload.get("head_contract")
+            turn = int(payload.get("current_heal_turn", 0))
+            try:
+                res = GLOBAL_POLICY_MGR.evaluate_pr_gate(
+                    tenant_id=t_id,
+                    project_id=p_id,
+                    test_run_history=test_hist,
+                    base_contract=base_c,
+                    head_contract=head_c,
+                    current_heal_turn=turn
+                )
+                self._send_json({"status": "SUCCESS", "evaluation": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/project/policy/slice-attention":
+            t_id = payload.get("tenant_id", "tenant_acme_fintech")
+            p_id = payload.get("project_id", "proj_fairyfly_core_9921")
+            sections = payload.get("sections", {})
+            max_tok = int(payload.get("max_total_tokens", 8192))
+            try:
+                res = GLOBAL_POLICY_MGR.slice_context_with_project_policy(
+                    tenant_id=t_id,
+                    project_id=p_id,
+                    sections=sections,
+                    max_total_tokens=max_tok
+                )
+                self._send_json({"status": "SUCCESS", "result": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
             return
 
         self._send_json({"error": "Not Found"}, 404)

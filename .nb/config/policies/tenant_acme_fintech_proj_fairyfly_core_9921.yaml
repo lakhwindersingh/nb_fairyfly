@@ -1,0 +1,36 @@
+tenant_id: tenant_acme_fintech
+project_id: proj_fairyfly_core_9921
+version: 2
+updated_at: '2026-09-21T01:40:37.300402+00:00'
+updated_by: user_super_alice
+attention:
+  persona_invariants_pct: 15
+  contracts_schemas_pct: 25
+  ast_codebase_pct: 35
+  memory_trajectories_pct: 10
+  reserved_output_pct: 15
+routing:
+  tier_a_threshold: 0.7
+  fallback_model: claude-3-5-sonnet-20241022
+  custom_tier_a_tasks:
+  - wire_contract_compat
+  - security_audit
+  - pr_gate_merge_decision
+  custom_tier_b_tasks:
+  - ast_parsing
+  - unit_test_run
+  - doc_generation
+  max_cost_ceiling_per_call_usd: 1.0
+ast:
+  max_stripping_depth: 3
+  preserve_decorators: true
+  preserve_docstrings: false
+  max_sibling_repeats: 2
+  strip_private_methods: true
+  keep_signatures_only: true
+healing_sla:
+  max_diagnostic_reprompts: 3
+  flaky_quarantine_variance_threshold: 0.15
+  wire_contract_breaking_rule: STRICT_BLOCK
+  auto_rollback_on_sla_breach: true
+  sla_timeout_seconds: 120
