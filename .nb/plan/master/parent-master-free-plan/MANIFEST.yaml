@@ -1,0 +1,50 @@
+plan_id: master_parent_free_community
+plan_name: Parent Master Context Engineering Framework (Free Community Edition)
+version: 7.5.0
+capability_rating: Free Community Tier
+plan_type: orchestration
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies: []
+file_versions:
+  concise:
+    path: concise.md
+    version: 7.5.0
+    last_modified: '2026-09-24'
+    content_hash: eb76fdd4e8f67a2837539441194bd183eb11f39326b2023e8b1d5dde2861a15f
+    line_count: 61
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 7.5.0
+    last_modified: '2026-09-24'
+    content_hash: fc96d18aa4048c49e70798ac892aebbccb993ac0c39affd328a9ecafc932427f
+    line_count: 278
+    primary_purpose: Extended implementation guide with IDE embedding and verification
+      strategies
+  readme:
+    path: README.md
+    version: 7.5.0
+    last_modified: '2026-09-24'
+    content_hash: b3d33a3af6add6d604b478b4ca2e58dcf6086afaa2fcc1e4446fdad5c65fe21e
+    line_count: 29
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- Single Canonical Gatekeeper Binary (.nb/bin/percipience)
+- Embedded Free Tier Plugin Assets & Startup Notification
+- Tree-Sitter AST Token Reduction (60-80%)
+- SHA-256 Merkle Ledger State Chaining
+- Basic Autonomous CI/CD Self-Repair Loop
+implementation_phases:
+  phase_1: Local Quad-Space Scaffolding
+  phase_2: Embedded IDE Plugin Asset Integration
+  phase_3: Free Tier CI/CD Workflow & Token Compression
+  phase_4: Sandbox Permission Governance
+success_metrics:
+  bootstrap_time: <1.5s
+  token_savings: 60-80%
+  test_pass_rate: 100%
+related_contracts:
+- .nb/context/contracts/
+related_rules:
+- .nb/context/rules/

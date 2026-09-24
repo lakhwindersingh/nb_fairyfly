@@ -1,0 +1,55 @@
+plan_id: domain_saas_portal
+plan_name: Enterprise SaaS, Corporate Portals & Web Platform Ecosystem
+version: 1.0.0
+capability_rating: L1
+plan_type: foundation
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 8f4589add4aa1471d0f602ac890af9bb07a854860fa7a1d606e0e157c93dc03a
+    line_count: 70
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: fbce5a2408f971a27fef73125b5ed0190504953f676bdfdaf67d9c2be6ec0207
+    line_count: 250
+    primary_purpose: Extended implementation guide with web architecture and multi-tenant
+      isolation
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 9dde005d0088aed98d556e951acc9801a185de094ec847d37b06b6d6fb348a45
+    line_count: 28
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- Modern Frontend & Corporate Web Systems (Next.js 14 App Router)
+- Multi-Tenant SaaS Portals & PostgreSQL Row-Level Security
+- Decoupled API Gateways & Stripe Usage Billing Handlers
+- Observability Hub Dashboard & Real-Time Telemetry Feeds
+- WCAG 2.1 AA & Core Web Vitals Quality Harnesses
+implementation_phases:
+  phase_1: Wire Contracts & Tenant Schemas
+  phase_2: Multi-Tenant RBAC & PostgreSQL RLS Engine
+  phase_3: Stripe Usage Metering & Rev-Share Calculation
+  phase_4: Next.js Frontend & 5-Tab Observability Hub
+  phase_5: E2E Playwright & Vitest Quality CI Verification
+success_metrics:
+  lcp_performance: <1.2s
+  tenant_isolation: 100%
+  test_coverage: 100%
+related_contracts:
+- .nb/context/contracts/onboarding_contract.yaml
+- .nb/context/contracts/billing_meter_contract.yaml
+- .nb/context/contracts/observability_contract.yaml
+related_rules:
+- .nb/context/rules/web_accessibility_rules.md
+- .nb/context/rules/tenant_isolation_invariants.md

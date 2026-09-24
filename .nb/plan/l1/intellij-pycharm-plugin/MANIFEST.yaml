@@ -1,0 +1,56 @@
+plan_id: domain_intellij_pycharm_plugin
+plan_name: IntelliJ IDEA & PyCharm IDE Plugin, PSI AST Analysis & Percipience Control
+  Plane Space
+version: 1.0.0
+capability_rating: L1
+plan_type: foundation
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: ceec92c0e78857b6b5c1b0e085d2669159ddf146f1f3581bcc06ff83e052184d
+    line_count: 66
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 773b1835b30c4bd4e896fee96b2a96886719894bd693847659641c92a45be51e
+    line_count: 291
+    primary_purpose: Extended implementation guide with JetBrains SDK and PSI architecture
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 356599f481c218cf5c7d475c22e42baef9394145f5dc3d4da190be7db93c79c4
+    line_count: 28
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- JetBrains Platform SDK & ToolWindow Control Plane
+- Program Structure Interface (PSI) Multi-Language AST Pruning
+- In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
+- JCEF Chromium Embedded Living Visualizer
+- Coroutine-based Background CLI Execution Service
+implementation_phases:
+  phase_1: Wire Contracts & PSI Bridge Specification
+  phase_2: Kotlin Plugin Architecture & Gradle Platform Setup
+  phase_3: PSI AST Token Pruner & Visualizer Popup
+  phase_4: JCEF ToolWindow & Live Merkle DAG Visualizer
+  phase_5: Distribution Bundle (.zip) Packaging & CI Verification
+success_metrics:
+  psi_token_reduction: 60-85%
+  edt_latency: <16ms (60 FPS)
+  test_coverage: 100%
+related_contracts:
+- .nb/context/contracts/intellij_plugin_manifest_contract.json
+- .nb/context/contracts/psi_ast_bridge_contract.yaml
+- .nb/context/contracts/daemon_rpc_contract.json
+related_rules:
+- .nb/context/rules/jetbrains_platform_threading_rules.md
+- .nb/context/rules/psi_read_lock_invariants.md
+- .nb/context/rules/jcef_security_invariants.md

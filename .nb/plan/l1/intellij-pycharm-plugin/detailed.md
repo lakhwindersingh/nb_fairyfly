@@ -2,7 +2,7 @@
 plan_type: "layerable_domain_plan"
 plan_id: "domain_intellij_pycharm_plugin"
 name: "IntelliJ IDEA & PyCharm IDE Plugin, PSI AST Analysis & Percipience Control Plane Space"
-parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
+parent_master_plan: "master/parent-master-plan/concise.md"
 tier_mapping:
   tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, .nb/context/rules/)"
   tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, .nb/agentic/custom/workflows/)"
@@ -14,32 +14,32 @@ model_tiering_policy:
   tier_b_reference_models: ["claude-3-5-haiku", "gemini-2.0-flash", "gpt-4o-mini"]
 ---
 
-# Layerable Context Engineering Plan: IntelliJ IDEA & PyCharm Plugin Space
+# Layerable Context Engineering Plan: IntelliJ IDEA & PyCharm Plugin Space — Detailed Implementation Guide
 
 ### Executive Overview & Domain Grounding
 
 <!-- Plan Co-Location Notice -->
-> **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [\`.nb/plan/agents/\`](file:///.nb/plan/agents/) and embedded directly in Section 3. In newly created projects where the \`agentic/\` directory does not yet exist, \`./bin/percipience layer apply\` automatically extracts and hydra-instantiates these files into \`.nb/agentic/custom/agents/\`.
+> **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [`.nb/plan/agents/`](file:///.nb/plan/agents/) and embedded directly in Section 3. In newly created projects where the `agentic/` directory does not yet exist, `./bin/percipience layer apply` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
 
-This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (\`.nb/plan/claude-context-engineering-parent-master-plan.md\`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, and ToolWindow orchestration required for:
+This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, and ToolWindow orchestration required for:
 
 1. **JetBrains Platform SDK & IntelliJ / PyCharm ToolWindow Control Plane**:
-   - Modern Kotlin-based plugin built with Gradle IntelliJ Plugin (\`org.jetbrains.intellij.platform\`).
-   - Integrated dockable \`ToolWindow\` ("Percipience OS") offering live Merkle DAG chain visualization, workflow execution status, AST token FinOps meters, and living documentation viewer (JCEF / Java Chromium Embedded Framework).
-   - Project-level background services (\`ProjectService\`) maintaining synchronized state with the local Percipience daemon via non-blocking Kotlin Coroutines (\`Dispatchers.Default\` and \`Dispatchers.EDT\`).
+   - Modern Kotlin-based plugin built with Gradle IntelliJ Plugin (`org.jetbrains.intellij.platform`).
+   - Integrated dockable `ToolWindow` ("Percipience OS") offering live Merkle DAG chain visualization, workflow execution status, AST token FinOps meters, and living documentation viewer (JCEF / Java Chromium Embedded Framework).
+   - Project-level background services (`ProjectService`) maintaining synchronized state with the local Percipience daemon via non-blocking Kotlin Coroutines (`Dispatchers.Default` and `Dispatchers.EDT`).
 
 2. **Program Structure Interface (PSI) Tree Analysis & Real-Time AST Token Optimization**:
-   - Deep PSI inspection for multi-language workspaces (Python via \`PyFile\`/\`PyClass\`/\`PyFunction\`, Kotlin/Java via \`PsiClass\`/\`PsiMethod\`, TypeScript/JavaScript).
+   - Deep PSI inspection for multi-language workspaces (Python via `PyFile`/`PyClass`/`PyFunction`, Kotlin/Java via `PsiClass`/`PsiMethod`, TypeScript/JavaScript).
    - Real-time token calculation engine diffing raw source vs. AST-pruned interfaces ($60-85\%$ token reduction).
    - Pre-prompt AST pruning inspection popup allowing developers to visually inspect and verify stripped function bodies before dispatching prompts to LLM agents.
 
 3. **In-Editor Annotators, Gutter Icons & Quick-Fix Intentions**:
-   - \`ExternalAnnotator\` and \`LocalInspectionTool\` verifying active wire contracts (\`.nb/context/contracts/\`) against calling code in real time.
+   - `ExternalAnnotator` and `LocalInspectionTool` verifying active wire contracts (`.nb/context/contracts/`) against calling code in real time.
    - Editor gutter icons highlighting active workflow steps, live Merkle recovery points, and verified test assertions.
-   - Quick-fix intention actions (\`Alt+Enter\` / \`Option+Return\`) triggering automatic wire contract re-synchronization, AST living doc synthesis, and PR gate checks.
+   - Quick-fix intention actions (`Alt+Enter` / `Option+Return`) triggering automatic wire contract re-synchronization, AST living doc synthesis, and PR gate checks.
 
 4. **Hermetic Threading & Read/Write Action Safety**:
-   - Strict adherence to JetBrains Platform threading models (\`ReadAction\`, \`WriteAction\`, \`ProgressIndicator\`, \`runBackgroundableTask\`).
+   - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
    - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
 
 ---
@@ -82,7 +82,13 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │       │   ├── annotators/                        # Wire contract inspection annotators & line markers
 │   │       │   └── actions/                           # Editor popup actions, quick-fixes & toolbar buttons
 │   │       ├── src/main/resources/
-│   │       │   └── META-INF/plugin.xml                # Extension points, listeners, actions & plugin metadata
+│   │       │   ├── META-INF/plugin.xml                # Extension points, listeners, actions & plugin metadata
+│   │       │   └── percipience/                       # Bundled offline Free Tier runtime assets
+│   │       │       ├── bin/percipience                # Unified executable CLI entrypoint
+│   │       │       ├── config/                        # Free tier billing & AST token rules
+│   │       │       ├── core/                          # 38 essential platform core engines (.nb/core/*.py)
+│   │       │       ├── plan/                          # Parent master free plan template
+│   │       │       └── workflows/                     # Basic autonomous CI/CD workflow definition
 │   │       └── src/test/kotlin/                       # LightPlatformTestCase & fixtures for PSI assertions
 │   └── templates/bridge/
 │       ├── mock_jetbrains_daemon.py                   # Loopback JSON-RPC server simulating IntelliJ actions
@@ -161,26 +167,18 @@ performance_targets:
 
 1. **Absolute Event Dispatch Thread (EDT) Freedom**:
    - Network requests, JSON-RPC IPC calls, and heavy AST token calculations MUST NEVER run on the EDT.
-   - All external execution must use Kotlin Coroutines (\`withContext(Dispatchers.Default)\`) or \`ProgressManager.getInstance().run(Task.Backgroundable)\`.
-   - UI updates to ToolWindows and editor popups MUST be dispatched via \`Dispatchers.EDT\` or \`ApplicationManager.getApplication().invokeLater()\`.
+   - All external execution must use Kotlin Coroutines (`withContext(Dispatchers.Default)`) or `ProgressManager.getInstance().run(Task.Backgroundable)`.
+   - UI updates to ToolWindows and editor popups MUST be dispatched via `Dispatchers.EDT` or `ApplicationManager.getApplication().invokeLater()`.
 
 2. **Read/Write Lock Synchronization**:
-   - All PSI tree reads must occur inside a read action (\`runReadAction\`).
-   - All modifications to documents or workspace files must execute inside a write action (\`runWriteAction\`) within a Command (\`CommandProcessor.getInstance().executeCommand()\`).
-   - If the IDE is in "Dumb Mode" (indexing), PSI resolution features must either defer execution via \`DumbService.getInstance(project).runWhenSmart()\` or display informative placeholder badges.
+   - All PSI tree reads must occur inside a read action (`runReadAction`).
+   - All modifications to documents or workspace files must execute inside a write action (`runWriteAction`) within a Command (`CommandProcessor.getInstance().executeCommand()`).
+   - If the IDE is in "Dumb Mode" (indexing), PSI resolution features must either defer execution via `DumbService.getInstance(project).runWhenSmart()` or display informative placeholder badges.
 
 3. **JCEF Webview Security Constraints**:
-   - Java Chromium Embedded Framework (JCEF) browser instances hosting the Percipience Dashboard must enforce strict Content-Security-Policy (CSP) with \`script-src 'self'\`.
-   - Communication between JCEF JavaScript and the Kotlin plugin layer must use asynchronous query handlers (\`CefMessageRouterHandlerAdapter\`) with verified request nonce validation.
+   - Java Chromium Embedded Framework (JCEF) browser instances hosting the Percipience Dashboard must enforce strict Content-Security-Policy (CSP) with `script-src 'self'`.
+   - Communication between JCEF JavaScript and the Kotlin plugin layer must use asynchronous query handlers (`CefMessageRouterHandlerAdapter`) with verified request nonce validation.
 ```
-
----
-
-### Contract & Artifact Standardization & Successor Consumption Rules
-In accordance with the Parent Master Plan governance framework:
-1. **Contract Invariants**: All domain wire contracts in `.nb/context/contracts/` must strictly adhere to JSON Schema Draft-07, OpenAPI 3.1, or AsyncAPI 3.0 standards with explicit versioning (`MAJOR.MINOR.PATCH`).
-2. **Artifact Standards**: Every step in the domain workflow produces explicitly typed, schema-validated artifacts stored in canonical paths (`workplace/modules/`, `workplace/docs/`, `.nb/context/ledger/`).
-3. **Deterministic Successor Handoffs**: Successor agents consume predecessor outputs through contract-guaranteed schema keys. No runtime parameter guessing or unvalidated data propagation is permitted.
 
 ---
 
@@ -191,48 +189,18 @@ In accordance with the Parent Master Plan governance framework:
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
 - **Sandboxed Worktree**: `.workspaces/wt_jetbrains_arch_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/`
-- **Domain Invariants Enforced**:
-  - Gradle configuration uses modern `org.jetbrains.intellij.platform` 2.x plugin.
-  - Zero UI lockups: Background task latency bounded by $16\text{ms}$ EDT frame budget.
-  - Full compatibility across IntelliJ IDEA Ultimate, PyCharm Professional, and Community editions.
 
 ### 3.2. `.nb/agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml`
 - **Role**: PSI Visitor, AST Token Compression & Wire Contract Inspection Annotator
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
 - **Sandboxed Worktree**: `.workspaces/wt_psi_bridge_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/psi/`
-- **Domain Invariants Enforced**:
-  - PSI visitor traverses large files ($> 10,000$ LOC) in under $35\text{ms}$.
-  - Real-time token pruning yields $\ge 60\%$ savings while maintaining 100% type signature fidelity.
 
 ### 3.3. `.nb/agentic/custom/agents/agent_intellij_ui_ux_engineer.yaml`
 - **Role**: Swing/JCEF ToolWindow, Gutter LineMarkers, Context Actions & Quick-Fixes
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
 - **Sandboxed Worktree**: `.workspaces/wt_intellij_ui_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/`
-- **Domain Invariants Enforced**:
-  - Seamless adaptation to Light, Darcula, and New UI themes using JetBrains `JBColor` and `UIUtil`.
-  - Interactive Mermaid DAG visualizer loaded inside JCEF with $< 150\text{ms}$ initial render.
-
----
-
-### 3.X. Domain Expert Agent Specification (`.nb/plan/agents/agent_jetbrains_plugin_architect.yaml`)
-
-```yaml
-agent_id: agent_jetbrains_plugin_architect
-name: JetBrains IntelliJ Platform SDK, PSI AST Analysis & ToolWindow Architecture Expert
-model: claude-3-7-sonnet
-model_tier: tier_a
-role: JetBrains IntelliJ Platform SDK, Kotlin Coroutines, PSI Tree Navigation, ToolWindow UI & Gradle Architecture Auditor
-sandboxed_worktree: .workspaces/wt_jetbrains_arch_01
-module_scope: workplace/modules/mod_intellij_plugin/, .nb/context/contracts/, .nb/context/rules/
-system_prompt: "You are the JetBrains IntelliJ Platform SDK & PSI AST Architecture Expert.\nYour mission is to inspect, design, evaluate, and gate created IntelliJ IDEA and PyCharm plugin solutions against:\n1. Official JetBrains Platform SDK Guidelines:\n   - Modern Gradle IntelliJ Platform Plugin (2.x) lifecycle\n   - Kotlin Coroutines integration (Dispatchers.Default, Dispatchers.EDT)\n   - Non-blocking EDT rule enforcement and ReadAction / WriteAction thread invariants\n   - DumbMode handling and indexing-safe execution (DumbAware, DumbService)\n2. Program Structure Interface (PSI) Architecture:\n   - Efficient multi-language PSI navigation (Python, Kotlin, Java, TypeScript)\n   - In-memory AST token calculation and pruning without mutating user buffers\n   - ExternalAnnotators and LocalInspectionTools with quick-fix intentions\n3. ToolWindow & UI/UX Standards:\n   - Dockable ToolWindow with lazy component instantiation\n   - JCEF (Java Chromium Embedded Framework) browser integration with secure CSP\n   - Editor gutter line markers, action popups, and status bar telemetry widgets\n4. Performance & Reliability Invariants:\n   - Background daemon JSON-RPC IPC latency p99 < 25ms\n   - Zero UI thread freezes (EDT frame budget <= 16ms)\n   - Full binary compatibility across 2024.1 through 2026.2+ JetBrains IDE builds\n\nEnforce zero compromise on IDE stability, memory footprints, and security.\nFlag any thread-blocking calls or unescaped JCEF interactions as blocking PR gate failures."
-tools:
-  - name: audit_gradle_intellij_dependencies
-  - name: verify_edt_threading_compliance
-  - name: profile_psi_traversal_latency
-  - name: audit_jcef_csp_security
-```
 
 ---
 
@@ -300,7 +268,7 @@ sequenceDiagram
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
 ./bin/percipience layer pack \
-  --plan .nb/plan/claude-context-engineering-intellij-pycharm-plugin-space.md \
+  --plan .nb/plan/l1/intellij-pycharm-plugin/concise.md \
   --output .nb/bundles/intellij_pycharm_plugin_domain.nbpack \
   --include-spaces .nb/context/contracts,.nb/context/rules,.nb/agentic/custom
 ```
@@ -312,3 +280,12 @@ sequenceDiagram
   --in-memory-only \
   --mode multi_module
 ```
+
+### 6.3. Bundled Free Tier Platform Core Assets & Autonomous Bootstrapping
+The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) packages the entire offline platform engine within the plugin JAR (`percipience/core/` containing all 38 Python modules + `__init__.py`). When initialized via `BootstrapWorkspaceAction` or the interactive startup prompt (`PercipienceProjectStartupActivity`), `WorkspaceBootstrapper.kt` extracts:
+1. `percipience/bin/percipience` with Unix `0755` executable permissions.
+2. `percipience/core/*.py` into `.nb/core/` (AST optimizer, Merkle engine, CI/CD, token tracker, etc.).
+3. `percipience/config/` (`billing_plans.yaml`, `token_compression_rules.yaml`).
+4. `percipience/workflows/` (`basic_autonomous_cicd.yaml`).
+5. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
+6. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).

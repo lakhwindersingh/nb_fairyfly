@@ -278,8 +278,9 @@ nb_fairyfly/ (Workspace Root)
 The Percipience IntelliJ / PyCharm Plugin (`mod_intellij_plugin`) acts as the comprehensive IDE control plane for the Free Community Tier:
 
 ### 7.1 Bundled Free Tier Platform Assets in Plugin Distribution
-The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) directly packages the canonical platform binary, configurations, and workflows inside its JAR resources (`percipience/`):
+The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) directly packages the canonical platform binary, configurations, core engine modules, and workflows inside its JAR resources (`percipience/`):
 - `percipience/bin/percipience`: The full platform CLI binary (packaged with automatic Unix execution permissions `0755` applied on extraction).
+- `percipience/core/`: The essential platform core engines (all 38 Python modules including `ast_optimizer.py`, `merkle_engine.py`, `autonomous_cicd.py`, `token_tracker.py`, `workflow_orchestrator.py`, `poisoning_sentinel.py`, `tree_sitter_daemon.py`, etc., plus `__init__.py`) bundled directly into the plugin JAR resources for complete offline execution autonomy and zero-dependency environment hydration.
 - `percipience/config/billing_plans.yaml`: Billing configuration enforcing the Free Community Tier (`plan_free`: 1 seat, 1 worktree, 500 PR audits/mo, AST token pruning, Merkle audit, basic autonomous CI/CD).
 - `percipience/config/token_compression_rules.yaml`: AST pruning thresholds preserving function signatures while collapsing bodies.
 - `percipience/workflows/basic_autonomous_cicd.yaml`: Ready-to-run 5-step autonomous CI/CD workflow.
@@ -287,10 +288,10 @@ The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0
 
 ### 7.2 Automated Workspace Detection & Interactive Startup Prompt
 - **Startup Hook (`PercipienceProjectStartupActivity`)**: Implements JetBrains `com.intellij.openapi.startup.ProjectActivity`. When any project is opened, it evaluates `WorkspaceBootstrapper.isWorkspaceConfigured(basePath)`.
-- **Interactive Balloon Notification**: If the workspace lacks `.nb/bin/percipience`, `.nb/config/billing_plans.yaml`, or `.nb/context/ledger/context_ledger.yaml`, it raises a non-intrusive interactive notification:
+- **Interactive Balloon Notification**: If the workspace lacks `.nb/bin/percipience`, `.nb/config/billing_plans.yaml`, `.nb/core/ast_optimizer.py`, or `.nb/context/ledger/context_ledger.yaml`, it raises a non-intrusive interactive notification:
   > *"🚀 Initialize Free Workspace: Welcome to Percipience Context OS! Would you like to initialize this workspace with the Free Community Tier (AST token pruning, Merkle ledger, and basic CI/CD)?"*
 - **Action Handlers**:
-  - `🚀 Initialize Free Workspace`: Invokes `WorkspaceBootstrapper.bootstrapWorkspace(basePath)` which unpacks bundled resources, sets `0755` executable permissions, scaffolds Quad-Space folders, and commits genesis Merkle block `RP_GENESIS_000`.
+  - `🚀 Initialize Free Workspace`: Invokes `WorkspaceBootstrapper.bootstrapWorkspace(basePath)` which unpacks bundled resources (including `.nb/core/*.py` execution engines, CLI binary with `0755` executable permissions, YAML configurations, CI/CD workflow, and Free Master Plan), scaffolds Quad-Space folders, and commits genesis Merkle block `RP_GENESIS_000`.
   - `Dismiss`: Dismisses the balloon notification without modifying the project.
 
 ### 7.3 Asynchronous Execution Service (`PercipienceExecutionService`) & IDE Action Suite

@@ -1,0 +1,52 @@
+plan_id: play_3_enterprise_os
+plan_name: Enterprise Context Engineering OS & CI/CD Gatekeeper (Play 3)
+version: 3.0.0
+capability_rating: L2
+plan_type: self-evolution
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 3.0.0
+    last_modified: '2026-09-24'
+    content_hash: 4cdfa095d173ee4c5e94cfffbeb36492a2313ea162eb0a163ff272de99f4d6f2
+    line_count: 62
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 3.0.0
+    last_modified: '2026-09-24'
+    content_hash: a4c9684f5f61054996c337db8153fef9be45572a110827518c2be1d69a121c1c
+    line_count: 1065
+    primary_purpose: Extended implementation guide with commercial strategy, architecture,
+      and deployment
+  readme:
+    path: README.md
+    version: 3.0.0
+    last_modified: '2026-09-24'
+    content_hash: bb03171c835ed27071c18a5bc506756e1d21a874a5258f133d92384a86c2f8ac
+    line_count: 28
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- Zero-Drift Git Worktree Isolation
+- Automated 40-70% AST Token Compression
+- Surgical Module Rollback to Recovery Points
+- Cryptographic Merkle State Ledger
+- Sealed Enclave .nbpack Packaging
+- Bring Your Own Repository (BYOR) Multi-VCS Adapter
+implementation_phases:
+  phase_1: Core Engine Hardening & Cryptographic Ledger
+  phase_2: IDE Plugin Packaging (IntelliJ & VSCode)
+  phase_3: Multi-Tenant Gateway & Observability Hub
+  phase_4: Multi-Cloud Production Blueprints
+success_metrics:
+  token_reduction: 40-70%
+  rollback_latency: <1.2s
+  audit_coverage: 100%
+related_contracts:
+- .nb/context/contracts/
+related_rules:
+- .nb/context/rules/

@@ -1,0 +1,55 @@
+plan_id: domain_vscode_plugin
+plan_name: Visual Studio Code Extension, Language Server Protocol & Percipience Control
+  Plane Space
+version: 1.0.0
+capability_rating: L1
+plan_type: foundation
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: d58ad5d548bca92323bcbe10e28531eeb10f2754a49e0e1b9bf7e24cf6418482
+    line_count: 70
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 0396e52d1ff4a5658b2cf78a85ecaf00095b1ece1ae61d89d1b68096988dbe1b
+    line_count: 290
+    primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-09-24'
+    content_hash: 4019634fd1eaee840712c08cf3e081e6530d7b4161f51c1dfa031c899ebb9436
+    line_count: 28
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- VSCode Extension API & VSIX Packaging Architecture
+- Language Server Protocol (LSP 3.17) Client-Server Subsystem
+- Secure Webview Panel & Interactive Visualizer
+- In-Editor CodeLens Triggers on Contracts & Workflows
+- Activity Bar Navigation & Status Bar FinOps Meters
+implementation_phases:
+  phase_1: Wire Contracts & LSP Specification
+  phase_2: TypeScript Extension Host & esbuild Pipeline
+  phase_3: Language Server Implementation & CodeLens Providers
+  phase_4: Webview Dashboard & Theme Synchronizer
+  phase_5: VSIX Packaging & CI Verification
+success_metrics:
+  lsp_response_latency: <50ms
+  csp_compliance: 100%
+  test_coverage: 100%
+related_contracts:
+- .nb/context/contracts/package_json_manifest_contract.json
+- .nb/context/contracts/lsp_protocol_contract.yaml
+- .nb/context/contracts/webview_message_rpc_contract.json
+related_rules:
+- .nb/context/rules/webview_csp_invariants.md
+- .nb/context/rules/lsp_threading_invariants.md
