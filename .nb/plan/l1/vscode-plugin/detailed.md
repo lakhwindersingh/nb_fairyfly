@@ -21,25 +21,29 @@ model_tiering_policy:
 <!-- Plan Co-Location Notice -->
 > **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [`.nb/agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/) and embedded directly in Section 3. In newly created projects where the `agentic/` directory does not yet exist, `./bin/percipience layer apply` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
 
-This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, VSCode Extension API protocols, Language Server Protocol (LSP 3.17) implementations, and Webview UI orchestration required for:
+This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, VSCode Extension API protocols, Language Server Protocol (LSP 3.17) implementations, Webview UI orchestration, and dynamic tier-permission-aware Control Plane button governance required for:
 
 1. **VSCode Extension API & VSIX Packaging Architecture**:
-   - Modern TypeScript extension built with `esbuild` and packaged via `@vscode/vsce`.
+   - Modern TypeScript extension built with `esbuild` and packaged via `@vscode/vsce` across universal and tier-specific packages.
    - Custom Activity Bar container with collapsible `TreeDataProvider` views for Workflows (`workflowTreeProvider.ts`), Agent Registry (`agentTreeProvider.ts`), Wire Contracts, and Merkle Snapshots with live status badges.
-   - Status bar items (`statusBarManager.ts`) indicating real-time Merkle chain continuity (`[✔ Merkle: Sealed]`) and real-time token FinOps savings.
+   - Status bar items (`statusBarManager.ts`) indicating real-time tier status, Merkle chain continuity (`[✔ Merkle: Sealed]`), and real-time token FinOps savings.
 
-2. **Language Server Protocol (LSP 3.17) Client-Server Subsystem**:
+2. **Dynamic Tier-Permission-Aware Control Plane Webview**:
+   - Webview dashboard (`dashboardPanel.ts`) evaluating active licenses (`tenant_license.json`, `.percipience_license.json`, `PERCIPIENCE_PLAN`).
+   - Dynamic button rendering mapping strictly to active entitlements across **Free Community**, **Team**, **Business**, and **Enterprise Dedicated** tiers, fully synchronized with the IntelliJ Control Plane action hierarchy.
+
+3. **Language Server Protocol (LSP 3.17) Client-Server Subsystem**:
    - Dedicated Language Server running in a detached Node.js process via `vscode-languageclient/node` (`lspClient.ts`) and `vscode-languageserver/node` (`lspServer.ts`).
    - In-editor CodeLens triggers (`codeLensProvider.ts`) on wire contracts (`.nb/context/contracts/`) and workflow steps (`.nb/agentic/custom/workflows/`), allowing one-click execution.
    - Real-time diagnostic annotators (`diagnosticProvider.ts`) highlighting schema validation errors, breaking contract changes, or unanchored dependencies directly on editor lines.
    - Hover and auto-completion providers for agent references, recovery points, and rule invariants.
 
-3. **Secure Webview Panel & Interactive Visualizer**:
+4. **Secure Webview Panel & Interactive Visualizer**:
    - Isolated Webview panels (`dashboardPanel.ts`) rendering live Merkle DAG block chains, interactive Mermaid diagrams, and living documentation.
    - Strict Content-Security-Policy (CSP) enforcement using nonce-based script injection and `webview.asWebviewUri()`.
    - UI consistency with the user's active VSCode theme (Light, Dark, High Contrast) via `@vscode/webview-ui-toolkit` and native CSS variables (`var(--vscode-editor-background)`).
 
-4. **Non-Blocking IPC & Extension Host Performance**:
+5. **Non-Blocking IPC & Extension Host Performance**:
    - Clean separation of concerns between UI extension host and LSP background worker threads.
    - Fast JSON-RPC IPC over local socket streams or named pipes, keeping extension host latency $< 12\text{ms}$.
 
@@ -76,6 +80,7 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   ├── modules/
 │   │   └── mod_vscode_extension/
 │   │       ├── package.json                           # VSCode extension manifest & configuration
+│   │       ├── package_extension.py                   # Multi-tier VSIX packaging script
 │   │       ├── tsconfig.json                          # TypeScript compiler options
 │   │       ├── esbuild.js                             # Multi-target bundle script (extension + server)
 │   │       ├── src/
@@ -89,9 +94,9 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │       │   │   ├── codeLensProvider.ts            # In-editor CodeLens triggers for contracts
 │   │       │   │   └── diagnosticProvider.ts          # YAML/JSON schema validation diagnostics
 │   │       │   ├── statusbar/
-│   │       │   │   └── statusBarManager.ts            # Status bar item controllers (Merkle & Token FinOps)
+│   │       │   │   └── statusBarManager.ts            # Status bar item controllers (Merkle, Tier & Token FinOps)
 │   │       │   └── webview/
-│   │       │       └── dashboardPanel.ts              # WebviewPanel provider, CSP nonce generator & RPC handlers
+│   │       │       └── dashboardPanel.ts              # Dynamic tier-aware Webview panel provider & actions
 │   │       └── test/                                  # Suite of vscode-test and mocha verification suites
 │   └── templates/bridge/
 │       ├── mock_vscode_ipc_host.py                    # IPC emulator simulating VSCode Extension Host RPC calls
@@ -206,14 +211,14 @@ performance_targets:
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/lsp/`, `workplace/modules/mod_vscode_extension/src/providers/`
 
 ### 3.3. `.nb/agentic/custom/agents/agent_vscode_webview_ux_engineer.yaml`
-- **Role**: Webview Panel UI, Nonce CSP Security, Mermaid Graph Renderer & Toolkit
+- **Role**: Webview Panel UI, Nonce CSP Security, Mermaid Graph Renderer & Dynamic Action Buttons
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
 - **Sandboxed Worktree**: `.workspaces/wt_vscode_ui_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/webview/`, `user/outputs/dashboard/`
 
 ---
 
-## 4. Virtual End-to-End Emulation Bridge
+## 4. Virtual End-to-End Emulation Bridge & Dynamic Webview Control Plane
 
 ```mermaid
 sequenceDiagram
@@ -234,20 +239,42 @@ sequenceDiagram
   Host->>LSP: percipience/validateContract
   LSP-->>Host: Return Diagnostic [✔ Schemas Valid (0 errors)]
 
-  Note over Dev,Webview: 2. Webview Panel & Living Merkle DAG Visualization
-  Dev->>Host: Run Command: "Percipience: Open Living Dashboard"
-  Host->>Webview: Create WebviewPanel with strict CSP Nonce
-  Host->>Daemon: Execute: ./bin/percipience audit --json
+  Note over Dev,Webview: 2. Tier-Aware Webview Panel & Control Plane Action Triggering
+  Dev->>Host: Run Command: "Percipience: Open Control Plane"
+  Host->>Webview: Create WebviewPanel with strict CSP Nonce & Tier Entitlements
+  Webview-->>Dev: Display Dynamic Buttons (Bootstrap, Gatekeeper, Merkle Audit, Worktrees, NBPack)
+  Dev->>Webview: Click: "🚦 Run PR Gatekeeper"
+  Webview->>Host: postMessage({ command: 'execute_action', action: 'gate' })
+  Host->>Daemon: Execute: ./.nb/bin/percipience gate
   Daemon->>Ledger: Verify SHA-256 block chain
-  Daemon-->>Host: Return Merkle DAG telemetry
-  Host->>Webview: postMessage({ command: 'renderDag', data: dagNodes })
-  Webview-->>Dev: Display interactive Mermaid DAG diagram (< 120ms)
+  Daemon-->>Host: Return Gatekeeper verification status
+  Host-->>Dev: Show Information Message: "PR Gatekeeper Passed Successfully"
 
-  Note over Dev,Host: 3. Real-Time Status Bar FinOps Telemetry
+  Note over Dev,Host: 3. Real-Time Status Bar FinOps & Tier Telemetry
   Host->>Daemon: Poll token metrics
   Daemon-->>Host: Return (Raw: 124k, Pruned: 38k, Savings: 69.3%)
-  Host-->>Dev: Update Status Bar: [✔ Merkle: Sealed | FinOps: 69.3% Saved]
+  Host-->>Dev: Update Status Bar: [$(zap) Percipience (Community): 69.3% Saved | $(shield) Merkle: OK]
 ```
+
+### 4.7. Synced Dynamic Action Button Matrix (VSCode & IntelliJ)
+
+| Control Plane Action | VSCode Command / Webview Action | Free Community | Team Tier | Business Tier | Enterprise Dedicated |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Bootstrap Workspace** | `percipience.bootstrap` | ✅ | ✅ | ✅ | ✅ |
+| **Run PR Gatekeeper** | `percipience.gate` | ✅ | ✅ | ✅ | ✅ |
+| **Verify Merkle Chain** | `percipience.audit` | ✅ | ✅ | ✅ | ✅ |
+| **Autonomous CI/CD** | `percipience.cicdRun` | ✅ | ✅ | ✅ | ✅ |
+| **Validate Layered Context** | `percipience.validate` | ✅ | ✅ | ✅ | ✅ |
+| **Token Savings Summary** | `percipience.tokenSummary` | ✅ | ✅ | ✅ | ✅ |
+| **Manage Worktrees** | `percipience.worktreeList` | ❌ | ✅ | ✅ | ✅ |
+| **Specialist Agents Registry**| `percipience.agentList` | ❌ | ✅ | ✅ | ✅ |
+| **Anti-Drift Parity Check** | `percipience.driftCheck` | ❌ | ✅ | ✅ | ✅ |
+| **Package Sealed NBPack** | `percipience.layerPack` | ❌ | ❌ | ✅ | ✅ |
+| **Gateway Provisioner** | `percipience.provision` | ❌ | ❌ | ✅ | ✅ |
+| **Cognitive Parity Report** | `percipience.driftReport` | ❌ | ❌ | ✅ | ✅ |
+| **Swarm Triad Orchestrator** | `percipience.swarmAudit` | ❌ | ❌ | ❌ | ✅ |
+| **Private VPC Enclave Sync**| `percipience.vpcSync` | ❌ | ❌ | ❌ | ✅ |
+| **Immutable WORM Egress** | `percipience.egressList` | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
@@ -275,7 +302,7 @@ sequenceDiagram
 
 ---
 
-## 6. Encrypted Packaging & Layer Consumption Workflow (`.nbpack`)
+## 6. Encrypted Packaging, Layer Consumption & Separate Tier VSIX Bundles
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
@@ -292,3 +319,11 @@ sequenceDiagram
   --in-memory-only \
   --mode multi_module
 ```
+
+### 6.3. Separate Multi-Tier VSIX Bundles for Permission Verification
+The VSCode packager (`package_extension.py`) generates dedicated tier-aware VSIX distributions in `.nb/bundles/`:
+- `percipience-vscode-extension-free-1.0.0.vsix`: Community edition with gatekeeper-only surface.
+- `percipience-vscode-extension-team-1.0.0.vsix`: Team edition with worktrees and custom agent registry.
+- `percipience-vscode-extension-business-1.0.0.vsix`: Business edition with sealed `.nbpack` compiler and gateway provisioner.
+- `percipience-vscode-extension-enterprise-1.0.0.vsix`: Enterprise edition with full private VPC and swarm orchestrator.
+- `percipience-vscode-extension-1.0.0.vsix`: Universal distribution defaulting to workspace license.

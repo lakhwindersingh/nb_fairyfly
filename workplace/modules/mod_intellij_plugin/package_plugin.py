@@ -3,7 +3,8 @@
 Percipience IntelliJ IDEA & PyCharm Plugin Packager
 Bundles Kotlin/Java classes, resources, plugin.xml, percipience runtime assets,
 and generates both standard JetBrains Plugin distribution JAR & ZIP archives
-as well as the encrypted domain .nbpack envelope.
+as well as the encrypted domain .nbpack envelope across Free, Team, Business,
+and Enterprise tiers for permission-aware testing.
 """
 
 import io
@@ -12,6 +13,7 @@ import sys
 import zipfile
 import shutil
 import hashlib
+import argparse
 from pathlib import Path
 
 PLUGIN_ROOT = Path(__file__).resolve().parent
@@ -59,7 +61,7 @@ def build_intellij_plugin_jar(jar_path: Path):
     print(f"📦 Built Plugin JAR: {jar_path} ({jar_path.stat().st_size:,} bytes)")
 
 
-def build_intellij_plugin_zip(jar_path: Path, zip_path: Path):
+def build_intellij_plugin_zip(jar_path: Path, zip_path: Path, tier_label: str = "Community"):
     """Builds the standard JetBrains plugin distribution ZIP (lib/plugin.jar structure)."""
     zip_path.parent.mkdir(parents=True, exist_ok=True)
     plugin_folder_name = "percipience-intellij-plugin"
@@ -69,7 +71,7 @@ def build_intellij_plugin_zip(jar_path: Path, zip_path: Path):
         arcname = f"{plugin_folder_name}/lib/{jar_path.name}"
         z.write(jar_path, arcname)
 
-        # Add README & license inside zip root
+        # Add README & user guide inside zip root
         guide = PLUGIN_ROOT / "PLUGIN_USER_GUIDE.md"
         if guide.exists():
             z.write(guide, f"{plugin_folder_name}/PLUGIN_USER_GUIDE.md")
@@ -82,37 +84,47 @@ def build_intellij_plugin_zip(jar_path: Path, zip_path: Path):
     print(f"📦 Built Plugin ZIP Distribution: {zip_path} ({zip_path.stat().st_size:,} bytes)")
 
 
-def package_intellij_bundle():
-    """Generates JAR, ZIP, and .nbpack layer package for IntelliJ / PyCharm."""
+def package_intellij_bundle(target_tier: str = "all"):
+    """Generates JAR, ZIP, tier-specific bundles, and .nbpack layer package for IntelliJ / PyCharm."""
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     OUT_BUNDLE.mkdir(parents=True, exist_ok=True)
 
-    # 1. Provision runtime assets first
-    print("🚀 Provisioning runtime bundle to IntelliJ plugin resources...")
+    tiers = ["free", "team", "business", "enterprise"] if target_tier == "all" else [target_tier.replace("plan_", "")]
+
+    # 1. Build tier-specific bundles
+    for t in tiers:
+        tier_plan_id = f"plan_{t}"
+        print(f"\n🚀 Provisioning runtime bundle for tier: {tier_plan_id}...")
+        CommercialPackagerProvisioner.provision_target(
+            workspace_root=REPO_ROOT,
+            tenant_id=f"tenant_{t}_test",
+            tier=tier_plan_id,
+            target="intellij"
+        )
+
+        tier_jar = DIST_DIR / f"percipience-intellij-plugin-{t}-1.0.0.jar"
+        tier_zip = DIST_DIR / f"percipience-intellij-plugin-{t}-1.0.0.zip"
+        build_intellij_plugin_jar(tier_jar)
+        build_intellij_plugin_zip(tier_jar, tier_zip, tier_label=t.capitalize())
+
+        shutil.copy2(tier_jar, OUT_BUNDLE / tier_jar.name)
+        shutil.copy2(tier_zip, OUT_BUNDLE / tier_zip.name)
+
+    # 2. Build default universal bundle (provisioned with plan_free as canonical base)
     CommercialPackagerProvisioner.provision_target(
         workspace_root=REPO_ROOT,
         tenant_id="tenant_community_default",
         tier="plan_free",
         target="intellij"
     )
+    default_jar = DIST_DIR / "percipience-intellij-plugin-1.0.0.jar"
+    default_zip = DIST_DIR / "percipience-intellij-plugin-1.0.0.zip"
+    build_intellij_plugin_jar(default_jar)
+    build_intellij_plugin_zip(default_jar, default_zip, tier_label="Universal")
+    shutil.copy2(default_jar, OUT_BUNDLE / default_jar.name)
+    shutil.copy2(default_zip, OUT_BUNDLE / default_zip.name)
 
-    # 2. Build JAR & ZIP
-    jar_filename = "percipience-intellij-plugin-1.0.0.jar"
-    zip_filename = "percipience-intellij-plugin-1.0.0.zip"
-    
-    jar_path = DIST_DIR / jar_filename
-    zip_path = DIST_DIR / zip_filename
-
-    build_intellij_plugin_jar(jar_path)
-    build_intellij_plugin_zip(jar_path, zip_path)
-
-    # 3. Copy to .nb/bundles
-    bundle_jar = OUT_BUNDLE / jar_filename
-    bundle_zip = OUT_BUNDLE / zip_filename
-    shutil.copy2(jar_path, bundle_jar)
-    shutil.copy2(zip_path, bundle_zip)
-
-    # 4. Compile .nbpack layer
+    # 3. Compile .nbpack layer
     plan_file = PLANS_DIR / "l1" / "intellij-pycharm-plugin" / "detailed.md"
     nbpack_path = OUT_BUNDLE / "intellij_pycharm_plugin_domain.nbpack"
     if plan_file.exists():
@@ -120,11 +132,13 @@ def package_intellij_bundle():
         res_nbpack = NBPackEnvelope.compile_layer_pack(REPO_ROOT, plan_file, nbpack_path)
         print(f"✅ Generated .nbpack domain layer: {res_nbpack} ({res_nbpack.stat().st_size:,} bytes)")
 
-    print(f"\n✨ All IntelliJ Plugin bundles successfully created:")
-    print(f"   • JAR: {bundle_jar} ({bundle_jar.stat().st_size:,} bytes)")
-    print(f"   • ZIP: {bundle_zip} ({bundle_zip.stat().st_size:,} bytes)")
-    print(f"   • NBPACK: {nbpack_path} ({nbpack_path.stat().st_size:,} bytes)")
+    print(f"\n✨ All IntelliJ Plugin bundles successfully created in {OUT_BUNDLE}:")
+    for f in OUT_BUNDLE.glob("percipience-intellij-plugin*"):
+        print(f"   • {f.name} ({f.stat().st_size:,} bytes)")
 
 
 if __name__ == "__main__":
-    package_intellij_bundle()
+    parser = argparse.ArgumentParser(description="Package Percipience IntelliJ Plugin")
+    parser.add_argument("--tier", choices=["all", "free", "team", "business", "enterprise"], default="all", help="Tier to package")
+    args = parser.parse_args()
+    package_intellij_bundle(target_tier=args.tier)

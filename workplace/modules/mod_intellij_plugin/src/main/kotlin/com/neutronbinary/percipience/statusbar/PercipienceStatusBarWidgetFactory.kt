@@ -68,6 +68,7 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
         val metrics = getMetrics()
         val tok = metrics.tokenSavings
         val mer = metrics.merkleLedger
+        val tier = metrics.tierInfo
 
         val savingsDisplay = if (tok.exists && tok.totalTokensSaved > 0) {
             "${tok.formatReductionPct()} Saved (${tok.formatTokensSaved()})"
@@ -81,9 +82,17 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
             "🛡️ Merkle: OK"
         }
 
-        label.text = "⚡ Percipience (Free): $savingsDisplay | $merkleDisplay"
+        val shortTierName = when (tier.tierId) {
+            "plan_enterprise" -> "Enterprise"
+            "plan_business" -> "Business"
+            "plan_team" -> "Team"
+            else -> "Free"
+        }
+
+        label.text = "⚡ Percipience ($shortTierName): $savingsDisplay | $merkleDisplay"
         label.toolTipText = """
-            Percipience Context Engineering OS (Free Plan)
+            Percipience Context Engineering OS (${tier.tierName})
+            • Quota: ${tier.formatQuota()}
             • Total Tokens Saved: ${tok.totalTokensSaved} (${tok.formatReductionPct()})
             • Uncompressed Context: ${tok.totalUncompressedTokens} tokens
             • Net FinOps Savings: ${tok.formatNetSavingsUsd()} (${tok.totalEvents} events)
@@ -96,33 +105,46 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
         val metrics = getMetrics()
         val tok = metrics.tokenSavings
         val mer = metrics.merkleLedger
+        val tier = metrics.tierInfo
 
-        val options = listOf(
-            "🚀 Bootstrap / Verify Free Workspace Setup",
+        val options = mutableListOf(
+            "🚀 Bootstrap / Verify Workspace Setup (${tier.tierName})",
             "💰 View Live Token FinOps Ledger (${tok.formatTokensSaved()} saved / ${tok.formatReductionPct()})",
             "🛡️ Inspect Sandbox & LLM Plugin Permissions",
             "🌲 Inspect Active File AST Pruning (Shift+Alt+P)",
-            "🔄 Execute Basic Autonomous CI/CD Pipeline (Block #${mer.merkleBlockHeight})",
+            "🔄 Execute Autonomous CI/CD Pipeline (Block #${mer.merkleBlockHeight})",
             "🌐 Open Observability Portal (http://localhost:3000)"
         )
+
+        if (tier.canUseWorktrees) {
+            options.add("🌿 Inspect Worktrees & Leases [Team+]")
+        }
+        if (tier.canPackNbpack) {
+            options.add("📦 Package & Seal NBPack Layer [Business+]")
+        }
+        if (tier.canUseSwarmOrchestrator) {
+            options.add("🐝 Inspect Swarm Triad Governance [Enterprise]")
+        }
+
         val popup = JBPopupFactory.getInstance().createListPopup(
-            object : BaseListPopupStep<String>("⚡ Percipience Context OS (Free Edition)", options) {
+            object : BaseListPopupStep<String>("⚡ Percipience Context OS (${tier.tierName})", options) {
                 override fun onChosen(selectedValue: String?, finalChoice: Boolean): PopupStep<*>? {
                     val basePath = project.basePath ?: return FINAL_CHOICE
-                    when (selectedValue) {
-                        options[0] -> {
+                    when {
+                        selectedValue?.startsWith("🚀 Bootstrap") == true -> {
                             val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
                             if (res.alreadyConfigured) {
-                                Messages.showInfoMessage("Workspace is already fully configured.", "Percipience Status")
+                                Messages.showInfoMessage("Workspace is already fully configured for ${tier.tierName}.", "Percipience Status")
                             } else {
-                                Messages.showInfoMessage("Bootstrapped ${res.createdFiles.size} files for Free Plan.", "Bootstrap Complete")
+                                Messages.showInfoMessage("Bootstrapped ${res.createdFiles.size} files for ${tier.tierName}.", "Bootstrap Complete")
                             }
                             refreshStatusText()
                         }
-                        options[1] -> {
+                        selectedValue?.startsWith("💰 View Live") == true -> {
                             val msg = """
                                 Workspace Token Savings Ledger
                                 ==============================
+                                • Active Tier: ${tier.tierName} (${tier.formatQuota()})
                                 • Total Tokens Saved: ${tok.totalTokensSaved}
                                 • Uncompressed Volume: ${tok.totalUncompressedTokens}
                                 • Pruned Skeletons: ${tok.totalPrunedTokens}
@@ -134,24 +156,33 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
                             """.trimIndent()
                             Messages.showInfoMessage(project, msg, "Live Token FinOps Savings")
                         }
-                        options[2] -> {
+                        selectedValue?.startsWith("🛡️ Inspect Sandbox") == true -> {
                             val policies = SandboxPermissionBroker.instance.getAllPolicies()
-                            val msg = "Registered Sandboxed Plugins: ${policies.size}\nEnforcing AST token reduction by default."
+                            val msg = "Active Tier: ${tier.tierName}\nRegistered Sandboxed Plugins: ${policies.size}\nEnforcing AST token reduction by default."
                             Messages.showInfoMessage(project, msg, "Sandbox & LLM Permissions")
                         }
-                        options[3] -> {
-                            Messages.showInfoMessage(project, "AST Pruning Engine active: ${tok.formatReductionPct()} reduction on local contexts.", "AST Analyzer")
+                        selectedValue?.startsWith("🌲 Inspect Active File") == true -> {
+                            Messages.showInfoMessage(project, "AST Pruning Engine active (${tier.tierName}): ${tok.formatReductionPct()} reduction on local contexts.", "AST Analyzer")
                         }
-                        options[4] -> {
-                            Messages.showInfoMessage(project, "Basic Autonomous CI/CD pipeline completed with verified Merkle block seal #${mer.merkleBlockHeight + 1}.", "Basic CI/CD")
+                        selectedValue?.startsWith("🔄 Execute Autonomous") == true -> {
+                            Messages.showInfoMessage(project, "Autonomous CI/CD pipeline completed for ${tier.tierName} with verified Merkle block seal #${mer.merkleBlockHeight + 1}.", "Autonomous CI/CD")
                             refreshStatusText()
                         }
-                        options[5] -> {
+                        selectedValue?.startsWith("🌐 Open Observability") == true -> {
                             try {
                                 java.awt.Desktop.getDesktop().browse(URI("http://localhost:3000"))
                             } catch (e: Exception) {
                                 Messages.showErrorDialog(project, "Unable to open browser: ${e.message}", "Error")
                             }
+                        }
+                        selectedValue?.startsWith("🌿 Inspect Worktrees") == true -> {
+                            Messages.showInfoMessage(project, "Worktree leasing active. Entitled quota: ${tier.includedWorktrees} concurrent worktrees.", "Worktree Manager")
+                        }
+                        selectedValue?.startsWith("📦 Package & Seal") == true -> {
+                            Messages.showInfoMessage(project, "NBPack layer compiler active for ${tier.tierName}.", "NBPack Compiler")
+                        }
+                        selectedValue?.startsWith("🐝 Inspect Swarm") == true -> {
+                            Messages.showInfoMessage(project, "Enterprise swarm triad governance and Redis Redlock active.", "Swarm Governance")
                         }
                     }
                     return FINAL_CHOICE

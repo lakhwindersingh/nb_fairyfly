@@ -21,34 +21,36 @@ model_tiering_policy:
 <!-- Plan Co-Location Notice -->
 > **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [`.nb/agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/) and embedded directly in Section 3. In newly created projects where the `agentic/` directory does not yet exist, `./bin/percipience layer apply` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
 
-This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, and ToolWindow orchestration required for:
+This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, ToolWindow orchestration, and tier-permission-aware Control Plane button governance required for:
 
 1. **JetBrains Platform SDK & IntelliJ / PyCharm ToolWindow Control Plane**:
    - Modern Kotlin-based plugin built with Gradle IntelliJ Plugin (`org.jetbrains.intellij.platform`).
-   - Integrated dockable `ToolWindow` ("Percipience OS") offering live Merkle DAG chain visualization, workflow execution status, AST token FinOps meters, and living documentation viewer (JCEF / Java Chromium Embedded Framework).
+   - Integrated dockable `ToolWindow` ("Percipience OS") offering dynamic, tier-governed Control Plane action buttons, live Merkle DAG chain visualization, workflow execution status, AST token FinOps meters, and living documentation viewer (JCEF / Java Chromium Embedded Framework).
    - Project-level background services (`ProjectService`) maintaining synchronized state with the local Percipience daemon via non-blocking Kotlin Coroutines (`Dispatchers.Default` and `Dispatchers.EDT`).
 
-2. **Program Structure Interface (PSI) Tree Analysis & Real-Time AST Token Optimization**:
+2. **Dynamic Tier-Permission-Aware Control Plane UI & Tooling Isolation**:
+   - Dynamic tier resolution evaluating workspace licenses (`tenant_license.json`, `.percipience_license.json`), context ledger, and environment (`PERCIPIENCE_PLAN`).
+   - Granular Control Plane button rendering mapping strictly to active entitlements across **Free Community**, **Team**, **Business**, and **Enterprise Dedicated** tiers.
+   - Enforcing strict platform tools exposure boundaries: Free Tier exposes exclusively safe gatekeeper actions while paid tiers expose raw tool suites and encrypted `.nbpack` compilers.
+
+3. **Program Structure Interface (PSI) Tree Analysis & Real-Time AST Token Optimization**:
    - Deep PSI inspection for multi-language workspaces (Python via `PyFile`/`PyClass`/`PyFunction`, Kotlin/Java via `PsiClass`/`PsiMethod`, TypeScript/JavaScript).
    - Real-time token calculation engine diffing raw source vs. AST-pruned interfaces ($60-85\%$ token reduction).
    - Pre-prompt AST pruning inspection popup allowing developers to visually inspect and verify stripped function bodies before dispatching prompts to LLM agents.
 
-3. **In-Editor Annotators, Gutter Icons & Quick-Fix Intentions**:
+4. **In-Editor Annotators, Gutter Icons & Quick-Fix Intentions**:
    - `ExternalAnnotator` and `LocalInspectionTool` verifying active wire contracts (`.nb/context/contracts/`) against calling code in real time.
    - Editor gutter icons highlighting active workflow steps, live Merkle recovery points, and verified test assertions.
    - Quick-fix intention actions (`Alt+Enter` / `Option+Return`) triggering automatic wire contract re-synchronization, AST living doc synthesis, and PR gate checks.
 
-4. **Hermetic Threading & Read/Write Action Safety**:
+5. **Hermetic Threading & Read/Write Action Safety**:
    - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
    - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
 
-5. **Terminal-Mode Autonomous Agent Integration & AST Token Compression (Claude Code, Gemini CLI, Aider, Cursor CLI)**:
-   - Deep integration with terminal-based autonomous AI agents executing inside the embedded IDE terminal tool window or external developer shell.
-   - Transparent interception & environment variable injection (`PERCIPIENCE_TERMINAL_MODE=1`, `PERCIPIENCE_AST_COMPRESSION=1`, `PERCIPIENCE_PROJECT_ROOT`) via `LocalTerminalCustomizer` / `PercipienceTerminalCustomizer`.
-   - Dynamic AST context extraction and skeletonization for Claude Code (`claude-code` / `CLAUDE.md`), Google Gemini CLI (`gemini-cli` / system instructions), and Aider (`aider` repo-map) achieving **40%–75% token reduction** on full repo prompt cycles.
-   - Real-time token metering and gross USD spend tracking recorded directly into the cryptographic `token_savings_ledger.yaml` with ToolWindow FinOps telemetry.
-   - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
-   - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
+6. **Terminal-Mode Autonomous Agent Integration & AST Token Compression**:
+   - Deep integration with terminal-based autonomous AI agents (Claude Code, Gemini CLI, Aider) executing inside the embedded IDE terminal tool window.
+   - Transparent interception & environment variable injection (`PERCIPIENCE_TERMINAL_MODE=1`, `PERCIPIENCE_AST_COMPRESSION=1`) via `PercipienceTerminalCustomizer`.
+   - Real-time token metering and gross USD spend tracking recorded directly into the cryptographic `token_savings_ledger.yaml`.
 
 ---
 
@@ -58,64 +60,83 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 .
 ├── .nb/context/
 │   ├── contracts/
-│   │   ├── intellij_plugin_manifest_contract.json # Plugin XML manifest, compatibility ranges (2024.1 - 2026.2+)
-│   │   ├── psi_ast_bridge_contract.yaml           # PSI symbol extraction schema, token calculation interfaces
-│   │   └── daemon_rpc_contract.json               # JSON-RPC 2.0 schema for IntelliJ <-> Percipience daemon IPC
+│   │   ├── intellij_plugin_manifest_contract.json  # plugin.xml contributes schema, actions, toolWindows
+│   │   ├── psi_ast_bridge_contract.yaml            # PSI traversal nodes & language AST mapping rules
+│   │   └── daemon_rpc_contract.json                # JSON-RPC IPC contract between IDE and daemon
 │   └── rules/
-│       ├── jetbrains_platform_threading_rules.md  # Non-blocking EDT, ReadAction/WriteAction and Coroutine rules
-│       ├── psi_read_lock_invariants.md            # Smart mode checks, DumbService handling & PSI lifecycle
-│       └── jcef_security_invariants.md            # Sandboxed JCEF webview CSP, local asset URI restrictions
+│       ├── jetbrains_platform_threading_rules.md   # EDT vs. Background coroutine dispatch rules
+│       ├── psi_read_lock_invariants.md             # ReadAction requirements for PSI tree traversal
+│       └── jcef_security_invariants.md             # Content-Security-Policy & origin sandboxing
 ├── .nb/agentic/
 │   └── custom/
 │       ├── agents/
-│       │   ├── agent_jetbrains_plugin_architect.yaml # Domain Expert: JetBrains SDK, Gradle, PSI, ToolWindow UI
-│       │   ├── agent_psi_ast_bridge_specialist.yaml   # Subagent: PSI visitor, AST compression & inspection annotator
-│       │   └── agent_intellij_ui_ux_engineer.yaml     # Subagent: Swing/JCEF ToolWindow, gutter icons & quick-fixes
+│       │   ├── agent_jetbrains_plugin_architect.yaml      # Domain Expert: Kotlin, Gradle, Plugin SDK
+│       │   ├── agent_psi_ast_bridge_specialist.yaml       # Subagent: PSI visitor, AST pruning
+│       │   └── agent_intellij_ui_ux_engineer.yaml         # Subagent: Swing/JCEF ToolWindow UI
 │       └── workflows/
-│           └── intellij_pycharm_plugin_delivery_flow.yaml # Manifest -> PSI Engine -> ToolWindow -> Daemon Bridge -> Verifier
+│           └── intellij_pycharm_plugin_delivery_flow.yaml # Build -> PSI Test -> ToolWindow -> Package
 ├── workplace/
 │   ├── docs/
-│   │   ├── intellij_pycharm_plugin_architecture.md           # System C4 component topologies & module interfaces (Mermaid)
-│   │   ├── intellij_pycharm_plugin_sequence.md               # End-to-end execution sequence flows (Mermaid)
-│   │   ├── intellij_pycharm_plugin_data_flow.md              # Topological data flow & contract exchange DAGs (Mermaid)
-│   │   ├── intellij_pycharm_plugin_entity_relation.md        # Entity-relationship & state transition models (Mermaid)
-│   │   └── intellij_pycharm_plugin_contracts_registry.md     # Machine-readable contract registry & artifact handoff matrix
+│   │   ├── intellij_pycharm_plugin_architecture.md        # System C4 component topologies & module interfaces (Mermaid)
+│   │   ├── intellij_pycharm_plugin_sequence.md            # End-to-end execution sequence flows (Mermaid)
+│   │   ├── intellij_pycharm_plugin_data_flow.md           # Topological data flow & contract exchange DAGs (Mermaid)
+│   │   ├── intellij_pycharm_plugin_entity_relation.md     # Entity-relationship & state transition models (Mermaid)
+│   │   └── intellij_pycharm_plugin_contracts_registry.md  # Machine-readable contract registry & artifact handoff matrix
 │   ├── modules/
 │   │   └── mod_intellij_plugin/
-│   │       ├── build.gradle.kts                       # Gradle IntelliJ Platform plugin configuration
-│   │       ├── src/main/kotlin/com/neutronbinary/percipience/
-│   │       │   ├── services/                          # Project & Application level background services
-│   │       │   ├── psi/                               # PSI symbol extractors, visitors & token calculators
-│   │       │   ├── toolwindow/                        # Dockable ToolWindow factory, JCEF dashboard & tree views
-│   │       │   ├── annotators/                        # Wire contract inspection annotators & line markers
-│   │       │   └── actions/                           # Editor popup actions, quick-fixes & toolbar buttons
-│   │       ├── src/main/resources/
-│   │       │   ├── META-INF/plugin.xml                # Extension points, listeners, actions & plugin metadata
-│   │       │   └── percipience/                       # Bundled offline Free Tier runtime assets
-│   │       │       ├── bin/percipience                # Unified executable CLI entrypoint
-│   │       │       ├── config/                        # Free tier billing & AST token rules
-│   │       │       ├── core/                          # 38 essential platform core engines (.nb/core/*.py)
-│   │       │       ├── plan/                          # Parent master free plan template
-│   │       │       └── workflows/                     # Basic autonomous CI/CD workflow definition
-│   │       └── src/test/kotlin/                       # LightPlatformTestCase & fixtures for PSI assertions
+│   │       ├── build.gradle.kts                           # Gradle IntelliJ Platform plugin configuration
+│   │       ├── package_plugin.py                          # Multi-tier JAR, ZIP & .nbpack packaging script
+│   │       ├── PLUGIN_USER_GUIDE.md                       # Comprehensive guide and tier matrix
+│   │       ├── src/main/
+│   │       │   ├── kotlin/com/neutronbinary/percipience/
+│   │       │   │   ├── PercipienceIcons.kt                # Custom SVG icons and UI assets
+│   │       │   │   ├── bootstrap/
+│   │       │   │   │   ├── PercipienceProjectStartupActivity.kt # Startup prompt for unconfigured workspaces
+│   │       │   │   │   └── WorkspaceBootstrapper.kt       # Offline Quad-Space scaffolding & extraction
+│   │       │   │   ├── actions/
+│   │       │   │   │   ├── BootstrapWorkspaceAction.kt    # Manual Tools menu trigger for bootstrap
+│   │       │   │   │   ├── InspectAstPruningAction.kt     # In-editor Shift+Alt+P AST inspection
+│   │       │   │   │   └── InspectSandboxPermissionsAction.kt # Tools menu trigger for permissions
+│   │       │   │   ├── annotators/
+│   │       │   │   │   └── ContractInspectionAnnotator.kt # Editor line markers for wire contracts
+│   │       │   │   ├── intentions/
+│   │       │   │   │   └── SyncWireContractIntention.kt   # Alt+Enter quick-fix for schema drift
+│   │       │   │   ├── ledger/
+│   │       │   │   │   └── WorkspaceLedgerReader.kt       # Real-time reader for FinOps, Merkle & TierInfo
+│   │       │   │   ├── psi/
+│   │       │   │   │   └── PsiAstBridge.kt                # Multi-language PSI AST pruning engine
+│   │       │   │   ├── security/
+│   │       │   │   │   └── SandboxPermissionBroker.kt     # Cross-plugin LLM access control & token enforcement
+│   │       │   │   ├── services/
+│   │       │   │   │   ├── PercipienceExecutionService.kt # Non-blocking CLI process execution
+│   │       │   │   │   └── PercipienceProjectService.kt   # State synchronization background service
+│   │       │   │   ├── statusbar/
+│   │       │   │   │   └── PercipienceStatusBarWidgetFactory.kt # Dynamic tier-aware status bar widget
+│   │       │   │   ├── terminal/
+│   │       │   │   │   └── PercipienceTerminalCustomizer.kt # Terminal agent AST compression & shell hooks
+│   │       │   │   └── toolwindow/
+│   │       │   │       └── PercipienceToolWindowFactory.kt # Dynamic tier-aware 6-tab Control Plane UI
+│   │       │   └── resources/
+│   │       │       ├── META-INF/
+│   │       │       │   └── plugin.xml                         # Plugin descriptor & extension points
+│   │       │       └── percipience/                           # Embedded offline platform runtime
+│   │       └── src/test/kotlin/                               # LightPlatformTestCase & fixtures
 │   └── templates/bridge/
-│       ├── mock_jetbrains_daemon.py                   # Loopback JSON-RPC server simulating IntelliJ actions
-│       └── virtual_psi_fixture.py                     # Synthetic PSI tree generator for offline CI validation
+│       ├── mock_jetbrains_daemon.py                           # Loopback JSON-RPC server simulating IntelliJ actions
+│       └── virtual_psi_fixture.py                             # Synthetic PSI tree generator for offline CI validation
 └── user/
     ├── inputs/
-    │   ├── intellij_plugin_config.yaml                # Target IDE versions (PyCharm, IDEA Ultimate, Community)
-    │   └── ui_theme_tokens.json                       # Dark/Light theme colors, typography and icon definitions
+    │   ├── intellij_plugin_config.yaml                        # Target IDE versions & feature flags
+    │   └── ui_theme_tokens.json                               # Dark/Light theme colors and typography
     ├── hitl/
-    │   └── poisoning_quarantine.md                    # Quarantined plugin bytecode or invalid PSI transformations
+    │   └── poisoning_quarantine.md                            # Quarantined plugin bytecode or invalid PSI transforms
     └── outputs/
-        ├── dashboard/
-        │   └── index.html                             # JCEF rendered living dashboard & Merkle state viewer
-        ├── intellij_plugin_metrics.json               # PSI parse throughput, EDT frame time, token savings
-        └── context_maturity_report.md                 # 6-dimensional context scorecard with IDE plugin audit
+        ├── dashboard/index.html                               # JCEF rendered living dashboard & Merkle state viewer
+        ├── intellij_plugin_metrics.json                       # PSI parse throughput, EDT frame time, token savings
+        └── context_maturity_report.md                         # 6-dimensional context scorecard with IDE plugin audit
 ```
 
----
-
+---\n
 ## 2. Wire Contracts & Safety Invariants (`.nb/context/contracts/`, `.nb/context/rules/`)
 
 ### 2.1. IntelliJ Plugin Manifest Contract (`.nb/context/contracts/intellij_plugin_manifest_contract.json`)
@@ -188,8 +209,7 @@ performance_targets:
    - Communication between JCEF JavaScript and the Kotlin plugin layer must use asynchronous query handlers (`CefMessageRouterHandlerAdapter`) with verified request nonce validation.
 ```
 
----
-
+---\n
 ## 3. Specialized Domain Subagents & Workflows (`.nb/agentic/custom/`)
 
 ### 3.1. `.nb/agentic/custom/agents/agent_jetbrains_plugin_architect.yaml`
@@ -210,9 +230,8 @@ performance_targets:
 - **Sandboxed Worktree**: `.workspaces/wt_intellij_ui_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/`
 
----
-
-## 4. Virtual End-to-End Emulation Bridge
+---\n
+## 4. Virtual End-to-End Emulation Bridge & UI Action Architecture
 
 ```mermaid
 sequenceDiagram
@@ -245,8 +264,79 @@ sequenceDiagram
   ToolWin-->>Dev: Refresh live Mermaid DAG and display green status notification
 ```
 
----
+### 4.7. Tier-Permission-Aware Control Plane & Dynamic Action Matrix
 
+The Percipience IntelliJ / PyCharm plugin dynamically resolves the user's active billing tier and selectively displays, enables, and manages Control Plane buttons:
+
+```mermaid
+graph TD
+  Resolver["WorkspaceLedgerReader.resolveTier()"]
+  
+  subgraph Tier_Entitlements["Dynamic Tier Permissions"]
+    FreeTier["plan_free (Community)"]
+    TeamTier["plan_team"]
+    BizTier["plan_business"]
+    EntTier["plan_enterprise"]
+  end
+
+  Resolver --> FreeTier
+  Resolver --> TeamTier
+  Resolver --> BizTier
+  Resolver --> EntTier
+
+  subgraph Free_Buttons["Core Gatekeeper Actions (All Tiers)"]
+    BtnBoot["🚀 Bootstrap / Verify Workspace"]
+    BtnGate["🚦 Run PR Gatekeeper"]
+    BtnAudit["🛡️ Verify Merkle Chain"]
+    BtnCicd["▶ Autonomous CI/CD Pipeline"]
+    BtnVal["🔍 Validate Layered Context"]
+    BtnTok["⚡ Token Savings Summary"]
+  end
+
+  subgraph Team_Buttons["Team Tier Actions [Team+]"]
+    BtnWt["🌿 Manage Worktrees"]
+    BtnAgent["🤖 Specialist Agents Registry"]
+    BtnDriftChk["🔄 Anti-Drift Parity Check"]
+  end
+
+  subgraph Biz_Buttons["Business Tier Actions [Business+]"]
+    BtnPack["📦 Package Sealed NBPack"]
+    BtnProv["🌐 Gateway Provisioner"]
+    BtnDriftRep["🧠 Cognitive Parity Report"]
+  end
+
+  subgraph Ent_Buttons["Enterprise Dedicated Actions [Enterprise]"]
+    BtnSwarm["🐝 Swarm Triad Orchestrator"]
+    BtnVpc["🔒 Private VPC Air-Gapped Sync"]
+    BtnWorm["📜 Immutable WORM Cloud Egress"]
+  end
+
+  FreeTier --> Free_Buttons
+  TeamTier --> Free_Buttons & Team_Buttons
+  BizTier --> Free_Buttons & Team_Buttons & Biz_Buttons
+  EntTier --> Free_Buttons & Team_Buttons & Biz_Buttons & Ent_Buttons
+```
+
+#### Detailed Action Matrix:
+| Control Plane Button | CLI Subcommand | Free Community | Team Tier | Business Tier | Enterprise Dedicated |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Bootstrap Workspace** | `bootstrap` | ✅ | ✅ | ✅ | ✅ |
+| **Run PR Gatekeeper** | `gate` | ✅ | ✅ | ✅ | ✅ |
+| **Verify Merkle Chain** | `audit --enforce-merkle-chain` | ✅ | ✅ | ✅ | ✅ |
+| **Autonomous CI/CD** | `cicd run` | ✅ | ✅ | ✅ | ✅ |
+| **Validate Layered Context** | `validate --layered` | ✅ | ✅ | ✅ | ✅ |
+| **Token Savings Summary** | `tokens summary` | ✅ | ✅ | ✅ | ✅ |
+| **Manage Worktrees** | `worktree list` | ❌ | ✅ | ✅ | ✅ |
+| **Specialist Agents Registry**| `agent list` | ❌ | ✅ | ✅ | ✅ |
+| **Anti-Drift Parity Check** | `drift check` | ❌ | ✅ | ✅ | ✅ |
+| **Package Sealed NBPack** | `layer pack` | ❌ | ❌ | ✅ | ✅ |
+| **Gateway Provisioner** | `provision --target all` | ❌ | ❌ | ✅ | ✅ |
+| **Cognitive Parity Report** | `drift report` | ❌ | ❌ | ✅ | ✅ |
+| **Swarm Triad Orchestrator** | `swarm audit` | ❌ | ❌ | ❌ | ✅ |
+| **Private VPC Enclave Sync**| `repo status` | ❌ | ❌ | ❌ | ✅ |
+| **Immutable WORM Egress** | `egress list` | ❌ | ❌ | ❌ | ✅ |
+
+---\n
 ## 5. Domain-Specific Surgical Rollback & Poisoning Defense
 
 ```mermaid
@@ -269,9 +359,8 @@ sequenceDiagram
   Gate-->>Agent: Reject PR with stack trace and mandate Kotlin Coroutine background dispatch
 ```
 
----
-
-## 6. Encrypted Packaging & Layer Consumption Workflow (`.nbpack`)
+---\n
+## 6. Encrypted Packaging, Layer Consumption & Separate Tier Bundles
 
 ### 6.1. Compiling the Sealed Domain Bundle
 ```bash
@@ -298,56 +387,10 @@ The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-
 5. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
 6. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).
 
-
-### 4.6. Terminal Mode Agent AST Proxy & JetBrains Shell Hook Architecture
-
-#### 1. Core Problem Addressed
-When developers run terminal-based autonomous coding agents (such as Anthropic's **Claude Code** `claude`, Google's **Gemini CLI** `gemini`, or **Aider**) inside the embedded IDE terminal or a standalone shell session, these agents typically read raw workspace files directly from disk. This results in:
-1. **Severe Token Bloat**: Ingesting raw function bodies and boilerplate burns 50k–150k tokens per prompt cycle.
-2. **Context Window Exhaustion**: Rapidly exhausts context limits on large multi-module repositories.
-3. **Bypassed FinOps Tracking**: Context queries bypass the IDE PSI and token savings ledger.
-
-#### 2. Percipience Terminal Proxy Architecture
-Percipience solves this with a dual-layer interception and compression architecture:
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Developer / Terminal User
-    participant Term as IntelliJ Embedded Terminal (PTY)
-    participant Cust as PercipienceTerminalCustomizer
-    participant Proxy as TerminalAgentASTProxy (.nb/core)
-    participant AST as ASTOptimizer (Python/Kotlin/TS)
-    participant Ledger as TokenTracker (token_savings_ledger.yaml)
-    participant Agent as Claude Code / Gemini CLI / Aider
-
-    Dev->>Term: Executes 'percipience agent wrap --agent claude' or 'claude'
-    Cust-->>Term: Injects PERCIPIENCE_TERMINAL_MODE=1, PERCIPIENCE_AST_COMPRESSION=1
-    Term->>Proxy: export_context(workspace_root, format='claude-code')
-    Proxy->>AST: prune_source(raw_code, lang)
-    AST-->>Proxy: AST Skeleton (signatures, types, docstrings)
-    Proxy->>Ledger: record_event(tokens_saved, model='claude-3-5-sonnet')
-    Proxy-->>Term: Writes .percipience_claude_context.md (46%-70% smaller)
-    Term->>Agent: Launches Agent with AST Context injected into system prompt
-    Agent-->>Dev: Autonomous execution completed with minimal token consumption
-```
-
-#### 3. CLI Command Suite for Terminal Agents
-Percipience provides dedicated CLI subcommands for managing terminal agents:
-
-```bash
-# 1. Export AST context for Claude Code, Gemini CLI, or Aider
-./.nb/bin/percipience context export --format claude-code --output .percipience_claude_context.md
-./.nb/bin/percipience context export --format gemini-cli --output .percipience_gemini_context.md
-
-# 2. Wrap and execute an agent with dynamic AST context injection
-./.nb/bin/percipience agent wrap --agent claude
-./.nb/bin/percipience agent wrap --agent gemini
-
-# 3. Generate transparent shell hooks for zsh / bash / fish
-./.nb/bin/percipience terminal hook --shell zsh
-eval "$(/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/bin/percipience terminal hook --shell zsh)"
-
-# 4. Inspect terminal agent FinOps savings in real-time
-./.nb/bin/percipience terminal status
-```
+### 6.4. Separate Multi-Tier Plugin Bundles for Permission Verification
+To test and verify dynamic permission enforcement across all tiers in staging and automated test harnesses, the packager (`package_plugin.py`) generates dedicated tier-aware plugin distributions in `.nb/bundles/`:
+- `percipience-intellij-plugin-free-1.0.0.zip`: Community edition pre-provisioned with `plan_free` license and gatekeeper-only surface.
+- `percipience-intellij-plugin-team-1.0.0.zip`: Team edition with worktree and custom agent provisioning.
+- `percipience-intellij-plugin-business-1.0.0.zip`: Business edition with full platform tools, NBPack encrypted packaging, and multi-tenant provisioner.
+- `percipience-intellij-plugin-enterprise-1.0.0.zip`: Enterprise edition with private VPC isolation, swarm triad orchestrator, and WORM cloud egress.
+- `percipience-intellij-plugin-1.0.0.zip`: Universal distribution defaulting to active workspace license.

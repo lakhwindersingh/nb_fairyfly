@@ -48,9 +48,33 @@ data class MerkleLedgerSummary(
     val exists: Boolean = false
 )
 
+data class TierInfo(
+    val tierId: String = "plan_free",
+    val tierName: String = "Free Community Tier",
+    val includedSeats: Int = 1,
+    val includedWorktrees: Int = 1,
+    val includedAuditsMonthly: Int = 500,
+    val canPackNbpack: Boolean = false,
+    val canCreateCustomAgents: Boolean = false,
+    val canUseWorktrees: Boolean = false,
+    val canUseDriftReconciliation: Boolean = false,
+    val canUseSwarmOrchestrator: Boolean = false,
+    val canUsePrivateVpc: Boolean = false,
+    val canUseWormEgress: Boolean = false,
+    val exposeBasicPlatformTools: Boolean = false
+) {
+    fun formatQuota(): String {
+        val seats = if (includedSeats < 0) "Unlimited Seats" else "$includedSeats Seat${if (includedSeats > 1) "s" else ""}"
+        val wts = if (includedWorktrees < 0) "Unlimited Worktrees" else "$includedWorktrees Worktree${if (includedWorktrees > 1) "s" else ""}"
+        val audits = if (includedAuditsMonthly < 0) "Unlimited Audits" else "$includedAuditsMonthly Audits/mo"
+        return "$seats | $wts | $audits"
+    }
+}
+
 data class WorkspaceMetrics(
     val tokenSavings: TokenSavingsSummary,
-    val merkleLedger: MerkleLedgerSummary
+    val merkleLedger: MerkleLedgerSummary,
+    val tierInfo: TierInfo = TierInfo()
 )
 
 object WorkspaceLedgerReader {
@@ -59,7 +83,8 @@ object WorkspaceLedgerReader {
         val root = if (!projectBasePath.isNullOrBlank()) File(projectBasePath) else null
         val tokenSavings = readTokenSavings(root)
         val merkleLedger = readMerkleLedger(root)
-        return WorkspaceMetrics(tokenSavings, merkleLedger)
+        val tierInfo = resolveTier(root)
+        return WorkspaceMetrics(tokenSavings, merkleLedger, tierInfo)
     }
 
     private fun findLedgerFile(root: File?, relativePaths: List<String>): File? {
@@ -69,6 +94,114 @@ object WorkspaceLedgerReader {
             if (f.exists() && f.isFile) return f
         }
         return null
+    }
+
+    fun resolveTier(projectRoot: File?): TierInfo {
+        var rawTier: String? = System.getenv("PERCIPIENCE_PLAN")
+        var tenantName: String? = null
+
+        // 1. Check license files
+        val licenseFiles = listOf(
+            ".nb/context/tenant_license.json",
+            ".nb/tenant_license.json",
+            "tenant_license.json",
+            ".percipience_license.json",
+            ".nb/context/PERCIPIENCE_LICENSE.json",
+            ".nb/PERCIPIENCE_LICENSE.json",
+            "workplace/modules/mod_intellij_plugin/src/main/resources/percipience/tenant_license.json"
+        )
+        val licFile = findLedgerFile(projectRoot, licenseFiles)
+        if (licFile != null && licFile.exists()) {
+            try {
+                val text = licFile.readText(Charsets.UTF_8)
+                val tierMatch = Regex("\"tier\"\\s*:\\s*\"([^\"]+)\"").find(text)
+                if (tierMatch != null) {
+                    rawTier = tierMatch.groupValues[1]
+                }
+                val nameMatch = Regex("\"tier_name\"\\s*:\\s*\"([^\"]+)\"").find(text)
+                if (nameMatch != null) {
+                    tenantName = nameMatch.groupValues[1]
+                }
+            } catch (ignored: Exception) {}
+        }
+
+        // 2. Check context_ledger.yaml if still not resolved
+        if (rawTier.isNullOrBlank()) {
+            val ledgerSummary = readMerkleLedger(projectRoot)
+            if (ledgerSummary.exists && ledgerSummary.tier.isNotBlank()) {
+                rawTier = ledgerSummary.tier
+            }
+        }
+
+        val normalized = when (rawTier?.lowercase()?.trim()) {
+            "team", "plan_team" -> "plan_team"
+            "business", "plan_business" -> "plan_business"
+            "enterprise", "plan_enterprise", "dedicated" -> "plan_enterprise"
+            else -> "plan_free"
+        }
+
+        return when (normalized) {
+            "plan_enterprise" -> TierInfo(
+                tierId = "plan_enterprise",
+                tierName = tenantName ?: "Enterprise Dedicated Tier",
+                includedSeats = -1,
+                includedWorktrees = -1,
+                includedAuditsMonthly = -1,
+                canPackNbpack = true,
+                canCreateCustomAgents = true,
+                canUseWorktrees = true,
+                canUseDriftReconciliation = true,
+                canUseSwarmOrchestrator = true,
+                canUsePrivateVpc = true,
+                canUseWormEgress = true,
+                exposeBasicPlatformTools = true
+            )
+            "plan_business" -> TierInfo(
+                tierId = "plan_business",
+                tierName = tenantName ?: "Business Tier",
+                includedSeats = 50,
+                includedWorktrees = 20,
+                includedAuditsMonthly = 25000,
+                canPackNbpack = true,
+                canCreateCustomAgents = true,
+                canUseWorktrees = true,
+                canUseDriftReconciliation = true,
+                canUseSwarmOrchestrator = false,
+                canUsePrivateVpc = false,
+                canUseWormEgress = false,
+                exposeBasicPlatformTools = true
+            )
+            "plan_team" -> TierInfo(
+                tierId = "plan_team",
+                tierName = tenantName ?: "Team Tier",
+                includedSeats = 15,
+                includedWorktrees = 5,
+                includedAuditsMonthly = 5000,
+                canPackNbpack = false,
+                canCreateCustomAgents = true,
+                canUseWorktrees = true,
+                canUseDriftReconciliation = true,
+                canUseSwarmOrchestrator = false,
+                canUsePrivateVpc = false,
+                canUseWormEgress = false,
+                exposeBasicPlatformTools = false
+            )
+            else -> TierInfo(
+                tierId = "plan_free",
+                tierName = tenantName ?: "Free Community Tier",
+                includedSeats = 1,
+                includedWorktrees = 1,
+                includedAuditsMonthly = 500,
+                canPackNbpack = false,
+                canCreateCustomAgents = false,
+                canUseWorktrees = false,
+                canUseDriftReconciliation = false,
+                canUseSwarmOrchestrator = false,
+                canUsePrivateVpc = false,
+                canUseWormEgress = false,
+                exposeBasicPlatformTools = false
+            )
+        }
     }
 
     fun readTokenSavings(projectRoot: File?): TokenSavingsSummary {

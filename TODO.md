@@ -426,24 +426,24 @@
 ## 18. Multi-Tenant Project Provisioning, Fleet Workspaces & Enterprise Admin Control Plane (`CAP-40` to `CAP-45`)
 
 ### 18.1. Secure Multi-Tenant Project Provisioning & IAM (`CAP-40`)
-- [ ] **TODO-PRT-01: Multi-Tenant Organization & Project Hierarchy (P1)**:
+- [x] **TODO-PRT-01: Multi-Tenant Organization & Project Hierarchy (P1)**:
   - *Shortcoming*: Portal currently functions under a single default workspace without organizational multi-tenancy and project isolation.
   - *Implementation Scope*: Implement `workplace/core/tenant_manager.py` with hierarchical tenant isolation: `Organization (Tenant) -> Projects -> Repositories -> Workspaces / Nodes`. Add tenant-scoped PostgreSQL RLS schemas and RBAC authorization (`Enterprise Super Admin`, `Project Lead`, `Security Auditor`, `Agent Worker`).
-- [ ] **TODO-PRT-02: One-Click Project Scaffolding Wizard (P1)**:
+- [x] **TODO-PRT-02: One-Click Project Scaffolding Wizard (P1)**:
   - *Shortcoming*: New customer projects require manual directory structure setup.
   - *Implementation Scope*: Implement `workplace/core/project_scaffolder.py` generating standard Quad-Space layouts (`context/`, `agentic/`, `workplace/`, `user/`), initializing isolated `context_ledger.yaml`, and minting genesis cryptographic recovery block `RP_GENESIS_000`.
-- [ ] **TODO-PRT-03: Automated KMS Key Broker & Sealed Enclave Provisioning (P1)**:
+- [x] **TODO-PRT-03: Automated KMS Key Broker & Sealed Enclave Provisioning (P1)**:
   - *Shortcoming*: Blueprint envelope keys are manually provisioned per instance.
   - *Implementation Scope*: Implement `workplace/core/kms_broker.py` for automated per-project Ed25519 signing keypairs and AES-256-GCM symmetric keys, supporting self-serve `.nbpack` domain layer packaging with zero client disk exposure.
 
 ### 18.2. Minute Project Control & Policy Configuration (`CAP-41`)
-- [ ] **TODO-PRT-04: Granular Context Engineering Tuning Sliders (P2)**:
+- [x] **TODO-PRT-04: Granular Context Engineering Tuning Sliders (P2)**:
   - *Shortcoming*: Token optimization, cognitive routing, and attention budget quotas are globally configured.
   - *Implementation Scope*: Add per-project policy configuration UI:
     - **Attention Slicing Quotas**: Dynamic ratio customization (default `15/25/35/10/15`).
     - **Cognitive Router Tiering Rules**: Project-level complexity thresholds for Tier A vs. Tier B routing.
     - **AST Pruning Limits**: Language-specific AST body stripping depth and decorator preservation rules.
-- [ ] **TODO-PRT-05: PR Gate & Self-Healing SLA Policies (P1)**:
+- [x] **TODO-PRT-05: PR Gate & Self-Healing SLA Policies (P1)**:
   - *Shortcoming*: PR verification gates and healing retries use static hardcoded bounds.
   - *Implementation Scope*: Add per-project SLA policies: configurable diagnostic re-prompt attempts (1–5 turns), statistical flaky test quarantine thresholds (e.g. failure variance > 15%), and cross-module wire contract breaking-change rules.
 
@@ -486,3 +486,18 @@
 - [ ] **TODO-PRT-12: Enterprise Security & Quarantine Central Command (P1)**:
   - *Shortcoming*: Poisoning alerts and quarantined diffs are stored in local markdown files on each machine.
   - *Implementation Scope*: Centralize fleet-wide context poisoning incidents, AST dependency CVE blocks, and drift evolutions in an interactive single-pane triage workflow, sealing all admin resolutions into the immutable SHA-256 Merkle ledger.
+
+---
+
+## 19. IntelliJ IDEA & PyCharm IDE Plugin Control Plane (`CAP-12`, `CAP-13`, `CAP-14`)
+
+- [x] **TODO-IDE-01: Bundled Essential Core Engines & Zero-Dependency Scaffolding (P1)**:
+  - *Shortcoming*: Bootstrapping new workspaces required pre-existing `.nb/core/` engine files on disk.
+  - *Implementation Scope*: Embed all 38 platform engines + `__init__.py` directly into IntelliJ plugin resources at `workplace/modules/mod_intellij_plugin/src/main/resources/percipience/core/`. Update `WorkspaceBootstrapper.kt` to unpack `.nb/core/*.py` alongside `.nb/bin/percipience` (`0755` executable permissions), configurations, CI/CD workflow, and genesis Merkle ledger block `RP_GENESIS_000`. Verify zero-disk external dependency operation.
+- [x] **TODO-IDE-02: Interactive Startup Notification & Execution Service (P1)**:
+  - Implement `PercipienceProjectStartupActivity` prompting users to bootstrap uninitialized workspaces on project open.
+  - Register `PercipienceExecutionService` for asynchronous CLI execution (`gate`, `audit`, `cicd run`, `validate --layered`, `tokens summary`) with live logging and VFS auto-refresh.
+- [x] **TODO-IDE-03: Sealed Distribution Packaging & Verification (P1)**:
+  - Create `package_plugin.py` to compile Kotlin sources, produce `percipience-intellij-plugin-1.0.0.zip`, and install into active JetBrains IDE config directories.
+  - Compile sealed layer envelope `.nb/bundles/intellij_pycharm_plugin_domain.nbpack` and verify full suite via `workplace/tests/test_ide_plugins_space.py`.
+

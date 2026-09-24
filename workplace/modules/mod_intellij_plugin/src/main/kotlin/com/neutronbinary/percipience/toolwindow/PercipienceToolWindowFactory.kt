@@ -16,10 +16,12 @@ import com.intellij.util.ui.UIUtil
 import com.neutronbinary.percipience.bootstrap.WorkspaceBootstrapper
 import com.neutronbinary.percipience.ledger.WorkspaceLedgerReader
 import com.neutronbinary.percipience.ledger.WorkspaceMetrics
+import com.neutronbinary.percipience.ledger.TierInfo
 import com.neutronbinary.percipience.security.SandboxPermissionBroker
 import com.neutronbinary.percipience.services.PercipienceExecutionService
 import kotlinx.coroutines.runBlocking
 import java.awt.*
+import java.io.File
 import java.net.URI
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -113,7 +115,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         titleLabel.font = titleLabel.font.deriveFont(Font.BOLD, 13.0f)
         titleLabel.foreground = titleCyan
 
-        val planTierLabel = JLabel("💳 Tier: Free Community Tier (Included: 1 Seat | 1 Worktree | 500 Audits/mo)")
+        val planTierLabel = JLabel("💳 Tier: Resolving...")
         planTierLabel.font = planTierLabel.font.deriveFont(Font.BOLD, 11.5f)
         planTierLabel.foreground = JBColor(Color(100, 116, 139), Color(148, 163, 184))
 
@@ -127,14 +129,314 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val savingsUsdLabel = JLabel("💵 Value Saved: Calculating...")
         savingsUsdLabel.font = savingsUsdLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val cicdLabel = JLabel("🔄 CI/CD Engine: Basic Autonomous CI/CD (Free Edition)")
+        val cicdLabel = JLabel("🔄 CI/CD Engine: Initializing...")
         cicdLabel.font = cicdLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val layerLabel = JLabel("🌐 Active Binary: .nb/bin/percipience (Executable Workspace-Wide)")
+        val layerLabel = JLabel("🌐 Active Binary: .nb/bin/percipience (Executable)")
         layerLabel.font = layerLabel.font.deriveFont(Font.PLAIN, 11.5f)
 
-        val toolsLabel = JLabel("🛠️ Tools Exposure: Gatekeeper Actions Only (Basic Platform Tools Unexposed on Free Tier)")
+        val toolsLabel = JLabel("🛠️ Tools Exposure: Initializing...")
         toolsLabel.font = toolsLabel.font.deriveFont(Font.PLAIN, 11.5f)
+
+        val actionsContainer = JPanel(BorderLayout())
+        actionsContainer.background = UIUtil.getPanelBackground()
+        val actionsPanel = JPanel()
+        actionsContainer.add(actionsPanel, BorderLayout.NORTH)
+
+        val execService = PercipienceExecutionService.getInstance(project)
+
+        fun rebuildActionsPanel(tierInfo: TierInfo) {
+            actionsPanel.removeAll()
+
+            // Count buttons to dynamically size grid
+            var buttonCount = 7 // Base buttons: Bootstrap, Gate, Merkle Audit, CI/CD, Validate, Token Summary, Refresh, Portal
+
+            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
+                buttonCount += 3 // Worktrees, Custom Agent, Anti-Drift Parity Check
+            }
+            if (tierInfo.canPackNbpack) {
+                buttonCount += 3 // NBPack layer pack, Provision Portal, Cognitive Router Report
+            }
+            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
+                buttonCount += 3 // Swarm Orchestrator, Private VPC Enclave, WORM Egress
+            }
+            buttonCount += 1 // Observability Portal
+
+            actionsPanel.layout = GridLayout(buttonCount, 1, 6, 6)
+            actionsPanel.border = EmptyBorder(10, 0, 10, 0)
+
+            // --- 1. Universal / Free Tier Core Action Buttons ---
+            val btnBootstrap = JButton("🚀 Bootstrap / Verify Workspace Setup")
+            btnBootstrap.addActionListener {
+                val basePath = project.basePath ?: return@addActionListener
+                val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
+                if (res.alreadyConfigured) {
+                    Messages.showInfoMessage(
+                        "Workspace is already fully bootstrapped with Master Plan, Merkle ledger, .nb/bin/percipience binary, and CI/CD.",
+                        "Percipience Workspace Status"
+                    )
+                } else {
+                    Messages.showInfoMessage(
+                        "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully for ${tierInfo.tierName}.\n\nPercipience CLI executable (.nb/bin/percipience) is now installed.",
+                        "Percipience Bootstrap Complete"
+                    )
+                }
+            }
+            actionsPanel.add(btnBootstrap)
+
+            val btnGate = JButton("🚦 Run PR Gatekeeper (`.nb/bin/percipience gate`)")
+            btnGate.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Percipience PR Gatekeeper...", false) {
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience gate..."
+                        val res = runBlocking { execService.runGatekeeper() }
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                "Gatekeeper Passed"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "Gatekeeper Failed"
+                            )
+                        }
+                    }
+                })
+            }
+            actionsPanel.add(btnGate)
+
+            val btnVerifyChain = JButton("🛡️ Verify Merkle Chain (`.nb/bin/percipience audit`)")
+            btnVerifyChain.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Merkle Ledger...", false) {
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience audit..."
+                        val res = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
+                                "Merkle Audit"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "Merkle Audit Error"
+                            )
+                        }
+                    }
+                })
+            }
+            actionsPanel.add(btnVerifyChain)
+
+            val btnRunWorkflow = JButton("▶ Execute Autonomous CI/CD Pipeline (`.nb/bin/percipience cicd run`)")
+            btnRunWorkflow.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Autonomous CI/CD...", false) {
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience cicd run..."
+                        val res = runBlocking { execService.runBasicCicd() }
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                "Autonomous CI/CD Pipeline"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "CI/CD Failure"
+                            )
+                        }
+                    }
+                })
+            }
+            actionsPanel.add(btnRunWorkflow)
+
+            val btnValidateLayered = JButton("🔍 Validate Layered Context (`.nb/bin/percipience validate --layered`)")
+            btnValidateLayered.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Validating Layered Context...", false) {
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience validate --layered..."
+                        val res = runBlocking { execService.runValidateLayered() }
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "Layered Context Validation Passed:\n\n${res.stdout}",
+                                "Layered Context Valid"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
+                                "Validation Failed"
+                            )
+                        }
+                    }
+                })
+            }
+            actionsPanel.add(btnValidateLayered)
+
+            val btnTokensSummary = JButton("⚡ Token Savings Summary (`.nb/bin/percipience tokens summary`)")
+            btnTokensSummary.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Token Savings Summary...", false) {
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        val res = runBlocking { execService.runTokensSummary() }
+                        if (res.success) {
+                            Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
+                        } else {
+                            Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
+                        }
+                    }
+                })
+            }
+            actionsPanel.add(btnTokensSummary)
+
+            // --- 2. Team Tier Entitled Buttons ---
+            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
+                val btnWorktrees = JButton("🌿 Manage Worktrees (`.nb/bin/percipience worktree list`) [Team+]")
+                btnWorktrees.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Worktrees...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runWorktreeList() }
+                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "No active worktrees" }, "Worktree Manager")
+                        }
+                    })
+                }
+                actionsPanel.add(btnWorktrees)
+
+                val btnCustomAgent = JButton("🤖 Specialist Agents Registry (`.nb/bin/percipience agent list`) [Team+]")
+                btnCustomAgent.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Agents...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runAgentList() }
+                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "Registered agents active" }, "Agent Registry")
+                        }
+                    })
+                }
+                actionsPanel.add(btnCustomAgent)
+
+                val btnDriftCheck = JButton("🔄 Anti-Drift Parity Check (`.nb/bin/percipience drift check`) [Team+]")
+                btnDriftCheck.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Checking Semantic Parity...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runDriftCheck() }
+                            Messages.showInfoMessage(project, res.stdout, "Anti-Drift Parity Check")
+                        }
+                    })
+                }
+                actionsPanel.add(btnDriftCheck)
+            }
+
+            // --- 3. Business Tier Entitled Buttons ---
+            if (tierInfo.canPackNbpack) {
+                val btnLayerPack = JButton("📦 Package Sealed NBPack (`.nb/bin/percipience layer pack`) [Business+]")
+                btnLayerPack.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Packaging NBPack Layer...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val planPath = ".nb/plan/l1/intellij-pycharm-plugin/detailed.md"
+                            val outPath = ".nb/bundles/intellij_pycharm_plugin_domain.nbpack"
+                            val res = runBlocking { execService.runLayerPack(planPath, outPath) }
+                            if (res.success) {
+                                Messages.showInfoMessage(project, "Layer package compiled successfully!\n\n${res.stdout}", "NBPack Sealed")
+                            } else {
+                                Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Packaging Error")
+                            }
+                        }
+                    })
+                }
+                actionsPanel.add(btnLayerPack)
+
+                val btnProvisionPortal = JButton("🌐 Multi-Tenant Gateway Provisioner (`.nb/bin/percipience provision`) [Business+]")
+                btnProvisionPortal.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Provisioning Gateway...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runProvisionPortal("all") }
+                            Messages.showInfoMessage(project, res.stdout, "Gateway Provisioning")
+                        }
+                    })
+                }
+                actionsPanel.add(btnProvisionPortal)
+
+                val btnDriftReport = JButton("🧠 Cognitive Router & Parity Report (`.nb/bin/percipience drift report`) [Business+]")
+                btnDriftReport.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Generating Parity Report...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runDriftReport() }
+                            Messages.showInfoMessage(project, res.stdout, "Cognitive Parity Breakdown")
+                        }
+                    })
+                }
+                actionsPanel.add(btnDriftReport)
+            }
+
+            // --- 4. Enterprise Tier Entitled Buttons ---
+            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
+                val btnSwarm = JButton("🐝 Swarm Triad Orchestrator (`.nb/bin/percipience swarm audit`) [Enterprise]")
+                btnSwarm.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Swarm Triad...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runSwarmAudit() }
+                            Messages.showInfoMessage(project, res.stdout, "Swarm Triad Governance")
+                        }
+                    })
+                }
+                actionsPanel.add(btnSwarm)
+
+                val btnVpcSync = JButton("🔒 Private VPC Air-Gapped Sync (`.nb/bin/percipience repo status`) [Enterprise]")
+                btnVpcSync.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing Private VPC Enclave...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runRepoStatus() }
+                            Messages.showInfoMessage(project, res.stdout, "Private VPC Enclave Status")
+                        }
+                    })
+                }
+                actionsPanel.add(btnVpcSync)
+
+                val btnWormEgress = JButton("📜 Immutable WORM Cloud Egress Export (`.nb/bin/percipience egress list`) [Enterprise]")
+                btnWormEgress.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Fetching WORM Egress Audit...", false) {
+                        override fun run(indicator: ProgressIndicator) {
+                            val res = runBlocking { execService.runEgressList() }
+                            Messages.showInfoMessage(project, res.stdout, "Immutable WORM Audit Trail")
+                        }
+                    })
+                }
+                actionsPanel.add(btnWormEgress)
+            }
+
+            // --- 5. Utilities ---
+            val btnRefresh = JButton("🔄 Refresh Metrics & Permissions")
+            btnRefresh.addActionListener {
+                val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
+                updateLabels()
+                rebuildActionsPanel(metrics.tierInfo)
+                Messages.showInfoMessage("Workspace metrics and permissions successfully reloaded for ${metrics.tierInfo.tierName}.", "Ledger Re-synced")
+            }
+            actionsPanel.add(btnRefresh)
+
+            val btnOpenPortal = JButton("🌐 Open Percipience Observability Portal")
+            btnOpenPortal.addActionListener {
+                try {
+                    Desktop.getDesktop().browse(URI("http://localhost:3000"))
+                } catch (e: Exception) {
+                    Messages.showErrorDialog("Unable to open browser: ${e.message}", "Error")
+                }
+            }
+            actionsPanel.add(btnOpenPortal)
+
+            actionsPanel.revalidate()
+            actionsPanel.repaint()
+        }
 
         fun updateLabels() {
             val basePath = project.basePath
@@ -143,10 +445,13 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(basePath)
             val tok = metrics.tokenSavings
             val mer = metrics.merkleLedger
+            val tierInfo = metrics.tierInfo
+
+            planTierLabel.text = "💳 Tier: ${tierInfo.tierName} (${tierInfo.formatQuota()})"
 
             val merkleHeightStr = if (mer.exists && mer.merkleBlockHeight > 0) "#${mer.merkleBlockHeight}" else "Genesis"
             val configStr = if (isConfigured) "Active" else "Not Initialized"
-            statusLabel.text = "● Workspace: $configStr | Merkle Chain: $merkleHeightStr Verified (Free Edition)"
+            statusLabel.text = "● Workspace: $configStr | Merkle Chain: $merkleHeightStr Verified (${tierInfo.tierName})"
 
             if (tok.exists && tok.totalTokensSaved > 0) {
                 finopsLabel.text = "💰 Token Compression: ${tok.formatReductionPct()} Reduction (${tok.formatTokensSaved()} Tokens Saved)"
@@ -155,9 +460,18 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                 finopsLabel.text = "💰 Token Compression: ~70.0% Target Reduction | AST Skeletonizer Active"
                 savingsUsdLabel.text = "💵 Gross Value Saved: $0.0000 | Net FinOps: $0.0000 (0 Events)"
             }
+
+            cicdLabel.text = "🔄 CI/CD Engine: Autonomous CI/CD (${tierInfo.tierName})"
+            toolsLabel.text = if (tierInfo.exposeBasicPlatformTools) {
+                "🛠️ Tools Exposure: Standard & Full Platform Tool APIs (Active)"
+            } else {
+                "🛠️ Tools Exposure: Gatekeeper Actions Only (Basic Platform Tools Unexposed on Free/Team Tier)"
+            }
         }
 
+        val initialMetrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
         updateLabels()
+        rebuildActionsPanel(initialMetrics.tierInfo)
 
         headerPanel.add(titleLabel)
         headerPanel.add(planTierLabel)
@@ -168,170 +482,8 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         headerPanel.add(layerLabel)
         headerPanel.add(toolsLabel)
 
-        val actionsPanel = JPanel(GridLayout(8, 1, 8, 8))
-        actionsPanel.background = UIUtil.getPanelBackground()
-        actionsPanel.border = EmptyBorder(10, 0, 10, 0)
-
-        val execService = PercipienceExecutionService.getInstance(project)
-
-        val btnBootstrap = JButton("🚀 Bootstrap / Verify Free Workspace Setup")
-        btnBootstrap.addActionListener {
-            val basePath = project.basePath ?: return@addActionListener
-            val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
-            if (res.alreadyConfigured) {
-                Messages.showInfoMessage(
-                    "Workspace is already fully bootstrapped with Free Master Plan, Merkle ledger, .nb/bin/percipience binary, and Basic CI/CD.",
-                    "Percipience Workspace Status"
-                )
-            } else {
-                Messages.showInfoMessage(
-                    "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully for Free Community Tier.\n\nPercipience CLI executable (.nb/bin/percipience) is now installed.",
-                    "Percipience Bootstrap Complete"
-                )
-            }
-            updateLabels()
-        }
-
-        val btnGate = JButton("🚦 Run PR Gatekeeper (`.nb/bin/percipience gate`)")
-        btnGate.addActionListener {
-            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Percipience PR Gatekeeper...", false) {
-                override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = true
-                    indicator.text = "Executing .nb/bin/percipience gate..."
-                    val res = runBlocking { execService.runGatekeeper() }
-                    updateLabels()
-                    if (res.success) {
-                        Messages.showInfoMessage(
-                            project,
-                            "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
-                            "Gatekeeper Passed"
-                        )
-                    } else {
-                        Messages.showErrorDialog(
-                            project,
-                            "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                            "Gatekeeper Failed"
-                        )
-                    }
-                }
-            })
-        }
-
-        val btnVerifyChain = JButton("🛡️ Verify Merkle Chain (`.nb/bin/percipience audit`)")
-        btnVerifyChain.addActionListener {
-            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Merkle Ledger...", false) {
-                override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = true
-                    indicator.text = "Executing .nb/bin/percipience audit..."
-                    val res = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
-                    updateLabels()
-                    if (res.success) {
-                        Messages.showInfoMessage(
-                            project,
-                            "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
-                            "Merkle Audit"
-                        )
-                    } else {
-                        Messages.showErrorDialog(
-                            project,
-                            "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                            "Merkle Audit Error"
-                        )
-                    }
-                }
-            })
-        }
-
-        val btnRunWorkflow = JButton("▶ Execute Basic CI/CD Pipeline (`.nb/bin/percipience cicd run`)")
-        btnRunWorkflow.addActionListener {
-            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Basic Autonomous CI/CD...", false) {
-                override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = true
-                    indicator.text = "Executing .nb/bin/percipience cicd run..."
-                    val res = runBlocking { execService.runBasicCicd() }
-                    updateLabels()
-                    if (res.success) {
-                        Messages.showInfoMessage(
-                            project,
-                            "Basic CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
-                            "Basic CI/CD Pipeline"
-                        )
-                    } else {
-                        Messages.showErrorDialog(
-                            project,
-                            "Basic CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                            "CI/CD Failure"
-                        )
-                    }
-                }
-            })
-        }
-
-        val btnValidateLayered = JButton("🔍 Validate Layered Context (`.nb/bin/percipience validate --layered`)")
-        btnValidateLayered.addActionListener {
-            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Validating Layered Context...", false) {
-                override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = true
-                    indicator.text = "Executing .nb/bin/percipience validate --layered..."
-                    val res = runBlocking { execService.runValidateLayered() }
-                    if (res.success) {
-                        Messages.showInfoMessage(
-                            project,
-                            "Layered Context Validation Passed:\n\n${res.stdout}",
-                            "Layered Context Valid"
-                        )
-                    } else {
-                        Messages.showErrorDialog(
-                            project,
-                            "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
-                            "Validation Failed"
-                        )
-                    }
-                }
-            })
-        }
-
-        val btnTokensSummary = JButton("⚡ Token Savings Summary (`.nb/bin/percipience tokens summary`)")
-        btnTokensSummary.addActionListener {
-            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Token Savings Summary...", false) {
-                override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = true
-                    val res = runBlocking { execService.runTokensSummary() }
-                    if (res.success) {
-                        Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
-                    } else {
-                        Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
-                    }
-                }
-            })
-        }
-
-        val btnRefresh = JButton("🔄 Refresh Metrics from Workspace Ledger")
-        btnRefresh.addActionListener {
-            updateLabels()
-            Messages.showInfoMessage("Workspace metrics successfully reloaded from ledger files.", "Ledger Re-synced")
-        }
-
-        val btnOpenPortal = JButton("🌐 Open Percipience Observability Portal")
-        btnOpenPortal.addActionListener {
-            try {
-                Desktop.getDesktop().browse(URI("http://localhost:3000"))
-            } catch (e: Exception) {
-                Messages.showErrorDialog("Unable to open browser: ${e.message}", "Error")
-            }
-        }
-
-        actionsPanel.add(btnBootstrap)
-        actionsPanel.add(btnGate)
-        actionsPanel.add(btnVerifyChain)
-        actionsPanel.add(btnRunWorkflow)
-        actionsPanel.add(btnValidateLayered)
-        actionsPanel.add(btnTokensSummary)
-        actionsPanel.add(btnRefresh)
-        actionsPanel.add(btnOpenPortal)
-
         mainPanel.add(headerPanel, BorderLayout.NORTH)
-        mainPanel.add(actionsPanel, BorderLayout.CENTER)
+        mainPanel.add(actionsContainer, BorderLayout.CENTER)
 
         return JBScrollPane(mainPanel)
     }
@@ -380,10 +532,13 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createCapabilitiesPanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
+        val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
+        val tierInfo = metrics.tierInfo
+
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
         sb.append("<h2>🚀 Percipience OS Capabilities &amp; Tier Governance</h2>")
-        sb.append("<p>Engineered context operating system built for JetBrains IDEs and autonomous LLM agent execution.</p>")
+        sb.append("<p>Engineered context operating system built for JetBrains IDEs and autonomous LLM agent execution. Active Tier: <b>${tierInfo.tierName}</b>.</p>")
 
         sb.append("<h3>🌟 Included Free Community Tier Capabilities</h3>")
         sb.append("<ul>")
@@ -403,17 +558,16 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
         sb.append("<h3>🔒 Encryption &amp; Obfuscation Architecture</h3>")
         sb.append("<ul>")
-        sb.append("<li><b>Platform Core Assets:</b> 🔒 Sealed &amp; Encrypted. Platform schemas (<code>.nb/context/</code>), configs (<code>.nb/config/</code>), core engines (<code>.nb/core/</code>), and master plans (including Free Master Plan) remain encrypted, obfuscated, and strictly readable by the <code>percipience</code> binary.</li>")
+        sb.append("<li><b>Platform Core Assets:</b> 🔒 Sealed &amp; Encrypted. Platform schemas (<code>.nb/context/</code>), configs (<code>.nb/config/</code>), core engines (<code>.nb/core/</code>), and master plans remain encrypted, obfuscated, and strictly readable by the <code>percipience</code> binary.</li>")
         sb.append("<li><b>Free Tier User Plans:</b> 📄 Strictly Plaintext (Non-Encryptable). Free Tier user plans in <code>workplace/</code> remain unencrypted.</li>")
         sb.append("<li><b>Paid Tiers (Business &amp; Enterprise):</b> 🔒 <code>.nbpack</code> AES-256 and RAM Enclave zero-disk plaintext execution for user domain plans and schemas.</li>")
         sb.append("</ul>")
 
-        sb.append("<h3>⚡ Enterprise Features (Available on Upgrade)</h3>")
+        sb.append("<h3>⚡ Tier-Aware Entitlements Matrix</h3>")
         sb.append("<ul>")
-        sb.append("<li><b>Encrypted NBPack Distribution:</b> Proprietary plan and schema bytecode obfuscation.</li>")
-        sb.append("<li><b>Private VPC &amp; Cloud Gatekeeper:</b> Air-gapped on-premise infrastructure.</li>")
-        sb.append("<li><b>Dedicated Slack Support &amp; SLA:</b> 15-minute response time.</li>")
-        sb.append("<li><b>Multi-Stage Closed-Loop Swarms:</b> Full swarm triad orchestration with Redis Redlock leasing.</li>")
+        sb.append("<li><b>Team Tier:</b> Git Worktree Leasing, Custom Agent Creation SDK, Anti-Drift Parity Checking.</li>")
+        sb.append("<li><b>Business Tier:</b> Encrypted <code>.nbpack</code> Layer Packaging, Multi-Tenant Gateway Provisioning, Cognitive Router.</li>")
+        sb.append("<li><b>Enterprise Dedicated Tier:</b> Swarm Triad Orchestration (Redis Redlock), Private VPC Enclave, WORM Cloud Egress.</li>")
         sb.append("</ul>")
 
         sb.append("</body></html>")
@@ -426,23 +580,38 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
     private fun createAgentsAndFlowsPanel(project: Project): JComponent {
         val isDark = UIUtil.isUnderDarcula()
+        val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
+        val tierInfo = metrics.tierInfo
+
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
         sb.append("<h2>🤖 Specialist Agents &amp; Delivery Flows</h2>")
-        sb.append("<p>Pre-configured agents and workflows active for the Free Community Tier:</p>")
+        sb.append("<p>Pre-configured agents and workflows active for <b>${tierInfo.tierName}</b>:</p>")
 
-        sb.append("<h3>Active Agents</h3>")
+        sb.append("<h3>Active Specialist Agents</h3>")
         sb.append("<ul>")
         sb.append("<li><code>agent_psi_ast_bridge_specialist</code> - Fast AST skeletonization</li>")
         sb.append("<li><code>agent_jetbrains_plugin_architect</code> - Plugin structure and threading</li>")
         sb.append("<li><code>agent_autonomous_healer</code> - Bounded TDD auto-healing</li>")
         sb.append("<li><code>agent_merkle_ledger</code> - Cryptographic state blocks</li>")
+        if (tierInfo.canCreateCustomAgents) {
+            sb.append("<li><code>agent_commercial_packager_provisioner</code> - Tier packaging and license provisioning [Team+]</li>")
+        }
+        if (tierInfo.canUseSwarmOrchestrator) {
+            sb.append("<li><code>agent_enterprise_saas_portal_architect</code> - Full swarm orchestration [Enterprise]</li>")
+        }
         sb.append("</ul>")
 
         sb.append("<h3>Active Workflows</h3>")
         sb.append("<ul>")
         sb.append("<li><code>basic_autonomous_cicd.yaml</code> - Free community autonomous CI/CD</li>")
         sb.append("<li><code>intellij_pycharm_plugin_delivery_flow.yaml</code> - IDE plugin delivery pipeline</li>")
+        if (tierInfo.canPackNbpack) {
+            sb.append("<li><code>commercial_packaging_provisioning_flow.yaml</code> - Multi-tier packaging workflow [Business+]</li>")
+        }
+        if (tierInfo.canUseSwarmOrchestrator) {
+            sb.append("<li><code>enterprise_sdlc.yaml</code> - Enterprise multi-stage closed loop swarm [Enterprise]</li>")
+        }
         sb.append("</ul>")
 
         sb.append("</body></html>")
@@ -470,7 +639,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         sb.append("<li><b>FinOps Ledger Metering:</b> All terminal prompt invocations are recorded into <code>token_savings_ledger.yaml</code> to calculate gross USD saved and net customer ROI.</li>")
         sb.append("</ul>")
         sb.append("<h3>🚀 Quick Commands</h3>")
-        sb.append("<pre><code># Wrap Claude Code with AST compression\n./.nb/bin/percipience agent wrap --agent claude\n\n# Wrap Gemini CLI\n./.nb/bin/percipience agent wrap --agent gemini\n\n# Install Shell Hook into zsh / bash\neval "$(./.nb/bin/percipience terminal hook --shell zsh)"</code></pre>")
+        sb.append("<pre><code># Wrap Claude Code with AST compression\n./.nb/bin/percipience agent wrap --agent claude\n\n# Wrap Gemini CLI\n./.nb/bin/percipience agent wrap --agent gemini\n\n# Install Shell Hook into zsh / bash\neval \"$(./.nb/bin/percipience terminal hook --shell zsh)\"</code></pre>")
         sb.append("</body></html>")
 
         val editorPane = JEditorPane("text/html", sb.toString())
@@ -529,8 +698,8 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         sb.append("<p>You can execute commands either through the Control Plane buttons above or directly from the terminal:</p>")
         sb.append("<pre><code># Run PR Gatekeeper\n./.nb/bin/percipience gate\n\n# Audit Merkle Ledger\n./.nb/bin/percipience audit --enforce-merkle-chain\n\n# Run Basic CI/CD\n./.nb/bin/percipience cicd run\n\n# Validate Layered Context\n./.nb/bin/percipience validate --layered\n\n# View Token Savings\n./.nb/bin/percipience tokens summary</code></pre>")
 
-        sb.append("<h3>2. New Workspace Initialization</h3>")
-        sb.append("<p>When creating or opening a new project, Percipience prompts you to initialize the workspace with the Free Community Tier. You can also click <b>Bootstrap / Verify Free Workspace</b> at any time.</p>")
+        sb.append("<h3>2. New Workspace Initialization &amp; Tier Awareness</h3>")
+        sb.append("<p>When opening a project, Percipience detects your active license tier (<code>tenant_license.json</code> or <code>context_ledger.yaml</code>) and dynamically renders the entitled action buttons in the Control Plane tab.</p>")
 
         sb.append("<h3>3. Tooling Exposure &amp; Encryption Boundaries</h3>")
         sb.append("<p>Free Tier workspaces operate under strict governance: low-level packaging tools and internal rule compilers remain unexposed, user plans remain plaintext, while the underlying platform core remains encrypted and readable by the percipience command.</p>")
