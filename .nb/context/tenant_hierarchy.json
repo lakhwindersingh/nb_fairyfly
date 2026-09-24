@@ -1,0 +1,153 @@
+{
+  "tenants": {
+    "tenant_acme_fintech": {
+      "tenant_id": "tenant_acme_fintech",
+      "name": "Acme Global Financial Technologies",
+      "slug": "acme-global-financial-technologies",
+      "tier": "plan_enterprise",
+      "status": "ACTIVE",
+      "created_at": "2026-09-21T01:06:10.688218+00:00",
+      "settings": {
+        "max_concurrent_nodes": 50
+      },
+      "metadata": {}
+    },
+    "tenant_acme_corp": {
+      "tenant_id": "tenant_acme_corp",
+      "name": "Tenant Acme Corp",
+      "slug": "tenant-acme-corp",
+      "tier": "plan_enterprise",
+      "status": "ACTIVE",
+      "provisioned_at": "2026-09-24T17:35:56.126240+00:00",
+      "entitlements": {
+        "ast_token_pruning": true,
+        "merkle_chain_audit": true,
+        "basic_autonomous_cicd": true,
+        "platform_core_encryption": true,
+        "nbpack_obfuscation": true,
+        "user_plan_encryption": true,
+        "basic_platform_tools_exposure": true,
+        "private_vpc_deploy": true,
+        "dedicated_slack_sla": true
+      },
+      "settings": {
+        "max_concurrent_worktrees": -1,
+        "monthly_pr_audits_quota": -1
+      }
+    },
+    "tenant_provision_test": {
+      "tenant_id": "tenant_provision_test",
+      "name": "Tenant Provision Test",
+      "slug": "tenant-provision-test",
+      "tier": "plan_team",
+      "status": "ACTIVE",
+      "created_at": "2026-09-24T17:59:57.898284+00:00",
+      "settings": {
+        "max_concurrent_worktrees": 5,
+        "monthly_pr_audits_quota": 5000
+      },
+      "metadata": {
+        "entitlements": {
+          "ast_token_pruning": true,
+          "merkle_chain_audit": true,
+          "basic_autonomous_cicd": true,
+          "platform_core_encryption": true,
+          "nbpack_obfuscation": false,
+          "user_plan_encryption": false,
+          "basic_platform_tools_exposure": false,
+          "private_vpc_deploy": false
+        },
+        "provisioned_at": "2026-09-24T17:59:57.898291+00:00"
+      }
+    }
+  },
+  "projects": {
+    "proj_fairyfly_core_9921": {
+      "project_id": "proj_fairyfly_core_9921",
+      "tenant_id": "tenant_acme_fintech",
+      "name": "NB Fairyfly Enterprise Trading Engine",
+      "slug": "nb-fairyfly-enterprise-trading-engine",
+      "mode": "multi_module",
+      "billing_tier": "plan_enterprise",
+      "status": "ACTIVE",
+      "created_at": "2026-09-21T01:06:10.688542+00:00",
+      "repositories": [
+        "repo_fairyfly_core"
+      ],
+      "workspace_nodes": [
+        "node_macbook_primary"
+      ],
+      "metadata": {}
+    },
+    "proj_crypto_arbitrage_01": {
+      "project_id": "proj_crypto_arbitrage_01",
+      "tenant_id": "tenant_acme_fintech",
+      "name": "Crypto High-Frequency Arbitrage Engine",
+      "slug": "crypto-high-frequency-arbitrage-engine",
+      "mode": "multi_module",
+      "billing_tier": "plan_enterprise",
+      "status": "ACTIVE",
+      "created_at": "2026-09-21T01:33:22.896738+00:00",
+      "repositories": [],
+      "workspace_nodes": [
+        "node_proj_crypto_arbitrage_01_local"
+      ],
+      "metadata": {}
+    }
+  },
+  "repositories": {
+    "repo_fairyfly_core": {
+      "repo_id": "repo_fairyfly_core",
+      "project_id": "proj_fairyfly_core_9921",
+      "tenant_id": "tenant_acme_fintech",
+      "name": "nb_fairyfly",
+      "url": "git@github.com:neutronbinary/nb_fairyfly.git",
+      "auth_type": "ssh_key",
+      "default_branch": "main",
+      "status": "CONNECTED",
+      "created_at": "2026-09-21T01:06:10.688661+00:00"
+    }
+  },
+  "workspace_nodes": {
+    "node_macbook_primary": {
+      "node_id": "node_macbook_primary",
+      "project_id": "proj_fairyfly_core_9921",
+      "tenant_id": "tenant_acme_fintech",
+      "hostname": "macbook-pro.local",
+      "ip_address": "127.0.0.1",
+      "os_info": "macOS/Linux",
+      "worktree_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly",
+      "status": "HEALTHY",
+      "last_heartbeat": "2026-09-21T01:06:10.688825+00:00",
+      "metadata": {}
+    },
+    "node_proj_crypto_arbitrage_01_local": {
+      "node_id": "node_proj_crypto_arbitrage_01_local",
+      "project_id": "proj_crypto_arbitrage_01",
+      "tenant_id": "tenant_acme_fintech",
+      "hostname": "MacBook-Pro-4.local",
+      "ip_address": "127.0.0.1",
+      "os_info": "macOS/Linux",
+      "worktree_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.workspaces/scaffold_proj_crypto_arbitrage_01",
+      "status": "HEALTHY",
+      "last_heartbeat": "2026-09-21T01:33:22.907038+00:00",
+      "metadata": {
+        "scaffolded_by": "user_super_alice"
+      }
+    }
+  },
+  "users": {
+    "user_super_alice": {
+      "user_id": "user_super_alice",
+      "tenant_id": "tenant_acme_fintech",
+      "email": "alice@acmeglobal.com",
+      "display_name": "Alice (Enterprise Super Admin)",
+      "role": "ENTERPRISE_SUPER_ADMIN",
+      "project_assignments": [
+        "*"
+      ],
+      "api_key_hash": "",
+      "created_at": "2026-09-21T01:06:10.689011+00:00"
+    }
+  }
+}
