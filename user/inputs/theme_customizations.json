@@ -1,0 +1,12 @@
+{
+  "editor.tokenColorCustomizations": {
+    "comments": "#64748b",
+    "functions": "#38bdf8",
+    "keywords": "#c084fc",
+    "strings": "#34d399"
+  },
+  "percipience.webview.customCss": {
+    "borderRadius": "8px",
+    "accentGlow": "0 0 12px rgba(0, 210, 255, 0.4)"
+  }
+}
