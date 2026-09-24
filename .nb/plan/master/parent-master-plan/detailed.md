@@ -415,7 +415,7 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
   - *Self-Recovering*: Autonomous fault diagnosis, ephemeral worktree test execution, bounded TDD auto-patching ($\le 3$ retries), and sub-1.2s surgical module rollback fallback sparing sibling services.
   - *Self-Improving*: Closed-loop telemetry feedback analyzing token burn and test pass velocities, dynamically tuning AST pruning thresholds (+12.5% compression gains) and prompt cache prefix alignment.
 - **Healthy Custom Agent Plugin Integration Pattern**:
-  - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the [Plugin Architectural Guide](file:///workplace/docs/guides/AGENT_PLUGIN_GUIDE.md).
+  - All custom agents conform to `agentic/templates/custom_agent_template.yaml` and the .
   - Scaffolding, workflow DAG injection (`wf_pr_gatekeeper.yaml`), ephemeral worktree sandboxing, and pre/post Merkle block sealing (`RP_AGENT_*`) are governed by `AgentPluginEngine`.
 - **Autonomous In-Workflow Living Documentation Engine & Mermaid Visualizer (Living Docs)**:
   - Software architecture documentation historically suffers from severe drift, rapidly becoming obsolete as code evolves. Percipience solves this by treating documentation as a compiled, living artifact of the codebase itself.
