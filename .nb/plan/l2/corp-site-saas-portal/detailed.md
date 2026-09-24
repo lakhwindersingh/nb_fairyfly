@@ -1,6 +1,6 @@
 # Percipience Cloud SaaS Portal & Enterprise Corporate Site: Detailed Multi-Module Engineering Plan
-**Parent Specification Reference**: Inherits from [Parent Master Context Engineering Plan](file:///Users/lakhwinder/PycharmProjects/nb_spanishfly/.junie/plans/claude-context-engineering-parent-master-plan.md) and [Corporate Website Space Plan](file:///Users/lakhwinder/PycharmProjects/nb_spanishfly/.junie/plans/claude-context-engineering-corp-site-space.md).  
-**Associated Commercial Play**: [Play 3: Enterprise Context Engineering OS & CI/CD Gatekeeper](file:///Users/lakhwinder/PycharmProjects/nb_spanishfly/user/outputs/play_3_enterprise_context_engineering_os_plan.md).  
+**Parent Specification Reference**: Inherits from [Parent Master Context Engineering Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) and [Corporate Website Space Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/saas-portal-domain/detailed.md).  
+**Associated Commercial Play**: [Play 3: Enterprise Context Engineering OS & CI/CD Gatekeeper](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l2/enterprise-context-engineering-os/detailed.md).  
 **Organization**: **Neutron Binary**  
 **Product**: **Percipience**  
 **Operating Mode**: `mode: multi_module`  
@@ -28,40 +28,40 @@ This document defines the production engineering plan for the **Percipience Clou
 The platform is structured strictly under the standardized `multi_module` Quad-Space convention, cleanly separating governance, agentic prompt trees, decoupled application modules, and customer input/output artifacts:
 
 ```text
-nb_spanishfly/
-├── context/                                 # [OBFUSCATED / ENCLAVE-SEALED] Governance & Schemas
-│   ├── contracts/                           # Formal inter-module interface schemas
-│   │   ├── onboarding_contract.yaml         # Onboarding <-> Core Control Plane payload spec
-│   │   ├── billing_meter_contract.yaml      # Usage Metering <-> Stripe billing events
-│   │   └── observability_contract.yaml      # Worker Telemetry <-> UI Dashboard feeds
+.
+├── .nb/context/                              # [OBFUSCATED / ENCLAVE-SEALED] Governance & Schemas
+│   ├── contracts/                            # Formal inter-module interface schemas
+│   │   ├── onboarding_contract.yaml          # Onboarding <-> Core Control Plane payload spec
+│   │   ├── billing_meter_contract.yaml       # Usage Metering <-> Stripe billing events
+│   │   └── observability_contract.yaml       # Worker Telemetry <-> UI Dashboard feeds
 │   ├── ledger/
-│   │   ├── context_ledger.yaml              # Master Merkle DAG state ledger
-│   │   └── context_ledger.public.yaml       # Disk-safe sanitized status projection
-│   ├── recovery_points/                     # Immutable verified rollback snapshots
-│   └── schemas/                             # Zod & JSON schema validation models
-├── agentic/                                 # [OBFUSCATED / ENCLAVE-SEALED] Prompt Suites & Workflows
-│   ├── methodologies/                       # Design token & web quality guidelines
-│   ├── prompts/                             # Autonomous site derivation prompt suites
-│   └── workflows/                           # Multi-agent SDLC orchestration DAGs
-├── workplace/                               # [TRANSPARENT CLIENT REPO] Customer Source & Modules
-│   ├── config/                              # Global site configs, feature flags, Tailwind themes
-│   │   ├── site_config.yaml                 # Multi-module routing, domain bindings, locales
-│   │   ├── billing_plans.yaml               # Pricing tiers, quotas, rev-share formulas
-│   │   └── tailwind.config.ts               # Shared Neutron Binary design tokens & styling
-│   ├── shared/                              # Shared cross-module libraries & typed DTOs
-│   │   ├── dto/                             # Shared TypeScript interfaces & types
-│   │   ├── crypto/                          # Merkle hash proof validators & Ed25519 JWT utils
-│   │   └── ui-primitives/                   # Headless accessible UI components (Shadcn/Tailwind)
-│   └── modules/                             # Independent, decoupled architectural modules
-│       ├── mod_portal_marketing/            # 1. Public marketing, SEO, MDX docs, ROI calculator
-│       ├── mod_tenant_onboarding/           # 2. Self-serve onboarding, auth, Quad-Space setup
-│       ├── mod_billing_metering/            # 3. Stripe billing, usage metering, rev-share ledger
-│       ├── mod_observability_usage/         # 4. Live telemetry dashboard, Merkle visualizer
-│       └── mod_shared_infra_bridge/         # 5. Shared-to-decoupled infrastructure adapter
-└── user/                                    # [TRANSPARENT CLIENT REPO] User Inputs, HITL & Outputs
-    ├── inputs/                              # Brand tokens, pricing parameters, sitemap specs
-    ├── hitl/                                # Poisoning quarantines, billing exception reviews
-    └── outputs/                             # Build artifacts, sitemaps, maturity scorecards
+│   │   ├── context_ledger.yaml               # Master Merkle DAG state ledger
+│   │   └── context_ledger.public.yaml        # Disk-safe sanitized status projection
+│   ├── recovery_points/                      # Immutable verified rollback snapshots
+│   └── schemas/                              # Zod & JSON schema validation models
+├── .nb/agentic/                              # [OBFUSCATED / ENCLAVE-SEALED] Prompt Suites & Workflows
+│   ├── methodologies/                        # Design token & web quality guidelines
+│   ├── prompts/                              # Autonomous site derivation prompt suites
+│   └── workflows/                            # Multi-agent SDLC orchestration DAGs
+├── workplace/                                # [TRANSPARENT CLIENT REPO] Customer Source & Modules
+│   ├── config/                               # Global site configs, feature flags, Tailwind themes
+│   │   ├── site_config.yaml                  # Multi-module routing, domain bindings, locales
+│   │   ├── billing_plans.yaml                # Pricing tiers, quotas, rev-share formulas
+│   │   └── tailwind.config.ts                # Shared Neutron Binary design tokens & styling
+│   ├── shared/                               # Shared cross-module libraries & typed DTOs
+│   │   ├── dto/                              # Shared TypeScript interfaces & types
+│   │   ├── crypto/                           # Merkle hash proof validators & Ed25519 JWT utils
+│   │   └── ui-primitives/                    # Headless accessible UI components (Shadcn/Tailwind)
+│   └── modules/                              # Independent, decoupled architectural modules
+│       ├── mod_portal_marketing/             # 1. Public marketing, SEO, MDX docs, ROI calculator
+│       ├── mod_tenant_onboarding/            # 2. Self-serve onboarding, auth, Quad-Space setup
+│       ├── mod_billing_metering/             # 3. Stripe billing, usage metering, rev-share ledger
+│       ├── mod_observability_usage/          # 4. Live telemetry dashboard, Merkle visualizer
+│       └── mod_shared_infra_bridge/          # 5. Shared-to-decoupled infrastructure adapter
+└── user/                                     # [TRANSPARENT CLIENT REPO] User Inputs, HITL & Outputs
+    ├── inputs/                               # Brand tokens, pricing parameters, sitemap specs
+    ├── hitl/                                 # Poisoning quarantines, billing exception reviews
+    └── outputs/                              # Build artifacts, sitemaps, maturity scorecards
 ```
 
 ---
@@ -418,47 +418,6 @@ modules:
     connection_pool_max: 20
     redis_namespace_prefix: "portal:"
     storage_bucket_override: ""
-```
-
----
-
-### 7.2. Inter-Module Billing & Usage Event Schema (`context/contracts/billing_meter_contract.yaml`)
-
-```yaml
-$schema: "http://json-schema.org/draft-07/schema#"
-title: "PercipienceUsageAndBillingEvent"
-type: "object"
-properties:
-  event_id:
-    type: "string"
-    format: "uuid"
-  tenant_id:
-    type: "string"
-  timestamp:
-    type: "string"
-    format: "date-time"
-  event_type:
-    type: "string"
-    enum: ["pr_gate_verified", "worktree_hour_consumed", "token_savings_realized"]
-  payload:
-    type: "object"
-    properties:
-      pr_number:
-        type: "integer"
-      git_commit_sha:
-        type: "string"
-      tokens_uncompressed:
-        type: "integer"
-      tokens_pruned:
-        type: "integer"
-      gross_token_savings_usd:
-        type: "number"
-      rev_share_due_usd:
-        type: "number"
-      merkle_block_hash:
-        type: "string"
-    required: ["merkle_block_hash"]
-required: ["event_id", "tenant_id", "timestamp", "event_type", "payload"]
 ```
 
 ---

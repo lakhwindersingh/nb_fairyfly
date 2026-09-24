@@ -4,7 +4,7 @@
 > **Product Brand:** **Percipience** *(Enterprise Context Engineering OS & CI/CD Gatekeeper)*  
 > **Target Market:** Enterprise Engineering Orgs, AI Dev Studios, and Autonomous Agent Fleets (2025–2026)  
 > **Target Commercial Scale:** **$1,500 – $10,000/mo Enterprise Base + Token Optimization Rev-Share ($1.2M – $3.5M ARR)**  
-> **Governing Master Architecture:** [`.junie/plans/claude-context-engineering-parent-master-plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_spanishfly/.junie/plans/claude-context-engineering-parent-master-plan.md)
+> **Governing Master Architecture:** [`.nb/plan/master/parent-master-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md)
 
 ---
 
@@ -194,7 +194,7 @@ radar-chart
 ```
 
 ### 4.6. Proprietary Plan, Context Space & Agentic Space Obfuscation, Anti-Exfiltration & Cryptographic Package Sealing (`.nbpack`)
-- **The Problem**: When running `percipience init --mode multi_module --parent-plan .junie/plans/claude-context-engineering-parent-master-plan.md` in enterprise client environments or public repositories, distributing raw markdown plans, `agentic/` prompt trees, and `context/` governance schemas creates major vulnerabilities:
+- **The Problem**: When running `percipience init --mode multi_module --parent-plan .nb/plan/master/parent-master-plan/detailed.md` in enterprise client environments or public repositories, distributing raw markdown plans, `agentic/` prompt trees, and `context/` governance schemas creates major vulnerabilities:
   1. **Intellectual Property Theft**: Exposes the proprietary master context engineering architecture, metaprompts, state ledger schemas, and recovery algorithms in plaintext.
   2. **Prompt & Workflow Exfiltration**: LLM agents are prone to regurgitating raw system prompts, derivation chains, and workflow rules into user chat logs, terminal outputs, or PR comments.
   3. **Plan & Schema Tampering**: Malicious actors or hallucinating agents can subtly alter rules, validation constraints, or contracts in plaintext YAML/Markdown, bypassing security gates.
@@ -366,7 +366,7 @@ npm install -g @neutronbinary/percipience
 # 1. (Optional for Plan Authors) Obfuscate & Compile Proprietary Plan
 # -------------------------------------------------------------
 percipience pack \
-  --input .junie/plans/claude-context-engineering-parent-master-plan.md \
+  --input .nb/plan/master/parent-master-plan/detailed.md \
   --include-spaces context,agentic \
   --output .percipience/parent_master.nbpack \
   --obfuscate \
@@ -399,7 +399,7 @@ percipience init \
 # Mode B: Using Plaintext Markdown (Internal / Development Mode)
 percipience init \
   --mode multi_module \
-  --parent-plan .junie/plans/claude-context-engineering-parent-master-plan.md
+  --parent-plan .nb/plan/master/parent-master-plan/detailed.md
 
 # -------------------------------------------------------------
 # 3. Connect Bring Your Own Repository (BYOR - GitLab / GHES / Bitbucket)
@@ -1058,7 +1058,7 @@ gantt
 ---
 
 ## 12. Immediate Action Items to Launch
-1. **Implement `percipience pack` Compiler**: Build the AST obfuscator and AES-256-GCM envelope encryptor that packages `.junie/plans/claude-context-engineering-parent-master-plan.md` into an immutable signed `.nbpack` bundle.
+1. **Implement `percipience pack` Compiler**: Build the AST obfuscator and AES-256-GCM envelope encryptor that packages `.nb/plan/master/parent-master-plan/detailed.md` into an immutable signed `.nbpack` bundle.
 2. **Provision EKS Karpenter / GCP GKE Infrastructure**: Apply baseline Terraform scripts to stand up the multi-AZ/multi-zone Kubernetes cluster, managed PostgreSQL, and Redis clusters.
 3. **Package the AST Tree-Sitter Daemon**: Compile the Rust-based AST parser daemon into lightweight Docker containers for Karpenter / GKE node pools.
 4. **Scaffold the GitHub Action Gatekeeper**: Release `neutronbinary/percipience-action@v2` on the GitHub Marketplace supporting `.nbpack` encrypted plan ingestion.

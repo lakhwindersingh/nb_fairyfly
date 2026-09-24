@@ -25,17 +25,17 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 
 1. **VSCode Extension API & VSIX Packaging Architecture**:
    - Modern TypeScript extension built with `esbuild` and packaged via `@vscode/vsce`.
-   - Custom Activity Bar container with collapsible `TreeDataProvider` views for Workflows, Agent Registry, Wire Contracts, and Merkle Snapshots with live status badges.
-   - Status bar items indicating real-time Merkle chain continuity (`[✔ Merkle: Sealed]`) and real-time token FinOps savings.
+   - Custom Activity Bar container with collapsible `TreeDataProvider` views for Workflows (`workflowTreeProvider.ts`), Agent Registry (`agentTreeProvider.ts`), Wire Contracts, and Merkle Snapshots with live status badges.
+   - Status bar items (`statusBarManager.ts`) indicating real-time Merkle chain continuity (`[✔ Merkle: Sealed]`) and real-time token FinOps savings.
 
 2. **Language Server Protocol (LSP 3.17) Client-Server Subsystem**:
-   - Dedicated Language Server running in a detached Node.js process via `vscode-languageclient/node` and `vscode-languageserver/node`.
-   - In-editor CodeLens triggers on wire contracts (`.nb/context/contracts/`) and workflow steps (`.nb/agentic/custom/workflows/`), allowing one-click execution.
-   - Real-time diagnostic annotators highlighting schema validation errors, breaking contract changes, or unanchored dependencies directly on editor lines.
+   - Dedicated Language Server running in a detached Node.js process via `vscode-languageclient/node` (`lspClient.ts`) and `vscode-languageserver/node` (`lspServer.ts`).
+   - In-editor CodeLens triggers (`codeLensProvider.ts`) on wire contracts (`.nb/context/contracts/`) and workflow steps (`.nb/agentic/custom/workflows/`), allowing one-click execution.
+   - Real-time diagnostic annotators (`diagnosticProvider.ts`) highlighting schema validation errors, breaking contract changes, or unanchored dependencies directly on editor lines.
    - Hover and auto-completion providers for agent references, recovery points, and rule invariants.
 
 3. **Secure Webview Panel & Interactive Visualizer**:
-   - Isolated Webview panels (`percipience.dashboard`) rendering live Merkle DAG block chains, interactive Mermaid diagrams, and living documentation.
+   - Isolated Webview panels (`dashboardPanel.ts`) rendering live Merkle DAG block chains, interactive Mermaid diagrams, and living documentation.
    - Strict Content-Security-Policy (CSP) enforcement using nonce-based script injection and `webview.asWebviewUri()`.
    - UI consistency with the user's active VSCode theme (Light, Dark, High Contrast) via `@vscode/webview-ui-toolkit` and native CSS variables (`var(--vscode-editor-background)`).
 
@@ -55,17 +55,17 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │   ├── lsp_protocol_contract.yaml           # Custom JSON-RPC methods between VSCode client and language server
 │   │   └── webview_message_rpc_contract.json    # JSON-RPC contract for Webview <-> Extension Host postMessage
 │   └── rules/
-│       ├── webview_csp_invariants.md            # Nonce generation, script-src 'nonce-*', localResourceRoots rules
-│       ├── lsp_threading_invariants.md          # Async handler rules, cancellation tokens & memory bounds
-│       └── vsix_packaging_invariants.md         # Production bundling, source-map exclusion & dependency pruning
+│       ├── webview_security_invariants.md       # Nonce generation, script-src 'nonce-*', localResourceRoots rules
+│       ├── vscode_activation_invariants.md       # Lazy activation, onStartupFinished, and memory constraints
+│       └── secret_storage_rules.md              # VSCode SecretStorage API for API keys and tokens
 ├── .nb/agentic/
 │   └── custom/
 │       ├── agents/
-│       │   ├── agent_vscode_extension_architect.yaml  # Domain Expert: VSCode API, TypeScript, esbuild, vsce
-│       │   ├── agent_lsp_language_server_specialist.yaml # Subagent: LSP 3.17, JSON-RPC, CodeLens & Diagnostics
-│       │   └── agent_vscode_webview_ui_engineer.yaml     # Subagent: Webview panels, Mermaid renderer, Toolkit
+│       │   ├── agent_vscode_extension_architect.yaml      # Domain Expert: VSCode API, TypeScript, esbuild, vsce
+│       │   ├── agent_lsp_language_features_specialist.yaml # Subagent: LSP 3.17, JSON-RPC, CodeLens & Diagnostics
+│       │   └── agent_vscode_webview_ux_engineer.yaml       # Subagent: Webview panels, Mermaid renderer, Toolkit
 │       └── workflows/
-│           └── vscode_extension_delivery_flow.yaml       # Manifest -> LSP -> Webview -> Packaging -> Verifier
+│           └── vscode_plugin_delivery_flow.yaml           # Manifest -> LSP -> Webview -> Packaging -> Verifier
 ├── workplace/
 │   ├── docs/
 │   │   ├── vscode_extension_architecture.md           # System C4 component topologies & module interfaces (Mermaid)
@@ -80,14 +80,18 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │       ├── esbuild.js                             # Multi-target bundle script (extension + server)
 │   │       ├── src/
 │   │       │   ├── extension.ts                       # Extension entrypoint, commands, views & status bar
-│   │       │   ├── tree/                              # TreeDataProvider implementations (Workflows, Agents, Ledger)
-│   │       │   ├── webview/                           # WebviewPanel provider, CSP nonce generator & RPC handlers
-│   │       │   └── status/                            # Status bar item controllers (Merkle & Token FinOps)
-│   │       ├── server/
-│   │       │   ├── server.ts                          # LSP 3.17 Language Server entrypoint
-│   │       │   ├── codelens/                          # CodeLens providers for contracts and workflows
-│   │       │   ├── diagnostics/                       # Real-time YAML/JSON contract schema diagnostics
-│   │       │   └── hover/                             # In-editor hover cards for recovery points & rules
+│   │       │   ├── lsp/
+│   │       │   │   ├── lspClient.ts                   # LanguageClient initialization and lifecycle
+│   │       │   │   └── lspServer.ts                   # LanguageServer connection and JSON-RPC dispatch
+│   │       │   ├── providers/
+│   │       │   │   ├── agentTreeProvider.ts           # TreeDataProvider for Agent Registry
+│   │       │   │   ├── workflowTreeProvider.ts        # TreeDataProvider for Workflows & DAGs
+│   │       │   │   ├── codeLensProvider.ts            # In-editor CodeLens triggers for contracts
+│   │       │   │   └── diagnosticProvider.ts          # YAML/JSON schema validation diagnostics
+│   │       │   ├── statusbar/
+│   │       │   │   └── statusBarManager.ts            # Status bar item controllers (Merkle & Token FinOps)
+│   │       │   └── webview/
+│   │       │       └── dashboardPanel.ts              # WebviewPanel provider, CSP nonce generator & RPC handlers
 │   │       └── test/                                  # Suite of vscode-test and mocha verification suites
 │   └── templates/bridge/
 │       ├── mock_vscode_ipc_host.py                    # IPC emulator simulating VSCode Extension Host RPC calls
@@ -167,7 +171,7 @@ performance_targets:
   max_server_memory_mb: 256
 ```
 
-### 2.3. Webview Content Security Policy Invariants (`.nb/context/rules/webview_csp_invariants.md`)
+### 2.3. Webview Content Security Policy Invariants (`.nb/context/rules/webview_security_invariants.md`)
 ```markdown
 # VSCode Webview Content Security Policy Invariants
 
@@ -195,17 +199,17 @@ performance_targets:
 - **Sandboxed Worktree**: `.workspaces/wt_vscode_arch_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/`
 
-### 3.2. `.nb/agentic/custom/agents/agent_lsp_language_server_specialist.yaml`
+### 3.2. `.nb/agentic/custom/agents/agent_lsp_language_features_specialist.yaml`
 - **Role**: LSP 3.17 Protocol Implementation, JSON-RPC, CodeLens & Diagnostic Annotations
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
 - **Sandboxed Worktree**: `.workspaces/wt_lsp_spec_01`
-- **Module Scope**: `workplace/modules/mod_vscode_extension/server/`
+- **Module Scope**: `workplace/modules/mod_vscode_extension/src/lsp/`, `workplace/modules/mod_vscode_extension/src/providers/`
 
-### 3.3. `.nb/agentic/custom/agents/agent_vscode_webview_ui_engineer.yaml`
+### 3.3. `.nb/agentic/custom/agents/agent_vscode_webview_ux_engineer.yaml`
 - **Role**: Webview Panel UI, Nonce CSP Security, Mermaid Graph Renderer & Toolkit
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
 - **Sandboxed Worktree**: `.workspaces/wt_vscode_ui_01`
-- **Module Scope**: `workplace/modules/mod_vscode_extension/src/webview/`
+- **Module Scope**: `workplace/modules/mod_vscode_extension/src/webview/`, `user/outputs/dashboard/`
 
 ---
 
@@ -216,8 +220,8 @@ sequenceDiagram
   autonumber
   participant Dev as Developer in VSCode
   participant Host as VSCode Extension Host (extension.ts)
-  participant LSP as Language Server (server.ts)
-  participant Webview as Webview Panel (Dashboard)
+  participant LSP as Language Server (lspServer.ts)
+  participant Webview as Webview Panel (dashboardPanel.ts)
   participant Daemon as Percipience CLI (bin/percipience)
   participant Ledger as Merkle Chain (.nb/context/ledger)
 
@@ -252,7 +256,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
   autonumber
-  participant Agent as agent_lsp_language_server_specialist
+  participant Agent as agent_lsp_language_features_specialist
   participant WT as Ephemeral Worktree (.workspaces/mod_vscode_extension)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as CSP & Threading Sentinel

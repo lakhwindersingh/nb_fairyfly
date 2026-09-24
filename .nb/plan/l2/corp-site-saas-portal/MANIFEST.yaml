@@ -20,8 +20,8 @@ file_versions:
     path: detailed.md
     version: 3.0.0
     last_modified: '2026-09-24'
-    content_hash: 8dd08396b303f1f9b5bfc9a5385d089f34aa611655d0842cf3d0718d025ba6b2
-    line_count: 508
+    content_hash: d98660b5d8be89e20e0acc023e1c283975119e0359738d5c6ffca4c2ae6395d2
+    line_count: 467
     primary_purpose: Extended implementation guide with web architecture, multi-module
       layout, and billing
   readme:

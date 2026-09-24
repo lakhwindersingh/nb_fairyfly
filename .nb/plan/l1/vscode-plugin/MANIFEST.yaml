@@ -13,15 +13,15 @@ file_versions:
     path: concise.md
     version: 1.0.0
     last_modified: '2026-09-24'
-    content_hash: d58ad5d548bca92323bcbe10e28531eeb10f2754a49e0e1b9bf7e24cf6418482
+    content_hash: 2663fe024ed3e916cc8d9d1dc378d3e30108af0e6dbd5228a3dd84643a04e174
     line_count: 70
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
     last_modified: '2026-09-24'
-    content_hash: 0396e52d1ff4a5658b2cf78a85ecaf00095b1ece1ae61d89d1b68096988dbe1b
-    line_count: 290
+    content_hash: a1f68fd630a7cebb371332403137d3056f1335e46c3b3852ddac35f18c833984
+    line_count: 294
     primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
   readme:
     path: README.md

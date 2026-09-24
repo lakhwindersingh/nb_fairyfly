@@ -18,9 +18,9 @@ model_tiering_policy:
 
 This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework**. It injects concrete IDE integration patterns, VSCode Extension API protocols, Language Server Protocol (LSP 3.17) implementations, and Webview UI orchestration required for:
 
-1. **VSCode Extension API & VSIX Packaging Architecture**: TypeScript extension built with `esbuild`, Activity Bar tree views, and status bar telemetry.
-2. **Language Server Protocol (LSP 3.17) Client-Server Subsystem**: Detached Node.js language server with in-editor CodeLens triggers, contract validation, and real-time diagnostic annotators.
-3. **Secure Webview Panel & Interactive Visualizer**: Nonce-based CSP protected visualizer matching active VSCode themes.
+1. **VSCode Extension API & VSIX Packaging Architecture**: TypeScript extension built with `esbuild`, Activity Bar tree views (`agentTreeProvider.ts`, `workflowTreeProvider.ts`), and status bar telemetry (`statusBarManager.ts`).
+2. **Language Server Protocol (LSP 3.17) Client-Server Subsystem**: Detached Node.js language server (`lspServer.ts`, `lspClient.ts`) with in-editor CodeLens triggers (`codeLensProvider.ts`), contract validation, and real-time diagnostic annotators (`diagnosticProvider.ts`).
+3. **Secure Webview Panel & Interactive Visualizer**: Nonce-based CSP protected visualizer (`dashboardPanel.ts`) matching active VSCode themes.
 
 ```mermaid
 graph TD
@@ -33,7 +33,7 @@ graph TD
   end
 
   subgraph Detached_LSP_Server["Detached Node.js LSP Server"]
-    LspServer["vscode-languageserver/node"]
+    LspServer["vscode-languageserver/node (lspServer.ts)"]
   end
 
   subgraph Local_Platform[".nb/ Platform System"]
@@ -52,8 +52,8 @@ graph TD
 ## 1. Domain-Specific Quad-Space Mapping
 
 - `.nb/context/contracts/`: `package_json_manifest_contract.json`, `lsp_protocol_contract.yaml`, `webview_message_rpc_contract.json`
-- `.nb/context/rules/`: `webview_csp_invariants.md`, `lsp_threading_invariants.md`
-- `.nb/agentic/custom/agents/`: `agent_vscode_extension_architect.yaml`, `agent_lsp_language_server_specialist.yaml`, `agent_vscode_webview_ui_engineer.yaml`
+- `.nb/context/rules/`: `webview_security_invariants.md`, `vscode_activation_invariants.md`, `secret_storage_rules.md`
+- `.nb/agentic/custom/agents/`: `agent_vscode_extension_architect.yaml`, `agent_lsp_language_features_specialist.yaml`, `agent_vscode_webview_ux_engineer.yaml`
 - `workplace/modules/mod_vscode_extension/`: TypeScript extension, language server, and VSIX bundle.
 - `user/outputs/`: Status telemetry and Webview dashboard feeds.
 

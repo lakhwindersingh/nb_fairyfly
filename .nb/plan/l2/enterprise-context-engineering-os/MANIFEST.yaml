@@ -19,7 +19,7 @@ file_versions:
     path: detailed.md
     version: 3.0.0
     last_modified: '2026-09-24'
-    content_hash: a4c9684f5f61054996c337db8153fef9be45572a110827518c2be1d69a121c1c
+    content_hash: c309cf6b980a4f0f35d7c6a7ba6e9dfb0d5e7b113cf95ba51cc3cc419c8fd261
     line_count: 1065
     primary_purpose: Extended implementation guide with commercial strategy, architecture,
       and deployment
