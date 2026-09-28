@@ -21,7 +21,7 @@ model_tiering_policy:
 <!-- Plan Co-Location Notice -->
 > **Co-Located Agent Specifications**: Agent definitions for this plan are stored along-with the plan in [`.nb/agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/) and embedded directly in Section 3. In newly created projects where the `agentic/` directory does not yet exist, `./bin/percipience layer apply` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
 
-This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, ToolWindow orchestration, and tier-permission-aware Control Plane button governance required for:
+This document is a **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects concrete IDE integration patterns, JetBrains Platform SDK APIs, Program Structure Interface (PSI) tree analysis, ToolWindow orchestration, Model Context Protocol (MCP) agent interoperability, and tier-permission-aware Control Plane button governance required for:
 
 1. **JetBrains Platform SDK & IntelliJ / PyCharm ToolWindow Control Plane**:
    - Modern Kotlin-based plugin built with Gradle IntelliJ Plugin (`org.jetbrains.intellij.platform`).
@@ -47,9 +47,10 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
    - Strict adherence to JetBrains Platform threading models (`ReadAction`, `WriteAction`, `ProgressIndicator`, `runBackgroundableTask`).
    - Non-blocking daemon communication over local UNIX domain sockets or IPC loopback bridges, avoiding UI freezes (EDT latency $< 16\text{ms}$).
 
-6. **Terminal-Mode Autonomous Agent Integration & AST Token Compression**:
-   - Deep integration with terminal-based autonomous AI agents (Claude Code, Gemini CLI, Aider) executing inside the embedded IDE terminal tool window.
+6. **Terminal-Mode Autonomous Agent Integration & Model Context Protocol (MCP)**:
+   - Deep integration with terminal-based autonomous AI agents (Claude Code, Gemini CLI, Cursor, Windsurf, Aider) executing inside the embedded IDE terminal tool window.
    - Transparent interception & environment variable injection (`PERCIPIENCE_TERMINAL_MODE=1`, `PERCIPIENCE_AST_COMPRESSION=1`) via `PercipienceTerminalCustomizer`.
+   - Automated provisioning of `.claude/mcp.json` and `.claude/settings.json` across all distribution bundles (`free`, `team`, `business`, `enterprise`, and `universal`) ensuring immediate out-of-the-box agent interoperability.
    - Real-time token metering and gross USD spend tracking recorded directly into the cryptographic `token_savings_ledger.yaml`.
 
 ---
@@ -58,6 +59,9 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 
 ```
 .
+├── .claude/
+│   ├── mcp.json                                     # Model Context Protocol server configuration for Claude
+│   └── settings.json                                # Claude agent settings, model routing & context rule map
 ├── .nb/context/
 │   ├── contracts/
 │   │   ├── intellij_plugin_manifest_contract.json  # plugin.xml contributes schema, actions, toolWindows
@@ -92,7 +96,7 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │       │   │   ├── PercipienceIcons.kt                # Custom SVG icons and UI assets
 │   │       │   │   ├── bootstrap/
 │   │       │   │   │   ├── PercipienceProjectStartupActivity.kt # Startup prompt for unconfigured workspaces
-│   │       │   │   │   └── WorkspaceBootstrapper.kt       # Offline Quad-Space scaffolding & extraction
+│   │       │   │   │   └── WorkspaceBootstrapper.kt       # Offline Quad-Space scaffolding & Claude MCP extraction
 │   │       │   │   ├── actions/
 │   │       │   │   │   ├── BootstrapWorkspaceAction.kt    # Manual Tools menu trigger for bootstrap
 │   │       │   │   │   ├── InspectAstPruningAction.kt     # In-editor Shift+Alt+P AST inspection
@@ -136,7 +140,8 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
         └── context_maturity_report.md                         # 6-dimensional context scorecard with IDE plugin audit
 ```
 
----\n
+---
+
 ## 2. Wire Contracts & Safety Invariants (`.nb/context/contracts/`, `.nb/context/rules/`)
 
 ### 2.1. IntelliJ Plugin Manifest Contract (`.nb/context/contracts/intellij_plugin_manifest_contract.json`)
@@ -209,7 +214,8 @@ performance_targets:
    - Communication between JCEF JavaScript and the Kotlin plugin layer must use asynchronous query handlers (`CefMessageRouterHandlerAdapter`) with verified request nonce validation.
 ```
 
----\n
+---
+
 ## 3. Specialized Domain Subagents & Workflows (`.nb/agentic/custom/`)
 
 ### 3.1. `.nb/agentic/custom/agents/agent_jetbrains_plugin_architect.yaml`
@@ -230,7 +236,8 @@ performance_targets:
 - **Sandboxed Worktree**: `.nb/workspaces/wt_intellij_ui_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/`
 
----\n
+---
+
 ## 4. Virtual End-to-End Emulation Bridge & UI Action Architecture
 
 ```mermaid
@@ -336,7 +343,8 @@ graph TD
 | **Private VPC Enclave Sync**| `repo status` | ❌ | ❌ | ❌ | ✅ |
 | **Immutable WORM Egress** | `egress list` | ❌ | ❌ | ❌ | ✅ |
 
----\n
+---
+
 ## 5. Domain-Specific Surgical Rollback & Poisoning Defense
 
 ```mermaid
@@ -359,7 +367,8 @@ sequenceDiagram
   Gate-->>Agent: Reject PR with stack trace and mandate Kotlin Coroutine background dispatch
 ```
 
----\n
+---
+
 ## 6. Encrypted Packaging, Layer Consumption & Separate Tier Bundles
 
 ### 6.1. Compiling the Sealed Domain Bundle
@@ -386,6 +395,8 @@ The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-
 4. `percipience/workflows/` (`basic_autonomous_cicd.yaml`).
 5. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
 6. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).
+7. Claude Model Context Protocol (MCP) server descriptor (`.claude/mcp.json` and `mcp.json`).
+8. Claude agent configuration, model tiering routing, and context rule bindings (`.claude/settings.json` and `settings.json`).
 
 ### 6.4. Separate Multi-Tier Plugin Bundles for Permission Verification
 To test and verify dynamic permission enforcement across all tiers in staging and automated test harnesses, the packager (`package_plugin.py`) generates dedicated tier-aware plugin distributions in `.nb/bundles/`:
@@ -394,3 +405,221 @@ To test and verify dynamic permission enforcement across all tiers in staging an
 - `percipience-intellij-plugin-business-1.0.0.zip`: Business edition with full platform tools, NBPack encrypted packaging, and multi-tenant provisioner.
 - `percipience-intellij-plugin-enterprise-1.0.0.zip`: Enterprise edition with private VPC isolation, swarm triad orchestrator, and WORM cloud egress.
 - `percipience-intellij-plugin-1.0.0.zip`: Universal distribution defaulting to active workspace license.
+
+---
+
+## 7. Model Context Protocol (MCP) & Agent Interoperability Across All Bundles
+
+Percipience natively bridges with Anthropic Claude (Claude Code, Claude Desktop, Claude CLI), Google Gemini (Gemini CLI), Cursor, Windsurf, and terminal autonomous agents via the **Model Context Protocol (MCP)**. This capability is baked into **all IntelliJ IDEA and PyCharm plugin distributions** (Free Community, Team, Business, Enterprise Dedicated, and Universal).
+
+### 7.1. MCP Server Architecture & Bridge Topology
+
+```mermaid
+graph TD
+  subgraph External_Agents["Autonomous Agent Layer"]
+    ClaudeCode["Claude Code / Desktop"]
+    GeminiAgent["Gemini CLI Agent"]
+    CursorAgent["Cursor / Windsurf Agent"]
+    TerminalAgent["Embedded Terminal Subagent"]
+  end
+
+  subgraph MCP_Config[".claude/mcp.json & .claude/settings.json"]
+    MCP_Json[".claude/mcp.json"]
+    Settings_Json[".claude/settings.json"]
+  end
+
+  subgraph Percipience_MCP_Servers["Percipience MCP Tool Suite"]
+    McpCli["percipience (Main CLI Engine)"]
+    McpAst["ast_optimizer (6D Token Pruner)"]
+    McpGate["gatekeeper (7-Stage CI/CD Guard)"]
+    McpMerkle["merkle_auditor (DAG Continuity & Ledger)"]
+    McpWt["worktree_manager (Isolated Worktrees)"]
+    McpDoc["living_doc_engine (Continuous Sync)"]
+  end
+
+  subgraph Platform_Core["Platform Runtime (.nb/core/ & .nb/bin/)"]
+    BinCli[".nb/bin/percipience"]
+    AstCore["ast_optimizer.py"]
+    CicdCore["autonomous_cicd.py"]
+    MerkleCore["merkle_engine.py"]
+  end
+
+  ClaudeCode & GeminiAgent & CursorAgent & TerminalAgent --> MCP_Json
+  ClaudeCode & GeminiAgent & CursorAgent & TerminalAgent --> Settings_Json
+
+  MCP_Json --> McpCli & McpAst & McpGate & McpMerkle & McpWt & McpDoc
+  McpCli & McpAst & McpGate & McpMerkle & McpWt & McpDoc --> BinCli
+  BinCli --> AstCore & CicdCore & MerkleCore
+```
+
+### 7.2. Canonical `.claude/mcp.json` Sample Schema
+
+When `WorkspaceBootstrapper.kt` initializes any workspace (or when `package_plugin.py` builds any plugin bundle), it generates and maintains the following canonical MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "percipience": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
+        "PERCIPIENCE_TERMINAL_MODE": "1",
+        "PERCIPIENCE_AST_COMPRESSION": "1"
+      },
+      "description": "Percipience Context Engineering CLI for running multi-agent workflows, managing worktrees, and auditing Merkle ledger."
+    },
+    "ast_optimizer": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "optimize"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Polyglot Tree-Sitter 6D AST skeletonization and token pruning engine (cuts prompt overhead by 60-85%)."
+    },
+    "gatekeeper": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "gate"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Automated 7-stage CI/CD gatekeeper validating wire contracts, security invariants, and test regressions."
+    },
+    "merkle_auditor": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "audit"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Cryptographic SHA-256 Merkle DAG state auditor, recovery point validator, and maturity scorecard evaluator."
+    },
+    "worktree_manager": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "worktree"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Ephemeral Git worktree allocator and concurrency isolator preventing workspace clobbering."
+    },
+    "living_doc_engine": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "doc"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "AST-to-Mermaid architecture synchronizer and living contract documentation generator."
+    }
+  }
+}
+```
+
+### 7.3. Canonical `.claude/settings.json` Sample Schema
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-settings.json",
+  "project_name": "nb_fairyfly",
+  "canonical_title": "Neutron Binary Percipience - Enterprise Context Engineering OS & Autonomous CI/CD Gatekeeper",
+  "version": "7.5.0",
+  "architecture": "Quad-Space Context Engineering (.nb / workplace / user / .claude)",
+  "settings_file": ".nb/config/claude_agents_settings.yaml",
+  "model_tiering_policy": {
+    "provider_agnostic": true,
+    "default_model": "claude-3-5-sonnet-20241022",
+    "tier_a_frontier": "claude-3-7-sonnet",
+    "tier_b_production": "claude-3-5-sonnet-20241022",
+    "tier_c_high_throughput": "claude-3-5-haiku-20241022",
+    "reference_models": {
+      "tier_a": [
+        "claude-3-7-sonnet",
+        "gemini-2.0-pro",
+        "gpt-4o",
+        "deepseek-r1"
+      ],
+      "tier_b": [
+        "claude-3-5-haiku",
+        "gemini-2.0-flash",
+        "gpt-4o-mini"
+      ]
+    }
+  },
+  "runtime_environment": {
+    "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
+    "PERCIPIENCE_CLI": ".nb/bin/percipience",
+    "PERCIPIENCE_TERMINAL_MODE": "1",
+    "PERCIPIENCE_AST_COMPRESSION": "1"
+  },
+  "context_rules": {
+    "jetbrains_threading": ".nb/context/rules/jetbrains_platform_threading_rules.md",
+    "psi_read_lock": ".nb/context/rules/psi_read_lock_invariants.md",
+    "jcef_security": ".nb/context/rules/jcef_security_invariants.md",
+    "sandbox_security": ".nb/context/rules/sandbox_security_rules.md",
+    "secret_storage": ".nb/context/rules/secret_storage_rules.md",
+    "merkle_ledger": ".nb/context/ledger/context_ledger.yaml"
+  },
+  "context_contracts": {
+    "intellij_manifest": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
+    "psi_ast_bridge": ".nb/context/contracts/psi_ast_bridge_contract.yaml",
+    "terminal_agent_ast": ".nb/context/contracts/terminal_agent_ast_contract.yaml",
+    "daemon_rpc": ".nb/context/contracts/daemon_rpc_contract.json",
+    "commercial_provisioning": ".nb/context/contracts/commercial_provisioning_contract.yaml"
+  },
+  "ignore_patterns": [
+    ".git/**",
+    ".workspaces/**",
+    ".nb/workspaces/**",
+    "__pycache__/**",
+    "**/*.pyc",
+    "build/**",
+    ".gradle/**",
+    "node_modules/**"
+  ],
+  "agent_registry": [
+    "agent_jetbrains_plugin_architect",
+    "agent_psi_ast_bridge_specialist",
+    "agent_intellij_ui_ux_engineer",
+    "agent_terminal_mode_specialist",
+    "agent_commercial_packager_provisioner",
+    "agent_living_doc_architect",
+    "agent_request_formalizer",
+    "contract_compatibility_checker",
+    "dependency_cve_sentinel",
+    "doc_drift_synchronizer",
+    "flaky_test_detector",
+    "security_auditor",
+    "token_finops_auditor",
+    "quality_guard"
+  ]
+}
+```
+
+### 7.4. Terminal Agent Interception & Token FinOps Accounting
+
+1. **Automatic Environment Injection**:
+   - `PercipienceTerminalCustomizer.kt` hooks into JetBrains `LocalTerminalCustomizer` extension point.
+   - When a developer opens a terminal session or launches Claude Code / Gemini CLI inside IntelliJ/PyCharm, the customizer injects:
+     - `PERCIPIENCE_TERMINAL_MODE=1`
+     - `PERCIPIENCE_AST_COMPRESSION=1`
+     - `PYTHONPATH=.:.nb:.nb/core:workplace:workplace/core`
+2. **Transparent Prompt Squeezing (60-85% Token Reduction)**:
+   - When external agents query files via MCP or CLI, the AST Pruner strips function/method bodies, AST comments, and unreferenced docstrings according to `.nb/config/token_compression_rules.yaml`.
+   - The token savings are logged to `.nb/context/ledger/token_savings_ledger.yaml` with gross USD cost avoidance metrics.
+3. **Multi-Bundle Uniformity**:
+   - Regardless of whether the user installs the **Free Community Edition** or the **Enterprise Dedicated Edition**, `.claude/mcp.json` and `.claude/settings.json` are automatically provisioned and kept in sync.

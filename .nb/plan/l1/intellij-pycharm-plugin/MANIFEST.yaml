@@ -1,7 +1,6 @@
 plan_id: domain_intellij_pycharm_plugin
-plan_name: IntelliJ IDEA & PyCharm IDE Plugin, PSI AST Analysis & Percipience Control
-  Plane Space
-version: 1.0.0
+plan_name: IntelliJ IDEA & PyCharm IDE Plugin, PSI AST Analysis & Percipience Control Plane Space
+version: 1.1.0
 capability_rating: L1
 plan_type: foundation
 status: active
@@ -11,27 +10,29 @@ dependencies:
 file_versions:
   concise:
     path: concise.md
-    version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: ceec92c0e78857b6b5c1b0e085d2669159ddf146f1f3581bcc06ff83e052184d
-    line_count: 66
+    version: 1.1.0
+    last_modified: '2026-09-28'
+    content_hash: 29e566f9427494f4bf3fd6ac01b150381af535fa845bfeb249831ec15803986d
+    line_count: 95
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
-    version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: 24c52792e4c7e0efc69f6745e927c5bd454d1cb722143cb5ff28dc1f1d9d9e50
-    line_count: 353
-    primary_purpose: Extended implementation guide with JetBrains SDK and PSI architecture
+    version: 1.1.0
+    last_modified: '2026-09-28'
+    content_hash: 535eebae0ae64da0f1da4ae531538fdd7a43ec29d9829b8552146c655bde8cf5
+    line_count: 625
+    primary_purpose: Extended implementation guide with JetBrains SDK, PSI architecture, and Claude MCP integration
   readme:
     path: README.md
-    version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: 356599f481c218cf5c7d475c22e42baef9394145f5dc3d4da190be7db93c79c4
-    line_count: 28
+    version: 1.1.0
+    last_modified: '2026-09-28'
+    content_hash: 545aac132c1630906880004bd00d6d33fccb89f673e0cf85ca71d91a86543cce
+    line_count: 33
     primary_purpose: Quick reference and navigation
 key_capabilities:
 - JetBrains Platform SDK & ToolWindow Control Plane
+- Dynamic Tier-Aware Control Plane Action Button Matrix
+- Model Context Protocol (MCP) Interoperability Across All Bundles (.claude/mcp.json)
 - Program Structure Interface (PSI) Multi-Language AST Pruning
 - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
 - JCEF Chromium Embedded Living Visualizer
@@ -41,7 +42,7 @@ implementation_phases:
   phase_2: Kotlin Plugin Architecture & Gradle Platform Setup
   phase_3: PSI AST Token Pruner & Visualizer Popup
   phase_4: JCEF ToolWindow & Live Merkle DAG Visualizer
-  phase_5: Distribution Bundle (.zip) Packaging & CI Verification
+  phase_5: Distribution Bundle (.zip) Packaging, Claude MCP Provisioning & CI Verification
 success_metrics:
   psi_token_reduction: 60-85%
   edt_latency: <16ms (60 FPS)
