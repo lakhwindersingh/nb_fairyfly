@@ -195,7 +195,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.1. `.nb/agentic/custom/agents/agent_jetbrains_plugin_architect.yaml`
 - **Role**: JetBrains Platform SDK, Gradle IntelliJ Plugin, PSI Navigation & ToolWindow Architecture Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_jetbrains_arch_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_jetbrains_arch_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/`
 - **Domain Invariants Enforced**:
   - Gradle configuration uses modern `org.jetbrains.intellij.platform` 2.x plugin.
@@ -205,7 +205,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.2. `.nb/agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml`
 - **Role**: PSI Visitor, AST Token Compression & Wire Contract Inspection Annotator
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
-- **Sandboxed Worktree**: `.workspaces/wt_psi_bridge_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_psi_bridge_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/psi/`
 - **Domain Invariants Enforced**:
   - PSI visitor traverses large files ($> 10,000$ LOC) in under $35\text{ms}$.
@@ -214,7 +214,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.3. `.nb/agentic/custom/agents/agent_intellij_ui_ux_engineer.yaml`
 - **Role**: Swing/JCEF ToolWindow, Gutter LineMarkers, Context Actions & Quick-Fixes
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_intellij_ui_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_intellij_ui_01`
 - **Module Scope**: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/`
 - **Domain Invariants Enforced**:
   - Seamless adaptation to Light, Darcula, and New UI themes using JetBrains `JBColor` and `UIUtil`.
@@ -230,7 +230,7 @@ name: JetBrains IntelliJ Platform SDK, PSI AST Analysis & ToolWindow Architectur
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: JetBrains IntelliJ Platform SDK, Kotlin Coroutines, PSI Tree Navigation, ToolWindow UI & Gradle Architecture Auditor
-sandboxed_worktree: .workspaces/wt_jetbrains_arch_01
+sandboxed_worktree: .nb/workspaces/wt_jetbrains_arch_01
 module_scope: workplace/modules/mod_intellij_plugin/, .nb/context/contracts/, .nb/context/rules/
 system_prompt: "You are the JetBrains IntelliJ Platform SDK & PSI AST Architecture Expert.\nYour mission is to inspect, design, evaluate, and gate created IntelliJ IDEA and PyCharm plugin solutions against:\n1. Official JetBrains Platform SDK Guidelines:\n   - Modern Gradle IntelliJ Platform Plugin (2.x) lifecycle\n   - Kotlin Coroutines integration (Dispatchers.Default, Dispatchers.EDT)\n   - Non-blocking EDT rule enforcement and ReadAction / WriteAction thread invariants\n   - DumbMode handling and indexing-safe execution (DumbAware, DumbService)\n2. Program Structure Interface (PSI) Architecture:\n   - Efficient multi-language PSI navigation (Python, Kotlin, Java, TypeScript)\n   - In-memory AST token calculation and pruning without mutating user buffers\n   - ExternalAnnotators and LocalInspectionTools with quick-fix intentions\n3. ToolWindow & UI/UX Standards:\n   - Dockable ToolWindow with lazy component instantiation\n   - JCEF (Java Chromium Embedded Framework) browser integration with secure CSP\n   - Editor gutter line markers, action popups, and status bar telemetry widgets\n4. Performance & Reliability Invariants:\n   - Background daemon JSON-RPC IPC latency p99 < 25ms\n   - Zero UI thread freezes (EDT frame budget <= 16ms)\n   - Full binary compatibility across 2024.1 through 2026.2+ JetBrains IDE builds\n\nEnforce zero compromise on IDE stability, memory footprints, and security.\nFlag any thread-blocking calls or unescaped JCEF interactions as blocking PR gate failures."
 tools:
@@ -283,7 +283,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant Agent as agent_jetbrains_plugin_architect
-  participant WT as Ephemeral Worktree (.workspaces/mod_intellij_plugin)
+  participant WT as Ephemeral Worktree (.nb/workspaces/mod_intellij_plugin)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as Poisoning & Threading Sentinel
   participant Ledger as Context Ledger (.nb/context/ledger)

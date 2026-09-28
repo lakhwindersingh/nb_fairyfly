@@ -196,7 +196,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.1. `.nb/agentic/custom/agents/agent_vscode_extension_architect.yaml`
 - **Role**: VSCode Extension API, TypeScript, LSP Client-Server Architecture, Webview Security & VSIX Packaging Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_vscode_arch_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_vscode_arch_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/`
 - **Domain Invariants Enforced**:
   - Zero global activation (`*` forbidden in `activationEvents`).
@@ -206,7 +206,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.2. `.nb/agentic/custom/agents/agent_lsp_language_features_specialist.yaml`
 - **Role**: LSP 3.17 Language Server, CodeLens, Real-Time Diagnostic Annotator & Hover Provider
 - **Model Tier**: `Tier_B` (`claude-3-5-haiku / flash`, `gemini-2.0-flash`, `gpt-4o-mini`)
-- **Sandboxed Worktree**: `.workspaces/wt_lsp_spec_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_lsp_spec_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/lsp/`
 - **Domain Invariants Enforced**:
   - Real-time diagnostic latency under $50\text{ms}$ on document change.
@@ -215,7 +215,7 @@ In accordance with the Parent Master Plan governance framework:
 ### 3.3. `.nb/agentic/custom/agents/agent_vscode_webview_ux_engineer.yaml`
 - **Role**: Webview UI Toolkit, VSCode Theme Synchronization, Interactive Mermaid DAG & Status Bar Engineer
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_vscode_ui_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_vscode_ui_01`
 - **Module Scope**: `workplace/modules/mod_vscode_extension/src/webview/`
 - **Domain Invariants Enforced**:
   - Full adherence to VSCode theme colors (`--vscode-*` variables) across all custom DOM elements.
@@ -231,7 +231,7 @@ name: Visual Studio Code Extension API, LSP & Webview Architecture Expert
 model: claude-3-7-sonnet
 model_tier: tier_a
 role: VSCode Extension API, TypeScript, LSP Client-Server Architecture, Webview Security & VSIX Packaging Auditor
-sandboxed_worktree: .workspaces/wt_vscode_arch_01
+sandboxed_worktree: .nb/workspaces/wt_vscode_arch_01
 module_scope: workplace/modules/mod_vscode_extension/, .nb/context/contracts/, .nb/context/rules/
 system_prompt: "You are the Visual Studio Code Extension API & LSP Architecture Expert.\nYour mission is to inspect, design, evaluate, and gate created VSCode extension solutions against:\n1. Official VSCode Extension Guidelines & Best Practices:\n   - Fast activation (<60ms) and targeted activationEvents (workspaceContains, onLanguage, onCommand)\n   - Clean decoupling between Extension Host and Language Server processes\n   - Strict VSIX packaging with esbuild tree-shaking and zero extraneous node_modules\n2. Language Server Protocol (LSP 3.17) Architecture:\n   - Incremental document synchronization (textDocumentSync: 2)\n   - CodeLens providers with lazy resolveProvider for minimal memory overhead\n   - Real-time diagnostic collections mapped to .nb/context/contracts/ and .nb/context/rules/\n3. Webview & UI/UX Security Standards:\n   - Strict Content-Security-Policy (CSP) with nonces and asWebviewUri\n   - VSCode Webview UI Toolkit components adapting to Light, Dark, and High Contrast themes\n   - Bidirectional JSON-RPC messaging with typed error handling and timeout bounds\n4. Performance & Reliability Invariants:\n   - Language server memory limit <= 256MB under peak indexing\n   - Non-blocking daemon IPC over local sockets with auto-reconnect backoff\n   - 100% test coverage using @vscode/test-electron for core activation and commands\n\nEnforce zero compromise on editor responsiveness, security sandboxing, and theme fidelity.\nFlag any unescaped CSP configurations or global activation events as blocking PR gate failures."
 tools:
@@ -287,7 +287,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant Agent as agent_vscode_extension_architect
-  participant WT as Ephemeral Worktree (.workspaces/mod_vscode_extension)
+  participant WT as Ephemeral Worktree (.nb/workspaces/mod_vscode_extension)
   participant Gate as Percipience Gatekeeper (Stage 3 & 4)
   participant Sentinel as Poisoning & Security Sentinel
   participant Ledger as Context Ledger (.nb/context/ledger)

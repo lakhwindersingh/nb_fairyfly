@@ -24,6 +24,8 @@ object WorkspaceBootstrapper {
         val masterPlanFile = File(root, ".nb/plan/claude-context-engineering-parent-master-plan.md")
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
+        val claudeMcpFile = File(root, ".claude/mcp.json")
+        val claudeSettingsFile = File(root, ".claude/settings.json")
         val coreDir = File(root, ".nb/core")
         val coreReady = File(coreDir, "ast_optimizer.py").exists() && File(coreDir, "merkle_engine.py").exists()
 
@@ -32,6 +34,8 @@ object WorkspaceBootstrapper {
                 (planFile.exists() || masterPlanFile.exists()) &&
                 ledgerFile.exists() &&
                 cicdFile.exists() &&
+                claudeMcpFile.exists() &&
+                claudeSettingsFile.exists() &&
                 coreReady)
     }
 
@@ -56,6 +60,7 @@ object WorkspaceBootstrapper {
             ".nb/agentic/prompts",
             ".nb/scripts",
             ".nb/tests",
+            ".claude",
             "workplace/modules",
             "workplace/shared",
             "workplace/tests",
@@ -444,6 +449,181 @@ continuity_verified: true
 """.trimIndent()
             publicLedger.writeText(publicContent)
             createdFiles.add(".nb/context/ledger/context_ledger.public.yaml")
+        }
+
+        // 9. Ensure Claude & MCP Agent Configuration (.claude/mcp.json & .claude/settings.json) across all bundles
+        val claudeMcpFile = File(root, ".claude/mcp.json")
+        if (!claudeMcpFile.exists()) {
+            val mcpContent = """
+{
+  "mcpServers": {
+    "percipience": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
+        "PERCIPIENCE_TERMINAL_MODE": "1",
+        "PERCIPIENCE_AST_COMPRESSION": "1"
+      },
+      "description": "Percipience Context Engineering CLI for running multi-agent workflows, managing worktrees, and auditing Merkle ledger."
+    },
+    "ast_optimizer": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "optimize"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Polyglot Tree-Sitter 6D AST skeletonization and token pruning engine (cuts prompt overhead by 60-85%)."
+    },
+    "gatekeeper": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "gate"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Automated 7-stage CI/CD gatekeeper validating wire contracts, security invariants, and test regressions."
+    },
+    "merkle_auditor": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "audit"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Cryptographic SHA-256 Merkle DAG state auditor, recovery point validator, and maturity scorecard evaluator."
+    },
+    "worktree_manager": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "worktree"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Ephemeral Git worktree allocator and concurrency isolator preventing workspace clobbering."
+    },
+    "living_doc_engine": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "doc"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "AST-to-Mermaid architecture synchronizer and living contract documentation generator."
+    }
+  }
+}
+""".trimIndent()
+            claudeMcpFile.writeText(mcpContent)
+            createdFiles.add(".claude/mcp.json")
+
+            val rootMcp = File(root, "mcp.json")
+            if (!rootMcp.exists()) {
+                rootMcp.writeText(mcpContent)
+                createdFiles.add("mcp.json")
+            }
+        }
+
+        val claudeSettingsFile = File(root, ".claude/settings.json")
+        if (!claudeSettingsFile.exists()) {
+            val settingsContent = """
+{
+  "${'$'}schema": "https://json.schemastore.org/claude-settings.json",
+  "project_name": "nb_fairyfly",
+  "canonical_title": "Neutron Binary Percipience - Enterprise Context Engineering OS & Autonomous CI/CD Gatekeeper",
+  "version": "7.5.0",
+  "architecture": "Quad-Space Context Engineering (.nb / workplace / user / .claude)",
+  "settings_file": ".nb/config/claude_agents_settings.yaml",
+  "model_tiering_policy": {
+    "provider_agnostic": true,
+    "default_model": "claude-3-5-sonnet-20241022",
+    "tier_a_frontier": "claude-3-7-sonnet",
+    "tier_b_production": "claude-3-5-sonnet-20241022",
+    "tier_c_high_throughput": "claude-3-5-haiku-20241022",
+    "reference_models": {
+      "tier_a": [
+        "claude-3-7-sonnet",
+        "gemini-2.0-pro",
+        "gpt-4o",
+        "deepseek-r1"
+      ],
+      "tier_b": [
+        "claude-3-5-haiku",
+        "gemini-2.0-flash",
+        "gpt-4o-mini"
+      ]
+    }
+  },
+  "runtime_environment": {
+    "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
+    "PERCIPIENCE_CLI": ".nb/bin/percipience",
+    "PERCIPIENCE_TERMINAL_MODE": "1",
+    "PERCIPIENCE_AST_COMPRESSION": "1"
+  },
+  "context_rules": {
+    "jetbrains_threading": ".nb/context/rules/jetbrains_platform_threading_rules.md",
+    "psi_read_lock": ".nb/context/rules/psi_read_lock_invariants.md",
+    "jcef_security": ".nb/context/rules/jcef_security_invariants.md",
+    "sandbox_security": ".nb/context/rules/sandbox_security_rules.md",
+    "secret_storage": ".nb/context/rules/secret_storage_rules.md",
+    "merkle_ledger": ".nb/context/ledger/context_ledger.yaml"
+  },
+  "context_contracts": {
+    "intellij_manifest": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
+    "psi_ast_bridge": ".nb/context/contracts/psi_ast_bridge_contract.yaml",
+    "terminal_agent_ast": ".nb/context/contracts/terminal_agent_ast_contract.yaml",
+    "daemon_rpc": ".nb/context/contracts/daemon_rpc_contract.json",
+    "commercial_provisioning": ".nb/context/contracts/commercial_provisioning_contract.yaml"
+  },
+  "ignore_patterns": [
+    ".git/**",
+    ".workspaces/**",
+    ".nb/workspaces/**",
+    "__pycache__/**",
+    "**/*.pyc",
+    "build/**",
+    ".gradle/**",
+    "node_modules/**"
+  ],
+  "agent_registry": [
+    "agent_jetbrains_plugin_architect",
+    "agent_psi_ast_bridge_specialist",
+    "agent_intellij_ui_ux_engineer",
+    "agent_terminal_mode_specialist",
+    "agent_commercial_packager_provisioner",
+    "agent_living_doc_architect",
+    "agent_request_formalizer",
+    "contract_compatibility_checker",
+    "dependency_cve_sentinel",
+    "doc_drift_synchronizer",
+    "flaky_test_detector",
+    "security_auditor",
+    "token_finops_auditor",
+    "quality_guard"
+  ]
+}
+""".trimIndent()
+            claudeSettingsFile.writeText(settingsContent)
+            createdFiles.add(".claude/settings.json")
+
+            val rootSettings = File(root, "settings.json")
+            if (!rootSettings.exists()) {
+                rootSettings.writeText(settingsContent)
+                createdFiles.add("settings.json")
+            }
         }
 
         // Refresh VFS

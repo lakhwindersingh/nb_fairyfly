@@ -48,7 +48,7 @@
 ## 1. Ephemeral Git Worktree Concurrency Engine (`CAP-05`)
 
 - [x] **Core Worktree Manager (`workplace/core/worktree_engine.py`)**:
-  - Implements dynamic worktree allocation under `.workspaces/wt_{agent_id}`.
+  - Implements dynamic worktree allocation under `.nb/workspaces/wt_{agent_id}`.
   - Dedicated branch creation (`wt_branch_{agent_id}`) and atomic cleanup.
   - POSIX active PID-probing (`os.kill(pid, 0)`) with automatic orphaned lease eviction.
 - [x] **Redis Distributed Lock Backend (`workplace/core/worktree_engine.py`)**:
@@ -452,7 +452,7 @@
   - *Shortcoming*: Enterprise admins have no visibility into active subagents running on local developer laptops or distributed CI/CD runner nodes.
   - *Implementation Scope*: Build background agent daemon (`.nb/.nb/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
     - **Machine Identity**: Hostname, Machine UUID, OS version, Local User/Agent ID.
-    - **Active Workspaces**: Path, Active Worktree (`.workspaces/wt_*`), Local Git Branch, Commit SHA.
+    - **Active Workspaces**: Path, Active Worktree (`.nb/workspaces/wt_*`), Local Git Branch, Commit SHA.
     - **Process & Task State**: Active PID, Task Name, Progress Percentage (0–100%), Step Status (e.g. *AST Pruning*, *Running Fuzzer*, *Awaiting Review*).
     - **Local Token Savings**: Input/Output tokens consumed, Tokens saved via AST/Cache, Net financial savings ($).
 - [ ] **TODO-PRT-07: Secure Fleet Ingestion Endpoint (P1)**:

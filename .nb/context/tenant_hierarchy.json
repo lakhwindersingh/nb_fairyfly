@@ -4,12 +4,12 @@
       "tenant_id": "tenant_acme_fintech",
       "name": "Tenant Acme Fintech",
       "slug": "tenant-acme-fintech",
-      "tier": "plan_business",
+      "tier": "plan_enterprise",
       "status": "ACTIVE",
-      "created_at": "2026-09-24T20:02:54.541568+00:00",
+      "created_at": "2026-09-28T22:12:00.861905+00:00",
       "settings": {
-        "max_concurrent_worktrees": 20,
-        "monthly_pr_audits_quota": 25000
+        "max_concurrent_worktrees": -1,
+        "monthly_pr_audits_quota": -1
       },
       "metadata": {
         "entitlements": {
@@ -20,9 +20,10 @@
           "nbpack_obfuscation": true,
           "user_plan_encryption": true,
           "basic_platform_tools_exposure": true,
-          "private_vpc_deploy": false
+          "private_vpc_deploy": true,
+          "dedicated_slack_sla": true
         },
-        "provisioned_at": "2026-09-24T20:02:54.541577+00:00"
+        "provisioned_at": "2026-09-28T22:12:00.861907+00:00"
       }
     },
     "tenant_acme_corp": {

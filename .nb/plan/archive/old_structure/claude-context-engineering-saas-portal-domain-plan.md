@@ -192,7 +192,7 @@ permissions:
 
 - **Role**: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation & Enterprise Security Auditor
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
-- **Sandboxed Worktree**: `.workspaces/wt_saas_audit_01`
+- **Sandboxed Worktree**: `.nb/workspaces/wt_saas_audit_01`
 - **Module Scope**: Strictly scoped to `workplace/modules/mod_portal_admin/ and workplace/modules/mod_tenant_billing/`
 
 #### Self-Contained Embedded Specification (`.nb/agentic/custom/agents/agent_enterprise_saas_portal_architect.yaml`)
@@ -206,7 +206,7 @@ model: claude-3-7-sonnet
 model_tier: tier_a
 role: Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation &
   Enterprise Security Auditor
-sandboxed_worktree: .workspaces/wt_saas_audit_01
+sandboxed_worktree: .nb/workspaces/wt_saas_audit_01
 module_scope: workplace/modules/mod_portal_admin/ and workplace/modules/mod_tenant_billing/
 system_prompt: "You are the Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security\
   \ & Subscription Infrastructure Expert.\nYour primary mission is to independently\
@@ -273,7 +273,7 @@ In a multi-module SaaS deployment with `mod_portal_marketing` and `mod_portal_ad
 sequenceDiagram
     autonumber
     participant Dev as agent_portal_developer
-    participant WT as Ephemeral Worktree (.workspaces/portal_admin)
+    participant WT as Ephemeral Worktree (.nb/workspaces/portal_admin)
     participant Gate as Percipience Gatekeeper
     participant Sentinel as Poisoning Sentinel
     participant Ledger as Context Ledger (Merkle Chain)

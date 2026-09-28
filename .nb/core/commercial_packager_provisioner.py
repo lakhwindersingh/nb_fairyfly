@@ -150,7 +150,11 @@ class CommercialPackagerProvisioner:
             "features": {}
         })
         
-        tier_rules = cls.CORE_TIER_RULES.get(norm_tier, cls.CORE_TIER_RULES["plan_free"])
+        raw_rules = cls.CORE_TIER_RULES.get(norm_tier, cls.CORE_TIER_RULES["plan_free"])
+        tier_rules = dict(raw_rules)
+        if isinstance(tier_rules.get("allowed_engines"), set):
+            tier_rules["allowed_engines"] = sorted(list(tier_rules["allowed_engines"]))
+
         return {
             "tier_id": norm_tier,
             "canonical_name": tier_data.get("name", norm_tier),
@@ -234,7 +238,7 @@ class CommercialPackagerProvisioner:
         core_dst = output_dir / "core"
         core_dst.mkdir(parents=True, exist_ok=True)
 
-        allowed_engines = rules.get("allowed_engines", set())
+        allowed_engines = set(rules.get("allowed_engines", [])) if isinstance(rules.get("allowed_engines"), list) else rules.get("allowed_engines", set())
         if core_src.exists():
             for f in core_src.glob("*.py"):
                 if f.name.startswith("."):
