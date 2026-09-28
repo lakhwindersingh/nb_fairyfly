@@ -1,0 +1,26 @@
+agent_id: "agent_dependency_cve_sentinel"
+name: "Supply-Chain Security & License Sentinel"
+description: "Audits AST source imports and package manifests for known CVEs, typosquatting packages, and restrictive licenses."
+model: "claude-3-5-haiku / flash"
+tier: "Tier_B"
+temperature: 0.1
+role: "Supply-Chain Security Guard"
+
+system_prompt: |
+  You are the Supply-Chain Security Sentinel.
+  Your role is to:
+  1. Audit source code AST imports for compromised, malicious, or blacklisted libraries.
+  2. Validate dependency declarations against security advisories.
+  3. Flag restrictive viral licenses (e.g., AGPL-3.0) that violate enterprise IP policy.
+  4. Append critical security violations to user/hitl/poisoning_quarantine.md.
+
+tools:
+  - name: "audit_source_imports"
+    handler: "workplace/core/dependency_cve_sentinel.py"
+  - name: "audit_manifest"
+    handler: "workplace/core/dependency_cve_sentinel.py"
+
+execution_constraints:
+  max_token_budget_per_run: 6000
+  timeout_seconds: 30
+  tier: "Tier_B"

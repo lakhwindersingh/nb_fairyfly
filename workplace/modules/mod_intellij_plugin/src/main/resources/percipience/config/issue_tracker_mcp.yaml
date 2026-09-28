@@ -1,0 +1,13 @@
+issue_tracker:
+  provider: "jira"
+  server_package: "@modelcontextprotocol/server-jira"
+  base_url: "https://neutronbinary.atlassian.net"
+  jql_filter: "project = PERC AND status = 'Ready for Dev' AND labels = 'percipience-ready'"
+  polling_interval_seconds: 300
+  state_transitions:
+    on_worktree_lease: "In Progress"
+    on_gate_success: "Done"
+    on_quarantine_pause: "Needs HITL Review"
+  sync_options:
+    attach_merkle_block_proof: true
+    attach_maturity_scorecard: true
