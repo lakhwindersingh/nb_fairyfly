@@ -53,7 +53,7 @@ jobs:
           python-version: '3.11'
       - name: Execute Autonomous CI/CD Gate
         run: |
-          chmod +x .nb/.nb/bin/percipience
+          chmod +x .nb/bin/percipience
           ./.nb/bin/percipience gate
           ./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
 ```
