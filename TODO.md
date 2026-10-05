@@ -35,7 +35,7 @@
 | **Layerable Domain Extensions (IoT, Mobile & SaaS)** | Specified | Specified | Required | Required | **[-] IN PROGRESS** | **0.75** |
 | **90-Day GTM Commercialization (Months 1–3 Milestones)** | N/A | Required | Required | N/A | **[-] IN PROGRESS** | **0.65** |
 | **Competitive Parity: Observability & OTel GenAI** | Specified | Required | Specified | N/A | **[-] PLANNED** | **0.40** |
-| **Competitive Parity: Runtime Guardrails & PII** | Specified | Required | Specified | N/A | **[-] PLANNED** | **0.40** |
+| **Competitive Parity: Runtime Guardrails & PII** | Specified | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
@@ -306,15 +306,15 @@
   - *Implementation*: Implemented `SemanticPromptCache` with term-frequency cosine vector similarity (default threshold $\ge 0.80$), TTL expiration, and telemetry tracking zeroing token burn on duplicate diagnostic inquiries.
 
 ### 16.2. Runtime Guardrails, PII Anonymization & Jailbreak Defense (Lakera / Prompt Armor / NeMo Guardrails / Guardrails AI)
-- [ ] **TODO-COMP-05: Real-Time Inbound/Outbound PII Masking & De-Anonymization (P1)**:
-  - *Competitor Benchmark*: Lakera and Microsoft Presidio redact Personally Identifiable Information (names, emails, SSNs, credit cards, IP addresses, proprietary internal hostnames) before LLM prompt transit and de-mask upon response ingestion.
-  - *Implementation Scope*: Implement `workplace/core/pii_sanitizer.py` supporting high-speed regex and NER-based PII token masking (`<PERSON_1>`, `<IP_ADDR_1>`) with strict memory-only de-anonymization tables.
-- [ ] **TODO-COMP-06: Inbound Indirect Prompt Injection Firewall (P1)**:
+- [x] **TODO-COMP-05: Real-Time Inbound/Outbound PII Masking & De-Anonymization (P1)**:
+  - *Competitor Benchmark*: Lakera and Microsoft Presidio redact Personally Identifiable Information (names, emails, SSNs, credit cards, IP addresses, proprietary internal hostnames, and credentials) before LLM prompt transit and de-mask upon response ingestion.
+  - *Implementation*: Implemented `workplace/core/pii_sanitizer.py` (mirrored across `.nb/core/`, VSCode, and IntelliJ runtimes). High-speed sub-millisecond regex token masking (`<API_KEY_1>`, `<SSN_1>`, `<EMAIL_1>`, `<PHONE_1>`, `<IP_ADDR_1>`, `<CREDIT_CARD_1>`, `<HOSTNAME_1>`, `<PERSON_1>`) with strict memory-only reverse vaults, zero disk leakage, session isolation, reversible `deanonymize()`, and comprehensive telemetry tracking. Exposes CLI (`percipience guardrail pii`) and REST endpoints (`POST /api/guardrails/pii-mask`, `POST /api/guardrails/pii-unmask`).
+- [x] **TODO-COMP-06: Inbound Indirect Prompt Injection Firewall (P1)**:
   - *Competitor Benchmark*: Prompt Armor & Lakera intercept malicious prompt injections embedded inside untrusted external web pages, Jira stories, Git issue descriptions, and PR comments.
-  - *Implementation Scope*: Implement `workplace/core/prompt_injection_guard.py` scanning inbound external payloads for jailbreak markers, prompt overrides, and adversarial instruction delimiters prior to context assembly.
-- [ ] **TODO-COMP-07: Output Policy & Hallucination Safety Rails (P2)**:
+  - *Implementation*: Implemented `workplace/core/prompt_injection_guard.py` (mirrored across all Quad-Space runtime locations). Multi-vector detection analyzing direct instruction overrides (`ignore previous instructions`, `DAN mode`, `developer mode`), chat delimiter hijacking (`"""SYSTEM:`, `[INST]`, `<<SYS>>`, `<|im_start|>`), role usurpation (`I am the system administrator`), egress/exfiltration probes (`curl webhook.site`), obfuscated base64 attacks (candidate extraction and decoding), and zero-width Unicode steganography. Returns granular risk score (0.0 to 1.0) and verdicts (`ALLOWED`, `QUARANTINED`, `BLOCKED`). Exposes `neutralize_payload()` wrapping in safe envelope `<untrusted_external_payload>`, quarantine logging to `user/hitl/injection_quarantine.jsonl`, CLI (`percipience guardrail injection`), and REST endpoint (`POST /api/guardrails/injection-scan`).
+- [x] **TODO-COMP-07: Output Policy & Hallucination Safety Rails (P2)**:
   - *Competitor Benchmark*: NeMo Guardrails and Guardrails AI enforce strict output validation schemas, preventing agents from emitting unverified shell execution commands, dangerous system calls, or out-of-spec code structures.
-  - *Implementation Scope*: Implement `workplace/core/output_guardrail_validator.py` executing post-generation AST structural verification before code is written to disk or worktrees.
+  - *Implementation*: Implemented `workplace/core/output_guardrail_validator.py` (mirrored across all runtime environments). Enforces post-generation AST structural verification via `ast.parse()` and `OutputGuardrailVisitor`: blocks dangerous system calls (`eval()`, `exec()`, `os.system()`, `subprocess.*(shell=True)`), JavaScript dynamic evaluation (`child_process.exec`, `new Function`), prohibits path traversal attacks (`/etc/passwd`, `/root/`, `/proc/`, `../../`), blacklists compromised supply-chain dependencies (`event-stream`, `crypto-miner`), validates syntax integrity, and detects hallucinated internal imports (`from core.<phantom> import ...`). Generates structured `remediation_prompt` envelopes for `DiagnosticRePromptEngine`, with CLI (`percipience guardrail output-check`) and REST endpoint (`POST /api/guardrails/output-validate`).
 
 ### 16.3. In-Editor Developer Experience, Language Server Protocol & Vector Search (Cursor / Windsurf / Claude Code / Copilot)
 - [ ] **TODO-COMP-08: Language Server Protocol (LSP) Indexing & Cross-File Symbol Graphs (P1)**:

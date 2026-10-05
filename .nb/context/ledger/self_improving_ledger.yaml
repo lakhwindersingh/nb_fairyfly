@@ -16,7 +16,7 @@ recommendations:
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
 timestamp: '2026-09-17T13:22:03.097963+00:00'
-last_optimized: '2026-10-05T03:41:47.698992+00:00'
+last_optimized: '2026-10-05T03:49:59.397011+00:00'
 optimizations:
 - timestamp: '2026-09-17T18:08:09.748421+00:00'
   avg_reduction_pct: 48.92
@@ -763,5 +763,11 @@ optimizations:
   avg_reduction_pct: 47.18
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
 - timestamp: '2026-10-05T03:41:47.698999+00:00'
+  avg_reduction_pct: 47.18
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-05T03:49:59.327233+00:00'
+  avg_reduction_pct: 47.18
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-05T03:49:59.397019+00:00'
   avg_reduction_pct: 47.18
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS

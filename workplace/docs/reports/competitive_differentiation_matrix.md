@@ -195,9 +195,9 @@ While Percipience leads in context engineering, cryptographic governance, token 
 - **Semantic Response Caching**: Portkey & GPTCache provide vector-similarity LLM response caching over Redis. (*Backlog: `TODO-COMP-04`*)
 
 ### 5.2. Enterprise Guardrails, PII Redaction & Security (Lakera / Prompt Armor / NeMo Guardrails)
-- **Inbound/Outbound PII Anonymization**: Microsoft Presidio and Lakera redact PII/internal tokens before model transit. (*Backlog: `TODO-COMP-05`*)
-- **Indirect Prompt Injection Firewall**: Prompt Armor protects against adversarial payload injection in external PR/issue text. (*Backlog: `TODO-COMP-06`*)
-- **Output Policy Enforcement**: NeMo Guardrails strictly bounds code outputs and dangerous shell execution. (*Backlog: `TODO-COMP-07`*)
+- **Inbound/Outbound PII Anonymization**: Microsoft Presidio and Lakera redact PII/internal tokens before model transit. (*Status: ✅ COMPLETED - `PIISanitizer` with memory-only vaults, sub-millisecond regex masking, reversible token mapping, zero disk leakage, and session isolation. `TODO-COMP-05`*)
+- **Indirect Prompt Injection Firewall**: Prompt Armor protects against adversarial payload injection in external PR/issue text. (*Status: ✅ COMPLETED - `PromptInjectionGuard` with multi-vector scanning, direct jailbreak defense, delimiter sanitization, base64 obfuscation decoding, steganography filtering, quarantine logging, and safe payload envelopes. `TODO-COMP-06`*)
+- **Output Policy Enforcement**: NeMo Guardrails strictly bounds code outputs and dangerous shell execution. (*Status: ✅ COMPLETED - `OutputGuardrailValidator` with post-generation AST structural verification, blocking dynamic eval/exec/os.system, prohibiting path traversal, supply-chain blacklisting, syntax validation, and DiagnosticRePrompt remediation. `TODO-COMP-07`*)
 
 ### 5.3. IDE Developer Experience & Vector Hybrid Retrieval (Cursor / Windsurf / Claude Code)
 - **Language Server Protocol (LSP) Indexing**: Active LSP daemons (`pyright`, `gopls`, `rust-analyzer`) provide exact cross-file type hierarchies and references. (*Backlog: `TODO-COMP-08`*)

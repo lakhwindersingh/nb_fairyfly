@@ -50,6 +50,9 @@ from core.semantic_prompt_cache import SemanticPromptCache
 from core.attention_budgeter import AttentionBudgeter
 from core.adversarial_fuzzer import AdversarialFuzzer
 from core.ambiguity_resolver import AmbiguityResolver
+from core.pii_sanitizer import PIISanitizer
+from core.prompt_injection_guard import PromptInjectionGuard
+from core.output_guardrail_validator import OutputGuardrailValidator
 
 from core.autonomous_cicd import (
     SelfSustainingEngine,
@@ -3847,6 +3850,23 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json(cache.get_metrics())
             return
 
+        if parsed.path == "/api/guardrails/metrics":
+            pii_metrics = PIISanitizer.get_instance().get_metrics()
+            inj_telemetry = PromptInjectionGuard().get_telemetry()
+            self._send_json({
+                "status": "HEALTHY",
+                "competitor_parity": "Lakera Guard / Prompt Armor / NeMo Guardrails / Guardrails AI",
+                "pii": pii_metrics,
+                "prompt_injection": inj_telemetry,
+                "output_guardrail": {
+                    "status": "OPERATIONAL",
+                    "banned_calls": ["eval", "exec", "system", "popen", "subprocess(shell=True)"],
+                    "path_traversal_protection": True,
+                    "supply_chain_auditing": True
+                }
+            })
+            return
+
         if parsed.path == "/api/client/project-details":
             client = self._get_authenticated_client(parsed)
             if not client:
@@ -4598,6 +4618,41 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
 
         parsed = urlparse(self.path)
         payload = self._read_json_body()
+
+        if parsed.path == "/api/guardrails/pii-mask":
+            text = payload.get("text", "")
+            sid = payload.get("session_id", "portal_session")
+            res = PIISanitizer.get_instance().anonymize(text, session_id=sid)
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/guardrails/pii-unmask":
+            masked_text = payload.get("masked_text", "")
+            sid = payload.get("session_id", "portal_session")
+            unmasked = PIISanitizer.get_instance().deanonymize(masked_text, session_id=sid)
+            self._send_json({
+                "deanonymized_text": unmasked,
+                "session_id": sid,
+                "status": "SUCCESS"
+            })
+            return
+
+        if parsed.path == "/api/guardrails/injection-scan":
+            p_text = payload.get("payload", "")
+            source = payload.get("source", "portal_api")
+            strict = payload.get("strict", False)
+            res = PromptInjectionGuard().scan_payload(p_text, source=source, strict=strict)
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/guardrails/output-validate":
+            code = payload.get("code", "")
+            lang = payload.get("language", "python")
+            fpath = payload.get("file_path")
+            validator = OutputGuardrailValidator(REPO_ROOT)
+            res = validator.validate_code_output(code, language=lang, file_path=fpath)
+            self._send_json(res)
+            return
 
         if parsed.path in ("/v1/chat/completions", "/api/gateway/chat/completions", "/api/gateway/simulate"):
             auth_hdr = self.headers.get("Authorization")
