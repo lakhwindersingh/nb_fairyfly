@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Percipience Sandbox Permission Contract",
+  "description": "Wire schema governing source code access requests for sandboxed LLM plugins inside IntelliJ/PyCharm.",
+  "type": "object",
+  "required": ["plugin_id", "target_path", "requested_level"],
+  "properties": {
+    "plugin_id": {
+      "type": "string",
+      "description": "Unique JetBrains plugin identifier (e.g. com.intellij.ai, com.github.copilot)"
+    },
+    "target_path": {
+      "type": "string",
+      "description": "Relative file path within workspace being accessed"
+    },
+    "requested_level": {
+      "type": "string",
+      "enum": ["READ_PRUNED_AST", "READ_RAW_SOURCE", "WRITE_SANDBOXED", "WRITE_DIRECT", "DENIED"]
+    },
+    "enforce_token_pruning": {
+      "type": "boolean",
+      "default": true
+    },
+    "caller_context": {
+      "type": "object",
+      "properties": {
+        "is_sandboxed": { "type": "boolean" },
+        "task_id": { "type": "string" }
+      }
+    }
+  }
+}

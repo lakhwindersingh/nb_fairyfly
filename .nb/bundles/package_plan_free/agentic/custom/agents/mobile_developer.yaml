@@ -1,0 +1,19 @@
+agent_id: "agent_mobile_developer"
+name: "Cross-Platform Mobile Bluetooth & Systems Engineer"
+version: "1.0.0"
+category: "mobile_engineering"
+model_tiering:
+  active_tier: "Tier_A"
+  tier_a_model: "claude-3-7-sonnet / pro"
+  tier_b_model: "claude-3-5-haiku / flash"
+budget_limits:
+  max_tokens_per_turn: 25000
+permissions:
+  allow_worktree_isolation: true
+  allowed_module_paths:
+    - "workplace/modules/mobile_app"
+    - "workplace/shared"
+enforced_invariants:
+  - "Non-blocking asynchronous Bluetooth I/O with exponential backoff on connection drops"
+  - "Strict GATT MTU negotiation (requesting 512 bytes with 23-byte default fallback)"
+  - "Secure platform keychain / Android Keystore storage for mTLS private keys"

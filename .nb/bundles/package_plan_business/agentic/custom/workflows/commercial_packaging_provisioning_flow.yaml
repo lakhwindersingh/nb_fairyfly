@@ -1,0 +1,67 @@
+name: commercial_packaging_provisioning_flow
+version: "1.0.0"
+description: "End-to-End Commercial Packaging, Multi-IDE Provisioning and Tier Permissioning Delivery Pipeline"
+
+trigger:
+  type: manual_or_billing_event
+  events:
+    - "tier_package_request"
+    - "tenant_provision_request"
+    - "billing_plan_updated"
+
+steps:
+  - id: step_validate_billing_rules
+    name: "Validate Pricing Matrix & Billing Plans Schema"
+    agent: agent_commercial_packager_provisioner
+    action: "validate_schema"
+    inputs:
+      config_file: ".nb/config/billing_plans.yaml"
+      contract_file: ".nb/context/contracts/billing_meter_contract.yaml"
+    timeout_ms: 10000
+
+  - id: step_filter_and_package_tier
+    name: "Filter Runtime Assets & Build Tier Distribution Bundle"
+    agent: agent_commercial_packager_provisioner
+    action: "package_tier"
+    inputs:
+      target_tier: "${input.tier:-plan_free}"
+      source_spaces:
+        - ".nb/bin"
+        - ".nb/config"
+        - ".nb/scripts"
+        - ".nb/core"
+        - ".nb/context"
+        - ".nb/agentic"
+        - ".nb/plan"
+    timeout_ms: 30000
+
+  - id: step_sign_and_seal_license
+    name: "Generate Cryptographically Signed License & Merkle Seal"
+    agent: agent_commercial_packager_provisioner
+    action: "seal_license"
+    inputs:
+      tenant_id: "${input.tenant_id:-tenant_community_default}"
+      merkle_action: "PACKAGE_TIER"
+    timeout_ms: 15000
+
+  - id: step_provision_ide_and_portal
+    name: "Provision Runtime Bundle to IntelliJ, VSCode, and SaaS Portal"
+    agent: agent_commercial_packager_provisioner
+    action: "provision_target"
+    inputs:
+      targets: ["intellij", "vscode", "portal"]
+    timeout_ms: 45000
+
+  - id: step_verify_tier_permissions
+    name: "Verify Cross-Platform Feature Gating & RBAC Permissions"
+    agent: agent_commercial_packager_provisioner
+    action: "verify_permissions"
+    inputs:
+      test_features:
+        - "ast_token_pruning"
+        - "merkle_chain_audit"
+        - "basic_autonomous_cicd"
+        - "basic_platform_tools_exposure"
+        - "nbpack_obfuscation"
+        - "private_vpc_deploy"
+    timeout_ms: 15000

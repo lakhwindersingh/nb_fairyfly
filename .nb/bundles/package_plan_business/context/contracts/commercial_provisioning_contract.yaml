@@ -1,0 +1,35 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceCommercialProvisioningContract"
+description: "Contract schema governing commercial package generation, multi-target tenant provisioning, Ed25519 license minting, and RBAC tier permissions across IntelliJ, VSCode, and SaaS Portal."
+type: "object"
+required:
+  - "tenant_id"
+  - "tier"
+  - "target"
+  - "timestamp"
+properties:
+  tenant_id:
+    type: "string"
+    description: "Unique tenant identifier receiving the provisioned package."
+  tier:
+    type: "string"
+    enum: ["plan_free", "plan_team", "plan_business", "plan_enterprise", "free", "team", "business", "enterprise"]
+    description: "Commercial pricing tier governing feature gates and engine inclusions."
+  target:
+    type: "string"
+    enum: ["all", "mod_intellij_plugin", "mod_vscode_extension", "saas_portal_gateway"]
+    description: "Target runtime environment to provision and configure."
+  license_metadata:
+    type: "object"
+    description: "Optional metadata parameters for Ed25519 cryptographic license token minting."
+    properties:
+      issued_by:
+        type: "string"
+      custom_seat_limit:
+        type: "integer"
+      expires_at:
+        type: "string"
+        format: "date-time"
+  timestamp:
+    type: "string"
+    format: "date-time"

@@ -1,0 +1,48 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceUsageAndBillingEvent"
+description: "Inter-module billing and usage event schema for high-throughput gate audits and 15% token savings revenue-share calculation."
+type: "object"
+required:
+  - "event_id"
+  - "tenant_id"
+  - "timestamp"
+  - "event_type"
+  - "payload"
+properties:
+  event_id:
+    type: "string"
+    format: "uuid"
+  tenant_id:
+    type: "string"
+  timestamp:
+    type: "string"
+    format: "date-time"
+  event_type:
+    type: "string"
+    enum:
+      - "pr_gate_verified"
+      - "worktree_hour_consumed"
+      - "token_savings_realized"
+  payload:
+    type: "object"
+    required:
+      - "merkle_block_hash"
+    properties:
+      pr_number:
+        type: "integer"
+      git_commit_sha:
+        type: "string"
+      tokens_uncompressed:
+        type: "integer"
+      tokens_pruned:
+        type: "integer"
+      gross_token_savings_usd:
+        type: "number"
+      rev_share_due_usd:
+        type: "number"
+      worktree_id:
+        type: "string"
+      duration_seconds:
+        type: "number"
+      merkle_block_hash:
+        type: "string"

@@ -1,0 +1,19 @@
+agent_id: "agent_iot_developer"
+name: "Embedded Firmware & MCU Systems Engineer"
+version: "1.0.0"
+category: "embedded_engineering"
+model_tiering:
+  active_tier: "Tier_A"
+  tier_a_model: "claude-3-7-sonnet / pro"
+  tier_b_model: "claude-3-5-haiku / flash"
+budget_limits:
+  max_tokens_per_turn: 25000
+permissions:
+  allow_worktree_isolation: true
+  allowed_module_paths:
+    - "workplace/modules/iot_node"
+    - "workplace/shared"
+enforced_invariants:
+  - "Zero dynamic heap allocation (malloc/free) after boot initialization"
+  - "Strict compliance with MISRA C:2012 guidelines"
+  - "Watchdog timer (WDT) refresh hooks inside all FreeRTOS task loops"

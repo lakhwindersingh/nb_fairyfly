@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DaemonRpcContract",
+  "type": "object",
+  "required": ["jsonrpc", "method", "id"],
+  "properties": {
+    "jsonrpc": {
+      "type": "string",
+      "enum": ["2.0"]
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "get_merkle_dag",
+        "execute_workflow",
+        "calculate_token_savings",
+        "inspect_ast_pruning",
+        "get_active_contracts",
+        "verify_contract_invariants"
+      ]
+    },
+    "params": {
+      "type": "object"
+    },
+    "id": {
+      "type": ["string", "integer"]
+    }
+  }
+}

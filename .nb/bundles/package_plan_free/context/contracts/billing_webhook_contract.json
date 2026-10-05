@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stripe_Paddle_Billing_Webhook_Contract",
+  "type": "object",
+  "required": ["id", "event_type", "created_at", "tenant_id", "data", "signature"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^evt_[a-zA-Z0-9]+$"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "customer.subscription.created",
+        "customer.subscription.updated",
+        "customer.subscription.deleted",
+        "invoice.payment_succeeded",
+        "invoice.payment_failed",
+        "finops.revshare_metered"
+      ]
+    },
+    "created_at": {
+      "type": "integer"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "required": ["amount_due_cents", "currency"],
+      "properties": {
+        "amount_due_cents": { "type": "integer", "minimum": 0 },
+        "currency": { "type": "string", "enum": ["USD", "EUR", "GBP"] },
+        "plan_tier": { "type": "string", "enum": ["plan_free", "plan_team", "plan_business", "plan_enterprise"] },
+        "token_savings_gross_usd": { "type": "number", "minimum": 0.0 },
+        "performance_fee_usd": { "type": "number", "minimum": 0.0 }
+      }
+    },
+    "signature": {
+      "type": "string",
+      "description": "HMAC-SHA256 signature generated using tenant webhook signing secret"
+    }
+  }
+}

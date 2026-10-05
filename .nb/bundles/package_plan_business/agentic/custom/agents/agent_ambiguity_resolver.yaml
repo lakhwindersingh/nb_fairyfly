@@ -1,0 +1,20 @@
+agent_id: "agent_ambiguity_resolver"
+name: "Autonomous Requirement Clarification & Ambiguity Specialist"
+version: "1.0.0"
+authority_tier: "DOMAIN_ARCHITECT"
+description: "Evaluates incoming unstructured requests and MVS specifications for ambiguity, unstated constraints, and missing technical anchors, generating interactive clarification RFCs before derivation."
+
+assigned_phase: "PHASE_2_FOUNDATIONAL"
+capabilities:
+  - "evaluate_ambiguity"
+  - "generate_clarification_rfc"
+  - "synthesize_clarification_questions"
+
+workflow_bindings:
+  - workflow_id: "wf_derivation_pipeline"
+    stage: "step_evaluate_ambiguity_gate"
+    fail_action: "QUARANTINE_AND_HALT"
+
+policies:
+  max_ambiguity_threshold: 0.35
+  require_hitl_signoff_on_ambiguous: true

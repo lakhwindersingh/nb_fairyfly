@@ -1,0 +1,77 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "TerminalAgentASTContract"
+description: "Terminal Mode Agent AST Proxy, context extraction formats, and shell injection contract."
+type: "object"
+contract_id: "terminal_agent_ast_contract"
+schema_version: "2.0.0"
+required:
+  - "supported_terminal_agents"
+  - "compression_targets"
+  - "ledger_tracking"
+properties:
+  supported_terminal_agents:
+    type: "array"
+    items:
+      type: "object"
+      required: ["id", "executable", "context_format", "target_context_file"]
+      properties:
+        id:
+          type: "string"
+        executable:
+          type: "string"
+        context_format:
+          type: "string"
+        target_context_file:
+          type: "string"
+        env_injections:
+          type: "object"
+  compression_targets:
+    type: "object"
+    required: ["minimum_token_reduction_pct", "target_average_reduction_pct"]
+    properties:
+      minimum_token_reduction_pct:
+        type: "number"
+      target_average_reduction_pct:
+        type: "number"
+      max_context_export_ms:
+        type: "number"
+  ledger_tracking:
+    type: "object"
+    required: ["enabled", "target_ledger"]
+    properties:
+      enabled:
+        type: "boolean"
+      target_ledger:
+        type: "string"
+      rev_share_pct:
+        type: "number"
+
+supported_terminal_agents:
+  - id: "claude-code"
+    executable: "claude"
+    context_format: "claude-code"
+    target_context_file: ".percipience_claude_context.md"
+    env_injections:
+      PERCIPIENCE_TERMINAL_MODE: "1"
+      PERCIPIENCE_AST_COMPRESSION: "1"
+      CLAUDE_CODE_PROMPT_PREFIX: "[Percipience AST Active]"
+  - id: "gemini-cli"
+    executable: "gemini"
+    context_format: "gemini-cli"
+    target_context_file: ".percipience_gemini_context.md"
+    env_injections:
+      PERCIPIENCE_TERMINAL_MODE: "1"
+      PERCIPIENCE_AST_COMPRESSION: "1"
+      GEMINI_SYSTEM_INSTRUCTIONS: ".percipience_gemini_context.md"
+  - id: "aider"
+    executable: "aider"
+    context_format: "aider"
+    target_context_file: ".percipience_aider_context.md"
+compression_targets:
+  minimum_token_reduction_pct: 40.0
+  target_average_reduction_pct: 65.0
+  max_context_export_ms: 250
+ledger_tracking:
+  enabled: true
+  target_ledger: ".nb/context/ledger/token_savings_ledger.yaml"
+  rev_share_pct: 15.0
