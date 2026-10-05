@@ -1,6 +1,7 @@
 """
 Percipience Core Workplace Modules:
-Multi-Tenant Project Provisioning, Fleet Workspaces, IAM & KMS Enclaves.
+Multi-Tenant Project Provisioning, Fleet Workspaces, IAM & KMS Enclaves,
+Runtime Guardrails, PII Anonymization & Prompt Injection Firewall.
 Extends the core namespace to seamlessly merge workplace/core and .nb/core.
 """
 
@@ -27,6 +28,9 @@ from .project_policy_engine import (
     SelfHealingSLAPolicy,
     WireContractRule
 )
+from .pii_sanitizer import PIISanitizer
+from .prompt_injection_guard import PromptInjectionGuard
+from .output_guardrail_validator import OutputGuardrailValidator
 
 __all__ = [
     "TenantManager",
@@ -47,5 +51,8 @@ __all__ = [
     "CognitiveRoutingPolicy",
     "ASTPruningPolicy",
     "SelfHealingSLAPolicy",
-    "WireContractRule"
+    "WireContractRule",
+    "PIISanitizer",
+    "PromptInjectionGuard",
+    "OutputGuardrailValidator",
 ]

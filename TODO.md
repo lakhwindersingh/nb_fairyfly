@@ -17,7 +17,7 @@
 | Core Subsystem / Pillar | Parent Master Plan | Play 3 OS Plan | Play 3 SaaS Portal Plan | Domain Space Plans | Implementation Status | Maturity Score |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Quad-Space Standard Scaffolding** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Unified Percipience CLI (`.nb/.nb/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
+| **Unified Percipience CLI (`.nb/bin/percipience`)** | Specified | Required | Required | Specified | **✅ COMPLETED** | **1.00** |
 | **AST Pruning & Token Optimization Engine** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Cryptographic Merkle State Ledger & Epoch Archives** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Context Poisoning Defense & Surgical Rollback** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
@@ -450,7 +450,7 @@
 ### 18.3. Workstation & Node Fleet Telemetry (Individual Machines) (`CAP-42`)
 - [ ] **TODO-PRT-06: Lightweight Workstation Agent Daemon (`percipience-agent`) (P1)**:
   - *Shortcoming*: Enterprise admins have no visibility into active subagents running on local developer laptops or distributed CI/CD runner nodes.
-  - *Implementation Scope*: Build background agent daemon (`.nb/.nb/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
+  - *Implementation Scope*: Build background agent daemon (`.nb/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
     - **Machine Identity**: Hostname, Machine UUID, OS version, Local User/Agent ID.
     - **Active Workspaces**: Path, Active Worktree (`.nb/workspaces/wt_*`), Local Git Branch, Commit SHA.
     - **Process & Task State**: Active PID, Task Name, Progress Percentage (0–100%), Step Status (e.g. *AST Pruning*, *Running Fuzzer*, *Awaiting Review*).
@@ -500,4 +500,97 @@
 - [x] **TODO-IDE-03: Sealed Distribution Packaging & Verification (P1)**:
   - Create `package_plugin.py` to compile Kotlin sources, produce `percipience-intellij-plugin-1.0.0.zip`, and install into active JetBrains IDE config directories.
   - Compile sealed layer envelope `.nb/bundles/intellij_pycharm_plugin_domain.nbpack` and verify full suite via `workplace/tests/test_ide_plugins_space.py`.
+
+---
+
+## 20. Actionable Issues & Implementation Backlog from Comprehensive Project Review (`output.md`)
+
+> **Governing Audit Report**: [`output.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/output.md) (Overall Score: 4.5/5.0)  
+> **Core Objective**: Systematically track and resolve all architectural gaps, documentation discrepancies, testing requirements, user experience bottlenecks, and commercialization milestones identified during the comprehensive workspace review.
+
+### 20.1. Tier 1: Immediate Launch Blockers (< 1 Day / Production Release Hygiene)
+- [x] **TODO-REV-01: Global CLI Path Inconsistency Fix across Documentation (P0)**:
+  - *Identified Issue*: Legacy markdown documents contained redundant double `.nb/.nb/bin/` paths instead of `.nb/bin/percipience`, causing CLI commands to fail when copy-pasted by developers.
+  - *Implementation Scope*: Conduct global search-and-replace across all `.md` files (`README.md`, `HOWTO_WORKSPACE_GUIDE.md`, `.claude/mcp.json`, etc.) standardizing all execution paths to `.nb/bin/percipience`.
+- [x] **TODO-REV-02: Root Portal Launcher Script (`start_portal.sh`) (P0)**:
+  - *Identified Issue*: `README.md` and onboarding guides referenced `./start_portal.sh` in the repository root, but developers had to manually run uvicorn from `workplace/portal/`.
+  - *Implementation Scope*: Create executable `start_portal.sh` in project root with automatic port detection (default `3000`), `PYTHONPATH` exports (`.:.nb:.nb/core:workplace:workplace/core`), orphan process cleanup (`lsof -ti:$PORT | xargs kill -9`), and direct FastAPI server launch.
+- [x] **TODO-REV-03: Automated CLI Binary Existence & Execution Verification Test (P0)**:
+  - *Identified Issue*: Test suite verified internal Python functions but lacked an automated integration test verifying that the physical `.nb/bin/percipience` script exists, is marked executable (`0755`), and successfully returns `--version`.
+  - *Implementation Scope*: Add `test_cli_binary_exists` to `workplace/tests/test_play3_suite.py` asserting file presence, POSIX `X_OK` permissions, and exit code `0` on subcommands.
+- [x] **TODO-REV-04: 5-Minute Developer Quick Start Section in `README.md` (P0)**:
+  - *Identified Issue*: `README.md` previously began with heavy architectural specifications without a 30-second developer quick start.
+  - *Implementation Scope*: Add prominent Quick Start section to `README.md` featuring one-click cloning, audit verification (`.nb/bin/percipience audit`), portal startup, and Merkle DAG dashboard exploration.
+- [ ] **TODO-REV-05: System Prerequisites & Dependency Matrix in HOWTO Guide (P0)**:
+  - *Identified Issue*: `HOWTO_WORKSPACE_GUIDE.md` lacked a dedicated prerequisites block specifying Python 3.11+, Git 2.30+, Redis 7.x (optional for distributed locks), and RAM recommendations (4GB min / 8GB for Tree-Sitter AST daemon).
+  - *Implementation Scope*: Add Prerequisites and installation verification section to `HOWTO_WORKSPACE_GUIDE.md` directly after the introduction.
+- [x] **TODO-REV-06: Transparent ROI Cost Calculator & AST Compression Limits (P0)**:
+  - *Identified Issue*: Marketing materials claimed 60–85% token reduction without demonstrating exact dollar calculations across team sizes and PR volumes, or discussing when AST pruning is counter-productive.
+  - *Implementation Scope*: Document realistic ROI math in `README.md` (e.g. 50-dev team @ 500 PRs/mo yielding $12,150 annual token savings) and document trade-offs where full source context is preferable (deep algorithmic refactors, complex bug triage).
+
+### 20.2. Tier 2: Pre-Team Tier Launch (1–3 Days / Fast Follow & Community Readiness)
+- [x] **TODO-REV-07: Head-to-Head Competitive Differentiation Matrix (P1)**:
+  - *Identified Issue*: Prospective users lacked a direct comparison table contrasting Percipience against Cursor, GitHub Copilot Workspace, and Devin.
+  - *Implementation Scope*: Embed comparison table in `README.md` and portal marketing highlighting Token Optimization (AST pruning), Cryptographic Audit Trails (Merkle DAG), Concurrent Agent Isolation (Worktrees), Self-Hosted VPC Enclaves, Native MCP compatibility, and Open Core licensing.
+- [x] **TODO-REV-08: Core Terminology Technical Glossary (P1)**:
+  - *Identified Issue*: High barrier to entry for developers unfamiliar with domain terms (AST Skeletonization, Merkle DAG, MVS, HITL, BYOR, WORM, MCP).
+  - *Implementation Scope*: Add comprehensive Glossary table in `README.md` explaining key terms, definitions, and developer benefits.
+- [ ] **TODO-REV-09: 5-Minute Video Walkthrough & Interactive Demo Outline (P1)**:
+  - *Identified Issue*: Absence of a concise visual demonstration showcasing live AST token reduction, tamper-evident Merkle state rolls, and isolated worktree concurrency.
+  - *Implementation Scope*: Draft storyboard script and embed Loom/YouTube walkthrough link in documentation covering: Problem Overview (0:30) -> Live AST Pruning (1:30) -> Merkle Audit Trail (1:30) -> Ephemeral Worktrees (1:00) -> Next Steps (0:30).
+- [ ] **TODO-REV-10: Concrete 90-Day GTM Milestones & Revenue Funnel (P1)**:
+  - *Identified Issue*: GTM commercialization backlog lacked calendarized execution milestones with specific customer acquisition targets.
+  - *Implementation Scope*: Establish formal 90-day rollout roadmap in `TODO.md` and commercial plans:
+    - **Month 1 (Private Beta)**: 10 design partner enterprises, 1,000 PR audits, 500k tokens saved, case study publication.
+    - **Month 2 (Public Beta)**: Public SaaS portal launch, Free tier self-serve onboarding, initial ROI benchmark report ($15k MRR target).
+    - **Month 3 (General Availability)**: GA release, VS Code / IntelliJ marketplace availability, self-serve Team tier ($50k MRR target).
+- [ ] **TODO-REV-11: End-to-End Developer Workflow Integration Test Suite (P1)**:
+  - *Identified Issue*: Test suite primarily focused on modular unit tests without a cohesive end-to-end integration test exercising the full MVS Spec -> Derivation -> Gatekeeper -> Merkle Block Seal pipeline.
+  - *Implementation Scope*: Create `workplace/tests/test_e2e_developer_workflow.py` testing complete lifecycle from raw feature spec to verified PR commit.
+- [x] **TODO-REV-12: Free Tier PR Audit Quota Clarification & Expansion (P1)**:
+  - *Identified Issue*: Initial 500 PR audits/mo quota was restrictive for active solo developers, and lacked clear definitions between gatekeeper runs and read-only status checks.
+  - *Implementation Scope*: Expand Free Tier limit to 1,000 PR audits/month in commercial tier matrices and explicitly define audit consumption rules.
+
+### 20.3. Tier 3: Enterprise Tier Launch (1–2 Weeks / Enterprise Scale & Extensibility)
+- [x] **TODO-REV-13: IDE Plugin MVP Ecosystem (VS Code & IntelliJ/PyCharm) (P1)**:
+  - *Identified Issue*: Developers expect native IDE extensions rather than relying solely on terminal CLI commands.
+  - *Implementation Scope*: Complete JetBrains / PyCharm plugin suite (`workplace/modules/mod_intellij_plugin/`) and scaffold VS Code extension bridge (`workplace/integrations/ide_extensions/`) supporting live Merkle status, one-click gatekeeper runs, and AST token meters.
+- [x] **TODO-REV-14: OpenTelemetry (OTel) GenAI Observability & APM Exporter (P1)**:
+  - *Identified Issue*: Enterprise APM infrastructure (Datadog, Dynatrace, Honeycomb, Jaeger) requires standardized OTel GenAI semantic spans for model latency, prompt token counts, and cost telemetry.
+  - *Implementation Scope*: Integrate `OpenTelemetryGenAIExporter` (`workplace/core/otel_exporter.py`) with W3C `traceparent` distributed headers, TTFT metrics, and streaming span sinks.
+- [ ] **TODO-REV-15: Interactive GitOps PR Bot (`percipience bot deploy`) (P2)**:
+  - *Identified Issue*: Automated pull request creation and interactive comment reviews currently require manual git workflows.
+  - *Implementation Scope*: Build `workplace/core/gitops_pr_bot.py` posting interactive Markdown status cards, collapsible test logs, ephemeral staging preview URLs, and handling slash commands (`/re-heal`, `/rollback`).
+- [ ] **TODO-REV-16: Hybrid Vector RAG Retrieval for Large Codebases (>1M LOC) (P2)**:
+  - *Identified Issue*: Massive enterprise monorepos require hybrid sparse-dense semantic search alongside deterministic AST pruning.
+  - *Implementation Scope*: Implement `workplace/core/vector_retrieval_engine.py` connecting LanceDB / Pinecone with Voyage Code 2 embeddings for semantic multi-hop code discovery.
+- [x] **TODO-REV-17: Restructured Enterprise Tier Commercial Package (P1)**:
+  - *Identified Issue*: $9,999/mo Enterprise tier required stronger justification with tangible enterprise services.
+  - *Implementation Scope*: Enrich Enterprise Tier specifications with: Dedicated Customer Success Manager (CSM), 40 hrs/quarter Custom MCP Server Development, 1-Hour Support SLA, Okta/Azure AD SAML/OIDC SSO, On-Premises Helm Charts, and SOC 2 Type II audit documentation.
+- [ ] **TODO-REV-18: Conventional-to-Quad-Space Repository Migration CLI Tool (P2)**:
+  - *Identified Issue*: Migrating legacy codebases into Percipience Quad-Space structure (`.nb/`, `workplace/`, `user/`, `.claude/`) required manual folder re-organization.
+  - *Implementation Scope*: Implement `percipience migrate --from-conventional [--analyze-only]` analyzing existing directory layouts and automatically refactoring files into Quad-Space partitions with dry-run reports.
+- [ ] **TODO-REV-19: Interactive Onboarding Setup Wizard (`percipience init --interactive`) (P2)**:
+  - *Identified Issue*: Initial setup required manual configuration of `mcp.json`, environment variables, and ledger genesis.
+  - *Implementation Scope*: Build interactive CLI wizard prompting for project type (Monorepo, Microservice, Package), primary language (Python, TypeScript, Go, Polyglot), and auto-provisioning MCP servers, hooks, and genesis Merkle ledger.
+
+### 20.4. Documentation, Operational Guides & Architectural Clarifications
+- [ ] **TODO-REV-20: Concrete MVS Feature Specification Example in HOWTO Guide (P1)**:
+  - *Identified Issue*: MVS documentation was conceptual without a concrete feature specification walkthrough.
+  - *Implementation Scope*: Add end-to-end OAuth2 authentication scenario in `HOWTO_WORKSPACE_GUIDE.md` showing MVS template population, automated type derivation, and FastAPI endpoint scaffolding.
+- [ ] **TODO-REV-21: Jira MCP Integration Alpha Disclaimer (P1)**:
+  - *Identified Issue*: Jira MCP ingestion command was presented without maturity context.
+  - *Implementation Scope*: Add alpha status callout (`Maturity: 0.80`) in `HOWTO_WORKSPACE_GUIDE.md` with instructions for manual `mvs_jira_story.json` fallback.
+- [ ] **TODO-REV-22: Ephemeral Worktree TTL & Automatic Cleanup Documentation (P1)**:
+  - *Identified Issue*: `--ttl` parameter was presented without detailed explanation of auto-merge vs quarantine behavior on timeout.
+  - *Implementation Scope*: Document TTL lifecycle mechanics, active POSIX PID probing, and automated lease reclamation in `HOWTO_WORKSPACE_GUIDE.md`.
+- [ ] **TODO-REV-23: Merkle Audit Trail Inspection & Benchmark Reference (P1)**:
+  - *Identified Issue*: Users had no reference for what a CLI audit output looks like or how the Merkle engine performs under high block counts.
+  - *Implementation Scope*: Add sample `percipience audit --block-id <id>` and `percipience audit --enforce-merkle-chain` output snippets alongside performance scalability tables (<10k LOC: 0.3s up to >1M LOC: 18s).
+- [ ] **TODO-REV-24: Platform Internals (`.nb/core/`) vs Application Code (`workplace/core/`) Clarification (P1)**:
+  - *Identified Issue*: Potential developer confusion between internal platform engines and extensible application logic.
+  - *Implementation Scope*: Add architectural boundary guide in `HOWTO_WORKSPACE_GUIDE.md` explaining `.nb/core/` (immutable platform runtime) vs `workplace/core/` (custom business logic, adapters, and domain engines).
+- [ ] **TODO-REV-25: Automated Code Coverage CLI Integration (`percipience test --coverage`) (P1)**:
+  - *Identified Issue*: Need for unified test coverage reporting directly from the CLI.
+  - *Implementation Scope*: Add `--coverage` flag to `percipience test` generating terminal summary tables and HTML coverage artifacts.
 

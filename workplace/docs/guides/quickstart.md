@@ -25,7 +25,7 @@ Get up and running with Percipience in less than 90 seconds using either your fa
 ### Installation & Initialization
 ```bash
 # Verify CLI execution
-chmod +x .nb/.nb/bin/percipience
+chmod +x .nb/bin/percipience
 ./.nb/bin/percipience --help
 ```
 
