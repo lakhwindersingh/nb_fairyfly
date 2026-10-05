@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_73077f7b51c1",
+  "license_id": "lic_plan_enterprise_5ce510e196ca",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,10 +18,10 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-05T03:41:49.235687+00:00",
-  "total_files": 106,
+  "issued_at": "2026-10-05T04:03:28.734131+00:00",
+  "total_files": 109,
   "file_manifest": {
-    "bin/percipience": "445e74b6faedd8f4c1a025f69152dd0a7caacc056088249aa5b76d4d5b24bccf",
+    "bin/percipience": "8994e163bbf3071f64cdb24adb5078a63b8a55012ac2fd2ccee9677c7eb99db7",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
@@ -30,6 +30,7 @@
     "core/workflow_orchestrator.py": "ac32539ca27c0fe8f0e79ffc2dc5fb8c038ea7c04debd78f39b1549c9fd26b98",
     "core/trajectory_recorder.py": "2a52a034202adff505cf9717ffe05fff0cbc2f11709d9d16545c6b3e85977ad8",
     "core/doc_drift_synchronizer.py": "13a08bee64479035e68fabb1fd6ad7ae5137b95b8be89b96ae6e4034addedbda",
+    "core/pii_sanitizer.py": "9c2535f096aab621831ba3c5fd7f0b439cdaeb463421f641ce9dd791ffb8417a",
     "core/ambiguity_resolver.py": "69d1775159de2ffce1f59ea6c76b8ce697a4b51096f49574c5b74fbd0cad5b83",
     "core/semantic_prompt_cache.py": "027448cd7ce28565ab374057386919a6dc69bf8a2951bacc427728d84fdb55c3",
     "core/eval_scoring_engine.py": "70341f06c7c65b5a345dcec90eaf3784116e19c73e82753ab2146cfc2e609097",
@@ -38,9 +39,9 @@
     "core/nbpack_envelope.py": "411a8c41920c1538ce85ac32f8615a465ce9bfaae8348aa646ba8be362b2d691",
     "core/living_doc_engine.py": "338c96a5dd261cb6e02f12ded87d085e10e59f8ea6f0a9cd1e8d308c89f3eb8e",
     "core/adversarial_fuzzer.py": "9d7fe5846d97779c447bc01863f713bfe464fcb444298fe148deea50a08125fd",
-    "core/agent_plugin_engine.py": "33312a3d89e66e931ae0c6670550bdd13a13784de4669ee3a5c002d50735bb57",
-    "core/commercial_packager_provisioner.py": "58794702c19dc2a80b2e0f889a91653638ef52a910a96bf0342c9875e337ee81",
-    "core/autonomous_cicd.py": "7bfe18754cd10459b2db180351dbce377a6950a5f981279f71c1970133d7b920",
+    "core/agent_plugin_engine.py": "0e6c7f624be69c3239f85bdea04d5c653a233bb1a5fb714d676f4b78db9a10f9",
+    "core/commercial_packager_provisioner.py": "01b770401ae89ad013f2c26a333d425a582f65cccabfe3a422fdac72f53579ee",
+    "core/autonomous_cicd.py": "3456d53a7a182a54e94f36b098c4034686d3c463ff75dafdd14db726b45f5572",
     "core/ast_optimizer.py": "e3a887af891a7e1e201ae1ccc21f7893a605563556e49c79438ad3d16b134144",
     "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
     "core/token_tracker.py": "be9de8ca46a79ab7513a04598af99c7fe0108a525e25061363ad811e86e6e76e",
@@ -65,8 +66,10 @@
     "core/prompt_benchmark_engine.py": "2df0c81df7d8e974a93e7a8e06d3691e0289930597a1ae4685c48bb1e7e7e0a6",
     "core/handoff_validator.py": "142f6f871a7e97009a18d0e687d9bc312b658ff8b565cd481178c9874cb6288d",
     "core/poisoning_sentinel.py": "b3e8f304ef5efb5a5747bdbf744a93d3746fee58e49ba4be154e79f72dd417d7",
+    "core/output_guardrail_validator.py": "1ae8cefed78946bede8c6169b2b1ce283bf154d5b91e3151a27733095da6f2cd",
     "core/worktree_engine.py": "6fdf4ac8a5fd75fae3b23b6c518621ba0d6521e7314c8becbb02acd9b103bf36",
     "core/dependency_cve_sentinel.py": "89e50447ebe50a6abc76c8ad2748ec605bedd66afdcebc8693f183343afad6fc",
+    "core/prompt_injection_guard.py": "64b865cf2d9527f656dc9b0c63f62ffea1e05aad8ea92cb6eb36e7ce41d4ef47",
     "context/contracts/ota_firmware_manifest.json": "ffbc39816820a72d94807bbb14801621fe7c23038fb155e35654a9a5576215c4",
     "context/contracts/daemon_rpc_contract.json": "7ae7165ff3a3fde83872f5668d4d9d1f46ea029c411f2d389cb06909f345d187",
     "context/contracts/rbac_permission_matrix.json": "5656a8772c77889ac9da2ec158c1d0774eb0e6d58b63cffc09efd65424f01900",
@@ -127,5 +130,5 @@
     "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "849fd89d1c6532ee1c6f25852b3d15833d6bdf2aa667eb3119545dc77dd0cdc4",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414"
   },
-  "signature_sha256": "f10bcaa3a5c574ba9e8cb7aa950e2ebcd81c153e06b1db43633c2a2edea0674b"
+  "signature_sha256": "6bec5daff7ad238cd555ed9d178a108caec6ed5f2830bc287a4a9787baa7bd5a"
 }

@@ -58,6 +58,9 @@ from core.workflow_orchestrator import WorkflowOrchestrator
 from core.error_recovery_orchestrator import ErrorRecoveryOrchestrator
 from core.terminal_agent_ast_proxy import TerminalAgentASTProxy
 from core.commercial_packager_provisioner import CommercialPackagerProvisioner
+from core.pii_sanitizer import PIISanitizer
+from core.prompt_injection_guard import PromptInjectionGuard
+from core.output_guardrail_validator import OutputGuardrailValidator
 
 def cmd_package(args):
     tier = getattr(args, "tier", "free")
@@ -941,6 +944,80 @@ def cmd_formalize(args):
         print(f"❌ Formalization failed: {e}")
         sys.exit(1)
 
+def cmd_guardrail(args):
+    action = args.guardrail_action
+    if action == "pii":
+        sanitizer = PIISanitizer.get_instance()
+        text = args.text or ""
+        if args.file:
+            p = Path(args.file)
+            if not p.is_absolute():
+                p = REPO_ROOT / p
+            if p.exists():
+                text = p.read_text(encoding="utf-8")
+        session_id = args.session or "cli_session"
+        if args.deanonymize:
+            res_text = sanitizer.deanonymize(text, session_id=session_id)
+            print("🔓 De-anonymized Text:")
+            print(res_text)
+        else:
+            res = sanitizer.anonymize(text, session_id=session_id)
+            print("🛡️  PII Masking Results (Lakera / Presidio Parity):")
+            print(f"   Session ID: {res['session_id']}")
+            print(f"   Tokens Masked: {res['tokens_masked']}")
+            print(f"   Entities Detected: {json.dumps(res['entities_detected'])}")
+            print(f"   Duration: {res['duration_ms']} ms")
+            print(f"   Memory-Only Vault Active: {res['memory_only']}")
+            print("   --- Masked Payload ---")
+            print(res["sanitized_text"])
+
+    elif action == "injection":
+        guard = PromptInjectionGuard()
+        payload = args.text or ""
+        if args.file:
+            p = Path(args.file)
+            if not p.is_absolute():
+                p = REPO_ROOT / p
+            if p.exists():
+                payload = p.read_text(encoding="utf-8")
+        res = guard.scan_payload(payload, source=args.source or "cli_input", strict=args.strict)
+        icon = "✅" if res["verdict"] == "ALLOWED" else ("⚠️" if res["verdict"] == "QUARANTINED" else "🛑")
+        print(f"{icon} Prompt Injection Firewall Scan (Prompt Armor / Lakera Parity):")
+        print(f"   Verdict: {res['verdict']}")
+        print(f"   Risk Score: {res['risk_score']:.3f}")
+        print(f"   Is Safe: {res['is_safe']}")
+        print(f"   Violations Found: {res['violations_count']}")
+        for v in res["violations"]:
+            print(f"   - [{v['category']}] ({v['severity']}): {v['description']} -> '{v['snippet']}'")
+        if not res["is_safe"]:
+            print("   --- Neutralized Payload ---")
+            print(res["neutralized_payload"])
+
+    elif action == "output-check":
+        validator = OutputGuardrailValidator(REPO_ROOT)
+        code = args.code or ""
+        file_path = args.file
+        if file_path:
+            p = Path(file_path)
+            if not p.is_absolute():
+                p = REPO_ROOT / p
+            if p.exists():
+                code = p.read_text(encoding="utf-8")
+        lang = args.lang or "python"
+        res = validator.validate_code_output(code, language=lang, file_path=file_path)
+        icon = "✅" if res["is_valid"] else "❌"
+        print(f"{icon} Post-Generation Output Guardrail Validation (NeMo / Guardrails AI Parity):")
+        print(f"   Valid: {res['is_valid']}")
+        print(f"   Syntax Clean: {res['is_syntax_valid']}")
+        print(f"   Action: {res['action']}")
+        print(f"   Safety Score: {res['safety_score']:.2f}")
+        print(f"   Violations Count: {res['violations_count']}")
+        for v in res["violations"]:
+            print(f"   - [{v.get('type')}] ({v.get('severity')}): {v.get('description')} (target: {v.get('target', 'N/A')})")
+        if res["remediation_prompt"]:
+            print("   --- Remediation Prompt ---")
+            print(res["remediation_prompt"])
+
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
@@ -1247,6 +1324,31 @@ def main():
     p_perm_chk.add_argument("--feature", required=True, help="Feature name to test")
     p_perm_chk.set_defaults(func=cmd_permission)
     p_perm.set_defaults(func=cmd_permission)
+
+    # guardrail
+    p_gr = subparsers.add_parser("guardrail", help="Runtime Guardrails, PII Anonymization & Prompt Injection Firewall")
+    p_gr_subs = p_gr.add_subparsers(dest="guardrail_action", required=True)
+
+    # guardrail pii
+    p_gr_pii = p_gr_subs.add_parser("pii", help="Real-Time Inbound/Outbound PII Masking and De-Anonymization")
+    p_gr_pii.add_argument("--text", default="", help="Text to sanitize")
+    p_gr_pii.add_argument("--file", default="", help="File path to read text from")
+    p_gr_pii.add_argument("--session", default="cli_session", help="Session ID for memory-only vault")
+    p_gr_pii.add_argument("--deanonymize", action="store_true", help="De-anonymize masked tokens using session vault")
+
+    # guardrail injection
+    p_gr_inj = p_gr_subs.add_parser("injection", help="Inbound Indirect Prompt Injection Firewall Scan")
+    p_gr_inj.add_argument("--text", default="", help="Payload text to scan")
+    p_gr_inj.add_argument("--file", default="", help="File path to read payload from")
+    p_gr_inj.add_argument("--source", default="cli_external", help="Payload source")
+    p_gr_inj.add_argument("--strict", action="store_true", help="Enable strict injection thresholds")
+
+    # guardrail output-check
+    p_gr_out = p_gr_subs.add_parser("output-check", help="Post-Generation AST Structural & Policy Validation")
+    p_gr_out.add_argument("--code", default="", help="Code string to validate")
+    p_gr_out.add_argument("--file", default="", help="File path to validate")
+    p_gr_out.add_argument("--lang", default="python", help="Language (python, typescript, json)")
+    p_gr.set_defaults(func=cmd_guardrail)
 
     args = parser.parse_args()
     if not args.subcommand:

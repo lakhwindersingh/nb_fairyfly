@@ -19,9 +19,20 @@ try:
 except ImportError:
     yaml = None
 
-from core.worktree_engine import WorktreeEngine
-from core.merkle_engine import MerkleEngine
-from core.token_tracker import TokenTracker
+try:
+    from core.worktree_engine import WorktreeEngine
+except (ImportError, ModuleNotFoundError):
+    WorktreeEngine = None
+
+try:
+    from core.merkle_engine import MerkleEngine
+except (ImportError, ModuleNotFoundError):
+    MerkleEngine = None
+
+try:
+    from core.token_tracker import TokenTracker
+except (ImportError, ModuleNotFoundError):
+    TokenTracker = None
 
 
 class SelfSustainingEngine:
@@ -39,14 +50,15 @@ class SelfSustainingEngine:
             "actions": []
         }
 
-        # 1. Lease Reclamation
-        leases = WorktreeEngine.list_leases(repo_root)
-        expired = [l for l in leases if l.get("expired", False)]
-        for l in expired:
-            agent_id = l.get("agent_id", "unknown")
-            WorktreeEngine.release(repo_root, agent_id)
-            results["reclaimed_leases"] += 1
-            results["actions"].append(f"Reclaimed expired worktree lease: {l.get('lease_id', agent_id)}")
+        # 1. Lease Reclamation (subject to WorktreeEngine availability)
+        if WorktreeEngine is not None:
+            leases = WorktreeEngine.list_leases(repo_root)
+            expired = [l for l in leases if l.get("expired", False)]
+            for l in expired:
+                agent_id = l.get("agent_id", "unknown")
+                WorktreeEngine.release(repo_root, agent_id)
+                results["reclaimed_leases"] += 1
+                results["actions"].append(f"Reclaimed expired worktree lease: {l.get('lease_id', agent_id)}")
 
         # 2. Context Garbage Collection (clean temporary scratch/test artifacts)
         scratch_dir = repo_root / "user" / "scratch"
@@ -56,8 +68,9 @@ class SelfSustainingEngine:
                 results["cleaned_artifacts"] += 1
 
         # 3. Merkle Ledger Reconciliation
-        chain_ok, logs = MerkleEngine.verify_chain(repo_root)
-        results["merkle_continuous"] = chain_ok
+        if MerkleEngine is not None:
+            chain_ok, logs = MerkleEngine.verify_chain(repo_root)
+            results["merkle_continuous"] = chain_ok
 
         return results
 
@@ -79,7 +92,19 @@ class AutonomousHealer:
         and applies bounded surgical auto-repair attempts under the 3-attempt SLA.
         """
         if failure_log:
-            from core.diagnostic_reprompt import DiagnosticRePromptEngine
+            try:
+                from core.diagnostic_reprompt import DiagnosticRePromptEngine
+            except (ImportError, ModuleNotFoundError):
+                DiagnosticRePromptEngine = None
+
+            if DiagnosticRePromptEngine is None:
+                return {
+                    "status": "SKIPPED_PLAN_RESTRICTION",
+                    "healed": False,
+                    "target_module": target_module,
+                    "error": "DiagnosticRePromptEngine is unavailable in this plan bundle."
+                }
+
             incident_id = f"INC_HEAL_{target_module}_{int(datetime.now(timezone.utc).timestamp())}"
             heal_res = DiagnosticRePromptEngine.execute_healing_loop(
                 workspace_root=repo_root,
@@ -105,7 +130,7 @@ class AutonomousHealer:
         healed = True
 
         # Seal healing state transition
-        seal = MerkleEngine.seal_block(repo_root, f"AUTONOMOUS_HEAL_MODULE_{target_module}")
+        seal = MerkleEngine.seal_block(repo_root, f"AUTONOMOUS_HEAL_MODULE_{target_module}") if MerkleEngine else {}
 
         return {
             "status": "HEALED",
@@ -128,7 +153,7 @@ class SelfImprovingEngine:
     @classmethod
     def analyze_and_optimize(cls, repo_root: Path) -> Dict[str, Any]:
         """Analyzes token savings and run metrics to optimize model tier routing and rules."""
-        token_ledger = TokenTracker.load_ledger(repo_root)
+        token_ledger = TokenTracker.load_ledger(repo_root) if TokenTracker else {}
         summary = token_ledger.get("summary", {})
         avg_pct = summary.get("average_reduction_pct", 48.5)
 
@@ -185,7 +210,7 @@ class AutonomousCICDOrchestrator:
             stages["improve"] = SelfImprovingEngine.analyze_and_optimize(repo_root)
 
         # 4. Merkle Seal
-        block = MerkleEngine.seal_block(repo_root, f"AUTONOMOUS_PIPELINE_{run_id}")
+        block = MerkleEngine.seal_block(repo_root, f"AUTONOMOUS_PIPELINE_{run_id}") if MerkleEngine else {}
         stages["merkle_seal"] = block
 
         return {

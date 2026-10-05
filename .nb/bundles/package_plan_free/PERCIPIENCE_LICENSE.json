@@ -1,6 +1,6 @@
 {
-  "license_id": "lic_plan_free_47dbe9bf3bcc",
-  "tenant_id": "tenant_community_default",
+  "license_id": "lic_plan_free_c20fa5e53128",
+  "tenant_id": "test_free_tenant",
   "tier": "plan_free",
   "tier_name": "Free Community Tier",
   "base_price_monthly_usd": 0,
@@ -17,10 +17,10 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-09-28T22:12:42.587177+00:00",
+  "issued_at": "2026-10-05T03:54:31.594143+00:00",
   "total_files": 86,
   "file_manifest": {
-    "bin/percipience": "445e74b6faedd8f4c1a025f69152dd0a7caacc056088249aa5b76d4d5b24bccf",
+    "bin/percipience": "23e8a9c6b88aa981f5950bcdbe1b48d895762541aaed99688dab24c81d812b9b",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
@@ -106,5 +106,5 @@
     "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "96717361a739ddf2887be40dc246c55e5ef38efbd59c420a787a3821622cfa5f",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414"
   },
-  "signature_sha256": "efd0ac48fbd14b49235906d95e473b4ec62e5a73c22656c6e863f0c8c72adf7c"
+  "signature_sha256": "e3a1b19b31f69cf47b10ffbbd67941646c3a9f15373771fe856c2205e483453b"
 }

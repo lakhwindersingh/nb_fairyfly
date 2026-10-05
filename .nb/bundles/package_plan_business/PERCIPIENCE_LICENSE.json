@@ -1,6 +1,6 @@
 {
-  "license_id": "lic_plan_business_e05d7aabbd7a",
-  "tenant_id": "tenant_business_test",
+  "license_id": "lic_plan_business_d397768169d3",
+  "tenant_id": "test_business_tenant",
   "tier": "plan_business",
   "tier_name": "Business Tier",
   "base_price_monthly_usd": 4499,
@@ -17,10 +17,10 @@
     "basic_platform_tools_exposure": true,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-09-28T20:30:47.564654+00:00",
+  "issued_at": "2026-10-05T03:55:27.004931+00:00",
   "total_files": 99,
   "file_manifest": {
-    "bin/percipience": "445e74b6faedd8f4c1a025f69152dd0a7caacc056088249aa5b76d4d5b24bccf",
+    "bin/percipience": "23e8a9c6b88aa981f5950bcdbe1b48d895762541aaed99688dab24c81d812b9b",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
@@ -119,5 +119,5 @@
     "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "849fd89d1c6532ee1c6f25852b3d15833d6bdf2aa667eb3119545dc77dd0cdc4",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414"
   },
-  "signature_sha256": "935468294ae61a156de4d980ea528c638c7e0e6726672aef0af98bd37982defd"
+  "signature_sha256": "708b728f5ff45d6e2b24be79d6b473ae7054f1a2aedbf5e22a5add5e2da1d38d"
 }

@@ -9,60 +9,134 @@ import sys
 import argparse
 import json
 import time
+import hashlib
 from pathlib import Path
 
-# Add .nb and workplace to sys.path to load core platform engines and project modules
+# Add .nb, .nb/core, workplace, and local bundle directories to sys.path
 current_p = Path(__file__).resolve()
-if current_p.parents[1].name in (".nb", "workplace"):
+candidate_roots = [current_p.parents[1]]
+if len(current_p.parents) > 2:
+    candidate_roots.append(current_p.parents[2])
+
+search_dirs = []
+for r in candidate_roots:
+    search_dirs.extend([
+        r,
+        r / ".nb",
+        r / ".nb" / "core",
+        r / "core",
+        r / "workplace",
+        r / "workplace" / "core",
+    ])
+
+for path_dir in search_dirs:
+    if path_dir.exists() and str(path_dir) not in sys.path:
+        sys.path.insert(0, str(path_dir))
+
+if current_p.parents[1].name in (".nb", "workplace") and len(current_p.parents) > 2:
     REPO_ROOT = current_p.parents[2]
 else:
     REPO_ROOT = current_p.parents[1]
 
-for path_dir in [REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
-    if str(path_dir) not in sys.path:
-        sys.path.insert(0, str(path_dir))
+# Dynamic, plan-aware core engine loader
+AVAILABLE_ENGINES = {}
 
-from core.ast_optimizer import ASTOptimizer
-from core.merkle_engine import MerkleEngine
-from core.poisoning_sentinel import PoisoningSentinel
-from core.maturity_evaluator import MaturityEvaluator
-from core.nbpack_envelope import NBPackEnvelope
-from core.worktree_engine import WorktreeEngine
-from core.byor_adapter import BYORAdapter
-from core.layered_context_validator import LayeredContextValidator
-from core.token_tracker import TokenTracker
-from core.agent_plugin_engine import AgentPluginEngine
-from core.autonomous_cicd import (
-    SelfSustainingEngine,
-    AutonomousHealer,
-    SelfImprovingEngine,
-    AutonomousCICDOrchestrator
+def _load_engine(module_name: str, class_names: list):
+    """
+    Safely imports engine classes from core.<module_name> subject to availability
+    in the active commercial plan bundle (Free, Team, Business, Enterprise).
+    """
+    try:
+        mod = __import__(f"core.{module_name}", fromlist=class_names)
+        results = [getattr(mod, cls, None) for cls in class_names]
+        AVAILABLE_ENGINES[module_name] = True
+        return results[0] if len(class_names) == 1 else results
+    except (ImportError, ModuleNotFoundError):
+        AVAILABLE_ENGINES[module_name] = False
+        return None if len(class_names) == 1 else [None] * len(class_names)
+
+
+def _require_engine(engine_obj, module_name: str, feature_desc: str, min_tier: str = "Team / Business / Enterprise") -> None:
+    """Enforces that an engine is available in the current plan bundle before executing a command."""
+    if engine_obj is None:
+        print(f"⚠️  Feature '{feature_desc}' is unavailable in this plan bundle.")
+        print(f"   Required engine module 'core/{module_name}.py' was not provisioned for the active tier.")
+        print(f"   Please upgrade to a {min_tier} plan to unlock this capability.")
+        sys.exit(1)
+
+
+# Dynamic engine imports subject to plan tier file availability
+ASTOptimizer = _load_engine("ast_optimizer", ["ASTOptimizer"])
+MerkleEngine = _load_engine("merkle_engine", ["MerkleEngine"])
+PoisoningSentinel = _load_engine("poisoning_sentinel", ["PoisoningSentinel"])
+MaturityEvaluator = _load_engine("maturity_evaluator", ["MaturityEvaluator"])
+NBPackEnvelope = _load_engine("nbpack_envelope", ["NBPackEnvelope"])
+WorktreeEngine = _load_engine("worktree_engine", ["WorktreeEngine"])
+BYORAdapter = _load_engine("byor_adapter", ["BYORAdapter"])
+LayeredContextValidator = _load_engine("layered_context_validator", ["LayeredContextValidator"])
+TokenTracker = _load_engine("token_tracker", ["TokenTracker"])
+AgentPluginEngine = _load_engine("agent_plugin_engine", ["AgentPluginEngine"])
+(SelfSustainingEngine, AutonomousHealer, SelfImprovingEngine, AutonomousCICDOrchestrator) = _load_engine(
+    "autonomous_cicd",
+    ["SelfSustainingEngine", "AutonomousHealer", "SelfImprovingEngine", "AutonomousCICDOrchestrator"]
 )
-from core.cognitive_router import CognitiveRouter
-from core.flaky_test_detector import FlakyTestDetector
-from core.contract_compatibility_checker import ContractCompatibilityChecker
-from core.dependency_cve_sentinel import DependencyCVESentinel
-from core.doc_drift_synchronizer import DocDriftSynchronizer
-from core.living_doc_engine import LivingDocEngine
-from core.worm_egress import WORMEgressManager
-from core.tree_sitter_daemon import TreeSitterDaemonClient
-from core.diagnostic_reprompt import DiagnosticRePromptEngine
-from core.token_optimizer_suite import TokenOptimizationConfig, UnifiedTokenOptimizer
-from core.handoff_validator import HandoffValidator
-from core.semantic_parity_engine import SemanticParityEngine
-from core.reconciliation_engine import DualReconciliationEngine
-from core.request_formalizer import RequestFormalizerEngine
-from core.swarm_governor import SwarmGovernor
-from core.prompt_drift_sentinel import PromptDriftSentinel
-from core.workflow_orchestrator import WorkflowOrchestrator
-from core.error_recovery_orchestrator import ErrorRecoveryOrchestrator
-from core.terminal_agent_ast_proxy import TerminalAgentASTProxy
-from core.commercial_packager_provisioner import CommercialPackagerProvisioner
-from core.pii_sanitizer import PIISanitizer
-from core.prompt_injection_guard import PromptInjectionGuard
-from core.output_guardrail_validator import OutputGuardrailValidator
+CognitiveRouter = _load_engine("cognitive_router", ["CognitiveRouter"])
+FlakyTestDetector = _load_engine("flaky_test_detector", ["FlakyTestDetector"])
+ContractCompatibilityChecker = _load_engine("contract_compatibility_checker", ["ContractCompatibilityChecker"])
+DependencyCVESentinel = _load_engine("dependency_cve_sentinel", ["DependencyCVESentinel"])
+DocDriftSynchronizer = _load_engine("doc_drift_synchronizer", ["DocDriftSynchronizer"])
+LivingDocEngine = _load_engine("living_doc_engine", ["LivingDocEngine"])
+WORMEgressManager = _load_engine("worm_egress", ["WORMEgressManager"])
+TreeSitterDaemonClient = _load_engine("tree_sitter_daemon", ["TreeSitterDaemonClient"])
+DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePromptEngine"])
+(TokenOptimizationConfig, UnifiedTokenOptimizer) = _load_engine(
+    "token_optimizer_suite",
+    ["TokenOptimizationConfig", "UnifiedTokenOptimizer"]
+)
+HandoffValidator = _load_engine("handoff_validator", ["HandoffValidator"])
+SemanticParityEngine = _load_engine("semantic_parity_engine", ["SemanticParityEngine"])
+DualReconciliationEngine = _load_engine("reconciliation_engine", ["DualReconciliationEngine"])
+RequestFormalizerEngine = _load_engine("request_formalizer", ["RequestFormalizerEngine"])
+SwarmGovernor = _load_engine("swarm_governor", ["SwarmGovernor"])
+PromptDriftSentinel = _load_engine("prompt_drift_sentinel", ["PromptDriftSentinel"])
+WorkflowOrchestrator = _load_engine("workflow_orchestrator", ["WorkflowOrchestrator"])
+ErrorRecoveryOrchestrator = _load_engine("error_recovery_orchestrator", ["ErrorRecoveryOrchestrator"])
+TerminalAgentASTProxy = _load_engine("terminal_agent_ast_proxy", ["TerminalAgentASTProxy"])
+CommercialPackagerProvisioner = _load_engine("commercial_packager_provisioner", ["CommercialPackagerProvisioner"])
+PIISanitizer = _load_engine("pii_sanitizer", ["PIISanitizer"])
+PromptInjectionGuard = _load_engine("prompt_injection_guard", ["PromptInjectionGuard"])
+OutputGuardrailValidator = _load_engine("output_guardrail_validator", ["OutputGuardrailValidator"])
+
+def cmd_status(args):
+    """Reports active plan tier, loaded core engines, and unavailable features."""
+    active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
+    lic_file = REPO_ROOT / "config" / "license.json"
+    if not lic_file.exists():
+        lic_file = REPO_ROOT / ".nb" / "config" / "license.json"
+    if lic_file.exists():
+        try:
+            lic = json.loads(lic_file.read_text(encoding="utf-8"))
+            active_plan = lic.get("tier", active_plan)
+        except Exception:
+            pass
+
+    loaded = [k for k, v in AVAILABLE_ENGINES.items() if v]
+    missing = [k for k, v in AVAILABLE_ENGINES.items() if not v]
+
+    print(f"📊 Percipience Runtime Status:")
+    print(f"   • Active Plan Tier: {active_plan.upper()}")
+    print(f"   • Core Engines Available: {len(loaded)} / {len(AVAILABLE_ENGINES)}")
+    print(f"   • Provisioned Engines:")
+    for eng in sorted(loaded):
+        print(f"     ✅ core/{eng}.py")
+    if missing:
+        print(f"   • Unavailable In Current Plan ({len(missing)}):")
+        for eng in sorted(missing):
+            print(f"     🔒 core/{eng}.py (Requires plan upgrade)")
+    print(f"   • Merkle Continuous: {MerkleEngine is not None}")
 
 def cmd_package(args):
+    _require_engine(CommercialPackagerProvisioner, "commercial_packager_provisioner", "package", "Enterprise")
     tier = getattr(args, "tier", "free")
     out_dir = Path(args.output) if getattr(args, "output", None) else None
     tenant = getattr(args, "tenant", "tenant_community_default")
@@ -82,6 +156,7 @@ def cmd_package(args):
         print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
 
 def cmd_provision(args):
+    _require_engine(CommercialPackagerProvisioner, "commercial_packager_provisioner", "provision", "Enterprise")
     tenant = args.tenant
     tier = getattr(args, "tier", "free")
     target = getattr(args, "target", "all")
@@ -100,6 +175,7 @@ def cmd_provision(args):
         print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
 
 def cmd_permission(args):
+    _require_engine(CommercialPackagerProvisioner, "commercial_packager_provisioner", "permission", "Enterprise")
     action = args.permission_action
     if action == "check":
         tenant_or_tier = args.tenant or args.tier or "plan_free"
@@ -141,18 +217,21 @@ def check_basic_tools_permission() -> bool:
     user plans remain strictly plaintext (non-encryptable), while platform core
     assets remain encrypted and readable by the percipience command.
     """
-    billing_file = REPO_ROOT / ".nb" / "config" / "billing_plans.yaml"
-    if not billing_file.exists():
-        billing_file = REPO_ROOT / "workplace" / "config" / "billing_plans.yaml"
-    if billing_file.exists():
-        try:
-            import yaml
-            data = yaml.safe_load(billing_file.read_text(encoding="utf-8")) or {}
-            active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
-            features = data.get("plans", {}).get(active_plan, {}).get("features", {})
-            return bool(features.get("basic_platform_tools_exposure", False))
-        except Exception:
-            pass
+    billing_paths = [
+        REPO_ROOT / ".nb" / "config" / "billing_plans.yaml",
+        REPO_ROOT / "config" / "billing_plans.yaml",
+        REPO_ROOT / "workplace" / "config" / "billing_plans.yaml",
+    ]
+    for bp in billing_paths:
+        if bp.exists():
+            try:
+                import yaml
+                data = yaml.safe_load(bp.read_text(encoding="utf-8")) or {}
+                active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
+                features = data.get("plans", {}).get(active_plan, {}).get("features", {})
+                return bool(features.get("basic_platform_tools_exposure", False))
+            except Exception:
+                pass
     return False
 
 def cmd_tools(args):
@@ -169,6 +248,7 @@ def cmd_tools(args):
         print("   Free tier user plans remain strictly plaintext. Platform core assets stay encrypted.")
 
 def cmd_pack(args):
+    _require_engine(NBPackEnvelope, "nbpack_envelope", "pack", "Business / Enterprise")
     if not check_basic_tools_permission():
         print("❌ Access Denied: Basic platform tools exposure and user plan encryption are disabled on Free Community Tier.")
         print("   Free tier user plans remain strictly plaintext (non-encryptable).")
@@ -181,12 +261,15 @@ def cmd_pack(args):
     print(f"✅ Sealed authenticated envelope generated at: {res}")
 
 def cmd_hydrate(args):
+    _require_engine(NBPackEnvelope, "nbpack_envelope", "hydrate", "Free / Team / Business / Enterprise")
     pack_path = Path(args.pack) if args.pack else (REPO_ROOT / ".nb" / "percipience_parent.nbpack")
     print(f"⚡ Hydrating encrypted envelope from: {pack_path.name}")
     payload = NBPackEnvelope.hydrate_in_memory(pack_path)
     print(f"✅ In-memory enclave hydrated: {len(payload)} components loaded into volatile memory.")
 
 def cmd_audit(args):
+    _require_engine(MerkleEngine, "merkle_engine", "audit", "Free / Team / Business / Enterprise")
+    _require_engine(MaturityEvaluator, "maturity_evaluator", "audit", "Free / Team / Business / Enterprise")
     print(f"🛡️ Running Percipience Context Maturity & Merkle State Audit...")
     
     # 1. Verify Merkle Chain
@@ -199,8 +282,11 @@ def cmd_audit(args):
         sys.exit(1)
 
     # 1b. Audit Prompt SemVer & Drift Integrity
-    prompt_res = PromptDriftSentinel.audit_prompt_integrity()
-    print(f"   Prompt Manifest Integrity: {prompt_res['verified_count']}/{prompt_res['total_prompts']} verified ({prompt_res['status']})")
+    if PromptDriftSentinel is not None:
+        prompt_res = PromptDriftSentinel.audit_prompt_integrity()
+        print(f"   Prompt Manifest Integrity: {prompt_res['verified_count']}/{prompt_res['total_prompts']} verified ({prompt_res['status']})")
+    else:
+        print("   Prompt Manifest Integrity: Skipped (Not provisioned in Free tier)")
 
     # 2. Evaluate Maturity
     report = MaturityEvaluator.generate_report(REPO_ROOT)
@@ -254,18 +340,22 @@ def cmd_gate(args):
     print(f"   [7/7] Merkle Block {seal['block_id']} sealed atomically! Hash: {seal['block_hash'][:16]}...")
 
     # Mirror to WORM Vault (CAP-22)
-    worm_res = WORMEgressManager.mirror_block(
-        workspace_root=REPO_ROOT,
-        block_id=seal["block_id"],
-        block_hash=seal["block_hash"],
-        merkle_root=seal["merkle_root"],
-        cloud_target="auto"
-    )
-    print(f"   [WORM] Mirrored to immutable vault: {worm_res.get('vault_uri', worm_res.get('vault_id', 'vault'))} ({worm_res.get('compliance_mode', 'COMPLIANCE')})")
+    if WORMEgressManager is not None:
+        worm_res = WORMEgressManager.mirror_block(
+            workspace_root=REPO_ROOT,
+            block_id=seal["block_id"],
+            block_hash=seal["block_hash"],
+            merkle_root=seal["merkle_root"],
+            cloud_target="auto"
+        )
+        print(f"   [WORM] Mirrored to immutable vault: {worm_res.get('vault_uri', worm_res.get('vault_id', 'vault'))} ({worm_res.get('compliance_mode', 'COMPLIANCE')})")
+    else:
+        print("   [WORM] Mirroring skipped (Requires Enterprise WORM Egress engine)")
 
     print(f"✅ All 7 Gatekeeper verification stages PASSED. Token report emitted to workplace/docs/reports/token_savings_report.md. Safe to merge.")
 
 def cmd_rollback(args):
+    _require_engine(PoisoningSentinel, "poisoning_sentinel", "rollback", "Free / Team / Business / Enterprise")
     print(f"⏪ Executing surgical rollback on module: {args.module}...")
     res = PoisoningSentinel.rollback_module(REPO_ROOT, args.module, args.target_point)
     if res["status"] == "ROLLED_BACK":
@@ -276,6 +366,7 @@ def cmd_rollback(args):
         sys.exit(1)
 
 def cmd_worktree(args):
+    _require_engine(WorktreeEngine, "worktree_engine", "worktree", "Team / Business / Enterprise")
     action = args.worktree_action
     if action == "acquire":
         ttl = getattr(args, "ttl", 3600)
@@ -322,6 +413,7 @@ def cmd_worktree(args):
             sys.exit(1)
 
 def cmd_egress(args):
+    _require_engine(WORMEgressManager, "worm_egress", "egress", "Enterprise")
     action = args.egress_action
     if action == "mirror":
         res = WORMEgressManager.mirror_block(
@@ -355,6 +447,7 @@ def cmd_egress(args):
             print(f"   • Block {r['block_id']}: {r['object_key']} -> {r['vault_id']} ({r['cloud_target']})")
 
 def cmd_daemon(args):
+    _require_engine(TreeSitterDaemonClient, "tree_sitter_daemon", "daemon", "Free / Team / Business / Enterprise")
     action = args.daemon_action
     client = TreeSitterDaemonClient(endpoint=args.endpoint)
     if action == "status":
@@ -375,6 +468,7 @@ def cmd_daemon(args):
         print(f"   Original: {res['original_tokens']} tokens | Pruned: {res['pruned_tokens']} tokens ({res['reduction_pct']}% reduction)")
 
 def cmd_reprompt(args):
+    _require_engine(DiagnosticRePromptEngine, "diagnostic_reprompt", "reprompt", "Business / Enterprise")
     incident_id = args.incident or f"INC_DIAG_{int(time.time())}"
     if args.generate_only:
         envelope = DiagnosticRePromptEngine.build_reprompt_envelope(
@@ -413,6 +507,7 @@ def cmd_reprompt(args):
             print(f"   Merkle Block Sealed: {res['merkle_block_id']}")
 
 def cmd_agent(args):
+    _require_engine(AgentPluginEngine, "agent_plugin_engine", "agent", "Team / Business / Enterprise")
     action = args.agent_action
     if action == "create":
         modules = [m.strip() for m in args.module.split(",")] if getattr(args, "module", None) else None
@@ -511,6 +606,7 @@ def cmd_agent(args):
         print("✅ Custom agent verification succeeded.")
 
 def cmd_repo(args):
+    _require_engine(BYORAdapter, "byor_adapter", "repo", "Team / Business / Enterprise")
     action = args.repo_action
     if action == "connect":
         res = BYORAdapter.connect_repository(
@@ -532,6 +628,7 @@ def cmd_repo(args):
             print("ℹ️ No external BYOR remote configured yet.")
 
 def cmd_validate(args):
+    _require_engine(LayeredContextValidator, "layered_context_validator", "validate", "Free / Team / Business / Enterprise")
     if args.layered:
         print("🔍 Validating 3-Tier Layered Context & Custom Invariants...")
         res = LayeredContextValidator.validate_layered_hierarchy(REPO_ROOT)
@@ -553,6 +650,7 @@ def cmd_run(args):
     print("✅ Workflow execution completed successfully.")
 
 def cmd_tokens(args):
+    _require_engine(UnifiedTokenOptimizer, "token_optimizer_suite", "tokens", "Free / Team / Business / Enterprise")
     action = args.tokens_action
     if action == "status":
         cfg = TokenOptimizationConfig.load_config(REPO_ROOT).get("token_optimization", {})
@@ -669,6 +767,7 @@ def cmd_tokens(args):
         print(f"✅ Token savings scorecard emitted to: {dest}")
 
 def cmd_cicd(args):
+    _require_engine(AutonomousCICDOrchestrator, "autonomous_cicd", "cicd", "Free / Team / Business / Enterprise")
     action = args.action or "run"
     if action == "run":
         print("🤖 Running Autonomous CI/CD Pipeline (Self-Sustaining, Self-Recovering, Self-Improving)...")
@@ -795,6 +894,7 @@ def cmd_layer(args):
 
 
 def cmd_drift(args):
+    _require_engine(SemanticParityEngine, "semantic_parity_engine", "drift", "Team / Business / Enterprise")
     action = args.drift_action
     if action == "check":
         print("🔍 Evaluating 6-Vector Semantic Parity & Workspace Drift...")
@@ -851,6 +951,7 @@ def cmd_drift(args):
         print(f"✅ {res['message']}")
 
 def cmd_swarm(args):
+    _require_engine(SwarmGovernor, "swarm_governor", "swarm", "Business / Enterprise")
     action = args.swarm_action
     if action == "audit":
         print("🐝 Auditing Multi-Agent Swarm Topology, Leases & Handover Routes...")
@@ -866,6 +967,7 @@ def cmd_swarm(args):
 
 
 def cmd_context(args):
+    _require_engine(TerminalAgentASTProxy, "terminal_agent_ast_proxy", "context", "Free / Team / Business / Enterprise")
     action = args.context_action
     if action == "export":
         modules = [m.strip() for m in args.module.split(",")] if getattr(args, "module", None) else None
@@ -885,6 +987,7 @@ def cmd_context(args):
             print(res["payload"])
 
 def cmd_terminal(args):
+    _require_engine(TerminalAgentASTProxy, "terminal_agent_ast_proxy", "terminal", "Free / Team / Business / Enterprise")
     action = args.terminal_action
     if action == "hook":
         print(TerminalAgentASTProxy.generate_shell_hook(args.shell))
@@ -909,6 +1012,7 @@ def cmd_terminal(args):
         print(f"   Injected Env: {list(wrapped['env'].keys())}")
 
 def cmd_formalize(args):
+    _require_engine(RequestFormalizerEngine, "request_formalizer", "formalize", "Free / Team / Business / Enterprise")
     print(f"📝 Formalizing unstructured engineering request...")
     print(f"   Input: {args.input}")
     print(f"   Target Format: {args.format}")
@@ -947,6 +1051,7 @@ def cmd_formalize(args):
 def cmd_guardrail(args):
     action = args.guardrail_action
     if action == "pii":
+        _require_engine(PIISanitizer, "pii_sanitizer", "guardrail pii", "Business / Enterprise")
         sanitizer = PIISanitizer.get_instance()
         text = args.text or ""
         if args.file:
@@ -972,6 +1077,7 @@ def cmd_guardrail(args):
             print(res["sanitized_text"])
 
     elif action == "injection":
+        _require_engine(PromptInjectionGuard, "prompt_injection_guard", "guardrail injection", "Business / Enterprise")
         guard = PromptInjectionGuard()
         payload = args.text or ""
         if args.file:
@@ -994,6 +1100,7 @@ def cmd_guardrail(args):
             print(res["neutralized_payload"])
 
     elif action == "output-check":
+        _require_engine(OutputGuardrailValidator, "output_guardrail_validator", "guardrail output-check", "Business / Enterprise")
         validator = OutputGuardrailValidator(REPO_ROOT)
         code = args.code or ""
         file_path = args.file
@@ -1349,6 +1456,13 @@ def main():
     p_gr_out.add_argument("--file", default="", help="File path to validate")
     p_gr_out.add_argument("--lang", default="python", help="Language (python, typescript, json)")
     p_gr.set_defaults(func=cmd_guardrail)
+
+    # status / plan
+    p_stat = subparsers.add_parser("status", help="Show active plan bundle tier, provisioned core engines, and feature availability")
+    p_stat.set_defaults(func=cmd_status)
+
+    p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan information and engine status")
+    p_plan_cmd.set_defaults(func=cmd_status)
 
     args = parser.parse_args()
     if not args.subcommand:

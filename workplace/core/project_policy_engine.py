@@ -15,10 +15,25 @@ import os
 from pathlib import Path
 import yaml
 
-from core.attention_budgeter import AttentionBudgeter
-from core.cognitive_router import CognitiveRouter
-from core.ast_optimizer import ASTOptimizer
-from core.contract_compatibility_checker import ContractCompatibilityChecker
+try:
+    from core.attention_budgeter import AttentionBudgeter
+except (ImportError, ModuleNotFoundError):
+    AttentionBudgeter = None
+
+try:
+    from core.cognitive_router import CognitiveRouter
+except (ImportError, ModuleNotFoundError):
+    CognitiveRouter = None
+
+try:
+    from core.ast_optimizer import ASTOptimizer
+except (ImportError, ModuleNotFoundError):
+    ASTOptimizer = None
+
+try:
+    from core.contract_compatibility_checker import ContractCompatibilityChecker
+except (ImportError, ModuleNotFoundError):
+    ContractCompatibilityChecker = None
 
 
 class WireContractRule(str, Enum):
@@ -264,11 +279,18 @@ class ProjectPolicyManager:
         section_token_metrics: Dict[str, Dict[str, Any]] = {}
         total_used = 0
 
+        chars_per_tok = getattr(AttentionBudgeter, "CHARS_PER_TOKEN", 4.0) if AttentionBudgeter else 4.0
+
+        def _estimate(text: str) -> int:
+            if AttentionBudgeter:
+                return AttentionBudgeter.estimate_tokens(text)
+            return max(1, len(text) // 4)
+
         for sec_key, quota in quota_tokens.items():
             if sec_key == "reserved_output":
                 continue
             raw_text = sections.get(sec_key, "")
-            raw_tokens = AttentionBudgeter.estimate_tokens(raw_text)
+            raw_tokens = _estimate(raw_text)
 
             if raw_tokens <= quota:
                 adjusted_text = raw_text
@@ -279,11 +301,11 @@ class ProjectPolicyManager:
                     adjusted_text = raw_text
                     trimmed_tokens = 0
                 else:
-                    char_cutoff = int(quota * AttentionBudgeter.CHARS_PER_TOKEN)
+                    char_cutoff = int(quota * chars_per_tok)
                     adjusted_text = raw_text[:char_cutoff] + "\n... [SLICED_BY_PROJECT_POLICY]"
-                    trimmed_tokens = raw_tokens - AttentionBudgeter.estimate_tokens(adjusted_text)
+                    trimmed_tokens = raw_tokens - _estimate(adjusted_text)
 
-            adj_tokens = AttentionBudgeter.estimate_tokens(adjusted_text)
+            adj_tokens = _estimate(adjusted_text)
             total_used += adj_tokens
             adjusted_sections[sec_key] = adjusted_text
             section_token_metrics[sec_key] = {
@@ -318,6 +340,9 @@ class ProjectPolicyManager:
         policy = self.get_policy(tenant_id, project_id).routing
         task_norm = task_type.lower().replace("-", "_").strip()
 
+        tier_a_model = getattr(CognitiveRouter, "TIER_A_MODEL", "claude-3-5-sonnet-20241022") if CognitiveRouter else "claude-3-5-sonnet-20241022"
+        tier_b_model = getattr(CognitiveRouter, "TIER_B_MODEL", "gemini-1.5-flash") if CognitiveRouter else "gemini-1.5-flash"
+
         is_custom_tier_a = task_norm in [t.lower() for t in policy.custom_tier_a_tasks]
         is_custom_tier_b = task_norm in [t.lower() for t in policy.custom_tier_b_tasks]
 
@@ -331,13 +356,17 @@ class ProjectPolicyManager:
             is_tier_a = complexity_score >= policy.tier_a_threshold
             reason = f"Complexity score {complexity_score:.2f} {'meets' if is_tier_a else 'below'} project threshold {policy.tier_a_threshold:.2f}."
         else:
-            # Fallback to default CognitiveRouter knowledge
-            default_res = CognitiveRouter.dispatch(task_type, requested_model)
-            is_tier_a = default_res["assigned_tier"] == "Tier_A"
-            reason = default_res["rationale"]
+            # Fallback to default CognitiveRouter knowledge if available
+            if CognitiveRouter:
+                default_res = CognitiveRouter.dispatch(task_type, requested_model)
+                is_tier_a = default_res["assigned_tier"] == "Tier_A"
+                reason = default_res["rationale"]
+            else:
+                is_tier_a = False
+                reason = "Default fallback routing without CognitiveRouter engine."
 
         assigned_tier = "Tier_A" if is_tier_a else "Tier_B"
-        assigned_model = CognitiveRouter.TIER_A_MODEL if is_tier_a else CognitiveRouter.TIER_B_MODEL
+        assigned_model = tier_a_model if is_tier_a else tier_b_model
         discount_pct = 0.0 if is_tier_a else 90.0
 
         return {
@@ -361,6 +390,9 @@ class ProjectPolicyManager:
         """
         Prunes source or HTML skeleton using project AST policy (TODO-PRT-04).
         """
+        if not ASTOptimizer:
+            return html_or_source
+
         policy = self.get_policy(tenant_id, project_id).ast
         if language.lower() in ("html", "xml", "jsx"):
             return ASTOptimizer.prune_html(
@@ -392,7 +424,7 @@ class ProjectPolicyManager:
         # 1. Wire Contract Compatibility Audit
         contract_status = "PASS"
         contract_violations = []
-        if base_contract and head_contract:
+        if base_contract and head_contract and ContractCompatibilityChecker:
             compat_result = ContractCompatibilityChecker.check_compatibility(base_contract, head_contract)
             if not compat_result["is_compatible"]:
                 contract_violations = compat_result["breaking_changes"]

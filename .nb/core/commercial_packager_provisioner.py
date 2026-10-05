@@ -100,7 +100,7 @@ class CommercialPackagerProvisioner:
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py",
                 "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py",
                 "nbpack_envelope.py", "agent_plugin_engine.py", "semantic_parity_engine.py",
-                "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py"
+                "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py", "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "commercial_packager_provisioner.py"
             },
             "allow_nbpack_compilation": True,
             "allow_custom_agent_creation": True,
