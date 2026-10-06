@@ -50,7 +50,7 @@ supported_terminal_agents:
   - id: "claude-code"
     executable: "claude"
     context_format: "claude-code"
-    target_context_file: ".percipience_claude_context.md"
+    target_context_file: ".nb/context/percipience_claude_context.md"
     env_injections:
       PERCIPIENCE_TERMINAL_MODE: "1"
       PERCIPIENCE_AST_COMPRESSION: "1"
@@ -58,7 +58,7 @@ supported_terminal_agents:
   - id: "gemini-cli"
     executable: "gemini"
     context_format: "gemini-cli"
-    target_context_file: ".percipience_gemini_context.md"
+    target_context_file: ".nb/context/percipience_gemini_context.md"
     env_injections:
       PERCIPIENCE_TERMINAL_MODE: "1"
       PERCIPIENCE_AST_COMPRESSION: "1"
@@ -66,7 +66,7 @@ supported_terminal_agents:
   - id: "aider"
     executable: "aider"
     context_format: "aider"
-    target_context_file: ".percipience_aider_context.md"
+    target_context_file: ".nb/context/percipience_aider_context.md"
 compression_targets:
   minimum_token_reduction_pct: 40.0
   target_average_reduction_pct: 65.0

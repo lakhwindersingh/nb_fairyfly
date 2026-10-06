@@ -789,7 +789,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         sb.append("<h3>⚡ How It Works</h3>")
         sb.append("<ul>")
         sb.append("<li><b>AST Structural Skeletons:</b> Strips function and class implementation bodies while preserving full signatures, type hints, docstrings, and DOM tags (40-70% token savings).</li>")
-        sb.append("<li><b>Dynamic Context Injection:</b> Generates compact context files (<code>.percipience_claude_context.md</code>, <code>.percipience_gemini_context.md</code>) loaded directly into CLI prompts.</li>")
+        sb.append("<li><b>Dynamic Context Injection:</b> Generates compact context files (<code>.nb/context/percipience_claude_context.md</code>, <code>.nb/context/percipience_gemini_context.md</code>) loaded directly into CLI prompts.</li>")
         sb.append("<li><b>FinOps Ledger Metering:</b> All terminal prompt invocations are recorded into <code>token_savings_ledger.yaml</code> to calculate gross USD saved and net customer ROI.</li>")
         sb.append("</ul>")
         sb.append("<h3>🚀 Quick Commands</h3>")
@@ -812,7 +812,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                 private var result: ExecutionResult? = null
 
                 override fun run(indicator: ProgressIndicator) {
-                    result = runBlocking { execService.runContextExport("claude-code", ".percipience_claude_context.md") }
+                    result = runBlocking { execService.runContextExport("claude-code", ".nb/context/percipience_claude_context.md") }
                 }
 
                 override fun onSuccess() {
@@ -833,7 +833,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
                 private var result: ExecutionResult? = null
 
                 override fun run(indicator: ProgressIndicator) {
-                    result = runBlocking { execService.runContextExport("gemini-cli", ".percipience_gemini_context.md") }
+                    result = runBlocking { execService.runContextExport("gemini-cli", ".nb/context/percipience_gemini_context.md") }
                 }
 
                 override fun onSuccess() {

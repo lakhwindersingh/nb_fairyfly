@@ -41,7 +41,7 @@ class LaunchTerminalAgentAction(private val agentName: String = "claude") : AnAc
                         "⚡ AST-Optimized Context Prepared for $agentName!\n\n" +
                                 "${res.stdout.trim()}\n\n" +
                                 "To run in Terminal tool window:\n" +
-                                "  claude --append-system-prompt \"\$(cat .percipience_claude_context.md)\"\n" +
+                                "  claude --append-system-prompt \"\$(cat .nb/context/percipience_claude_context.md)\"\n" +
                                 "or use shell hook: eval \"\$(./.nb/bin/percipience terminal hook)\"",
                         "Terminal Mode Agent Ready"
                     )

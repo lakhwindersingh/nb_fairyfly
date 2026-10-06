@@ -21,10 +21,15 @@ class ExportTerminalContextAction(private val formatType: String = "claude-code"
         val execService = PercipienceExecutionService.getInstance(project)
         val basePath = project.basePath ?: return
 
+        val contextDir = File(basePath, ".nb/context")
+        if (!contextDir.exists()) {
+            contextDir.mkdirs()
+        }
+
         val outputFile = if (formatType == "claude-code") {
-            File(basePath, ".percipience_claude_context.md")
+            File(contextDir, "percipience_claude_context.md")
         } else {
-            File(basePath, ".percipience_gemini_context.md")
+            File(contextDir, "percipience_gemini_context.md")
         }
 
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting AST Context ($formatType)...", false) {
@@ -43,7 +48,7 @@ class ExportTerminalContextAction(private val formatType: String = "claude-code"
                 if (res.success) {
                     Messages.showInfoMessage(
                         project,
-                        "✅ AST Context successfully exported to:\n${outputFile.name}\n\n${res.stdout.trim()}",
+                        "✅ AST Context successfully exported to:\n${outputFile.path}\n\n${res.stdout.trim()}",
                         "Context Export Complete"
                     )
                 } else {
@@ -58,8 +63,8 @@ class ExportTerminalContextAction(private val formatType: String = "claude-code"
             override fun onThrowable(error: Throwable) {
                 Messages.showErrorDialog(
                     project,
-                    "Export Error:\n\n${error.message}",
-                    "Export Error"
+                    "Context Export Exception:\n\n${error.message}",
+                    "Error"
                 )
             }
         })
