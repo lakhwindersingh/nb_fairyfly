@@ -9,7 +9,50 @@ import os
 import sys
 import time
 import json
-import yaml
+try:
+    import yaml
+    try:
+        from yaml import CSafeLoader as SafeLoader, CSafeDumper as SafeDumper
+    except ImportError:
+        from yaml import SafeLoader, SafeDumper
+except ImportError:
+    class _FallbackYaml:
+        @staticmethod
+        def safe_load(stream):
+            if hasattr(stream, "read"):
+                content = stream.read()
+            else:
+                content = str(stream)
+            try:
+                return json.loads(content)
+            except Exception:
+                pass
+            res = {}
+            for line in content.splitlines():
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if ":" in line:
+                    k, v = line.split(":", 1)
+                    k = k.strip()
+                    v = v.strip().strip("'\"")
+                    if v.lower() == "true": res[k] = True
+                    elif v.lower() == "false": res[k] = False
+                    elif v.isdigit(): res[k] = int(v)
+                    else: res[k] = v
+            return res
+
+        @staticmethod
+        def dump(data, stream=None, sort_keys=False, **kwargs):
+            content = json.dumps(data, indent=2, sort_keys=sort_keys)
+            if stream and hasattr(stream, "write"):
+                stream.write(content)
+                return None
+            return content
+
+    yaml = _FallbackYaml()
+    SafeLoader = None
+    SafeDumper = None
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional, Tuple

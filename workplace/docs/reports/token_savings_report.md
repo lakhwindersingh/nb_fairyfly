@@ -2,7 +2,7 @@
 
 > **Standard**: Continuous Context Optimization & AST Skeleton Pruning  
 > **Pricing Model**: 15.0% Performance-Fee Revenue-Share on Realized Token Savings  
-> **Last Updated**: 2026-10-06T03:25:38.616425+00:00  
+> **Last Updated**: 2026-10-06T03:30:18.858963+00:00  
 
 ---
 
@@ -10,14 +10,14 @@
 
 | Metric | Measured Value | Unit / Formula |
 | :--- | :---: | :--- |
-| **Total AST Pruning Events** | `4,492` | Recorded Code Transformations |
-| **Uncompressed Context Tokens** | `15,776,220` | Raw AST Token Baseline |
-| **Pruned Skeletons Dispatched** | `8,307,950` | AST Optimized Payload Tokens |
-| **Net Context Tokens Saved** | **`7,468,270`** | Direct Token Waste Eliminated |
+| **Total AST Pruning Events** | `4,624` | Recorded Code Transformations |
+| **Uncompressed Context Tokens** | `15,897,734` | Raw AST Token Baseline |
+| **Pruned Skeletons Dispatched** | `8,371,406` | AST Optimized Payload Tokens |
+| **Net Context Tokens Saved** | **`7,526,328`** | Direct Token Waste Eliminated |
 | **Average Context Reduction** | **`47.3%`** | Structural Context Compression |
-| **Gross Model Spend Saved** | **`$22.4004`** | Baseline API Cost Avoidance |
-| **Percipience 15% Performance Fee** | **`$3.3637`** | Value-Add Rev-Share Meter (15.0%) |
-| **Net Customer ROI** | **`$19.0369`** | **Direct Cash Savings to Enterprise** |
+| **Gross Model Spend Saved** | **`$22.5746`** | Baseline API Cost Avoidance |
+| **Percipience 15% Performance Fee** | **`$3.3898`** | Value-Add Rev-Share Meter (15.0%) |
+| **Net Customer ROI** | **`$19.1849`** | **Direct Cash Savings to Enterprise** |
 
 ---
 
@@ -25,8 +25,8 @@
 
 ```mermaid
 pie title Token Consumption vs Savings
-    "Pruned Context Dispatched" : 8307950
-    "Eliminated Context Overhead" : 7468270
+    "Pruned Context Dispatched" : 8371406
+    "Eliminated Context Overhead" : 7526328
 ```
 
 ---

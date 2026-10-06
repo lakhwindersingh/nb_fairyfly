@@ -33,6 +33,16 @@ for path_dir in search_dirs:
     if path_dir.exists() and str(path_dir) not in sys.path:
         sys.path.insert(0, str(path_dir))
 
+# Dynamic discovery of user/system site-packages for dependencies (PyYAML, etc.)
+try:
+    import yaml
+except ImportError:
+    import glob
+    candidate_sites = glob.glob(os.path.expanduser('~/Library/Python/*/lib/python/site-packages')) +                       glob.glob('/Library/Frameworks/Python.framework/Versions/*/lib/python*/site-packages') +                       glob.glob('/opt/homebrew/lib/python*/site-packages') +                       glob.glob('/usr/local/lib/python*/site-packages')
+    for site in candidate_sites:
+        if site not in sys.path and os.path.isdir(site):
+            sys.path.append(site)
+
 if current_p.parents[1].name in (".nb", "workplace") and len(current_p.parents) > 2:
     REPO_ROOT = current_p.parents[2]
 else:

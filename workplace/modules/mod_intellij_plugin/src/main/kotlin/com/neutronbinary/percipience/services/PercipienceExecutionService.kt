@@ -27,39 +27,101 @@ class PercipienceExecutionService(private val project: Project) {
         }
     }
 
+    @Volatile
+    private var cachedPythonExecutable: String? = null
+
+    private fun testPythonCandidate(executablePath: String, requireYaml: Boolean): Boolean {
+        return try {
+            val testCode = if (requireYaml) {
+                "import yaml, json, sys; sys.exit(0)"
+            } else {
+                "import json, sys; sys.exit(0)"
+            }
+            val pb = ProcessBuilder(executablePath, "-c", testCode)
+            pb.redirectErrorStream(true)
+            val process = pb.start()
+            val finished = process.waitFor(1200, java.util.concurrent.TimeUnit.MILLISECONDS)
+            finished && process.exitValue() == 0
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     fun findPythonExecutable(): String {
+        cachedPythonExecutable?.let { cached ->
+            val f = File(cached)
+            if ((f.exists() && f.canExecute()) || cached == "python3") {
+                return cached
+            }
+        }
+
         val basePath = project.basePath
+        val candidatePaths = mutableListOf<String>()
+
+        // 1. Virtual environments in current project root
         if (basePath != null) {
             val root = File(basePath)
-            val venvCandidates = listOf(
+            listOf(
                 File(root, ".venv/bin/python3"),
                 File(root, ".venv/bin/python"),
                 File(root, "venv/bin/python3"),
                 File(root, "venv/bin/python"),
-                File(root, ".env/bin/python3")
-            )
-            for (c in venvCandidates) {
-                if (c.exists() && c.canExecute()) {
-                    return c.absolutePath
+                File(root, ".env/bin/python3"),
+                File(root, ".env/bin/python"),
+                File(root, "env/bin/python3"),
+                File(root, "env/bin/python")
+            ).forEach { if (it.exists() && it.canExecute()) candidatePaths.add(it.absolutePath) }
+        }
+
+        // 2. Known Framework and system Python installations on macOS/Linux/Unix
+        val userHome = System.getProperty("user.home") ?: ""
+        val knownSystemCandidates = listOf(
+            "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+            "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+            "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+            "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
+            "/Library/Frameworks/Python.framework/Versions/Current/bin/python3",
+            "/usr/bin/python3",
+            "/usr/local/bin/python3",
+            "/opt/homebrew/bin/python3",
+            "$userHome/.pyenv/shims/python3",
+            "$userHome/.pyenv/shims/python",
+            "$userHome/miniconda3/bin/python3",
+            "$userHome/anaconda3/bin/python3",
+            "python3",
+            "python"
+        )
+        candidatePaths.addAll(knownSystemCandidates)
+
+        // Pass 1: Prioritize an interpreter that has 'yaml' (PyYAML) installed
+        for (cand in candidatePaths) {
+            val f = File(cand)
+            val exists = f.exists() && f.canExecute()
+            val isCommand = cand == "python3" || cand == "python"
+            if (exists || isCommand) {
+                if (testPythonCandidate(cand, requireYaml = true)) {
+                    cachedPythonExecutable = cand
+                    return cand
                 }
             }
         }
 
-        // Check system python3 candidates
-        val systemCandidates = listOf(
-            "/opt/homebrew/bin/python3",
-            "/usr/local/bin/python3",
-            "/usr/bin/python3",
-            "python3",
-            "python"
-        )
-        for (c in systemCandidates) {
-            val f = File(c)
-            if (f.exists() && f.canExecute()) {
-                return f.absolutePath
+        // Pass 2: Fallback to any working python3/python interpreter
+        for (cand in candidatePaths) {
+            val f = File(cand)
+            val exists = f.exists() && f.canExecute()
+            val isCommand = cand == "python3" || cand == "python"
+            if (exists || isCommand) {
+                if (testPythonCandidate(cand, requireYaml = false)) {
+                    cachedPythonExecutable = cand
+                    return cand
+                }
             }
         }
-        return "python3"
+
+        val fallback = "python3"
+        cachedPythonExecutable = fallback
+        return fallback
     }
 
     fun getPercipienceBinary(): File {
@@ -99,141 +161,97 @@ class PercipienceExecutionService(private val project: Project) {
 
         val pb = ProcessBuilder(fullCommand)
         pb.directory(File(basePath))
-        pb.environment()["PYTHONUNBUFFERED"] = "1"
-        pb.environment()["PYTHONPATH"] = "${File(basePath, ".nb").absolutePath}:${File(basePath, ".nb/core").absolutePath}:${File(basePath, "workplace").absolutePath}"
+        pb.redirectErrorStream(false)
 
-        val stdoutSb = StringBuilder()
-        val stderrSb = StringBuilder()
+        val env = pb.environment()
+        env["PERCIPIENCE_ROOT"] = basePath
+        env["PERCIPIENCE_CLI_HEADLESS"] = "1"
+        env["PYTHONUNBUFFERED"] = "1"
 
-        try {
+        return@withContext try {
             val process = pb.start()
+
+            val stdoutBuilder = StringBuilder()
+            val stderrBuilder = StringBuilder()
 
             val stdoutReader = BufferedReader(InputStreamReader(process.inputStream))
             val stderrReader = BufferedReader(InputStreamReader(process.errorStream))
 
-            var line: String?
-            while (stdoutReader.readLine().also { line = it } != null) {
-                val l = line ?: ""
-                stdoutSb.appendLine(l)
-                onOutput?.invoke(l)
+            val stdoutThread = Thread {
+                stdoutReader.lineSequence().forEach { line ->
+                    stdoutBuilder.append(line).append("\n")
+                    onOutput?.invoke(line)
+                }
+            }
+            val stderrThread = Thread {
+                stderrReader.lineSequence().forEach { line ->
+                    stderrBuilder.append(line).append("\n")
+                }
             }
 
-            while (stderrReader.readLine().also { line = it } != null) {
-                val l = line ?: ""
-                stderrSb.appendLine(l)
-                onOutput?.invoke("[STDERR] $l")
-            }
+            stdoutThread.start()
+            stderrThread.start()
 
             val exitCode = process.waitFor()
+            stdoutThread.join(2000)
+            stderrThread.join(2000)
+
+            // Refresh VFS to reflect newly created / updated files in IDE
             VirtualFileManager.getInstance().asyncRefresh(null)
 
             ExecutionResult(
                 exitCode = exitCode,
-                stdout = stdoutSb.toString().trim(),
-                stderr = stderrSb.toString().trim(),
+                stdout = stdoutBuilder.toString().trim(),
+                stderr = stderrBuilder.toString().trim(),
                 command = fullCommand.joinToString(" "),
-                success = exitCode == 0
+                success = (exitCode == 0)
             )
-        } catch (e: Exception) {
+        } catch (ex: Exception) {
             ExecutionResult(
                 exitCode = 1,
-                stdout = stdoutSb.toString().trim(),
-                stderr = e.message ?: "Unknown process execution error",
+                stdout = "",
+                stderr = "Failed to execute percipience: ${ex.message}",
                 command = fullCommand.joinToString(" "),
                 success = false
             )
         }
     }
 
-    suspend fun runGatekeeper(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("gate", emptyList(), onOutput)
-    }
+    suspend fun runGatekeeper() = executeCommand("gate")
 
-    suspend fun runMerkleAudit(
-        enforceMerkleChain: Boolean = true,
-        minMaturity: Double = 0.85,
-        onOutput: ((String) -> Unit)? = null
-    ): ExecutionResult {
-        val args = mutableListOf<String>()
-        if (enforceMerkleChain) {
-            args.add("--enforce-merkle-chain")
-        }
-        args.add("--min-maturity")
-        args.add(minMaturity.toString())
-        return executeCommand("audit", args, onOutput)
-    }
+    suspend fun runMerkleAudit(enforceMerkleChain: Boolean = true, minMaturity: Double = 0.85) =
+        executeCommand("audit", listOf("--min-maturity", minMaturity.toString()))
 
-    suspend fun runBasicCicd(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("cicd", listOf("run"), onOutput)
-    }
+    suspend fun runBasicCicd() = executeCommand("cicd")
 
-    suspend fun runValidateLayered(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("validate", listOf("--layered"), onOutput)
-    }
+    suspend fun runValidateLayered() = executeCommand("layer", listOf("validate"))
 
-    suspend fun runTokensSummary(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("tokens", listOf("summary"), onOutput)
-    }
+    suspend fun runTokensSummary() = executeCommand("tokens", listOf("summary"))
 
-    suspend fun runTerminalStatus(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("terminal", listOf("status"), onOutput)
-    }
+    suspend fun runWorktreesList() = executeCommand("worktrees", listOf("list"))
 
-    suspend fun runWorktreeList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("worktree", listOf("list"), onOutput)
-    }
+    suspend fun runCustomAgent(agentName: String, taskDescription: String) =
+        executeCommand("agent", listOf("run", agentName, "--task", taskDescription))
 
-    suspend fun runAgentList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("agent", listOf("list"), onOutput)
-    }
+    suspend fun runDriftCheck() = executeCommand("drift", listOf("check"))
 
-    suspend fun runDriftCheck(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("drift", listOf("check"), onOutput)
-    }
+    suspend fun runLayerPack(domainPlanPath: String, outputPath: String) =
+        executeCommand("layer", listOf("pack", domainPlanPath, "-o", outputPath))
 
-    suspend fun runDriftReport(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("drift", listOf("report"), onOutput)
-    }
+    suspend fun runProvisionPortal(tier: String) =
+        executeCommand("portal", listOf("provision", "--tier", tier))
 
-    suspend fun runLayerPack(planPath: String, outputPath: String, onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("layer", listOf("pack", "--plan", planPath, "--output", outputPath), onOutput)
-    }
+    suspend fun runDriftReport() = executeCommand("drift", listOf("report"))
 
-    suspend fun runProvisionPortal(target: String = "all", onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("provision", listOf("--target", target), onOutput)
-    }
+    suspend fun runSwarmInspect() = executeCommand("swarm", listOf("inspect"))
 
-    suspend fun runSwarmAudit(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("swarm", listOf("audit"), onOutput)
-    }
+    suspend fun runVpcSync() = executeCommand("vpc", listOf("sync"))
 
-    suspend fun runEgressList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("egress", listOf("list"), onOutput)
-    }
+    suspend fun runWormEgressAudit() = executeCommand("worm", listOf("audit"))
 
-    suspend fun runRepoStatus(onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("repo", listOf("status"), onOutput)
-    }
+    suspend fun runAgentWrap(agentName: String, format: String) =
+        executeCommand("terminal", listOf("wrap", agentName, "--format", format))
 
-    suspend fun runContextExport(format: String = "claude-code", outputPath: String? = null, onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        val args = mutableListOf("export", "--format", format)
-        if (outputPath != null) {
-            args.add("--output")
-            args.add(outputPath)
-        }
-        return executeCommand("context", args, onOutput)
-    }
-
-    suspend fun runAgentWrap(agent: String = "claude", format: String? = null, onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        val args = mutableListOf("wrap", "--agent", agent)
-        if (format != null) {
-            args.add("--format")
-            args.add(format)
-        }
-        return executeCommand("terminal", args, onOutput)
-    }
-
-    suspend fun runTerminalHook(shell: String = "zsh", onOutput: ((String) -> Unit)? = null): ExecutionResult {
-        return executeCommand("terminal", listOf("hook", "--shell", shell), onOutput)
-    }
+    suspend fun runContextExport(format: String, outputFile: String) =
+        executeCommand("terminal", listOf("export", "--format", format, "-o", outputFile))
 }
