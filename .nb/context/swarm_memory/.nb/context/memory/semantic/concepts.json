@@ -1,0 +1,76 @@
+{
+  "quad_space_architecture": {
+    "concept_id": "quad_space_architecture",
+    "title": "Quad-Space Architectural Boundaries",
+    "description": "Strict separation between .nb/ (core/governance), workplace/ (code), user/ (requests), and .claude/ (agent config).",
+    "rules": [
+      "Never write temporary or mutable project code to .nb/core or user/.",
+      "All production implementation logic belongs in workplace/modules/."
+    ],
+    "tags": [
+      "architecture",
+      "quad_space",
+      "invariants"
+    ]
+  },
+  "merkle_immutability": {
+    "concept_id": "merkle_immutability",
+    "title": "Merkle Ledger Immutability & WORM Audit",
+    "description": "All state transitions must be sealed with SHA-256 blocks anchored in Write-Once-Read-Many storage.",
+    "rules": [
+      "Do not mutate existing Merkle block files.",
+      "Recovery points (RP_*) require valid cryptographic linkage."
+    ],
+    "tags": [
+      "merkle",
+      "worm",
+      "security"
+    ]
+  },
+  "wire_contract_invariants": {
+    "concept_id": "wire_contract_invariants",
+    "title": "Cross-Module Wire Contracts",
+    "description": "Wire contracts in .nb/context/contracts/ govern cross-module communication schemas.",
+    "rules": [
+      "Public module APIs must strictly adhere to active wire contract schemas.",
+      "Breaking wire contract changes require SemVer major increment."
+    ],
+    "tags": [
+      "contracts",
+      "api",
+      "schema"
+    ]
+  },
+  "CONCEPT_DAG_EXPANSION": {
+    "concept_id": "CONCEPT_DAG_EXPANSION",
+    "title": "Dynamic Runtime DAG Expansion",
+    "description": "Enables autonomous agents to dynamically spawn sub-goals without cycle formation.",
+    "rules": [
+      "Verify acyclicity via Kahn algorithm",
+      "Limit recursion depth <= 3",
+      "Rewire terminal dependents"
+    ],
+    "tags": [
+      "dag",
+      "orchestration",
+      "subgoals"
+    ],
+    "updated_at": 1791312969.5596192
+  },
+  "CONCEPT_CBAC_TOKENS": {
+    "concept_id": "CONCEPT_CBAC_TOKENS",
+    "title": "Capability-Based Access Control",
+    "description": "Cryptographic HMAC-signed capability tokens scoping agent filesystem and network access.",
+    "rules": [
+      "Enforce directory path sandboxing",
+      "Reject loopback or shell breakout",
+      "Require unexpired token"
+    ],
+    "tags": [
+      "security",
+      "cbac",
+      "sandbox"
+    ],
+    "updated_at": 1791313291.6867142
+  }
+}

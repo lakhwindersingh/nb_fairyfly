@@ -3124,6 +3124,50 @@
       "retention_days": 365,
       "egress_timestamp": "2026-10-06T18:44:03Z",
       "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 2403,
+      "block_hash": "c2951304d4ad7457523bdac841787553e7452696578348f594c7a1c6c84f68da",
+      "merkle_root": "113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_002403_c2951304d4ad7457.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-10-06T18:44:41Z",
+      "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 9999,
+      "block_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "merkle_root": "5c719875152a5592bbdd300b1a067ffccb60bb4a94200424564c7ca9ea5e5ec0",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_009999_e3b0c44298fc1c14.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-10-06T19:05:20Z",
+      "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 2408,
+      "block_hash": "4fa8d77f69eb53f4f229d8d95675571184de88aa353bca3e0e127557f7eefed2",
+      "merkle_root": "113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_002408_4fa8d77f69eb53f4.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-10-06T19:05:25Z",
+      "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 2409,
+      "block_hash": "2ee1ad35dba340ccd538bcb5c45d59544e7282e110c430a7fb9c1e69635ffef0",
+      "merkle_root": "113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_002409_2ee1ad35dba340cc.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-10-06T19:07:07Z",
+      "status": "MIRRORED_IMMUTABLE"
     }
   ]
 }
