@@ -446,6 +446,22 @@ ledger_chain:
   current_block_hash: 6a317f156f94fb1e49a6ee9f580723210cd8c4b7ed23f3f6493af6e35d3994a7
   action: PR_GATE_VERIFICATION_PASSED
   block_hash: 6a317f156f94fb1e49a6ee9f580723210cd8c4b7ed23f3f6493af6e35d3994a7
+- block_id: 2411
+  block_type: STATE_UPDATE
+  prev_block_hash: 6a317f156f94fb1e49a6ee9f580723210cd8c4b7ed23f3f6493af6e35d3994a7
+  timestamp: '2026-10-06T19:48:56.217319+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: cc86487adffec589f32da3d9050ffb501e2e927fc8801f81b075c8ca474df8a0
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: cc86487adffec589f32da3d9050ffb501e2e927fc8801f81b075c8ca474df8a0
+- block_id: 2412
+  block_type: STATE_UPDATE
+  prev_block_hash: cc86487adffec589f32da3d9050ffb501e2e927fc8801f81b075c8ca474df8a0
+  timestamp: '2026-10-06T19:49:21.436739+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 7cc619bcf28bbcb645538ea506327121dcdcc1f5b6dd1f57674052e0bc6989bf
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 7cc619bcf28bbcb645538ea506327121dcdcc1f5b6dd1f57674052e0bc6989bf
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:

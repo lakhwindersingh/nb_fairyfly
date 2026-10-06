@@ -3003,7 +3003,10 @@ percipience rollback \
         fetchOtelSpans();
       } else if (id === 'reports') {
         fetchPortalTokenSavings();
+      } else if (id === 'swarm-governance') {
+        loadSwarmTab();
       }
+    window.showTab = showTab;
     }
 
     async function runContextGatewayDemo() {
@@ -6032,10 +6035,11 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
 
         self._send_json({"error": "Not Found"}, 404)
 
-def run_server(port: int = 3000):
-    server_address = ("127.0.0.1", port)
+def run_server(port: int = 3000, host: Optional[str] = None):
+    bind_host = host or os.environ.get("PORTAL_HOST", "0.0.0.0")
+    server_address = (bind_host, port)
     httpd = HTTPServer(server_address, PortalRequestHandler)
-    print(f"🌍 Percipience Cloud SaaS Portal running at http://localhost:{port}/")
+    print(f"🌍 Percipience Cloud SaaS Portal running at http://localhost:{port}/ (bound to {bind_host}:{port})")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

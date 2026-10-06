@@ -352,7 +352,7 @@
 > **Core Objective:** Transition the `agentic/` workspace from script-orchestrated automation to a fully autonomous, self-governing, multi-agent cognitive software engineering ecosystem.
 
 ### 17.1. Agent Coordination, Governance & Swarm Topologies
-- [ ] **TODO-AGT-01: Dynamic Task DAGs & Runtime Sub-Goal Expansion (P1)** (`GAP-AGT-01`):
+- [x] **TODO-AGT-01: Dynamic Task DAGs & Runtime Sub-Goal Expansion (P1)** (`GAP-AGT-01`):
   - *Governing Review*: `GAP-AGT-01` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
   - *Defect & SDLC Impact*: Workflows in `agentic/workflows/` (`derivation_pipeline.yaml`, `pr_gatekeeper.yaml`) are static, linear step lists. When unexpected dependencies or complex structural tasks arise, agents cannot synthesize runtime sub-goals, spawn exploratory sub-plans, backtrack on failures, or adapt execution paths without manual human intervention or pipeline failure.
   - *Target Files*:
@@ -368,7 +368,7 @@
     - Unit tests verifying dynamic node insertion, topological sort update, backtracking on step failure, and depth ceiling enforcement.
     - Emits structured execution traces logged to `.nb/context/ledger/dynamic_dag_traces.jsonl`.
 
-- [ ] **TODO-AGT-02: Structured Multi-Pass Reflection & Critic Verification Loops (Reflexion) (P1)** (`GAP-AGT-02`):
+- [x] **TODO-AGT-02: Structured Multi-Pass Reflection & Critic Verification Loops (Reflexion) (P1)** (`GAP-AGT-02`):
   - *Governing Review*: `GAP-AGT-02` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
   - *Defect & SDLC Impact*: Prompts in `agentic/prompts/` (e.g. `derivation_prompt.md`, `evaluation_refinement_prompt.md`) execute in a single forward pass without an internal Generator -> Critic -> Refiner (*Reflexion*) verification cycle, emitting unverified code or flawed architectural assumptions directly to physical file systems and build gates, increasing token burn and test failure cycles.
   - *Target Files*:
@@ -385,7 +385,7 @@
     - Unit tests validating multi-pass critique extraction, defect correction, early exit on $S_{\text{critique}} \ge 0.90$, and enforcement of $N_{\text{reflect}} \le 2$.
     - Integration tests asserting zero disk write occurs until Critic verification passes.
 
-- [ ] **TODO-AGT-03: 3-Tier Persistent Agent Memory Architecture (Working, Episodic & Semantic) (P1)** (`GAP-AGT-03`):
+- [x] **TODO-AGT-03: 3-Tier Persistent Agent Memory Architecture (Working, Episodic & Semantic) (P1)** (`GAP-AGT-03`):
   - *Governing Review*: `GAP-AGT-03` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
   - *Defect & SDLC Impact*: Agents operate statelessly across session runs. The flat Merkle ledger stores action records but does not provide an indexed memory model. An agent facing a previously solved build issue, flaky test quarantine, or contract discrepancy must rediscover solutions from scratch, wasting cognitive context and tokens.
   - *Target Files*:
@@ -401,7 +401,7 @@
   - *Acceptance Criteria*:
     - Unit tests verifying working memory isolation per worktree, episodic retrieval recall $> 0.85$ on matching error signatures, semantic index lookup, and memory consolidation into Merkle blocks.
 
-- [ ] **TODO-AGT-04: Declarative Tool Contracts & JSON Schema Validation (P1)** (`GAP-AGT-04`):
+- [x] **TODO-AGT-04: Declarative Tool Contracts & JSON Schema Validation (P1)** (`GAP-AGT-04`):
   - *Governing Review*: `GAP-AGT-04` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
   - *Defect & SDLC Impact*: Custom agent definitions in `agentic/custom/agents/*.yaml` declare tools as plain string lists (`tools: [ast_pruner, cve_sentinel]`). There is no runtime validation of tool input arguments or output schemas, no distinction between read-only (idempotent) vs mutating tools, leading to agent malformed tool-call exceptions.
   - *Target Files*:
@@ -417,7 +417,7 @@
   - *Acceptance Criteria*:
     - Unit tests verifying parameter validation rejection, return schema conformance, idempotency caching, and timeout enforcement across all platform tools.
 
-- [ ] **TODO-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens (P1)** (`GAP-AGT-05`):
+- [x] **TODO-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens (P1)** (`GAP-AGT-05`):
   - *Governing Review*: `GAP-AGT-05` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
   - *Defect & SDLC Impact*: Once spawned, agents inherit full execution privileges with no declarative permission boundaries. A rogue or hallucinating agent could execute arbitrary system commands, write to protected paths outside its module workspace, or perform unauthorized network egress.
   - *Target Files*:
@@ -431,6 +431,14 @@
     - **Network Egress Firewall**: Verifies `CAP_NETWORK_EGRESS` token flag; blocks external socket creation unless explicitly authorized for cloud ledger sync.
   - *Acceptance Criteria*:
     - Unit tests validating path traversal interception, forbidden subprocess command blocking, network socket restriction, and valid capability token lifecycle.
+
+- [x] **Portal Integration & UI Dashboard for Swarm Topologies & Governance**:
+  - *Target Files*: [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py), [`workplace/modules/mod_portal_marketing/components/capabilities_catalog.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_portal_marketing/components/capabilities_catalog.ts), [`workplace/tests/test_portal_swarm_governance.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_portal_swarm_governance.py).
+  - *Delivered*:
+    - Integrated Tab 15 (`#swarm-governance`, `🤖 Swarm & Governance`) in the SaaS portal featuring 5 interactive panels for DAG runtime expansion, 5-pillar reflexion critic scoring, 3-tier episodic/semantic memory search, JSON Schema Draft-07 declarative tool execution, and HMAC-signed CBAC sandbox token minting/access testing.
+    - Added REST endpoints: `/api/swarm/dynamic-dag`, `/api/swarm/dynamic-dag/simulate`, `/api/swarm/reflexion/evaluate`, `/api/swarm/memory/status`, `/api/swarm/memory/episodic`, `/api/swarm/memory/semantic`, `/api/swarm/memory/consolidate`, `/api/swarm/tools`, `/api/swarm/tools/validate-execute`, `/api/swarm/cbac/mint`, `/api/swarm/cbac/verify-access`.
+    - Enriched marketing capability models `cap_dynamic_dag`, `cap_reflexion_critic`, `cap_3tier_memory`, `cap_tool_contracts`, `cap_cbac_sandbox`.
+    - Comprehensive automated test suite passing (8/8 tests in `test_portal_swarm_governance.py`).
 
 ### 17.2. Runtime Architecture, Quad-Space Boundaries & Execution Hygiene
 - [x] **TODO-AGT-06: Quad-Space Boundary Cleanup & Runtime Deduplication (P1)** ([`agentic/runtime/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/runtime/)):

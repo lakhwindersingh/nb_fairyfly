@@ -1,0 +1,36 @@
+# =============================================================================
+# Percipience Hermetic Test Runner & Autonomous CI/CD Gatekeeper Container
+# =============================================================================
+FROM python:3.11-slim
+
+WORKDIR /workspace
+
+# Install complete CI/CD testing dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    make \
+    build-essential \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure git identity for gatekeeper commits & worktrees in container
+RUN git config --global user.name "Percipience CI/CD Bot" && \
+    git config --global user.email "bot@percipience.internal" && \
+    git config --global init.defaultBranch main && \
+    git config --global --add safe.directory /workspace
+
+COPY workplace/infra/docker/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copy repository tree
+COPY . /workspace
+
+# Ensure CLI executables have permission
+RUN chmod +x /workspace/.nb/bin/* /workspace/workplace/bin/* 2>/dev/null || true
+
+ENV PYTHONPATH=/workspace:/workspace/.nb:/workspace/workplace
+ENV PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
+ENV PORTAL_URL=http://portal:3000
+
+CMD ["pytest", "workplace/tests/", "-v", "--durations=10"]

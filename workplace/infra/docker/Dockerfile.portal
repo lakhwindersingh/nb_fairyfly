@@ -1,0 +1,35 @@
+# =============================================================================
+# Percipience Cloud SaaS Portal & API Gateway Container
+# =============================================================================
+FROM python:3.11-slim
+
+WORKDIR /workspace
+
+# Install minimal runtime system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python requirements
+COPY workplace/infra/docker/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copy platform engine, portal, and workplace spaces
+COPY .nb /workspace/.nb
+COPY workplace /workspace/workplace
+COPY user /workspace/user
+
+# Setup python module paths
+ENV PYTHONPATH=/workspace:/workspace/.nb:/workspace/workplace
+ENV PORTAL_HOST=0.0.0.0
+ENV PORT=3000
+ENV PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD curl -f http://127.0.0.1:3000/api/health || exit 1
+
+ENTRYPOINT ["python3", "workplace/portal/server.py", "3000"]

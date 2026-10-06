@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  tree-sitter-daemon:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.tree_sitter_daemon
+    image: percipience/tree-sitter-daemon:latest
+    container_name: percipience-tree-sitter-daemon
+    ports:
+      - "8585:8585"
+    environment:
+      - PERCIPIENCE_DAEMON_HOST=0.0.0.0
+      - PERCIPIENCE_DAEMON_PORT=8585
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8585/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - percipience-net
+
+  portal:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.portal
+    image: percipience/portal:latest
+    container_name: percipience-portal
+    ports:
+      - "3000:3000"
+    environment:
+      - PORTAL_HOST=0.0.0.0
+      - PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
+    depends_on:
+      tree-sitter-daemon:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - percipience-net
+
+  test-runner:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.test_runner
+    image: percipience/test-runner:latest
+    container_name: percipience-test-runner
+    environment:
+      - PORTAL_URL=http://portal:3000
+      - PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
+    depends_on:
+      portal:
+        condition: service_healthy
+      tree-sitter-daemon:
+        condition: service_healthy
+    profiles:
+      - test
+    networks:
+      - percipience-net
+
+networks:
+  percipience-net:
+    driver: bridge
