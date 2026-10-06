@@ -61,3 +61,7 @@ tmp/
 # Log files
 *.log
 /.nb/context/ledger/archive/
+/user/inputs/formal_requests/
+/.nb/agentic/trajectories/
+/.nb/context/terminal/
+/.nb/context/handoffs/archive/
