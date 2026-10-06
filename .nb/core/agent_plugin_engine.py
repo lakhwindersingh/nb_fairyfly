@@ -459,26 +459,38 @@ class AgentPluginEngine:
                 continue
 
         for yf in sorted(yaml_files):
+            stem_id = yf.stem if yf.stem.startswith("agent_") else f"agent_{yf.stem}"
             try:
                 with open(yf, "r", encoding="utf-8") as f:
                     data = yaml.safe_load(f) or {}
                 meta = data.get("metadata", {})
                 mod_prof = data.get("model_profile", {})
-                aid = meta.get("agent_id") or data.get("agent_id") or f"agent_{yf.stem}"
+                aid = meta.get("agent_id") or data.get("agent_id") or stem_id
+
+                mod_scope_raw = data.get("module_scope")
+                if isinstance(mod_scope_raw, dict):
+                    allowed_modules = mod_scope_raw.get("allowed_modules", ["workplace/core"])
+                elif isinstance(mod_scope_raw, list):
+                    allowed_modules = mod_scope_raw
+                elif isinstance(mod_scope_raw, str):
+                    allowed_modules = [m.strip() for m in mod_scope_raw.split(",") if m.strip()]
+                else:
+                    allowed_modules = ["workplace/core"]
+
                 results.append({
                     "agent_id": aid,
                     "name": meta.get("name") or data.get("name") or yf.stem.replace("_", " ").title(),
                     "category": meta.get("category", "custom"),
                     "model": mod_prof.get("model") or data.get("model", "claude-3-5-sonnet-20241022"),
                     "role": mod_prof.get("role") or data.get("role", "Custom Specialist"),
-                    "allowed_modules": data.get("module_scope", {}).get("allowed_modules", ["workplace/core"]),
+                    "allowed_modules": allowed_modules,
                     "file_path": str(yf.relative_to(workspace_root)),
                     "workflow_bindings": workflow_steps_map.get(aid, []),
                     "status": "ACTIVE"
                 })
             except Exception as e:
                 results.append({
-                    "agent_id": f"agent_{yf.stem}",
+                    "agent_id": stem_id,
                     "name": yf.stem,
                     "file_path": str(yf.relative_to(workspace_root)),
                     "status": "ERROR",
