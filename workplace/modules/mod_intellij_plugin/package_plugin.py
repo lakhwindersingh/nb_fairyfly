@@ -14,6 +14,7 @@ import zipfile
 import shutil
 import hashlib
 import argparse
+import subprocess
 from pathlib import Path
 
 PLUGIN_ROOT = Path(__file__).resolve().parent
@@ -26,6 +27,65 @@ sys.path.insert(0, str(REPO_ROOT / ".nb" / "core"))
 sys.path.insert(0, str(REPO_ROOT / "workplace" / "core"))
 from nbpack_envelope import NBPackEnvelope
 from commercial_packager_provisioner import CommercialPackagerProvisioner
+
+
+def compile_kotlin_sources():
+    """Compiles all Kotlin source files into build/classes/kotlin/main using the local IDE kotlinc compiler."""
+    classes_dir = PLUGIN_ROOT / "build" / "classes" / "kotlin" / "main"
+    src_kotlin = PLUGIN_ROOT / "src" / "main" / "kotlin"
+    kt_files = [str(p) for p in src_kotlin.rglob("*.kt")]
+    if not kt_files:
+        return
+
+    kotlinc_candidates = [
+        Path("/Users/lakhwinder/Applications/IntelliJ IDEA.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+        Path("/Applications/IntelliJ IDEA.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+        Path("/Users/lakhwinder/Applications/PyCharm.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+        Path("/Applications/PyCharm.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+    ]
+    which_kotlinc = shutil.which("kotlinc")
+    if which_kotlinc:
+        kotlinc_candidates.append(Path(which_kotlinc))
+
+    kotlinc_bin = None
+    for cand in kotlinc_candidates:
+        if cand and cand.is_file() and os.access(str(cand), os.X_OK):
+            kotlinc_bin = str(cand)
+            break
+
+    if not kotlinc_bin:
+        print("⚠️ kotlinc not found; proceeding with existing compiled classes.")
+        return
+
+    idea_root = None
+    for cand_root in [
+        Path("/Users/lakhwinder/Applications/IntelliJ IDEA.app/Contents"),
+        Path("/Applications/IntelliJ IDEA.app/Contents"),
+        Path("/Users/lakhwinder/Applications/PyCharm.app/Contents"),
+        Path("/Applications/PyCharm.app/Contents"),
+    ]:
+        if cand_root.is_dir():
+            idea_root = cand_root
+            break
+
+    if not idea_root:
+        print("⚠️ IDE installation root not found for classpath; proceeding with existing compiled classes.")
+        return
+
+    jars = [str(p) for p in (idea_root / "lib").glob("*.jar")]
+    jars += [str(p) for p in idea_root.glob("plugins/Kotlin/kotlinc/lib/*.jar")]
+    jars += [str(p) for p in idea_root.glob("plugins/Kotlin/lib/*.jar")]
+    jars += [str(p) for p in idea_root.glob("plugins/terminal/lib/*.jar")]
+    cp = ":".join(jars)
+
+    classes_dir.mkdir(parents=True, exist_ok=True)
+    cmd = [kotlinc_bin, "-cp", cp] + kt_files + ["-d", str(classes_dir)]
+    print(f"🔨 Compiling {len(kt_files)} Kotlin source files with kotlinc...")
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        print(f"❌ kotlinc compilation failed:\n{res.stderr}")
+        raise RuntimeError(f"Kotlin compilation failed: {res.stderr}")
+    print(f"✅ Successfully compiled Kotlin classes to {classes_dir}")
 
 
 def build_intellij_plugin_jar(jar_path: Path):
@@ -88,6 +148,9 @@ def package_intellij_bundle(target_tier: str = "all"):
     """Generates JAR, ZIP, tier-specific bundles, and .nbpack layer package for IntelliJ / PyCharm."""
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     OUT_BUNDLE.mkdir(parents=True, exist_ok=True)
+
+    # Compile fresh classes first
+    compile_kotlin_sources()
 
     tiers = ["free", "team", "business", "enterprise"] if target_tier == "all" else [target_tier.replace("plan_", "")]
 

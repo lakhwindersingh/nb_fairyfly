@@ -19,6 +19,7 @@ import com.neutronbinary.percipience.ledger.WorkspaceLedgerReader
 import com.neutronbinary.percipience.ledger.WorkspaceMetrics
 import com.neutronbinary.percipience.ledger.TierInfo
 import com.neutronbinary.percipience.security.SandboxPermissionBroker
+import com.neutronbinary.percipience.services.ExecutionResult
 import com.neutronbinary.percipience.services.PercipienceExecutionService
 import kotlinx.coroutines.runBlocking
 import java.awt.*
@@ -146,327 +147,6 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
 
         val execService = PercipienceExecutionService.getInstance(project)
 
-        fun rebuildActionsPanel(tierInfo: TierInfo) {
-            actionsPanel.removeAll()
-
-            // Count buttons to dynamically size grid
-            var buttonCount = 7 // Base buttons: Bootstrap, Gate, Merkle Audit, CI/CD, Validate, Token Summary, Refresh, Portal
-
-            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
-                buttonCount += 3 // Worktrees, Custom Agent, Anti-Drift Parity Check
-            }
-            if (tierInfo.canPackNbpack) {
-                buttonCount += 3 // NBPack layer pack, Provision Portal, Cognitive Router Report
-            }
-            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
-                buttonCount += 3 // Swarm Orchestrator, Private VPC Enclave, WORM Egress
-            }
-            buttonCount += 1 // Observability Portal
-
-            actionsPanel.layout = GridLayout(buttonCount, 1, 6, 6)
-            actionsPanel.border = EmptyBorder(10, 0, 10, 0)
-
-            // --- 1. Universal / Free Tier Core Action Buttons ---
-            val btnBootstrap = JButton("🚀 Bootstrap / Verify Workspace Setup")
-            btnBootstrap.addActionListener {
-                val basePath = project.basePath ?: return@addActionListener
-                val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
-                if (res.alreadyConfigured) {
-                    Messages.showInfoMessage(
-                        "Workspace is already fully bootstrapped with Master Plan, Merkle ledger, .nb/bin/percipience binary, and CI/CD.",
-                        "Percipience Workspace Status"
-                    )
-                } else {
-                    Messages.showInfoMessage(
-                        "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully for ${tierInfo.tierName}.\n\nPercipience CLI executable (.nb/bin/percipience) is now installed.",
-                        "Percipience Bootstrap Complete"
-                    )
-                }
-            }
-            actionsPanel.add(btnBootstrap)
-
-            val btnGate = JButton("🚦 Run PR Gatekeeper (`.nb/bin/percipience gate`)")
-            btnGate.addActionListener {
-                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Percipience PR Gatekeeper...", false) {
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.isIndeterminate = true
-                        indicator.text = "Executing .nb/bin/percipience gate..."
-                        val res = runBlocking { execService.runGatekeeper() }
-                        ApplicationManager.getApplication().invokeLater {
-                            if (res.success) {
-                                Messages.showInfoMessage(
-                                    project,
-                                    "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
-                                    "Gatekeeper Passed"
-                                )
-                            } else {
-                                Messages.showErrorDialog(
-                                    project,
-                                    "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                    "Gatekeeper Failed"
-                                )
-                            }
-                        }
-                    }
-                })
-            }
-            actionsPanel.add(btnGate)
-
-            val btnVerifyChain = JButton("🛡️ Verify Merkle Chain (`.nb/bin/percipience audit`)")
-            btnVerifyChain.addActionListener {
-                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Merkle Ledger...", false) {
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.isIndeterminate = true
-                        indicator.text = "Executing .nb/bin/percipience audit..."
-                        val res = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
-                        ApplicationManager.getApplication().invokeLater {
-                            if (res.success) {
-                                Messages.showInfoMessage(
-                                    project,
-                                    "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
-                                    "Merkle Audit"
-                                )
-                            } else {
-                                Messages.showErrorDialog(
-                                    project,
-                                    "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                    "Merkle Audit Error"
-                                )
-                            }
-                        }
-                    }
-                })
-            }
-            actionsPanel.add(btnVerifyChain)
-
-            val btnRunWorkflow = JButton("▶ Execute Autonomous CI/CD Pipeline (`.nb/bin/percipience cicd run`)")
-            btnRunWorkflow.addActionListener {
-                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Autonomous CI/CD...", false) {
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.isIndeterminate = true
-                        indicator.text = "Executing .nb/bin/percipience cicd run..."
-                        val res = runBlocking { execService.runBasicCicd() }
-                        ApplicationManager.getApplication().invokeLater {
-                            if (res.success) {
-                                Messages.showInfoMessage(
-                                    project,
-                                    "CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
-                                    "Autonomous CI/CD Pipeline"
-                                )
-                            } else {
-                                Messages.showErrorDialog(
-                                    project,
-                                    "CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
-                                    "CI/CD Failure"
-                                )
-                            }
-                        }
-                    }
-                })
-            }
-            actionsPanel.add(btnRunWorkflow)
-
-            val btnValidateLayered = JButton("🔍 Validate Layered Context (`.nb/bin/percipience validate --layered`)")
-            btnValidateLayered.addActionListener {
-                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Validating Layered Context...", false) {
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.isIndeterminate = true
-                        indicator.text = "Executing .nb/bin/percipience validate --layered..."
-                        val res = runBlocking { execService.runValidateLayered() }
-                        ApplicationManager.getApplication().invokeLater {
-                            if (res.success) {
-                                Messages.showInfoMessage(
-                                    project,
-                                    "Layered Context Validation Passed:\n\n${res.stdout}",
-                                    "Layered Context Valid"
-                                )
-                            } else {
-                                Messages.showErrorDialog(
-                                    project,
-                                    "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
-                                    "Validation Failed"
-                                )
-                            }
-                        }
-                    }
-                })
-            }
-            actionsPanel.add(btnValidateLayered)
-
-            val btnTokensSummary = JButton("⚡ Token Savings Summary (`.nb/bin/percipience tokens summary`)")
-            btnTokensSummary.addActionListener {
-                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Token Savings Summary...", false) {
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.isIndeterminate = true
-                        val res = runBlocking { execService.runTokensSummary() }
-                        ApplicationManager.getApplication().invokeLater {
-                            if (res.success) {
-                                Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
-                            } else {
-                                Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
-                            }
-                        }
-                    }
-                })
-            }
-            actionsPanel.add(btnTokensSummary)
-
-            // --- 2. Team Tier Entitled Buttons ---
-            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
-                val btnWorktrees = JButton("🌿 Manage Worktrees (`.nb/bin/percipience worktree list`) [Team+]")
-                btnWorktrees.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Worktrees...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runWorktreeList() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout.ifEmpty { "No active worktrees" }, "Worktree Manager")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnWorktrees)
-
-                val btnCustomAgent = JButton("🤖 Specialist Agents Registry (`.nb/bin/percipience agent list`) [Team+]")
-                btnCustomAgent.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Agents...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runAgentList() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout.ifEmpty { "Registered agents active" }, "Agent Registry")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnCustomAgent)
-
-                val btnDriftCheck = JButton("🔄 Anti-Drift Parity Check (`.nb/bin/percipience drift check`) [Team+]")
-                btnDriftCheck.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Checking Semantic Parity...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runDriftCheck() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Anti-Drift Parity Check")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnDriftCheck)
-            }
-
-            // --- 3. Business Tier Entitled Buttons ---
-            if (tierInfo.canPackNbpack) {
-                val btnLayerPack = JButton("📦 Package Sealed NBPack (`.nb/bin/percipience layer pack`) [Business+]")
-                btnLayerPack.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Packaging NBPack Layer...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val planPath = ".nb/plan/l1/intellij-pycharm-plugin/detailed.md"
-                            val outPath = ".nb/bundles/intellij_pycharm_plugin_domain.nbpack"
-                            val res = runBlocking { execService.runLayerPack(planPath, outPath) }
-                            ApplicationManager.getApplication().invokeLater {
-                                if (res.success) {
-                                    Messages.showInfoMessage(project, "Layer package compiled successfully!\n\n${res.stdout}", "NBPack Sealed")
-                                } else {
-                                    Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Packaging Error")
-                                }
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnLayerPack)
-
-                val btnProvisionPortal = JButton("🌐 Multi-Tenant Gateway Provisioner (`.nb/bin/percipience provision`) [Business+]")
-                btnProvisionPortal.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Provisioning Gateway...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runProvisionPortal("all") }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Gateway Provisioning")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnProvisionPortal)
-
-                val btnDriftReport = JButton("🧠 Cognitive Router & Parity Report (`.nb/bin/percipience drift report`) [Business+]")
-                btnDriftReport.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Generating Parity Report...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runDriftReport() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Cognitive Parity Breakdown")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnDriftReport)
-            }
-
-            // --- 4. Enterprise Tier Entitled Buttons ---
-            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
-                val btnSwarm = JButton("🐝 Swarm Triad Orchestrator (`.nb/bin/percipience swarm audit`) [Enterprise]")
-                btnSwarm.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Swarm Triad...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runSwarmAudit() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Swarm Triad Governance")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnSwarm)
-
-                val btnVpcSync = JButton("🔒 Private VPC Air-Gapped Sync (`.nb/bin/percipience repo status`) [Enterprise]")
-                btnVpcSync.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing Private VPC Enclave...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runRepoStatus() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Private VPC Enclave Status")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnVpcSync)
-
-                val btnWormEgress = JButton("📜 Immutable WORM Cloud Egress Export (`.nb/bin/percipience egress list`) [Enterprise]")
-                btnWormEgress.addActionListener {
-                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Fetching WORM Egress Audit...", false) {
-                        override fun run(indicator: ProgressIndicator) {
-                            val res = runBlocking { execService.runEgressList() }
-                            ApplicationManager.getApplication().invokeLater {
-                                Messages.showInfoMessage(project, res.stdout, "Immutable WORM Audit Trail")
-                            }
-                        }
-                    })
-                }
-                actionsPanel.add(btnWormEgress)
-            }
-
-            // --- 5. Utilities ---
-            val btnRefresh = JButton("🔄 Refresh Metrics & Permissions")
-            btnRefresh.addActionListener {
-                val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
-                updateLabels()
-                rebuildActionsPanel(metrics.tierInfo)
-                Messages.showInfoMessage("Workspace metrics and permissions successfully reloaded for ${metrics.tierInfo.tierName}.", "Ledger Re-synced")
-            }
-            actionsPanel.add(btnRefresh)
-
-            val btnOpenPortal = JButton("🌐 Open Percipience Observability Portal")
-            btnOpenPortal.addActionListener {
-                try {
-                    Desktop.getDesktop().browse(URI("http://localhost:3000"))
-                } catch (e: Exception) {
-                    Messages.showErrorDialog("Unable to open browser: ${e.message}", "Error")
-                }
-            }
-            actionsPanel.add(btnOpenPortal)
-
-            actionsPanel.revalidate()
-            actionsPanel.repaint()
-        }
-
         fun updateLabels() {
             val basePath = project.basePath
             val isConfigured = if (basePath != null) WorkspaceBootstrapper.isWorkspaceConfigured(basePath) else false
@@ -496,6 +176,451 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
             } else {
                 "🛠️ Tools Exposure: Gatekeeper Actions Only (Basic Platform Tools Unexposed on Free/Team Tier)"
             }
+        }
+
+        fun rebuildActionsPanel(tierInfo: TierInfo) {
+            actionsPanel.removeAll()
+
+            // Count buttons to dynamically size grid
+            var buttonCount = 7 // Base buttons: Bootstrap, Gate, Merkle Audit, CI/CD, Validate, Token Summary, Refresh, Portal
+
+            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
+                buttonCount += 3 // Worktrees, Custom Agent, Anti-Drift Parity Check
+            }
+            if (tierInfo.canPackNbpack) {
+                buttonCount += 3 // NBPack layer pack, Provision Portal, Cognitive Router Report
+            }
+            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
+                buttonCount += 3 // Swarm Orchestrator, Private VPC Enclave, WORM Egress
+            }
+            buttonCount += 1 // Observability Portal
+
+            actionsPanel.layout = GridLayout(buttonCount, 1, 6, 6)
+            actionsPanel.border = EmptyBorder(10, 0, 10, 0)
+
+            // --- 1. Universal / Free Tier Core Action Buttons ---
+            val btnBootstrap = JButton("🚀 Bootstrap / Verify Workspace Setup")
+            btnBootstrap.addActionListener {
+                val basePath = project.basePath ?: return@addActionListener
+                val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
+                updateLabels()
+                if (res.alreadyConfigured) {
+                    Messages.showInfoMessage(
+                        project,
+                        "Workspace is already fully bootstrapped with Master Plan, Merkle ledger, .nb/bin/percipience binary, and CI/CD.",
+                        "Percipience Workspace Status"
+                    )
+                } else {
+                    Messages.showInfoMessage(
+                        project,
+                        "Bootstrapped ${res.createdFiles.size} files and ${res.createdDirectories.size} directories successfully for ${tierInfo.tierName}.\n\nPercipience CLI executable (.nb/bin/percipience) is now installed.",
+                        "Percipience Bootstrap Complete"
+                    )
+                }
+            }
+            actionsPanel.add(btnBootstrap)
+
+            val btnGate = JButton("🚦 Run PR Gatekeeper (`.nb/bin/percipience gate`)")
+            btnGate.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Percipience PR Gatekeeper...", false) {
+                    private var result: ExecutionResult? = null
+
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience gate..."
+                        result = runBlocking { execService.runGatekeeper() }
+                    }
+
+                    override fun onSuccess() {
+                        updateLabels()
+                        val res = result ?: return
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "PR Gatekeeper Passed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                "Gatekeeper Passed"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "PR Gatekeeper Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "Gatekeeper Failed"
+                            )
+                        }
+                    }
+
+                    override fun onThrowable(error: Throwable) {
+                        Messages.showErrorDialog(project, "Gatekeeper Execution Error:\n\n${error.message}", "Gatekeeper Error")
+                    }
+                })
+            }
+            actionsPanel.add(btnGate)
+
+            val btnVerifyChain = JButton("🛡️ Verify Merkle Chain (`.nb/bin/percipience audit`)")
+            btnVerifyChain.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Merkle Ledger...", false) {
+                    private var result: ExecutionResult? = null
+
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience audit..."
+                        result = runBlocking { execService.runMerkleAudit(enforceMerkleChain = true, minMaturity = 0.85) }
+                    }
+
+                    override fun onSuccess() {
+                        updateLabels()
+                        val res = result ?: return
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "Merkle Chain Audit Validated!\n\n${res.stdout.takeLast(400)}",
+                                "Merkle Audit"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "Merkle Audit Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "Merkle Audit Error"
+                            )
+                        }
+                    }
+
+                    override fun onThrowable(error: Throwable) {
+                        Messages.showErrorDialog(project, "Audit Execution Error:\n\n${error.message}", "Merkle Audit Error")
+                    }
+                })
+            }
+            actionsPanel.add(btnVerifyChain)
+
+            val btnRunWorkflow = JButton("▶ Execute Autonomous CI/CD Pipeline (`.nb/bin/percipience cicd run`)")
+            btnRunWorkflow.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Autonomous CI/CD...", false) {
+                    private var result: ExecutionResult? = null
+
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience cicd run..."
+                        result = runBlocking { execService.runBasicCicd() }
+                    }
+
+                    override fun onSuccess() {
+                        updateLabels()
+                        val res = result ?: return
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "CI/CD Executed Successfully!\n\n${res.stdout.takeLast(400)}",
+                                "Autonomous CI/CD Pipeline"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "CI/CD Failed:\n\n${res.stderr.ifEmpty { res.stdout }.takeLast(600)}",
+                                "CI/CD Failure"
+                            )
+                        }
+                    }
+
+                    override fun onThrowable(error: Throwable) {
+                        Messages.showErrorDialog(project, "CI/CD Execution Error:\n\n${error.message}", "CI/CD Failure")
+                    }
+                })
+            }
+            actionsPanel.add(btnRunWorkflow)
+
+            val btnValidateLayered = JButton("🔍 Validate Layered Context (`.nb/bin/percipience validate --layered`)")
+            btnValidateLayered.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Validating Layered Context...", false) {
+                    private var result: ExecutionResult? = null
+
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        indicator.text = "Executing .nb/bin/percipience validate --layered..."
+                        result = runBlocking { execService.runValidateLayered() }
+                    }
+
+                    override fun onSuccess() {
+                        updateLabels()
+                        val res = result ?: return
+                        if (res.success) {
+                            Messages.showInfoMessage(
+                                project,
+                                "Layered Context Validation Passed:\n\n${res.stdout}",
+                                "Layered Context Valid"
+                            )
+                        } else {
+                            Messages.showErrorDialog(
+                                project,
+                                "Layered Context Validation Failed:\n\n${res.stderr.ifEmpty { res.stdout }}",
+                                "Validation Failed"
+                            )
+                        }
+                    }
+
+                    override fun onThrowable(error: Throwable) {
+                        Messages.showErrorDialog(project, "Validation Error:\n\n${error.message}", "Validation Failed")
+                    }
+                })
+            }
+            actionsPanel.add(btnValidateLayered)
+
+            val btnTokensSummary = JButton("⚡ Token Savings Summary (`.nb/bin/percipience tokens summary`)")
+            btnTokensSummary.addActionListener {
+                ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Token Savings Summary...", false) {
+                    private var result: ExecutionResult? = null
+
+                    override fun run(indicator: ProgressIndicator) {
+                        indicator.isIndeterminate = true
+                        result = runBlocking { execService.runTokensSummary() }
+                    }
+
+                    override fun onSuccess() {
+                        updateLabels()
+                        val res = result ?: return
+                        if (res.success) {
+                            Messages.showInfoMessage(project, res.stdout, "Token Savings & FinOps Summary")
+                        } else {
+                            Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Error")
+                        }
+                    }
+
+                    override fun onThrowable(error: Throwable) {
+                        Messages.showErrorDialog(project, "Summary Error:\n\n${error.message}", "Error")
+                    }
+                })
+            }
+            actionsPanel.add(btnTokensSummary)
+
+            // --- 2. Team Tier Entitled Buttons ---
+            if (tierInfo.canUseWorktrees || tierInfo.canCreateCustomAgents) {
+                val btnWorktrees = JButton("🌱 Manage Worktrees (`.nb/bin/percipience worktree list`) [Team+]")
+                btnWorktrees.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Worktrees...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runWorktreeList() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "No active worktrees" }, "Worktree Manager")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Failed to list worktrees", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnWorktrees)
+
+                val btnCustomAgent = JButton("🤖 Specialist Agents Registry (`.nb/bin/percipience agent list`) [Team+]")
+                btnCustomAgent.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Listing Agents...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runAgentList() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout.ifEmpty { "Registered agents active" }, "Agent Registry")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Failed to list agents", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnCustomAgent)
+
+                val btnDriftCheck = JButton("🔄 Anti-Drift Parity Check (`.nb/bin/percipience drift check`) [Team+]")
+                btnDriftCheck.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Checking Semantic Parity...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runDriftCheck() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Anti-Drift Parity Check")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Parity check failed", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnDriftCheck)
+            }
+
+            // --- 3. Business Tier Entitled Buttons ---
+            if (tierInfo.canPackNbpack) {
+                val btnLayerPack = JButton("📦 Package Sealed NBPack (`.nb/bin/percipience layer pack`) [Business+]")
+                btnLayerPack.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Packaging NBPack Layer...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            val planPath = ".nb/plan/l1/intellij-pycharm-plugin/detailed.md"
+                            val outPath = ".nb/bundles/intellij_pycharm_plugin_domain.nbpack"
+                            result = runBlocking { execService.runLayerPack(planPath, outPath) }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            if (res.success) {
+                                Messages.showInfoMessage(project, "Layer package compiled successfully!\n\n${res.stdout}", "NBPack Sealed")
+                            } else {
+                                Messages.showErrorDialog(project, res.stderr.ifEmpty { res.stdout }, "Packaging Error")
+                            }
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Packaging error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnLayerPack)
+
+                val btnProvisionPortal = JButton("🌐 Multi-Tenant Gateway Provisioner (`.nb/bin/percipience provision`) [Business+]")
+                btnProvisionPortal.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Provisioning Gateway...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runProvisionPortal("all") }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Gateway Provisioning")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Provisioning error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnProvisionPortal)
+
+                val btnDriftReport = JButton("🧠 Cognitive Router & Parity Report (`.nb/bin/percipience drift report`) [Business+]")
+                btnDriftReport.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Generating Parity Report...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runDriftReport() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Cognitive Parity Breakdown")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Report error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnDriftReport)
+            }
+
+            // --- 4. Enterprise Tier Entitled Buttons ---
+            if (tierInfo.canUseSwarmOrchestrator || tierInfo.canUsePrivateVpc || tierInfo.canUseWormEgress) {
+                val btnSwarm = JButton("🐝 Swarm Triad Orchestrator (`.nb/bin/percipience swarm audit`) [Enterprise]")
+                btnSwarm.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Auditing Swarm Triad...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runSwarmAudit() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Swarm Triad Governance")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Swarm audit error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnSwarm)
+
+                val btnVpcSync = JButton("🔒 Private VPC Air-Gapped Sync (`.nb/bin/percipience repo status`) [Enterprise]")
+                btnVpcSync.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Syncing Private VPC Enclave...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runRepoStatus() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Private VPC Enclave Status")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "VPC sync error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnVpcSync)
+
+                val btnWormEgress = JButton("📜 Immutable WORM Cloud Egress Export (`.nb/bin/percipience egress list`) [Enterprise]")
+                btnWormEgress.addActionListener {
+                    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Fetching WORM Egress Audit...", false) {
+                        private var result: ExecutionResult? = null
+
+                        override fun run(indicator: ProgressIndicator) {
+                            result = runBlocking { execService.runEgressList() }
+                        }
+
+                        override fun onSuccess() {
+                            val res = result ?: return
+                            Messages.showInfoMessage(project, res.stdout, "Immutable WORM Audit Trail")
+                        }
+
+                        override fun onThrowable(error: Throwable) {
+                            Messages.showErrorDialog(project, error.message ?: "Egress fetch error", "Error")
+                        }
+                    })
+                }
+                actionsPanel.add(btnWormEgress)
+            }
+
+            // --- 5. Utilities ---
+            val btnRefresh = JButton("🔄 Refresh Metrics & Permissions")
+            btnRefresh.addActionListener {
+                val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
+                updateLabels()
+                rebuildActionsPanel(metrics.tierInfo)
+                Messages.showInfoMessage(
+                    project,
+                    "Workspace metrics and permissions successfully reloaded for ${metrics.tierInfo.tierName}.",
+                    "Ledger Re-synced"
+                )
+            }
+            actionsPanel.add(btnRefresh)
+
+            val btnOpenPortal = JButton("🌐 Open Percipience Observability Portal")
+            btnOpenPortal.addActionListener {
+                try {
+                    Desktop.getDesktop().browse(URI("http://localhost:3000"))
+                } catch (e: Exception) {
+                    Messages.showErrorDialog(project, "Unable to open browser: ${e.message}", "Error")
+                }
+            }
+            actionsPanel.add(btnOpenPortal)
+
+            actionsPanel.revalidate()
+            actionsPanel.repaint()
         }
 
         val initialMetrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
@@ -668,7 +793,11 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         sb.append("<li><b>FinOps Ledger Metering:</b> All terminal prompt invocations are recorded into <code>token_savings_ledger.yaml</code> to calculate gross USD saved and net customer ROI.</li>")
         sb.append("</ul>")
         sb.append("<h3>🚀 Quick Commands</h3>")
-        sb.append("<pre><code># Wrap Claude Code with AST compression\n./.nb/bin/percipience agent wrap --agent claude\n\n# Wrap Gemini CLI\n./.nb/bin/percipience agent wrap --agent gemini\n\n# Install Shell Hook into zsh / bash\neval \"$(./.nb/bin/percipience terminal hook --shell zsh)\"</code></pre>")
+        sb.append("<ul>")
+        sb.append("<li><code>percipience wrap claude-code</code> - Injects AST stripped skeletons directly into Claude Code.</li>")
+        sb.append("<li><code>percipience wrap gemini-cli</code> - Injects AST stripped skeletons directly into Gemini CLI.</li>")
+        sb.append("<li><code>percipience terminal hook</code> - Outputs dynamic eval hook for zsh/bash shell startup.</li>")
+        sb.append("</ul>")
         sb.append("</body></html>")
 
         val editorPane = JEditorPane("text/html", sb.toString())
@@ -680,11 +809,19 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         btnClaude.addActionListener {
             val execService = PercipienceExecutionService.getInstance(project)
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Claude Code AST Context...", false) {
+                private var result: ExecutionResult? = null
+
                 override fun run(indicator: ProgressIndicator) {
-                    val res = runBlocking { execService.runContextExport("claude-code", ".percipience_claude_context.md") }
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showInfoMessage(project, res.stdout, "Claude Code Context Export")
-                    }
+                    result = runBlocking { execService.runContextExport("claude-code", ".percipience_claude_context.md") }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    Messages.showInfoMessage(project, res.stdout, "Claude Code Context Export")
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Export failed", "Error")
                 }
             })
         }
@@ -693,11 +830,19 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         btnGemini.addActionListener {
             val execService = PercipienceExecutionService.getInstance(project)
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Exporting Gemini CLI AST Context...", false) {
+                private var result: ExecutionResult? = null
+
                 override fun run(indicator: ProgressIndicator) {
-                    val res = runBlocking { execService.runContextExport("gemini-cli", ".percipience_gemini_context.md") }
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showInfoMessage(project, res.stdout, "Gemini CLI Context Export")
-                    }
+                    result = runBlocking { execService.runContextExport("gemini-cli", ".percipience_gemini_context.md") }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    Messages.showInfoMessage(project, res.stdout, "Gemini CLI Context Export")
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Export failed", "Error")
                 }
             })
         }
@@ -706,11 +851,19 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         btnStatus.addActionListener {
             val execService = PercipienceExecutionService.getInstance(project)
             ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Loading Terminal FinOps Status...", false) {
+                private var result: ExecutionResult? = null
+
                 override fun run(indicator: ProgressIndicator) {
-                    val res = runBlocking { execService.runTerminalStatus() }
-                    ApplicationManager.getApplication().invokeLater {
-                        Messages.showInfoMessage(project, res.stdout, "Terminal Agent FinOps Status")
-                    }
+                    result = runBlocking { execService.runTerminalStatus() }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    Messages.showInfoMessage(project, res.stdout, "Terminal Agent FinOps Status")
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Status error", "Error")
                 }
             })
         }
@@ -728,16 +881,27 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val isDark = UIUtil.isUnderDarcula()
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
-        sb.append("<h2>📖 Percipience User Guide &amp; Quickstart</h2>")
-        sb.append("<h3>1. Running Commands</h3>")
-        sb.append("<p>You can execute commands either through the Control Plane buttons above or directly from the terminal:</p>")
-        sb.append("<pre><code># Run PR Gatekeeper\n./.nb/bin/percipience gate\n\n# Audit Merkle Ledger\n./.nb/bin/percipience audit --enforce-merkle-chain\n\n# Run Basic CI/CD\n./.nb/bin/percipience cicd run\n\n# Validate Layered Context\n./.nb/bin/percipience validate --layered\n\n# View Token Savings\n./.nb/bin/percipience tokens summary</code></pre>")
+        sb.append("<h2>📘 Percipience Platform User Guide</h2>")
+        sb.append("<p>Welcome to <b>Percipience</b> — the contextual engineering operating system for JetBrains IDEs.</p>")
 
-        sb.append("<h3>2. New Workspace Initialization &amp; Tier Awareness</h3>")
-        sb.append("<p>When opening a project, Percipience detects your active license tier (<code>tenant_license.json</code> or <code>context_ledger.yaml</code>) and dynamically renders the entitled action buttons in the Control Plane tab.</p>")
+        sb.append("<h3>1. Core Architecture</h3>")
+        sb.append("<p>Percipience structures software development into a deterministic, layered hierarchy of invariants, schemas, and execution plans.</p>")
+        sb.append("<ul>")
+        sb.append("<li><b>Layer 0 (L0) - Master Governance:</b> Platform rules, Merkle chain validation, and sandbox policies.</li>")
+        sb.append("<li><b>Layer 1 (L1) - Domain Engine:</b> Feature specifications, AST pruning routines, and tool integrations.</li>")
+        sb.append("<li><b>Layer 2 (L2) - Deployment:</b> Packaging, tier bundles, and CI/CD automation.</li>")
+        sb.append("</ul>")
 
-        sb.append("<h3>3. Tooling Exposure &amp; Encryption Boundaries</h3>")
-        sb.append("<p>Free Tier workspaces operate under strict governance: low-level packaging tools and internal rule compilers remain unexposed, user plans remain plaintext, while the underlying platform core remains encrypted and readable by the percipience command.</p>")
+        sb.append("<h3>2. Key Operations</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>Run PR Gatekeeper:</b> Validates tests, static analysis, and seals a cryptographic Merkle block.</li>")
+        sb.append("<li><b>Verify Merkle Chain:</b> Verifies the integrity of the linear SHA-256 block sequence.</li>")
+        sb.append("<li><b>Autonomous CI/CD:</b> Runs automated test suites with bounded auto-healing retry logic.</li>")
+        sb.append("<li><b>AST Token Pruning:</b> Strips unnecessary implementation bodies before feeding context to LLM agents.</li>")
+        sb.append("</ul>")
+
+        sb.append("<h3>3. JetBrains Threading Model</h3>")
+        sb.append("<p>All background CLI commands and coroutines run asynchronously off the Event Dispatch Thread (EDT) via <code>Task.Backgroundable</code>. UI updates, label refreshes, and modal dialogs are dispatched safely on the EDT via <code>onSuccess()</code> callbacks.</p>")
 
         sb.append("</body></html>")
 

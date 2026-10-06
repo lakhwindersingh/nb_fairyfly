@@ -8,9 +8,11 @@ import com.neutronbinary.percipience.psi.PsiAstBridge
 
 class InspectAstPruningAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project
         val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
         val metrics = PsiAstBridge.extractSymbolsAndPrune(psiFile)
         Messages.showInfoMessage(
+            project,
             "AST Pruning Metrics:\n" +
             "Original Tokens: ${metrics.originalTokens}\n" +
             "Pruned Tokens: ${metrics.prunedTokens}\n" +

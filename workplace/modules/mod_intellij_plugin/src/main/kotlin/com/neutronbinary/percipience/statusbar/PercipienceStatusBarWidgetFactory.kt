@@ -117,7 +117,7 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
         )
 
         if (tier.canUseWorktrees) {
-            options.add("🌿 Inspect Worktrees & Leases [Team+]")
+            options.add("🌱 Inspect Worktrees & Leases [Team+]")
         }
         if (tier.canPackNbpack) {
             options.add("📦 Package & Seal NBPack Layer [Business+]")
@@ -134,9 +134,9 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
                         selectedValue?.startsWith("🚀 Bootstrap") == true -> {
                             val res = WorkspaceBootstrapper.bootstrapWorkspace(basePath)
                             if (res.alreadyConfigured) {
-                                Messages.showInfoMessage("Workspace is already fully configured for ${tier.tierName}.", "Percipience Status")
+                                Messages.showInfoMessage(project, "Workspace is already fully configured for ${tier.tierName}.", "Percipience Status")
                             } else {
-                                Messages.showInfoMessage("Bootstrapped ${res.createdFiles.size} files for ${tier.tierName}.", "Bootstrap Complete")
+                                Messages.showInfoMessage(project, "Bootstrapped ${res.createdFiles.size} files for ${tier.tierName}.", "Bootstrap Complete")
                             }
                             refreshStatusText()
                         }
@@ -175,7 +175,7 @@ class PercipienceStatusBarWidget(private val project: Project) : CustomStatusBar
                                 Messages.showErrorDialog(project, "Unable to open browser: ${e.message}", "Error")
                             }
                         }
-                        selectedValue?.startsWith("🌿 Inspect Worktrees") == true -> {
+                        selectedValue?.startsWith("🌱 Inspect Worktrees") == true -> {
                             Messages.showInfoMessage(project, "Worktree leasing active. Entitled quota: ${tier.includedWorktrees} concurrent worktrees.", "Worktree Manager")
                         }
                         selectedValue?.startsWith("📦 Package & Seal") == true -> {
