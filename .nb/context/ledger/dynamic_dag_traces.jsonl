@@ -1,0 +1,6 @@
+{"timestamp": 1791305740.4617732, "dag_id": "test_s17_dag", "event": "GRAPH_LOADED", "payload": {"total_nodes": 2}}
+{"timestamp": 1791305740.46205, "dag_id": "test_s17_dag", "event": "SUBGOALS_EXPANDED", "payload": {"parent_step_id": "plan", "created_subgoals": ["plan_sub1"], "new_depth": 1, "total_nodes": 3}}
+{"timestamp": 1791305740.462092, "dag_id": "test_s17_dag", "event": "BACKTRACK_ROUTED", "payload": {"failed_step_id": "plan_sub1", "alternate_step_id": "alt_branch", "skipped_descendants": ["verify"]}}
+{"timestamp": 1791305772.521707, "dag_id": "test_s17_dag", "event": "GRAPH_LOADED", "payload": {"total_nodes": 2}}
+{"timestamp": 1791305772.521852, "dag_id": "test_s17_dag", "event": "SUBGOALS_EXPANDED", "payload": {"parent_step_id": "plan", "created_subgoals": ["plan_sub1"], "new_depth": 1, "total_nodes": 3}}
+{"timestamp": 1791305772.521903, "dag_id": "test_s17_dag", "event": "BACKTRACK_ROUTED", "payload": {"failed_step_id": "plan_sub1", "alternate_step_id": "alt_branch", "skipped_descendants": ["verify"]}}
