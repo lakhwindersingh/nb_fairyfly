@@ -60,7 +60,9 @@ class CommercialPackagerProvisioner:
                 "terminal_agent_ast_proxy.py", "attention_budgeter.py", "ambiguity_resolver.py",
                 "maturity_evaluator.py", "poisoning_sentinel.py", "prompt_benchmark_engine.py",
                 "reconciliation_engine.py", "request_formalizer.py", "semantic_prompt_cache.py",
-                "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py", "nbpack_envelope.py"
+                "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py", "nbpack_envelope.py",
+                "commercial_packager_provisioner.py", "handoff_validator.py", "pii_sanitizer.py",
+                "prompt_injection_guard.py", "output_guardrail_validator.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": False,
@@ -79,7 +81,9 @@ class CommercialPackagerProvisioner:
                 "maturity_evaluator.py", "poisoning_sentinel.py", "prompt_benchmark_engine.py",
                 "reconciliation_engine.py", "request_formalizer.py", "semantic_prompt_cache.py",
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py",
-                "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py"
+                "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py",
+                "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": True,
@@ -100,7 +104,10 @@ class CommercialPackagerProvisioner:
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py",
                 "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py",
                 "nbpack_envelope.py", "agent_plugin_engine.py", "semantic_parity_engine.py",
-                "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py", "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "commercial_packager_provisioner.py"
+                "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py",
+                "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py",
+                "otel_exporter.py", "context_gateway.py"
             },
             "allow_nbpack_compilation": True,
             "allow_custom_agent_creation": True,
@@ -188,6 +195,8 @@ class CommercialPackagerProvisioner:
         else:
             output_dir = Path(output_dir).resolve()
 
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
         bundled_files: List[str] = []
@@ -222,13 +231,14 @@ class CommercialPackagerProvisioner:
         scripts_dst = output_dir / "scripts"
         scripts_dst.mkdir(parents=True, exist_ok=True)
         if scripts_src.exists():
-            for f in scripts_src.glob("*.sh"):
-                dst_file = scripts_dst / f.name
-                shutil.copy2(f, dst_file)
-                dst_file.chmod(0o755)
-                rel_path = f"scripts/{f.name}"
-                bundled_files.append(rel_path)
-                file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
+            for f in scripts_src.glob("*"):
+                if f.is_file() and not f.name.startswith("."):
+                    dst_file = scripts_dst / f.name
+                    shutil.copy2(f, dst_file)
+                    dst_file.chmod(0o755)
+                    rel_path = f"scripts/{f.name}"
+                    bundled_files.append(rel_path)
+                    file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
 
         # 4. Package .nb/core/ based on tier filtering
         core_src = workspace_root / ".nb" / "core"
@@ -240,7 +250,7 @@ class CommercialPackagerProvisioner:
 
         allowed_engines = set(rules.get("allowed_engines", [])) if isinstance(rules.get("allowed_engines"), list) else rules.get("allowed_engines", set())
         if core_src.exists():
-            for f in core_src.glob("*.py"):
+            for f in sorted(core_src.glob("*.py")):
                 if f.name.startswith("."):
                     continue
                 if allowed_engines == "ALL" or f.name in allowed_engines:
@@ -260,7 +270,7 @@ class CommercialPackagerProvisioner:
                 if sub_src.exists():
                     sub_dst = context_dst / sub
                     sub_dst.mkdir(parents=True, exist_ok=True)
-                    for f in sub_src.glob("*"):
+                    for f in sorted(sub_src.glob("*")):
                         if f.is_file() and not f.name.startswith("."):
                             dst_file = sub_dst / f.name
                             shutil.copy2(f, dst_file)
@@ -278,7 +288,7 @@ class CommercialPackagerProvisioner:
                 if sub_src.exists():
                     sub_dst = agentic_dst / sub
                     sub_dst.mkdir(parents=True, exist_ok=True)
-                    for f in sub_src.glob("*.yaml"):
+                    for f in sorted(sub_src.glob("*.yaml")):
                         # In Free Tier, only package basic free agents & basic CI/CD workflow
                         if tier_id == "plan_free":
                             if "enterprise" in f.name or "saas_portal" in f.name or "iot_mobile" in f.name:
@@ -289,21 +299,49 @@ class CommercialPackagerProvisioner:
                         bundled_files.append(rel_path)
                         file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
 
+        # 6b. Package workflows directory (basic_autonomous_cicd.yaml)
+        workflows_dst = output_dir / "workflows"
+        workflows_dst.mkdir(parents=True, exist_ok=True)
+        basic_cicd = workspace_root / ".nb" / "agentic" / "custom" / "workflows" / "basic_autonomous_cicd.yaml"
+        if not basic_cicd.exists():
+            basic_cicd = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "workflows" / "basic_autonomous_cicd.yaml"
+        if basic_cicd.exists():
+            dst_cicd = workflows_dst / "basic_autonomous_cicd.yaml"
+            shutil.copy2(basic_cicd, dst_cicd)
+            bundled_files.append("workflows/basic_autonomous_cicd.yaml")
+            file_hashes["workflows/basic_autonomous_cicd.yaml"] = hashlib.sha256(dst_cicd.read_bytes()).hexdigest()
+
         # 7. Package Master Plan template
         plan_dst = output_dir / "plan"
         plan_dst.mkdir(parents=True, exist_ok=True)
         if tier_id == "plan_free":
             free_plan = workspace_root / ".nb" / "plan" / "master" / "parent-master-free-plan" / "detailed.md"
+            if not free_plan.exists():
+                free_plan = workspace_root / ".nb" / "plan" / "claude-context-engineering-parent-master-free_plan.md"
             if free_plan.exists():
                 dst_plan = plan_dst / "claude-context-engineering-parent-master-free_plan.md"
                 shutil.copy2(free_plan, dst_plan)
                 bundled_files.append("plan/claude-context-engineering-parent-master-free_plan.md")
+                file_hashes["plan/claude-context-engineering-parent-master-free_plan.md"] = hashlib.sha256(dst_plan.read_bytes()).hexdigest()
         else:
             master_plan = workspace_root / ".nb" / "plan" / "master" / "parent-master-plan" / "detailed.md"
+            if not master_plan.exists():
+                master_plan = workspace_root / ".nb" / "plan" / "claude-context-engineering-parent-master-plan.md"
             if master_plan.exists():
                 dst_plan = plan_dst / "claude-context-engineering-parent-master-plan.md"
                 shutil.copy2(master_plan, dst_plan)
                 bundled_files.append("plan/claude-context-engineering-parent-master-plan.md")
+                file_hashes["plan/claude-context-engineering-parent-master-plan.md"] = hashlib.sha256(dst_plan.read_bytes()).hexdigest()
+
+            # Also provide free plan template for offline fallback
+            free_plan = workspace_root / ".nb" / "plan" / "master" / "parent-master-free-plan" / "detailed.md"
+            if not free_plan.exists():
+                free_plan = workspace_root / ".nb" / "plan" / "claude-context-engineering-parent-master-free_plan.md"
+            if free_plan.exists():
+                dst_free = plan_dst / "claude-context-engineering-parent-master-free_plan.md"
+                shutil.copy2(free_plan, dst_free)
+                bundled_files.append("plan/claude-context-engineering-parent-master-free_plan.md")
+                file_hashes["plan/claude-context-engineering-parent-master-free_plan.md"] = hashlib.sha256(dst_free.read_bytes()).hexdigest()
 
         # 8. Generate PERCIPIENCE_LICENSE.json
         manifest_payload = {
@@ -429,7 +467,7 @@ class CommercialPackagerProvisioner:
         if target in ["all", "intellij", "pycharm", "ide", "mod_intellij_plugin"]:
             ij_resources = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience"
             ij_resources.mkdir(parents=True, exist_ok=True)
-            for item in ["bin", "config", "core", "agentic", "plan"]:
+            for item in ["bin", "config", "core", "agentic", "plan", "workflows"]:
                 src_item = src_pkg_dir / item
                 dst_item = ij_resources / item
                 if src_item.exists():
@@ -446,7 +484,7 @@ class CommercialPackagerProvisioner:
             if vscode_dir.exists():
                 vscode_runtime = vscode_dir / "percipience_runtime"
                 vscode_runtime.mkdir(parents=True, exist_ok=True)
-                for item in ["bin", "config", "core"]:
+                for item in ["bin", "config", "core", "agentic", "plan", "workflows"]:
                     src_item = src_pkg_dir / item
                     dst_item = vscode_runtime / item
                     if src_item.exists():
@@ -519,61 +557,20 @@ class CommercialPackagerProvisioner:
     def verify_permissions(
         cls,
         workspace_root: Path,
-        tenant_id: str = "tenant_community_default",
-        action: str = "",
-        target_file: Optional[str] = None,
-        feature: str = "",
-        tenant_id_or_tier: Optional[str] = None
+        tier_or_tenant: str,
+        feature_name: str
     ) -> Dict[str, Any]:
-        t_id = tenant_id_or_tier or tenant_id
         """
-        Verifies whether a tenant or tier is permitted to perform an action or use a feature.
+        Enforces and checks RBAC permission gates against the active license.
         """
-        workspace_root = Path(workspace_root).resolve()
-        evaluated_action = action or feature
-
-        tenant_tier = t_id
-        tenant_hierarchy_file = workspace_root / ".nb" / "context" / "tenant_hierarchy.json"
-        if tenant_hierarchy_file.exists():
-            try:
-                data = json.loads(tenant_hierarchy_file.read_text(encoding="utf-8"))
-                tenants = data.get("tenants", {})
-                if t_id in tenants:
-                    tenant_tier = tenants[t_id].get("tier", "plan_free")
-            except Exception:
-                pass
-
-        spec = cls.get_tier_spec(tenant_tier, workspace_root)
-        features = spec.get("features", {})
-        rules = spec.get("rules", {})
-
-        allowed = bool(features.get(evaluated_action, False))
-
-        # Check rule overrides
-        if evaluated_action in rules:
-            allowed = bool(rules[evaluated_action])
-        elif evaluated_action == "allow_worm_egress":
-            allowed = bool(rules.get("allow_worm_egress", False))
-        elif evaluated_action == "allow_nbpack_compilation":
-            allowed = bool(rules.get("allow_nbpack_compilation", False))
-        elif evaluated_action == "allow_custom_agent_creation":
-            allowed = bool(rules.get("allow_custom_agent_creation", False))
-        elif evaluated_action == "allow_private_vpc":
-            allowed = bool(rules.get("allow_private_vpc", False))
-        elif evaluated_action == "allow_multi_tenant_gateway":
-            allowed = bool(rules.get("allow_multi_tenant_gateway", False))
-        elif evaluated_action == "basic_platform_tools_exposure":
-            allowed = bool(rules.get("expose_basic_platform_tools", False))
+        spec = cls.audit_billing_entitlements(workspace_root, tier_or_tenant)
+        entitlements = spec.get("features", {})
+        allowed = bool(entitlements.get(feature_name, False))
 
         return {
-            "tenant_id": t_id,
-            "tenant_or_tier": t_id,
-            "tier": spec["tier_id"],
-            "resolved_tier": spec["tier_id"],
-            "tier_name": spec["canonical_name"],
-            "action": evaluated_action,
-            "feature": evaluated_action,
-            "permitted": allowed,
+            "feature": feature_name,
             "allowed": allowed,
-            "reason": "Permitted under tier entitlements" if allowed else f"Action/Feature '{evaluated_action}' requires tier upgrade from {spec['canonical_name']}"
+            "tier": spec["tier"],
+            "tier_name": spec["tier_name"],
+            "enforcement": "STRICT_RBAC"
         }
