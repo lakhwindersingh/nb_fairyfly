@@ -1,0 +1,36 @@
+name: "ast_pruner"
+description: "High-speed polyglot AST skeletonizer and token compression tool."
+is_idempotent: true
+mutates_filesystem: false
+timeout_seconds: 15
+required_capabilities:
+  - "CAP_FS_READ"
+parameters:
+  type: "object"
+  required:
+    - "source_code"
+    - "language"
+  properties:
+    source_code:
+      type: "string"
+      minLength: 1
+    language:
+      type: "string"
+      enum: ["python", "typescript", "javascript", "kotlin", "java", "html"]
+    focus_symbols:
+      type: "array"
+      items:
+        type: "string"
+returns:
+  type: "object"
+  required:
+    - "pruned_code"
+    - "tokens_saved"
+    - "reduction_pct"
+  properties:
+    pruned_code:
+      type: "string"
+    tokens_saved:
+      type: "integer"
+    reduction_pct:
+      type: "number"

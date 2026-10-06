@@ -1,0 +1,61 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceAgentMemorySchema"
+description: "Schema for 3-tier persistent agent memory architecture (Working, Episodic, Semantic)."
+type: "object"
+properties:
+  working_memory:
+    type: "object"
+    required: ["session_id", "in_flight_hypotheses", "symbol_diffs"]
+    properties:
+      session_id:
+        type: "string"
+      in_flight_hypotheses:
+        type: "array"
+        items:
+          type: "string"
+      symbol_diffs:
+        type: "object"
+        additionalProperties: true
+      step_returns:
+        type: "array"
+        items:
+          type: "object"
+  episodic_memory:
+    type: "object"
+    required: ["episode_id", "task_id", "error_signature", "resolution_status", "timestamp"]
+    properties:
+      episode_id:
+        type: "string"
+      task_id:
+        type: "string"
+      error_signature:
+        type: "string"
+      root_cause:
+        type: "string"
+      patch_summary:
+        type: "string"
+      resolution_status:
+        type: "string"
+        enum: ["RESOLVED", "QUARANTINED", "ABORTED"]
+      merkle_block_hash:
+        type: "string"
+      timestamp:
+        type: "number"
+  semantic_memory:
+    type: "object"
+    required: ["concept_id", "title", "description", "rules"]
+    properties:
+      concept_id:
+        type: "string"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      rules:
+        type: "array"
+        items:
+          type: "string"
+      tags:
+        type: "array"
+        items:
+          type: "string"

@@ -1,0 +1,33 @@
+name: "cve_sentinel"
+description: "Audits dependency lockfiles against Known Exploited Vulnerabilities (KEV) and SBOM databases."
+is_idempotent: true
+mutates_filesystem: false
+timeout_seconds: 20
+required_capabilities:
+  - "CAP_FS_READ"
+parameters:
+  type: "object"
+  required:
+    - "manifest_path"
+  properties:
+    manifest_path:
+      type: "string"
+    fail_on_severity:
+      type: "string"
+      enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      default: "HIGH"
+returns:
+  type: "object"
+  required:
+    - "status"
+    - "vulnerabilities_found"
+    - "compliant"
+  properties:
+    status:
+      type: "string"
+    vulnerabilities_found:
+      type: "array"
+      items:
+        type: "object"
+    compliant:
+      type: "boolean"

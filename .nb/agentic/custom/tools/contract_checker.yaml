@@ -1,0 +1,29 @@
+name: "contract_checker"
+description: "Verifies cross-module API schemas against versioned wire contracts."
+is_idempotent: true
+mutates_filesystem: false
+timeout_seconds: 15
+required_capabilities:
+  - "CAP_FS_READ"
+parameters:
+  type: "object"
+  required:
+    - "contract_name"
+    - "payload"
+  properties:
+    contract_name:
+      type: "string"
+    payload:
+      type: "object"
+returns:
+  type: "object"
+  required:
+    - "compatible"
+    - "violations"
+  properties:
+    compatible:
+      type: "boolean"
+    violations:
+      type: "array"
+      items:
+        type: "string"

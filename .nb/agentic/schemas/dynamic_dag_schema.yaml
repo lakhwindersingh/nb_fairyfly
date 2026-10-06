@@ -1,0 +1,68 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceDynamicDAGSchema"
+description: "Schema for runtime dynamic task DAGs, sub-goal expansions, and blast-radius branching."
+type: "object"
+required:
+  - "dag_id"
+  - "nodes"
+properties:
+  dag_id:
+    type: "string"
+    pattern: "^[A-Za-z0-9_\\-]+$"
+  description:
+    type: "string"
+  max_recursion_depth:
+    type: "integer"
+    minimum: 1
+    maximum: 5
+    default: 3
+  max_total_steps:
+    type: "integer"
+    minimum: 1
+    maximum: 50
+    default: 20
+  nodes:
+    type: "array"
+    items:
+      $ref: "#/definitions/StepNode"
+definitions:
+  StepNode:
+    type: "object"
+    required:
+      - "id"
+      - "action"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      action:
+        type: "string"
+      dependencies:
+        type: "array"
+        items:
+          type: "string"
+        default: []
+      status:
+        type: "string"
+        enum:
+          - "PENDING"
+          - "RUNNING"
+          - "COMPLETED"
+          - "FAILED"
+          - "BACKTRACKED"
+          - "SKIPPED"
+        default: "PENDING"
+      depth:
+        type: "integer"
+        minimum: 0
+        default: 0
+      parent_step_id:
+        type: ["string", "null"]
+      blast_radius:
+        type: "array"
+        items:
+          type: "string"
+      metadata:
+        type: "object"
+        additionalProperties: true
