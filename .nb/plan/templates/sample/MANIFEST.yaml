@@ -1,0 +1,51 @@
+plan_id: "domain_sample_iot_mobile"
+plan_name: "Sample IoT & Mobile BLE Ecosystem Space"
+version: "1.0.0"
+capability_rating: "L1"
+plan_type: "layerable_domain_plan"
+status: "active"
+parent_plan: "master/parent-master-plan/concise.md"
+dependencies:
+  - "master_parent_framework"
+file_versions:
+  concise:
+    path: "concise.md"
+    version: "1.0.0"
+    last_modified: "2026-10-06"
+    content_hash: "28e02f9c572b22bbecab0c672288001a18204b77f9e80209935bf764fce5ad23"
+    line_count: 98
+    primary_purpose: "Compact domain specification for token-optimized agentic context"
+  detailed:
+    path: "detailed.md"
+    version: "1.0.0"
+    last_modified: "2026-10-06"
+    content_hash: "6e0766bca501b1a43a085d7b5ae173fc0f3ee18bcfa17a4ea3c82531a7ff7799"
+    line_count: 340
+    primary_purpose: "Comprehensive implementation blueprint, GATT wire contracts, and simulator harness"
+  readme:
+    path: "README.md"
+    version: "1.0.0"
+    last_modified: "2026-10-06"
+    content_hash: "7ec173ceeb4a05d8bc15ef2327598c199ad5815cf1ad01458021da6d9f7a77c3"
+    line_count: 28
+    primary_purpose: "Quick reference, domain overview, and developer navigation"
+key_capabilities:
+  - "Embedded Firmware MCU Runtime & Zephyr OS Emulation"
+  - "BLE 5.3 GATT Characteristic Packet Wire Contracts"
+  - "Cross-Platform Mobile Companion Client (KMP / Swift)"
+  - "Virtual Loopback Socket Bridge & Deterministic Simulator"
+implementation_phases:
+  phase_1: "GATT Wire Contracts & MTU Invariant Rules"
+  phase_2: "C/C++ Embedded Stub & Mobile App Subsystems"
+  phase_3: "Virtual Daemon Bridge & Python Loopback Tests"
+  phase_4: "Ed25519 Sealed Layer Packaging (.nbpack)"
+success_metrics:
+  packet_delivery_rate: ">=99.9%"
+  mtu_compliance: "100%"
+  test_coverage: "100%"
+related_contracts:
+  - ".nb/context/contracts/ble_gatt_telemetry_contract.yaml"
+  - ".nb/context/contracts/device_command_rpc_contract.json"
+related_rules:
+  - ".nb/context/rules/ble_packet_mtu_invariants.md"
+  - ".nb/context/rules/firmware_memory_bounds.md"

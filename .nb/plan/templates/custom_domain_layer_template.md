@@ -2,10 +2,10 @@
 plan_type: "layerable_domain_plan"
 plan_id: "domain_{{DOMAIN_SLUG}}"
 name: "{{DOMAIN_NAME}} Ecosystem Plan"
-parent_master_plan: ".nb/plan/claude-context-engineering-parent-master-plan.md"
+parent_master_plan: ".nb/plan/master/parent-master-plan/concise.md"
 tier_mapping:
-  tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, context/rules/)"
-  tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, agentic/custom/workflows/)"
+  tier_2: "Enterprise Domain Rules & Wire Contracts (.nb/context/contracts/, .nb/context/rules/)"
+  tier_3: "Specialist Subagents & Delivery Workflows (.nb/agentic/custom/agents/, .nb/agentic/custom/workflows/)"
 model_tiering_policy:
   provider_agnostic: true
   tier_a_model: "claude-3-7-sonnet / pro"
@@ -16,8 +16,15 @@ model_tiering_policy:
 
 # Layerable Context Engineering Plan: {{DOMAIN_NAME}} Space
 
+> **Standard Template Kit**: [`.nb/plan/templates/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/)  
+> **Concrete Reference Sample**: [`.nb/plan/templates/sample/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/sample/)  
+> **Parent Master Framework**: [`.nb/plan/master/parent-master-plan/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/)
+
+---
+
 ### Executive Overview & Domain Grounding
-This document is a standardized **Layerable Domain-Specific Context Engineering Plan** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/claude-context-engineering-parent-master-plan.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects domain-specific wire contracts, specialized subagents, and verification bridges required for:
+
+This document is a standardized **Layerable Domain-Specific Context Engineering Plan Specification** designed to overlay onto the generic **Parent Master Context Engineering Framework** (`.nb/plan/master/parent-master-plan/concise.md`). While the parent framework governs universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD, this domain layer injects domain-specific wire contracts, specialized subagents, and verification bridges required for:
 
 1. **{{DOMAIN_CORE_CAPABILITY_1}}**: Description of core technology stack, target protocols, or runtimes.
 2. **{{DOMAIN_CORE_CAPABILITY_2}}**: Description of domain data structures, state machines, or transactional boundaries.
@@ -26,46 +33,68 @@ This document is a standardized **Layerable Domain-Specific Context Engineering 
 
 ---
 
-## 1. Domain-Specific Quad-Space Mapping
+## 1. Standard 4-File Plan Organization
+
+Under the Percipience Context Engineering architecture, each domain plan directory is partitioned into four synchronized files:
+
+```
+.nb/plan/<layer_level>/<domain-slug>/
+├── README.md        # Human-readable navigation, quick links, and capability summary
+├── MANIFEST.yaml    # Cryptographic ledger, line counts, dependencies & SHA-256 hashes
+├── concise.md       # Compact domain specification for token-optimized agent context (~80-120 lines)
+└── detailed.md      # Comprehensive engineering blueprint, wire contracts & test harnesses (~300-500 lines)
+```
+
+- For quick agent context injection, inject [`concise.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/concise.md) ($60-80\%$ token savings).
+- For deep implementation, refactoring, and test authoring, consult [`detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/detailed.md).
+- To sync versions, line counts, and SHA-256 hashes, run:
+  ```bash
+  python3 .nb/plan/scripts/sync_plan_versions.py
+  ```
+
+---
+
+## 2. Domain-Specific Quad-Space Mapping
 
 When layered onto the Parent Master Plan, the workspace instantiates domain-specialized structures across the four clean directories:
 
 ```
 .
-├── context/
-│   ├── contracts/
-│   │   ├── {{DOMAIN_WIRE_CONTRACT_1}}.yaml     # Primary inter-module communication wire contract
-│   │   └── {{DOMAIN_WIRE_CONTRACT_2}}.json     # Domain event payloads or state schema validations
-│   └── rules/
-│       └── {{DOMAIN_INVARIANTS_RULE}}.md       # Domain non-negotiable architectural invariant rules
-├── agentic/
-│   ├── custom/agents/
-│   │   ├── {{SPECIALIST_AGENT_1}}.yaml         # Subagent 1: Domain-specific producer/driver specialist
-│   │   └── {{SPECIALIST_AGENT_2}}.yaml         # Subagent 2: Domain-specific consumer/client specialist
-│   └── custom/workflows/
-│       └── {{DOMAIN_DELIVERY_WORKFLOW}}.yaml   # Domain-specific verification and build pipeline DAG
+├── .nb/
+│   ├── context/
+│   │   ├── contracts/
+│   │   │   ├── {{DOMAIN_WIRE_CONTRACT_1}}.yaml      # Primary inter-module communication wire contract
+│   │   │   └── {{DOMAIN_WIRE_CONTRACT_2}}.json      # Domain event payloads or state schema validations
+│   │   └── rules/
+│   │       ├── {{DOMAIN_INVARIANTS_RULE_1}}.md      # Domain architectural invariant rules
+│   │       └── {{DOMAIN_INVARIANTS_RULE_2}}.md      # Memory, latency, or throughput bounds
+│   └── agentic/
+│       └── custom/
+│           ├── agents/
+│           │   ├── agent_{{SPECIALIST_AGENT_1}}.yaml # Domain producer/driver specialist subagent
+│           │   └── agent_{{SPECIALIST_AGENT_2}}.yaml # Domain consumer/client specialist subagent
+│           └── workflows/
+│               └── {{DOMAIN_DELIVERY_WORKFLOW}}.yaml # Domain-specific verification and build pipeline DAG
 ├── workplace/
 │   ├── modules/
-│   │   ├── mod_{{PROVIDER_MODULE}}/            # Core provider subsystem implementation
-│   │   └── mod_{{CONSUMER_MODULE}}/            # Consumer application or client implementation
-│   ├── shared/
-│   │   └── contracts/                          # Code-generated types, stubs, and protocol buffers
-│   └── templates/bridge/
-│       └── virtual_{{DOMAIN_SIMULATOR}}_bridge.py # Virtual daemon/mock socket bridging modules
+│   │   ├── mod_{{PROVIDER_MODULE}}/                 # Core provider subsystem implementation
+│   │   └── mod_{{CONSUMER_MODULE}}/                 # Consumer application or client implementation
+│   └── tests/
+│       └── test_{{DOMAIN_SLUG}}_space.py            # Unit & loopback integration tests
 └── user/
     ├── inputs/
-    │   └── {{DOMAIN_MVS_SPEC}}.yaml            # Sparse initial user specification / requirements
+    │   └── {{DOMAIN_MVS_SPEC}}.yaml                 # Sparse initial user specification / requirements
     └── hitl/
-        └── poisoning_quarantine.md             # Quarantine ledger for domain-specific contract violations
+        └── poisoning_quarantine.md                  # Quarantine ledger for domain-specific contract violations
 ```
 
 ---
 
-## 2. Wire Contracts & Safety Invariants (`context/contracts/`, `context/rules/`)
+## 3. Wire Contracts & Safety Invariants (`.nb/context/contracts/`, `.nb/context/rules/`)
 
 The domain layer establishes non-overridable wire contracts verified by the pre-commit gatekeeper:
 
-### 2.1. `context/contracts/{{DOMAIN_WIRE_CONTRACT_1}}.yaml`
+### 3.1. `.nb/context/contracts/{{DOMAIN_WIRE_CONTRACT_1}}.yaml`
 ```yaml
 schema_version: "1.0.0"
 domain: "{{DOMAIN_SLUG}}"
@@ -80,16 +109,16 @@ payload_schema:
     payload: { type: "object" }
 ```
 
-### 2.2. `context/rules/{{DOMAIN_INVARIANTS_RULE}}.md`
+### 3.2. `.nb/context/rules/{{DOMAIN_INVARIANTS_RULE_1}}.md`
 - **Domain Invariant 1**: Strict contract conformity across producer and consumer modules.
-- **Domain Invariant 2**: Memory budget, latency, or throughput bounds.
+- **Domain Invariant 2**: Memory budget, latency, or throughput bounds enforced via sentinels.
 - **Domain Invariant 3**: Zero-drift compliance with parent cryptographic Merkle verification.
 
 ---
 
-## 3. Specialized Domain Subagents & Workflows (`agentic/custom/`)
+## 4. Specialized Domain Subagents & Workflows (`.nb/agentic/custom/`)
 
-### 3.1. `agentic/custom/agents/{{SPECIALIST_AGENT_1}}.yaml`
+### 4.1. `.nb/agentic/custom/agents/agent_{{SPECIALIST_AGENT_1}}.yaml`
 ```yaml
 agent_id: "agent_{{SPECIALIST_AGENT_1}}"
 name: "{{DOMAIN_NAME}} Specialist"
@@ -99,7 +128,7 @@ model_tiering:
   active_tier: "Tier_A"
   tier_a_model: "claude-3-7-sonnet / pro"
   tier_b_model: "claude-3-5-haiku / flash"
-system_prompt_ref: "agentic/prompts/{{SPECIALIST_AGENT_1}}_prompt.md"
+system_prompt_ref: ".nb/agentic/prompts/{{SPECIALIST_AGENT_1}}_prompt.md"
 budget_limits:
   max_tokens_per_turn: 25000
   max_ast_pruned_tokens: 12000
@@ -107,7 +136,7 @@ permissions:
   allow_worktree_isolation: true
   allowed_module_paths:
     - "workplace/modules/mod_{{PROVIDER_MODULE}}"
-    - "context/contracts"
+    - ".nb/context/contracts"
 enforced_invariants:
   - "Zero AST contract drift"
   - "Mandatory unit and simulation test coverage >= 85%"
@@ -115,9 +144,9 @@ enforced_invariants:
 
 ---
 
-## 4. Virtual Emulation & End-to-End Simulation Loopback Bridge
+## 5. Virtual Emulation & End-to-End Simulation Loopback Bridge
 
-In autonomous CI/CD pipelines, external environments or hardware may be unavailable. The domain test harness creates a virtual integration bridge:
+In autonomous CI/CD pipelines, external hardware or remote environments may be unavailable. The domain test harness creates a virtual integration bridge:
 
 ```mermaid
 sequenceDiagram
@@ -138,63 +167,47 @@ sequenceDiagram
 
 ---
 
-## 5. Domain-Specific Surgical Rollback & Poisoning Defense
+## 6. Domain-Specific Surgical Rollback & Poisoning Defense
 
 Under this domain plan, recovery points are strictly isolated per module:
 - `RP_{{PROVIDER_PREFIX}}_001`: Verified clean state of provider module.
 - `RP_{{CONSUMER_PREFIX}}_002`: Verified clean state of consumer module.
 
 **Failure Mitigation**:
-If an agent hallucinates an incompatible field or introduces a dependency breach in `mod_{{CONSUMER_MODULE}}`, the gatekeeper executes a surgical rollback:
+If an agent hallucinates an incompatible field or introduces a dependency breach in `mod_{{CONSUMER_MODULE}}`:
 1. `PoisoningSentinel.execute_surgical_rollback` restores only `workplace/modules/mod_{{CONSUMER_MODULE}}/` to its last verified recovery point.
 2. Sibling module `workplace/modules/mod_{{PROVIDER_MODULE}}/` remains untouched.
 3. The invalid state is logged to `user/hitl/poisoning_quarantine.md`, and a new Merkle block is sealed.
 
 ---
 
-## 6. Encrypted Packaging & Layer Consumption Workflow (`.nbpack`)
+## 7. Dynamic Commercial Tier Matrix
 
-To protect proprietary domain intellectual property, contracts, and prompt trees, this layer can be compiled into a tamper-proof `.nbpack` binary envelope:
-
-### 6.1. Compiling the Sealed Domain Bundle
-```bash
-./workplace/workplace/bin/percipience layer pack \
-  --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md \
-  --output .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack \
-  --include-spaces context/contracts,context/rules,agentic/custom
-```
-
-### 6.2. Consuming the Encrypted Bundle in Target Repository
-```bash
-# Hydrate and layer directly into secure RAM enclave without writing plaintext to disk
-./workplace/workplace/bin/percipience layer apply \
-  --pack .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack \
-  --in-memory-only \
-  --mode multi_module
-```
-
-When consumed:
-1. The **Percipience Enclave Runtime** validates the `NBPACK_V2_SEALED` binary header and SHA-256 signature.
-2. Domain contracts and subagent prompts are mounted into volatile RAM memory.
-3. The master context ledger records the layer application with a newly sealed cryptographic Merkle block.
+| Tier | Entitled Features | Module Scope | Packaging Output |
+| :--- | :--- | :--- | :--- |
+| **Free Community** (`plan_free`) | Gatekeeper checks, local AST pruning | Local provider module | Local repo only |
+| **Team Tier** (`plan_team`) | + Ephemeral worktrees, custom agents | Provider + Consumer modules | Local + IDE plugins |
+| **Business Tier** (`plan_business`) | + Sealed .nbpack packaging, API gateway | All domain modules | Cloud SaaS + IDE plugins |
+| **Enterprise Dedicated** (`plan_enterprise`) | + Swarm Triad, VPC enclave, WORM vault | Full repository + custom contracts | Dedicated multi-tenant cluster |
 
 ---
 
-## 7. CLI Layering Commands & Verification Protocol
-
-To apply this custom domain layer onto a fresh or existing repository:
+## 8. CLI Commands & Verification Protocol
 
 ```bash
-# 1. Initialize repository using Parent Master Plan
-./workplace/workplace/bin/percipience init --mode multi_module --parent-plan .nb/plan/claude-context-engineering-parent-master-plan.md
+# 1. Verify and synchronize plan versions
+python3 .nb/plan/scripts/sync_plan_versions.py
 
-# 2. Apply this domain layer
-./workplace/workplace/bin/percipience layer apply --plan .nb/plan/templates/custom_{{DOMAIN_SLUG}}_domain_plan.md
+# 2. Package into sealed .nbpack envelope
+./.nb/bin/percipience layer pack \
+  --plan .nb/plan/{{LAYER_LEVEL}}/{{DOMAIN_SLUG}}/concise.md \
+  --output .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack
 
-# 3. Scaffold and integrate domain subagents
-./workplace/workplace/bin/percipience agent create --name {{SPECIALIST_AGENT_1}} --template cicd_quality --role "{{DOMAIN_NAME}} Specialist"
-./workplace/workplace/bin/percipience agent integrate --agent agent_{{SPECIALIST_AGENT_1}} --workflow wf_pr_gatekeeper --after step_contract_compat
+# 3. Apply layer bundle to target environment
+./.nb/bin/percipience layer apply \
+  --pack .nb/bundles/{{DOMAIN_SLUG}}_domain.nbpack \
+  --in-memory-only
 
 # 4. Run PR Gatekeeper verification
-./workplace/workplace/bin/percipience gate
+./.nb/bin/percipience gate
 ```

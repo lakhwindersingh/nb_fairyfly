@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_team_379593e4e2aa",
+  "license_id": "lic_plan_team_47310c9cd65a",
   "tenant_id": "tenant_provision_test",
   "tier": "plan_team",
   "tier_name": "Team Tier",
@@ -17,7 +17,7 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-06T02:48:41.974240+00:00",
+  "issued_at": "2026-10-06T02:59:16.557402+00:00",
   "total_files": 102,
   "file_manifest": {
     "bin/percipience": "8994e163bbf3071f64cdb24adb5078a63b8a55012ac2fd2ccee9677c7eb99db7",
@@ -123,5 +123,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "31a8521d3a4bb5f4aebd4295fc50520e9b37977d6d6fe94239f1aebc770669e9",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "0cf48a8552d8e40ac5832cdc4a1522a21e149933f7d35fdc93698feb1d1ef968"
+  "signature_sha256": "604c9f728a35fbcb454d948fe4257e7787db39786e3ad108e2f934a06c87e05f"
 }

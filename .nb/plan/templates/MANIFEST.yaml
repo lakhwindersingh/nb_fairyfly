@@ -1,0 +1,51 @@
+plan_id: "domain_{{DOMAIN_SLUG}}"
+plan_name: "{{DOMAIN_NAME}}"
+version: "1.0.0"
+capability_rating: "{{CAPABILITY_RATING:-L1}}" # L1 (Foundation/IDE/Gateway), L2 (Ecosystem/SaaS/OS), L3 (Specialized)
+plan_type: "layerable_domain_plan"
+status: "active"
+parent_plan: "{{PARENT_PLAN:-master/parent-master-plan/concise.md}}"
+dependencies:
+  - "master_parent_framework"
+file_versions:
+  concise:
+    path: "concise.md"
+    version: "1.0.0"
+    last_modified: "{{CURRENT_DATE}}"
+    content_hash: "{{SHA256_HASH}}"
+    line_count: 0
+    primary_purpose: "Compact domain specification for token-optimized agentic context"
+  detailed:
+    path: "detailed.md"
+    version: "1.0.0"
+    last_modified: "{{CURRENT_DATE}}"
+    content_hash: "{{SHA256_HASH}}"
+    line_count: 0
+    primary_purpose: "Comprehensive implementation blueprint, API wire contracts, and test harness"
+  readme:
+    path: "README.md"
+    version: "1.0.0"
+    last_modified: "{{CURRENT_DATE}}"
+    content_hash: "{{SHA256_HASH}}"
+    line_count: 0
+    primary_purpose: "Quick reference, domain overview, and developer navigation"
+key_capabilities:
+  - "{{DOMAIN_CAPABILITY_1}}"
+  - "{{DOMAIN_CAPABILITY_2}}"
+  - "{{DOMAIN_CAPABILITY_3}}"
+  - "{{DOMAIN_CAPABILITY_4}}"
+implementation_phases:
+  phase_1: "Wire Contracts & Boundary Invariants"
+  phase_2: "Domain Implementation & Subsystem Architecture"
+  phase_3: "Specialist Subagents & Verification Workflows"
+  phase_4: "Packaging, Distribution & Gateway Provisioning"
+success_metrics:
+  contract_compliance: "100%"
+  test_coverage: "100%"
+  token_reduction_ratio: ">=60%"
+related_contracts:
+  - ".nb/context/contracts/{{DOMAIN_WIRE_CONTRACT_1}}.yaml"
+  - ".nb/context/contracts/{{DOMAIN_WIRE_CONTRACT_2}}.json"
+related_rules:
+  - ".nb/context/rules/{{DOMAIN_INVARIANT_RULE_1}}.md"
+  - ".nb/context/rules/{{DOMAIN_INVARIANT_RULE_2}}.md"
