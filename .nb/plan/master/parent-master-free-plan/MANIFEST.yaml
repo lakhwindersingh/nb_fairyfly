@@ -10,22 +10,22 @@ file_versions:
   concise:
     path: concise.md
     version: 7.5.0
-    last_modified: '2026-09-24'
-    content_hash: 5764450573e33e4b93c73e10701d2a769f3285de77d19eeedc68324502a18968
-    line_count: 66
+    last_modified: '2026-10-05'
+    content_hash: bfe2315b4e21753067ff5f77e7af4031fd2a73b7c2f56d4bf4e97bf86e9a51e0
+    line_count: 70
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 7.5.0
-    last_modified: '2026-09-24'
-    content_hash: 422ca2d177a3e9dd1802997755e2cad2f2a495845f14e90fa6ad0543c30c720b
-    line_count: 321
+    last_modified: '2026-10-05'
+    content_hash: 3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380
+    line_count: 351
     primary_purpose: Extended implementation guide with IDE embedding and verification
       strategies
   readme:
     path: README.md
     version: 7.5.0
-    last_modified: '2026-09-24'
+    last_modified: '2026-10-05'
     content_hash: b3d33a3af6add6d604b478b4ca2e58dcf6086afaa2fcc1e4446fdad5c65fe21e
     line_count: 29
     primary_purpose: Quick reference and navigation

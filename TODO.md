@@ -271,7 +271,7 @@
   - Enforce max swarm recursion depth ($D_{\max} = 2$) and max concurrent active worktrees ($N_{\max} = 4$) with automated SIGKILL for rogue workers.
 - [x] **TODO-AD-02: Cryptographic Handoff Token & Payload Schema Validator (P1)** ([`workplace/core/handoff_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/handoff_validator.py)):
   - Enforce JSON Schema Draft-07 validation for inter-agent communication messages via `agentic/schemas/handoff_schema.yaml`.
-  - Implement non-bypassable signed `HandoffToken` verification in workflow orchestrator to prevent downstream release gates from running without preceding gate attestations.
+  - Implement non-bypassable signed `HandoffToken` verification with zero-drift attestation ($S_{SP} \ge 0.95$), single-use nonces, payload artifact hashes, dynamic YAML DAG routing, replay prevention, and guaranteed persistent outbox/inbox delivery spools with ACK receipts.
 - [x] **TODO-AD-03: Composite 6-Vector Semantic Parity Engine & CLI (P1)** ([`workplace/core/semantic_parity_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/semantic_parity_engine.py)):
   - Implement `workplace/core/semantic_parity_engine.py` calculating real-time $S_{SP}$ metric score ($0.00 \text{ to } 1.00$).
   - Add CLI subcommands:
@@ -412,9 +412,9 @@
 - [ ] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)**:
   - *Shortcoming*: HITL is only used as an error quarantine dump rather than proactive milestone approval.
   - *Implementation Scope*: Implement interactive HITL approval cards (web/CLI) in `workplace/core/hitl_checkpoint_manager.py` for architectural trade-off sign-offs.
-- [ ] **TODO-AGT-19: Deadlock Detection & Inter-Agent Handoff Cycle Sentinel (P1)**:
-  - *Shortcoming*: Handoff tokens lack runtime cycle detection, risking infinite recursive delegation loops.
-  - *Implementation Scope*: Implement cycle detection and hop TTL ($TTL = 5$) in `workplace/core/handoff_validator.py` to terminate recursive handoff deadlocks.
+- [x] **TODO-AGT-19: Deadlock Detection & Inter-Agent Handoff Cycle Sentinel (P1)** ([`workplace/core/handoff_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/handoff_validator.py)):
+  - *Shortcoming*: Handoff tokens lacked runtime cycle detection, risking infinite recursive delegation loops.
+  - *Implementation*: Implemented topological loop sentinel (`lineage` inspection), max hop ceiling (`hop_count <= 5`), anti-drift attestation ($S_{SP} \ge 0.95$), replay token tracking, dynamic YAML workflow DAG route synchronization, and persistent outbox/inbox delivery in `workplace/core/handoff_validator.py` and `.nb/core/handoff_validator.py`.
 - [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)**:
   - *Shortcoming*: Custom agents lack standardized benchmark suites measuring task success rate and token efficiency.
   - *Implementation Scope*: Build `workplace/tests/benchmarks/test_agent_benchmarks.py` running automated golden test challenge sets across all agents with Merkle scorecards.

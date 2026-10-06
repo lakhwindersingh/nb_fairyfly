@@ -108,6 +108,18 @@ Multi-agent swarms frequently exhibit failure modes during task delegation:
    - *Failure Mode*: A Tier B specialist agent (e.g. doc generator or diff pruner) attempts actions reserved exclusively for Tier A frontier agents (such as signing Merkle blocks, approving PR gates, or modifying wire contracts).
    - *Protocol Enforcement*: Role-Based Access Control (RBAC) matrix in `layered_context_validator.py` blocks unauthorized capability execution.
 
+6. **Swarm Deadlocks & Circular Handoff Loops (`GAP-AGT-19`)**:
+   - *Failure Mode*: Autonomous agents enter circular delegation ping-pong ($A \to B \to A$) or recursive swarm loops when encountering unhandled ambiguities or edge cases, causing runaway token consumption.
+   - *Protocol Enforcement*: Topological cycle sentinel in `handoff_validator.py` inspects the historical `lineage` array and enforces a strict hop ceiling ($H_{\max} = 5$). Cycles immediately trigger `REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED` and halt the rogue loop.
+
+7. **Replay Attacks & Stale Token Resubmission**:
+   - *Failure Mode*: Stale or intercepted tokens are replayed to trigger downstream stages without legitimate gate re-evaluation.
+   - *Protocol Enforcement*: Ephemeral single-use cryptographic nonces and a spent token ledger (`_SPENT_TOKENS`) reject replayed tokens with `REJECTED_REPLAYED_HANDOFF_TOKEN`, accompanied by TTL expiration enforcement.
+
+8. **Passive In-Memory Drop vs. Guaranteed Outbox/Inbox Delivery**:
+   - *Failure Mode*: Handoff payloads validated in memory are dropped due to transient process exits or worker restarts before reaching successor agents.
+   - *Protocol Enforcement*: Guaranteed persistent delivery spooling (`.nb/context/handoffs/outbox/` and `.nb/context/handoffs/inbox/{agent_id}/`) with explicit acknowledgment (ACK) receipts and Merkle block sealing.
+
 ### 3.4. Documentation Drift
 - **Definition**: Implementation details diverge from system documentation in `workplace/docs/`.
 - **Remediation**: `agent_living_doc_architect` introspects source ASTs and updates all 31 living markdown documents with executable Mermaid diagrams before PR verification.
@@ -141,10 +153,13 @@ sequenceDiagram
         ASTGate-->>Dev: Reject with Reverse AST Diff (Revert Mode)
     end
 
-    Dev->>HandoverGate: Emit Handoff Payload to Next Agent
-    HandoverGate->>HandoverGate: Verify DAG Successor Authorization & Payload Schema
-    alt Rogue Agent Spawn or Invalid Payload
-        HandoverGate-->>Dev: Reject: Unauthorized Successor or Schema Mutation
+    Dev->>HandoverGate: Request Attested Handoff (Verify S_SP >= 0.95 & Hash Artifact)
+    HandoverGate->>HandoverGate: Verify Anti-Drift Parity, Nonce, DAG Successor & Schema
+    alt Active Drift (S_SP < 0.95) or Circular Loop (GAP-AGT-19)
+        HandoverGate-->>Dev: Reject: Active Drift Detected or Max Hops/Cycle Exceeded
+    else Verified No-Drift & Authorized Successor
+        HandoverGate->>HandoverGate: Spool to Persistent Outbox & Recipient Inbox
+        HandoverGate-->>Dev: Emit Signed Attested Token & Dispatch Receipt
     end
 
     Dev->>WireGate: Validate Wire Contracts (.nb/context/contracts/)

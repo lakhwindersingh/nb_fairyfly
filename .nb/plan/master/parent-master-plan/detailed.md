@@ -143,8 +143,14 @@ The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reducti
 - **Multi-Dimensional 6D Token Optimization Suite**:
   - Six discrete compression pruners (`ASTSkeletonPruner`, `DocPruner`, `ConfigSchemaPruner`, `DiagnosticLogPruner`, `GitDiffPruner`, `ConversationMemoryCompactor`) in `.nb/core/token_optimizer_suite.py`.
   - Configurable compression presets (`disabled`, `conservative`, `standard`, `aggressive`, `extreme`) and granular per-strategy toggles.
-- **Multi-Agent Handover Integrity & 6-Vector Semantic Parity Engine (CAP-27)**:
+- **Multi-Agent Handover Integrity, Attested Anti-Drift Tokens & Guaranteed Delivery Engine (CAP-09, CAP-26, CAP-27, GAP-AGT-19)**:
   - Cryptographic HMAC-SHA256 `HandoffToken` generation and JSON Schema Draft-07 payload validation (`agentic/schemas/handoff_schema.yaml`) in `.nb/core/handoff_validator.py`.
+  - **Zero-Drift Attested Handoff Binding**: Strict pre-condition requiring `SemanticParityEngine` zero-drift confirmation ($S_{SP} \ge 0.95$). If $S_{SP} < 0.95$, handoff token issuance is hard-blocked with `ValueError`. Attested tokens bind payload artifact digest ($H(\text{artifact})$), parity report digest ($H(\text{receipt})$), and a cryptographically secure 128-bit single-use nonce.
+  - **Two-Phase Guaranteed Outbox/Inbox Delivery Spooling**: Handoff payloads are atomically spooled to `.nb/context/handoffs/outbox/` and routed to the recipient agent's dedicated inbox `.nb/context/handoffs/inbox/{agent_id}/`. Downstream agents poll via `poll_inbox()` and issue explicit cryptographic acknowledgments (`acknowledge_handover()`), archiving processed envelopes to `.nb/context/handoffs/archive/`.
+  - **Anti-Replay Protection & TTL Validation**: Spent tokens are logged to an in-memory/disk spent token ledger (`_SPENT_TOKENS`). Replayed tokens trigger immediate rejection (`REJECTED_REPLAYED_HANDOFF_TOKEN`). Payloads with explicit `ttl_seconds` are validated against UTC expiration boundaries (`REJECTED_EXPIRED_HANDOFF_TOKEN`).
+  - **Swarm Graph Cycle Sentinel & Max-Hop Ceilings (`GAP-AGT-19`)**: Payloads track topological historical traversal in `lineage: List[str]` and integer `hop_count`. If `to_agent \in lineage` (circular loop) or `hop_count \ge 5` (max-hop ceiling), handoffs are rejected with `REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED` to prevent infinite recursive swarm deadlocks and token drain.
+  - **Dynamic YAML Workflow DAG Routing & Approved Agent Verification**: Dynamically parses step dependencies from all `.nb/agentic/workflows/*.yaml` manifests (`load_dynamic_workflow_routes()`) to derive valid transition edges, closing static routing divergence and disallowing unauthenticated custom workflow bypasses. Verifies target agent registration in `AgentPluginEngine` (`verify_agent_approval()`).
+  - **Cryptographic Merkle State Ledger Sealing**: Successful handoffs automatically invoke `MerkleEngine.seal_block()` to commit an immutable audit receipt block (`RP_HO_*`) into `context_ledger.yaml`.
   - Composite mathematical parity formulation in `.nb/core/semantic_parity_engine.py`: $S_{SP} = 0.20 S_{\text{AST}} + 0.25 S_{\text{Contract}} + 0.20 S_{\text{Behavior}} + 0.15 S_{\text{Handover}} + 0.10 S_{\text{Doc}} + 0.10 S_{\text{SupplyChain}}$.
   - Automated Dual-Reconciliation Protocol in `.nb/core/reconciliation_engine.py` (automated surgical reverse diffing in Revert Mode vs. HITL RFC spec evolution in `user/hitl/proposed_spec_delta.md` in Evolve Mode).
   - Multi-agent swarm governance with recursion ceiling ($D_{\max} = 2$) and active worktree lease eviction preventing shadow subagent spawning.
@@ -929,9 +935,22 @@ graph LR
    - Resolves agent specifications across multi-tier search paths (`.nb/agentic/custom/agents/`, `.nb/plan/agents/`, `.nb/plan/packages/*/agents/`, `user/hitl/orphaned_context_files/agents/`).
    - Provisions isolated ephemeral worktree sandbox (`.nb/workspaces/subagent_<executor>/`).
    - Asserts concurrency lease lock, preventing race conditions.
-3. **`handoff_hook` (Cross-Agent Cryptographic Continuity)**:
-   - Encapsulates inter-agent artifacts within a signed `HandoffToken` containing predecessor block hash, artifact Merkle root, and schema version.
-   - Successor agent validates token signature before ingesting payloads, eliminating context poisoning.
+3. **`handoff_hook` (Cross-Agent Cryptographic Continuity & Guaranteed Delivery Instructions)**:
+   - **Instruction for Calling Agent (Predecessor Executor)**:
+     1. Complete task in sandboxed worktree (`.nb/workspaces/subagent_<id>/`).
+     2. Invoke `SemanticParityEngine.compute_parity_report()` to assert no active drift ($S_{SP} \ge 0.95$). If active drift is detected, abort handoff and trigger Revert Mode or Evolve Mode reconciliation.
+     3. Request an attested handoff token via `HandoffValidator.generate_attested_token(from_agent, to_agent, workflow_id, stage, gate_id, artifact_content, parity_report)`.
+     4. Format handoff payload conformant to `agentic/schemas/handoff_schema.yaml` with required fields: `token_hash`, `artifact_hash`, `parity_receipt_hash`, `nonce`, `lineage`, and `hop_count`.
+     5. Dispatch payload via `HandoffValidator.process_handover(payload, auto_dispatch=True)`. The engine validates the payload, seals a Merkle receipt block, spools to `.nb/context/handoffs/outbox/`, and drops the envelope into `.nb/context/handoffs/inbox/{to_agent}/`.
+   - **Instruction for Successor Agent (Consumer Executor)**:
+     1. Prior to commencing work, poll pending assignments via `HandoffValidator.poll_inbox(agent_id)`.
+     2. Confirm payload delivery status is `DISPATCHED` and verify payload artifact hash matches $H(\text{artifact})$.
+     3. Ingest payload and execute downstream task within isolated worktree sandbox.
+     4. On successful ingestion/completion, issue explicit acknowledgment via `HandoffValidator.acknowledge_handover(agent_id, handoff_id)`, which records an `.ack` receipt and archives the envelope to `.nb/context/handoffs/archive/`.
+   - **Instruction for Swarm Orchestrator (Runtime Sentinel)**:
+     1. Enforce topological cycle checking (`GAP-AGT-19`): immediately reject any transition where `to_agent \in lineage` or `hop_count \ge 5` (`REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED`).
+     2. Enforce replay prevention: reject any previously spent token or duplicate handoff ID (`REJECTED_REPLAYED_HANDOFF_TOKEN`).
+     3. Anchor confirmed handovers into the cryptographic Merkle ledger (`context_ledger.yaml`).
 4. **`post_step_hook` / `verification_gate_hook`**:
    - Executes independent verification gates (`gate_arch_review`, `gate_provider_review`, `gate_consumer_review`, `gate_cross_module_compatibility`, `gate_doc_drift_verification`).
    - Rejects unverified artifacts and triggers bounded auto-healing ($N \le 3$).
@@ -1130,7 +1149,12 @@ The `WorkflowEngine` executes Kahn’s algorithm to analyze and validate workflo
 1. **Acyclicity Assertion**: Validates that no cyclic dependencies exist ($\mathcal{O}(V + E)$).
 2. **Predecessor & Successor Resolution**: Automatically computes the explicit `_predecessors` (via `depends_on`) and `_successors` (via adjacency inverse mapping) for every step.
 3. **Execution Depth & Concurrency Partitioning**: Assigns topological depth indices to each step, allowing independent parallel subagent tasks at the same depth to execute concurrently within isolated worktrees (`.nb/workspaces/subagent_<id>/`).
-4. **Contract-Bound Handoffs**: Maps predecessor output artifacts directly to successor input parameters, verifying schema conformity before triggering successor agents.
+4. **Contract-Bound Guaranteed Handoffs & Cycle Sentinel (GAP-AGT-19)**:
+   - Maps predecessor output artifacts directly to successor input parameters, verifying JSON Schema Draft-07 conformity via `handoff_schema.yaml`.
+   - Dynamic routing engine loads active transition edges from `.nb/agentic/workflows/*.yaml` (`load_dynamic_workflow_routes()`) and checks target agent authorization (`verify_agent_approval()`).
+   - Strict Anti-Drift binding ($S_{SP} \ge 0.95$) and single-use nonce issuance immunize the pipeline against unverified gate short-circuiting and replay attacks.
+   - Enforces topological cycle detection across the execution lineage and caps delegation depth at $H_{\max} = 5$ (`REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED`).
+   - Guarantees persistent two-phase spooling via Outbox/Inbox envelopes with downstream acknowledgment receipts.
 
 #### 3. Co-Located & Embedded Agent Specifications
 Every executor referenced in a workflow must be specified in the plan’s co-located agent directory (`.nb/plan/agents/<agent_id>.yaml`) and embedded in Section 3 of the plan. When a layer is applied via `./.nb/bin/percipience layer apply`, the hydration engine automatically instantiates these agents into `.nb/agentic/custom/agents/` with full role, model tier (`tier_a` vs `tier_b`), sandboxed worktree, module scope, and specialized tool bindings.

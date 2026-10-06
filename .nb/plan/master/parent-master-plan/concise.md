@@ -40,7 +40,7 @@ graph TD
    - **Tier B (High-Throughput)**: AST extraction, test scaffolding, diff application (`claude-3-5-haiku`, `gemini-2.0-flash`, `gpt-4o-mini`).
    - **Tier C (Deterministic/Offline)**: AST pruning, SHA-256 Merkle chain verification, regex scanning.
 5. **CAP-05: Git Worktree Workspace Isolation**: Ephemeral worktrees (`.nb/workspaces/subagent_<id>/`) preventing concurrent file conflicts during parallel swarm execution.
-6. **CAP-06: Spec-to-Code Semantic Parity & Anti-Drift Engine**: Mathematical vector similarity and AST contract scoring (0.00–1.00) with Revert and Evolve modes.
+6. **CAP-06: Spec-to-Code Semantic Parity, Anti-Drift Engine & Attested Handover Governance**: Mathematical 6-vector parity scoring ($S_{SP} \ge 0.95$), Revert/Evolve dual reconciliation, attested handoff token generation binding artifact hashes and nonces, persistent outbox/inbox delivery spools with ACK receipts, and swarm graph cycle sentinel ($H_{\max} = 5$, `GAP-AGT-19`).
 7. **CAP-07: Bounded TDD Self-Healing & Test Quarantine**: Maximum 3 self-repair retries before quarantining failing tests in `context_ledger.yaml`.
 8. **CAP-08: Cryptographic Ledger Hash-Chain (Merkle Engine)**: Immutable SHA-256 chaining of all artifact diffs, test evidence, and state transitions.
 9. **CAP-09: Time-Travel Debugging & Visual DAG Dashboard**: Lightweight web dashboard (`user/outputs/dashboard/index.html`) with DAG inspection and diff visualizer.

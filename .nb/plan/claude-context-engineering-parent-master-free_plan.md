@@ -18,6 +18,7 @@ The **Percipience Parent Master Context Engineering Plan (Free Community Edition
 - **Cryptographic Merkle State Chain**: Continuous SHA-256 tamper-evident ledger tracking all artifact modifications, agent actions, and recovery snapshots.
 - **Basic Autonomous CI/CD Setup**: Lightweight self-sustaining workspace hygiene, single-attempt bounded self-repair, contract verification, and automated Merkle state sealing.
 - **Granular Sandbox Permissions for Local LLMs**: Scaffolding and granular cross-plugin sandbox permission control (`SandboxPermissionBroker`) for IDE-embedded LLMs.
+- **Attested Multi-Agent Handover & Guaranteed Delivery Spooling**: Zero-drift attested tokens ($S_{SP} \ge 0.95$), persistent outbox/inbox delivery queues, single-use nonce replay defense, and topological cycle sentinel (`GAP-AGT-19`).
 
 ```mermaid
 graph TD
@@ -225,6 +226,35 @@ Hooks incorporate a differential state evaluation engine:
 - **Persistent Ledger Receipt Cache**: Stored at `.nb/context/ledger/step_cache.json`.
 - **Smart Skip Determination**: If input fingerprints match the cached receipt and output artifacts exist on disk, the step execution is skipped.
 - **Verbose Reporting**: Emits structured console telemetry.
+
+### 5.5 Guaranteed Handover Protocol, Anti-Drift Attestation & Cycle Prevention (`CAP-09`, `CAP-26`, `GAP-AGT-19`)
+The Free Community Edition implements the exact same rigorous handover verification and delivery guarantees provided across enterprise tiers via `.nb/core/handoff_validator.py` and `.nb/agentic/schemas/handoff_schema.yaml`:
+
+1. **Anti-Drift Attested Handoff Generation (`generate_attested_token`)**:
+   - Prior to transferring context or triggering successor steps, the calling agent or platform engine MUST assert zero active drift by calculating $S_{SP}$ via `SemanticParityEngine.compute_parity_report()`.
+   - If composite $S_{SP} < 0.95$, `generate_attested_token()` raises a hard error (`ValueError: Workspace exhibits active drift`), blocking token creation and forcing local code remediation or spec alignment.
+   - The attested token cryptographically binds the SHA-256 hash of the payload artifact (`artifact_hash`), the anti-drift receipt hash (`parity_receipt_hash`), and a single-use random 128-bit cryptographic nonce into the HMAC-SHA256 signature.
+
+2. **Persistent Two-Phase Outbox/Inbox Guaranteed Delivery**:
+   - Passing payloads through `process_handover(payload, auto_dispatch=True)` validates the JSON Schema Draft-07 envelope and atomically spools the payload to `.nb/context/handoffs/outbox/` and recipient inbox `.nb/context/handoffs/inbox/{to_agent}/` with `delivery_status: DISPATCHED`.
+   - The successor agent polls its local inbox via `poll_inbox(agent_id)`, verifies the artifact digest matches `artifact_hash`, and executes its sandboxed task.
+   - Upon completion, the consumer invokes `acknowledge_handover(agent_id, handoff_id)`, which writes an `.ack` receipt and moves the envelope to `.nb/context/handoffs/archive/`.
+
+3. **Replay Attack & Stale Resubmission Defense**:
+   - The engine logs every processed token to `_SPENT_TOKENS`. Any attempt to replay a spent token or reuse a duplicate handoff ID is rejected with `REJECTED_REPLAYED_HANDOFF_TOKEN`.
+   - If `ttl_seconds` is provided in the payload, the timestamp is verified against current UTC time; expired tokens trigger `REJECTED_EXPIRED_HANDOFF_TOKEN`.
+
+4. **Swarm Graph Cycle Sentinel & Max-Hop Ceilings (`GAP-AGT-19`)**:
+   - Payloads maintain an immutable `lineage: List[str]` and integer `hop_count`.
+   - If `to_agent in lineage`, the handover is terminated with `REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED` to eliminate infinite recursive delegation deadlocks.
+   - If `hop_count >= 5`, the handoff is rejected to prevent unmetered local token burn and process proliferation.
+
+5. **Dynamic YAML Route Synchronization & Approved Agent Assertion**:
+   - Valid routing edges are dynamically resolved from all active manifests in `.nb/agentic/workflows/*.yaml` (`load_dynamic_workflow_routes()`). Arbitrary open bypasses for custom workflows are strictly prohibited.
+   - Target agents are verified against registered platform roles and `AgentPluginEngine` (`verify_agent_approval()`).
+
+6. **Cryptographic Merkle State Ledger Sealing**:
+   - Every confirmed handoff automatically seals an immutable Merkle block (`RP_HO_*`) into `context_ledger.yaml` via `MerkleEngine.seal_block()`.
 
 ---
 

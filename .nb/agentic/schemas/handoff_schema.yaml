@@ -30,6 +30,28 @@ properties:
   timestamp:
     type: "string"
     format: "date-time"
+  parity_receipt_hash:
+    type: "string"
+    description: "SHA-256 hash of confirmed Anti-Drift Parity Report (S_sp >= 0.95)"
+  artifact_hash:
+    type: "string"
+    description: "SHA-256 content hash of the payload artifact"
+  nonce:
+    type: "string"
+    description: "Cryptographic single-use nonce for replay protection"
+  hop_count:
+    type: "integer"
+    minimum: 0
+    maximum: 10
+    description: "Current swarm execution hop counter (MAX_HOP_COUNT = 5)"
+  lineage:
+    type: "array"
+    items:
+      type: "string"
+    description: "Ordered sequence of previously visited agent IDs"
+  ttl_seconds:
+    type: "integer"
+    description: "Time-to-live for handoff delivery in seconds"
   metadata:
     type: "object"
     additionalProperties: true

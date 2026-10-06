@@ -4,10 +4,10 @@ Neutron Binary Percipience CLI
 Enterprise Context Engineering OS & CI/CD Gatekeeper Command-Line Interface.
 """
 
-import os
-import sys
 import argparse
 import json
+import os
+import sys
 import time
 from pathlib import Path
 
@@ -38,7 +38,6 @@ from core.autonomous_cicd import (
     SelfImprovingEngine,
     AutonomousCICDOrchestrator
 )
-from core.cognitive_router import CognitiveRouter
 from core.flaky_test_detector import FlakyTestDetector
 from core.contract_compatibility_checker import ContractCompatibilityChecker
 from core.dependency_cve_sentinel import DependencyCVESentinel
@@ -48,14 +47,11 @@ from core.worm_egress import WORMEgressManager
 from core.tree_sitter_daemon import TreeSitterDaemonClient
 from core.diagnostic_reprompt import DiagnosticRePromptEngine
 from core.token_optimizer_suite import TokenOptimizationConfig, UnifiedTokenOptimizer
-from core.handoff_validator import HandoffValidator
 from core.semantic_parity_engine import SemanticParityEngine
 from core.reconciliation_engine import DualReconciliationEngine
 from core.request_formalizer import RequestFormalizerEngine
 from core.swarm_governor import SwarmGovernor
 from core.prompt_drift_sentinel import PromptDriftSentinel
-from core.workflow_orchestrator import WorkflowOrchestrator
-from core.error_recovery_orchestrator import ErrorRecoveryOrchestrator
 from core.terminal_agent_ast_proxy import TerminalAgentASTProxy
 from core.commercial_packager_provisioner import CommercialPackagerProvisioner
 from core.pii_sanitizer import PIISanitizer

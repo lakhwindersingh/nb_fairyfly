@@ -68,30 +68,54 @@ stateDiagram-v2
 
 ---
 
-## 3. Cryptographic Handoff Verification Protocol
+## 3. Cryptographic Handoff Verification & Guaranteed Delivery Protocol
 
-Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation from preceding verification gates.
+Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation confirming zero active drift ($S_{SP} \ge 0.95$), bound artifact hashes, and guaranteed delivery via persistent outbox/inbox spools.
+
+### 3.1. Mathematical Attestation Token Formulation
+The cryptographic attestation token binds the workflow context, agent identities, payload artifact digest, anti-drift receipt hash, and a single-use cryptographic nonce:
+
+$$\text{Token} = \text{HMAC-SHA256}_{K}\Big(\text{wf} \parallel \text{stage} \parallel \text{gate} \parallel (\text{from} \to \text{to}) \parallel H(\text{artifact}) \parallel H(\text{receipt}_{S_{SP}}) \parallel \text{nonce}\Big)$$
+
+Where:
+- $H(\text{artifact}) = \text{SHA-256}(\text{payload\_artifact\_content})$ prevents payload tampering in transit.
+- $H(\text{receipt}_{S_{SP}}) = \text{SHA-256}(\text{parity\_report})$ guarantees $S_{SP} \ge 0.95$ was confirmed by `SemanticParityEngine`.
+- $\text{nonce} \in \{0, 1\}^{128}$ ensures single-use validity, immunizing the swarm against replay attacks.
+
+### 3.2. Delivery Guarantees & Swarm Cycle Sentinel (GAP-AGT-19)
+1. **Persistent Outbox/Inbox Spooling**:
+   - Authorized handoffs are atomically spooled into `.nb/context/handoffs/outbox/` and routed to the successor agent's inbox spool (`.nb/context/handoffs/inbox/{agent_id}/`).
+   - Downstream agents process payloads and emit cryptographic acknowledgment (`acknowledge_handover`), moving envelopes to `.nb/context/handoffs/archive/`.
+2. **Topological Cycle & Max-Hop Sentinel**:
+   - The payload maintains an immutable `lineage: List[str]` and integer `hop_count`.
+   - If $\text{target\_agent} \in \text{lineage}$, the handover is rejected with `REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED`, preventing recursive delegation loops.
+   - If $\text{hop\_count} \ge H_{\max}$ ($H_{\max} = 5$), the handoff is terminated to prevent swarm resource exhaustion.
+3. **Merkle Ledger Anchoring**:
+   - Each confirmed handover automatically seals a cryptographic Merkle block (`HANDOFF_CONFIRMED:{from}->{to}:{wf}`) into the immutable ledger.
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant AgentA as Upstream Agent (e.g. AstOptimizer)
-    participant Gate as Preceding Verification Gate
-    participant AgentB as Downstream Agent (e.g. CVESentinel)
-    participant Engine as HandoffValidator & Ledger
+    participant Engine as HandoffValidator & Parity Engine
+    participant Outbox as Persistent Outbox/Inbox Spool
+    participant AgentB as Successor Agent (e.g. CVESentinel)
+    participant Merkle as Merkle Audit Ledger
 
-    AgentA->>Gate: Execute Task & Request Verification
-    Gate->>Gate: Verify Invariants & Output Artifact
-    Gate->>Engine: Generate HMAC-SHA256 HandoffToken
-    Engine-->>AgentA: Emit Signed HandoffToken
-    AgentA->>AgentB: Transmit Payload (handoff_id, payload_artifact, token_hash)
-    AgentB->>Engine: Validate Payload Schema & Token Authenticity
-    alt Valid Token & Authorized DAG Route
-        Engine-->>AgentB: Confirmed (AUTHORIZED_HANDOFF_CONFIRMED)
-        AgentB->>AgentB: Execute Downstream Task
-    else Forged Token or Rogue Route
-        Engine-->>AgentB: REJECTED_UNAUTHORIZED_HANDOVER
-        Engine->>Engine: Terminate Rogue Worker & Alert Control Plane
+    AgentA->>Engine: Request Attested Handoff (Verify S_SP >= 0.95 & Hash Artifact)
+    Engine->>Engine: Assert S_SP >= 0.95, Generate Nonce & HMAC Token
+    Engine-->>AgentA: Emit Attested Token & Nonce
+    AgentA->>Engine: Process Handover (Payload + Token + Lineage + HopCount)
+    Engine->>Engine: Verify Schema, Dynamic YAML Route, Cycle Sentinel & Nonce Replay
+    alt Verification Succeeded
+        Engine->>Outbox: Spool to outbox/ and inbox/AgentB/
+        Engine->>Merkle: Seal Cryptographic Block (RP_HO_xxx)
+        Engine-->>AgentA: AUTHORIZED_HANDOFF_CONFIRMED (DISPATCHED)
+        AgentB->>Outbox: Poll Inbox (poll_inbox)
+        AgentB->>AgentB: Execute Task in Sandboxed Worktree
+        AgentB->>Outbox: Acknowledge Execution (acknowledge_handover)
+    else Drift Detected (S_SP < 0.95) or Cycle Detected (GAP-AGT-19)
+        Engine-->>AgentA: REJECTED_CYCLE_OR_MAX_HOPS_EXCEEDED / REJECTED_UNAUTHORIZED_HANDOVER
     end
 ```
 

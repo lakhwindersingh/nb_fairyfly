@@ -17,6 +17,7 @@ The **Percipience Parent Master Context Engineering Plan (Free Community Edition
 - **Cryptographic Merkle State Chain**: Continuous SHA-256 tamper-evident ledger tracking all artifact modifications.
 - **Basic Autonomous CI/CD Setup**: Lightweight workspace hygiene, single-attempt bounded self-repair, and contract verification.
 - **Granular Sandbox Permissions**: Security broker for local and embedded LLMs.
+- **Attested Handover & Guaranteed Delivery**: Zero-drift attested tokens ($S_{SP} \ge 0.95$), persistent outbox/inbox queues, single-use nonce replay defense, and topological cycle sentinel (`GAP-AGT-19`).
 
 ```mermaid
 graph TD
@@ -58,6 +59,9 @@ graph TD
 
 # Token FinOps metrics summary
 ./.nb/bin/percipience tokens summary
+
+# Semantic parity & anti-drift check
+./.nb/bin/percipience drift check
 
 # Commercial packaging & provisioning
 ./.nb/bin/percipience package --tier free

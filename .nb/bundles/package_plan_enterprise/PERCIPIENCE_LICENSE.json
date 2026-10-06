@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_5ce510e196ca",
+  "license_id": "lic_plan_enterprise_e0599957873e",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,7 +18,7 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-05T04:03:28.734131+00:00",
+  "issued_at": "2026-10-06T01:36:08.595334+00:00",
   "total_files": 109,
   "file_manifest": {
     "bin/percipience": "8994e163bbf3071f64cdb24adb5078a63b8a55012ac2fd2ccee9677c7eb99db7",
@@ -64,7 +64,7 @@
     "core/swarm_governor.py": "49cc7ac03aa96a94dfc574049ea5e1a6523e4945ba490895aaf099bd6a75acfd",
     "core/contract_compatibility_checker.py": "5efba61538b319ecc86d6de7bf23382c91940c9831c6da8eb5259ebb6f6e62a5",
     "core/prompt_benchmark_engine.py": "2df0c81df7d8e974a93e7a8e06d3691e0289930597a1ae4685c48bb1e7e7e0a6",
-    "core/handoff_validator.py": "142f6f871a7e97009a18d0e687d9bc312b658ff8b565cd481178c9874cb6288d",
+    "core/handoff_validator.py": "74d79d9fcf19f9beef2b7fa364566d7ecd0786ba67fb7cd2ad701a9c3e1aaf45",
     "core/poisoning_sentinel.py": "b3e8f304ef5efb5a5747bdbf744a93d3746fee58e49ba4be154e79f72dd417d7",
     "core/output_guardrail_validator.py": "1ae8cefed78946bede8c6169b2b1ce283bf154d5b91e3151a27733095da6f2cd",
     "core/worktree_engine.py": "6fdf4ac8a5fd75fae3b23b6c518621ba0d6521e7314c8becbb02acd9b103bf36",
@@ -130,5 +130,5 @@
     "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "849fd89d1c6532ee1c6f25852b3d15833d6bdf2aa667eb3119545dc77dd0cdc4",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414"
   },
-  "signature_sha256": "6bec5daff7ad238cd555ed9d178a108caec6ed5f2830bc287a4a9787baa7bd5a"
+  "signature_sha256": "ac54398459d9c9afdc78497712592f25deda510878c54c993798f76a93f2ce8d"
 }
