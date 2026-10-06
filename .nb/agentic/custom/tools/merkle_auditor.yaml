@@ -1,0 +1,30 @@
+name: "merkle_auditor"
+description: "Audits cryptographic SHA-256 Merkle ledger DAG continuity and seals state transitions."
+is_idempotent: false
+mutates_filesystem: true
+timeout_seconds: 30
+required_capabilities:
+  - "CAP_FS_READ"
+  - "CAP_MERKLE_SEAL"
+parameters:
+  type: "object"
+  required:
+    - "action"
+  properties:
+    action:
+      type: "string"
+      enum: ["audit", "seal_block"]
+    block_payload:
+      type: "object"
+returns:
+  type: "object"
+  required:
+    - "status"
+    - "merkle_root"
+  properties:
+    status:
+      type: "string"
+    merkle_root:
+      type: "string"
+    block_index:
+      type: "integer"

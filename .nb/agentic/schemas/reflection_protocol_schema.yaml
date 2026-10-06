@@ -1,0 +1,54 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceReflectionProtocolSchema"
+description: "Schema for 3-phase Reflexion loops (GENERATE -> CRITIQUE -> REFINE) and invariant verification envelopes."
+type: "object"
+required:
+  - "critique"
+  - "defects_found"
+  - "severity"
+  - "passes_invariants"
+  - "convergence_score"
+properties:
+  phase:
+    type: "string"
+    enum: ["GENERATE", "CRITIQUE", "REFINE"]
+  iteration:
+    type: "integer"
+    minimum: 1
+    maximum: 3
+  critique:
+    type: "string"
+  defects_found:
+    type: "array"
+    items:
+      type: "string"
+  severity:
+    type: "string"
+    enum: ["LOW", "MEDIUM", "HIGH"]
+  refined_plan:
+    type: "string"
+  passes_invariants:
+    type: "boolean"
+  convergence_score:
+    type: "number"
+    minimum: 0.0
+    maximum: 1.0
+  pillar_scores:
+    type: "object"
+    properties:
+      wire_contract_conformity:
+        type: "number"
+      edge_case_coverage:
+        type: "number"
+      type_signature_purity:
+        type: "number"
+      guardrail_compliance:
+        type: "number"
+      token_budget_adherence:
+        type: "number"
+    required:
+      - "wire_contract_conformity"
+      - "edge_case_coverage"
+      - "type_signature_purity"
+      - "guardrail_compliance"
+      - "token_budget_adherence"

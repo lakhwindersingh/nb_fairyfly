@@ -1,0 +1,38 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceToolContractSchema"
+description: "Declarative JSON Schema Draft-07 specification for autonomous agent tools."
+type: "object"
+required:
+  - "name"
+  - "description"
+  - "parameters"
+  - "returns"
+  - "is_idempotent"
+  - "mutates_filesystem"
+  - "timeout_seconds"
+properties:
+  name:
+    type: "string"
+    pattern: "^[a-z0-9_\\-]+$"
+  description:
+    type: "string"
+  parameters:
+    type: "object"
+    description: "JSON Schema describing accepted input arguments"
+  returns:
+    type: "object"
+    description: "JSON Schema describing returned output payload"
+  is_idempotent:
+    type: "boolean"
+  mutates_filesystem:
+    type: "boolean"
+  timeout_seconds:
+    type: "integer"
+    minimum: 1
+    maximum: 300
+    default: 30
+  required_capabilities:
+    type: "array"
+    items:
+      type: "string"
+    default: []
