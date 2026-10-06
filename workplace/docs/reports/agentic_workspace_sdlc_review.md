@@ -176,28 +176,28 @@ graph TD
 
 ## 3. Prioritized Implementation Roadmap
 
-| Shortcoming ID | Subsystem | Title | Priority | Target Milestone |
+| Shortcoming ID | Subsystem | Title | Priority | Status / Milestone |
 | :--- | :--- | :--- | :---: | :---: |
-| **GAP-AGT-01** | Workflows | Dynamic Task DAGs & Runtime Sub-Goal Expansion | **P1** | Sprint 1 |
-| **GAP-AGT-02** | Prompts | Multi-Pass Self-Reflection & Critic Verification Loops | **P1** | Sprint 1 |
-| **GAP-AGT-03** | Runtime | 3-Tier Agent Memory Architecture (Working/Episodic/Semantic) | **P1** | Sprint 1 |
-| **GAP-AGT-04** | Manifests | Declarative Tool Contracts & JSON Schema Definitions | **P1** | Sprint 1 |
-| **GAP-AGT-05** | Security | Capability-Based Access Control Tokens (`CAP_FS_*`) | **P1** | Sprint 1 |
-| **GAP-AGT-06** | Architecture | Quad-Space Boundary Cleanup (`agentic/runtime/` refactoring) | **P1** | Sprint 1 |
-| **GAP-AGT-07** | Workflows | Parallel Fan-Out / Fan-In Barrier Synchronization | **P2** | Sprint 2 |
-| **GAP-AGT-08** | Workflows | Fine-Grained Error Taxonomy & Adaptive Playbooks | **P1** | Sprint 1 |
-| **GAP-AGT-09** | Prompts | Prompt SemVer & Automated Regression Benchmarks | **P2** | Sprint 2 |
-| **GAP-AGT-10** | Governance | Hierarchical Agent Supervision & Authority Trees | **P1** | Sprint 1 |
-| **GAP-AGT-11** | Quality | Adversarial Red-Team & Fuzzing Agent (`agent_adversarial_fuzzer`) | **P1** | Sprint 2 |
-| **GAP-AGT-12** | Cognitive | Context Attention Slicing & Token Budgeting Strategy | **P2** | Sprint 2 |
-| **GAP-AGT-13** | FinOps | Static Prefix Pinning for KV Prompt Cache Optimization | **P1** | Sprint 1 |
-| **GAP-AGT-14** | Observability | Structured Trajectory Recording & Replay Engine (`agentic/trajectories/`) | **P2** | Sprint 2 |
-| **GAP-AGT-15** | Ingestion | Requirement Ambiguity Resolver Agent (`agent_ambiguity_resolver`) | **P2** | Sprint 2 |
-| **GAP-AGT-16** | Cognitive | Dynamic Few-Shot Exemplar RAG Injection | **P2** | Sprint 3 |
-| **GAP-AGT-17** | Governance | 2-of-3 Multi-Agent Consensus Quorum for Tier-A Decisions | **P1** | Sprint 2 |
-| **GAP-AGT-18** | HITL | Proactive Milestone Checkpoints & Approval Cards | **P2** | Sprint 3 |
-| **GAP-AGT-19** | Governance | Deadlock Detection & Inter-Agent Handoff Cycle Sentinel | **P1** | **Completed / Verified** |
-| **GAP-AGT-20** | CI/CD | Continuous Agent Benchmark & Quality Evaluation Harness | **P1** | Sprint 2 |
+| **GAP-AGT-01** | Workflows | Dynamic Task DAGs & Runtime Sub-Goal Expansion | **P1** | Open (Sprint 1, `TODO-AGT-01`) |
+| **GAP-AGT-02** | Prompts | Multi-Pass Self-Reflection & Critic Verification Loops | **P1** | Open (Sprint 1, `TODO-AGT-02`) |
+| **GAP-AGT-03** | Runtime | 3-Tier Agent Memory Architecture (Working/Episodic/Semantic) | **P1** | Open (Sprint 1, `TODO-AGT-03`) |
+| **GAP-AGT-04** | Manifests | Declarative Tool Contracts & JSON Schema Definitions | **P1** | Open (Sprint 1, `TODO-AGT-04`) |
+| **GAP-AGT-05** | Security | Capability-Based Access Control Tokens (`CAP_FS_*`) | **P1** | Open (Sprint 1, `TODO-AGT-05`) |
+| **GAP-AGT-06** | Architecture | Quad-Space Boundary Cleanup (`agentic/runtime/` refactoring) | **P1** | **Completed / Verified** (`TODO-AGT-06`) |
+| **GAP-AGT-07** | Workflows | Parallel Fan-Out / Fan-In Barrier Synchronization | **P2** | **Completed / Verified** (`TODO-AGT-07`) |
+| **GAP-AGT-08** | Workflows | Fine-Grained Error Taxonomy & Adaptive Playbooks | **P1** | **Completed / Verified** (`TODO-AGT-08`) |
+| **GAP-AGT-09** | Prompts | Prompt SemVer & Automated Regression Benchmarks | **P2** | **Completed / Verified** (`TODO-AGT-09`) |
+| **GAP-AGT-10** | Governance | Hierarchical Agent Supervision & Authority Trees | **P1** | **Completed / Verified** (`TODO-AGT-10`) |
+| **GAP-AGT-11** | Quality | Adversarial Red-Team & Fuzzing Agent (`agent_adversarial_fuzzer`) | **P1** | **Completed / Verified** (`TODO-AGT-11`) |
+| **GAP-AGT-12** | Cognitive | Context Attention Slicing & Token Budgeting Strategy | **P2** | **Completed / Verified** (`TODO-AGT-12`) |
+| **GAP-AGT-13** | FinOps | Static Prefix Pinning for KV Prompt Cache Optimization | **P1** | **Completed / Verified** (`TODO-AGT-13`) |
+| **GAP-AGT-14** | Observability | Structured Trajectory Recording & Replay Engine (`agentic/trajectories/`) | **P2** | **Completed / Verified** (`TODO-AGT-14`) |
+| **GAP-AGT-15** | Ingestion | Requirement Ambiguity Resolver Agent (`agent_ambiguity_resolver`) | **P2** | **Completed / Verified** (`TODO-AGT-15`) |
+| **GAP-AGT-16** | Cognitive | Dynamic Few-Shot Exemplar RAG Injection | **P2** | Open (Sprint 3, `TODO-AGT-16`) |
+| **GAP-AGT-17** | Governance | 2-of-3 Multi-Agent Consensus Quorum for Tier-A Decisions | **P1** | Open (Sprint 2, `TODO-AGT-17`) |
+| **GAP-AGT-18** | HITL | Proactive Milestone Checkpoints & Approval Cards | **P2** | Open (Sprint 3, `TODO-AGT-18`) |
+| **GAP-AGT-19** | Governance | Deadlock Detection & Inter-Agent Handoff Cycle Sentinel | **P1** | **Completed / Verified** (`TODO-AGT-19`) |
+| **GAP-AGT-20** | CI/CD | Continuous Agent Benchmark & Quality Evaluation Harness | **P1** | Open (Sprint 2, `TODO-AGT-20`) |
 
 ---
 

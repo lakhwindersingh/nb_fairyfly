@@ -12,23 +12,23 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: 2663fe024ed3e916cc8d9d1dc378d3e30108af0e6dbd5228a3dd84643a04e174
-    line_count: 70
+    last_modified: '2026-10-06'
+    content_hash: 8bef3922b210508af90ca8632f3c84c107b4426cd336032aba1f2e8bb9a92374
+    line_count: 87
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: 417ea4f23e0bd3620eec2b406c5a90b8baf796659b43d90504f0290f6b22e05e
-    line_count: 294
+    last_modified: '2026-10-06'
+    content_hash: 0b06d4e78ed912423b44e73cbad75db103ec33774b7225abd6bbab9d4387f626
+    line_count: 329
     primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-09-24'
-    content_hash: 4019634fd1eaee840712c08cf3e081e6530d7b4161f51c1dfa031c899ebb9436
-    line_count: 28
+    last_modified: '2026-10-06'
+    content_hash: b0a8877f08e46135c4bfef9b921b9acd645292562d2d35c37b77c57db0ce4cd4
+    line_count: 31
     primary_purpose: Quick reference and navigation
 key_capabilities:
 - VSCode Extension API & VSIX Packaging Architecture

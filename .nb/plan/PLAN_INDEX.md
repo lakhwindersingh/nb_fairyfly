@@ -1,7 +1,7 @@
 ---
 index_type: "master_navigation"
 purpose: "Unified entry point for agentic and human navigation of all plans"
-last_updated: "2026-09-24"
+last_updated: "2026-10-05"
 total_plans: 7
 organization_schema: "hierarchical_with_dual_format"
 ---
@@ -12,9 +12,9 @@ organization_schema: "hierarchical_with_dual_format"
 
 ```text
 📦 .nb/plan/
-├── 📖 PLAN_INDEX.md                 ← YOU ARE HERE
+├── 📖 README.md                     ← Master Plan Space Overview
+├── 📑 PLAN_INDEX.md                 ← YOU ARE HERE (Active Plan Catalog)
 ├── 📚 PLAN_GUIDE.md                 ← Human & Agentic Usage Guide
-├── 🗺️ REORGANIZATION_MAP.md         ← Legacy-to-New Path Mapping
 ├── 🎯 master/                       ← Orchestration Layer
 │   ├── parent-master-plan/          ← Parent Master Framework (CAP-01 - CAP-35)
 │   └── parent-master-free-plan/     ← Free Community Edition
@@ -27,9 +27,12 @@ organization_schema: "hierarchical_with_dual_format"
 │   └── corp-site-saas-portal/       ← Play 3 Cloud SaaS Portal & Brand Site
 ├── 📐 templates/                    ← Domain Layer Templates
 │   └── custom_domain_layer_template.md
-├── 🔄 sync_plan_versions.py         ← Automated SHA-256 Manifest Sync Tool
-└── 🗄️ archive/                      ← Historical & Old Structure Archive
-    └── old_structure/
+├── ⚙️ scripts/                      ← Automation & Verification Tools
+│   └── sync_plan_versions.py        ← Automated SHA-256 Manifest Sync Tool
+└── 🗄️ archive/                      ← Historical & Migration Archives
+    ├── legacy_plans/                ← Monolithic Pre-Split Plans
+    ├── migration/                   ← Migration Guides & Maps
+    └── old_structure/               ← Legacy Compatibility Path
 ```
 
 ---
@@ -42,6 +45,7 @@ organization_schema: "hierarchical_with_dual_format"
 - **Detailed Guide**: [master/parent-master-plan/detailed.md](./master/parent-master-plan/detailed.md)
 - **Overview**: [master/parent-master-plan/README.md](./master/parent-master-plan/README.md)
 - **Version Manifest**: [master/parent-master-plan/MANIFEST.yaml](./master/parent-master-plan/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-parent-master-plan.md](./claude-context-engineering-parent-master-plan.md)
 - **Purpose**: Master blueprint governing universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD (CAP-01 through CAP-35).
 
 ### Parent Master Context Engineering Plan (Free Community Edition)
@@ -50,6 +54,7 @@ organization_schema: "hierarchical_with_dual_format"
 - **Detailed Guide**: [master/parent-master-free-plan/detailed.md](./master/parent-master-free-plan/detailed.md)
 - **Overview**: [master/parent-master-free-plan/README.md](./master/parent-master-free-plan/README.md)
 - **Version Manifest**: [master/parent-master-free-plan/MANIFEST.yaml](./master/parent-master-free-plan/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-parent-master-free_plan.md](./claude-context-engineering-parent-master-free_plan.md)
 - **Purpose**: Community edition of the parent framework tailored for single-seat local development with embedded IDE plugin bootstrapping.
 
 ---
@@ -62,6 +67,7 @@ organization_schema: "hierarchical_with_dual_format"
 - **Detailed Guide**: [l1/intellij-pycharm-plugin/detailed.md](./l1/intellij-pycharm-plugin/detailed.md)
 - **Overview**: [l1/intellij-pycharm-plugin/README.md](./l1/intellij-pycharm-plugin/README.md)
 - **Version Manifest**: [l1/intellij-pycharm-plugin/MANIFEST.yaml](./l1/intellij-pycharm-plugin/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-intellij-pycharm-plugin-space.md](./claude-context-engineering-intellij-pycharm-plugin-space.md)
 - **Purpose**: JetBrains Platform SDK plugin, PSI multi-language AST pruning, in-editor annotators, and dockable JCEF living visualizer.
 
 ### Visual Studio Code Extension Space
@@ -70,6 +76,7 @@ organization_schema: "hierarchical_with_dual_format"
 - **Detailed Guide**: [l1/vscode-plugin/detailed.md](./l1/vscode-plugin/detailed.md)
 - **Overview**: [l1/vscode-plugin/README.md](./l1/vscode-plugin/README.md)
 - **Version Manifest**: [l1/vscode-plugin/MANIFEST.yaml](./l1/vscode-plugin/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-vscode-plugin-space.md](./claude-context-engineering-vscode-plugin-space.md)
 - **Purpose**: VSCode Extension API, Language Server Protocol (LSP 3.17), in-editor CodeLens triggers, and nonce CSP Webview panel.
 
 ### Enterprise SaaS & Corporate Portal Space
@@ -78,6 +85,7 @@ organization_schema: "hierarchical_with_dual_format"
 - **Detailed Guide**: [l1/saas-portal-domain/detailed.md](./l1/saas-portal-domain/detailed.md)
 - **Overview**: [l1/saas-portal-domain/README.md](./l1/saas-portal-domain/README.md)
 - **Version Manifest**: [l1/saas-portal-domain/MANIFEST.yaml](./l1/saas-portal-domain/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-saas-portal-domain-plan.md](./claude-context-engineering-saas-portal-domain-plan.md)
 - **Purpose**: Next.js 14 App Router, multi-tenant RBAC, PostgreSQL RLS, Stripe billing, and 5-tab Observability Hub dashboard.
 
 ---
@@ -102,7 +110,9 @@ organization_schema: "hierarchical_with_dual_format"
 
 ---
 
-## 4. Templates & Tools
+## 4. Templates, Tools & Historical Archives
 
 - **Custom Domain Layer Template**: [templates/custom_domain_layer_template.md](./templates/custom_domain_layer_template.md)
-- **Automated Version Sync Tool**: [sync_plan_versions.py](./sync_plan_versions.py)
+- **Automated Version Sync Tool**: [scripts/sync_plan_versions.py](./scripts/sync_plan_versions.py)
+- **Legacy Monolithic Archive**: [archive/legacy_plans/](./archive/legacy_plans/)
+- **Migration Reports & Mapping**: [archive/migration/](./archive/migration/)

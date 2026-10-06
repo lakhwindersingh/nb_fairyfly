@@ -174,7 +174,20 @@ class PlanVersionSync:
 
 def main():
     parser = argparse.ArgumentParser(description="Synchronize and verify plan version manifests.")
-    parser.add_argument("plan_root", nargs="?", default=".nb/plan", help="Path to plan directory (default: .nb/plan)")
+    # Auto-resolve plan root based on script location or current working dir
+    script_dir = Path(__file__).resolve().parent
+    if (script_dir / "master").exists():
+        calc_default = script_dir
+    elif (script_dir.parent / "master").exists():
+        calc_default = script_dir.parent
+    elif (script_dir.parent / "plan" / "master").exists():
+        calc_default = script_dir.parent / "plan"
+    elif Path(".nb/plan/master").exists():
+        calc_default = Path(".nb/plan")
+    else:
+        calc_default = Path(".nb/plan")
+
+    parser.add_argument("plan_root", nargs="?", default=str(calc_default), help="Path to plan directory (default: auto-detected)")
     parser.add_argument("--check-only", "--report", dest="check_only", action="store_true", help="Report sync status without modifying files")
     args = parser.parse_args()
 

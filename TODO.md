@@ -352,21 +352,85 @@
 > **Core Objective:** Transition the `agentic/` workspace from script-orchestrated automation to a fully autonomous, self-governing, multi-agent cognitive software engineering ecosystem.
 
 ### 17.1. Agent Coordination, Governance & Swarm Topologies
-- [ ] **TODO-AGT-01: Dynamic Task DAGs & Runtime Sub-Goal Expansion (P1)**:
-  - *Shortcoming*: Static linear workflows in `agentic/workflows/` cannot dynamically expand sub-goals or backtrack upon discovering unexpected dependencies.
-  - *Implementation Scope*: Upgrade workflow engine in `workplace/core/` to support runtime dynamic DAG expansion, branch backtracking, and goal recursion.
-- [ ] **TODO-AGT-02: Structured Multi-Pass Reflection & Critic Loops (Reflexion) (P1)**:
-  - *Shortcoming*: Prompts in `agentic/prompts/` lack structured Generator -> Critic -> Refiner cycles, emitting unverified code directly to build gates.
-  - *Implementation Scope*: Embed formal self-reflection verification schemas in `agentic/prompts/` requiring pre-generation invariant critiques.
-- [ ] **TODO-AGT-03: 3-Tier Persistent Agent Memory Architecture (P1)**:
-  - *Shortcoming*: Agents are stateless across session runs without memory of past test fixes or solutions.
-  - *Implementation Scope*: Implement `workplace/core/agent_memory_engine.py` providing Working Memory (scratchpad), Episodic Memory (past run logs/fixes), and Semantic Memory (indexed codebase patterns).
-- [ ] **TODO-AGT-04: Declarative Tool Contracts & JSON Schema Validation (P1)**:
-  - *Shortcoming*: Agent manifests declare tools as plain string arrays without parameter schemas or mutation boundaries.
-  - *Implementation Scope*: Add formal JSON-Schema / OpenAPI contracts for all agent tools with input validation, output typing, and idempotency declarations in `agentic/schemas/tool_contract_schema.yaml`.
-- [ ] **TODO-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens (P1)**:
-  - *Shortcoming*: Agents inherit full OS execution privileges without fine-grained permission sandboxes.
-  - *Implementation Scope*: Implement `workplace/core/agent_capability_guard.py` enforcing cryptographically bound permission tokens (`CAP_FS_READ`, `CAP_FS_WRITE_MODULE_ONLY`, `CAP_NETWORK_EGRESS_OFF`, `CAP_EXEC_SUBPROCESS`).
+- [ ] **TODO-AGT-01: Dynamic Task DAGs & Runtime Sub-Goal Expansion (P1)** (`GAP-AGT-01`):
+  - *Governing Review*: `GAP-AGT-01` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
+  - *Defect & SDLC Impact*: Workflows in `agentic/workflows/` (`derivation_pipeline.yaml`, `pr_gatekeeper.yaml`) are static, linear step lists. When unexpected dependencies or complex structural tasks arise, agents cannot synthesize runtime sub-goals, spawn exploratory sub-plans, backtrack on failures, or adapt execution paths without manual human intervention or pipeline failure.
+  - *Target Files*:
+    - Implementation: [`workplace/core/dynamic_dag_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/dynamic_dag_orchestrator.py) (mirrored to [`.nb/core/dynamic_dag_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/dynamic_dag_orchestrator.py))
+    - Schema: [`.nb/agentic/schemas/dynamic_dag_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/dynamic_dag_schema.yaml)
+    - Tests: [`workplace/tests/test_dynamic_dag_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_dynamic_dag_orchestrator.py)
+  - *Technical Scope & Architecture*:
+    - **Dynamic Sub-Goal Expansion**: Implement `DynamicDAGOrchestrator.expand_subgoals(parent_step_id: str, subgoals: List[StepNode])` enabling Plan-and-Solve / ReAct runtime step graph mutation.
+    - **Blast-Radius Branching**: Introspects affected files and AST symbols to dynamically insert targeted validation sub-graphs (`validate_syntax` -> `run_focused_tests` -> `check_contract_parity`).
+    - **Backtracking & Alternate Branch Routing**: When an exploratory branch fails verification, the orchestrator rolls back ephemeral worktree state to the parent branch point and selects the next viable strategy branch.
+    - **Graph Constraints & Loop Guard**: Strict acyclicity check ($\mathcal{O}(V+E)$) on every runtime mutation; hard limit on dynamic expansion recursion depth ($D_{\text{dynamic}} \le 3$) and node count ($N_{\text{max\_steps}} \le 20$).
+  - *Acceptance Criteria*:
+    - Unit tests verifying dynamic node insertion, topological sort update, backtracking on step failure, and depth ceiling enforcement.
+    - Emits structured execution traces logged to `.nb/context/ledger/dynamic_dag_traces.jsonl`.
+
+- [ ] **TODO-AGT-02: Structured Multi-Pass Reflection & Critic Verification Loops (Reflexion) (P1)** (`GAP-AGT-02`):
+  - *Governing Review*: `GAP-AGT-02` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
+  - *Defect & SDLC Impact*: Prompts in `agentic/prompts/` (e.g. `derivation_prompt.md`, `evaluation_refinement_prompt.md`) execute in a single forward pass without an internal Generator -> Critic -> Refiner (*Reflexion*) verification cycle, emitting unverified code or flawed architectural assumptions directly to physical file systems and build gates, increasing token burn and test failure cycles.
+  - *Target Files*:
+    - Implementation: [`workplace/core/self_reflection_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/self_reflection_engine.py) (mirrored to [`.nb/core/self_reflection_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/self_reflection_engine.py))
+    - Schema: [`.nb/agentic/schemas/reflection_protocol_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/reflection_protocol_schema.yaml)
+    - Prompt Templates: [`.nb/agentic/prompts/derivation_prompt.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/prompts/derivation_prompt.md)
+    - Tests: [`workplace/tests/test_self_reflection_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_self_reflection_engine.py)
+  - *Technical Scope & Architecture*:
+    - **3-Phase Reflexion Protocol**: Enforce `GENERATE` -> `CRITIQUE` -> `REFINE` state transitions prior to filesystem write.
+    - **Invariant Verification Checklist**: The Critic phase validates 5 mandatory invariant pillars: (1) Wire contract schema conformity, (2) Edge-case coverage (null handling, bounds, concurrency), (3) Type signature purity, (4) Inbound/outbound guardrail policy compliance, (5) Token budget adherence.
+    - **Convergence & Bounded Iterations**: Compute reflection convergence score $S_{\text{critique}} \in [0.0, 1.0]$. Terminate when $S_{\text{critique}} \ge 0.90$ or upon reaching bounded maximum turns ($N_{\text{reflect}} \le 2$).
+    - **Critique Envelope Schema**: Structured output schema capturing `{ critique: str, defects_found: List[str], severity: "LOW"|"MEDIUM"|"HIGH", refined_plan: str, passes_invariants: bool }`.
+  - *Acceptance Criteria*:
+    - Unit tests validating multi-pass critique extraction, defect correction, early exit on $S_{\text{critique}} \ge 0.90$, and enforcement of $N_{\text{reflect}} \le 2$.
+    - Integration tests asserting zero disk write occurs until Critic verification passes.
+
+- [ ] **TODO-AGT-03: 3-Tier Persistent Agent Memory Architecture (Working, Episodic & Semantic) (P1)** (`GAP-AGT-03`):
+  - *Governing Review*: `GAP-AGT-03` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
+  - *Defect & SDLC Impact*: Agents operate statelessly across session runs. The flat Merkle ledger stores action records but does not provide an indexed memory model. An agent facing a previously solved build issue, flaky test quarantine, or contract discrepancy must rediscover solutions from scratch, wasting cognitive context and tokens.
+  - *Target Files*:
+    - Implementation: [`workplace/core/agent_memory_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_memory_engine.py) (mirrored to [`.nb/core/agent_memory_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_memory_engine.py))
+    - Memory Stores: `.nb/context/memory/episodic/`, `.nb/context/memory/semantic/`
+    - Schema: [`.nb/agentic/schemas/agent_memory_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/agent_memory_schema.yaml)
+    - Tests: [`workplace/tests/test_agent_memory_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_agent_memory_engine.py)
+  - *Technical Scope & Architecture*:
+    - **Tier 1 (Working Memory)**: Ephemeral, session-scoped scratchpad (`.nb/workspaces/subagent_<id>/scratchpad.json`) maintaining in-flight hypotheses, active AST symbol diffs, and intermediate step returns. Auto-evicted upon task completion or rollback.
+    - **Tier 2 (Episodic Memory)**: Persistent JSONL event stream (`.nb/context/memory/episodic/episodes.jsonl`) indexing past task executions, failed test traces, root cause diagnostics, and verified patches. Queryable via error-signature hashing and TF-IDF similarity.
+    - **Tier 3 (Semantic Memory)**: Long-term conceptual store (`.nb/context/memory/semantic/concepts.json`) capturing project architectural patterns, wire contract guidelines, domain invariants, and coding conventions.
+    - **Memory Consolidation**: On every successful Merkle block seal (`RP_*`), automatically consolidate the working memory resolution into the episodic memory store with cryptographic block anchoring.
+  - *Acceptance Criteria*:
+    - Unit tests verifying working memory isolation per worktree, episodic retrieval recall $> 0.85$ on matching error signatures, semantic index lookup, and memory consolidation into Merkle blocks.
+
+- [ ] **TODO-AGT-04: Declarative Tool Contracts & JSON Schema Validation (P1)** (`GAP-AGT-04`):
+  - *Governing Review*: `GAP-AGT-04` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
+  - *Defect & SDLC Impact*: Custom agent definitions in `agentic/custom/agents/*.yaml` declare tools as plain string lists (`tools: [ast_pruner, cve_sentinel]`). There is no runtime validation of tool input arguments or output schemas, no distinction between read-only (idempotent) vs mutating tools, leading to agent malformed tool-call exceptions.
+  - *Target Files*:
+    - Implementation: [`workplace/core/tool_contract_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/tool_contract_validator.py) (mirrored to [`.nb/core/tool_contract_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/tool_contract_validator.py))
+    - Schema: [`.nb/agentic/schemas/tool_contract_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/tool_contract_schema.yaml)
+    - Tool Registry: [`.nb/agentic/custom/tools/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/tools/)
+    - Tests: [`workplace/tests/test_tool_contract_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_tool_contract_validator.py)
+  - *Technical Scope & Architecture*:
+    - **Formal Declarative Tool Contracts**: Define complete JSON Schema Draft-07 contracts for all platform tools: `name`, `description`, `parameters` (types, required fields, constraints), `returns` schema, `is_idempotent: bool`, `mutates_filesystem: bool`, `timeout_seconds: int`, and `required_capabilities: List[str]`.
+    - **Pre-Call & Post-Call Validation**: Runtime interceptor validates tool arguments before execution (`INVALID_TOOL_ARGUMENTS`) and validates return payloads against output schemas (`INVALID_TOOL_OUTPUT`).
+    - **Idempotency Caching Engine**: For tools declared with `is_idempotent: true`, automatically cache outputs keyed by `(tool_name, sha256(canonical_inputs))` to eliminate redundant compute and token spend.
+    - **Timeout Enforcer**: Hard execution deadline per tool execution using POSIX signals / threading timeouts, returning `TOOL_TIMEOUT_EXCEEDED` on breach.
+  - *Acceptance Criteria*:
+    - Unit tests verifying parameter validation rejection, return schema conformance, idempotency caching, and timeout enforcement across all platform tools.
+
+- [ ] **TODO-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens (P1)** (`GAP-AGT-05`):
+  - *Governing Review*: `GAP-AGT-05` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar I: Agent Coordination & Governance).
+  - *Defect & SDLC Impact*: Once spawned, agents inherit full execution privileges with no declarative permission boundaries. A rogue or hallucinating agent could execute arbitrary system commands, write to protected paths outside its module workspace, or perform unauthorized network egress.
+  - *Target Files*:
+    - Implementation: [`workplace/core/agent_capability_guard.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_capability_guard.py) (mirrored to [`.nb/core/agent_capability_guard.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_capability_guard.py))
+    - Rules: [`.nb/context/rules/capability_tokens.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/rules/capability_tokens.yaml)
+    - Tests: [`workplace/tests/test_agent_capability_guard.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_agent_capability_guard.py)
+  - *Technical Scope & Architecture*:
+    - **Cryptographic Capability Tokens**: Issue HMAC-SHA256 capability tokens bound to `(agent_id, worktree_path, allowed_operations, expiry_utc)` specifying granular rights: `CAP_FS_READ`, `CAP_FS_WRITE_MODULE_ONLY`, `CAP_NETWORK_EGRESS_OFF`, `CAP_EXEC_SUBPROCESS`, `CAP_MERKLE_SEAL`.
+    - **Path-Bound Filesystem Enforcer**: Intercepts file I/O operations. Hard-blocks write attempts targeting protected directories (`.nb/core/`, `.nb/context/invariants/`, `workplace/` outside the agent's assigned module directory) with `PERMISSION_DENIED_PATH_RESTRICTED`.
+    - **Subprocess Command Whitelist**: Restricts shell execution to explicitly whitelisted commands (`pytest`, `git diff`, `python3 -m pyright`), blocking unsafe binaries (`curl`, `wget`, `rm -rf`, `nc`, `pip install`) with `PERMISSION_DENIED_UNAUTHORIZED_COMMAND`.
+    - **Network Egress Firewall**: Verifies `CAP_NETWORK_EGRESS` token flag; blocks external socket creation unless explicitly authorized for cloud ledger sync.
+  - *Acceptance Criteria*:
+    - Unit tests validating path traversal interception, forbidden subprocess command blocking, network socket restriction, and valid capability token lifecycle.
 
 ### 17.2. Runtime Architecture, Quad-Space Boundaries & Execution Hygiene
 - [x] **TODO-AGT-06: Quad-Space Boundary Cleanup & Runtime Deduplication (P1)** ([`agentic/runtime/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/runtime/)):
@@ -403,21 +467,73 @@
   - *Implementation*: Implemented `AmbiguityResolver` calculating requirement entropy and drafting interactive clarification RFCs in `user/hitl/clarification_requests/`.
 
 ### 17.4. Resilience, Evaluation, Consensus & Security Capabilities
-- [ ] **TODO-AGT-16: Dynamic Few-Shot Exemplar Selection & Context-Aware RAG Injection (P2)**:
-  - *Shortcoming*: Prompts lack domain-specific positive/negative code exemplars.
-  - *Implementation Scope*: Implement `workplace/core/few_shot_retriever.py` dynamically injecting top-k verified code examples based on AST structure and task domain.
-- [ ] **TODO-AGT-17: 2-of-3 Multi-Agent Consensus Quorum for Critical Decisions (P1)**:
-  - *Shortcoming*: Tier-A decisions (security sign-off, schema deprecations, merge approvals) rely on single-agent evaluations.
-  - *Implementation Scope*: Implement `workplace/core/consensus_quorum_engine.py` requiring 2-of-3 agreement across diverse prompt personas before executing Tier-A actions.
-- [ ] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)**:
-  - *Shortcoming*: HITL is only used as an error quarantine dump rather than proactive milestone approval.
-  - *Implementation Scope*: Implement interactive HITL approval cards (web/CLI) in `workplace/core/hitl_checkpoint_manager.py` for architectural trade-off sign-offs.
+- [ ] **TODO-AGT-16: Dynamic Few-Shot Exemplar Selection & Context-Aware RAG Injection (P2)** (`GAP-AGT-16`):
+  - *Governing Review*: `GAP-AGT-16` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
+  - *Defect & SDLC Impact*: Prompts are zero-shot or contain static hardcoded code snippets that do not adapt to specific problem domains, leading to lower code synthesis accuracy on complex domain tasks (Stripe webhooks, BLE ring buffers, AST visitors).
+  - *Target Files*:
+    - Implementation: [`workplace/core/few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/few_shot_retriever.py) (mirrored to [`.nb/core/few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/few_shot_retriever.py))
+    - Exemplar Store: `.nb/context/exemplars/`
+    - Tests: [`workplace/tests/test_few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_few_shot_retriever.py)
+  - *Technical Scope & Architecture*:
+    - **Multi-Factor Exemplar Scoring**: Compute matching score $S_{\text{exemplar}} = 0.40 S_{\text{lang}} + 0.35 S_{\text{ast\_pattern}} + 0.25 S_{\text{domain\_tag}}$ against task requirements.
+    - **Curated Golden Exemplar Library**: Establish structured JSON exemplar library covering common production patterns: FastAPI endpoints, OpenAPI wire contracts, AST visitors, state machines, and cryptographic verification hooks.
+    - **Token-Budgeted Dynamic Injection**: Injects top-$k$ ($k \in [1, 3]$) positive exemplars and counter-factual negative exemplars, respecting strict attention slicing budgets ($< 15\%$ of total prompt window).
+  - *Acceptance Criteria*:
+    - Unit tests verifying exemplar retrieval ranking, language/AST filtering, token budget constraint compliance, and graceful fallback to zero-shot when no match is found.
+
+- [ ] **TODO-AGT-17: 2-of-3 Multi-Agent Consensus Quorum for Critical Decisions (P1)** (`GAP-AGT-17`):
+  - *Governing Review*: `GAP-AGT-17` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
+  - *Defect & SDLC Impact*: Critical pipeline decisions (security sign-off, wire contract deprecation, PR gate merge approvals) depend on a single agent persona, creating cognitive blindspots and vulnerability to single prompt injections.
+  - *Target Files*:
+    - Implementation: [`workplace/core/consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/consensus_quorum_engine.py) (mirrored to [`.nb/core/consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/consensus_quorum_engine.py))
+    - Schema: [`.nb/agentic/schemas/quorum_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/quorum_schema.yaml)
+    - Tests: [`workplace/tests/test_consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_consensus_quorum_engine.py)
+  - *Technical Scope & Architecture*:
+    - **2-of-3 Heterogeneous Quorum Protocol**: Solicits independent evaluations from 3 diverse evaluators (e.g. `SecurityAuditor`, `ArchitecturalSpecialist`, `QualityGatekeeper`) or distinct prompt/model configurations.
+    - **Vote Aggregation & Disagreement Resolution**: Tallies votes across standardized verdicts: `APPROVE`, `REQUEST_REVISION`, `QUARANTINE_VETO`. Requires at least 2 `APPROVE` votes for pipeline advancement.
+    - **Single-Veto Quarantine**: Any `QUARANTINE_VETO` vote halts execution immediately and routes the task to `user/hitl/poisoning_quarantine.md`.
+    - **Cryptographic Quorum Receipt**: Generates signed HMAC-SHA256 quorum receipt with all voter verdicts and rationales, anchored into Merkle ledger block `RP_QUORUM_*`.
+  - *Acceptance Criteria*:
+    - Unit tests validating 3-agent vote aggregation, 2-of-3 approval passage, deadlock resolution, single-veto quarantine escalation, and Merkle receipt sealing.
+
+- [ ] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)** (`GAP-AGT-18`):
+  - *Governing Review*: `GAP-AGT-18` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
+  - *Defect & SDLC Impact*: Human-In-The-Loop (HITL) interaction is treated exclusively as an error trap (`poisoning_quarantine.md`). Missed opportunities for human feedback during architectural planning, trade-off selection, or visual UI approval before downstream code generation.
+  - *Target Files*:
+    - Implementation: [`workplace/core/hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/hitl_checkpoint_manager.py) (mirrored to [`.nb/core/hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/hitl_checkpoint_manager.py))
+    - Checkpoint Spool: `user/hitl/milestones/`
+    - Schema: [`.nb/agentic/schemas/hitl_checkpoint_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/hitl_checkpoint_schema.yaml)
+    - Tests: [`workplace/tests/test_hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_hitl_checkpoint_manager.py)
+  - *Technical Scope & Architecture*:
+    - **Workflow Milestone Checkpoints**: Declarative workflow step `checkpoint_type: HITL_MILESTONE` pausing pipeline execution at critical boundaries (e.g. `ARCH_DESIGN_APPROVAL`, `SCHEMA_EVOLUTION_RFC`, `UI_WIREFRAME_SIGN_OFF`).
+    - **Interactive Approval Cards**: Emits structured markdown and JSON cards in `user/hitl/milestones/{checkpoint_id}.json` containing diff previews, blast-radius projections, and selectable options (`[APPROVE]`, `[REJECT]`, `[MODIFY]`).
+    - **CLI & Portal Resumption**: CLI commands `percipience hitl list`, `percipience hitl approve --id <id>`, `percipience hitl reject --id <id> --reason <text>` updating state and unblocking workflow execution.
+    - **Configurable Timeout Policies**: Supports `timeout_action: AUTO_PAUSE | QUARANTINE | PROCEED_CONSERVATIVE` after specified duration.
+  - *Acceptance Criteria*:
+    - Unit tests validating checkpoint creation, serialization, CLI resolution ingestion, timeout handling, and workflow resumption.
+
 - [x] **TODO-AGT-19: Deadlock Detection & Inter-Agent Handoff Cycle Sentinel (P1)** ([`workplace/core/handoff_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/handoff_validator.py)):
   - *Shortcoming*: Handoff tokens lacked runtime cycle detection, risking infinite recursive delegation loops.
   - *Implementation*: Implemented topological loop sentinel (`lineage` inspection), max hop ceiling (`hop_count <= 5`), anti-drift attestation ($S_{SP} \ge 0.95$), replay token tracking, dynamic YAML workflow DAG route synchronization, and persistent outbox/inbox delivery in `workplace/core/handoff_validator.py` and `.nb/core/handoff_validator.py`.
-- [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)**:
-  - *Shortcoming*: Custom agents lack standardized benchmark suites measuring task success rate and token efficiency.
-  - *Implementation Scope*: Build `workplace/tests/benchmarks/test_agent_benchmarks.py` running automated golden test challenge sets across all agents with Merkle scorecards.
+
+- [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)** (`GAP-AGT-20`):
+  - *Governing Review*: `GAP-AGT-20` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
+  - *Defect & SDLC Impact*: Custom agents in `agentic/custom/agents/` are evaluated ad-hoc without standardized benchmark suites. No objective measurement of agent task success rate, latency, token spend, or regression across workspace updates.
+  - *Target Files*:
+    - Implementation: [`workplace/core/agent_benchmark_harness.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_benchmark_harness.py) (mirrored to [`.nb/core/agent_benchmark_harness.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_benchmark_harness.py))
+    - Benchmark Suite: [`workplace/tests/benchmarks/test_agent_benchmarks.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/benchmarks/test_agent_benchmarks.py)
+    - Scorecard Report: [`workplace/docs/reports/agent_quality_scorecard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agent_quality_scorecard.md)
+  - *Technical Scope & Architecture*:
+    - **Standardized Synthetic Challenge Suite**: Automated evaluation scenarios exercising each agent across 5 core disciplines: AST parsing & pruning, wire contract validation, living doc generation, CVE remediation, and flaky test isolation.
+    - **5-Metric Scoring Radar**:
+      1. Task Success Rate ($TSR \ge 90\%$)
+      2. Semantic Parity Score ($S_{SP} \ge 0.95$)
+      3. Token Efficiency ($< 5\text{k}$ tokens / task)
+      4. Execution Latency ($< 10\text{s}$ per turn)
+      5. Invariant Compliance Rate ($100\%$ zero-violation)
+    - **Automated Scorecard & Merkle Anchoring**: CLI command `percipience benchmark run --agents all` generating Markdown scorecard and committing evaluation receipt `RP_BENCHMARK_*` to Merkle ledger.
+  - *Acceptance Criteria*:
+    - Unit and benchmark tests validating challenge execution, metric calculation, radar scorecard generation, and regression detection when an agent underperforms.
 
 ---
 
