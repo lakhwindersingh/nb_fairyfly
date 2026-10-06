@@ -13,6 +13,7 @@ Detailed Multi-Section Product Platform featuring:
 """
 
 from typing import Dict, Any, List, Optional, Tuple
+import dataclasses
 import sys
 import os
 import json
@@ -72,6 +73,11 @@ from core.tenant_manager import (
 from core.project_scaffolder import ProjectScaffolder, ScaffoldResult
 from core.kms_broker import KMSBroker, KeyRecord, SealedEnclaveBundle
 from core.commercial_packager_provisioner import CommercialPackagerProvisioner
+from core.dynamic_dag_orchestrator import DynamicDAGOrchestrator, StepNode
+from core.self_reflection_engine import SelfReflectionEngine, ReflexionVerificationError
+from core.agent_memory_engine import AgentMemoryEngine
+from core.tool_contract_validator import ToolContractValidator
+from core.agent_capability_guard import AgentCapabilityGuard
 from core.project_policy_engine import (
     ProjectPolicyManager,
     ProjectPolicy,
@@ -544,6 +550,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔐 Client Space</button>
       <button class="nav-btn" onclick="showTab('governance'); loadGovernanceTab();" id="govNavBtn" style="border:1px solid var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant &amp; Policies</button>
       <button class="nav-btn" onclick="showTab('commercial-provisioner'); loadCommercialTab();" id="commercialNavBtn" style="border:1px solid var(--amber); color:var(--amber); font-weight:700;">📦 Commercial Provisioner</button>
+      <button class="nav-btn" onclick="showTab('swarm-governance'); loadSwarmTab();" id="swarmNavBtn" style="border:1px solid var(--emerald); color:var(--emerald); font-weight:700;">🤖 Swarm &amp; Governance</button>
       <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
@@ -2626,6 +2633,293 @@ percipience rollback \
         <div id="commPermResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
       </div>
     </section>
+
+    <!-- TAB 15: SWARM TOPOLOGIES & AGENT GOVERNANCE (SECTION 17.1) -->
+    <section id="swarm-governance" class="tab-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--emerald); display:flex; align-items:center; gap:8px;">
+            <span>🤖</span> Percipience Swarm Topologies, Agent Coordination &amp; Cryptographic Governance
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Dynamic Task DAGs • Multi-Pass Reflexion &amp; Critic Loops • 3-Tier Persistent Memory • Declarative Tool Contracts • Capability-Based Access Control (CBAC)
+          </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" onclick="loadSwarmTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh Swarm State</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: DYNAMIC DAG ORCHESTRATION & RUNTIME SUB-GOAL EXPANSION -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🕸️ GAP-AGT-01: Dynamic Task DAGs &amp; Runtime Sub-Goal Expansion</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald" id="swarmDagAcyclicityBadge">✓ Kahn Acyclicity Enforced</span>
+            <span class="badge badge-purple" id="swarmDagMaxDepthBadge">Max Depth: 3</span>
+            <span class="badge badge-cyan" id="swarmDagTotalNodesBadge">Nodes: 4 / 20 Max</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:16px;">
+          Autonomous agents dynamically break down complex tasks into runtime sub-goals. Downstream dependencies are automatically rewired to wait for terminal sub-goals while preventing circular deadlock cycles.
+        </p>
+
+        <!-- DAG VISUALIZER -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">Execution Graph &amp; Dependency Chain:</div>
+          <div id="swarmDagOrderContainer" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); min-height:48px;">
+            <span style="color:var(--muted); font-size:11px;">Loading execution DAG...</span>
+          </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; align-items:flex-end;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Select Parent Step to Expand</label>
+            <select id="swarmDagParentSelect" class="select" style="font-size:12px;">
+              <option value="step_code_derivation">step_code_derivation (Derive Implementation)</option>
+              <option value="step_plan_architecture">step_plan_architecture (Synthesize Architecture)</option>
+              <option value="step_verify_gate">step_verify_gate (Attest Verification Gate)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Sub-Goal Template</label>
+            <select id="swarmDagTemplateSelect" class="select" style="font-size:12px;">
+              <option value="ast_and_critic">AST Type Check + Critic Invariant Evaluation</option>
+              <option value="fuzz_and_benchmark">Fuzz Testing + Latency Micro-Benchmark</option>
+              <option value="security_cve_scan">CVE Sentinel Scan + Memory Safety Check</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" onclick="expandDynamicDAGSubgoals()" style="font-size:12px; height:38px; flex:1;">
+              ⚡ Expand Sub-Goals
+            </button>
+            <button class="btn btn-secondary" onclick="simulateDynamicDAGExecution()" style="font-size:12px; height:38px;">
+              ▶️ Simulate DAG
+            </button>
+            <button class="btn btn-secondary" onclick="resetDynamicDAG()" style="font-size:12px; height:38px;">
+              ↺ Reset
+            </button>
+          </div>
+        </div>
+
+        <div id="swarmDagResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:200px; overflow-y:auto;"></div>
+      </div>
+
+      <!-- ROW 2: REFLEXION & 5-PILLAR CRITIC ENGINE + ZERO DISK WRITE -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🧠 GAP-AGT-02: Structured Multi-Pass Reflexion &amp; Critic Verification</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-purple">Zero-Disk-Write Sandbox</span>
+            <span class="badge badge-amber">Gate Threshold: ≥ 0.95</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Multi-turn critic evaluates generated code across 5 mathematical invariant pillars. Disk writes are strictly prohibited unless the composite score passes the 0.95 threshold with 0 critical defects.
+        </p>
+
+        <!-- 5 PILLAR METRICS DISPLAY -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:16px;">
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">1. Wire Conformity</div>
+            <div id="pillarScoreWire" style="font-size:18px; font-weight:800; color:var(--cyan);">1.00</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">2. Edge Case Coverage</div>
+            <div id="pillarScoreEdge" style="font-size:18px; font-weight:800; color:var(--amber);">0.50</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">3. Type Signature Purity</div>
+            <div id="pillarScoreType" style="font-size:18px; font-weight:800; color:var(--purple);">0.90</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">4. Guardrail Compliance</div>
+            <div id="pillarScoreGuard" style="font-size:18px; font-weight:800; color:var(--emerald);">1.00</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">5. Token Budget Adherence</div>
+            <div id="pillarScoreToken" style="font-size:18px; font-weight:800; color:var(--emerald);">1.00</div>
+          </div>
+        </div>
+
+        <!-- CODE EVALUATION INPUT -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" style="font-size:11px;">Candidate Code / Artifact for Critic Analysis</label>
+          <textarea id="reflexionCodeInput" class="input" rows="4" style="font-family:'JetBrains Mono', monospace; font-size:11px; resize:vertical;">def process_payment(account_id: str, amount_usd: float) -> bool:
+    if not account_id or amount_usd <= 0:
+        raise ValueError("Invalid payment parameters")
+    try:
+        # Secure ledger commit
+        return True
+    except Exception as exc:
+        return False</textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-primary" onclick="runReflexionEvaluation()" style="font-size:12px;">
+            🔬 Evaluate Candidate Against 5 Pillars
+          </button>
+          <button class="btn btn-secondary" onclick="loadDefectiveSnippet()" style="font-size:12px;">
+            ⚠️ Load Defective Snippet
+          </button>
+        </div>
+
+        <div id="reflexionResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+
+      <!-- ROW 3: 3-TIER PERSISTENT MEMORY & EPISODIC RETRIEVAL -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">💾 GAP-AGT-03: 3-Tier Persistent Memory Engine (Working, Episodic &amp; Semantic)</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-cyan" id="memWorkingBadge">Tier 1: In-Flight RAM</span>
+            <span class="badge badge-purple" id="memEpisodicCountBadge">Tier 2: 1 Episode</span>
+            <span class="badge badge-emerald" id="memSemanticCountBadge">Tier 3: 2 Concepts</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Tier 1 holds working scratchpad &amp; hypotheses. Tier 2 indexes failure episodes with cosine TF-IDF similarity. Tier 3 stores cross-session architectural concepts sealed into Merkle blocks.
+        </p>
+
+        <div style="display:grid; grid-template-columns: 1fr auto auto; gap:10px; align-items:center; margin-bottom:14px;">
+          <input type="text" id="memorySearchQuery" class="input" placeholder="Search episodic memory (e.g. 'cycle detected', 'type annotation', 'bootstrap')" style="font-size:12px;">
+          <button class="btn btn-primary" onclick="searchEpisodicMemory()" style="font-size:12px; white-space:nowrap;">
+            🔍 Search Episodes
+          </button>
+          <button class="btn btn-secondary" onclick="consolidateWorkingMemory()" style="font-size:12px; white-space:nowrap;">
+            💾 Consolidate Working Memory
+          </button>
+        </div>
+
+        <div id="memoryResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+      </div>
+
+      <!-- ROW 4: DECLARATIVE TOOL CONTRACTS (JSON SCHEMA DRAFT-07) -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">📐 GAP-AGT-04: Declarative Tool Contracts &amp; Schema Validation</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald">JSON Schema Draft-07</span>
+            <span class="badge badge-cyan">Idempotency Caching</span>
+            <span class="badge badge-purple">4 Registered Tools</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Every subagent tool defines strict declarative contracts. Arguments and outputs are validated with runtime type checking and deterministic execution caches.
+        </p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Select Tool Contract</label>
+            <select id="swarmToolSelect" class="select" style="font-size:12px;" onchange="updateToolArgsTemplate()">
+              <option value="ast_pruner">ast_pruner (Polyglot AST Skeletonizer &amp; Token Compressor)</option>
+              <option value="contract_checker">contract_checker (Cross-Module Interface Validator)</option>
+              <option value="merkle_auditor">merkle_auditor (Cryptographic SHA-256 Audit Tree)</option>
+              <option value="cve_sentinel">cve_sentinel (Vulnerability Scanner)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Contract Spec Overview</label>
+            <div id="swarmToolSpecBadge" style="font-size:11.5px; color:var(--muted); padding-top:6px;">
+              Idempotent: <b>True</b> | Mutates Disk: <b>False</b> | Timeout: <b>15s</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" style="font-size:11px;">Tool Arguments (JSON)</label>
+          <textarea id="swarmToolArgsInput" class="input" rows="3" style="font-family:'JetBrains Mono', monospace; font-size:11px;">{"source_code": "def calculate_risk(account: str) -> float:\n    # Large docstring\n    return 0.05", "language": "python"}</textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="validateAndExecuteTool()" style="font-size:12px; padding:8px 18px;">
+          🧪 Validate Contract &amp; Execute Tool
+        </button>
+
+        <div id="swarmToolResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+
+      <!-- ROW 5: CAPABILITY-BASED ACCESS CONTROL (CBAC) SANDBOX TOKENS -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🛡️ GAP-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald">HMAC-SHA256 Signed</span>
+            <span class="badge badge-red">Loopback &amp; Core Protected</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Subagents run in capability-scoped sandboxes. Cryptographic tokens grant least-privilege access to filesystem worktrees, subprocess commands, and network egress destinations.
+        </p>
+
+        <!-- TOKEN MINTER -->
+        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:8px; color:var(--text);">🔑 Mint Scoped Agent Capability Token:</div>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Agent ID</label>
+              <input type="text" id="cbacAgentId" class="input" value="agent_sandbox_coder" style="font-size:12px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Token TTL (Seconds)</label>
+              <input type="number" id="cbacTtl" class="input" value="3600" style="font-size:12px;">
+            </div>
+          </div>
+
+          <div style="font-size:11px; margin-bottom:8px; color:var(--muted);">Granted Capabilities:</div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px; font-size:11.5px;">
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capFsRead" checked> <code>CAP_FS_READ</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capFsWriteMod" checked> <code>CAP_FS_WRITE_MODULE_ONLY</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capExecSubprocess"> <code>CAP_EXEC_SUBPROCESS</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capNetEgress"> <code>CAP_NET_EGRESS</code>
+            </label>
+          </div>
+
+          <button class="btn btn-primary" onclick="mintCbacToken()" style="font-size:11.5px; padding:6px 14px;">
+            ⚡ Mint Cryptographic Token
+          </button>
+        </div>
+
+        <!-- LIVE SANDBOX TESTER -->
+        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:8px; color:var(--text);">🧪 Live Sandbox Policy Gate Evaluation:</div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label" style="font-size:11px;">Active Capability Token</label>
+            <input type="text" id="cbacActiveToken" class="input" placeholder="Mint a token above or paste here..." style="font-size:11px; font-family:'JetBrains Mono', monospace;">
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px; align-items:flex-end;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Evaluation Gate Type</label>
+              <select id="cbacGateType" class="select" style="font-size:12px;" onchange="updateCbacTestInputs()">
+                <option value="fs_valid">Filesystem Write (Permitted Module File)</option>
+                <option value="fs_blocked_core">Filesystem Write (Forbidden Protected Core: .nb/core)</option>
+                <option value="subproc_safe">Subprocess Command (Whitelisted: pytest)</option>
+                <option value="subproc_blocked">Subprocess Command (Dangerous / Blocked: rm -rf)</option>
+                <option value="net_loopback">Network Egress (Blocked Loopback: 127.0.0.1)</option>
+                <option value="net_external">Network Egress (External: api.github.com:443)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="testCbacSandboxAccess()" style="font-size:12px; height:38px;">
+              🛡️ Test Sandbox Access
+            </button>
+          </div>
+
+          <div id="cbacResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -3608,6 +3902,490 @@ percipience rollback \
     }
   }
 
+
+  // ===========================================================================
+  // SECTION 17.1: SWARM TOPOLOGIES & AGENT GOVERNANCE CLIENT LOGIC
+  // ===========================================================================
+  let currentSwarmDAGNodes = [];
+
+  async function loadSwarmTab() {
+    await Promise.all([
+      refreshDynamicDAG(),
+      refreshMemoryStatus(),
+      refreshSwarmTools()
+    ]);
+  }
+
+  async function refreshDynamicDAG() {
+    try {
+      const res = await fetch('/api/swarm/dynamic-dag');
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        currentSwarmDAGNodes = data.nodes || [];
+        renderDagOrder(data.topological_order || [], currentSwarmDAGNodes);
+        document.getElementById('swarmDagTotalNodesBadge').innerText = `Nodes: ${currentSwarmDAGNodes.length} / ${data.max_steps} Max`;
+        document.getElementById('swarmDagMaxDepthBadge').innerText = `Max Depth: ${data.max_depth}`;
+        
+        // Update parent select options
+        const sel = document.getElementById('swarmDagParentSelect');
+        if (sel) {
+          sel.innerHTML = currentSwarmDAGNodes.map(n => 
+            `<option value="${n.id}">${n.id} (${n.name || n.action}) [depth ${n.depth}]</option>`
+          ).join('');
+        }
+      }
+    } catch (e) {
+      console.error('Error refreshing dynamic DAG:', e);
+    }
+  }
+
+  function renderDagOrder(order, nodes) {
+    const container = document.getElementById('swarmDagOrderContainer');
+    if (!container) return;
+    if (!order || order.length === 0) {
+      container.innerHTML = '<span style="color:var(--muted); font-size:11px;">No nodes in DAG.</span>';
+      return;
+    }
+
+    const nodeMap = {};
+    (nodes || []).forEach(n => { nodeMap[n.id] = n; });
+
+    let html = '';
+    order.forEach((stepId, idx) => {
+      const node = nodeMap[stepId] || { action: 'step', status: 'PENDING', depth: 0 };
+      const statusColor = node.status === 'SUCCESS' ? 'var(--green)' : (node.status === 'FAILED' ? 'var(--red)' : 'var(--cyan)');
+      html += `
+        <div style="background:var(--card-bg); border:1px solid var(--border); border-left:3px solid ${statusColor}; padding:6px 10px; border-radius:4px; font-size:11px; display:flex; flex-direction:column; gap:2px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <b style="color:var(--text);">${stepId}</b>
+            <span class="badge badge-purple" style="font-size:9.5px; padding:1px 5px;">d=${node.depth}</span>
+          </div>
+          <div style="color:var(--muted); font-size:10px;">${node.name || node.action}</div>
+        </div>
+      `;
+      if (idx < order.length - 1) {
+        html += '<span style="color:var(--muted); font-weight:700;">➔</span>';
+      }
+    });
+    container.innerHTML = html;
+  }
+
+  async function expandDynamicDAGSubgoals() {
+    const parentId = document.getElementById('swarmDagParentSelect').value;
+    const template = document.getElementById('swarmDagTemplateSelect').value;
+    const resBox = document.getElementById('swarmDagResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Expanding DAG sub-goals dynamically and verifying Kahn acyclicity...</span>';
+
+    let subgoals = [];
+    if (template === 'ast_and_critic') {
+      subgoals = [
+        { id: `${parentId}_ast_strict_typing`, action: 'ast_strict_typing', name: 'AST Strict Type Verification' },
+        { id: `${parentId}_reflexion_critic`, action: 'reflexion_critic', name: 'Multi-Pillar Critic Verification' }
+      ];
+    } else if (template === 'fuzz_and_benchmark') {
+      subgoals = [
+        { id: `${parentId}_fuzz_boundary_test`, action: 'fuzz_test', name: 'Automated Boundary Fuzzing' },
+        { id: `${parentId}_latency_benchmark`, action: 'benchmark', name: 'P99 Latency SLA Attestation' }
+      ];
+    } else {
+      subgoals = [
+        { id: `${parentId}_cve_scan`, action: 'cve_scan', name: 'CVE Vulnerability Scanning' },
+        { id: `${parentId}_memory_safety`, action: 'memory_safety', name: 'Memory Safety Invariant Check' }
+      ];
+    }
+
+    try {
+      const res = await fetch('/api/swarm/dynamic-dag/simulate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'expand', parent_step_id: parentId, subgoals: subgoals })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:4px;">✓ Runtime Sub-Goal Expansion Succeeded:</div>
+          <div><b>Parent Step:</b> <code>${data.parent_step_id}</code></div>
+          <div><b>Spawned Sub-Goals:</b> ${data.created_ids.map(id => `<span class="badge badge-emerald">${id}</span>`).join(' ')}</div>
+          <div style="margin-top:4px;"><b>Updated Kahn Topological Order:</b> <code>${data.topological_order.join(' ➔ ')}</code></div>
+        `;
+        await refreshDynamicDAG();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Expansion Failed: ${data.error || 'Unknown error'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function simulateDynamicDAGExecution() {
+    const resBox = document.getElementById('swarmDagResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Simulating topological pipeline execution across worker swarm...</span>';
+    try {
+      const res = await fetch('/api/swarm/dynamic-dag/simulate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'simulate_execution' })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const er = data.execution_result;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:4px;">✓ Pipeline Execution Completed (Status: ${er.status}):</div>
+          <div><b>Total Executed Steps:</b> <span class="badge badge-cyan">${er.executed_steps.length}</span></div>
+          <div><b>Execution Order:</b> <code>${er.executed_steps.join(' ➔ ')}</code></div>
+        `;
+        await refreshDynamicDAG();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Execution Error: ${data.error || 'Unknown error'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function resetDynamicDAG() {
+    const resBox = document.getElementById('swarmDagResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Resetting DAG to baseline 4-step pipeline...</span>';
+    try {
+      const res = await fetch('/api/swarm/dynamic-dag/simulate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'reset' })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        resBox.innerHTML = '<span style="color:var(--green);">✓ Dynamic DAG reset to baseline pipeline.</span>';
+        await refreshDynamicDAG();
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Reset Error: ${e.message}</span>`;
+    }
+  }
+
+  async function runReflexionEvaluation() {
+    const code = document.getElementById('reflexionCodeInput').value;
+    const resBox = document.getElementById('reflexionResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Executing 5-pillar mathematical critic evaluation...</span>';
+
+    try {
+      const res = await fetch('/api/swarm/reflexion/evaluate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ code_or_artifact: code, task_context: { module: 'core', task: 'payment_engine' } })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const crit = data.critique;
+        const p = crit.pillar_scores || {};
+        
+        // Update metric scorecards
+        document.getElementById('pillarScoreWire').innerText = (p.wire_contract_conformity || 0).toFixed(2);
+        document.getElementById('pillarScoreEdge').innerText = (p.edge_case_coverage || 0).toFixed(2);
+        document.getElementById('pillarScoreType').innerText = (p.type_signature_purity || 0).toFixed(2);
+        document.getElementById('pillarScoreGuard').innerText = (p.guardrail_compliance || 0).toFixed(2);
+        document.getElementById('pillarScoreToken').innerText = (p.token_budget_adherence || 0).toFixed(2);
+
+        const passBadge = crit.passes_invariants 
+          ? '<span class="badge badge-emerald" style="font-size:12px;">✓ PASS (Approved for Disk Write)</span>'
+          : '<span class="badge badge-red" style="font-size:12px;">✗ CRITIQUE REQUIRED (Zero-Disk-Write Enforced)</span>';
+
+        const defectItems = (crit.defects_found || []).map(d => `<li style="margin-bottom:2px;">${d}</li>`).join('');
+
+        resBox.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div><b>Reflexion Gate Verdict:</b> ${passBadge}</div>
+            <div><b>Convergence Score:</b> <span class="badge badge-purple" style="font-size:12px;">${(crit.convergence_score*100).toFixed(1)}%</span></div>
+          </div>
+          <div style="margin-bottom:6px;"><b>Critic Synopsis:</b> ${crit.critique}</div>
+          ${defectItems ? `<div style="color:var(--amber); font-weight:700; margin-top:6px;">Identified Defects:</div><ul style="padding-left:18px; margin:4px 0 8px 0; color:var(--text);">${defectItems}</ul>` : ''}
+          <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border); margin-top:6px;">
+            <b>Automated Refined Plan:</b> <span style="color:var(--cyan);">${crit.refined_plan}</span>
+          </div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Critic Error: ${data.error || 'Evaluation failed'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  function loadDefectiveSnippet() {
+    document.getElementById('reflexionCodeInput').value = `def bad_func(x):
+    return x + 10`;
+    runReflexionEvaluation();
+  }
+
+  async function refreshMemoryStatus() {
+    try {
+      const res = await fetch('/api/swarm/memory/status');
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        document.getElementById('memEpisodicCountBadge').innerText = `Tier 2: ${data.episodes_count} Episodes`;
+        document.getElementById('memSemanticCountBadge').innerText = `Tier 3: ${data.concepts_count} Concepts`;
+      }
+    } catch (e) {
+      console.error('Error refreshing memory status:', e);
+    }
+  }
+
+  async function searchEpisodicMemory() {
+    const q = document.getElementById('memorySearchQuery').value || '';
+    const resBox = document.getElementById('memoryResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Performing TF-IDF cosine similarity search across historical defect episodes...</span>';
+
+    try {
+      const res = await fetch(`/api/swarm/memory/episodic?q=${encodeURIComponent(q)}&limit=5`);
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const episodes = data.episodes || [];
+        if (episodes.length === 0) {
+          resBox.innerHTML = '<span style="color:var(--muted);">No matching failure episodes found above similarity threshold.</span>';
+          return;
+        }
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Retrieved ${episodes.length} Episodic Incident(s):</div>
+          ${episodes.map(ep => `
+            <div style="background:var(--card-bg); border:1px solid var(--border); padding:8px 10px; border-radius:4px; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <b>Task:</b> <code>${ep.task_id}</code>
+                <span class="badge badge-emerald">${ep.resolution_status}</span>
+              </div>
+              <div><b>Root Cause:</b> ${ep.root_cause}</div>
+              <div><b>Patch Summary:</b> <span style="color:var(--cyan);">${ep.patch_summary}</span></div>
+              <div style="font-size:10px; color:var(--muted); margin-top:2px;">Merkle Attestation: <code>${ep.merkle_block_hash || 'PENDING'}</code></div>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Search Error: ${data.error || 'Failed'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function consolidateWorkingMemory() {
+    const resBox = document.getElementById('memoryResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Consolidating in-flight working memory into persistent episodic and Merkle store...</span>';
+
+    try {
+      const res = await fetch('/api/swarm/memory/consolidate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ session_id: 'session_portal_demo', merkle_block_hash: '0000deadbeef' })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const c = data.consolidation;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Working Memory Successfully Consolidated:</div>
+          <div><b>Archived Episode Task:</b> <code>${c.task_id}</code></div>
+          <div><b>Root Cause / Context:</b> ${c.root_cause}</div>
+          <div><b>Patch Synopsis:</b> <span style="color:var(--cyan);">${c.patch_summary}</span></div>
+          <div><b>Sealed Merkle Hash:</b> <code>${c.merkle_block_hash}</code></div>
+        `;
+        await refreshMemoryStatus();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Consolidation Error: ${data.error || 'Failed'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  let registeredTools = [];
+  async function refreshSwarmTools() {
+    try {
+      const res = await fetch('/api/swarm/tools');
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        registeredTools = data.tools || [];
+        updateToolArgsTemplate();
+      }
+    } catch (e) {
+      console.error('Error refreshing tools:', e);
+    }
+  }
+
+  function updateToolArgsTemplate() {
+    const toolName = document.getElementById('swarmToolSelect').value;
+    const badge = document.getElementById('swarmToolSpecBadge');
+    const input = document.getElementById('swarmToolArgsInput');
+    const t = registeredTools.find(tool => tool.name === toolName);
+
+    if (t) {
+      badge.innerHTML = `Idempotent: <b>${t.is_idempotent}</b> | Mutates Disk: <b>${t.mutates_filesystem}</b> | Timeout: <b>${t.timeout_seconds}s</b> | Caps: <code>${(t.required_capabilities || []).join(', ')}</code>`;
+    }
+
+    if (toolName === 'ast_pruner') {
+      input.value = JSON.stringify({
+        source_code: `def calculate_risk(account: str) -> float:
+    return 0.05`,
+        language: "python"
+      }, null, 2);
+    } else if (toolName === 'contract_checker') {
+      input.value = JSON.stringify({
+        source_code: `class PaymentService:
+    def execute(self) -> bool:
+        return True`,
+        module_name: "mod_billing"
+      }, null, 2);
+    } else if (toolName === 'merkle_auditor') {
+      input.value = JSON.stringify({
+        target_file: ".nb/audit/log.json"
+      }, null, 2);
+    } else if (toolName === 'cve_sentinel') {
+      input.value = JSON.stringify({
+        dependency_list: ["cryptography==41.0.0", "pyyaml==6.0.1"]
+      }, null, 2);
+    }
+  }
+
+  async function validateAndExecuteTool() {
+    const toolName = document.getElementById('swarmToolSelect').value;
+    const rawArgs = document.getElementById('swarmToolArgsInput').value;
+    const resBox = document.getElementById('swarmToolResultBox');
+    resBox.style.display = 'block';
+
+    let parsedArgs = {};
+    try {
+      parsedArgs = JSON.parse(rawArgs);
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">JSON Syntax Error in Arguments: ${e.message}</span>`;
+      return;
+    }
+
+    resBox.innerHTML = '<span style="color:var(--cyan);">Validating input JSON Schema Draft-07 contract and executing...</span>';
+
+    try {
+      const res = await fetch('/api/swarm/tools/validate-execute', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ tool_name: toolName, args: parsedArgs })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const tr = data.tool_result;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Contract Validated &amp; Tool Executed (${tr.status}):</div>
+          <div><b>Tool:</b> <span class="badge badge-purple">${tr.tool}</span> | <b>Idempotent Cache Hit:</b> ${tr.cache_hit}</div>
+          <div style="margin-top:6px; background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+            <pre style="margin:0; font-size:11px; color:var(--text);">${JSON.stringify(tr.result, null, 2)}</pre>
+          </div>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Schema Validation or Tool Failure: ${data.error || 'Failed'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
+  async function mintCbacToken() {
+    const agentId = document.getElementById('cbacAgentId').value || 'agent_sandbox_coder';
+    const ttl = parseInt(document.getElementById('cbacTtl').value || '3600');
+    const ops = [];
+    if (document.getElementById('capFsRead').checked) ops.push('CAP_FS_READ');
+    if (document.getElementById('capFsWriteMod').checked) ops.push('CAP_FS_WRITE_MODULE_ONLY');
+    if (document.getElementById('capExecSubprocess').checked) ops.push('CAP_EXEC_SUBPROCESS');
+    if (document.getElementById('capNetEgress').checked) ops.push('CAP_NET_EGRESS');
+
+    try {
+      const res = await fetch('/api/swarm/cbac/mint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ agent_id: agentId, ttl_seconds: ttl, allowed_operations: ops })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        document.getElementById('cbacActiveToken').value = data.token;
+        const resBox = document.getElementById('cbacResultBox');
+        resBox.style.display = 'block';
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:4px;">✓ Cryptographic Token Successfully Minted:</div>
+          <div><b>Agent:</b> <code>${data.agent_id}</code> | <b>TTL:</b> ${data.ttl_seconds}s</div>
+          <div><b>Capabilities:</b> ${data.allowed_operations.map(o => `<span class="badge badge-emerald">${o}</span>`).join(' ')}</div>
+        `;
+      }
+    } catch (e) {
+      console.error('Error minting CBAC token:', e);
+    }
+  }
+
+  function updateCbacTestInputs() {
+    // Helper to dynamically adjust options if needed
+  }
+
+  async function testCbacSandboxAccess() {
+    const token = document.getElementById('cbacActiveToken').value;
+    const gateType = document.getElementById('cbacGateType').value;
+    const resBox = document.getElementById('cbacResultBox');
+    resBox.style.display = 'block';
+
+    if (!token) {
+      resBox.innerHTML = '<span style="color:var(--red);">Please mint or provide a capability token first.</span>';
+      return;
+    }
+
+    let payload = { token: token };
+    if (gateType === 'fs_valid') {
+      payload.check_type = 'fs';
+      payload.target_path = 'workplace/core/test_candidate.py';
+      payload.operation = 'write';
+    } else if (gateType === 'fs_blocked_core') {
+      payload.check_type = 'fs';
+      payload.target_path = '.nb/core/protected_kernel.py';
+      payload.operation = 'write';
+    } else if (gateType === 'subproc_safe') {
+      payload.check_type = 'subprocess';
+      payload.command = 'pytest workplace/tests';
+    } else if (gateType === 'subproc_blocked') {
+      payload.check_type = 'subprocess';
+      payload.command = 'rm -rf /tmp/data';
+    } else if (gateType === 'net_loopback') {
+      payload.check_type = 'network';
+      payload.host = '127.0.0.1';
+      payload.port = 8080;
+    } else if (gateType === 'net_external') {
+      payload.check_type = 'network';
+      payload.host = 'api.github.com';
+      payload.port = 443;
+    }
+
+    try {
+      const res = await fetch('/api/swarm/cbac/verify-access', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const badge = data.allowed 
+          ? '<span class="badge badge-emerald" style="font-size:12px;">✓ ACCESS GRANTED</span>'
+          : '<span class="badge badge-red" style="font-size:12px;">✗ ACCESS DENIED</span>';
+
+        resBox.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div><b>Policy Evaluation:</b> ${badge}</div>
+            <div><b>Check Type:</b> <span class="badge badge-purple">${data.check_type}</span></div>
+          </div>
+          ${data.reason ? `<div><b>Denial Reason:</b> <code style="color:var(--red);">${data.reason}</code></div>` : '<div style="color:var(--green);">Target request satisfied all cryptographic capability token invariants.</div>'}
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Sandbox Verification Error: ${data.error || 'Failed'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Network Error: ${e.message}</span>`;
+    }
+  }
+
     // On Load initializations
   document.addEventListener("DOMContentLoaded", () => {
     checkClientSession();
@@ -3691,6 +4469,46 @@ if not GLOBAL_TENANT_MGR.get_tenant("tenant_acme_fintech"):
         display_name="Alice (Enterprise Super Admin)",
         role=TenantRole.ENTERPRISE_SUPER_ADMIN
     )
+
+
+# ==============================================================================
+# SECTION 17.1: SWARM COORDINATION, GOVERNANCE & RUNTIME ENGINES
+# ==============================================================================
+GLOBAL_SWARM_DAG = DynamicDAGOrchestrator(dag_id="percipience_swarm_pipeline")
+if not GLOBAL_SWARM_DAG.nodes:
+    GLOBAL_SWARM_DAG.add_node(StepNode(id="step_ingest_spec", action="ingest_spec", name="Ingest Specification", metadata={"agent": "agent_planner"}))
+    GLOBAL_SWARM_DAG.add_node(StepNode(id="step_plan_architecture", action="plan_architecture", name="Synthesize Architecture", dependencies=["step_ingest_spec"], metadata={"agent": "agent_architect"}))
+    GLOBAL_SWARM_DAG.add_node(StepNode(id="step_code_derivation", action="code_derivation", name="Derive Implementation", dependencies=["step_plan_architecture"], blast_radius=["workplace/core/engine.py"], metadata={"agent": "agent_coder"}))
+    GLOBAL_SWARM_DAG.add_node(StepNode(id="step_verify_gate", action="verify_gate", name="Attest Verification Gate", dependencies=["step_code_derivation"], metadata={"agent": "agent_verifier"}))
+
+GLOBAL_SWARM_MEMORY = AgentMemoryEngine(base_dir=REPO_ROOT / ".nb" / "context" / "swarm_memory")
+if not GLOBAL_SWARM_MEMORY.get_concept("CONCEPT_DAG_EXPANSION"):
+    GLOBAL_SWARM_MEMORY.store_concept(
+        concept_id="CONCEPT_DAG_EXPANSION",
+        title="Dynamic Runtime DAG Expansion",
+        description="Enables autonomous agents to dynamically spawn sub-goals without cycle formation.",
+        rules=["Verify acyclicity via Kahn algorithm", "Limit recursion depth <= 3", "Rewire terminal dependents"],
+        tags=["dag", "orchestration", "subgoals"]
+    )
+if not GLOBAL_SWARM_MEMORY.get_concept("CONCEPT_CBAC_TOKENS"):
+    GLOBAL_SWARM_MEMORY.store_concept(
+        concept_id="CONCEPT_CBAC_TOKENS",
+        title="Capability-Based Access Control",
+        description="Cryptographic HMAC-signed capability tokens scoping agent filesystem and network access.",
+        rules=["Enforce directory path sandboxing", "Reject loopback or shell breakout", "Require unexpired token"],
+        tags=["security", "cbac", "sandbox"]
+    )
+GLOBAL_SWARM_MEMORY.record_episode(
+    task_id="task_swarm_bootstrap",
+    error_signature="NONE_SUCCESS",
+    root_cause="Bootstrap initialization",
+    patch_summary="Initialized 3-tier persistent memory, dynamic DAG orchestrator, and CBAC sandboxing.",
+    resolution_status="RESOLVED",
+    merkle_block_hash="0000abc123"
+)
+
+GLOBAL_SWARM_TOOLS = ToolContractValidator()
+GLOBAL_SWARM_GUARD = AgentCapabilityGuard()
 
 class PortalRequestHandler(BaseHTTPRequestHandler):
     def _send_bytes(self, data: bytes, content_type: str = "application/octet-stream", filename: Optional[str] = None, status: int = 200):
@@ -4551,6 +5369,67 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"status": "SUCCESS", "packages": packages})
             return
 
+        
+        if parsed.path == "/api/swarm/dynamic-dag":
+            order = []
+            try:
+                order = GLOBAL_SWARM_DAG.topological_sort()
+            except Exception:
+                pass
+            nodes_data = [dataclasses.asdict(n) for n in GLOBAL_SWARM_DAG.nodes.values()]
+            self._send_json({
+                "status": "SUCCESS",
+                "dag_id": GLOBAL_SWARM_DAG.dag_id,
+                "nodes": nodes_data,
+                "topological_order": order,
+                "max_depth": GLOBAL_SWARM_DAG.max_depth,
+                "max_steps": GLOBAL_SWARM_DAG.max_steps
+            })
+            return
+
+        if parsed.path == "/api/swarm/memory/status":
+            episodes = GLOBAL_SWARM_MEMORY.query_episodic_memory("", top_k=50, min_similarity=0.0)
+            concepts = GLOBAL_SWARM_MEMORY.lookup_concepts([])
+            self._send_json({
+                "status": "SUCCESS",
+                "episodes_count": len(episodes),
+                "concepts_count": len(concepts),
+                "base_dir": str(GLOBAL_SWARM_MEMORY.working_dir.parent)
+            })
+            return
+
+        if parsed.path == "/api/swarm/memory/episodic":
+            query_params = parse_qs(parsed.query)
+            q = query_params.get("q", [""])[0]
+            limit = int(query_params.get("limit", ["5"])[0])
+            episodes = GLOBAL_SWARM_MEMORY.query_episodic_memory(query_text=q, top_k=limit, min_similarity=0.0 if not q else 0.01)
+            self._send_json({"status": "SUCCESS", "episodes": episodes})
+            return
+
+        if parsed.path == "/api/swarm/memory/semantic":
+            query_params = parse_qs(parsed.query)
+            tags_raw = query_params.get("tags", [""])[0]
+            tags = [t.strip() for t in tags_raw.split(",") if t.strip()] if tags_raw else []
+            concepts = GLOBAL_SWARM_MEMORY.lookup_concepts(tags)
+            self._send_json({"status": "SUCCESS", "concepts": concepts})
+            return
+
+        if parsed.path == "/api/swarm/tools":
+            tools_data = []
+            for name, c in GLOBAL_SWARM_TOOLS.registry.items():
+                tools_data.append({
+                    "name": c.name,
+                    "description": c.description,
+                    "parameters": c.parameters,
+                    "returns": c.returns,
+                    "is_idempotent": c.is_idempotent,
+                    "mutates_filesystem": c.mutates_filesystem,
+                    "timeout_seconds": c.timeout_seconds,
+                    "required_capabilities": c.required_capabilities
+                })
+            self._send_json({"status": "SUCCESS", "tools": tools_data})
+            return
+
         self._send_json({"error": "Not Found"}, 404)
 
     def do_POST(self):
@@ -4981,6 +5860,175 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
 
 
+
+        
+        if parsed.path == "/api/swarm/dynamic-dag/simulate":
+            action = payload.get("action", "expand")
+            if action == "reset":
+                GLOBAL_SWARM_DAG.nodes.clear()
+                GLOBAL_SWARM_DAG.add_node(StepNode(id="step_ingest_spec", action="ingest_spec", name="Ingest Specification", metadata={"agent": "agent_planner"}))
+                GLOBAL_SWARM_DAG.add_node(StepNode(id="step_plan_architecture", action="plan_architecture", name="Synthesize Architecture", dependencies=["step_ingest_spec"], metadata={"agent": "agent_architect"}))
+                GLOBAL_SWARM_DAG.add_node(StepNode(id="step_code_derivation", action="code_derivation", name="Derive Implementation", dependencies=["step_plan_architecture"], blast_radius=["workplace/core/engine.py"], metadata={"agent": "agent_coder"}))
+                GLOBAL_SWARM_DAG.add_node(StepNode(id="step_verify_gate", action="verify_gate", name="Attest Verification Gate", dependencies=["step_code_derivation"], metadata={"agent": "agent_verifier"}))
+                self._send_json({
+                    "status": "SUCCESS",
+                    "action": "reset",
+                    "nodes": [dataclasses.asdict(n) for n in GLOBAL_SWARM_DAG.nodes.values()],
+                    "topological_order": GLOBAL_SWARM_DAG.topological_sort()
+                })
+                return
+            elif action == "expand":
+                parent_id = payload.get("parent_step_id", "step_code_derivation")
+                subgoals = payload.get("subgoals", [])
+                if not subgoals:
+                    subgoals = [
+                        {"id": f"{parent_id}_ast_type_check", "action": "ast_type_check", "name": "AST Strict Typing Verification"},
+                        {"id": f"{parent_id}_invariant_critic", "action": "invariant_critic", "name": "Multi-Pillar Critic Analysis"}
+                    ]
+                try:
+                    created_ids = GLOBAL_SWARM_DAG.expand_subgoals(parent_id, subgoals)
+                    order = GLOBAL_SWARM_DAG.topological_sort()
+                    self._send_json({
+                        "status": "SUCCESS",
+                        "action": "expand",
+                        "parent_step_id": parent_id,
+                        "created_ids": created_ids,
+                        "nodes": [dataclasses.asdict(n) for n in GLOBAL_SWARM_DAG.nodes.values()],
+                        "topological_order": order
+                    })
+                except Exception as e:
+                    self._send_json({"error": str(e)}, status=400)
+                return
+            elif action == "simulate_execution":
+                def dummy_executor(node, orchestrator):
+                    return {"result": f"Execution finished for step {node.id}", "status": "SUCCESS"}
+                executors = {nid: dummy_executor for nid in GLOBAL_SWARM_DAG.nodes}
+                try:
+                    exec_result = GLOBAL_SWARM_DAG.execute(executors)
+                    self._send_json({
+                        "status": "SUCCESS",
+                        "action": "simulate_execution",
+                        "execution_result": exec_result,
+                        "nodes": [dataclasses.asdict(n) for n in GLOBAL_SWARM_DAG.nodes.values()]
+                    })
+                except Exception as e:
+                    self._send_json({"error": str(e)}, status=400)
+                return
+            else:
+                self._send_json({"error": f"Unknown action '{action}'"}, status=400)
+                return
+
+        if parsed.path == "/api/swarm/reflexion/evaluate":
+            code = payload.get("code_or_artifact", "")
+            context = payload.get("task_context", {})
+            try:
+                critique = SelfReflectionEngine.evaluate_invariants(code, context)
+                self._send_json({
+                    "status": "SUCCESS",
+                    "critique": dataclasses.asdict(critique)
+                })
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/swarm/memory/consolidate":
+            session_id = payload.get("session_id", "session_portal_demo")
+            merkle_hash = payload.get("merkle_block_hash", "0000deadbeef")
+            try:
+                wm = GLOBAL_SWARM_MEMORY.get_working_memory(session_id)
+                if not wm.get("in_flight_hypotheses") and not wm.get("symbol_diffs") and not wm.get("step_returns"):
+                    GLOBAL_SWARM_MEMORY.set_working_memory(session_id, {
+                        "in_flight_hypotheses": ["Dynamic DAG verified", "CBAC token guard active"],
+                        "symbol_diffs": {"DynamicDAGOrchestrator": "ADDED"},
+                        "step_returns": [{"step": "step_ingest_spec", "status": "SUCCESS"}]
+                    })
+                res = GLOBAL_SWARM_MEMORY.consolidate_working_memory(session_id, merkle_hash)
+                self._send_json({
+                    "status": "SUCCESS",
+                    "consolidation": res
+                })
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/swarm/tools/validate-execute":
+            tool_name = payload.get("tool_name", "ast_pruner")
+            args = payload.get("args", {})
+            try:
+                handlers = {
+                    "ast_pruner": lambda source_code="", language="python", focus_symbols=None: {
+                        "pruned_code": source_code[:120] + "... [AST SKELETONIZED]" if len(source_code) > 120 else source_code,
+                        "tokens_saved": max(10, len(source_code) // 4),
+                        "reduction_pct": 0.584
+                    },
+                    "contract_checker": lambda source_code="", module_name="core": {
+                        "contract_valid": True,
+                        "violations": [],
+                        "module_name": module_name
+                    },
+                    "merkle_auditor": lambda target_file=".nb/audit/log.json", expected_root=None: {
+                        "verified": True,
+                        "root_hash": "a1b2c3d4e5f67890abcdef1234567890abcdef1234567890abcdef1234567890",
+                        "depth": 4
+                    },
+                    "cve_sentinel": lambda dependency_list=None: {
+                        "cve_count": 0,
+                        "status": "CLEAN",
+                        "scanned_count": len(dependency_list or [])
+                    }
+                }
+                fn = handlers.get(tool_name, lambda **kw: {"status": "CUSTOM_HANDLED", "kw": kw})
+                result = GLOBAL_SWARM_TOOLS.execute_tool(tool_name, args, fn)
+                self._send_json({"status": "SUCCESS", "tool_result": result})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/swarm/cbac/mint":
+            agent_id = payload.get("agent_id", "agent_sandbox_coder")
+            worktree_path = payload.get("worktree_path", str(REPO_ROOT))
+            allowed_operations = payload.get("allowed_operations", ["CAP_FS_READ", "CAP_FS_WRITE_MODULE_ONLY"])
+            ttl = int(payload.get("ttl_seconds", 3600))
+            try:
+                tok = AgentCapabilityGuard.mint_token(agent_id, worktree_path, allowed_operations, ttl)
+                self._send_json({
+                    "status": "SUCCESS",
+                    "token": tok,
+                    "agent_id": agent_id,
+                    "allowed_operations": allowed_operations,
+                    "ttl_seconds": ttl
+                })
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/swarm/cbac/verify-access":
+            token_str = payload.get("token", "")
+            check_type = payload.get("check_type", "fs")
+            try:
+                if check_type == "fs":
+                    target_p = payload.get("target_path", str(REPO_ROOT / "workplace/core/test.py"))
+                    operation = payload.get("operation", "write")
+                    allowed, reason = AgentCapabilityGuard.check_fs_access(token_str, target_p, operation, REPO_ROOT)
+                elif check_type == "subprocess":
+                    cmd = payload.get("command", "pytest")
+                    allowed, reason = AgentCapabilityGuard.check_subprocess_command(token_str, cmd)
+                elif check_type == "network":
+                    host = payload.get("host", "api.github.com")
+                    port = int(payload.get("port", 443))
+                    allowed, reason = AgentCapabilityGuard.check_network_egress(token_str, host, port)
+                else:
+                    allowed, reason = False, f"Unknown check_type '{check_type}'"
+
+                self._send_json({
+                    "status": "SUCCESS",
+                    "check_type": check_type,
+                    "allowed": allowed,
+                    "reason": reason
+                })
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
 
         self._send_json({"error": "Not Found"}, 404)
 

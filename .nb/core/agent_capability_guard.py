@@ -218,7 +218,7 @@ class AgentCapabilityGuard:
             return True, None
 
         # External host requires CAP_NETWORK_EGRESS
-        if "CAP_NETWORK_EGRESS" not in allowed_ops:
+        if "CAP_NETWORK_EGRESS" not in allowed_ops and "CAP_NET_EGRESS" not in allowed_ops:
             return False, f"PERMISSION_DENIED_NETWORK_EGRESS_BLOCKED: External connection to {host}:{port} forbidden without CAP_NETWORK_EGRESS"
 
         return True, None

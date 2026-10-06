@@ -265,6 +265,8 @@ class AgentMemoryEngine:
     def lookup_concepts(self, query_or_tags: List[str]) -> List[Dict[str, Any]]:
         """Looks up concepts matching any of the specified keywords or tags."""
         concepts = self._load_concepts()
+        if not query_or_tags:
+            return list(concepts.values())
         matches: List[Dict[str, Any]] = []
         search_terms = {t.lower() for t in query_or_tags}
 
