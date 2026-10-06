@@ -167,6 +167,7 @@ class PercipienceExecutionService(private val project: Project) {
         env["PERCIPIENCE_ROOT"] = basePath
         env["PERCIPIENCE_CLI_HEADLESS"] = "1"
         env["PYTHONUNBUFFERED"] = "1"
+        env["PYTHONPATH"] = "${File(basePath, ".nb").absolutePath}:${File(basePath, ".nb/core").absolutePath}:${File(basePath, "workplace").absolutePath}"
 
         return@withContext try {
             val process = pb.start()
@@ -186,6 +187,7 @@ class PercipienceExecutionService(private val project: Project) {
             val stderrThread = Thread {
                 stderrReader.lineSequence().forEach { line ->
                     stderrBuilder.append(line).append("\n")
+                    onOutput?.invoke("[STDERR] $line")
                 }
             }
 
@@ -217,41 +219,115 @@ class PercipienceExecutionService(private val project: Project) {
         }
     }
 
-    suspend fun runGatekeeper() = executeCommand("gate")
+    suspend fun runGatekeeper(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("gate", emptyList(), onOutput)
+    }
 
-    suspend fun runMerkleAudit(enforceMerkleChain: Boolean = true, minMaturity: Double = 0.85) =
-        executeCommand("audit", listOf("--min-maturity", minMaturity.toString()))
+    suspend fun runMerkleAudit(
+        enforceMerkleChain: Boolean = true,
+        minMaturity: Double = 0.85,
+        onOutput: ((String) -> Unit)? = null
+    ): ExecutionResult {
+        val args = mutableListOf<String>()
+        if (enforceMerkleChain) {
+            args.add("--enforce-merkle-chain")
+        }
+        args.add("--min-maturity")
+        args.add(minMaturity.toString())
+        return executeCommand("audit", args, onOutput)
+    }
 
-    suspend fun runBasicCicd() = executeCommand("cicd")
+    suspend fun runBasicCicd(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("cicd", listOf("run"), onOutput)
+    }
 
-    suspend fun runValidateLayered() = executeCommand("layer", listOf("validate"))
+    suspend fun runValidateLayered(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("validate", listOf("--layered"), onOutput)
+    }
 
-    suspend fun runTokensSummary() = executeCommand("tokens", listOf("summary"))
+    suspend fun runTokensSummary(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("tokens", listOf("summary"), onOutput)
+    }
 
-    suspend fun runWorktreesList() = executeCommand("worktrees", listOf("list"))
+    suspend fun runTerminalStatus(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("terminal", listOf("status"), onOutput)
+    }
 
-    suspend fun runCustomAgent(agentName: String, taskDescription: String) =
-        executeCommand("agent", listOf("run", agentName, "--task", taskDescription))
+    suspend fun runWorktreeList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("worktree", listOf("list"), onOutput)
+    }
 
-    suspend fun runDriftCheck() = executeCommand("drift", listOf("check"))
+    suspend fun runWorktreesList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return runWorktreeList(onOutput)
+    }
 
-    suspend fun runLayerPack(domainPlanPath: String, outputPath: String) =
-        executeCommand("layer", listOf("pack", domainPlanPath, "-o", outputPath))
+    suspend fun runAgentList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("agent", listOf("list"), onOutput)
+    }
 
-    suspend fun runProvisionPortal(tier: String) =
-        executeCommand("portal", listOf("provision", "--tier", tier))
+    suspend fun runCustomAgent(agentName: String, taskDescription: String, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("agent", listOf("run", agentName, "--task", taskDescription), onOutput)
+    }
 
-    suspend fun runDriftReport() = executeCommand("drift", listOf("report"))
+    suspend fun runDriftCheck(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("drift", listOf("check"), onOutput)
+    }
 
-    suspend fun runSwarmInspect() = executeCommand("swarm", listOf("inspect"))
+    suspend fun runDriftReport(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("drift", listOf("report"), onOutput)
+    }
 
-    suspend fun runVpcSync() = executeCommand("vpc", listOf("sync"))
+    suspend fun runLayerPack(planPath: String, outputPath: String, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("layer", listOf("pack", "--plan", planPath, "--output", outputPath), onOutput)
+    }
 
-    suspend fun runWormEgressAudit() = executeCommand("worm", listOf("audit"))
+    suspend fun runProvisionPortal(target: String = "all", onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("provision", listOf("--target", target), onOutput)
+    }
 
-    suspend fun runAgentWrap(agentName: String, format: String) =
-        executeCommand("terminal", listOf("wrap", agentName, "--format", format))
+    suspend fun runSwarmAudit(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("swarm", listOf("audit"), onOutput)
+    }
 
-    suspend fun runContextExport(format: String, outputFile: String) =
-        executeCommand("terminal", listOf("export", "--format", format, "-o", outputFile))
+    suspend fun runSwarmInspect(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("swarm", listOf("inspect"), onOutput)
+    }
+
+    suspend fun runEgressList(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("egress", listOf("list"), onOutput)
+    }
+
+    suspend fun runWormEgressAudit(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("worm", listOf("audit"), onOutput)
+    }
+
+    suspend fun runRepoStatus(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("repo", listOf("status"), onOutput)
+    }
+
+    suspend fun runVpcSync(onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("vpc", listOf("sync"), onOutput)
+    }
+
+    suspend fun runContextExport(format: String = "claude-code", outputPath: String? = null, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        val args = mutableListOf("export", "--format", format)
+        if (outputPath != null) {
+            args.add("--output")
+            args.add(outputPath)
+        }
+        return executeCommand("context", args, onOutput)
+    }
+
+    suspend fun runAgentWrap(agent: String = "claude", format: String? = null, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        val args = mutableListOf("wrap", "--agent", agent)
+        if (format != null) {
+            args.add("--format")
+            args.add(format)
+        }
+        return executeCommand("terminal", args, onOutput)
+    }
+
+    suspend fun runTerminalHook(shell: String = "zsh", onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("terminal", listOf("hook", "--shell", shell), onOutput)
+    }
 }

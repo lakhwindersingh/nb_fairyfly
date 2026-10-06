@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_free_5ab129aa7a68",
+  "license_id": "lic_plan_free_285bc90f984a",
   "tenant_id": "tenant_community_default",
   "tier": "plan_free",
   "tier_name": "Free Community Tier",
@@ -17,10 +17,10 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-06T02:30:09.509966+00:00",
+  "issued_at": "2026-10-06T03:36:51.778041+00:00",
   "total_files": 93,
   "file_manifest": {
-    "bin/percipience": "8994e163bbf3071f64cdb24adb5078a63b8a55012ac2fd2ccee9677c7eb99db7",
+    "bin/percipience": "8b5354e5efcce6a034c396494f40c44b7f5d55760b1afe128f20ca75ab2bb32c",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
@@ -31,13 +31,13 @@
     "core/ast_optimizer.py": "e3a887af891a7e1e201ae1ccc21f7893a605563556e49c79438ad3d16b134144",
     "core/attention_budgeter.py": "22b14dea8e9d1209a07a63d5a57cb24a2077ec6985f1418141c886ecfef9ade3",
     "core/autonomous_cicd.py": "3456d53a7a182a54e94f36b098c4034686d3c463ff75dafdd14db726b45f5572",
-    "core/commercial_packager_provisioner.py": "55c2cf6c5d6db73689c84076f32c7131026d97095bb739eab8c64f77dd15748c",
+    "core/commercial_packager_provisioner.py": "bd6f08b01a05176587a5faddc13b7987059c2bc8aa96cdcc602564d86fff0d50",
     "core/contract_compatibility_checker.py": "5efba61538b319ecc86d6de7bf23382c91940c9831c6da8eb5259ebb6f6e62a5",
     "core/dependency_cve_sentinel.py": "89e50447ebe50a6abc76c8ad2748ec605bedd66afdcebc8693f183343afad6fc",
     "core/error_recovery_orchestrator.py": "dc9e2d60f3b3626a0424b6b2b4fcc608e5dee4e986d6684212bc4002390426f4",
     "core/eval_scoring_engine.py": "70341f06c7c65b5a345dcec90eaf3784116e19c73e82753ab2146cfc2e609097",
     "core/flaky_test_detector.py": "af79e4d3cc97bc9a67aef0e7af7d13c5ff62025da0f45ccca1588dd1800ab160",
-    "core/handoff_validator.py": "11beaf3e566e8a08dc17c23db62f8513c9bb90656f4c24e56f36e2081293eb05",
+    "core/handoff_validator.py": "67375ff78caa9a85f24605f53c04e125602bb1336381b5488bad322a2bb20a60",
     "core/layered_context_validator.py": "0123017c5b77342f9106368ee60cfd89088d7821933f05e5fbb36cd3d75436d7",
     "core/living_doc_engine.py": "338c96a5dd261cb6e02f12ded87d085e10e59f8ea6f0a9cd1e8d308c89f3eb8e",
     "core/maturity_evaluator.py": "acacf52fb6fa280a68a8d9a2a9bb0b0528b3859a916edbef91dd7ef467810209",
@@ -56,7 +56,7 @@
     "core/token_tracker.py": "be9de8ca46a79ab7513a04598af99c7fe0108a525e25061363ad811e86e6e76e",
     "core/trajectory_recorder.py": "2a52a034202adff505cf9717ffe05fff0cbc2f11709d9d16545c6b3e85977ad8",
     "core/tree_sitter_daemon.py": "70ff5f54820adbfe973a8496f1049572ef2df5ee4f07718a85b1e997f6b7b2d8",
-    "core/workflow_orchestrator.py": "ac32539ca27c0fe8f0e79ffc2dc5fb8c038ea7c04debd78f39b1549c9fd26b98",
+    "core/workflow_orchestrator.py": "b75ea71727d4b5ea604e6bc2d47e97301ac2ac7bee30383c72e0a2ef82467486",
     "context/contracts/billing_meter_contract.yaml": "e54933b1c65d36c9d420038b1cd09b065443ab52aebe1daccca794bf4a5c0a3e",
     "context/contracts/billing_webhook_contract.json": "02c24ca87f2e38865e25b143e230c80fd86cd4f46bc31ba3e8b982806e3b2c41",
     "context/contracts/ble_gatt_spec.yaml": "2e338f08a72eb1713ebd7b216e9b64c91b99bda6264c45d679e148a425b74e59",
@@ -108,11 +108,11 @@
     "agentic/custom/agents/test_finops_auditor.yaml": "932ad5142da7922995976f86797cfc6eada43cc3a63cd90d85859cb89dbdaade",
     "agentic/custom/agents/token_finops_auditor.yaml": "7893a4d1994007d4297ffbcca086e25263ece4b17731cb5a5125570de38502bf",
     "agentic/custom/workflows/basic_autonomous_cicd.yaml": "3e00f72aa238ef6159a86fa206dae121777eb72e933c13c0e4ecca2f9caf1d33",
-    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "96717361a739ddf2887be40dc246c55e5ef38efbd59c420a787a3821622cfa5f",
+    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "6c5ada100810f9bc3dd2acc51fc5dffd56cea8a736accf2ebc2277b6dea3fa15",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414",
     "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "15a2a56734d32850631a7664617e8242e03600c43bdc1ce18b49afbbc2a25e6f",
     "workflows/basic_autonomous_cicd.yaml": "3e00f72aa238ef6159a86fa206dae121777eb72e933c13c0e4ecca2f9caf1d33",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "b7fa93f574c2151ba2d09fb481fdbec1204008a86996fc4c266cec197306753e"
+  "signature_sha256": "7379460df0bdbf020b71d66ec937d592787c6c7ec1607335f0f6bb673d3c18a1"
 }
