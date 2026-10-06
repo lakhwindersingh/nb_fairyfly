@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable, Set
 import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parents[1].name == "workplace" else Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) >= 3 and (Path(__file__).resolve().parents[2] / ".nb").exists() else Path(__file__).resolve().parents[1]
 
 
 class WorkflowOrchestrator:
@@ -21,13 +21,27 @@ class WorkflowOrchestrator:
 
     @classmethod
     def load_workflow(cls, workflow_path: Path) -> Dict[str, Any]:
-        """Loads and validates a workflow YAML specification."""
+        """Loads and validates a workflow YAML specification, normalizing steps and stages."""
         if not workflow_path.exists():
             raise FileNotFoundError(f"Workflow definition not found at: {workflow_path}")
         with open(workflow_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-        if "workflow_id" not in data or "steps" not in data:
-            raise ValueError(f"Invalid workflow schema in {workflow_path}")
+        
+        workflow_id = data.get("workflow_id") or data.get("name") or data.get("id") or workflow_path.stem
+        raw_steps = data.get("steps") or data.get("stages") or []
+        if not workflow_id or not raw_steps:
+            raise ValueError(f"Invalid workflow schema in {workflow_path}: missing workflow_id/steps/stages")
+
+        normalized_steps = []
+        for s in raw_steps:
+            if isinstance(s, dict):
+                norm_s = dict(s)
+                norm_s["id"] = s.get("id") or s.get("step_id") or s.get("stage_id") or f"step_{len(normalized_steps)}"
+                norm_s["executor"] = s.get("executor") or s.get("agent") or "generic_executor"
+                normalized_steps.append(norm_s)
+
+        data["workflow_id"] = workflow_id
+        data["steps"] = normalized_steps
         return data
 
     @classmethod

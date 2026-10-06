@@ -304,38 +304,80 @@ class HandoffValidator:
 
     @classmethod
     def load_dynamic_workflow_routes(cls, workflow_id: str, workspace_root: Optional[Path] = None) -> Dict[Tuple[str, str], str]:
-        """Dynamically parses workflow manifest YAML from agentic/workflows/ into valid DAG transitions."""
+        """Dynamically parses workflow manifest YAML from agentic/workflows/ and agentic/custom/workflows/ into valid DAG transitions."""
         ws = _resolve_repo_root(workspace_root)
+        clean_wf = workflow_id.replace('wf_', '')
         candidates = [
-            ws / ".nb" / "agentic" / "workflows" / f"{workflow_id.replace('wf_', '')}.yaml",
+            ws / ".nb" / "agentic" / "workflows" / f"{clean_wf}.yaml",
             ws / ".nb" / "agentic" / "workflows" / f"{workflow_id}.yaml",
-            ws / "agentic" / "workflows" / f"{workflow_id.replace('wf_', '')}.yaml",
+            ws / ".nb" / "agentic" / "custom" / "workflows" / f"{clean_wf}.yaml",
+            ws / ".nb" / "agentic" / "custom" / "workflows" / f"{workflow_id}.yaml",
+            ws / "agentic" / "workflows" / f"{clean_wf}.yaml",
             ws / "agentic" / "workflows" / f"{workflow_id}.yaml",
+            ws / "agentic" / "custom" / "workflows" / f"{clean_wf}.yaml",
+            ws / "agentic" / "custom" / "workflows" / f"{workflow_id}.yaml",
         ]
         wf_file = next((c for c in candidates if c.exists()), None)
+        if not wf_file:
+            wf_search_dirs = [
+                ws / ".nb" / "agentic" / "workflows",
+                ws / ".nb" / "agentic" / "custom" / "workflows",
+                ws / "agentic" / "workflows",
+                ws / "agentic" / "custom" / "workflows"
+            ]
+            for d in wf_search_dirs:
+                if d.exists():
+                    for f in d.glob("*.yaml"):
+                        try:
+                            import yaml
+                            dat = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+                            if dat.get("workflow_id") == workflow_id or dat.get("name") == workflow_id or f.stem == workflow_id or f.stem == clean_wf:
+                                wf_file = f
+                                break
+                        except Exception:
+                            continue
+                if wf_file:
+                    break
+
         if not wf_file:
             return {}
 
         try:
             import yaml
             data = yaml.safe_load(wf_file.read_text(encoding="utf-8")) or {}
-            steps = data.get("steps", [])
+            raw_steps = data.get("steps") or data.get("stages") or []
+            steps = []
+            for s in raw_steps:
+                if isinstance(s, dict):
+                    norm_s = dict(s)
+                    norm_s["id"] = s.get("id") or s.get("step_id") or s.get("stage_id") or f"step_{len(steps)}"
+                    norm_s["executor"] = s.get("executor") or s.get("agent") or ""
+                    steps.append(norm_s)
+
             step_by_id = {s["id"]: s for s in steps}
             routes = {}
 
-            for step in steps:
+            for idx, step in enumerate(steps):
                 curr_exec = step.get("executor")
                 gate = step.get("gate", step.get("id"))
-                for dep_id in step.get("depends_on", []):
-                    dep_step = step_by_id.get(dep_id)
-                    if dep_step:
-                        dep_exec = dep_step.get("executor")
-                        if dep_exec and curr_exec:
-                            routes[(dep_exec, curr_exec)] = gate
-                            # Also map normalized agent names
-                            norm_dep = dep_exec.replace("platform.", "agent_")
-                            norm_curr = curr_exec.replace("platform.", "agent_")
-                            routes[(norm_dep, norm_curr)] = gate
+                deps = step.get("depends_on", [])
+                if not deps and idx > 0:
+                    prev_exec = steps[idx - 1].get("executor")
+                    if prev_exec and curr_exec and prev_exec != curr_exec:
+                        routes[(prev_exec, curr_exec)] = gate
+                        norm_prev = prev_exec.replace("platform.", "agent_")
+                        norm_curr = curr_exec.replace("platform.", "agent_")
+                        routes[(norm_prev, norm_curr)] = gate
+                else:
+                    for dep_id in deps:
+                        dep_step = step_by_id.get(dep_id)
+                        if dep_step:
+                            dep_exec = dep_step.get("executor")
+                            if dep_exec and curr_exec and dep_exec != curr_exec:
+                                routes[(dep_exec, curr_exec)] = gate
+                                norm_dep = dep_exec.replace("platform.", "agent_")
+                                norm_curr = curr_exec.replace("platform.", "agent_")
+                                routes[(norm_dep, norm_curr)] = gate
             return routes
         except Exception:
             return {}
