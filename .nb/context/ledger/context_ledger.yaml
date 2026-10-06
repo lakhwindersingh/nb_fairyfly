@@ -558,6 +558,14 @@ ledger_chain:
   current_block_hash: a0ac2bf75b69f0988b3f36f2f2bd5f0f40598860e3ad5fa85d92bf263ff6cc67
   action: PR_GATE_VERIFICATION_PASSED
   block_hash: a0ac2bf75b69f0988b3f36f2f2bd5f0f40598860e3ad5fa85d92bf263ff6cc67
+- block_id: 2400
+  block_type: STATE_UPDATE
+  prev_block_hash: a0ac2bf75b69f0988b3f36f2f2bd5f0f40598860e3ad5fa85d92bf263ff6cc67
+  timestamp: '2026-10-06T18:41:28.812283+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 522cb917f77fd7cb0393bdb3e394fae6e75dae71b5df021f4a4044edb40699c7
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 522cb917f77fd7cb0393bdb3e394fae6e75dae71b5df021f4a4044edb40699c7
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
