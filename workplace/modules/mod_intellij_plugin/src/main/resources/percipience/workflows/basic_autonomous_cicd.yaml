@@ -7,7 +7,7 @@ steps:
     name: "Self-Sustaining Workspace Hygiene"
     executor: "platform.self_sustaining_engine"
     description: "Reclaims local worktree locks, purges scratch temporary artifacts, and checks ledger continuity."
-    inputs: ["user/scratch/", ".workspaces/"]
+    inputs: ["user/scratch/", ".nb/workspaces/"]
     failure_action: "warn_and_continue"
 
   - step_id: "ast_token_reduction"

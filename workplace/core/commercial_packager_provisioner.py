@@ -162,9 +162,11 @@ class CommercialPackagerProvisioner:
         if isinstance(tier_rules.get("allowed_engines"), set):
             tier_rules["allowed_engines"] = sorted(list(tier_rules["allowed_engines"]))
 
+        canonical_name = tier_data.get("name", norm_tier)
         return {
             "tier_id": norm_tier,
-            "canonical_name": tier_data.get("name", norm_tier),
+            "canonical_name": canonical_name,
+            "tier_name": canonical_name,
             "base_price_monthly_usd": tier_data.get("base_price_monthly_usd", 0),
             "included_seats": tier_data.get("included_seats", 1),
             "included_concurrent_worktrees": tier_data.get("included_concurrent_worktrees", 1),
@@ -429,6 +431,7 @@ class CommercialPackagerProvisioner:
             "tenant_id": t_id,
             "tier": spec["tier_id"],
             "tier_name": spec["canonical_name"],
+            "canonical_name": spec["canonical_name"],
             "base_price_monthly_usd": spec["base_price_monthly_usd"],
             "included_seats": spec["included_seats"],
             "included_concurrent_worktrees": spec["included_concurrent_worktrees"],
@@ -474,6 +477,22 @@ class CommercialPackagerProvisioner:
                     if dst_item.exists():
                         shutil.rmtree(dst_item)
                     shutil.copytree(src_item, dst_item)
+
+            # Ensure both canonical plan templates are present in IDE resources
+            free_plan_src = workspace_root / ".nb" / "plan" / "master" / "parent-master-free-plan" / "detailed.md"
+            if not free_plan_src.exists():
+                free_plan_src = workspace_root / ".nb" / "plan" / "claude-context-engineering-parent-master-free_plan.md"
+            if free_plan_src.exists():
+                (ij_resources / "plan").mkdir(parents=True, exist_ok=True)
+                shutil.copy2(free_plan_src, ij_resources / "plan" / "claude-context-engineering-parent-master-free_plan.md")
+
+            master_plan_src = workspace_root / ".nb" / "plan" / "master" / "parent-master-plan" / "detailed.md"
+            if not master_plan_src.exists():
+                master_plan_src = workspace_root / ".nb" / "plan" / "claude-context-engineering-parent-master-plan.md"
+            if master_plan_src.exists():
+                (ij_resources / "plan").mkdir(parents=True, exist_ok=True)
+                shutil.copy2(master_plan_src, ij_resources / "plan" / "claude-context-engineering-parent-master-plan.md")
+
             # Copy license
             shutil.copy2(src_pkg_dir / "PERCIPIENCE_LICENSE.json", ij_resources / "tenant_license.json")
             provisioned_targets.append("mod_intellij_plugin")
@@ -557,20 +576,38 @@ class CommercialPackagerProvisioner:
     def verify_permissions(
         cls,
         workspace_root: Path,
-        tier_or_tenant: str,
-        feature_name: str
+        tenant_id_or_tier: Optional[str] = None,
+        feature: Optional[str] = None,
+        tier_or_tenant: Optional[str] = None,
+        feature_name: Optional[str] = None,
+        *args,
+        **kwargs
     ) -> Dict[str, Any]:
         """
         Enforces and checks RBAC permission gates against the active license.
+        Supports both positional and keyword invocation signatures.
         """
-        spec = cls.audit_billing_entitlements(workspace_root, tier_or_tenant)
+        workspace_root = Path(workspace_root).resolve()
+        target = tenant_id_or_tier or tier_or_tenant or kwargs.get("tier") or kwargs.get("tenant") or kwargs.get("tenant_id") or "plan_free"
+        feat = feature or feature_name or kwargs.get("action") or kwargs.get("feature_name") or ""
+        if not feat and len(args) > 0:
+            feat = args[0]
+
+        spec = cls.audit_billing_entitlements(workspace_root, target)
         entitlements = spec.get("features", {})
-        allowed = bool(entitlements.get(feature_name, False))
+        rules = spec.get("rules", {})
+        allowed = bool(entitlements.get(feat, False) or rules.get(feat, False))
+        tier_label = spec.get("canonical_name") or spec.get("tier_name") or "Plan"
+        reason = f"Feature '{feat}' is {'granted' if allowed else 'not granted'} under {tier_label} entitlements."
 
         return {
-            "feature": feature_name,
+            "feature": feat,
+            "action": feat,
             "allowed": allowed,
+            "permitted": allowed,
             "tier": spec["tier"],
-            "tier_name": spec["tier_name"],
+            "tier_name": tier_label,
+            "canonical_name": tier_label,
+            "reason": reason,
             "enforcement": "STRICT_RBAC"
         }
