@@ -23,9 +23,11 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-for p_dir in [REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
-    if str(p_dir) not in sys.path:
-        sys.path.insert(0, str(p_dir))
+for p_dir in [REPO_ROOT, REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+    p_str = str(p_dir)
+    if p_str in sys.path:
+        sys.path.remove(p_str)
+    sys.path.insert(0, p_str)
 
 from core.ast_optimizer import ASTOptimizer
 from core.merkle_engine import MerkleEngine

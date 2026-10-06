@@ -1,30 +1,33 @@
 # =============================================================================
 # Percipience Standalone Native Tree-Sitter AST Daemon Container
 # =============================================================================
-FROM rust:1.77-alpine AS builder
+FROM python:3.11-slim
 
-WORKDIR /app
-RUN apk add --no-cache musl-dev gcc make git
+WORKDIR /workspace
 
-# Compile high-throughput Tree-Sitter native grammar bindings
-COPY workplace/config/ /app/config/
-RUN echo "Building Percipience Native Tree-Sitter Engine..."
+# Install minimal build tools and curl for healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    build-essential \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-FROM alpine:3.19 AS runtime
+# Install Python dependencies
+COPY workplace/infra/docker/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-WORKDIR /percipience
-RUN apk add --no-cache ca-certificates libgcc python3
+# Copy required engine and source spaces
+COPY .nb /workspace/.nb
+COPY workplace /workspace/workplace
 
-COPY --from=builder /app /percipience/app
-COPY workplace/core/ /percipience/workplace/core/
-COPY workplace/bin/percipience /percipience/workplace/bin/percipience
-
+ENV PYTHONPATH=/workspace/workplace:/workspace/.nb:/workspace
+ENV PERCIPIENCE_DAEMON_HOST=0.0.0.0
 ENV PERCIPIENCE_DAEMON_PORT=8585
-ENV PERCIPIENCE_WORKERS=8
 
 EXPOSE 8585
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
-  CMD python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8585/health')" || exit 1
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+  CMD curl -f http://127.0.0.1:8585/health || exit 1
 
-ENTRYPOINT ["python3", "-m", "core.tree_sitter_daemon"]
+ENTRYPOINT ["python3", "-m", "workplace.core.tree_sitter_daemon"]

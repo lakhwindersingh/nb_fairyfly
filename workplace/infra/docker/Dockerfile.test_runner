@@ -29,7 +29,7 @@ COPY . /workspace
 # Ensure CLI executables have permission
 RUN chmod +x /workspace/.nb/bin/* /workspace/workplace/bin/* 2>/dev/null || true
 
-ENV PYTHONPATH=/workspace:/workspace/.nb:/workspace/workplace
+ENV PYTHONPATH=/workspace/workplace:/workspace/.nb:/workspace
 ENV PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
 ENV PORTAL_URL=http://portal:3000
 
