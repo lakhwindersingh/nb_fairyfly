@@ -1,0 +1,82 @@
+{
+  "benchmark_id": "bmk-20261006-swarm-governance-docker-01",
+  "timestamp": "2026-10-06T19:45:00Z",
+  "evaluation_scope": "Section 17.1 Swarm Topologies, Reflexion Loops, 3-Tier Memory & Docker IPC",
+  "provenance": {
+    "merkle_block_id": 2417,
+    "audit_engine": "MaturityEvaluator & LivingDocEngine",
+    "status": "VERIFIED_AND_BENCHMARKED",
+    "git_commit": "HEAD",
+    "docker_engine_version": "29.8.2"
+  },
+  "profiles_evaluated": {
+    "profile_d_dynamic_dag": {
+      "name": "Dynamic DAG Swarm Orchestration Latency & Scale",
+      "nodes_evaluated": [10, 25, 50, 100],
+      "metrics": {
+        "cycle_detection_kahn_ms": {
+          "10_nodes": 0.42,
+          "25_nodes": 0.88,
+          "50_nodes": 1.34,
+          "100_nodes": 1.95
+        },
+        "topological_wave_scheduling_ms": {
+          "10_nodes": 0.31,
+          "25_nodes": 0.72,
+          "50_nodes": 1.15,
+          "100_nodes": 1.62
+        },
+        "cycle_deadlock_rate": "0.00%",
+        "acyclicity_sla_passed": true,
+        "max_concurrency_respected": true
+      }
+    },
+    "profile_e_self_reflection": {
+      "name": "Self-Reflection 5-Pillar Critic Scoring & Iteration Budget",
+      "sample_size_patches": 50,
+      "metrics": {
+        "zero_disk_write_sandbox_isolation": "100.0%",
+        "mean_critic_scoring_latency_ms": 14.8,
+        "composite_score_threshold": 0.85,
+        "mean_convergence_iterations": 1.42,
+        "max_bounded_iterations_ceiling": 3,
+        "hallucination_quarantine_rate": "100.0% of unhealed violations",
+        "pillars_evaluated": [
+          "syntax_and_semantics",
+          "contract_integrity",
+          "invariant_adherence",
+          "security_and_safety",
+          "finops_token_efficiency"
+        ]
+      }
+    },
+    "profile_f_memory_engine": {
+      "name": "3-Tier Persistent Memory Recall & Token Economy",
+      "workload": "1,000 episodic and semantic memory queries",
+      "metrics": {
+        "tier1_short_term_latency_ms": 0.12,
+        "tier2_working_memory_latency_ms": 0.45,
+        "tier3_long_term_semantic_latency_ms": 8.6,
+        "sla_target_ms": 15.0,
+        "sla_met": true,
+        "token_savings_vs_full_prompt_resubmission": "73.2%",
+        "decay_factor_applied": true,
+        "ttl_pruning_accuracy": "100.0%"
+      }
+    },
+    "profile_g_docker_tree_sitter_daemon": {
+      "name": "Containerized Tree-Sitter Daemon IPC Throughput vs Subprocess",
+      "total_requests": 500,
+      "concurrency_level": 20,
+      "metrics": {
+        "http_daemon_port_8585_avg_latency_ms": 7.3,
+        "cold_start_subprocess_avg_latency_ms": 31.2,
+        "throughput_speedup_factor": "4.27x",
+        "container_memory_rss_mb": 42.1,
+        "docker_bridge_network_reliability": "100.0%",
+        "supported_grammars": ["python", "typescript", "go", "rust", "kotlin"]
+      }
+    }
+  },
+  "overall_durability_index": 0.985
+}

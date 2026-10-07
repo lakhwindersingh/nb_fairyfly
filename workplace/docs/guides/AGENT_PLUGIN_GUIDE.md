@@ -58,55 +58,17 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 
 ---
 
-## 3. CLI Developer Reference
+## 3. Section 17.1 Swarm Governance & Security Integrations
 
-### 3.1. Scaffolding a New Agent Plugin
-```bash
-# Scaffold a custom quality agent from the healthy template:
-./.nb/bin/percipience agent create \
-  --name custom_quality_guard \
-  --template cicd_quality \
-  --role "Code Quality & Invariant Enforcer" \
-  --module "workplace/core,workplace/modules/mod_portal_marketing"
-```
-*Output:* Creates `agentic/custom/agents/custom_quality_guard.yaml` and seals a cryptographic Merkle block (`RP_AGENT_REGISTER_CUSTOM_QUALITY_GUARD`).
-
-### 3.2. Integrating into an Existing Workflow DAG
-```bash
-# Injects the agent into the PR Gatekeeper workflow directly after contract verification:
-./.nb/bin/percipience agent integrate \
-  --agent agent_custom_quality_guard \
-  --workflow wf_pr_gatekeeper \
-  --after step_contract_compat
-```
-*Output:* Updates `agentic/workflows/pr_gatekeeper.yaml`, validates DAG acyclicity, and seals a Merkle block.
-
-### 3.3. Executing the Agent in Sandboxed Isolation
-```bash
-# Run the custom agent in an isolated worktree with token metering:
-./.nb/bin/percipience agent run \
-  --agent agent_custom_quality_guard \
-  --task "Analyze AST complexity across workplace/modules/mod_portal_marketing"
-```
-*Output:* Provisions `.nb/workspaces/wt_agent_custom_quality_guard`, enforces AST pruning, verifies contracts, and seals Merkle Block upon pass.
-
-### 3.4. Surgically Rolling Back an Agent or Affected Module
-```bash
-# Rewind changes introduced by an agent to a clean recovery point:
-./.nb/bin/percipience agent rollback \
-  --agent agent_custom_quality_guard \
-  --module mod_portal_marketing \
-  --recovery-point RP_PLAY3_BOOTSTRAP_001
-```
-
-### 3.5. Listing Registered Custom Agents
-```bash
-./.nb/bin/percipience agent list
-```
+Custom agent plugins execute within the Section 17.1 Swarm Governance Framework:
+1. **Capability-Based Access Control (CBAC)**: Agent plugins are issued HMAC-SHA256 capability tokens (`AgentCapabilityGuard`). Privileges (such as filesystem write or network egress) are explicitly scoped and dynamically downgraded if anomalous behavior is detected.
+2. **Tool Contract Validation**: All tool invocations executed by custom agents must conform strictly to JSON Schema (Draft-07) schemas enforced by `ToolContractValidator`.
+3. **3-Tier Memory Model**: Agents can persist episodic context across turns using `AgentMemoryEngine` (Working memory for active tasks and Long-term memory with relevance scoring and decay).
+4. **5-Pillar Reflexion Critic**: Before merging diffs, candidate outputs can be vetted through the `SelfReflectionEngine` in a zero-disk-write sandbox.
 
 ---
 
-## 4. Manifest Schema Field Reference
+## 4. Manifest Specification (`custom_agent_template.yaml`)
 
 | YAML Field | Type | Description |
 | :--- | :--- | :--- |
@@ -121,17 +83,9 @@ If the agent fails verification and cannot auto-heal within 3 attempts, the engi
 
 ---
 
-## 5. Verification Proof
-Every custom agent plugin engineered according to this guide is guaranteed to satisfy:
-1. **0.95+ Context Maturity Standard**: Fully compliant with D1 (Invariance) and D6 (Autonomous Gatekeeping).
-2. **Deterministic Cryptographic Continuity**: Every plugin registration, workflow integration, and execution pass is hashed and sealed into the continuous SHA-256 Merkle chain.
-
-
----
-
 ## 5. Built-in Autonomous CI/CD Specialist Plugins
 
-The Percipience platform ships with four pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/):
+The Percipience platform ships with five pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/):
 
 | Agent Plugin ID | Manifest File | Cognitive Tier | Primary Responsibility |
 | :--- | :--- | :---: | :--- |
@@ -139,5 +93,6 @@ The Percipience platform ships with four pre-configured, production-ready specia
 | **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
 | **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
 | **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
+| **`agent_living_doc_architect`** | [`agent_living_doc_architect.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/agent_living_doc_architect.yaml) | **Tier B** | Living documentation synthesizer; verifies and generates Mermaid architectural and sequence diagrams in `workplace/docs/`. |
 
-All specialist plugins are integrated into the 6-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/workflows/pr_gatekeeper.yaml).
+All specialist plugins are integrated into the 7-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/workflows/pr_gatekeeper.yaml).
