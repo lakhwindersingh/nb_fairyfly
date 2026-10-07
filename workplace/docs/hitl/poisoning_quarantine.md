@@ -1,7 +1,7 @@
 # Human-in-the-Loop (HITL) Context Poisoning Quarantine Ledger
 
 > **Workspace**: `nb_fairyfly`  
-> **Governing Architecture**: [Parent Master Context Engineering Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md)  
+> **Governing Architecture**: [Parent Master Context Engineering Plan](/.nb/plan/master/parent-master-plan/detailed.md)  
 > **Status**: Active Sentinel Monitoring  
 
 ---

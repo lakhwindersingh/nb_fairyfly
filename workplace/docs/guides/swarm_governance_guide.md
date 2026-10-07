@@ -1,7 +1,7 @@
 # Agent Swarm Coordination & Governance Guide (Section 17.1)
 
-> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md) (Section 17.1)  
-> **Core Subsystems:** [`.nb/core/dynamic_dag_orchestrator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/dynamic_dag_orchestrator.py), [`.nb/core/self_reflection_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/self_reflection_engine.py), [`.nb/core/agent_memory_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_memory_engine.py), [`.nb/core/agent_capability_guard.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_capability_guard.py), [`.nb/core/tool_contract_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/tool_contract_validator.py)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](/.nb/plan/master/parent-master-free-plan/detailed.md) (Section 17.1)  
+> **Core Subsystems:** [`.nb/core/dynamic_dag_orchestrator.py`](/.nb/core/dynamic_dag_orchestrator.py), [`.nb/core/self_reflection_engine.py`](/.nb/core/self_reflection_engine.py), [`.nb/core/agent_memory_engine.py`](/.nb/core/agent_memory_engine.py), [`.nb/core/agent_capability_guard.py`](/.nb/core/agent_capability_guard.py), [`.nb/core/tool_contract_validator.py`](/.nb/core/tool_contract_validator.py)  
 > **Portal Dashboard:** Tab 15 (`#swarm-governance`) on `http://localhost:3000`  
 
 ---

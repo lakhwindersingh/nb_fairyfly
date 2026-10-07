@@ -38,6 +38,7 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         tabbedPane.addTab("Capabilities", createCapabilitiesPanel(project))
         tabbedPane.addTab("Agents & Flows", createAgentsAndFlowsPanel(project))
         tabbedPane.addTab("Terminal Agents & FinOps", createTerminalAgentsPanel(project))
+        tabbedPane.addTab("Swarm & Fleet", createSwarmGovernancePanel(project))
         tabbedPane.addTab("User Guide", createUserGuidePanel(project))
 
         val content = ContentFactory.getInstance().createContent(tabbedPane, "", false)
@@ -871,6 +872,172 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         buttonPanel.add(btnClaude)
         buttonPanel.add(btnGemini)
         buttonPanel.add(btnStatus)
+
+        mainPanel.add(JBScrollPane(editorPane), BorderLayout.CENTER)
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH)
+        return mainPanel
+    }
+
+    private fun createSwarmGovernancePanel(project: Project): JComponent {
+        val mainPanel = JPanel(BorderLayout(10, 10))
+        mainPanel.border = EmptyBorder(12, 12, 12, 12)
+        mainPanel.background = UIUtil.getPanelBackground()
+
+        val isDark = UIUtil.isUnderDarcula()
+        val sb = StringBuilder()
+        sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
+        sb.append("<h2>🐝 Swarm Governance &amp; Fleet Management</h2>")
+        sb.append("<p>Orchestrate distributed autonomous multi-agent swarms with topological DAG wave execution, multi-pillar self-reflection critics, 2-of-3 Byzantine model consensus, capability token enforcement (CBAC), and workstation fleet monitoring.</p>")
+
+        sb.append("<h3>⚡ Key Swarm Subsystems</h3>")
+        sb.append("<ul>")
+        sb.append("<li><b>Dynamic DAG Orchestrator:</b> Runtime goal-expansion and topological wave execution (<code>.nb/bin/percipience swarm dag</code>).</li>")
+        sb.append("<li><b>Autonomous Self-Reflection Critic:</b> Zero-disk-write critique verifying architecture, security, and schema invariants (<code>.nb/bin/percipience swarm reflexion</code>).</li>")
+        sb.append("<li><b>Multi-Model Consensus Quorum:</b> 2-of-3 model voting attestation across Claude, GPT-4, and Gemini with cryptographic signatures (<code>.nb/bin/percipience swarm consensus</code>).</li>")
+        sb.append("<li><b>Capability-Based Access Control (CBAC):</b> HMAC-SHA256 minted capability envelopes constraining agent file, network, and tool rights (<code>.nb/bin/percipience swarm cbac</code>).</li>")
+        sb.append("<li><b>Workstation &amp; Fleet FinOps:</b> Multi-node telemetry tracking CPU/RAM load, task progress, and 15% platform rev-share fee / 85% customer net ROI (<code>.nb/bin/percipience swarm fleet</code>).</li>")
+        sb.append("</ul>")
+
+        sb.append("<h3>🛠️ Swarm Operations</h3>")
+        sb.append("<p>Use the action buttons below to trigger real-time swarm orchestrations directly in your IDE workspace.</p>")
+        sb.append("</body></html>")
+
+        val editorPane = JEditorPane("text/html", sb.toString())
+        editorPane.isEditable = false
+        editorPane.background = UIUtil.getPanelBackground()
+
+        val buttonPanel = JPanel(FlowLayout(FlowLayout.LEFT, 8, 8))
+
+        val btnDag = JButton("🌊 Execute Swarm DAG Wave")
+        btnDag.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Executing Swarm Wave...", false) {
+                private var result: ExecutionResult? = null
+
+                override fun run(indicator: ProgressIndicator) {
+                    result = runBlocking { execService.runSwarmDag("exec") }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    if (res.success) {
+                        Messages.showInfoMessage(project, "Swarm Wave Execution Succeeded!\n\n${res.stdout}", "Swarm DAG")
+                    } else {
+                        Messages.showErrorDialog(project, "Swarm Wave Failed:\n\n${res.stderr.ifEmpty { res.stdout }}", "Swarm Wave Error")
+                    }
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "DAG execution error", "Error")
+                }
+            })
+        }
+
+        val btnReflexion = JButton("🔍 Self-Reflection Critic")
+        btnReflexion.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Running Reflexion Critic...", false) {
+                private var result: ExecutionResult? = null
+
+                override fun run(indicator: ProgressIndicator) {
+                    result = runBlocking { execService.runSwarmReflexion() }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    if (res.success) {
+                        Messages.showInfoMessage(project, "Reflexion Invariants Passed!\n\n${res.stdout}", "Swarm Reflexion")
+                    } else {
+                        Messages.showErrorDialog(project, "Reflexion Violated Invariants:\n\n${res.stderr.ifEmpty { res.stdout }}", "Reflexion Violated")
+                    }
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Reflexion error", "Error")
+                }
+            })
+        }
+
+        val btnConsensus = JButton("⚖️ Consensus Quorum")
+        btnConsensus.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Verifying Multi-Model Consensus...", false) {
+                private var result: ExecutionResult? = null
+
+                override fun run(indicator: ProgressIndicator) {
+                    result = runBlocking { execService.runSwarmConsensus("PR Gate Approval") }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    if (res.success) {
+                        Messages.showInfoMessage(project, "Consensus Quorum Passed!\n\n${res.stdout}", "Consensus Quorum")
+                    } else {
+                        Messages.showErrorDialog(project, "Consensus Quorum Failed:\n\n${res.stderr.ifEmpty { res.stdout }}", "Consensus Rejected")
+                    }
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Consensus error", "Error")
+                }
+            })
+        }
+
+        val btnCbac = JButton("🛡️ Mint CBAC Token")
+        btnCbac.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Minting CBAC Token...", false) {
+                private var result: ExecutionResult? = null
+
+                override fun run(indicator: ProgressIndicator) {
+                    result = runBlocking { execService.runSwarmCbac("agent_sandbox_coder") }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    if (res.success) {
+                        Messages.showInfoMessage(project, "CBAC Token Minted:\n\n${res.stdout}", "CBAC Minted")
+                    } else {
+                        Messages.showErrorDialog(project, "CBAC Minting Failed:\n\n${res.stderr.ifEmpty { res.stdout }}", "CBAC Error")
+                    }
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "CBAC error", "Error")
+                }
+            })
+        }
+
+        val btnFleet = JButton("🚀 Workstation & Fleet Status")
+        btnFleet.addActionListener {
+            val execService = PercipienceExecutionService.getInstance(project)
+            ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Querying Fleet Status...", false) {
+                private var result: ExecutionResult? = null
+
+                override fun run(indicator: ProgressIndicator) {
+                    result = runBlocking { execService.runSwarmFleet(simulatePulse = true) }
+                }
+
+                override fun onSuccess() {
+                    val res = result ?: return
+                    if (res.success) {
+                        Messages.showInfoMessage(project, "Fleet Status & FinOps:\n\n${res.stdout}", "Fleet Status")
+                    } else {
+                        Messages.showErrorDialog(project, "Fleet Inspection Failed:\n\n${res.stderr.ifEmpty { res.stdout }}", "Fleet Error")
+                    }
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    Messages.showErrorDialog(project, error.message ?: "Fleet query error", "Error")
+                }
+            })
+        }
+
+        buttonPanel.add(btnDag)
+        buttonPanel.add(btnReflexion)
+        buttonPanel.add(btnConsensus)
+        buttonPanel.add(btnCbac)
+        buttonPanel.add(btnFleet)
 
         mainPanel.add(JBScrollPane(editorPane), BorderLayout.CENTER)
         mainPanel.add(buttonPanel, BorderLayout.SOUTH)

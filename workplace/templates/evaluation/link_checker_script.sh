@@ -21,9 +21,22 @@ for file in ${MD_FILES}; do
     # Strip anchor fragments
     clean_link="${link%%#*}"
     
-    # Handle file:// links
+    # Handle file:// links with cross-environment tolerance (host vs docker container vs CI)
     if [[ "$clean_link" =~ ^file:// ]]; then
-      resolved_path="${clean_link#file://}"
+      raw_path="${clean_link#file://}"
+      if [[ -e "$raw_path" ]]; then
+        resolved_path="$raw_path"
+      elif [[ "$raw_path" =~ /nb_fairyfly/(.*) ]]; then
+        # Map foreign host workspace path to current REPO_ROOT (e.g. running inside container /workspace)
+        sub_path="${BASH_REMATCH[1]}"
+        resolved_path="${REPO_ROOT}/${sub_path}"
+      elif [[ "$raw_path" =~ ^/workspace/(.*) ]]; then
+        # Map container /workspace path to current host REPO_ROOT
+        sub_path="${BASH_REMATCH[1]}"
+        resolved_path="${REPO_ROOT}/${sub_path}"
+      else
+        resolved_path="$raw_path"
+      fi
     elif [[ "$clean_link" =~ ^/ ]]; then
       resolved_path="${REPO_ROOT}${clean_link}"
     else

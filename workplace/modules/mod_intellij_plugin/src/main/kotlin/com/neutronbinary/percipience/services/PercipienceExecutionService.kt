@@ -330,4 +330,30 @@ class PercipienceExecutionService(private val project: Project) {
     suspend fun runTerminalHook(shell: String = "zsh", onOutput: ((String) -> Unit)? = null): ExecutionResult {
         return executeCommand("terminal", listOf("hook", "--shell", shell), onOutput)
     }
+
+    suspend fun runSwarmDag(action: String = "inspect", parentId: String = "step_ast_prune", onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("swarm", listOf("dag", "--action", action, "--parent-id", parentId), onOutput)
+    }
+
+    suspend fun runSwarmReflexion(file: String? = null, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        val args = mutableListOf("reflexion")
+        if (file != null) {
+            args.add("--file")
+            args.add(file)
+        }
+        return executeCommand("swarm", args, onOutput)
+    }
+
+    suspend fun runSwarmConsensus(proposal: String = "PR Gate Approval", onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("swarm", listOf("consensus", "--proposal", proposal), onOutput)
+    }
+
+    suspend fun runSwarmCbac(agentId: String = "agent_sandbox_coder", ops: String = "CAP_FS_READ,CAP_FS_WRITE_MODULE_ONLY", ttl: Int = 3600, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        return executeCommand("swarm", listOf("cbac", "--agent-id", agentId, "--ops", ops, "--ttl", ttl.toString()), onOutput)
+    }
+
+    suspend fun runSwarmFleet(simulatePulse: Boolean = false, onOutput: ((String) -> Unit)? = null): ExecutionResult {
+        val args = if (simulatePulse) listOf("fleet", "--simulate-pulse") else listOf("fleet")
+        return executeCommand("swarm", args, onOutput)
+    }
 }

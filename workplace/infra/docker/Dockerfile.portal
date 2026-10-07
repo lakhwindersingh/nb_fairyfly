@@ -21,6 +21,9 @@ COPY .nb /workspace/.nb
 COPY workplace /workspace/workplace
 COPY user /workspace/user
 
+# Ensure binaries have executable permissions
+RUN chmod +x /workspace/.nb/bin/* /workspace/workplace/bin/* 2>/dev/null || true
+
 # Setup python module paths with workplace prioritized
 ENV PYTHONPATH=/workspace/workplace:/workspace/.nb:/workspace
 ENV PORTAL_HOST=0.0.0.0

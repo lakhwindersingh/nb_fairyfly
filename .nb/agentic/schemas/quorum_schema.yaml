@@ -1,0 +1,78 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "MultiAgentQuorumReceiptSchema"
+description: "JSON Schema for 2-of-3 heterogeneous multi-agent consensus quorum decisions."
+type: "object"
+required:
+  - "quorum_id"
+  - "decision_type"
+  - "target_artifact"
+  - "verdict"
+  - "quorum_passed"
+  - "votes"
+  - "quorum_hmac"
+  - "timestamp_utc"
+properties:
+  quorum_id:
+    type: "string"
+    pattern: "^qrm_[a-f0-9]{8,16}$"
+  decision_type:
+    type: "string"
+    enum:
+      - "PR_GATE_APPROVAL"
+      - "WIRE_CONTRACT_DEPRECATION"
+      - "SECURITY_SIGN_OFF"
+      - "SURGICAL_ROLLBACK"
+      - "SPEC_EVOLUTION_RFC"
+  target_artifact:
+    type: "string"
+  verdict:
+    type: "string"
+    enum:
+      - "APPROVED"
+      - "REVISION_REQUESTED"
+      - "QUARANTINED"
+      - "DEADLOCKED"
+  quorum_passed:
+    type: "boolean"
+  required_threshold:
+    type: "integer"
+    minimum: 1
+    maximum: 3
+    default: 2
+  single_veto_triggered:
+    type: "boolean"
+  votes:
+    type: "array"
+    minItems: 3
+    maxItems: 3
+    items:
+      type: "object"
+      required:
+        - "evaluator_id"
+        - "role"
+        - "vote"
+        - "rationale"
+        - "confidence"
+      properties:
+        evaluator_id:
+          type: "string"
+        role:
+          type: "string"
+        vote:
+          type: "string"
+          enum:
+            - "APPROVE"
+            - "REQUEST_REVISION"
+            - "QUARANTINE_VETO"
+        rationale:
+          type: "string"
+        confidence:
+          type: "number"
+          minimum: 0.0
+          maximum: 1.0
+  quorum_hmac:
+    type: "string"
+    pattern: "^[a-f0-9]{64}$"
+  timestamp_utc:
+    type: "string"
+    format: "date-time"
