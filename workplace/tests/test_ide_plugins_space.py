@@ -329,6 +329,11 @@ class TestIdePluginsSpace(unittest.TestCase):
         self.assertTrue((actions_dir / "RunMerkleAuditAction.kt").exists())
         self.assertTrue((actions_dir / "TokensSummaryAction.kt").exists())
         self.assertTrue((actions_dir / "ValidateLayerAction.kt").exists())
+        self.assertTrue((actions_dir / "RunSwarmDagAction.kt").exists())
+        self.assertTrue((actions_dir / "RunReflexionCriticAction.kt").exists())
+        self.assertTrue((actions_dir / "RunConsensusQuorumAction.kt").exists())
+        self.assertTrue((actions_dir / "MintCbacTokenAction.kt").exists())
+        self.assertTrue((actions_dir / "InspectFleetAction.kt").exists())
         self.assertTrue((services_dir / "PercipienceExecutionService.kt").exists())
 
     def test_13_user_guide_and_quickstart_documentation(self):
@@ -426,6 +431,72 @@ class TestIdePluginsSpace(unittest.TestCase):
             self.assertIn("plan_team", text)
             self.assertIn("plan_business", text)
             self.assertIn("plan_enterprise", text)
+
+
+
+    def test_18_swarm_capabilities_registered_in_intellij_plugin(self):
+        """Validates that swarm capabilities, actions, toolwindow tabs, and CLI hooks are registered."""
+        ij_module = self.plugins_dir / "mod_intellij_plugin"
+        actions_dir = ij_module / "src" / "main" / "kotlin" / "com" / "neutronbinary" / "percipience" / "actions"
+        services_dir = ij_module / "src" / "main" / "kotlin" / "com" / "neutronbinary" / "percipience" / "services"
+        toolwindow_dir = ij_module / "src" / "main" / "kotlin" / "com" / "neutronbinary" / "percipience" / "toolwindow"
+        plugin_xml = ij_module / "src" / "main" / "resources" / "META-INF" / "plugin.xml"
+        res_core = ij_module / "src" / "main" / "resources" / "percipience" / "core"
+        res_bin = ij_module / "src" / "main" / "resources" / "percipience" / "bin"
+
+        # 1. Swarm Actions exist
+        swarm_actions = [
+            "RunSwarmDagAction.kt",
+            "RunReflexionCriticAction.kt",
+            "RunConsensusQuorumAction.kt",
+            "MintCbacTokenAction.kt",
+            "InspectFleetAction.kt"
+        ]
+        for act in swarm_actions:
+            self.assertTrue((actions_dir / act).exists(), f"Action {act} must exist")
+
+        # 2. Execution Service has swarm methods
+        exec_content = (services_dir / "PercipienceExecutionService.kt").read_text(encoding="utf-8")
+        self.assertIn("runSwarmDag", exec_content)
+        self.assertIn("runSwarmReflexion", exec_content)
+        self.assertIn("runSwarmConsensus", exec_content)
+        self.assertIn("runSwarmCbac", exec_content)
+        self.assertIn("runSwarmFleet", exec_content)
+
+        # 3. ToolWindow has Swarm tab and panel
+        tw_content = (toolwindow_dir / "PercipienceToolWindowFactory.kt").read_text(encoding="utf-8")
+        self.assertIn('tabbedPane.addTab("Swarm & Fleet"', tw_content)
+        self.assertIn("createSwarmGovernancePanel", tw_content)
+
+        # 4. plugin.xml registers swarm actions
+        pxml_content = plugin_xml.read_text(encoding="utf-8")
+        self.assertIn("com.neutronbinary.percipience.RunSwarmDag", pxml_content)
+        self.assertIn("com.neutronbinary.percipience.RunReflexionCritic", pxml_content)
+        self.assertIn("com.neutronbinary.percipience.RunConsensusQuorum", pxml_content)
+        self.assertIn("com.neutronbinary.percipience.MintCbacToken", pxml_content)
+        self.assertIn("com.neutronbinary.percipience.InspectFleet", pxml_content)
+
+        # 5. Embedded swarm core engines and executable binaries
+        self.assertTrue((res_core / "dynamic_dag_orchestrator.py").exists())
+        self.assertTrue((res_core / "self_reflection_engine.py").exists())
+        self.assertTrue((res_core / "consensus_quorum_engine.py").exists())
+        self.assertTrue((res_core / "agent_capability_guard.py").exists())
+        self.assertTrue((res_core / "fleet_manager.py").exists())
+        self.assertTrue((res_bin / "percipience").exists())
+        self.assertTrue(os.access(res_bin / "percipience", os.X_OK))
+
+        # 6. Verify CLI subcommands return code 0
+        cli_bin = self.repo_root / ".nb" / "bin" / "percipience"
+        subcommands = [
+            ["swarm", "dag"],
+            ["swarm", "reflexion"],
+            ["swarm", "consensus"],
+            ["swarm", "cbac"],
+            ["swarm", "fleet"]
+        ]
+        for sub in subcommands:
+            res = subprocess.run([str(cli_bin)] + sub, capture_output=True, text=True)
+            self.assertEqual(res.returncode, 0, f"Command {' '.join(sub)} failed: {res.stderr} {res.stdout}")
 
 
 if __name__ == "__main__":

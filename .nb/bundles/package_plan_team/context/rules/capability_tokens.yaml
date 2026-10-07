@@ -1,0 +1,47 @@
+version: "1.0.0"
+policy_name: "CapabilityBasedAccessControl"
+description: "Rules and invariants governing CBAC tokens, filesystem sandboxing, subprocess whitelisting, and network firewalling for autonomous agents."
+
+defined_capabilities:
+  - id: "CAP_FS_READ"
+    description: "Allows read access within authorized project tree"
+  - id: "CAP_FS_WRITE_MODULE_ONLY"
+    description: "Allows write access strictly bounded to assigned module directory in worktree"
+  - id: "CAP_NETWORK_EGRESS"
+    description: "Allows outbound external network connections"
+  - id: "CAP_EXEC_SUBPROCESS"
+    description: "Allows executing whitelisted test and compilation CLI tools"
+  - id: "CAP_MERKLE_SEAL"
+    description: "Allows cryptographic sealing of Merkle ledger blocks"
+
+protected_directories:
+  - ".nb/core/"
+  - ".nb/context/rules/"
+  - ".nb/context/invariants/"
+  - ".git/"
+
+subprocess_whitelist:
+  - "pytest"
+  - "git"
+  - "python3"
+  - "python"
+  - "node"
+  - "npm"
+  - "tsc"
+  - "pyright"
+  - "ruff"
+
+blocked_subprocesses:
+  - "curl"
+  - "wget"
+  - "rm"
+  - "nc"
+  - "netcat"
+  - "bash"
+  - "sh"
+  - "zsh"
+  - "pip"
+  - "chmod"
+  - "chown"
+  - "dd"
+  - "mkfs"

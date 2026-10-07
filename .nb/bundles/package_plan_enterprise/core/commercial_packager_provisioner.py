@@ -105,7 +105,7 @@ class CommercialPackagerProvisioner:
                 "reconciliation_engine.py", "request_formalizer.py", "semantic_prompt_cache.py",
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py", "nbpack_envelope.py",
                 "commercial_packager_provisioner.py", "handoff_validator.py", "pii_sanitizer.py",
-                "prompt_injection_guard.py", "output_guardrail_validator.py"
+                "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": False,
@@ -126,7 +126,7 @@ class CommercialPackagerProvisioner:
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py",
                 "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
-                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py"
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": True,
@@ -149,7 +149,7 @@ class CommercialPackagerProvisioner:
                 "nbpack_envelope.py", "agent_plugin_engine.py", "semantic_parity_engine.py",
                 "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
-                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py",
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py",
                 "otel_exporter.py", "context_gateway.py"
             },
             "allow_nbpack_compilation": True,

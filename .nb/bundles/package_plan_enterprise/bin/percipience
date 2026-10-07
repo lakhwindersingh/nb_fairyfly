@@ -114,6 +114,14 @@ SemanticParityEngine = _load_engine("semantic_parity_engine", ["SemanticParityEn
 DualReconciliationEngine = _load_engine("reconciliation_engine", ["DualReconciliationEngine"])
 RequestFormalizerEngine = _load_engine("request_formalizer", ["RequestFormalizerEngine"])
 SwarmGovernor = _load_engine("swarm_governor", ["SwarmGovernor"])
+(DynamicDAGOrchestrator, DAGNode, DAGExecutionTrace) = _load_engine(
+    "dynamic_dag_orchestrator",
+    ["DynamicDAGOrchestrator", "DAGNode", "DAGExecutionTrace"]
+)
+SelfReflectionEngine = _load_engine("self_reflection_engine", ["SelfReflectionEngine"])
+AgentCapabilityGuard = _load_engine("agent_capability_guard", ["AgentCapabilityGuard"])
+AgentMemoryEngine = _load_engine("agent_memory_engine", ["AgentMemoryEngine"])
+FleetManager = _load_engine("fleet_manager", ["FleetManager"])
 PromptDriftSentinel = _load_engine("prompt_drift_sentinel", ["PromptDriftSentinel"])
 WorkflowOrchestrator = _load_engine("workflow_orchestrator", ["WorkflowOrchestrator"])
 ErrorRecoveryOrchestrator = _load_engine("error_recovery_orchestrator", ["ErrorRecoveryOrchestrator"])
@@ -1056,6 +1064,93 @@ def cmd_swarm(args):
             print(f"❌ Containerized plan execution failed: {receipt.error_message or 'Non-zero exit code'}")
             print(f"   Exit code: {receipt.exit_code}")
             sys.exit(receipt.exit_code or 1)
+    elif action == "dag":
+        _require_engine(DynamicDAGOrchestrator, "dynamic_dag_orchestrator", "swarm dag", "Business / Enterprise")
+        orch = DynamicDAGOrchestrator()
+        from dynamic_dag_orchestrator import StepNode
+        if not orch.nodes:
+            orch.add_node(StepNode(id="step_ingest_spec", action="ingest_spec", name="Ingest Specification", metadata={"agent": "agent_planner"}))
+            orch.add_node(StepNode(id="step_plan_architecture", action="plan_architecture", name="Synthesize Architecture", dependencies=["step_ingest_spec"], metadata={"agent": "agent_architect"}))
+            orch.add_node(StepNode(id="step_code_derivation", action="code_derivation", name="Derive Implementation", dependencies=["step_plan_architecture"], blast_radius=["workplace/core/engine.py"], metadata={"agent": "agent_coder"}))
+            orch.add_node(StepNode(id="step_verify_gate", action="verify_gate", name="Attest Verification Gate", dependencies=["step_code_derivation"], metadata={"agent": "agent_verifier"}))
+        dag_action = getattr(args, "action", "inspect")
+        print("🐝 Dynamic Multi-Agent Swarm DAG Orchestrator:")
+        if dag_action == "expand":
+            subgoals = [
+                {"id": f"{args.parent_id}_ast_type_check", "action": "ast_type_check", "name": "AST Strict Typing Verification"},
+                {"id": f"{args.parent_id}_invariant_critic", "action": "invariant_critic", "name": "Multi-Pillar Critic Analysis"}
+            ]
+            created = orch.expand_subgoals(args.parent_id, subgoals)
+            print(f"   ✓ Subgoals expanded under {args.parent_id}: {created}")
+        elif dag_action == "exec":
+            def dummy_exec(node, orchestrator):
+                return {"result": f"Executed step {node.id}", "status": "SUCCESS"}
+            executors = {nid: dummy_exec for nid in orch.nodes}
+            res = orch.execute(executors)
+            print(f"   ✓ Executed {len(res.executed_steps)} steps in topological wave sequence.")
+            print(f"   Duration: {res.duration_ms:.1f}ms | Status: {res.status}")
+        order = orch.topological_sort()
+        print(f"   Active DAG Nodes: {len(orch.nodes)}")
+        for nid in order:
+            n = orch.nodes[nid]
+            print(f"   • [{n.status:9}] {n.id:30} (Depth: {n.depth}, Deps: {len(n.dependencies)})")
+    elif action == "reflexion":
+        _require_engine(SelfReflectionEngine, "self_reflection_engine", "swarm reflexion", "Business / Enterprise")
+        target_f = Path(args.file)
+        if not target_f.is_absolute():
+            target_f = REPO_ROOT / target_f
+        code_content = target_f.read_text(encoding="utf-8") if target_f.exists() else "# Sample module"
+        print(f"🪞 Running Self-Reflection Critic on {target_f.name}...")
+        critique = SelfReflectionEngine.evaluate_invariants(code_content, {"target": str(target_f)})
+        print(f"   Convergence Score: {critique.convergence_score*100:.1f}%")
+        decision = "APPROVED (Passes Invariants)" if critique.passes_invariants else "CRITIQUE REQUIRED (Zero-Disk-Write)"
+        print(f"   Gate Decision:     {decision} | Severity: {critique.severity}")
+        for k, v in critique.pillar_scores.items():
+            print(f"   • {k:25}: {v:.2f}")
+        print(f"   Zero-Disk-Write:   {'ENFORCED' if not critique.passes_invariants else 'CLEARED'}")
+    elif action == "consensus":
+        _require_engine(ConsensusQuorumEngine, "consensus_quorum_engine", "swarm consensus", "Business / Enterprise")
+        from consensus_quorum_engine import EvaluatorVote
+        engine = ConsensusQuorumEngine(workspace_root=REPO_ROOT)
+        votes = [
+            EvaluatorVote("eval_claude", "Claude 3.7 Sonnet", "APPROVE", "Approved AST optimization", 0.95),
+            EvaluatorVote("eval_gpt", "GPT-4o Reasoning", "APPROVE", "Compatible wire contracts", 0.92),
+            EvaluatorVote("eval_gemini", "Gemini 2.5 Pro", "APPROVE", "Zero flaky regressions", 0.88)
+        ]
+        receipt = engine.evaluate_quorum("PR_GATE_APPROVAL", args.proposal, votes, required_threshold=2)
+        print("🗳️ Multi-Model Consensus Quorum Engine:")
+        print(f"   Target Artifact:   {receipt.target_artifact}")
+        print(f"   Quorum Decision:   {receipt.verdict} (Passed: {receipt.quorum_passed})")
+        print(f"   Quorum HMAC:       {receipt.quorum_hmac[:16]}...")
+    elif action == "cbac":
+        _require_engine(AgentCapabilityGuard, "agent_capability_guard", "swarm cbac", "Business / Enterprise")
+        ops = [o.strip() for o in args.ops.split(",") if o.strip()]
+        token = AgentCapabilityGuard.mint_token(args.agent_id, str(REPO_ROOT), ops, args.ttl)
+        print("🛡️ Minted Capability-Based Access Control (CBAC) Token:")
+        print(f"   Agent ID:          {args.agent_id}")
+        print(f"   Allowed Ops:       {', '.join(ops)}")
+        print(f"   TTL:               {args.ttl}s")
+        print(f"   Token:             {token}")
+    elif action == "fleet":
+        _require_engine(FleetManager, "fleet_manager", "swarm fleet", "Business / Enterprise")
+        mgr = FleetManager()
+        if getattr(args, "simulate_pulse", False):
+            mgr.simulate_pulse(delta_tokens=50000, advance_task=True)
+            print("⚡ Injected activity pulse (+50k tokens & milestone advancement) into fleet.")
+        machines = mgr.list_machines()
+        rollup = mgr.get_finops_rollup()
+        s = rollup["summary"]
+        print("🖥️ Enterprise Workstation & Swarm Fleet Status:")
+        print(f"   Active Nodes:      {s['active_machines_count']} / {s['total_machines_count']}")
+        print(f"   Total Tokens Saved: {s['total_tokens_saved']:,}")
+        print(f"   Gross Cloud Saved: ${s['enterprise_gross_savings_usd']:.2f}")
+        print(f"   15% Percipience Fee: ${s['percipience_rev_share_fee_usd']:.2f}")
+        print(f"   85% Customer Net:  ${s['customer_net_retained_usd']:.2f}")
+        print("   Connected Nodes:")
+        for m in machines:
+            task = m.get("active_task", {}).get("task_name", "Idle")
+            pct = m.get("active_task", {}).get("progress_pct", 0)
+            print(f"   • [{m.get('health_status'):7}] {m.get('hostname'):22} | {task} ({pct:.0f}%)")
 
 
 
@@ -1454,6 +1549,29 @@ def main():
     p_sw_exec.add_argument("--ttl", type=int, default=3600, help="Worktree lease TTL in seconds")
     p_sw_exec.add_argument("--no-gate", action="store_true", help="Skip gatekeeper verification")
     p_sw_exec.add_argument("--mock", action="store_true", help="Run in mock/simulation mode")
+
+    # swarm dag
+    p_sw_dag = p_swarm_subs.add_parser("dag", help="Execute or inspect Dynamic DAG multi-agent waves")
+    p_sw_dag.add_argument("--action", choices=["inspect", "exec", "expand", "reset"], default="inspect")
+    p_sw_dag.add_argument("--parent-id", default="step_ast_prune")
+
+    # swarm reflexion
+    p_sw_ref = p_swarm_subs.add_parser("reflexion", help="Evaluate Reflexion invariant critic on target file")
+    p_sw_ref.add_argument("--file", default="workplace/core/fleet_agent.py", help="Target source file to evaluate")
+
+    # swarm consensus
+    p_sw_con = p_swarm_subs.add_parser("consensus", help="Run multi-model consensus quorum engine")
+    p_sw_con.add_argument("--proposal", default="PR Gate Approval", help="Proposal text")
+
+    # swarm cbac
+    p_sw_cbac = p_swarm_subs.add_parser("cbac", help="Mint Capability-Based Access Control tokens")
+    p_sw_cbac.add_argument("--agent-id", default="agent_sandbox_coder", help="Agent identifier")
+    p_sw_cbac.add_argument("--ops", default="CAP_FS_READ,CAP_FS_WRITE_MODULE_ONLY", help="Comma-separated operations")
+    p_sw_cbac.add_argument("--ttl", type=int, default=3600, help="Token TTL in seconds")
+
+    # swarm fleet
+    p_sw_flt = p_swarm_subs.add_parser("fleet", help="Inspect distributed workstation and node fleet metrics")
+    p_sw_flt.add_argument("--simulate-pulse", action="store_true", help="Inject simulated pulse with +50k tokens")
     p_swarm.set_defaults(func=cmd_swarm)
 
     # hitl

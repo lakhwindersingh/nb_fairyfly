@@ -98,6 +98,12 @@ DocDriftSynchronizer = _load_engine("doc_drift_synchronizer", ["DocDriftSynchron
 LivingDocEngine = _load_engine("living_doc_engine", ["LivingDocEngine"])
 WORMEgressManager = _load_engine("worm_egress", ["WORMEgressManager"])
 TreeSitterDaemonClient = _load_engine("tree_sitter_daemon", ["TreeSitterDaemonClient"])
+(ContainerPlanExecutor, PlanExecutionRequest) = _load_engine("container_plan_executor", ["ContainerPlanExecutor", "PlanExecutionRequest"])
+GitBundleTransport = _load_engine("git_bundle_transport", ["GitBundleTransport"])
+FewShotRetriever = _load_engine("few_shot_retriever", ["FewShotRetriever"])
+ConsensusQuorumEngine = _load_engine("consensus_quorum_engine", ["ConsensusQuorumEngine"])
+HITLCheckpointManager = _load_engine("hitl_checkpoint_manager", ["HITLCheckpointManager"])
+AgentBenchmarkHarness = _load_engine("agent_benchmark_harness", ["AgentBenchmarkHarness"])
 DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePromptEngine"])
 (TokenOptimizationConfig, UnifiedTokenOptimizer) = _load_engine(
     "token_optimizer_suite",
@@ -108,6 +114,14 @@ SemanticParityEngine = _load_engine("semantic_parity_engine", ["SemanticParityEn
 DualReconciliationEngine = _load_engine("reconciliation_engine", ["DualReconciliationEngine"])
 RequestFormalizerEngine = _load_engine("request_formalizer", ["RequestFormalizerEngine"])
 SwarmGovernor = _load_engine("swarm_governor", ["SwarmGovernor"])
+(DynamicDAGOrchestrator, DAGNode, DAGExecutionTrace) = _load_engine(
+    "dynamic_dag_orchestrator",
+    ["DynamicDAGOrchestrator", "DAGNode", "DAGExecutionTrace"]
+)
+SelfReflectionEngine = _load_engine("self_reflection_engine", ["SelfReflectionEngine"])
+AgentCapabilityGuard = _load_engine("agent_capability_guard", ["AgentCapabilityGuard"])
+AgentMemoryEngine = _load_engine("agent_memory_engine", ["AgentMemoryEngine"])
+FleetManager = _load_engine("fleet_manager", ["FleetManager"])
 PromptDriftSentinel = _load_engine("prompt_drift_sentinel", ["PromptDriftSentinel"])
 WorkflowOrchestrator = _load_engine("workflow_orchestrator", ["WorkflowOrchestrator"])
 ErrorRecoveryOrchestrator = _load_engine("error_recovery_orchestrator", ["ErrorRecoveryOrchestrator"])
@@ -960,6 +974,55 @@ def cmd_drift(args):
         res = DualReconciliationEngine.approve_delta(REPO_ROOT, delta_id)
         print(f"✅ {res['message']}")
 
+def cmd_hitl(args):
+    action = args.hitl_action
+    from workplace.core.hitl_checkpoint_manager import HITLCheckpointManager
+    mgr = HITLCheckpointManager(workspace_root=REPO_ROOT)
+    if action == "list":
+        chks = mgr.list_checkpoints(pending_only=args.pending_only)
+        if not chks:
+            print("ℹ️ No milestone checkpoints found.")
+            return
+        print(f"📋 Percipience HITL Milestone Checkpoints ({len(chks)} total):")
+        for c in chks:
+            badge = "⏳ PENDING" if c.status == "PENDING" else f"🏁 {c.status}"
+            print(f"   • [{c.checkpoint_id}] {badge} | {c.milestone_type} | {c.title}")
+    elif action == "approve":
+        try:
+            chk = mgr.resolve_checkpoint(args.id, decision="APPROVE", reason=args.comment or "Approved via CLI", resolver=args.resolver or "cli_operator")
+            print(f"✅ Checkpoint {chk.checkpoint_id} APPROVED successfully.")
+            print(f"   Resolution: {chk.resolution.reason}")
+        except Exception as e:
+            print(f"❌ Error approving checkpoint: {e}")
+            sys.exit(1)
+    elif action == "reject":
+        try:
+            chk = mgr.resolve_checkpoint(args.id, decision="REJECT", reason=args.reason or "Rejected via CLI", resolver=args.resolver or "cli_operator")
+            print(f"🛑 Checkpoint {chk.checkpoint_id} REJECTED.")
+            print(f"   Reason: {chk.resolution.reason}")
+        except Exception as e:
+            print(f"❌ Error rejecting checkpoint: {e}")
+            sys.exit(1)
+
+
+def cmd_benchmark(args):
+    action = getattr(args, "benchmark_action", "run")
+    from workplace.core.agent_benchmark_harness import AgentBenchmarkHarness
+    harness = AgentBenchmarkHarness(workspace_root=REPO_ROOT)
+    if action == "run":
+        print("🎯 Executing Continuous Multi-Agent Quality Evaluation Suite...")
+        scorecard = harness.run_benchmark_suite()
+        report_path = harness.save_report(scorecard)
+        print(f"✅ Evaluation Complete! Overall Grade: {scorecard.overall_grade}")
+        print(f"   • Task Success Rate (TSR):    {scorecard.tsr_pct:.1f}%")
+        print(f"   • Semantic Parity (S_SP):     {scorecard.avg_semantic_parity:.3f}")
+        print(f"   • Avg Tokens Consumed:        {scorecard.avg_tokens_consumed:,.0f} tokens")
+        print(f"   • Avg Turn Latency:           {scorecard.avg_latency_s:.3f}s")
+        print(f"   • Invariant Compliance:       {scorecard.invariant_compliance_pct:.1f}%")
+        print(f"   • Merkle Anchor:              {scorecard.merkle_receipt_id}")
+        print(f"📄 Full scorecard saved to {report_path.relative_to(REPO_ROOT)}")
+
+
 def cmd_swarm(args):
     _require_engine(SwarmGovernor, "swarm_governor", "swarm", "Business / Enterprise")
     action = args.swarm_action
@@ -973,6 +1036,121 @@ def cmd_swarm(args):
         print("   Authority Tiers Active: Orchestrator, DomainArchitect, SpecialistWorker, GatekeeperSentinel")
         print("   Rogue Dynamic Subagents Detected: 0 (All processes verified in DAG)")
         print("✅ Swarm integrity verified: No shadow processes or lease leaks.")
+    elif action == "exec":
+        _require_engine(ContainerPlanExecutor, "container_plan_executor", "swarm exec", "Business / Enterprise")
+        print("🚀 Initializing Sandboxed Container Plan Derivation...")
+        print(f"   Plan:           {args.plan}")
+        print(f"   Agent ID:       {args.agent_id}")
+        print(f"   Target Module:  {args.target_module}")
+        print(f"   LLM CLI:        {args.llm}")
+        print(f"   Mock Mode:      {args.mock}")
+        executor = ContainerPlanExecutor(workspace_root=REPO_ROOT, mock_mode=args.mock)
+        req = PlanExecutionRequest(
+            plan_path=args.plan,
+            agent_id=args.agent_id,
+            target_module=args.target_module,
+            prompt=args.prompt,
+            llm_cli=args.llm,
+            ttl_seconds=args.ttl,
+            run_gatekeeper=not args.no_gate
+        )
+        receipt = executor.execute(req)
+        if receipt.status == "SUCCESS":
+            print(f"✅ Containerized plan execution succeeded in {receipt.duration_ms:.1f}ms!")
+            print(f"   Worktree: {receipt.worktree_path}")
+            print(f"   Branch:   {receipt.branch}")
+            print(f"   Gate:     {'PASSED' if receipt.gatekeeper_passed else 'SKIPPED'}")
+        else:
+            print(f"❌ Containerized plan execution failed: {receipt.error_message or 'Non-zero exit code'}")
+            print(f"   Exit code: {receipt.exit_code}")
+            sys.exit(receipt.exit_code or 1)
+    elif action == "dag":
+        _require_engine(DynamicDAGOrchestrator, "dynamic_dag_orchestrator", "swarm dag", "Business / Enterprise")
+        orch = DynamicDAGOrchestrator()
+        from dynamic_dag_orchestrator import StepNode
+        if not orch.nodes:
+            orch.add_node(StepNode(id="step_ingest_spec", action="ingest_spec", name="Ingest Specification", metadata={"agent": "agent_planner"}))
+            orch.add_node(StepNode(id="step_plan_architecture", action="plan_architecture", name="Synthesize Architecture", dependencies=["step_ingest_spec"], metadata={"agent": "agent_architect"}))
+            orch.add_node(StepNode(id="step_code_derivation", action="code_derivation", name="Derive Implementation", dependencies=["step_plan_architecture"], blast_radius=["workplace/core/engine.py"], metadata={"agent": "agent_coder"}))
+            orch.add_node(StepNode(id="step_verify_gate", action="verify_gate", name="Attest Verification Gate", dependencies=["step_code_derivation"], metadata={"agent": "agent_verifier"}))
+        dag_action = getattr(args, "action", "inspect")
+        print("🐝 Dynamic Multi-Agent Swarm DAG Orchestrator:")
+        if dag_action == "expand":
+            subgoals = [
+                {"id": f"{args.parent_id}_ast_type_check", "action": "ast_type_check", "name": "AST Strict Typing Verification"},
+                {"id": f"{args.parent_id}_invariant_critic", "action": "invariant_critic", "name": "Multi-Pillar Critic Analysis"}
+            ]
+            created = orch.expand_subgoals(args.parent_id, subgoals)
+            print(f"   ✓ Subgoals expanded under {args.parent_id}: {created}")
+        elif dag_action == "exec":
+            def dummy_exec(node, orchestrator):
+                return {"result": f"Executed step {node.id}", "status": "SUCCESS"}
+            executors = {nid: dummy_exec for nid in orch.nodes}
+            res = orch.execute(executors)
+            print(f"   ✓ Executed {len(res.executed_steps)} steps in topological wave sequence.")
+            print(f"   Duration: {res.duration_ms:.1f}ms | Status: {res.status}")
+        order = orch.topological_sort()
+        print(f"   Active DAG Nodes: {len(orch.nodes)}")
+        for nid in order:
+            n = orch.nodes[nid]
+            print(f"   • [{n.status:9}] {n.id:30} (Depth: {n.depth}, Deps: {len(n.dependencies)})")
+    elif action == "reflexion":
+        _require_engine(SelfReflectionEngine, "self_reflection_engine", "swarm reflexion", "Business / Enterprise")
+        target_f = Path(args.file)
+        if not target_f.is_absolute():
+            target_f = REPO_ROOT / target_f
+        code_content = target_f.read_text(encoding="utf-8") if target_f.exists() else "# Sample module"
+        print(f"🪞 Running Self-Reflection Critic on {target_f.name}...")
+        critique = SelfReflectionEngine.evaluate_invariants(code_content, {"target": str(target_f)})
+        print(f"   Convergence Score: {critique.convergence_score*100:.1f}%")
+        decision = "APPROVED (Passes Invariants)" if critique.passes_invariants else "CRITIQUE REQUIRED (Zero-Disk-Write)"
+        print(f"   Gate Decision:     {decision} | Severity: {critique.severity}")
+        for k, v in critique.pillar_scores.items():
+            print(f"   • {k:25}: {v:.2f}")
+        print(f"   Zero-Disk-Write:   {'ENFORCED' if not critique.passes_invariants else 'CLEARED'}")
+    elif action == "consensus":
+        _require_engine(ConsensusQuorumEngine, "consensus_quorum_engine", "swarm consensus", "Business / Enterprise")
+        from consensus_quorum_engine import EvaluatorVote
+        engine = ConsensusQuorumEngine(workspace_root=REPO_ROOT)
+        votes = [
+            EvaluatorVote("eval_claude", "Claude 3.7 Sonnet", "APPROVE", "Approved AST optimization", 0.95),
+            EvaluatorVote("eval_gpt", "GPT-4o Reasoning", "APPROVE", "Compatible wire contracts", 0.92),
+            EvaluatorVote("eval_gemini", "Gemini 2.5 Pro", "APPROVE", "Zero flaky regressions", 0.88)
+        ]
+        receipt = engine.evaluate_quorum("PR_GATE_APPROVAL", args.proposal, votes, required_threshold=2)
+        print("🗳️ Multi-Model Consensus Quorum Engine:")
+        print(f"   Target Artifact:   {receipt.target_artifact}")
+        print(f"   Quorum Decision:   {receipt.verdict} (Passed: {receipt.quorum_passed})")
+        print(f"   Quorum HMAC:       {receipt.quorum_hmac[:16]}...")
+    elif action == "cbac":
+        _require_engine(AgentCapabilityGuard, "agent_capability_guard", "swarm cbac", "Business / Enterprise")
+        ops = [o.strip() for o in args.ops.split(",") if o.strip()]
+        token = AgentCapabilityGuard.mint_token(args.agent_id, str(REPO_ROOT), ops, args.ttl)
+        print("🛡️ Minted Capability-Based Access Control (CBAC) Token:")
+        print(f"   Agent ID:          {args.agent_id}")
+        print(f"   Allowed Ops:       {', '.join(ops)}")
+        print(f"   TTL:               {args.ttl}s")
+        print(f"   Token:             {token}")
+    elif action == "fleet":
+        _require_engine(FleetManager, "fleet_manager", "swarm fleet", "Business / Enterprise")
+        mgr = FleetManager()
+        if getattr(args, "simulate_pulse", False):
+            mgr.simulate_pulse(delta_tokens=50000, advance_task=True)
+            print("⚡ Injected activity pulse (+50k tokens & milestone advancement) into fleet.")
+        machines = mgr.list_machines()
+        rollup = mgr.get_finops_rollup()
+        s = rollup["summary"]
+        print("🖥️ Enterprise Workstation & Swarm Fleet Status:")
+        print(f"   Active Nodes:      {s['active_machines_count']} / {s['total_machines_count']}")
+        print(f"   Total Tokens Saved: {s['total_tokens_saved']:,}")
+        print(f"   Gross Cloud Saved: ${s['enterprise_gross_savings_usd']:.2f}")
+        print(f"   15% Percipience Fee: ${s['percipience_rev_share_fee_usd']:.2f}")
+        print(f"   85% Customer Net:  ${s['customer_net_retained_usd']:.2f}")
+        print("   Connected Nodes:")
+        for m in machines:
+            task = m.get("active_task", {}).get("task_name", "Idle")
+            pct = m.get("active_task", {}).get("progress_pct", 0)
+            print(f"   • [{m.get('health_status'):7}] {m.get('hostname'):22} | {task} ({pct:.0f}%)")
 
 
 
@@ -995,6 +1173,40 @@ def cmd_context(args):
             print(f"✅ Exported AST context to {out_p} ({res['tokens_saved']:,} tokens saved, {res['reduction_pct']}% reduction)")
         else:
             print(res["payload"])
+    elif action == "sync":
+        if getattr(args, "is_async", False):
+            res = TerminalAgentASTProxy.trigger_async_context_export(
+                workspace_root=REPO_ROOT,
+                format_type=args.format,
+                output_path=Path(args.output) if getattr(args, "output", None) else None,
+                debounce_seconds=getattr(args, "debounce", 0.0),
+                force=getattr(args, "force", False)
+            )
+            print(f"⚡ Context sync scheduled asynchronously (debounce: {res['debounce_seconds']}s, format: {res['format']})")
+        else:
+            res = TerminalAgentASTProxy.export_and_save_context(
+                workspace_root=REPO_ROOT,
+                format_type=args.format,
+                output_path=Path(args.output) if getattr(args, "output", None) else None,
+                force=getattr(args, "force", False)
+            )
+            if res.get("status") == "UP_TO_DATE":
+                print(f"⚡ AST Context is already fresh ({res['context_file']})")
+            else:
+                print(f"✅ Synchronized AST context: {res['message']}")
+    elif action == "watch":
+        debounce = getattr(args, "debounce", 3.0)
+        fmt = getattr(args, "format", "claude-code")
+        print(f"👀 Watching workspace for AST changes (format: {fmt}, debounce: {debounce}s)...")
+        try:
+            while True:
+                time.sleep(debounce)
+                stale, _ = TerminalAgentASTProxy.is_context_stale(REPO_ROOT, fmt)
+                if stale:
+                    res = TerminalAgentASTProxy.export_and_save_context(REPO_ROOT, fmt)
+                    print(f"⚡ [Percipience Watcher] {res['message']}")
+        except KeyboardInterrupt:
+            print("\nStopped context watcher.")
 
 def cmd_terminal(args):
     _require_engine(TerminalAgentASTProxy, "terminal_agent_ast_proxy", "terminal", "Free / Team / Business / Enterprise")
@@ -1213,12 +1425,24 @@ def main():
 
 
     # context
-    p_ctx = subparsers.add_parser("context", help="Export and format AST-pruned context for agents")
+    p_ctx = subparsers.add_parser("context", help="Export, sync, and format AST-pruned context for agents")
     p_ctx_subs = p_ctx.add_subparsers(dest="context_action", required=True)
     p_ctx_exp = p_ctx_subs.add_parser("export", help="Export AST-pruned context")
     p_ctx_exp.add_argument("--format", default="claude-code", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"])
     p_ctx_exp.add_argument("--module", help="Target modules comma-separated")
     p_ctx_exp.add_argument("--output", help="Output file path")
+
+    p_ctx_sync = p_ctx_subs.add_parser("sync", help="Synchronize AST context with change-detection and async support")
+    p_ctx_sync.add_argument("--format", default="claude-code", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"])
+    p_ctx_sync.add_argument("--output", help="Output file path")
+    p_ctx_sync.add_argument("--async", dest="is_async", action="store_true", help="Run asynchronously in background")
+    p_ctx_sync.add_argument("--debounce", type=float, default=0.0, help="Debounce seconds before running")
+    p_ctx_sync.add_argument("--force", action="store_true", help="Force re-export even if mtime is unchanged")
+
+    p_ctx_watch = p_ctx_subs.add_parser("watch", help="Asynchronously watch workspace and auto-update context on changes")
+    p_ctx_watch.add_argument("--format", default="claude-code", choices=["claude-code", "gemini-cli", "aider", "markdown", "json"])
+    p_ctx_watch.add_argument("--debounce", type=float, default=3.0, help="Debounce seconds")
+
     p_ctx.set_defaults(func=cmd_context)
 
     # terminal
@@ -1316,7 +1540,61 @@ def main():
     p_swarm = subparsers.add_parser("swarm", help="Audit multi-agent swarm leases and handover governance")
     p_swarm_subs = p_swarm.add_subparsers(dest="swarm_action", required=True)
     p_sw_aud = p_swarm_subs.add_parser("audit", help="Audit active swarm leases, depths and rogue spawns")
+    p_sw_exec = p_swarm_subs.add_parser("exec", help="Execute plan-to-code derivation in sandboxed container worktree")
+    p_sw_exec.add_argument("--plan", required=True, help="Path to .nb/plan/ specification")
+    p_sw_exec.add_argument("--agent-id", default="agent_worker", help="Unique agent identifier")
+    p_sw_exec.add_argument("--target-module", default="workplace", help="Target module to modify")
+    p_sw_exec.add_argument("--prompt", required=True, help="Prompt or task instructions for LLM CLI")
+    p_sw_exec.add_argument("--llm", default="claude", choices=["claude", "aider", "gemini", "custom"], help="LLM CLI to invoke")
+    p_sw_exec.add_argument("--ttl", type=int, default=3600, help="Worktree lease TTL in seconds")
+    p_sw_exec.add_argument("--no-gate", action="store_true", help="Skip gatekeeper verification")
+    p_sw_exec.add_argument("--mock", action="store_true", help="Run in mock/simulation mode")
+
+    # swarm dag
+    p_sw_dag = p_swarm_subs.add_parser("dag", help="Execute or inspect Dynamic DAG multi-agent waves")
+    p_sw_dag.add_argument("--action", choices=["inspect", "exec", "expand", "reset"], default="inspect")
+    p_sw_dag.add_argument("--parent-id", default="step_ast_prune")
+
+    # swarm reflexion
+    p_sw_ref = p_swarm_subs.add_parser("reflexion", help="Evaluate Reflexion invariant critic on target file")
+    p_sw_ref.add_argument("--file", default="workplace/core/fleet_agent.py", help="Target source file to evaluate")
+
+    # swarm consensus
+    p_sw_con = p_swarm_subs.add_parser("consensus", help="Run multi-model consensus quorum engine")
+    p_sw_con.add_argument("--proposal", default="PR Gate Approval", help="Proposal text")
+
+    # swarm cbac
+    p_sw_cbac = p_swarm_subs.add_parser("cbac", help="Mint Capability-Based Access Control tokens")
+    p_sw_cbac.add_argument("--agent-id", default="agent_sandbox_coder", help="Agent identifier")
+    p_sw_cbac.add_argument("--ops", default="CAP_FS_READ,CAP_FS_WRITE_MODULE_ONLY", help="Comma-separated operations")
+    p_sw_cbac.add_argument("--ttl", type=int, default=3600, help="Token TTL in seconds")
+
+    # swarm fleet
+    p_sw_flt = p_swarm_subs.add_parser("fleet", help="Inspect distributed workstation and node fleet metrics")
+    p_sw_flt.add_argument("--simulate-pulse", action="store_true", help="Inject simulated pulse with +50k tokens")
     p_swarm.set_defaults(func=cmd_swarm)
+
+    # hitl
+    p_hitl = subparsers.add_parser("hitl", help="Interactive Human-In-The-Loop milestone checkpoints")
+    p_hitl_subs = p_hitl.add_subparsers(dest="hitl_action", required=True)
+    p_h_list = p_hitl_subs.add_parser("list", help="List milestone checkpoints")
+    p_h_list.add_argument("--pending-only", action="store_true", help="Filter pending checkpoints")
+    p_h_app = p_hitl_subs.add_parser("approve", help="Approve milestone checkpoint")
+    p_h_app.add_argument("--id", required=True, help="Checkpoint ID (chk_*)")
+    p_h_app.add_argument("--comment", default="", help="Optional approval rationale")
+    p_h_app.add_argument("--resolver", default="cli_operator", help="Resolver ID")
+    p_h_rej = p_hitl_subs.add_parser("reject", help="Reject milestone checkpoint")
+    p_h_rej.add_argument("--id", required=True, help="Checkpoint ID (chk_*)")
+    p_h_rej.add_argument("--reason", required=True, help="Rejection reason")
+    p_h_rej.add_argument("--resolver", default="cli_operator", help="Resolver ID")
+    p_hitl.set_defaults(func=cmd_hitl)
+
+    # benchmark
+    p_bench = subparsers.add_parser("benchmark", help="Automated agent benchmarking and continuous evaluation")
+    p_bench_subs = p_bench.add_subparsers(dest="benchmark_action", required=True)
+    p_b_run = p_bench_subs.add_parser("run", help="Run agent benchmark suite")
+    p_b_run.add_argument("--agents", default="all", help="Target agents to evaluate")
+    p_bench.set_defaults(func=cmd_benchmark)
 
     # validate
     p_val = subparsers.add_parser("validate", help="Validate layered context hierarchy")

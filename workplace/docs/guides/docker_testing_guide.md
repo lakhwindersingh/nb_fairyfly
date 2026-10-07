@@ -1,8 +1,8 @@
 # Percipience Docker Local Testing Harness Guide
 
-> **Location:** [`workplace/infra/docker/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/)  
-> **Compose Manifest:** [`workplace/infra/docker/docker-compose.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-compose.yml)  
-> **Control Script:** [`workplace/infra/docker/docker-test.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-test.sh)  
+> **Location:** [`workplace/infra/docker/`](/workplace/infra/docker/)  
+> **Compose Manifest:** [`workplace/infra/docker/docker-compose.yml`](/workplace/infra/docker/docker-compose.yml)  
+> **Control Script:** [`workplace/infra/docker/docker-test.sh`](/workplace/infra/docker/docker-test.sh)  
 
 ---
 
@@ -10,10 +10,11 @@
 
 To guarantee hermetic test execution and prevent host environment pollution across macOS, Linux, and Windows, Percipience provides a containerized multi-service testing harness.
 
-The Docker topology isolates the three core execution components:
-1. **SaaS Portal Service (`percipience-portal`)**: Serves the 15-tab governance and observability portal on port 3000.
+The Docker topology isolates the core execution components:
+1. **SaaS Portal Service (`percipience-portal`)**: Serves the 16-tab governance, fleet monitor, and observability portal on port 3000.
 2. **Tree-Sitter Daemon Service (`percipience-tree-sitter-daemon`)**: High-performance HTTP daemon microservice on port 8585 performing multi-language AST extraction and skeletonization.
 3. **Hermetic Test Runner (`percipience-test-runner`)**: Ephemeral test execution container that mounts the repository and runs unit tests, integration tests, and the 7-stage PR Gatekeeper.
+4. **Fleet Agent Runners (`percipience-fleet-agent-1` & `2`)**: Background daemon containers simulating distributed developer workstations and CI runners transmitting live heartbeats, task progress, and token savings.
 
 ```mermaid
 flowchart TD
@@ -25,6 +26,7 @@ flowchart TD
     Portal["percipience-portal<br/>(Port 3000: HTTP Portal & REST APIs)"]
     Daemon["percipience-tree-sitter-daemon<br/>(Port 8585: AST Microservice)"]
     Runner["percipience-test-runner<br/>(Ephemeral Test & Gate Execution)"]
+    FleetAgents["percipience-fleet-agent-1 & 2<br/>(Simulated Workstation Nodes)"]
   end
 
   CLI --> Portal
@@ -32,6 +34,7 @@ flowchart TD
   CLI --> Runner
   Runner -->|HTTP AST queries| Daemon
   Runner -->|HTTP Health & API tests| Portal
+  FleetAgents -->|Heartbeats & Telemetry| Portal
 ```
 
 ---
@@ -43,7 +46,7 @@ flowchart TD
 - **Exposed Port:** `3000`
 - **Command:** `python3 workplace/portal/server.py`
 - **Health Check:** `curl -f http://localhost:3000/api/health || exit 1`
-- **Volume Bind:** Read-only repository mount ensuring changes can be previewed live without rebuilding.
+- **Function:** Serves dashboard UI and fleet ingestion endpoints (`/api/fleet/heartbeat`, `/api/fleet/telemetry`, `/api/fleet/machines`, `/api/fleet/finops-rollup`, `/api/fleet/simulate`).
 
 ### 2.2. Tree-Sitter AST Daemon (`Dockerfile.tree_sitter_daemon`)
 - **Base Image:** `python:3.11-slim`
@@ -54,7 +57,12 @@ flowchart TD
   - `GET /health`: Daemon status and loaded grammar engines.
   - `POST /parse`: Receives source code and language identifier; returns pruned AST skeletons and symbol tables.
 
-### 2.3. Hermetic Test Runner (`Dockerfile.test_runner`)
+### 2.3. Fleet Runner Agents (`percipience-fleet-agent-1 & 2`)
+- **Base Image:** `percipience/portal:latest`
+- **Command:** `python3 .nb/bin/percipience-agent --portal http://portal:3000 --simulate --interval 4`
+- **Function:** Simulates real-time developer workstations and CI runners actively performing AST pruning, fuzzing, and contract verification while transmitting periodic heartbeats and token savings to the portal.
+
+### 2.4. Hermetic Test Runner (`Dockerfile.test_runner`)
 - **Base Image:** `python:3.11-slim`
 - **Environment:** Pre-installed dependencies, test utilities, and verification tools.
 - **Function:** Runs isolated test suites and gatekeeper verification without requiring local Python environments or pip packages on the developer host.
@@ -63,23 +71,32 @@ flowchart TD
 
 ## 3. CLI Commands Reference (`docker-test.sh`)
 
-The executable harness script [`workplace/infra/docker/docker-test.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-test.sh) automates all container lifecycle operations:
+The executable harness script [`workplace/infra/docker/docker-test.sh`](/workplace/infra/docker/docker-test.sh) automates all container lifecycle operations:
 
 ```bash
 # Check Docker engine availability and current container status
 ./workplace/infra/docker/docker-test.sh status
 
-# Build Docker images and start services in the background
+# Start portal & tree-sitter daemon detached and wait for healthy state
 ./workplace/infra/docker/docker-test.sh up
+
+# Start portal, daemon, and simulated fleet runner containers (Swarm mode)
+./workplace/infra/docker/docker-test.sh fleet-up
+
+# Display live machine fleet, FinOps rollup, and active tasks from running portal
+./workplace/infra/docker/docker-test.sh fleet-status
+
+# Trigger an immediate activity burst (+50k tokens & milestone advancement)
+./workplace/infra/docker/docker-test.sh simulate-pulse
 
 # Run unit and integration tests inside the hermetic test runner
 ./workplace/infra/docker/docker-test.sh test
 
+# Run fleet telemetry & FinOps rollup test suite
+./workplace/infra/docker/docker-test.sh test-fleet
+
 # Run portal-specific integration tests against the live portal container
 ./workplace/infra/docker/docker-test.sh test-portal
-
-# Test the Tree-Sitter daemon AST microservice over HTTP IPC
-./workplace/infra/docker/docker-test.sh test-daemon
 
 # Execute the complete 7-stage CI/CD Gatekeeper inside the container
 ./workplace/infra/docker/docker-test.sh gate
@@ -110,6 +127,8 @@ jobs:
         run: ./workplace/infra/docker/docker-test.sh up
       - name: Run Hermetic Test Suite
         run: ./workplace/infra/docker/docker-test.sh test
+      - name: Run Fleet Test Suite
+        run: ./workplace/infra/docker/docker-test.sh test-fleet
       - name: Run 7-Stage Gatekeeper
         run: ./workplace/infra/docker/docker-test.sh gate
       - name: Teardown Containers

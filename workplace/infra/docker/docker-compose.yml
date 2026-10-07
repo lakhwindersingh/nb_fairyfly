@@ -46,6 +46,8 @@ services:
       dockerfile: workplace/infra/docker/Dockerfile.test_runner
     image: percipience/test-runner:latest
     container_name: percipience-test-runner
+    volumes:
+      - ../../../:/workspace:rw
     environment:
       - PORTAL_URL=http://portal:3000
       - PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
@@ -69,6 +71,42 @@ services:
       - PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
     profiles:
       - agent
+    networks:
+      - percipience-net
+
+  fleet-agent-1:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.portal
+    image: percipience/portal:latest
+    container_name: percipience-fleet-agent-1
+    environment:
+      - PORTAL_URL=http://portal:3000
+    depends_on:
+      portal:
+        condition: service_healthy
+    entrypoint: ["python3", ".nb/bin/percipience-agent", "--portal", "http://portal:3000", "--simulate", "--interval", "4", "--org", "org_enterprise", "--project", "proj_docker_swarm"]
+    profiles:
+      - fleet
+      - swarm
+    networks:
+      - percipience-net
+
+  fleet-agent-2:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.portal
+    image: percipience/portal:latest
+    container_name: percipience-fleet-agent-2
+    environment:
+      - PORTAL_URL=http://portal:3000
+    depends_on:
+      portal:
+        condition: service_healthy
+    entrypoint: ["python3", ".nb/bin/percipience-agent", "--portal", "http://portal:3000", "--simulate", "--interval", "6", "--org", "org_enterprise", "--project", "proj_billing"]
+    profiles:
+      - fleet
+      - swarm
     networks:
       - percipience-net
 
