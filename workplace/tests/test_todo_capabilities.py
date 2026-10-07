@@ -945,6 +945,30 @@ class TestSection21ContainerizedWorktreeSwarms(unittest.TestCase):
         self.assertIn("--agent-id", proc.stdout)
         self.assertIn("--mock", proc.stdout)
 
+    def test_dews_03_git_bundle_transport(self):
+        """Tests TODO-DEWS-03: GitBundleTransport packaging, verification, and streaming."""
+        from workplace.core.git_bundle_transport import GitBundleTransport, BundleManifest
+        
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_p = Path(tmp_dir)
+            repo = tmp_p / "repo"
+            repo.mkdir()
+            subprocess.run(["git", "init", "-b", "main"], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.name", "Tester"], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "test@test.ai"], cwd=repo, check=True, capture_output=True)
+            (repo / "sample.txt").write_text("sample content", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo, check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", "init"], cwd=repo, check=True, capture_output=True)
+            
+            transport = GitBundleTransport(storage_dir=tmp_p / "bundles")
+            receipt = transport.create_bundle(repo_path=repo, branch="main", agent_id="agent_test")
+            self.assertEqual(receipt.status, "SUCCESS")
+            self.assertTrue(Path(receipt.bundle_path).exists())
+            
+            is_valid, msg, heads = transport.verify_bundle(Path(receipt.bundle_path), repo)
+            self.assertTrue(is_valid)
+            self.assertGreaterEqual(len(heads), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

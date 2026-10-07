@@ -99,6 +99,7 @@ LivingDocEngine = _load_engine("living_doc_engine", ["LivingDocEngine"])
 WORMEgressManager = _load_engine("worm_egress", ["WORMEgressManager"])
 TreeSitterDaemonClient = _load_engine("tree_sitter_daemon", ["TreeSitterDaemonClient"])
 (ContainerPlanExecutor, PlanExecutionRequest) = _load_engine("container_plan_executor", ["ContainerPlanExecutor", "PlanExecutionRequest"])
+GitBundleTransport = _load_engine("git_bundle_transport", ["GitBundleTransport"])
 DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePromptEngine"])
 (TokenOptimizationConfig, UnifiedTokenOptimizer) = _load_engine(
     "token_optimizer_suite",

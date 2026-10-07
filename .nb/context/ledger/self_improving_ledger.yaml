@@ -1,4 +1,4 @@
-current_avg_reduction_pct: 47.39
+current_avg_reduction_pct: 47.4
 policy_adjustments:
 - rule: AST_PRUNING_AGGRESSIVENESS
   status: OPTIMAL
@@ -16,7 +16,7 @@ recommendations:
 - Prompt system_prompt.md prefix aligned for Anthropic 90% cache discount tier.
 target_reduction_pct: 55.0
 timestamp: '2026-09-17T13:22:03.097963+00:00'
-last_optimized: '2026-10-07T14:42:21.317519+00:00'
+last_optimized: '2026-10-07T14:53:19.053945+00:00'
 optimizations:
 - timestamp: '2026-09-17T18:08:09.748421+00:00'
   avg_reduction_pct: 48.92
@@ -1070,4 +1070,16 @@ optimizations:
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
 - timestamp: '2026-10-07T14:42:21.317530+00:00'
   avg_reduction_pct: 47.39
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-07T14:49:42.011998+00:00'
+  avg_reduction_pct: 47.4
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-07T14:49:42.111489+00:00'
+  avg_reduction_pct: 47.4
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-07T14:53:18.961496+00:00'
+  avg_reduction_pct: 47.4
+  recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS
+- timestamp: '2026-10-07T14:53:19.053955+00:00'
+  avg_reduction_pct: 47.4
   recommended_router_policy: COMPACT_FOR_DIFFS_FRONTIER_FOR_SYNTHESIS

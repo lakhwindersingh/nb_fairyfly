@@ -40,7 +40,7 @@
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
 | **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] PLANNED** | **0.50** |
-| **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.70** |
+| **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.75** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
@@ -267,9 +267,8 @@
   - 6-Vector mathematical parity formulation: $S_{SP} = 0.20 S_{\text{AST}} + 0.25 S_{\text{Contract}} + 0.20 S_{\text{Behavior}} + 0.15 S_{\text{Handover}} + 0.10 S_{\text{Doc}} + 0.10 S_{\text{SupplyChain}}$.
   - Multi-agent handover failure modes: unauthorized successor spawning, bypassed gate short-circuiting, payload contract mutation, recursive swarm explosions, and role usurpation.
   - Dual-Reconciliation workflow (Automated Revert Mode vs. HITL-gated Evolve Mode).
-- [ ] **TODO-AD-01: Multi-Agent Swarm Governor & Rogue Spawning Sentinel (P1)**:
-  - Implement `workplace/core/swarm_governor.py` to intercept ad-hoc subagent creation (`define_subagent` / runtime processes) not explicitly defined in `agentic/workflows/`.
-  - Enforce max swarm recursion depth ($D_{\max} = 2$) and max concurrent active worktrees ($N_{\max} = 4$) with automated SIGKILL for rogue workers.
+- [x] **TODO-AD-01: Multi-Agent Swarm Governor & Rogue Spawning Sentinel (P1)**:
+  - *Implemented via TODO-AGT-10*: Built [`workplace/core/swarm_governor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/swarm_governor.py) enforcing 4-tier authority hierarchy (`ORCHESTRATOR` > `DOMAIN_ARCHITECT` > `SPECIALIST_WORKER` > `GATEKEEPER_SENTINEL`), max recursion depth ($D \le 2$), and max concurrent active worktree ceiling ($N \le 4$) with anti-usurpation interception. Verified in `test_swarm_governor_authority_tree`.
 - [x] **TODO-AD-02: Cryptographic Handoff Token & Payload Schema Validator (P1)** ([`workplace/core/handoff_validator.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/handoff_validator.py)):
   - Enforce JSON Schema Draft-07 validation for inter-agent communication messages via `agentic/schemas/handoff_schema.yaml`.
   - Implement non-bypassable signed `HandoffToken` verification with zero-drift attestation ($S_{SP} \ge 0.95$), single-use nonces, payload artifact hashes, dynamic YAML DAG routing, replay prevention, and guaranteed persistent outbox/inbox delivery spools with ACK receipts.
@@ -324,9 +323,8 @@
 - [ ] **TODO-COMP-09: Hybrid Sparse-Dense Vector Code Search alongside AST Pruning (P1)**:
   - *Competitor Benchmark*: Cursor & Claude Code utilize hybrid BM25 + dense embedding vector search (LanceDB / Qdrant / Chroma) with semantic reranking for natural-language conceptual codebase queries.
   - *Implementation Scope*: Implement `workplace/core/vector_retrieval_engine.py` pairing AST structural skeletons with local embedded vector indices (LanceDB) and Voyage/OpenAI embeddings for multi-hop semantic code discovery.
-- [ ] **TODO-COMP-10: VS Code & JetBrains / PyCharm IDE Extension Adapter (P2)**:
-  - *Competitor Benchmark*: Cursor & GitHub Copilot provide seamless in-editor UI (in-gutter diffs, inline chat, hotkey triggers, one-click rollback/accept).
-  - *Implementation Scope*: Develop VS Code & JetBrains Extension / MCP Bridge (`workplace/integrations/ide_extensions/`) for in-editor interactive gate inspection, gutter diff reviews, and one-click surgical rollback directly in developer IDEs.
+- [x] **TODO-COMP-10: VS Code & JetBrains / PyCharm IDE Extension Adapter (P2)**:
+  - *Implemented via Section 19 (TODO-IDE-01..03) & TODO-REV-13*: Developed JetBrains IntelliJ/PyCharm plugin suite (`workplace/modules/mod_intellij_plugin/`), bundled platform engines, packaged `.nb/bundles/intellij_pycharm_plugin_domain.nbpack`, produced release zips/jars, and scaffolded VS Code extension bridge. Verified in `test_ide_plugins_space.py`.
 - [ ] **TODO-COMP-11: Multimodal UI & Design Token Context Ingestion (P2)**:
   - *Competitor Benchmark*: Claude Code / Cursor / Devin accept screenshot images and Figma designs directly to generate CSS/React AST components and verify pixel-level rendering.
   - *Implementation Scope*: Implement `workplace/core/multimodal_ui_engine.py` parsing design tokens, Figma JSON schemas, and UI screenshots into clean Tailwind/React component ASTs.
@@ -683,12 +681,12 @@
 - [x] **TODO-REV-14: OpenTelemetry (OTel) GenAI Observability & APM Exporter (P1)**:
   - *Identified Issue*: Enterprise APM infrastructure (Datadog, Dynatrace, Honeycomb, Jaeger) requires standardized OTel GenAI semantic spans for model latency, prompt token counts, and cost telemetry.
   - *Implementation Scope*: Integrate `OpenTelemetryGenAIExporter` (`workplace/core/otel_exporter.py`) with W3C `traceparent` distributed headers, TTFT metrics, and streaming span sinks.
-- [ ] **TODO-REV-15: Interactive GitOps PR Bot (`percipience bot deploy`) (P2)**:
+- [ ] **TODO-REV-15: Interactive GitOps PR Bot (`percipience bot deploy`) (P2)** *(Consolidated with TODO-COMP-15)*:
   - *Identified Issue*: Automated pull request creation and interactive comment reviews currently require manual git workflows.
-  - *Implementation Scope*: Build `workplace/core/gitops_pr_bot.py` posting interactive Markdown status cards, collapsible test logs, ephemeral staging preview URLs, and handling slash commands (`/re-heal`, `/rollback`).
-- [ ] **TODO-REV-16: Hybrid Vector RAG Retrieval for Large Codebases (>1M LOC) (P2)**:
+  - *Implementation Scope*: Build `workplace/core/gitops_pr_bot.py` posting interactive Markdown status cards, collapsible test logs, ephemeral staging preview URLs, and handling slash commands (`/re-heal`, `/rollback`). Tracks unified PR bot lifecycle alongside `TODO-COMP-15`.
+- [ ] **TODO-REV-16: Hybrid Vector RAG Retrieval for Large Codebases (>1M LOC) (P2)** *(Consolidated with TODO-COMP-09)*:
   - *Identified Issue*: Massive enterprise monorepos require hybrid sparse-dense semantic search alongside deterministic AST pruning.
-  - *Implementation Scope*: Implement `workplace/core/vector_retrieval_engine.py` connecting LanceDB / Pinecone with Voyage Code 2 embeddings for semantic multi-hop code discovery.
+  - *Implementation Scope*: Unified into `TODO-COMP-09` (`workplace/core/vector_retrieval_engine.py`) connecting LanceDB / Pinecone with Voyage Code 2 embeddings for semantic multi-hop code discovery within the Unified Context Retrieval Pipeline.
 - [x] **TODO-REV-17: Restructured Enterprise Tier Commercial Package (P1)**:
   - *Identified Issue*: $9,999/mo Enterprise tier required stronger justification with tangible enterprise services.
   - *Implementation Scope*: Enrich Enterprise Tier specifications with: Dedicated Customer Success Manager (CSM), 40 hrs/quarter Custom MCP Server Development, 1-Hour Support SLA, Okta/Azure AD SAML/OIDC SSO, On-Premises Helm Charts, and SOC 2 Type II audit documentation.
@@ -737,10 +735,10 @@
   - *Acceptance Criteria*: Automatically mounts worktree without `.git` pointer breakage via automatic `gitdir` pointer translation and rollback; passes invariant context and plan; executes simulation/live LLM inside container; cleans up worktree lease upon exit; verified by 6 passing unit/integration tests and CLI execution.
 
 ### 21.2. Phase 2: Distributed Multi-Container Swarm Fleet & Transport
-- [ ] **TODO-DEWS-03: Streaming Git Bundle Transport Module (P1)**:
+- [x] **TODO-DEWS-03: Streaming Git Bundle Transport Module (P1)**:
   - *Identified Requirement*: Cryptographic packaging and extraction of Git commits and uncommitted diffs using `git bundle create` and `git bundle verify`. Provide streaming HTTP upload/download adapters to transmit state between developer workstations and remote fleets without polluting remote Git branches.
-  - *Target Files*: `.nb/core/git_bundle_transport.py`, `workplace/core/git_bundle_transport.py`
-  - *Acceptance Criteria*: Round-trip test: local uncommitted branch -> bundle -> remote extraction -> remote commit -> result bundle -> local merge passes with 100% hash parity.
+  - *Target Files*: [`.nb/core/git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/git_bundle_transport.py), [`workplace/core/git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/git_bundle_transport.py), [`workplace/tests/test_git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_git_bundle_transport.py)
+  - *Acceptance Criteria*: Round-trip test: local uncommitted branch -> bundle -> remote extraction -> remote commit -> result bundle -> local merge passes with 100% hash parity; chunk streaming generator and SHA-256 integrity verified; tested via 5/5 passing unit/integration tests.
 - [ ] **TODO-DEWS-04: Enterprise Swarm Fleet Dispatch API & Endpoints (P1)**:
   - *Identified Requirement*: REST endpoints under `/api/swarm/fleet/*` (`POST /api/swarm/fleet/dispatch`, `GET /api/swarm/fleet/jobs/{job_id}`, `GET /api/swarm/fleet/jobs/{job_id}/bundle`) supporting asynchronous task ingestion, worker allocation, and streaming results.
   - *Target Files*: `workplace/portal/server.py`, `.nb/core/swarm_fleet_dispatcher.py`
