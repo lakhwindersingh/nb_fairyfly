@@ -5,7 +5,7 @@
 > **Publication Date:** September 2026  
 > **Document Version:** 1.0.0-PROD  
 > **Target Framework:** Neutron Binary Percipience (`CAP-01` through `CAP-27`)  
-> **Governing Spec:** [`.nb/plan/master/parent-master-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-plan/detailed.md`](/.nb/plan/master/parent-master-plan/detailed.md)  
 
 ---
 
@@ -70,7 +70,7 @@ stateDiagram-v2
 
 ## 3. Cryptographic Handoff Verification & Guaranteed Delivery Protocol
 
-Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation confirming zero active drift ($S_{SP} \ge 0.95$), bound artifact hashes, and guaranteed delivery via persistent outbox/inbox spools.
+Inter-agent communication is governed by strongly-typed DTOs defined in [`agentic/schemas/handoff_schema.yaml`](/.nb/agentic/schemas/handoff_schema.yaml). No agent may accept a handoff payload without cryptographic attestation confirming zero active drift ($S_{SP} \ge 0.95$), bound artifact hashes, and guaranteed delivery via persistent outbox/inbox spools.
 
 ### 3.1. Mathematical Attestation Token Formulation
 The cryptographic attestation token binds the workflow context, agent identities, payload artifact digest, anti-drift receipt hash, and a single-use cryptographic nonce:

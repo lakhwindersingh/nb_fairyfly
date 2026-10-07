@@ -39,7 +39,7 @@
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] PLANNED** | **0.50** |
+| **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] IN PROGRESS** | **0.85** |
 | **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.75** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
@@ -575,32 +575,37 @@
   - *Implementation Scope*: Add per-project SLA policies: configurable diagnostic re-prompt attempts (1–5 turns), statistical flaky test quarantine thresholds (e.g. failure variance > 15%), and cross-module wire contract breaking-change rules.
 
 ### 18.3. Workstation & Node Fleet Telemetry (Individual Machines) (`CAP-42`)
-- [ ] **TODO-PRT-06: Lightweight Workstation Agent Daemon (`percipience-agent`) (P1)**:
+- [x] **TODO-PRT-06: Lightweight Workstation Agent Daemon (`percipience-agent`) (P1)**:
   - *Shortcoming*: Enterprise admins have no visibility into active subagents running on local developer laptops or distributed CI/CD runner nodes.
   - *Implementation Scope*: Build background agent daemon (`.nb/bin/percipience-agent`, `workplace/core/fleet_agent.py`) running on macOS/Linux/Windows nodes. Periodically collects and transmits node telemetry:
     - **Machine Identity**: Hostname, Machine UUID, OS version, Local User/Agent ID.
     - **Active Workspaces**: Path, Active Worktree (`.nb/workspaces/wt_*`), Local Git Branch, Commit SHA.
     - **Process & Task State**: Active PID, Task Name, Progress Percentage (0–100%), Step Status (e.g. *AST Pruning*, *Running Fuzzer*, *Awaiting Review*).
     - **Local Token Savings**: Input/Output tokens consumed, Tokens saved via AST/Cache, Net financial savings ($).
-- [ ] **TODO-PRT-07: Secure Fleet Ingestion Endpoint (P1)**:
+  - *Status*: Completed in `workplace/core/fleet_agent.py`, `.nb/core/fleet_agent.py`, and executable `.nb/bin/percipience-agent` (`chmod +x`). Verified via `test_fleet_telemetry_finops.py` and `test_todo_capabilities.py`.
+- [x] **TODO-PRT-07: Secure Fleet Ingestion Endpoint (P1)**:
   - *Shortcoming*: Portal lacks dedicated telemetry ingestion endpoints for distributed workstations.
   - *Implementation Scope*: Implement `POST /api/fleet/heartbeat` and `POST /api/fleet/telemetry` in `workplace/portal/server.py` with mTLS / bearer node-token authentication, tracking machine health status (`HEALTHY`, `HEALING`, `OFFLINE`, `QUARANTINED`).
+  - *Status*: Completed in `workplace/portal/server.py` and `workplace/core/fleet_manager.py`. Supports bearer token auth, heartbeats, full telemetry ingestion, and offline timeout liveness detection.
 
 ### 18.4. Enterprise Admin Consolidated Fleet Monitoring & FinOps Dashboard (`CAP-43`)
-- [ ] **TODO-PRT-08: Enterprise Fleet Machine Grid & Live Workspaces Map (P1)**:
+- [x] **TODO-PRT-08: Enterprise Fleet Machine Grid & Live Workspaces Map (P1)**:
   - *Shortcoming*: Enterprise admins cannot view all distributed developer machines and subagent nodes from a single pane.
   - *Implementation Scope*: Add **Enterprise Fleet Monitor** tab to the portal and standalone dashboard:
     - Interactive machine grid filterable by Org, Project, and Status.
     - Columns: `Machine / Host`, `Developer / Subagent`, `Active Project`, `Worktree / Branch`, `Current Task & Progress Bar`, `Tokens Saved ($)`, `Actions`.
-- [ ] **TODO-PRT-09: Machine-Level & Project-Level Token Savings Rollup (P1)**:
+  - *Status*: Completed in `workplace/portal/server.py` (Tab 16 `#fleet-monitor`). Provides interactive machine grid, status badges, active worktree inspection, and live task progress.
+- [x] **TODO-PRT-09: Machine-Level & Project-Level Token Savings Rollup (P1)**:
   - *Shortcoming*: FinOps accounting only calculates global mock ledger values.
   - *Implementation Scope*: Aggregate verified token savings across all connected machines and projects:
     - Gross Cloud LLM Savings ($) across the enterprise.
     - 15% Percipience Rev-Share Fee vs. 85% Net Customer Retained Savings.
     - Machine-level and project-level savings leaderboards.
-- [ ] **TODO-PRT-10: Real-Time Task Progression & Milestone Tracker (P2)**:
+  - *Status*: Completed in `workplace/core/fleet_manager.py` (`get_finops_rollup()`) and `GET /api/fleet/finops-rollup`. Computes enterprise gross savings, 15% Percipience rev-share fee, 85% customer net, and ranked machine/project leaderboards.
+- [x] **TODO-PRT-10: Real-Time Task Progression & Milestone Tracker (P2)**:
   - *Shortcoming*: Long-running subagent tasks provide no step-by-step progress metrics.
   - *Implementation Scope*: Visualize live agent execution trajectories with step-by-step progress bars, task ETAs based on historical runtimes, and alerts for stuck subagents.
+  - *Status*: Completed in `workplace/core/fleet_manager.py` (`get_active_tasks()`) and `GET /api/fleet/tasks`. Displays real-time progress bars, step status, and ETAs in Fleet Monitor UI and REST API.
 
 ### 18.5. Remote Machine Interventions & Governance Actions (`CAP-44`)
 - [ ] **TODO-PRT-11: Remote Admin Actions on Individual Machines (P1)**:

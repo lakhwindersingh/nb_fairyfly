@@ -3,7 +3,7 @@
 > **Standard Version**: 2.1.0  
 > **Status**: Active Reference Harness  
 > **Auditable Provenance**: Linked directly to Merkle DAG Ledger Blocks (`.nb/context/ledger/context_ledger.yaml`)  
-> **Docker Test Harness:** [`workplace/infra/docker/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/)  
+> **Docker Test Harness:** [`workplace/infra/docker/`](/workplace/infra/docker/)  
 
 ---
 

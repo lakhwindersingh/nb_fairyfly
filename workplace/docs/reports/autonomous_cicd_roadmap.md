@@ -3,8 +3,8 @@
 > **Product Brand:** **Neutron Binary Percipience**  
 > **Target Release:** Q4 2026 – Q3 2027  
 > **Status:** Production Architecture & Engineering Roadmap  
-> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md)  
-> **Live Observability Hub:** [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](/.nb/plan/master/parent-master-free-plan/detailed.md)  
+> **Live Observability Hub:** [`workplace/portal/server.py`](/workplace/portal/server.py)  
 
 ---
 
@@ -142,7 +142,7 @@ gantt
    - `ToolContractValidator`: JSON Schema Draft-07 enforcement for tool inputs and outputs.
 2. **Local Multi-Container Docker Testing Harness (`DELIVERED`)**:
    - `workplace/infra/docker/` with multi-service compose (`percipience-portal` on 3000, `percipience-tree-sitter-daemon` on 8585, `percipience-test-runner`).
-   - Unified executable testing harness [`docker-test.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-test.sh).
+   - Unified executable testing harness [`docker-test.sh`](/workplace/infra/docker/docker-test.sh).
 3. **Portal Tab 15 (`#swarm-governance`) & REST Catalog (`DELIVERED`)**:
    - Interactive live UI dashboards and 11 REST API endpoints under `/api/swarm/*`.
 4. **7-Stage CI/CD Gatekeeper & WORM Vault (`DELIVERED`)**:

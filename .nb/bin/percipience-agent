@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""
+Percipience Workstation Fleet Daemon (percipience-agent / TODO-PRT-06)
+Runs in background on developer machines & CI/CD nodes, transmitting
+machine identity, active worktree leases, task progression, and FinOps token metrics.
+"""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import sys
+import time
+
+CURRENT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = CURRENT_DIR.parent.parent
+
+for p in [REPO_ROOT, REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+    p_str = str(p)
+    if p_str not in sys.path:
+        sys.path.insert(0, p_str)
+
+from core.fleet_agent import FleetAgentDaemon, TokenFinOps
+from datetime import datetime
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="percipience-agent",
+        description="Lightweight workstation and node fleet telemetry daemon"
+    )
+    parser.add_argument("--portal", default="http://127.0.0.1:3000", help="Central portal endpoint URL")
+    parser.add_argument("--token", default=None, help="Bearer authorization node token")
+    parser.add_argument("--interval", type=int, default=15, help="Heartbeat polling interval in seconds")
+    parser.add_argument("--once", action="store_true", help="Emit single heartbeat & telemetry and exit")
+    parser.add_argument("--status", action="store_true", help="Inspect and display local machine node identity")
+    parser.add_argument("--org", default="org_enterprise", help="Organization identifier")
+    parser.add_argument("--project", default="proj_core", help="Project identifier")
+    parser.add_argument("--simulate", action="store_true", help="Simulate evolving task progress and token generation")
+
+    args = parser.parse_args()
+
+    daemon = FleetAgentDaemon(
+        workspace_root=REPO_ROOT,
+        org_id=args.org,
+        project_id=args.project
+    )
+
+    if args.status:
+        telemetry = daemon.collect_telemetry()
+        print("🖥️ Percipience Workstation Node Telemetry:")
+        print(f"   • Machine ID:      {telemetry.machine.machine_id}")
+        print(f"   • Hostname:        {telemetry.machine.hostname}")
+        print(f"   • OS:              {telemetry.machine.os_name} {telemetry.machine.os_version}")
+        print(f"   • User:            {telemetry.machine.user_id}")
+        print(f"   • Worktree:        {telemetry.workspace.active_worktree} (Branch: {telemetry.workspace.git_branch})")
+        print(f"   • Active Task:     {telemetry.task.task_name} ({telemetry.task.progress_pct:.1f}%)")
+        print(f"   • Tokens Saved:    {telemetry.finops.tokens_saved:,} tokens (${telemetry.finops.gross_savings_usd:.4f})")
+        return
+
+    if args.once:
+        success = daemon.transmit_telemetry(portal_url=args.portal, auth_token=args.token)
+        if success:
+            print(f"✅ Transmitted node telemetry from {daemon.get_machine_identity().machine_id} to {args.portal}")
+        else:
+            print(f"⚠️ Could not reach portal at {args.portal}. Cached telemetry locally.")
+        return
+
+    print(f"🚀 Starting Percipience Fleet Daemon for node {daemon.get_machine_identity().machine_id}...")
+    print(f"   Transmitting heartbeats every {args.interval}s to {args.portal}")
+
+    step = 0
+    sim_phases = [
+        ("AST Pruning & Token Slicing", "AST Optimization"),
+        ("Adversarial Invariant Fuzzing", "Running Fuzzer"),
+        ("Cross-Module Wire Verification", "Contract Testing"),
+        ("Merkle Epoch State Sealing", "Block Sealing")
+    ]
+    accumulated_tokens = 45000
+
+    try:
+        while True:
+            if args.simulate:
+                step += 1
+                phase_name, step_status = sim_phases[(step // 4) % len(sim_phases)]
+                pct = ((step % 10) * 10) + 10.0
+                accumulated_tokens += 15000
+                daemon.update_task_progress(
+                    task_id=f"sim_task_{daemon.get_machine_identity().machine_id}",
+                    task_name=phase_name,
+                    progress_pct=min(100.0, float(pct)),
+                    step_status=step_status,
+                    eta_seconds=max(0, 30 - (step % 10) * 3)
+                )
+                gross = (accumulated_tokens / 1000.0) * 0.003
+                daemon.get_token_finops = lambda: TokenFinOps(
+                    input_tokens=10000 + accumulated_tokens // 2,
+                    output_tokens=3000 + accumulated_tokens // 5,
+                    tokens_saved=accumulated_tokens,
+                    gross_savings_usd=round(gross, 4),
+                    net_savings_usd=round(gross * 0.85, 4),
+                    fee_usd=round(gross * 0.15, 4)
+                )
+                success = daemon.transmit_telemetry(portal_url=args.portal, auth_token=args.token)
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ⚡ Simulated telemetry: {phase_name} ({pct:.0f}%) | Tokens: {accumulated_tokens:,} | Sent: {success}")
+            else:
+                daemon.transmit_heartbeat(portal_url=args.portal, auth_token=args.token)
+            time.sleep(args.interval)
+    except KeyboardInterrupt:
+        print("\n🛑 Fleet daemon stopped cleanly.")
+
+
+if __name__ == "__main__":
+    main()

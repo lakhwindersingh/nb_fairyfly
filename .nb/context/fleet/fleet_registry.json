@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-10-07T16:47:59.554239+00:00",
+  "machines": {
+    "node_mac_lakhwinder": {
+      "machine_id": "node_mac_lakhwinder",
+      "hostname": "macbook-pro.local",
+      "os_name": "macOS",
+      "os_version": "Darwin 24.1.0",
+      "user_id": "lakhwinder",
+      "org_id": "org_enterprise",
+      "project_id": "proj_fairyfly",
+      "health_status": "HEALTHY",
+      "last_seen_utc": "2026-10-07T16:47:59.554224+00:00",
+      "workspace_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly",
+      "active_worktree": "wt_branch_worker_1",
+      "git_branch": "feature/dews-fleet",
+      "git_commit": "ce77d0d3c21c",
+      "uncommitted_changes": false,
+      "active_task": {
+        "task_id": "task_ast_pruning_01",
+        "task_name": "AST Pruning & Token Optimization",
+        "progress_pct": 85.0,
+        "step_status": "AST Skeletonization",
+        "eta_seconds": 15,
+        "is_stuck": false
+      },
+      "finops": {
+        "tokens_saved": 420000,
+        "gross_savings_usd": 1.26,
+        "net_savings_usd": 1.071,
+        "fee_usd": 0.189
+      }
+    },
+    "node_linux_ci_runner_01": {
+      "machine_id": "node_linux_ci_runner_01",
+      "hostname": "runner-eks-spot-04.corp",
+      "os_name": "Linux",
+      "os_version": "Debian 12 (bookworm)",
+      "user_id": "agent_runner",
+      "org_id": "org_enterprise",
+      "project_id": "proj_fairyfly",
+      "health_status": "HEALTHY",
+      "last_seen_utc": "2026-10-07T16:47:59.554224+00:00",
+      "workspace_path": "/workspace",
+      "active_worktree": "wt_branch_runner_01",
+      "git_branch": "main",
+      "git_commit": "ce77d0d3c21c",
+      "uncommitted_changes": false,
+      "active_task": {
+        "task_id": "task_fuzzer_02",
+        "task_name": "Adversarial Fuzzing Gate",
+        "progress_pct": 50.0,
+        "step_status": "Running Fuzzer",
+        "eta_seconds": 45,
+        "is_stuck": false
+      },
+      "finops": {
+        "tokens_saved": 980000,
+        "gross_savings_usd": 2.94,
+        "net_savings_usd": 2.499,
+        "fee_usd": 0.441
+      }
+    },
+    "node_dev_alice_win": {
+      "machine_id": "node_dev_alice_win",
+      "hostname": "alice-workstation.corp",
+      "os_name": "Windows",
+      "os_version": "10.0.22631",
+      "user_id": "alice",
+      "org_id": "org_enterprise",
+      "project_id": "proj_billing",
+      "health_status": "HEALTHY",
+      "last_seen_utc": "2026-10-07T16:47:59.554224+00:00",
+      "workspace_path": "C:\\dev\\nb_fairyfly",
+      "active_worktree": "wt_branch_alice",
+      "git_branch": "feat/stripe",
+      "git_commit": "8f3b2110c9a4",
+      "uncommitted_changes": true,
+      "active_task": {
+        "task_id": "task_review_03",
+        "task_name": "Contract Validation",
+        "progress_pct": 100.0,
+        "step_status": "Awaiting Review",
+        "eta_seconds": 0,
+        "is_stuck": false
+      },
+      "finops": {
+        "tokens_saved": 210000,
+        "gross_savings_usd": 0.63,
+        "net_savings_usd": 0.5355,
+        "fee_usd": 0.0945
+      }
+    }
+  },
+  "telemetry_history": {}
+}

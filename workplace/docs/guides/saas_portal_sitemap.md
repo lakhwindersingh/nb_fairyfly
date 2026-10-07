@@ -1,7 +1,7 @@
 # Percipience Cloud SaaS Portal Sitemap & Route Specifications
 
-> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md)  
-> **Server Implementation:** [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)  
+> **Governing Spec:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](/.nb/plan/master/parent-master-free-plan/detailed.md)  
+> **Server Implementation:** [`workplace/portal/server.py`](/workplace/portal/server.py)  
 > **Default Port:** `http://localhost:3000` (Local) / Container Port `3000` (`percipience-portal`)
 
 ---

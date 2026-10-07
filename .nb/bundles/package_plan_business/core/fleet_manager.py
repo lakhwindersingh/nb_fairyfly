@@ -371,3 +371,97 @@ class FleetManager:
                 task_entry["health_status"] = m["health_status"]
                 tasks.append(task_entry)
         return tasks
+
+    def simulate_pulse(
+        self,
+        machine_id: Optional[str] = None,
+        delta_tokens: int = 50000,
+        advance_task: bool = True
+    ) -> Dict[str, Any]:
+        """Simulates activity pulse for UI and integration testing."""
+        now = datetime.now(timezone.utc).isoformat()
+        if not self.machines:
+            self._seed_default_fleet()
+
+        target_id = machine_id
+        if not target_id:
+            for mid, m in self.machines.items():
+                if m.get("health_status") == "HEALTHY":
+                    target_id = mid
+                    break
+            if not target_id:
+                target_id = next(iter(self.machines.keys()), "node_docker_runner_01")
+
+        if target_id not in self.machines:
+            self.machines[target_id] = {
+                "machine_id": target_id,
+                "hostname": "docker-runner-swarm.local",
+                "os_name": "Linux",
+                "os_version": "Debian 12 (container)",
+                "user_id": "agent_runner",
+                "org_id": "org_enterprise",
+                "project_id": "proj_docker_swarm",
+                "health_status": "HEALTHY",
+                "last_seen_utc": now,
+                "workspace_path": "/workspace",
+                "active_worktree": "wt_container_01",
+                "git_branch": "feature/swarm-test",
+                "git_commit": "d0c4e1f7",
+                "uncommitted_changes": False,
+                "active_task": {
+                    "task_id": "task_swarm_01",
+                    "task_name": "Swarm Parallel AST Pruning",
+                    "progress_pct": 10.0,
+                    "step_status": "Analyzing Modules",
+                    "eta_seconds": 60,
+                    "is_stuck": False
+                },
+                "finops": {
+                    "tokens_saved": 0,
+                    "gross_savings_usd": 0.0,
+                    "net_savings_usd": 0.0,
+                    "fee_usd": 0.0
+                }
+            }
+
+        m = self.machines[target_id]
+        m["last_seen_utc"] = now
+        m["health_status"] = "HEALTHY"
+
+        tok = m["finops"].get("tokens_saved", 0) + delta_tokens
+        gross = round((tok / 1000.0) * 0.003, 4)
+        m["finops"]["tokens_saved"] = tok
+        m["finops"]["gross_savings_usd"] = gross
+        m["finops"]["net_savings_usd"] = round(gross * 0.85, 4)
+        m["finops"]["fee_usd"] = round(gross * 0.15, 4)
+
+        if advance_task and "active_task" in m:
+            curr_pct = m["active_task"].get("progress_pct", 0.0)
+            new_pct = curr_pct + 15.0
+            if new_pct > 100.0:
+                new_pct = 15.0
+                phases = ["AST Slicing", "Contract Verification", "Parallel Fuzzing", "Merkle Sealing"]
+                current_phase = m["active_task"].get("step_status", "")
+                idx = (phases.index(current_phase) + 1) % len(phases) if current_phase in phases else 0
+                m["active_task"]["step_status"] = phases[idx]
+            m["active_task"]["progress_pct"] = round(new_pct, 1)
+
+        self._save()
+        return {
+            "status": "SUCCESS",
+            "action": "SIMULATION_PULSE",
+            "machine_id": target_id,
+            "machine": m,
+            "finops_rollup": self.get_finops_rollup()
+        }
+
+    def reset_fleet(self) -> Dict[str, Any]:
+        """Resets fleet to standard baseline seeded state."""
+        self._seed_default_fleet()
+        self._save()
+        return {
+            "status": "SUCCESS",
+            "action": "RESET_BASELINE",
+            "machines_count": len(self.machines),
+            "finops_rollup": self.get_finops_rollup()
+        }

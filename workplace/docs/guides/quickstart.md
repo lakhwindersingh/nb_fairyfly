@@ -6,7 +6,7 @@ Get up and running with **Neutron Binary Percipience** in less than 90 seconds u
 
 ## 1. Local Docker Testing Harness (Recommended for Hermetic Validation)
 
-Percipience provides an isolated, multi-container Docker testing harness in [`workplace/infra/docker/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/) that spins up the SaaS Portal, the Tree-Sitter AST parsing daemon, and hermetic test runners with zero host pollution:
+Percipience provides an isolated, multi-container Docker testing harness in [`workplace/infra/docker/`](/workplace/infra/docker/) that spins up the SaaS Portal, the Tree-Sitter AST parsing daemon, and hermetic test runners with zero host pollution:
 
 ```bash
 # 1. Inspect environment and container readiness
@@ -25,7 +25,7 @@ Percipience provides an isolated, multi-container Docker testing harness in [`wo
 ./workplace/infra/docker/docker-test.sh down
 ```
 
-For complete details on container architecture, IPC endpoints, and volume mounts, see the [Docker Testing Guide](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/guides/docker_testing_guide.md).
+For complete details on container architecture, IPC endpoints, and volume mounts, see the [Docker Testing Guide](/workplace/docs/guides/docker_testing_guide.md).
 
 ---
 

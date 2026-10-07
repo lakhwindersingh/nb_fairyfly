@@ -2937,6 +2937,30 @@ percipience rollback \
         </p>
       </div>
 
+      <!-- Fleet & Docker Testing Harness Control Banner -->
+      <div style="background:var(--bg-card); padding:16px 20px; border-radius:10px; border:1px solid var(--cyan); margin:18px 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+        <div>
+          <div style="font-weight:700; font-size:15px; color:var(--cyan); display:flex; align-items:center; gap:8px;">
+            <span>⚡ Fleet &amp; Docker Testing Harness</span>
+            <span id="dockerStatusBadge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:2px 8px; border-radius:12px; font-weight:600;">Checking Docker...</span>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+            Test real-time node telemetry ingestion, task progression animation, and 15% revenue share FinOps rollup.
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+          <button onclick="triggerSimulateActivity(50000)" class="nav-btn" style="background:rgba(6,182,212,0.15); border:1px solid var(--cyan); color:var(--cyan); font-size:12px; font-weight:600; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            ⚡ Inject Pulse (+50k tokens)
+          </button>
+          <button onclick="triggerAdvanceMilestone()" class="nav-btn" style="background:rgba(16,185,129,0.15); border:1px solid var(--green); color:var(--green); font-size:12px; font-weight:600; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            ⏩ Advance Milestones (+15%)
+          </button>
+          <button onclick="triggerResetFleet()" class="nav-btn" style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.4); color:#f87171; font-size:12px; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            🔄 Reset Baseline
+          </button>
+        </div>
+      </div>
+
       <!-- KPI Summary Cards -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin:24px 0;">
         <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
@@ -3064,6 +3088,7 @@ percipience rollback \
     setInterval(fetchPortalTokenSavings, 5000);
 
     async function loadFleetTab() {
+      updateDockerStatusBadge();
       try {
         const [resMach, resFin, resTasks] = await Promise.all([
           fetch('/api/fleet/machines'),
@@ -3159,6 +3184,51 @@ percipience rollback \
         console.error("Fleet tab load error", e);
       }
     }
+
+    async function triggerSimulateActivity(tokens) {
+      try {
+        await fetch('/api/fleet/simulate?tokens=' + tokens, {method: 'POST'});
+        loadFleetTab();
+      } catch(e) { console.error(e); }
+    }
+    async function triggerAdvanceMilestone() {
+      try {
+        await fetch('/api/fleet/simulate?advance=true&tokens=15000', {method: 'POST'});
+        loadFleetTab();
+      } catch(e) { console.error(e); }
+    }
+    async function triggerResetFleet() {
+      if (!confirm('Reset fleet to standard baseline configuration?')) return;
+      try {
+        await fetch('/api/fleet/reset', {method: 'POST'});
+        loadFleetTab();
+      } catch(e) { console.error(e); }
+    }
+    async function updateDockerStatusBadge() {
+      try {
+        const res = await fetch('/api/fleet/docker-status');
+        if (res.ok) {
+          const data = await res.json();
+          const badge = document.getElementById('dockerStatusBadge');
+          if (badge) {
+            if (data.docker_running) {
+              const count = (data.containers || []).length;
+              badge.style.color = 'var(--green)';
+              badge.style.background = 'rgba(16,185,129,0.15)';
+              badge.innerText = `🐳 Docker Active (${count} containers)`;
+            } else if (data.docker_installed) {
+              badge.style.color = 'var(--amber)';
+              badge.style.background = 'rgba(245,158,11,0.15)';
+              badge.innerText = '🐳 Docker Daemon Idle';
+            } else {
+              badge.style.color = 'var(--muted)';
+              badge.innerText = 'Docker Not Detected';
+            }
+          }
+        }
+      } catch(e) {}
+    }
+
 
     function showTab(id) {
       if (!id) return;
@@ -5646,6 +5716,34 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"status": "SUCCESS", "count": len(tasks), "tasks": tasks})
             return
 
+        if parsed.path == "/api/fleet/docker-status":
+            import shutil, subprocess
+            docker_installed = shutil.which("docker") is not None
+            docker_running = False
+            containers = []
+            if docker_installed:
+                try:
+                    res = subprocess.run(["docker", "ps", "--format", "{{.Names}}|{{.Image}}|{{.Status}}"], capture_output=True, text=True, timeout=2)
+                    if res.returncode == 0:
+                        docker_running = True
+                        for line in res.stdout.strip().split("\n"):
+                            if line.strip():
+                                parts = line.split("|")
+                                containers.append({
+                                    "name": parts[0],
+                                    "image": parts[1] if len(parts) > 1 else "",
+                                    "status": parts[2] if len(parts) > 2 else ""
+                                })
+                except Exception:
+                    pass
+            self._send_json({
+                "status": "SUCCESS",
+                "docker_installed": docker_installed,
+                "docker_running": docker_running,
+                "containers": containers
+            })
+            return
+
         self._send_json({"error": "Not Found"}, 404)
 
     def do_POST(self):
@@ -5659,6 +5757,20 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/fleet/telemetry":
             data = self._read_json_body()
             res = GLOBAL_FLEET_MGR.ingest_telemetry(data)
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/fleet/simulate":
+            from urllib.parse import parse_qs
+            query_params = parse_qs(parsed.query)
+            advance = query_params.get("advance", ["true"])[0].lower() in ("true", "1")
+            delta_tokens = int(query_params.get("tokens", ["50000"])[0])
+            res = GLOBAL_FLEET_MGR.simulate_pulse(delta_tokens=delta_tokens, advance_task=advance)
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/fleet/reset":
+            res = GLOBAL_FLEET_MGR.reset_fleet()
             self._send_json(res)
             return
 

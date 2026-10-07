@@ -7,8 +7,8 @@
 > **Version**: 7.5-Autonomous-CICD-Model-Agnostic  
 > **Target Audience**: Chief Technology Officers, VP of Engineering, AI Platform Leads, FinOps Directors, DevSecOps Architects  
 > **Models & Systems Evaluated**: Anthropic Claude (3.7 Sonnet / 3.5 Sonnet / 3.5 Haiku), OpenAI (GPT-4o / GPT-4o-mini), Google Gemini (2.0 Pro / 2.0 Flash), Neutron Binary Percipience v7.5  
-> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/archive/old_structure/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) | [Autonomous CI/CD Engineering Roadmap](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md)  
-> **Live Observability Console**: [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html)  
+> **Governing Specifications**: [Play 3 Enterprise Context Engineering OS Plan](/.nb/plan/archive/old_structure/CEaasS/play_3_enterprise_context_engineering_os_plan.md) | [Parent Master Plan](/.nb/plan/master/parent-master-plan/detailed.md) | [Autonomous CI/CD Engineering Roadmap](/workplace/docs/reports/autonomous_cicd_roadmap.md)  
+> **Live Observability Console**: [`user/outputs/dashboard/index.html`](/user/outputs/dashboard/index.html)  
 
 ---
 
@@ -40,7 +40,7 @@ Percipience achieved:
 
 ## 1. Executive Summary & Key Benchmark Findings
 
-Across 250 standardized software engineering tasks executed on production codebases, combined with continuous live telemetry recorded in [`.nb/context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/token_savings_ledger.yaml) and verified via [`workplace/tests/test_play3_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_play3_suite.py), Percipience demonstrated transformative improvements across token consumption, inference cost, multi-agent stability, operational autonomy, and recovery speed.
+Across 250 standardized software engineering tasks executed on production codebases, combined with continuous live telemetry recorded in [`.nb/context/ledger/token_savings_ledger.yaml`](/.nb/context/ledger/token_savings_ledger.yaml) and verified via [`workplace/tests/test_play3_suite.py`](/workplace/tests/test_play3_suite.py), Percipience demonstrated transformative improvements across token consumption, inference cost, multi-agent stability, operational autonomy, and recovery speed.
 
 ### Summary Comparison Table: Baseline vs. Percipience
 
@@ -136,8 +136,8 @@ Every context modification, test outcome, agent registration, layer hydration, a
 
 ### 3.6. Sub-1.2s Surgical Module Rollback & Poisoning Defense ($\text{RP}_k$)
 If an agent introduces context poisoning (e.g., hardcoded secrets, cyclic dependencies, or broken wire contracts), the `PoisoningSentinel` intercepts the defect before commit:
-1. Offending code is quarantined into [`user/hitl/poisoning_quarantine.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/hitl/poisoning_quarantine.md).
-2. The engine executes surgical rollback via [`agentic/runtime/recovery/surgical_rollback_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/runtime/recovery/surgical_rollback_manager.py), rewinding solely the contaminated module to recovery point $\text{RP}_k$.
+1. Offending code is quarantined into [`user/hitl/poisoning_quarantine.md`](/user/hitl/poisoning_quarantine.md).
+2. The engine executes surgical rollback via [`agentic/runtime/recovery/surgical_rollback_manager.py`](/.nb/agentic/runtime/recovery/surgical_rollback_manager.py), rewinding solely the contaminated module to recovery point $\text{RP}_k$.
 3. Sibling modules (`mod_portal_marketing`, `mod_portal_admin`) continue executing with zero disruption.
 4. **Empirical Recovery Latency**: Completed in **< 1.2 seconds**, compared to 45+ minutes in manual git triage.
 
@@ -145,10 +145,10 @@ If an agent introduces context poisoning (e.g., hardcoded secrets, cyclic depend
 To keep the core operating system universal and generic, domain-specific extensions (such as Connected IoT/Mobile systems and Cloud SaaS Portals) are decoupled into layerable plans. Proprietary domain contracts and specialist agents are compiled into Ed25519-signed, AES-256 encrypted binary `.nbpack` envelopes (`.nb/bundles/`):
 - **Zero-Disk Plaintext Residue**: Consumed directly into an in-memory volatile RAM enclave (`MOUNTED_LAYERS`) via `./.nb/bin/percipience layer apply --in-memory-only`.
 - **Cryptographic State Continuity**: Automatically seals a new Merkle block (`LAYER_APPLIED:<plan_id>`) upon mounting.
-- **Custom Scaffolding**: Standardized templates in [`.nb/plan/templates/custom_domain_layer_template.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md) allow enterprises to create domain layers for FinTech, Healthcare, AI/ML, and Web3 systems.
+- **Custom Scaffolding**: Standardized templates in [`.nb/plan/templates/custom_domain_layer_template.md`](/.nb/plan/templates/custom_domain_layer_template.md) allow enterprises to create domain layers for FinTech, Healthcare, AI/ML, and Web3 systems.
 
 ### 3.8. The Autonomous CI/CD Triad: Beyond the Passive Gatekeeper
-Recognizing that enterprise agent swarms require continuous operations, Percipience introduces the **Autonomous CI/CD Triad** ([`.nb/core/autonomous_cicd.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/autonomous_cicd.py)), making delivery self-sustaining, self-recovering, and self-improving:
+Recognizing that enterprise agent swarms require continuous operations, Percipience introduces the **Autonomous CI/CD Triad** ([`.nb/core/autonomous_cicd.py`](/.nb/core/autonomous_cicd.py)), making delivery self-sustaining, self-recovering, and self-improving:
 
 ```mermaid
 graph TD
@@ -257,7 +257,7 @@ In benchmark runs simulating 10 concurrent subagents working simultaneously on t
 When synthetic context poisoning incidents (e.g., hallucinated external packages, invalid type contracts, secret leaks) were deliberately introduced:
 
 - **Baseline System**: 82% of poisoning incidents cascaded into downstream turns, burning an average of 48,000 additional tokens before failing completely. Recovery required manual human developer intervention (`git reset --hard`, manual file picking) averaging **45 minutes of downtime**.
-- **Percipience System**: 100% of poisoning incidents were intercepted by verification gates. Offending code was quarantined to [`user/hitl/poisoning_quarantine.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/hitl/poisoning_quarantine.md), and a surgical rollback of the single affected module executed in **1.14 seconds**, allowing sibling modules to continue without interruption.
+- **Percipience System**: 100% of poisoning incidents were intercepted by verification gates. Offending code was quarantined to [`user/hitl/poisoning_quarantine.md`](/user/hitl/poisoning_quarantine.md), and a surgical rollback of the single affected module executed in **1.14 seconds**, allowing sibling modules to continue without interruption.
 
 ---
 
@@ -277,7 +277,7 @@ To measure the operational impact of the Autonomous CI/CD Triad, we injected 40 
 
 ### 5.6. Live Production Workspace Ledger Telemetry & Empirical Scaling
 
-In addition to controlled benchmarks, Percipience continuously captures every live repository event into an append-only cryptographic ledger ([`.nb/context/ledger/token_savings_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/token_savings_ledger.yaml)). The live operational metrics from this active workspace validate the benchmark model:
+In addition to controlled benchmarks, Percipience continuously captures every live repository event into an append-only cryptographic ledger ([`.nb/context/ledger/token_savings_ledger.yaml`](/.nb/context/ledger/token_savings_ledger.yaml)). The live operational metrics from this active workspace validate the benchmark model:
 
 ```yaml
 version: 1.0.0
@@ -405,10 +405,10 @@ The transition from human-driven typing to agent-driven autonomous software engi
 By combining **Tree-Sitter structural AST pruning**, **byte-for-byte prompt-cache alignment**, **model-agnostic cognitive tiering**, **ephemeral Git worktree isolation**, **cryptographic Merkle state ledgers**, and the **Autonomous CI/CD Triad (Self-Sustaining, Self-Recovering, Self-Improving)**, Neutron Binary Percipience provides the first enterprise control plane that cuts context token consumption by **62.4%**, slashes inference spend by **71.8%**, eliminates CI queue bottlenecks, and guarantees deterministic governance in mission-critical software development.
 
 ### Next Steps & Further Reading
-- **Autonomous CI/CD Engineering Roadmap**: Read the complete 4-phase strategic specification in [`workplace/docs/reports/autonomous_cicd_roadmap.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/autonomous_cicd_roadmap.md).
-- **Interactive Observability Hub**: Open [`user/outputs/dashboard/index.html`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/outputs/dashboard/index.html) or run `./start_portal.sh 3000` to inspect the live control plane.
-- **Developer Guide**: Read [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md).
-- **Custom Domain Layer Template**: Build new domain extensions using [`.nb/plan/templates/custom_domain_layer_template.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md).
+- **Autonomous CI/CD Engineering Roadmap**: Read the complete 4-phase strategic specification in [`workplace/docs/reports/autonomous_cicd_roadmap.md`](/workplace/docs/reports/autonomous_cicd_roadmap.md).
+- **Interactive Observability Hub**: Open [`user/outputs/dashboard/index.html`](/user/outputs/dashboard/index.html) or run `./start_portal.sh 3000` to inspect the live control plane.
+- **Developer Guide**: Read [`HOWTO_WORKSPACE_GUIDE.md`](/HOWTO_WORKSPACE_GUIDE.md).
+- **Custom Domain Layer Template**: Build new domain extensions using [`.nb/plan/templates/custom_domain_layer_template.md`](/.nb/plan/templates/custom_domain_layer_template.md).
 - **Enterprise Contact**: To schedule a technical pilot or private VPC deployment, email `enterprise@neutronbinary.com`.
 
 ---

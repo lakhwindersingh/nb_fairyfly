@@ -2,9 +2,9 @@
 ## Enterprise Context Engineering OS & Autonomous CI/CD Gatekeeper vs. Industry Alternatives
 > **Document Status:** Production Architectural Analysis & Living Market Intelligence  
 > **Target Audience:** CTOs, VP of Engineering, Enterprise Architects, Principal FinOps Leads  
-> **Interactive Portal:** Tab 3 (`Comparatives`) in [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)  
-> **Core Component:** [`workplace/modules/mod_portal_marketing/components/competitive_matrix.ts`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_portal_marketing/components/competitive_matrix.ts)  
-> **Engineering Backlog & Gap Analysis:** [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md)  
+> **Interactive Portal:** Tab 3 (`Comparatives`) in [`workplace/portal/server.py`](/workplace/portal/server.py)  
+> **Core Component:** [`workplace/modules/mod_portal_marketing/components/competitive_matrix.ts`](/workplace/modules/mod_portal_marketing/components/competitive_matrix.ts)  
+> **Engineering Backlog & Gap Analysis:** [`TODO.md`](/TODO.md)  
 
 ---
 
@@ -180,7 +180,7 @@ graph TD
 
 ## 5. Competitive Gap Analysis & Roadmap Adoption (Where Alternatives Lead)
 
-While Percipience leads in context engineering, cryptographic governance, token FinOps, and closed-loop CI/CD remediation, industry alternatives hold specialized capabilities and mature ergonomics in four key areas. These items have been integrated into [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md#L182-L245) for engineering implementation:
+While Percipience leads in context engineering, cryptographic governance, token FinOps, and closed-loop CI/CD remediation, industry alternatives hold specialized capabilities and mature ergonomics in four key areas. These items have been integrated into [`TODO.md`](/TODO.md#L182-L245) for engineering implementation:
 
 ### 5.1. Observability, Distributed Traces & Evals (LangSmith / Arize Phoenix / Promptfoo)
 - **OpenTelemetry (OTel) GenAI Conventions**: LangSmith and Phoenix natively export OpenTelemetry spans with TTFT waterfalls and standardized `gen_ai.*` semantic attributes to Datadog/Jaeger. (*Backlog: `TODO-COMP-01`*)

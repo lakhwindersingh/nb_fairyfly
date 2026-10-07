@@ -1,8 +1,8 @@
 # Percipience Custom Agent Plugin Architecture & Healthy Integration Guide
 
 > **Standard:** Enterprise Autonomous CI/CD Plugin Specification  
-> **Schema:** [`agentic/templates/custom_agent_template.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/templates/custom_agent_template.yaml)  
-> **Engine:** [`.nb/core/agent_plugin_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_plugin_engine.py)  
+> **Schema:** [`agentic/templates/custom_agent_template.yaml`](/.nb/agentic/templates/custom_agent_template.yaml)  
+> **Engine:** [`.nb/core/agent_plugin_engine.py`](/.nb/core/agent_plugin_engine.py)  
 > **Control Plane Subcommand:** `./.nb/bin/percipience agent {create, integrate, run, rollback, list}`  
 
 ---
@@ -85,14 +85,14 @@ Custom agent plugins execute within the Section 17.1 Swarm Governance Framework:
 
 ## 5. Built-in Autonomous CI/CD Specialist Plugins
 
-The Percipience platform ships with five pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/):
+The Percipience platform ships with five pre-configured, production-ready specialist agent plugins located in [`agentic/custom/agents/`](/.nb/agentic/custom/agents/):
 
 | Agent Plugin ID | Manifest File | Cognitive Tier | Primary Responsibility |
 | :--- | :--- | :---: | :--- |
-| **`agent_flaky_test_detector`** | [`flaky_test_detector.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/flaky_test_detector.yaml) | **Tier B** | Multi-run stability analysis, quarantines non-deterministic tests into `user/hitl/flaky_quarantine.yaml` without halting CI. |
-| **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
-| **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
-| **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
-| **`agent_living_doc_architect`** | [`agent_living_doc_architect.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/agents/agent_living_doc_architect.yaml) | **Tier B** | Living documentation synthesizer; verifies and generates Mermaid architectural and sequence diagrams in `workplace/docs/`. |
+| **`agent_flaky_test_detector`** | [`flaky_test_detector.yaml`](/.nb/agentic/custom/agents/flaky_test_detector.yaml) | **Tier B** | Multi-run stability analysis, quarantines non-deterministic tests into `user/hitl/flaky_quarantine.yaml` without halting CI. |
+| **`agent_contract_compatibility_checker`** | [`contract_compatibility_checker.yaml`](/.nb/agentic/custom/agents/contract_compatibility_checker.yaml) | **Tier A** | SemVer evolution guard; diffs JSON/YAML wire contracts in `context/contracts/` to block breaking removals or mutations. |
+| **`agent_dependency_cve_sentinel`** | [`dependency_cve_sentinel.yaml`](/.nb/agentic/custom/agents/dependency_cve_sentinel.yaml) | **Tier B** | Supply-chain security; audits AST imports and manifests for known CVEs, typosquatting packages, and viral licenses. |
+| **`agent_doc_drift_synchronizer`** | [`doc_drift_synchronizer.yaml`](/.nb/agentic/custom/agents/doc_drift_synchronizer.yaml) | **Tier B** | Blueprint synchronization; verifies exported AST symbols against `.nb/plan/` specifications and flags doc drift. |
+| **`agent_living_doc_architect`** | [`agent_living_doc_architect.yaml`](/.nb/agentic/custom/agents/agent_living_doc_architect.yaml) | **Tier B** | Living documentation synthesizer; verifies and generates Mermaid architectural and sequence diagrams in `workplace/docs/`. |
 
-All specialist plugins are integrated into the 7-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/workflows/pr_gatekeeper.yaml).
+All specialist plugins are integrated into the 7-stage verification gatekeeper in [`agentic/workflows/pr_gatekeeper.yaml`](/.nb/agentic/workflows/pr_gatekeeper.yaml).

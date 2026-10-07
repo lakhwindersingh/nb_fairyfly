@@ -3,8 +3,8 @@
 > **RFC Status:** Draft / Under Review  
 > **Date:** 2026-10-06  
 > **Target Release:** Percipience Enterprise (Q4 2026 – Q1 2027)  
-> **Related Specifications:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md) (Section 17.1), [`workplace/infra/docker/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/)  
-> **Purpose:** Blueprint for deriving actionable items in [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md) to enable sandboxed single-container worktree derivation and distributed multi-container enterprise swarm fleets.
+> **Related Specifications:** [`.nb/plan/master/parent-master-free-plan/detailed.md`](../../../.nb/plan/master/parent-master-free-plan/detailed.md) (Section 17.1), [`workplace/infra/docker/`](../../infra/docker/)  
+> **Purpose:** Blueprint for deriving actionable items in [`TODO.md`](../../../TODO.md) to enable sandboxed single-container worktree derivation and distributed multi-container enterprise swarm fleets.
 
 ---
 
@@ -144,7 +144,7 @@ flowchart TD
 
 ## 4. Candidate TODO Items for Engineering Implementation
 
-Below are the drafted backlog items designed to be reviewed and incorporated into [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md):
+Below are the drafted backlog items designed to be reviewed and incorporated into [`TODO.md`](../../../TODO.md):
 
 ### `TODO-DEWS-01`: Docker Agent Runner Base Image & Tooling Manifest
 * **Component:** `workplace/infra/docker/Dockerfile.agent_runner`, `workplace/infra/docker/entrypoint_agent.sh`
@@ -190,5 +190,5 @@ Below are the drafted backlog items designed to be reviewed and incorporated int
 
 ## 5. Next Steps
 - [ ] Review RFC specifications and candidate backlog items.
-- [ ] Incorporate approved items (`TODO-DEWS-01` through `TODO-DEWS-08`) into [`TODO.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/TODO.md).
+- [ ] Incorporate approved items (`TODO-DEWS-01` through `TODO-DEWS-08`) into [`TODO.md`](../../../TODO.md).
 - [ ] Implement Phase 1: `Dockerfile.agent_runner` and local worktree executor (`TODO-DEWS-01`, `TODO-DEWS-02`).
