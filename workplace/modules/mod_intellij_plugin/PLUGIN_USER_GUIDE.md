@@ -43,6 +43,13 @@ The Control Plane panel dynamically detects your active billing tier (`tenant_li
 - **Token Pruning by Default (`READ_PRUNED_AST`)**: Automatically intercepts cross-plugin source read requests and returns token-pruned AST skeletons, preventing token exhaustion and exfiltration of internal implementations.
 - **Merkle Ledger WORM Protection**: Modifications to `.nb/context/ledger/` and invariant contracts are strictly blocked (`DENIED`).
 
+### 1.5 Autonomous Swarm & Distributed Fleet Governance
+- **Dynamic DAG Orchestration**: Topological wave progression with runtime subgoal expansion and parallel execution (`percipience swarm dag`).
+- **Self-Reflection Invariant Critic**: Zero-disk-write in-memory critique evaluating architecture, security, and schema invariants (`percipience swarm reflexion`).
+- **Multi-Model Consensus Quorum**: Cryptographically attested 2-of-3 model voting across Claude 3.5 Sonnet, GPT-4o, and Gemini 1.5 Pro (`percipience swarm consensus`).
+- **Capability-Based Access Control (CBAC)**: Issues cryptographically signed HMAC-SHA256 capability tokens restricting agent file, network, and execution bounds (`percipience swarm cbac`).
+- **Workstation & Node Fleet Monitoring**: Real-time heartbeat telemetry, node health, and FinOps revenue share distribution (15% platform rev-share fee / 85% customer net) (`percipience swarm fleet`).
+
 ---
 
 ## 🛠️ 2. User Interface & Controls
@@ -54,7 +61,8 @@ Located on the right-hand sidebar of the IDE:
 - **Tab 3: Capabilities**: In-depth documentation of PSI AST traversal, Merkle security, and tier tooling isolation.
 - **Tab 4: Agents & Flows**: Registry of active specialist agents and execution pipelines for the active tier.
 - **Tab 5: Terminal Agents & FinOps**: Interactive integration with Claude Code, Gemini CLI, and Aider with AST context generation.
-- **Tab 6: User Guide**: Quick commands, configuration tips, and shortcuts.
+- **Tab 6: Swarm & Fleet**: Multi-agent DAG waves, self-reflection critic, 2-of-3 model consensus, CBAC tokens, and distributed fleet monitoring.
+- **Tab 7: User Guide**: Quick commands, configuration tips, and shortcuts.
 
 ### Status Bar Widget
 Located on the bottom right of the IDE status bar:

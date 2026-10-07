@@ -63,60 +63,6 @@ contracts:
   version: 1.0.0
   status: VALID
 recovery_points:
-- id: RP_HO_ATTESTED_1791391017367
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T16:36:57.377168+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-- id: RP_HO_TODO_STAGE_01
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T16:36:58.412619+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-- id: RP_HO_TODO_STAGE_01
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T16:48:18.801890+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1791395104
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:04.907354+00:00'
-  status: VERIFIED
-  description: AGENT_REGISTERED (agent_test_perf_guard)
-- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1791395105
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:05.058939+00:00'
-  status: VERIFIED
-  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
-- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1791395108
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:08.822347+00:00'
-  status: VERIFIED
-  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
-- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1791395108
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:08.970614+00:00'
-  status: VERIFIED
-  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
-- id: RP_HEALED_MOD_PORTAL_MARKETING_1791395115
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:15.938534+00:00'
-  status: VERIFIED
-  description: DIAGNOSTIC_REPROMPT_HEAL_APPLIED (mod_portal_marketing)
-- id: RP_PLAY3_BOOTSTRAP_001
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-07T17:45:16.089702+00:00'
-  status: VERIFIED
-  description: SURGICAL_ROLLBACK_AFTER_FAILED_REPROMPT (mod_portal_marketing -> RP_PLAY3_BOOTSTRAP_001)
 - id: RP_HO_PR_STAGE_01
   module_scope: global_system
   git_commit: HEAD
@@ -189,207 +135,61 @@ recovery_points:
   timestamp: '2026-10-07T18:08:55.961025+00:00'
   status: VERIFIED
   description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1791405613
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:13.675521+00:00'
+  status: VERIFIED
+  description: AGENT_REGISTERED (agent_test_perf_guard)
+- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1791405613
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:13.882413+00:00'
+  status: VERIFIED
+  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1791405617
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:17.573001+00:00'
+  status: VERIFIED
+  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1791405617
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:17.730256+00:00'
+  status: VERIFIED
+  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_HEALED_MOD_PORTAL_MARKETING_1791405624
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:24.811525+00:00'
+  status: VERIFIED
+  description: DIAGNOSTIC_REPROMPT_HEAL_APPLIED (mod_portal_marketing)
+- id: RP_PLAY3_BOOTSTRAP_001
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:24.962146+00:00'
+  status: VERIFIED
+  description: SURGICAL_ROLLBACK_AFTER_FAILED_REPROMPT (mod_portal_marketing -> RP_PLAY3_BOOTSTRAP_001)
+- id: RP_HO_PR_STAGE_01
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:25.139820+00:00'
+  status: VERIFIED
+  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+- id: RP_HO_ATTESTED_1791405625306
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:25.320760+00:00'
+  status: VERIFIED
+  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+- id: RP_HO_TODO_STAGE_01
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-07T20:40:36.314360+00:00'
+  status: VERIFIED
+  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
 ledger_chain:
-- block_id: 2479
-  block_type: STATE_UPDATE
-  prev_block_hash: c97373adedac203ffd73c6930a0a08574afeeca5931efc3b03ffd7c9a0e28bde
-  timestamp: '2026-10-07T16:48:18.776093+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 9204d93e68645b7d123229610faddbfe80ac18eec34e307078ac14e63fe7bf18
-  action: AUTONOMOUS_PIPELINE_autocicd_20261007_164818
-  block_hash: 9204d93e68645b7d123229610faddbfe80ac18eec34e307078ac14e63fe7bf18
-- block_id: 2480
-  block_type: STATE_UPDATE
-  prev_block_hash: 9204d93e68645b7d123229610faddbfe80ac18eec34e307078ac14e63fe7bf18
-  timestamp: '2026-10-07T16:48:18.801890+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 18d5a894ce5bdb7de5f440c9ab9d0e527220ae83abb89d4306bbf1a0bbe1332d
-  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-  block_hash: 18d5a894ce5bdb7de5f440c9ab9d0e527220ae83abb89d4306bbf1a0bbe1332d
-- block_id: 2481
-  block_type: STATE_UPDATE
-  prev_block_hash: 18d5a894ce5bdb7de5f440c9ab9d0e527220ae83abb89d4306bbf1a0bbe1332d
-  timestamp: '2026-10-07T16:48:42.323317+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 533578489ecaa5fde5424ce15d6f37fc7328e4ed92b2687e7ce2624d0abd85d5
-  action: PR_GATE_VERIFICATION_PASSED
-  block_hash: 533578489ecaa5fde5424ce15d6f37fc7328e4ed92b2687e7ce2624d0abd85d5
-- block_id: 2482
-  block_type: STATE_UPDATE
-  prev_block_hash: 533578489ecaa5fde5424ce15d6f37fc7328e4ed92b2687e7ce2624d0abd85d5
-  timestamp: '2026-10-07T17:44:21.587082+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: c7db156676f5fa16ea83f7043cfc1a4195942bcc1adf9c267ed96a8ad9c7559f
-  action: PR_GATE_VERIFICATION_PASSED
-  block_hash: c7db156676f5fa16ea83f7043cfc1a4195942bcc1adf9c267ed96a8ad9c7559f
-- block_id: 2483
-  block_type: STATE_UPDATE
-  prev_block_hash: c7db156676f5fa16ea83f7043cfc1a4195942bcc1adf9c267ed96a8ad9c7559f
-  timestamp: '2026-10-07T17:45:04.089298+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: fb4cfb86cd0e3370813b40dceba3f4116df3633ec284a6586fdc366a1bc6951f
-  action: AUTONOMOUS_HEAL_MODULE_mod_portal_marketing
-  block_hash: fb4cfb86cd0e3370813b40dceba3f4116df3633ec284a6586fdc366a1bc6951f
-- block_id: 2484
-  block_type: STATE_UPDATE
-  prev_block_hash: fb4cfb86cd0e3370813b40dceba3f4116df3633ec284a6586fdc366a1bc6951f
-  timestamp: '2026-10-07T17:45:04.556616+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 274be0766039b846ebe668afd364eda8b1452dc378e399d651fc6a5b351911a1
-  action: AUTONOMOUS_HEAL_MODULE_global_system
-  block_hash: 274be0766039b846ebe668afd364eda8b1452dc378e399d651fc6a5b351911a1
-- block_id: 2485
-  block_type: STATE_UPDATE
-  prev_block_hash: 274be0766039b846ebe668afd364eda8b1452dc378e399d651fc6a5b351911a1
-  timestamp: '2026-10-07T17:45:04.755550+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 8a3096e6e54358d33597a279bcc249b435a2d03668bc878a9cf4a9d232efad26
-  action: AUTONOMOUS_PIPELINE_autocicd_20261007_174504
-  block_hash: 8a3096e6e54358d33597a279bcc249b435a2d03668bc878a9cf4a9d232efad26
-- block_id: 2486
-  block_type: STATE_UPDATE
-  prev_block_hash: 8a3096e6e54358d33597a279bcc249b435a2d03668bc878a9cf4a9d232efad26
-  timestamp: '2026-10-07T17:45:04.907354+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 8b1e3784238e3cea250addf1dac62fda5e293486be98d52f218fc61d8b6826b6
-  action: AGENT_REGISTERED (agent_test_perf_guard)
-  block_hash: 8b1e3784238e3cea250addf1dac62fda5e293486be98d52f218fc61d8b6826b6
-- block_id: 2487
-  block_type: STATE_UPDATE
-  prev_block_hash: 8b1e3784238e3cea250addf1dac62fda5e293486be98d52f218fc61d8b6826b6
-  timestamp: '2026-10-07T17:45:05.058939+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: e0aa7fd80ddf17fa52c4db9ae9e9a921b0cae587c4254de2e0554277e2d65746
-  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
-  block_hash: e0aa7fd80ddf17fa52c4db9ae9e9a921b0cae587c4254de2e0554277e2d65746
-- block_id: 2488
-  block_type: STATE_UPDATE
-  prev_block_hash: e0aa7fd80ddf17fa52c4db9ae9e9a921b0cae587c4254de2e0554277e2d65746
-  timestamp: '2026-10-07T17:45:08.822347+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 18109a49bed429cf71c7711f295088488d0918764b56cad589f07afb4c034b30
-  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
-  block_hash: 18109a49bed429cf71c7711f295088488d0918764b56cad589f07afb4c034b30
-- block_id: 2489
-  block_type: STATE_UPDATE
-  prev_block_hash: 18109a49bed429cf71c7711f295088488d0918764b56cad589f07afb4c034b30
-  timestamp: '2026-10-07T17:45:08.970614+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 297b494c4a74c0854aae0501a07cfa9f43ab8cfe1005e4b610c41d60bbd65dec
-  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
-  block_hash: 297b494c4a74c0854aae0501a07cfa9f43ab8cfe1005e4b610c41d60bbd65dec
-- block_id: 2490
-  block_type: STATE_UPDATE
-  prev_block_hash: 297b494c4a74c0854aae0501a07cfa9f43ab8cfe1005e4b610c41d60bbd65dec
-  timestamp: '2026-10-07T17:45:09.297424+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 31151fe4260c2930f16a72d9676c69a547376765dd360799e1943f0d239819e1
-  action: APPLIED_LAYER:detailed
-  block_hash: 31151fe4260c2930f16a72d9676c69a547376765dd360799e1943f0d239819e1
-- block_id: 2491
-  block_type: STATE_UPDATE
-  prev_block_hash: 31151fe4260c2930f16a72d9676c69a547376765dd360799e1943f0d239819e1
-  timestamp: '2026-10-07T17:45:15.938534+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 15f071c0107d296c650cd9d1fc10f388517e7b077ade858bba7a837b2f4aae26
-  action: DIAGNOSTIC_REPROMPT_HEAL_APPLIED (mod_portal_marketing)
-  block_hash: 15f071c0107d296c650cd9d1fc10f388517e7b077ade858bba7a837b2f4aae26
-- block_id: 2492
-  block_type: STATE_UPDATE
-  prev_block_hash: 15f071c0107d296c650cd9d1fc10f388517e7b077ade858bba7a837b2f4aae26
-  timestamp: '2026-10-07T17:45:16.089702+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: b975954ee20ba1f85e3581956690f64cc31e67987abe3e5e189eb809f8db3763
-  action: SURGICAL_ROLLBACK_AFTER_FAILED_REPROMPT (mod_portal_marketing -> RP_PLAY3_BOOTSTRAP_001)
-  block_hash: b975954ee20ba1f85e3581956690f64cc31e67987abe3e5e189eb809f8db3763
-- block_id: 2493
-  block_type: STATE_UPDATE
-  prev_block_hash: b975954ee20ba1f85e3581956690f64cc31e67987abe3e5e189eb809f8db3763
-  timestamp: '2026-10-07T17:45:16.269483+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: d0c8ec835bcc7028e03b61f362ca8025d41aaaccf3e40ec2dcb76ad7f16407d4
-  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-  block_hash: d0c8ec835bcc7028e03b61f362ca8025d41aaaccf3e40ec2dcb76ad7f16407d4
-- block_id: 2494
-  block_type: STATE_UPDATE
-  prev_block_hash: d0c8ec835bcc7028e03b61f362ca8025d41aaaccf3e40ec2dcb76ad7f16407d4
-  timestamp: '2026-10-07T17:45:16.456738+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 69b6f9d0acf14701f69d149faa5069d54d529e91732e2f9c159050e28b37abe7
-  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-  block_hash: 69b6f9d0acf14701f69d149faa5069d54d529e91732e2f9c159050e28b37abe7
-- block_id: 2495
-  block_type: STATE_UPDATE
-  prev_block_hash: 69b6f9d0acf14701f69d149faa5069d54d529e91732e2f9c159050e28b37abe7
-  timestamp: '2026-10-07T17:45:26.385711+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 9d30eb350682fe695e45149b82e8fce1f9f66374ad2b60b13521c2b39814dfde
-  action: AUTONOMOUS_HEAL_MODULE_mod_portal_marketing
-  block_hash: 9d30eb350682fe695e45149b82e8fce1f9f66374ad2b60b13521c2b39814dfde
-- block_id: 2496
-  block_type: STATE_UPDATE
-  prev_block_hash: 9d30eb350682fe695e45149b82e8fce1f9f66374ad2b60b13521c2b39814dfde
-  timestamp: '2026-10-07T17:45:26.639350+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: cd6be2289c683e39a9a7bcbcb10fc5ec255726e99f4d4fe4e314001d80825b9a
-  action: AUTONOMOUS_HEAL_MODULE_global_system
-  block_hash: cd6be2289c683e39a9a7bcbcb10fc5ec255726e99f4d4fe4e314001d80825b9a
-- block_id: 2497
-  block_type: STATE_UPDATE
-  prev_block_hash: cd6be2289c683e39a9a7bcbcb10fc5ec255726e99f4d4fe4e314001d80825b9a
-  timestamp: '2026-10-07T17:45:26.857012+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 1dd5d20f5fbc8f1e33af204830dd9b5630a82ee2d4e0b7092385fbaeb338d2c9
-  action: AUTONOMOUS_PIPELINE_autocicd_20261007_174526
-  block_hash: 1dd5d20f5fbc8f1e33af204830dd9b5630a82ee2d4e0b7092385fbaeb338d2c9
-- block_id: 2498
-  block_type: STATE_UPDATE
-  prev_block_hash: 1dd5d20f5fbc8f1e33af204830dd9b5630a82ee2d4e0b7092385fbaeb338d2c9
-  timestamp: '2026-10-07T17:45:27.011998+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: bffec69e4c7d3f2c586616eed456a8ad22dda8fe0577e0c736aa1750d01a8c13
-  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-  block_hash: bffec69e4c7d3f2c586616eed456a8ad22dda8fe0577e0c736aa1750d01a8c13
-- block_id: 2499
-  block_type: STATE_UPDATE
-  prev_block_hash: bffec69e4c7d3f2c586616eed456a8ad22dda8fe0577e0c736aa1750d01a8c13
-  timestamp: '2026-10-07T17:46:47.390466+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: f6239f6470944928776632014873b6a4351d1ed3a8e656b14dffd5023a1f3f6b
-  action: PR_GATE_VERIFICATION_PASSED
-  block_hash: f6239f6470944928776632014873b6a4351d1ed3a8e656b14dffd5023a1f3f6b
-- block_id: 2500
-  block_type: STATE_UPDATE
-  prev_block_hash: f6239f6470944928776632014873b6a4351d1ed3a8e656b14dffd5023a1f3f6b
-  timestamp: '2026-10-07T18:08:52.970545+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 0a09f1169c2baea4f656faac25d8790f65a10493ab10821d8a9e5946bb8823d4
-  action: AUTONOMOUS_HEAL_MODULE_mod_portal_marketing
-  block_hash: 0a09f1169c2baea4f656faac25d8790f65a10493ab10821d8a9e5946bb8823d4
-- block_id: 2501
-  block_type: STATE_UPDATE
-  prev_block_hash: 0a09f1169c2baea4f656faac25d8790f65a10493ab10821d8a9e5946bb8823d4
-  timestamp: '2026-10-07T18:08:53.122598+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 8555f062b7e2c957582f257f8a53c885ac4e3cfa61514bdbb8b35613b53d6b9f
-  action: AUTONOMOUS_HEAL_MODULE_global_system
-  block_hash: 8555f062b7e2c957582f257f8a53c885ac4e3cfa61514bdbb8b35613b53d6b9f
-- block_id: 2502
-  block_type: STATE_UPDATE
-  prev_block_hash: 8555f062b7e2c957582f257f8a53c885ac4e3cfa61514bdbb8b35613b53d6b9f
-  timestamp: '2026-10-07T18:08:53.198209+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: 65337d164987e616224ab5fabec34838d1ceb155fbc4e0b8218424f7734a270e
-  action: AUTONOMOUS_PIPELINE_autocicd_20261007_180853
-  block_hash: 65337d164987e616224ab5fabec34838d1ceb155fbc4e0b8218424f7734a270e
-- block_id: 2503
-  block_type: STATE_UPDATE
-  prev_block_hash: 65337d164987e616224ab5fabec34838d1ceb155fbc4e0b8218424f7734a270e
-  timestamp: '2026-10-07T18:08:53.251071+00:00'
-  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
-  current_block_hash: a234b313831d811d1914e7bc5f16c98526b5c37f433d34bd6dd64f27dcc95ce7
-  action: AGENT_REGISTERED (agent_test_perf_guard)
-  block_hash: a234b313831d811d1914e7bc5f16c98526b5c37f433d34bd6dd64f27dcc95ce7
 - block_id: 2504
   block_type: STATE_UPDATE
   prev_block_hash: a234b313831d811d1914e7bc5f16c98526b5c37f433d34bd6dd64f27dcc95ce7
@@ -502,6 +302,158 @@ ledger_chain:
   current_block_hash: b0781c0f209f700465c62ffecda241908060552646d3a1cdb13392e4f068b1f6
   action: PR_GATE_VERIFICATION_PASSED
   block_hash: b0781c0f209f700465c62ffecda241908060552646d3a1cdb13392e4f068b1f6
+- block_id: 2518
+  block_type: STATE_UPDATE
+  prev_block_hash: b0781c0f209f700465c62ffecda241908060552646d3a1cdb13392e4f068b1f6
+  timestamp: '2026-10-07T18:15:47.564783+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 6730b3ea509911d18ac8c6e4e62d40ad18f51bc6cfe139f3fcb7a52756570cf4
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 6730b3ea509911d18ac8c6e4e62d40ad18f51bc6cfe139f3fcb7a52756570cf4
+- block_id: 2519
+  block_type: STATE_UPDATE
+  prev_block_hash: 6730b3ea509911d18ac8c6e4e62d40ad18f51bc6cfe139f3fcb7a52756570cf4
+  timestamp: '2026-10-07T18:36:22.322802+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 912cfb210db2f54ea0bf4c1defb66ea9e5265e69048b0da83a9eadcb4861c482
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 912cfb210db2f54ea0bf4c1defb66ea9e5265e69048b0da83a9eadcb4861c482
+- block_id: 2520
+  block_type: STATE_UPDATE
+  prev_block_hash: 912cfb210db2f54ea0bf4c1defb66ea9e5265e69048b0da83a9eadcb4861c482
+  timestamp: '2026-10-07T19:00:38.381928+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: a3a50e6de4f4e1ea0a87a352a2d55333851c20f2331f9be9abb3ac094b81af7c
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: a3a50e6de4f4e1ea0a87a352a2d55333851c20f2331f9be9abb3ac094b81af7c
+- block_id: 2521
+  block_type: STATE_UPDATE
+  prev_block_hash: a3a50e6de4f4e1ea0a87a352a2d55333851c20f2331f9be9abb3ac094b81af7c
+  timestamp: '2026-10-07T20:40:12.385068+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: e98437ad6d0c6be636c7bf7ab2e667cce6f45f029f1924eb93a4c7390f98026c
+  action: AUTONOMOUS_HEAL_MODULE_mod_portal_marketing
+  block_hash: e98437ad6d0c6be636c7bf7ab2e667cce6f45f029f1924eb93a4c7390f98026c
+- block_id: 2522
+  block_type: STATE_UPDATE
+  prev_block_hash: e98437ad6d0c6be636c7bf7ab2e667cce6f45f029f1924eb93a4c7390f98026c
+  timestamp: '2026-10-07T20:40:12.966371+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 6cc6f6971e87815753472f54ded8f514457b0d4b9ed66269f263dbb2d9b28dc1
+  action: AUTONOMOUS_HEAL_MODULE_global_system
+  block_hash: 6cc6f6971e87815753472f54ded8f514457b0d4b9ed66269f263dbb2d9b28dc1
+- block_id: 2523
+  block_type: STATE_UPDATE
+  prev_block_hash: 6cc6f6971e87815753472f54ded8f514457b0d4b9ed66269f263dbb2d9b28dc1
+  timestamp: '2026-10-07T20:40:13.224483+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: cb01ac724e7aab9f777d3aeb6e04a4cde0b255d61950cf322e9928ee436f6c8b
+  action: AUTONOMOUS_PIPELINE_autocicd_20261007_204012
+  block_hash: cb01ac724e7aab9f777d3aeb6e04a4cde0b255d61950cf322e9928ee436f6c8b
+- block_id: 2524
+  block_type: STATE_UPDATE
+  prev_block_hash: cb01ac724e7aab9f777d3aeb6e04a4cde0b255d61950cf322e9928ee436f6c8b
+  timestamp: '2026-10-07T20:40:13.675521+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 861480d8ccf4db3f93ea35b111e27da295b18f660e4f80604567438976a4b143
+  action: AGENT_REGISTERED (agent_test_perf_guard)
+  block_hash: 861480d8ccf4db3f93ea35b111e27da295b18f660e4f80604567438976a4b143
+- block_id: 2525
+  block_type: STATE_UPDATE
+  prev_block_hash: 861480d8ccf4db3f93ea35b111e27da295b18f660e4f80604567438976a4b143
+  timestamp: '2026-10-07T20:40:13.882413+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 4fb90bbfd3f470f995e77446dff08529b99ff505a85a846212e10fa52c85a89c
+  action: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
+  block_hash: 4fb90bbfd3f470f995e77446dff08529b99ff505a85a846212e10fa52c85a89c
+- block_id: 2526
+  block_type: STATE_UPDATE
+  prev_block_hash: 4fb90bbfd3f470f995e77446dff08529b99ff505a85a846212e10fa52c85a89c
+  timestamp: '2026-10-07T20:40:17.573001+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 5e78b4ecdbdf67286048a4dfa763efe6076859f21bf581d21b4116a94284820c
+  action: AGENT_TASK_VERIFIED (agent_test_perf_guard)
+  block_hash: 5e78b4ecdbdf67286048a4dfa763efe6076859f21bf581d21b4116a94284820c
+- block_id: 2527
+  block_type: STATE_UPDATE
+  prev_block_hash: 5e78b4ecdbdf67286048a4dfa763efe6076859f21bf581d21b4116a94284820c
+  timestamp: '2026-10-07T20:40:17.730256+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 1fed89f76d49005bf2a2f3c2c8b66d6b104b205b9309a031ed94aa25c3efd21c
+  action: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
+  block_hash: 1fed89f76d49005bf2a2f3c2c8b66d6b104b205b9309a031ed94aa25c3efd21c
+- block_id: 2528
+  block_type: STATE_UPDATE
+  prev_block_hash: 1fed89f76d49005bf2a2f3c2c8b66d6b104b205b9309a031ed94aa25c3efd21c
+  timestamp: '2026-10-07T20:40:18.021736+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 09ebc8deb564d3326aff47866f5d5b7a462f0c219c77fb76df651f228c291d82
+  action: APPLIED_LAYER:detailed
+  block_hash: 09ebc8deb564d3326aff47866f5d5b7a462f0c219c77fb76df651f228c291d82
+- block_id: 2529
+  block_type: STATE_UPDATE
+  prev_block_hash: 09ebc8deb564d3326aff47866f5d5b7a462f0c219c77fb76df651f228c291d82
+  timestamp: '2026-10-07T20:40:24.811525+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: e69a1339e3b2c63c9592e185bebb2c06c090d3aefee4e53ec8c449077eb9e155
+  action: DIAGNOSTIC_REPROMPT_HEAL_APPLIED (mod_portal_marketing)
+  block_hash: e69a1339e3b2c63c9592e185bebb2c06c090d3aefee4e53ec8c449077eb9e155
+- block_id: 2530
+  block_type: STATE_UPDATE
+  prev_block_hash: e69a1339e3b2c63c9592e185bebb2c06c090d3aefee4e53ec8c449077eb9e155
+  timestamp: '2026-10-07T20:40:24.962146+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 1b7df07fc52ea7d0b13d892e2ec6481cca0f9e7318830a96e524f390c5bc15ae
+  action: SURGICAL_ROLLBACK_AFTER_FAILED_REPROMPT (mod_portal_marketing -> RP_PLAY3_BOOTSTRAP_001)
+  block_hash: 1b7df07fc52ea7d0b13d892e2ec6481cca0f9e7318830a96e524f390c5bc15ae
+- block_id: 2531
+  block_type: STATE_UPDATE
+  prev_block_hash: 1b7df07fc52ea7d0b13d892e2ec6481cca0f9e7318830a96e524f390c5bc15ae
+  timestamp: '2026-10-07T20:40:25.139820+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: a2686c73ae95ba7b44cc2f97c655759695088a65130cab7f6d1f9c69625a0867
+  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+  block_hash: a2686c73ae95ba7b44cc2f97c655759695088a65130cab7f6d1f9c69625a0867
+- block_id: 2532
+  block_type: STATE_UPDATE
+  prev_block_hash: a2686c73ae95ba7b44cc2f97c655759695088a65130cab7f6d1f9c69625a0867
+  timestamp: '2026-10-07T20:40:25.320760+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 4df8e7f0dd574fb7888b1333a333b4c45f88a7b878d96ec77b683a9fbe19e28a
+  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+  block_hash: 4df8e7f0dd574fb7888b1333a333b4c45f88a7b878d96ec77b683a9fbe19e28a
+- block_id: 2533
+  block_type: STATE_UPDATE
+  prev_block_hash: 4df8e7f0dd574fb7888b1333a333b4c45f88a7b878d96ec77b683a9fbe19e28a
+  timestamp: '2026-10-07T20:40:35.706648+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: af2b38af892f559f977ddf8e7d78000c0ca91dc14eb6e23829b7d8e457b46f28
+  action: AUTONOMOUS_HEAL_MODULE_mod_portal_marketing
+  block_hash: af2b38af892f559f977ddf8e7d78000c0ca91dc14eb6e23829b7d8e457b46f28
+- block_id: 2534
+  block_type: STATE_UPDATE
+  prev_block_hash: af2b38af892f559f977ddf8e7d78000c0ca91dc14eb6e23829b7d8e457b46f28
+  timestamp: '2026-10-07T20:40:35.960316+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: c2797d3a18a62519115d42f4aaef12bfe1b49e148ed9e73572a2a859bbf3d5ba
+  action: AUTONOMOUS_HEAL_MODULE_global_system
+  block_hash: c2797d3a18a62519115d42f4aaef12bfe1b49e148ed9e73572a2a859bbf3d5ba
+- block_id: 2535
+  block_type: STATE_UPDATE
+  prev_block_hash: c2797d3a18a62519115d42f4aaef12bfe1b49e148ed9e73572a2a859bbf3d5ba
+  timestamp: '2026-10-07T20:40:36.161506+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: 3bd34f06a0810f88b96d6b72cabae58dbb12f791d741f3cf392b0fcfb00c6ef5
+  action: AUTONOMOUS_PIPELINE_autocicd_20261007_204035
+  block_hash: 3bd34f06a0810f88b96d6b72cabae58dbb12f791d741f3cf392b0fcfb00c6ef5
+- block_id: 2536
+  block_type: STATE_UPDATE
+  prev_block_hash: 3bd34f06a0810f88b96d6b72cabae58dbb12f791d741f3cf392b0fcfb00c6ef5
+  timestamp: '2026-10-07T20:40:36.314360+00:00'
+  merkle_root: 113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d
+  current_block_hash: c32909931132a93e3c8538834788e831b24c9e092f90a1579606b8a16bd87331
+  action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+  block_hash: c32909931132a93e3c8538834788e831b24c9e092f90a1579606b8a16bd87331
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
@@ -551,7 +503,7 @@ applied_layers:
   status: ACTIVE
 - layer_id: detailed
   bundle_file: test_saas_layer.nbpack
-  bundle_sha256: 397c4163a694f08ee31e254bc5a414f2e3cace0c738af83e9b54535693a68759
+  bundle_sha256: 4486e8b8779afda6e1bd84078b2937327cca4e380c0f43c4014f834f3f116f1f
   storage_mode: RAM_ENCLAVE
   components_count: 68
   status: ACTIVE
@@ -1210,6 +1162,12 @@ epoch_rollups:
   block_count: 25
   epoch_rollup_hash: 99fad8148a5f799780520dd5320869ee6437ed6a604d32106a82f68aa6cba260
   archive_path: .nb/context/ledger/archive/epoch_2454_2478.json
+- epoch_id: epoch_2479_2503
+  start_block_id: 2479
+  end_block_id: 2503
+  block_count: 25
+  epoch_rollup_hash: 6a8f2f24d51a5d0cb61be9b7c2864a7566cbdce5a1b2d0630529118ed6fc0f7b
+  archive_path: .nb/context/ledger/archive/epoch_2479_2503.json
 living_docs:
   engine_enabled: true
   docs_root: workplace/docs/
