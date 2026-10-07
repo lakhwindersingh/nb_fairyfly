@@ -98,6 +98,7 @@ DocDriftSynchronizer = _load_engine("doc_drift_synchronizer", ["DocDriftSynchron
 LivingDocEngine = _load_engine("living_doc_engine", ["LivingDocEngine"])
 WORMEgressManager = _load_engine("worm_egress", ["WORMEgressManager"])
 TreeSitterDaemonClient = _load_engine("tree_sitter_daemon", ["TreeSitterDaemonClient"])
+(ContainerPlanExecutor, PlanExecutionRequest) = _load_engine("container_plan_executor", ["ContainerPlanExecutor", "PlanExecutionRequest"])
 DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePromptEngine"])
 (TokenOptimizationConfig, UnifiedTokenOptimizer) = _load_engine(
     "token_optimizer_suite",
@@ -973,6 +974,34 @@ def cmd_swarm(args):
         print("   Authority Tiers Active: Orchestrator, DomainArchitect, SpecialistWorker, GatekeeperSentinel")
         print("   Rogue Dynamic Subagents Detected: 0 (All processes verified in DAG)")
         print("✅ Swarm integrity verified: No shadow processes or lease leaks.")
+    elif action == "exec":
+        _require_engine(ContainerPlanExecutor, "container_plan_executor", "swarm exec", "Business / Enterprise")
+        print("🚀 Initializing Sandboxed Container Plan Derivation...")
+        print(f"   Plan:           {args.plan}")
+        print(f"   Agent ID:       {args.agent_id}")
+        print(f"   Target Module:  {args.target_module}")
+        print(f"   LLM CLI:        {args.llm}")
+        print(f"   Mock Mode:      {args.mock}")
+        executor = ContainerPlanExecutor(workspace_root=REPO_ROOT, mock_mode=args.mock)
+        req = PlanExecutionRequest(
+            plan_path=args.plan,
+            agent_id=args.agent_id,
+            target_module=args.target_module,
+            prompt=args.prompt,
+            llm_cli=args.llm,
+            ttl_seconds=args.ttl,
+            run_gatekeeper=not args.no_gate
+        )
+        receipt = executor.execute(req)
+        if receipt.status == "SUCCESS":
+            print(f"✅ Containerized plan execution succeeded in {receipt.duration_ms:.1f}ms!")
+            print(f"   Worktree: {receipt.worktree_path}")
+            print(f"   Branch:   {receipt.branch}")
+            print(f"   Gate:     {'PASSED' if receipt.gatekeeper_passed else 'SKIPPED'}")
+        else:
+            print(f"❌ Containerized plan execution failed: {receipt.error_message or 'Non-zero exit code'}")
+            print(f"   Exit code: {receipt.exit_code}")
+            sys.exit(receipt.exit_code or 1)
 
 
 
@@ -1362,6 +1391,15 @@ def main():
     p_swarm = subparsers.add_parser("swarm", help="Audit multi-agent swarm leases and handover governance")
     p_swarm_subs = p_swarm.add_subparsers(dest="swarm_action", required=True)
     p_sw_aud = p_swarm_subs.add_parser("audit", help="Audit active swarm leases, depths and rogue spawns")
+    p_sw_exec = p_swarm_subs.add_parser("exec", help="Execute plan-to-code derivation in sandboxed container worktree")
+    p_sw_exec.add_argument("--plan", required=True, help="Path to .nb/plan/ specification")
+    p_sw_exec.add_argument("--agent-id", default="agent_worker", help="Unique agent identifier")
+    p_sw_exec.add_argument("--target-module", default="workplace", help="Target module to modify")
+    p_sw_exec.add_argument("--prompt", required=True, help="Prompt or task instructions for LLM CLI")
+    p_sw_exec.add_argument("--llm", default="claude", choices=["claude", "aider", "gemini", "custom"], help="LLM CLI to invoke")
+    p_sw_exec.add_argument("--ttl", type=int, default=3600, help="Worktree lease TTL in seconds")
+    p_sw_exec.add_argument("--no-gate", action="store_true", help="Skip gatekeeper verification")
+    p_sw_exec.add_argument("--mock", action="store_true", help="Run in mock/simulation mode")
     p_swarm.set_defaults(func=cmd_swarm)
 
     # validate

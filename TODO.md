@@ -40,6 +40,7 @@
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
 | **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] PLANNED** | **0.50** |
+| **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.70** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
 
@@ -718,3 +719,45 @@
   - *Identified Issue*: Need for unified test coverage reporting directly from the CLI.
   - *Implementation Scope*: Add `--coverage` flag to `percipience test` generating terminal summary tables and HTML coverage artifacts.
 
+---
+
+## 21. Distributed Ephemeral Worktree Swarms & Sandboxed Plan Derivation (DEWS) (`CAP-48` to `CAP-52`)
+
+> **Governing RFC**: [`workplace/docs/proposals/rfc_containerized_worktree_swarms.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/proposals/rfc_containerized_worktree_swarms.md)  
+> **Core Objective**: Enable sandboxed single-container worktree plan execution via LLM CLIs (Claude, Aider) and scale to distributed multi-container enterprise swarm fleets with zero-cloud-clutter Git bundle transport, topological 3-way consolidation, and verified local delivery.
+
+### 21.1. Phase 1: Sandboxed Plan Derivation in Local Worktree Container
+- [x] **TODO-DEWS-01: Docker Agent Runner Base Image & Tooling Manifest (P1)**:
+  - *Identified Requirement*: Standardized, hardened multi-runtime Docker image equipped with Python 3.11, Node.js 20, Git, jq, curl, `@anthropic-ai/claude-code`, and `aider-chat`. Include non-root execution permissions, global git identity defaults, and dynamic safe-directory configuration.
+  - *Target Files*: [`workplace/infra/docker/Dockerfile.agent_runner`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/Dockerfile.agent_runner), [`workplace/infra/docker/entrypoint_agent.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/entrypoint_agent.sh), [`workplace/infra/docker/docker-compose.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-compose.yml), [`workplace/infra/docker/docker-test.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-test.sh)
+  - *Acceptance Criteria*: Image builds cleanly; `claude --version` (2.1.197), `node --version` (v20.20.2), `python3 --version` (3.11.17) execute successfully inside container; non-root user `agent` (UID 1000) cannot access root filesystem; safe.directory properly initialized.
+- [x] **TODO-DEWS-02: Containerized Plan-to-Code Executor Engine (P1)**:
+  - *Identified Requirement*: Execution harness that takes an `.nb/plan/` path and target module, acquires an ephemeral worktree via `WorktreeEngine.acquire()`, mounts the worktree into `percipience/agent-runner`, and drives the LLM CLI in headless mode (`-p` / `--print`) to implement the specification.
+  - *Target Files*: [`.nb/core/container_plan_executor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/container_plan_executor.py), [`workplace/core/container_plan_executor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/container_plan_executor.py), CLI subcommand in [`.nb/bin/percipience`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/bin/percipience) (`swarm exec`), [`workplace/tests/test_container_plan_executor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_container_plan_executor.py)
+  - *Acceptance Criteria*: Automatically mounts worktree without `.git` pointer breakage via automatic `gitdir` pointer translation and rollback; passes invariant context and plan; executes simulation/live LLM inside container; cleans up worktree lease upon exit; verified by 6 passing unit/integration tests and CLI execution.
+
+### 21.2. Phase 2: Distributed Multi-Container Swarm Fleet & Transport
+- [ ] **TODO-DEWS-03: Streaming Git Bundle Transport Module (P1)**:
+  - *Identified Requirement*: Cryptographic packaging and extraction of Git commits and uncommitted diffs using `git bundle create` and `git bundle verify`. Provide streaming HTTP upload/download adapters to transmit state between developer workstations and remote fleets without polluting remote Git branches.
+  - *Target Files*: `.nb/core/git_bundle_transport.py`, `workplace/core/git_bundle_transport.py`
+  - *Acceptance Criteria*: Round-trip test: local uncommitted branch -> bundle -> remote extraction -> remote commit -> result bundle -> local merge passes with 100% hash parity.
+- [ ] **TODO-DEWS-04: Enterprise Swarm Fleet Dispatch API & Endpoints (P1)**:
+  - *Identified Requirement*: REST endpoints under `/api/swarm/fleet/*` (`POST /api/swarm/fleet/dispatch`, `GET /api/swarm/fleet/jobs/{job_id}`, `GET /api/swarm/fleet/jobs/{job_id}/bundle`) supporting asynchronous task ingestion, worker allocation, and streaming results.
+  - *Target Files*: `workplace/portal/server.py`, `.nb/core/swarm_fleet_dispatcher.py`
+  - *Acceptance Criteria*: Authenticated multipart upload accepts bundles; returns task execution receipt; provides live WebSocket / SSE job status updates.
+- [ ] **TODO-DEWS-05: Distributed Worktree Coordinator with Live Redis 7.x Redlock (P1)**:
+  - *Identified Requirement*: Enhance `RedisRedlockBackend` in `workplace/core/worktree_engine.py` with real `redis-py` connection pooling, distributed lease renewal heartbeats, and cluster quorum verification for multi-node deployments.
+  - *Target Files*: `.nb/core/worktree_engine.py`, `workplace/core/worktree_engine.py`
+  - *Acceptance Criteria*: Concurrent worktree requests across 5 containers correctly serialize; dead container lease auto-evicts within TTL window.
+- [ ] **TODO-DEWS-06: Topological Consolidation & 3-Way Merge Agent Plugin (P1)**:
+  - *Identified Requirement*: Specialist agent that takes $N$ completed worker branches, performs topological 3-way merges into an integration worktree, verifies wire contracts, and resolves non-conflicting seam differences before triggering the PR Gatekeeper.
+  - *Target Files*: `.nb/agentic/custom/agents/agent_consolidation_synthesizer.yaml`, `.nb/core/consolidation_synthesizer.py`
+  - *Acceptance Criteria*: Merges 3 disjoint module branches with 0 human intervention; rejects breaking contract divergences with actionable diagnostics.
+- [ ] **TODO-DEWS-07: Percipience CLI Remote Dispatch Subcommand (P1)**:
+  - *Identified Requirement*: Add `./.nb/bin/percipience swarm dispatch --remote <fleet-url> --plan <path> --sync-back <target-wt>` to wrap bundle creation, API dispatch, progress polling, and local unbundle checkout into a seamless developer command.
+  - *Target Files*: `.nb/bundles/package_plan_business/bin/percipience`, `.nb/bin/percipience`
+  - *Acceptance Criteria*: Single CLI command dispatches local plan, displays live remote container wave progress in terminal, and checks out verified code locally.
+- [ ] **TODO-DEWS-08: Portal Fleet Telemetry & Swarm Dashboard Tab (P2)**:
+  - *Identified Requirement*: Live Fleet Monitoring UI in the Portal displaying active worker container slots, Redis Redlock leases, active wave DAG executions, and cumulative FinOps token burn.
+  - *Target Files*: `workplace/portal/server.py` (`#swarm-fleet`)
+  - *Acceptance Criteria*: Live visual dashboard updating every 2s via `/api/swarm/fleet/status`; shows per-worker CPU/memory/token metrics.

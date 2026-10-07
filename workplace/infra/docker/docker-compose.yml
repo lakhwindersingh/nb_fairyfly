@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   tree-sitter-daemon:
     build:
@@ -58,6 +56,19 @@ services:
         condition: service_healthy
     profiles:
       - test
+    networks:
+      - percipience-net
+
+  agent-runner:
+    build:
+      context: ../../../
+      dockerfile: workplace/infra/docker/Dockerfile.agent_runner
+    image: percipience/agent-runner:latest
+    container_name: percipience-agent-runner
+    environment:
+      - PERCIPIENCE_DAEMON_URL=http://tree-sitter-daemon:8585
+    profiles:
+      - agent
     networks:
       - percipience-net
 

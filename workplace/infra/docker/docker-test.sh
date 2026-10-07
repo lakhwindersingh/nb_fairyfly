@@ -18,7 +18,8 @@ usage() {
   echo "Usage: $0 [command]"
   echo ""
   echo "Available commands:"
-  echo "  build         Build all Docker images (portal, tree-sitter-daemon, test-runner)"
+  echo "  build         Build all core Docker images (portal, tree-sitter-daemon, test-runner)"
+  echo "  build-runner  Build isolated agent-runner image (Dockerfile.agent_runner)"
   echo "  up            Start portal & tree-sitter daemon detached and wait for healthy state"
   echo "  down          Stop and remove containers and local networks"
   echo "  status        Check health status of running services"
@@ -27,6 +28,7 @@ usage() {
   echo "  gate          Execute 7-stage CI/CD gatekeeper (./.nb/bin/percipience gate) in container"
   echo "  logs          Follow live container logs"
   echo "  shell         Open interactive bash shell in test-runner container"
+  echo "  shell-runner  Open interactive bash shell in agent-runner container"
   echo ""
   exit 1
 }
@@ -36,9 +38,16 @@ CMD="${1:-}"
 case "$CMD" in
   build)
     print_header
-    echo "📦 Building all Percipience container images..."
-    docker compose -f "$COMPOSE_FILE" build
+    echo "📦 Building core Percipience container images..."
+    docker compose -f "$COMPOSE_FILE" build tree-sitter-daemon portal test-runner
     echo "✅ Build completed successfully."
+    ;;
+
+  build-runner)
+    print_header
+    echo "🤖 Building sandboxed agent-runner image..."
+    docker compose -f "$COMPOSE_FILE" build agent-runner
+    echo "✅ Agent runner build completed successfully."
     ;;
 
   up)
@@ -109,6 +118,12 @@ case "$CMD" in
     print_header
     echo "🐚 Opening shell inside test-runner container..."
     docker compose -f "$COMPOSE_FILE" run --rm --entrypoint /bin/bash test-runner
+    ;;
+
+  shell-runner)
+    print_header
+    echo "🤖 Opening shell inside agent-runner container..."
+    docker compose -f "$COMPOSE_FILE" run --rm --entrypoint /bin/bash agent-runner
     ;;
 
   *)

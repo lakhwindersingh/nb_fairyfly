@@ -6,6 +6,7 @@ and JetBrains IDE Plugin Terminal Customization.
 
 import os
 import sys
+import time
 import unittest
 import tempfile
 from pathlib import Path
@@ -86,6 +87,7 @@ class TestTerminalAgentASTIntegration(unittest.TestCase):
         self.assertEqual(wrapped["agent_cmd"], "claude")
         self.assertEqual(wrapped["format"], "claude-code")
         self.assertTrue(Path(wrapped["context_file"]).exists())
+        self.assertTrue(Path(wrapped["canonical_context_file"]).exists())
         self.assertIn("PERCIPIENCE_TERMINAL_MODE", wrapped["env"])
         self.assertIn("PERCIPIENCE_AST_COMPRESSION", wrapped["env"])
         self.assertIn("CLAUDE_CODE_PROMPT_PREFIX", wrapped["env"])
@@ -98,6 +100,7 @@ class TestTerminalAgentASTIntegration(unittest.TestCase):
         self.assertIn("gemini()", zsh_hook)
         self.assertIn("aider()", zsh_hook)
         self.assertIn("PERCIPIENCE_TERMINAL_MODE=1", zsh_hook)
+        self.assertIn(".nb/context/percipience_claude_context.md", zsh_hook)
 
     def test_06_terminal_finops_summary(self):
         """Validates terminal FinOps metrics aggregation."""
@@ -115,6 +118,58 @@ class TestTerminalAgentASTIntegration(unittest.TestCase):
         self.assertIn("agent_terminal_mode_specialist", text)
         self.assertIn("Terminal Mode Agent Interceptor", text)
         self.assertIn("export_ast_context", text)
+
+    def test_08_canonical_nb_context_relocation(self):
+        """Validates relocation of percipience context into .nb/context/ and root symlink resolution."""
+        canonical_p = TerminalAgentASTProxy.get_canonical_output_path(self.repo_root, "claude-code")
+        self.assertEqual(canonical_p, (self.repo_root / ".nb" / "context" / "percipience_claude_context.md").resolve())
+        self.assertTrue(canonical_p.exists(), ".nb/context/percipience_claude_context.md must exist")
+
+        # Root symlink validation
+        root_symlink = self.repo_root / ".percipience_claude_context.md"
+        self.assertTrue(root_symlink.exists(), "Root symlink or file must resolve")
+        self.assertEqual(root_symlink.resolve(), canonical_p)
+
+    def test_09_context_freshness_and_cache(self):
+        """Validates staleness check and cache short-circuiting."""
+        # Export should ensure context is up to date
+        save_res = TerminalAgentASTProxy.export_and_save_context(self.repo_root, format_type="claude-code")
+        self.assertIn(save_res["status"], ["UP_TO_DATE", "EXPORTED"])
+
+        # Second call without force should return UP_TO_DATE
+        cached_res = TerminalAgentASTProxy.export_and_save_context(self.repo_root, format_type="claude-code", force=False)
+        self.assertEqual(cached_res["status"], "UP_TO_DATE")
+        self.assertFalse(cached_res["stale"])
+
+        # Forced call should refresh
+        forced_res = TerminalAgentASTProxy.export_and_save_context(self.repo_root, format_type="claude-code", force=True)
+        self.assertEqual(forced_res["status"], "EXPORTED")
+        self.assertTrue(forced_res["stale"])
+
+    def test_10_async_context_export_and_debouncing(self):
+        """Validates asynchronous non-blocking context synchronization."""
+        t0 = time.time()
+        async_res = TerminalAgentASTProxy.trigger_async_context_export(
+            workspace_root=self.repo_root,
+            format_type="claude-code",
+            debounce_seconds=0.1
+        )
+        elapsed = time.time() - t0
+        # Must return immediately (< 50ms)
+        self.assertLess(elapsed, 0.05)
+        self.assertEqual(async_res["status"], "QUEUED_ASYNC")
+
+    def test_11_claude_code_memory_and_slash_commands(self):
+        """Validates .claude/CLAUDE.md guidelines and custom slash commands."""
+        claude_md = self.repo_root / ".claude" / "CLAUDE.md"
+        self.assertTrue(claude_md.exists(), ".claude/CLAUDE.md must exist")
+        text = claude_md.read_text(encoding="utf-8")
+        self.assertIn(".nb/context/percipience_claude_context.md", text)
+
+        cmd_file = self.repo_root / ".claude" / "commands" / "refresh-context.md"
+        self.assertTrue(cmd_file.exists(), "refresh-context.md slash command must exist")
+        cmd_text = cmd_file.read_text(encoding="utf-8")
+        self.assertIn("percipience context sync", cmd_text)
 
 
 if __name__ == "__main__":
