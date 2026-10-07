@@ -97,6 +97,8 @@ from core.self_reflection_engine import SelfReflectionEngine, ReflexionVerificat
 from core.agent_memory_engine import AgentMemoryEngine
 from core.tool_contract_validator import ToolContractValidator
 from core.agent_capability_guard import AgentCapabilityGuard
+from core.fleet_agent import FleetAgentDaemon, MachineIdentity, WorkspaceTelemetry, TaskProgress, TokenFinOps, HeartbeatPayload, NodeTelemetry
+from core.fleet_manager import FleetManager
 
 
 class TestSection01WorktreeEngine(unittest.TestCase):
@@ -920,6 +922,91 @@ class TestSection18MultiTenantProjectProvisioning(unittest.TestCase):
         policy = pm.get_policy("t_1", "p_1")
         self.assertIsNotNone(policy)
         self.assertGreater(policy.attention.ast_codebase_pct, 0)
+
+    def test_fleet_agent_daemon_telemetry(self):
+        """Tests TODO-PRT-06: FleetAgentDaemon identity, worktree introspection, task state, and FinOps."""
+        agent = FleetAgentDaemon(
+            workspace_root=self.ws_root,
+            org_id="tenant_omega",
+            project_id="proj_alpha",
+            machine_id="test_node_01"
+        )
+        identity = agent.get_machine_identity()
+        self.assertEqual(identity.machine_id, "test_node_01")
+        self.assertTrue(len(identity.hostname) > 0)
+        self.assertEqual(identity.agent_version, "1.0.0")
+
+        wt = agent.get_workspace_telemetry()
+        self.assertEqual(wt.workspace_path, str(self.ws_root.resolve()))
+
+        task = agent.update_task_progress("task_01", "AST Pruning", 50.0, "Optimizing AST", 30)
+        self.assertEqual(task.progress_pct, 50.0)
+
+        finops = agent.get_token_finops()
+        self.assertGreater(finops.tokens_saved, 0)
+        self.assertAlmostEqual(finops.fee_usd, round(finops.gross_savings_usd * 0.15, 4), places=3)
+        self.assertAlmostEqual(finops.net_savings_usd, round(finops.gross_savings_usd * 0.85, 4), places=3)
+
+    def test_fleet_manager_heartbeat_and_liveness(self):
+        """Tests TODO-PRT-07: Ingestion endpoints, liveness evaluation, and machine filtering."""
+        mgr = FleetManager(storage_path=self.ws_root / "fleet_reg.json")
+        res = mgr.ingest_heartbeat({
+            "machine_id": "node_x",
+            "hostname": "host-x",
+            "health_status": "HEALTHY",
+            "org_id": "tenant_1",
+            "project_id": "proj_1",
+            "tokens_saved": 100000
+        })
+        self.assertEqual(res["status"], "SUCCESS")
+        machines = mgr.list_machines(project_id="proj_1")
+        self.assertEqual(len(machines), 1)
+        self.assertEqual(machines[0]["machine_id"], "node_x")
+
+        # Test liveness timeout
+        from datetime import datetime, timezone, timedelta
+        mgr.machines["node_x"]["last_seen_utc"] = (datetime.now(timezone.utc) - timedelta(seconds=120)).isoformat()
+        mgr.evaluate_liveness()
+        self.assertEqual(mgr.machines["node_x"]["health_status"], "OFFLINE")
+
+    def test_fleet_finops_rollup_and_leaderboards(self):
+        """Tests TODO-PRT-08, 09: 15%/85% FinOps Rollup and Machine/Project Leaderboards."""
+        mgr = FleetManager(storage_path=self.ws_root / "fleet_reg_finops.json")
+        mgr.machines.clear()
+        mgr.ingest_telemetry({
+            "machine": {"machine_id": "node_a", "hostname": "ha", "os_name": "macOS", "os_version": "15", "user_id": "u1"},
+            "workspace": {"workspace_path": "/a", "active_worktree": "wt_a", "git_branch": "main", "git_commit": "c1", "uncommitted_changes": False},
+            "task": {"task_id": "t1", "task_name": "Task A", "progress_pct": 50.0, "step_status": "Working", "started_at": "2026-10-07T00:00:00Z"},
+            "finops": {"input_tokens": 100, "output_tokens": 50, "tokens_saved": 1000000, "gross_savings_usd": 3.00, "fee_usd": 0.45, "net_savings_usd": 2.55},
+            "health_status": "HEALTHY",
+            "org_id": "t_corp",
+            "project_id": "p_core"
+        })
+        rollup = mgr.get_finops_rollup()
+        self.assertEqual(rollup["summary"]["total_machines_count"], 1)
+        self.assertEqual(rollup["summary"]["total_tokens_saved"], 1000000)
+        self.assertAlmostEqual(rollup["summary"]["enterprise_gross_savings_usd"], 3.00, places=2)
+        self.assertAlmostEqual(rollup["summary"]["percipience_rev_share_fee_usd"], 0.45, places=2)
+        self.assertAlmostEqual(rollup["summary"]["customer_net_retained_usd"], 2.55, places=2)
+        self.assertEqual(len(rollup["machine_leaderboard"]), 1)
+        self.assertEqual(rollup["machine_leaderboard"][0]["machine_id"], "node_a")
+
+    def test_fleet_task_progress_tracking(self):
+        """Tests TODO-PRT-10: Real-time task progression & milestone tracker across fleet."""
+        mgr = FleetManager(storage_path=self.ws_root / "fleet_reg_tasks.json")
+        mgr.ingest_heartbeat({
+            "machine_id": "node_b",
+            "hostname": "hb",
+            "active_task": "Running Lint",
+            "progress_pct": 75.0,
+            "tokens_saved": 10000
+        })
+        tasks = mgr.get_active_tasks()
+        self.assertTrue(len(tasks) >= 1)
+        t = next((x for x in tasks if x["machine_id"] == "node_b"), None)
+        self.assertIsNotNone(t)
+        self.assertEqual(t["task_name"], "Running Lint")
+        self.assertEqual(t["progress_pct"], 75.0)
 
 
 class TestSection19IDEPluginControlPlane(unittest.TestCase):

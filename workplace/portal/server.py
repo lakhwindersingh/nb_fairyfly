@@ -80,6 +80,8 @@ from core.self_reflection_engine import SelfReflectionEngine, ReflexionVerificat
 from core.agent_memory_engine import AgentMemoryEngine
 from core.tool_contract_validator import ToolContractValidator
 from core.agent_capability_guard import AgentCapabilityGuard
+from core.fleet_manager import FleetManager
+from core.fleet_agent import FleetAgentDaemon
 from core.project_policy_engine import (
     ProjectPolicyManager,
     ProjectPolicy,
@@ -553,6 +555,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('governance'); loadGovernanceTab();" id="govNavBtn" style="border:1px solid var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant &amp; Policies</button>
       <button class="nav-btn" onclick="showTab('commercial-provisioner'); loadCommercialTab();" id="commercialNavBtn" style="border:1px solid var(--amber); color:var(--amber); font-weight:700;">📦 Commercial Provisioner</button>
       <button class="nav-btn" onclick="showTab('swarm-governance'); loadSwarmTab();" id="swarmNavBtn" style="border:1px solid var(--emerald); color:var(--emerald); font-weight:700;">🤖 Swarm &amp; Governance</button>
+      <button class="nav-btn" onclick="showTab('fleet-monitor'); loadFleetTab();" id="fleetNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🖥️ Fleet &amp; FinOps</button>
       <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
     </nav>
   </header>
@@ -2922,6 +2925,101 @@ percipience rollback \
         </div>
       </div>
     </section>
+
+    <!-- TAB 16: ENTERPRISE FLEET & FINOPS MONITOR -->
+    <section id="fleet-monitor" class="tab-content">
+      <div class="hero">
+        <div class="hero-badge">🖥️ Enterprise Workstation &amp; Swarm Fleet</div>
+        <h1>Distributed Machine Fleet Monitor<br>&amp; Real-Time FinOps Rollup</h1>
+        <p style="color:var(--muted); max-width:750px; margin:10px auto 0;">
+          Consolidated control plane for distributed developer workstations, runner nodes, and container swarms.
+          Tracks real-time task progression, active worktree leases, and enterprise-wide 15% revenue share token savings.
+        </p>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin:24px 0;">
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">Connected Machines</div>
+          <div id="fleetTotalMachines" style="font-size:26px; font-weight:800; color:var(--text); margin-top:6px;">--</div>
+          <div id="fleetActiveSubtitle" style="color:var(--green); font-size:12px; margin-top:4px;">● All nodes communicating</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">Enterprise Gross Cloud Savings</div>
+          <div id="fleetGrossSavings" style="font-size:26px; font-weight:800; color:var(--cyan); margin-top:6px;">$0.00</div>
+          <div id="fleetTokensSubtitle" style="color:var(--muted); font-size:12px; margin-top:4px;">0 tokens reduced</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">85% Customer Net Retained</div>
+          <div id="fleetNetSavings" style="font-size:26px; font-weight:800; color:var(--green); margin-top:6px;">$0.00</div>
+          <div style="color:var(--muted); font-size:12px; margin-top:4px;">Direct customer savings retained</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">15% Percipience Fee</div>
+          <div id="fleetFee" style="font-size:26px; font-weight:800; color:var(--amber); margin-top:6px;">$0.00</div>
+          <div style="color:var(--muted); font-size:12px; margin-top:4px;">Billed only on verified savings</div>
+        </div>
+      </div>
+
+      <!-- Live Machine Grid -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="margin:0; font-size:18px;">🖥️ Distributed Machine Fleet Grid</h3>
+          <button onclick="loadFleetTab()" class="nav-btn" style="border:1px solid var(--border-accent); color:var(--cyan); font-size:12px; cursor:pointer;">🔄 Refresh Fleet</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:10px 8px;">Machine / Host</th>
+                <th style="padding:10px 8px;">User / Agent</th>
+                <th style="padding:10px 8px;">Project</th>
+                <th style="padding:10px 8px;">Active Worktree &amp; Branch</th>
+                <th style="padding:10px 8px;">Current Task</th>
+                <th style="padding:10px 8px;">Progress</th>
+                <th style="padding:10px 8px;">Gross Saved</th>
+                <th style="padding:10px 8px;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="fleetMachineTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Task Progression & FinOps Leaderboard Split -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(400px, 1fr)); gap:20px;">
+        <!-- Real-time Task Progression -->
+        <div style="background:var(--bg-card); padding:20px; border-radius:10px; border:1px solid var(--border);">
+          <h3 style="margin-top:0; font-size:16px; margin-bottom:16px;">⚡ Real-Time Task Progression &amp; Milestones</h3>
+          <div id="fleetTaskCards" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Project & Machine Savings Rollup -->
+        <div style="background:var(--bg-card); padding:20px; border-radius:10px; border:1px solid var(--border);">
+          <h3 style="margin-top:0; font-size:16px; margin-bottom:16px;">🏆 Project &amp; Node FinOps Leaderboard</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                  <th style="padding:8px 6px;">Scope</th>
+                  <th style="padding:8px 6px;">Identifier</th>
+                  <th style="padding:8px 6px;">Tokens Saved</th>
+                  <th style="padding:8px 6px;">Gross Savings</th>
+                  <th style="padding:8px 6px;">Customer Net (85%)</th>
+                </tr>
+              </thead>
+              <tbody id="fleetLeaderboardBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -2964,6 +3062,103 @@ percipience rollback \
     }
     setTimeout(fetchPortalTokenSavings, 500);
     setInterval(fetchPortalTokenSavings, 5000);
+
+    async function loadFleetTab() {
+      try {
+        const [resMach, resFin, resTasks] = await Promise.all([
+          fetch('/api/fleet/machines'),
+          fetch('/api/fleet/finops-rollup'),
+          fetch('/api/fleet/tasks')
+        ]);
+        if (resMach.ok) {
+          const mData = await resMach.json();
+          const tbody = document.getElementById('fleetMachineTableBody');
+          if (tbody) {
+            tbody.innerHTML = (mData.machines || []).map(m => {
+              const statusBadge = m.health_status === 'HEALTHY' ? '<span style="color:var(--green); font-weight:700;">● HEALTHY</span>' :
+                                  m.health_status === 'QUARANTINED' ? '<span style="color:var(--red); font-weight:700;">🛑 QUARANTINED</span>' :
+                                  '<span style="color:var(--muted); font-weight:700;">○ ' + m.health_status + '</span>';
+              const taskName = m.active_task ? m.active_task.task_name : 'Idle';
+              const progress = m.active_task ? m.active_task.progress_pct : 100;
+              const saved = m.finops ? ('$' + Number(m.finops.gross_savings_usd).toFixed(4)) : '$0.00';
+              return '<tr style="border-bottom:1px solid var(--border);">' +
+                '<td style="padding:10px 8px; font-weight:600;">' + m.hostname + '<br><span style="font-size:11px; color:var(--muted);">' + m.machine_id + ' (' + m.os_name + ')</span></td>' +
+                '<td style="padding:10px 8px;">' + m.user_id + '</td>' +
+                '<td style="padding:10px 8px;"><code>' + m.project_id + '</code></td>' +
+                '<td style="padding:10px 8px;"><code>' + m.active_worktree + '</code><br><span style="font-size:11px; color:var(--muted);">' + m.git_branch + ' @ ' + m.git_commit + '</span></td>' +
+                '<td style="padding:10px 8px;">' + taskName + '</td>' +
+                '<td style="padding:10px 8px; width:120px;">' +
+                  '<div style="background:var(--code-bg); height:8px; border-radius:4px; overflow:hidden;">' +
+                    '<div style="background:var(--cyan); width:' + progress + '%; height:100%;"></div>' +
+                  '</div>' +
+                  '<span style="font-size:10px; color:var(--muted);">' + progress + '%</span>' +
+                '</td>' +
+                '<td style="padding:10px 8px; color:var(--cyan); font-weight:700;">' + saved + '</td>' +
+                '<td style="padding:10px 8px;">' + statusBadge + '</td>' +
+              '</tr>';
+            }).join('');
+          }
+        }
+        if (resFin.ok) {
+          const fData = await resFin.json();
+          const r = fData.rollup || {};
+          const s = r.summary || {};
+          if (document.getElementById('fleetTotalMachines')) document.getElementById('fleetTotalMachines').innerText = s.total_machines_count || 0;
+          if (document.getElementById('fleetGrossSavings')) document.getElementById('fleetGrossSavings').innerText = '$' + (s.enterprise_gross_savings_usd || 0).toFixed(2);
+          if (document.getElementById('fleetNetSavings')) document.getElementById('fleetNetSavings').innerText = '$' + (s.customer_net_retained_usd || 0).toFixed(2);
+          if (document.getElementById('fleetFee')) document.getElementById('fleetFee').innerText = '$' + (s.percipience_rev_share_fee_usd || 0).toFixed(2);
+          if (document.getElementById('fleetTokensSubtitle')) document.getElementById('fleetTokensSubtitle').innerText = Number(s.total_tokens_saved || 0).toLocaleString() + ' tokens reduced';
+
+          const leadBody = document.getElementById('fleetLeaderboardBody');
+          if (leadBody) {
+            const rows = [];
+            (r.project_leaderboard || []).forEach(p => {
+              rows.push('<tr style="border-bottom:1px solid var(--border);">' +
+                '<td style="padding:8px 6px; font-weight:700; color:var(--purple);">Project</td>' +
+                '<td style="padding:8px 6px;"><code>' + p.project_id + '</code> (' + p.machines_count + ' nodes)</td>' +
+                '<td style="padding:8px 6px;">' + Number(p.tokens_saved).toLocaleString() + '</td>' +
+                '<td style="padding:8px 6px; color:var(--cyan); font-weight:700;">$' + Number(p.gross_savings_usd).toFixed(2) + '</td>' +
+                '<td style="padding:8px 6px; color:var(--green); font-weight:700;">$' + Number(p.net_savings_usd).toFixed(2) + '</td>' +
+              '</tr>');
+            });
+            (r.machine_leaderboard || []).forEach(m => {
+              rows.push('<tr style="border-bottom:1px solid var(--border);">' +
+                '<td style="padding:8px 6px; font-weight:600; color:var(--cyan);">Node</td>' +
+                '<td style="padding:8px 6px;">' + m.hostname + ' (' + m.user_id + ')</td>' +
+                '<td style="padding:8px 6px;">' + Number(m.tokens_saved).toLocaleString() + '</td>' +
+                '<td style="padding:8px 6px; color:var(--cyan); font-weight:700;">$' + Number(m.gross_savings_usd).toFixed(2) + '</td>' +
+                '<td style="padding:8px 6px; color:var(--green); font-weight:700;">$' + Number(m.net_savings_usd).toFixed(2) + '</td>' +
+              '</tr>');
+            });
+            leadBody.innerHTML = rows.join('');
+          }
+        }
+        if (resTasks.ok) {
+          const tData = await resTasks.json();
+          const tCont = document.getElementById('fleetTaskCards');
+          if (tCont) {
+            tCont.innerHTML = (tData.tasks || []).map(t => {
+              const stuckTag = t.is_stuck ? '<span style="color:var(--red); font-weight:700;">[STUCK ALERT]</span>' : '';
+              return '<div style="background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border);">' +
+                '<div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px;">' +
+                  '<span>' + t.task_name + ' ' + stuckTag + '</span>' +
+                  '<span style="color:var(--cyan);">' + t.progress_pct + '%</span>' +
+                '</div>' +
+                '<div style="background:var(--bg-card); height:6px; border-radius:3px; overflow:hidden; margin-bottom:6px;">' +
+                  '<div style="background:var(--cyan); width:' + t.progress_pct + '%; height:100%;"></div>' +
+                '</div>' +
+                '<div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted);">' +
+                  '<span>Node: <code>' + t.hostname + '</code> (' + t.project_id + ')</span>' +
+                  '<span>Step: <i>' + t.step_status + '</i> | ETA: ' + t.eta_seconds + 's</span>' +
+                '</div>' +
+              '</div>';
+            }).join('');
+          }
+        }
+      } catch (e) {
+        console.error("Fleet tab load error", e);
+      }
+    }
 
     function showTab(id) {
       if (!id) return;
@@ -4514,6 +4709,7 @@ GLOBAL_SWARM_MEMORY.record_episode(
 
 GLOBAL_SWARM_TOOLS = ToolContractValidator()
 GLOBAL_SWARM_GUARD = AgentCapabilityGuard()
+GLOBAL_FLEET_MGR = FleetManager(storage_path=REPO_ROOT / ".nb" / "context" / "fleet" / "fleet_registry.json")
 
 class PortalRequestHandler(BaseHTTPRequestHandler):
     def _send_bytes(self, data: bytes, content_type: str = "application/octet-stream", filename: Optional[str] = None, status: int = 200):
@@ -5435,10 +5631,37 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"status": "SUCCESS", "tools": tools_data})
             return
 
+        if parsed.path == "/api/fleet/machines":
+            machines = GLOBAL_FLEET_MGR.list_machines()
+            self._send_json({"status": "SUCCESS", "count": len(machines), "machines": machines})
+            return
+
+        if parsed.path == "/api/fleet/finops-rollup":
+            rollup = GLOBAL_FLEET_MGR.get_finops_rollup()
+            self._send_json({"status": "SUCCESS", "rollup": rollup})
+            return
+
+        if parsed.path == "/api/fleet/tasks":
+            tasks = GLOBAL_FLEET_MGR.get_active_tasks()
+            self._send_json({"status": "SUCCESS", "count": len(tasks), "tasks": tasks})
+            return
+
         self._send_json({"error": "Not Found"}, 404)
 
     def do_POST(self):
         parsed = urlparse(self.path)
+        if parsed.path == "/api/fleet/heartbeat":
+            data = self._read_json_body()
+            res = GLOBAL_FLEET_MGR.ingest_heartbeat(data)
+            self._send_json(res)
+            return
+
+        if parsed.path == "/api/fleet/telemetry":
+            data = self._read_json_body()
+            res = GLOBAL_FLEET_MGR.ingest_telemetry(data)
+            self._send_json(res)
+            return
+
         if parsed.path == "/api/auth/login":
             data = self._read_json_body()
             client_id = data.get("client_id", "acme_corp_fintech")
