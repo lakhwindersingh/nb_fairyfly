@@ -377,3 +377,169 @@ def test_cbac_token_minting_and_sandbox_verification(portal_server):
     net_blocked = json.loads(res.read().decode("utf-8"))
     assert net_blocked["allowed"] is False
     assert "CAP_NETWORK_EGRESS" in net_blocked["reason"] or "CAP_NET_EGRESS" in net_blocked["reason"]
+
+
+def test_swarm_contracts_catalog_and_validation(portal_server):
+    """Tests GET /api/swarm/contracts and POST /api/swarm/contracts."""
+    conn = HTTPConnection(portal_server)
+
+    # 1. GET /api/swarm/contracts
+    conn.request("GET", "/api/swarm/contracts")
+    res = conn.getresponse()
+    assert res.status == 200
+    data = json.loads(res.read().decode("utf-8"))
+    assert data["status"] == "SUCCESS"
+    assert "contracts" in data
+    assert len(data["contracts"]) >= 4
+
+    # 2. POST /api/swarm/contracts with tool_name=ast_prune and file_path
+    conn.request(
+        "POST",
+        "/api/swarm/contracts",
+        body=json.dumps({"tool_name": "ast_prune", "args": {"file_path": "server.py"}}),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 200
+    post_data = json.loads(res.read().decode("utf-8"))
+    assert post_data["status"] == "SUCCESS"
+    assert post_data["contract_valid"] is True
+    assert post_data["tool_result"]["status"] == "SUCCESS"
+
+
+def test_swarm_dag_submission_and_cycle_prevention(portal_server):
+    """Tests POST /api/swarm/dag and Kahn acyclicity validation."""
+    conn = HTTPConnection(portal_server)
+
+    # 1. Valid acyclic DAG
+    payload = {"nodes": [{"id": "build", "deps": []}, {"id": "test", "deps": ["build"]}]}
+    conn.request(
+        "POST",
+        "/api/swarm/dag",
+        body=json.dumps(payload),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 200
+    data = json.loads(res.read().decode("utf-8"))
+    assert data["status"] == "SUCCESS"
+    assert data["acyclic"] is True
+    assert data["topological_order"] == ["build", "test"]
+
+    # 2. Cyclic DAG rejection
+    cyclic_payload = {"nodes": [{"id": "a", "deps": ["b"]}, {"id": "b", "deps": ["a"]}]}
+    conn.request(
+        "POST",
+        "/api/swarm/dag",
+        body=json.dumps(cyclic_payload),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 400
+    err_data = json.loads(res.read().decode("utf-8"))
+    assert "CYCLE_DETECTED" in err_data["error"]
+
+    # 3. GET /api/swarm/dag
+    conn.request("GET", "/api/swarm/dag")
+    res = conn.getresponse()
+    assert res.status == 200
+    dag_state = json.loads(res.read().decode("utf-8"))
+    assert dag_state["status"] == "SUCCESS"
+
+
+def test_swarm_memory_tier_endpoints(portal_server):
+    """Tests GET, POST, and DELETE /api/swarm/memory."""
+    conn = HTTPConnection(portal_server)
+
+    # 1. GET /api/swarm/memory?tier=working
+    conn.request("GET", "/api/swarm/memory?tier=working")
+    res = conn.getresponse()
+    assert res.status == 200
+    data = json.loads(res.read().decode("utf-8"))
+    assert data["status"] == "SUCCESS"
+    assert data["tier"] == "working"
+    assert len(data["entries"]) >= 1
+
+    # 2. POST /api/swarm/memory
+    conn.request(
+        "POST",
+        "/api/swarm/memory",
+        body=json.dumps({"tier": "working", "hypothesis": "Hypothesis A verified"}),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 200
+    post_data = json.loads(res.read().decode("utf-8"))
+    assert post_data["status"] == "SUCCESS"
+    assert post_data["stored"] is True
+
+    # 3. DELETE /api/swarm/memory
+    conn.request("DELETE", "/api/swarm/memory")
+    res = conn.getresponse()
+    assert res.status == 200
+    del_data = json.loads(res.read().decode("utf-8"))
+    assert del_data["status"] == "SUCCESS"
+
+
+def test_swarm_reflection_endpoint(portal_server):
+    """Tests POST /api/swarm/reflection and GET /api/swarm/reflection."""
+    conn = HTTPConnection(portal_server)
+
+    # 1. GET /api/swarm/reflection
+    conn.request("GET", "/api/swarm/reflection")
+    res = conn.getresponse()
+    assert res.status == 200
+    get_data = json.loads(res.read().decode("utf-8"))
+    assert get_data["status"] == "SUCCESS"
+    assert len(get_data["history"]) >= 1
+
+    # 2. POST /api/swarm/reflection with candidate_code and context
+    conn.request(
+        "POST",
+        "/api/swarm/reflection",
+        body=json.dumps({"candidate_code": "def solve(): pass", "context": "TDD task"}),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 200
+    post_data = json.loads(res.read().decode("utf-8"))
+    assert post_data["status"] == "SUCCESS"
+    assert "critique" in post_data
+    assert "convergence_score" in post_data
+
+
+def test_swarm_capabilities_and_topologies(portal_server):
+    """Tests GET /api/swarm/capabilities, POST /api/swarm/capabilities, and GET /api/swarm/topologies."""
+    conn = HTTPConnection(portal_server)
+
+    # 1. GET /api/swarm/capabilities
+    conn.request("GET", "/api/swarm/capabilities")
+    res = conn.getresponse()
+    assert res.status == 200
+    cap_data = json.loads(res.read().decode("utf-8"))
+    assert cap_data["status"] == "SUCCESS"
+    assert len(cap_data["supported_capabilities"]) >= 4
+
+    # 2. POST /api/swarm/capabilities with shorthand capabilities
+    conn.request(
+        "POST",
+        "/api/swarm/capabilities",
+        body=json.dumps({"agent_id": "agent_tester", "capabilities": ["fs:read", "exec:test"]}),
+        headers={"Content-Type": "application/json"}
+    )
+    res = conn.getresponse()
+    assert res.status == 200
+    post_data = json.loads(res.read().decode("utf-8"))
+    assert post_data["status"] == "SUCCESS"
+    assert "token" in post_data
+    assert post_data["agent_id"] == "agent_tester"
+    assert "CAP_FS_READ" in post_data["capabilities"]
+    assert "CAP_EXEC_SUBPROCESS" in post_data["capabilities"]
+
+    # 3. GET /api/swarm/topologies
+    conn.request("GET", "/api/swarm/topologies")
+    res = conn.getresponse()
+    assert res.status == 200
+    topos = json.loads(res.read().decode("utf-8"))
+    assert topos["status"] == "SUCCESS"
+    assert len(topos["topologies"]) == 4
