@@ -100,6 +100,10 @@ WORMEgressManager = _load_engine("worm_egress", ["WORMEgressManager"])
 TreeSitterDaemonClient = _load_engine("tree_sitter_daemon", ["TreeSitterDaemonClient"])
 (ContainerPlanExecutor, PlanExecutionRequest) = _load_engine("container_plan_executor", ["ContainerPlanExecutor", "PlanExecutionRequest"])
 GitBundleTransport = _load_engine("git_bundle_transport", ["GitBundleTransport"])
+FewShotRetriever = _load_engine("few_shot_retriever", ["FewShotRetriever"])
+ConsensusQuorumEngine = _load_engine("consensus_quorum_engine", ["ConsensusQuorumEngine"])
+HITLCheckpointManager = _load_engine("hitl_checkpoint_manager", ["HITLCheckpointManager"])
+AgentBenchmarkHarness = _load_engine("agent_benchmark_harness", ["AgentBenchmarkHarness"])
 DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePromptEngine"])
 (TokenOptimizationConfig, UnifiedTokenOptimizer) = _load_engine(
     "token_optimizer_suite",
@@ -962,6 +966,55 @@ def cmd_drift(args):
         res = DualReconciliationEngine.approve_delta(REPO_ROOT, delta_id)
         print(f"✅ {res['message']}")
 
+def cmd_hitl(args):
+    action = args.hitl_action
+    from workplace.core.hitl_checkpoint_manager import HITLCheckpointManager
+    mgr = HITLCheckpointManager(workspace_root=REPO_ROOT)
+    if action == "list":
+        chks = mgr.list_checkpoints(pending_only=args.pending_only)
+        if not chks:
+            print("ℹ️ No milestone checkpoints found.")
+            return
+        print(f"📋 Percipience HITL Milestone Checkpoints ({len(chks)} total):")
+        for c in chks:
+            badge = "⏳ PENDING" if c.status == "PENDING" else f"🏁 {c.status}"
+            print(f"   • [{c.checkpoint_id}] {badge} | {c.milestone_type} | {c.title}")
+    elif action == "approve":
+        try:
+            chk = mgr.resolve_checkpoint(args.id, decision="APPROVE", reason=args.comment or "Approved via CLI", resolver=args.resolver or "cli_operator")
+            print(f"✅ Checkpoint {chk.checkpoint_id} APPROVED successfully.")
+            print(f"   Resolution: {chk.resolution.reason}")
+        except Exception as e:
+            print(f"❌ Error approving checkpoint: {e}")
+            sys.exit(1)
+    elif action == "reject":
+        try:
+            chk = mgr.resolve_checkpoint(args.id, decision="REJECT", reason=args.reason or "Rejected via CLI", resolver=args.resolver or "cli_operator")
+            print(f"🛑 Checkpoint {chk.checkpoint_id} REJECTED.")
+            print(f"   Reason: {chk.resolution.reason}")
+        except Exception as e:
+            print(f"❌ Error rejecting checkpoint: {e}")
+            sys.exit(1)
+
+
+def cmd_benchmark(args):
+    action = getattr(args, "benchmark_action", "run")
+    from workplace.core.agent_benchmark_harness import AgentBenchmarkHarness
+    harness = AgentBenchmarkHarness(workspace_root=REPO_ROOT)
+    if action == "run":
+        print("🎯 Executing Continuous Multi-Agent Quality Evaluation Suite...")
+        scorecard = harness.run_benchmark_suite()
+        report_path = harness.save_report(scorecard)
+        print(f"✅ Evaluation Complete! Overall Grade: {scorecard.overall_grade}")
+        print(f"   • Task Success Rate (TSR):    {scorecard.tsr_pct:.1f}%")
+        print(f"   • Semantic Parity (S_SP):     {scorecard.avg_semantic_parity:.3f}")
+        print(f"   • Avg Tokens Consumed:        {scorecard.avg_tokens_consumed:,.0f} tokens")
+        print(f"   • Avg Turn Latency:           {scorecard.avg_latency_s:.3f}s")
+        print(f"   • Invariant Compliance:       {scorecard.invariant_compliance_pct:.1f}%")
+        print(f"   • Merkle Anchor:              {scorecard.merkle_receipt_id}")
+        print(f"📄 Full scorecard saved to {report_path.relative_to(REPO_ROOT)}")
+
+
 def cmd_swarm(args):
     _require_engine(SwarmGovernor, "swarm_governor", "swarm", "Business / Enterprise")
     action = args.swarm_action
@@ -1402,6 +1455,28 @@ def main():
     p_sw_exec.add_argument("--no-gate", action="store_true", help="Skip gatekeeper verification")
     p_sw_exec.add_argument("--mock", action="store_true", help="Run in mock/simulation mode")
     p_swarm.set_defaults(func=cmd_swarm)
+
+    # hitl
+    p_hitl = subparsers.add_parser("hitl", help="Interactive Human-In-The-Loop milestone checkpoints")
+    p_hitl_subs = p_hitl.add_subparsers(dest="hitl_action", required=True)
+    p_h_list = p_hitl_subs.add_parser("list", help="List milestone checkpoints")
+    p_h_list.add_argument("--pending-only", action="store_true", help="Filter pending checkpoints")
+    p_h_app = p_hitl_subs.add_parser("approve", help="Approve milestone checkpoint")
+    p_h_app.add_argument("--id", required=True, help="Checkpoint ID (chk_*)")
+    p_h_app.add_argument("--comment", default="", help="Optional approval rationale")
+    p_h_app.add_argument("--resolver", default="cli_operator", help="Resolver ID")
+    p_h_rej = p_hitl_subs.add_parser("reject", help="Reject milestone checkpoint")
+    p_h_rej.add_argument("--id", required=True, help="Checkpoint ID (chk_*)")
+    p_h_rej.add_argument("--reason", required=True, help="Rejection reason")
+    p_h_rej.add_argument("--resolver", default="cli_operator", help="Resolver ID")
+    p_hitl.set_defaults(func=cmd_hitl)
+
+    # benchmark
+    p_bench = subparsers.add_parser("benchmark", help="Automated agent benchmarking and continuous evaluation")
+    p_bench_subs = p_bench.add_subparsers(dest="benchmark_action", required=True)
+    p_b_run = p_bench_subs.add_parser("run", help="Run agent benchmark suite")
+    p_b_run.add_argument("--agents", default="all", help="Target agents to evaluate")
+    p_bench.set_defaults(func=cmd_benchmark)
 
     # validate
     p_val = subparsers.add_parser("validate", help="Validate layered context hierarchy")

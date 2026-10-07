@@ -38,7 +38,7 @@
 | **Competitive Parity: Runtime Guardrails & PII** | Specified | Required | Specified | N/A | **✅ COMPLETED** | **1.00** |
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
-| **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **[-] PLANNED** | **0.40** |
+| **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] PLANNED** | **0.50** |
 | **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.75** |
 
@@ -474,7 +474,8 @@
   - *Implementation*: Implemented `AmbiguityResolver` calculating requirement entropy and drafting interactive clarification RFCs in `user/hitl/clarification_requests/`.
 
 ### 17.4. Resilience, Evaluation, Consensus & Security Capabilities
-- [ ] **TODO-AGT-16: Dynamic Few-Shot Exemplar Selection & Context-Aware RAG Injection (P2)** (`GAP-AGT-16`):
+- [x] **TODO-AGT-16: Dynamic Few-Shot Exemplar Selection & Context-Aware RAG Injection (P2)** (`GAP-AGT-16`):
+  - *Implemented*: Built [`workplace/core/few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/few_shot_retriever.py) (mirrored to [`.nb/core/few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/few_shot_retriever.py)) and golden pattern library in [`.nb/context/exemplars/exemplar_library.json`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/exemplars/exemplar_library.json). Multi-factor scoring ($0.40 S_{lang} + 0.35 S_{pattern} + 0.25 S_{tags}$), token budgeting, counter-factual negative exemplars, and graceful zero-shot fallback. Verified via 6 tests in [`test_few_shot_retriever.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_few_shot_retriever.py).
   - *Governing Review*: `GAP-AGT-16` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
   - *Defect & SDLC Impact*: Prompts are zero-shot or contain static hardcoded code snippets that do not adapt to specific problem domains, leading to lower code synthesis accuracy on complex domain tasks (Stripe webhooks, BLE ring buffers, AST visitors).
   - *Target Files*:
@@ -488,7 +489,8 @@
   - *Acceptance Criteria*:
     - Unit tests verifying exemplar retrieval ranking, language/AST filtering, token budget constraint compliance, and graceful fallback to zero-shot when no match is found.
 
-- [ ] **TODO-AGT-17: 2-of-3 Multi-Agent Consensus Quorum for Critical Decisions (P1)** (`GAP-AGT-17`):
+- [x] **TODO-AGT-17: 2-of-3 Multi-Agent Consensus Quorum for Critical Decisions (P1)** (`GAP-AGT-17`):
+  - *Implemented*: Built [`workplace/core/consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/consensus_quorum_engine.py) (mirrored to [`.nb/core/consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/consensus_quorum_engine.py)) and schema [`.nb/agentic/schemas/quorum_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/quorum_schema.yaml). Enforces 2-of-3 heterogeneous consensus across Security, Quality, and Architecture evaluators, single-veto quarantine escalation to `poisoning_quarantine.md`, and HMAC-SHA256 quorum receipts. Verified via 5 tests in [`test_consensus_quorum_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_consensus_quorum_engine.py).
   - *Governing Review*: `GAP-AGT-17` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
   - *Defect & SDLC Impact*: Critical pipeline decisions (security sign-off, wire contract deprecation, PR gate merge approvals) depend on a single agent persona, creating cognitive blindspots and vulnerability to single prompt injections.
   - *Target Files*:
@@ -503,7 +505,8 @@
   - *Acceptance Criteria*:
     - Unit tests validating 3-agent vote aggregation, 2-of-3 approval passage, deadlock resolution, single-veto quarantine escalation, and Merkle receipt sealing.
 
-- [ ] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)** (`GAP-AGT-18`):
+- [x] **TODO-AGT-18: Proactive Milestone-Based HITL Interactive Checkpoints (P2)** (`GAP-AGT-18`):
+  - *Implemented*: Built [`workplace/core/hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/hitl_checkpoint_manager.py) (mirrored to [`.nb/core/hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/hitl_checkpoint_manager.py)), checkpoint schema [`.nb/agentic/schemas/hitl_checkpoint_schema.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/schemas/hitl_checkpoint_schema.yaml), and CLI subcommands (`percipience hitl list`, `percipience hitl approve`, `percipience hitl reject`). Emits interactive Markdown/JSON cards in `user/hitl/milestones/`, handles blast-radius analysis, and executes timeout policies. Verified via 6 tests in [`test_hitl_checkpoint_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_hitl_checkpoint_manager.py).
   - *Governing Review*: `GAP-AGT-18` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
   - *Defect & SDLC Impact*: Human-In-The-Loop (HITL) interaction is treated exclusively as an error trap (`poisoning_quarantine.md`). Missed opportunities for human feedback during architectural planning, trade-off selection, or visual UI approval before downstream code generation.
   - *Target Files*:
@@ -523,7 +526,8 @@
   - *Shortcoming*: Handoff tokens lacked runtime cycle detection, risking infinite recursive delegation loops.
   - *Implementation*: Implemented topological loop sentinel (`lineage` inspection), max hop ceiling (`hop_count <= 5`), anti-drift attestation ($S_{SP} \ge 0.95$), replay token tracking, dynamic YAML workflow DAG route synchronization, and persistent outbox/inbox delivery in `workplace/core/handoff_validator.py` and `.nb/core/handoff_validator.py`.
 
-- [ ] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)** (`GAP-AGT-20`):
+- [x] **TODO-AGT-20: Automated Agent Benchmark & Continuous Quality Evaluation Harness (P1)** (`GAP-AGT-20`):
+  - *Implemented*: Built [`workplace/core/agent_benchmark_harness.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/agent_benchmark_harness.py) (mirrored to [`.nb/core/agent_benchmark_harness.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/agent_benchmark_harness.py)), benchmark suite in [`workplace/tests/benchmarks/test_agent_benchmarks.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/benchmarks/test_agent_benchmarks.py), scorecard report at [`workplace/docs/reports/agent_quality_scorecard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agent_quality_scorecard.md), and CLI subcommand `percipience benchmark run`. Computes 5-Metric Radar (TSR >= 90%, S_SP >= 0.95, Token Efficiency < 5k, Latency < 10s, Invariant Compliance = 100%) and seals evaluation receipts to Merkle ledger. Verified via 5 tests in [`test_agent_benchmarks.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/benchmarks/test_agent_benchmarks.py).
   - *Governing Review*: `GAP-AGT-20` in [`workplace/docs/reports/agentic_workspace_sdlc_review.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/reports/agentic_workspace_sdlc_review.md) (Pillar IV: Resilience, Evaluation & Security).
   - *Defect & SDLC Impact*: Custom agents in `agentic/custom/agents/` are evaluated ad-hoc without standardized benchmark suites. No objective measurement of agent task success rate, latency, token spend, or regression across workspace updates.
   - *Target Files*:

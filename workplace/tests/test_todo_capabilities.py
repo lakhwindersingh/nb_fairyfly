@@ -798,6 +798,76 @@ def safe_calc(val: float) -> Optional[float]:
             self.assertFalse(allowed)
             self.assertIn("PERMISSION_DENIED_UNAUTHORIZED_COMMAND", err)
 
+    def test_few_shot_retriever_exemplar_scoring_and_retrieval(self):
+        """Tests TODO-AGT-16: FewShotRetriever multi-factor scoring and token budgeting."""
+        from workplace.core.few_shot_retriever import FewShotRetriever
+        retriever = FewShotRetriever()
+        results = retriever.retrieve(query_lang="python", query_pattern="fastapi_endpoint", domain_tags=["api"])
+        self.assertGreaterEqual(len(results), 1)
+        self.assertGreater(results[0].score, 0.70)
+        formatted = retriever.format_prompt_injection(results)
+        self.assertIn("Reference Implementation Exemplars", formatted)
+
+    def test_consensus_quorum_engine_2_of_3_and_veto(self):
+        """Tests TODO-AGT-17: ConsensusQuorumEngine 2-of-3 quorum passage and single-veto quarantine."""
+        from workplace.core.consensus_quorum_engine import ConsensusQuorumEngine, EvaluatorVote
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            engine = ConsensusQuorumEngine(workspace_root=Path(tmp_dir))
+            # Test approval passage
+            votes_pass = [
+                EvaluatorVote("a1", "SecurityAuditor", "APPROVE", "ok"),
+                EvaluatorVote("a2", "QualityGatekeeper", "APPROVE", "ok"),
+                EvaluatorVote("a3", "ArchitecturalSpecialist", "REQUEST_REVISION", "fix doc")
+            ]
+            receipt_pass = engine.evaluate_quorum("PR_GATE_APPROVAL", "test_artifact", votes_pass)
+            self.assertTrue(receipt_pass.quorum_passed)
+            self.assertEqual(receipt_pass.verdict, "APPROVED")
+            
+            # Test single-veto quarantine
+            votes_veto = [
+                EvaluatorVote("a1", "SecurityAuditor", "QUARANTINE_VETO", "malicious payload"),
+                EvaluatorVote("a2", "QualityGatekeeper", "APPROVE", "ok"),
+                EvaluatorVote("a3", "ArchitecturalSpecialist", "APPROVE", "ok")
+            ]
+            receipt_veto = engine.evaluate_quorum("SECURITY_SIGN_OFF", "test_artifact", votes_veto)
+            self.assertFalse(receipt_veto.quorum_passed)
+            self.assertEqual(receipt_veto.verdict, "QUARANTINED")
+            self.assertTrue(receipt_veto.single_veto_triggered)
+
+    def test_hitl_checkpoint_manager_and_cli(self):
+        """Tests TODO-AGT-18: HITLCheckpointManager creation, resolution, and CLI."""
+        from workplace.core.hitl_checkpoint_manager import HITLCheckpointManager
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            mgr = HITLCheckpointManager(workspace_root=Path(tmp_dir))
+            chk = mgr.create_checkpoint("ARCH_DESIGN_APPROVAL", "Test Checkpoint", "Review architecture")
+            self.assertEqual(chk.status, "PENDING")
+            
+            resolved = mgr.resolve_checkpoint(chk.checkpoint_id, "APPROVE", reason="Approved test")
+            self.assertEqual(resolved.status, "APPROVED")
+
+        # Test CLI help
+        cli_path = REPO_ROOT / ".nb" / "bin" / "percipience"
+        proc = subprocess.run([str(cli_path), "hitl", "--help"], capture_output=True, text=True, timeout=10)
+        self.assertEqual(proc.returncode, 0)
+        self.assertIn("approve", proc.stdout)
+
+    def test_agent_benchmark_harness_and_radar_evaluation(self):
+        """Tests TODO-AGT-20: AgentBenchmarkHarness 5-metric radar evaluation and CLI."""
+        from workplace.core.agent_benchmark_harness import AgentBenchmarkHarness
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            harness = AgentBenchmarkHarness(workspace_root=Path(tmp_dir))
+            card = harness.run_benchmark_suite()
+            self.assertGreaterEqual(card.tsr_pct, 90.0)
+            self.assertGreaterEqual(card.avg_semantic_parity, 0.95)
+            self.assertEqual(card.invariant_compliance_pct, 100.0)
+            self.assertIn(card.overall_grade, ["A+", "A"])
+
+        # Test CLI help
+        cli_path = REPO_ROOT / ".nb" / "bin" / "percipience"
+        proc = subprocess.run([str(cli_path), "benchmark", "--help"], capture_output=True, text=True, timeout=10)
+        self.assertEqual(proc.returncode, 0)
+        self.assertIn("run", proc.stdout)
+
 
 class TestSection18MultiTenantProjectProvisioning(unittest.TestCase):
     """Section 18: Multi-Tenant Project Provisioning, Fleet Workspaces & Enterprise Admin Control Plane"""
