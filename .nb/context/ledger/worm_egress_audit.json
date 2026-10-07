@@ -3355,6 +3355,17 @@
       "retention_days": 365,
       "egress_timestamp": "2026-10-07T14:42:30Z",
       "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 2433,
+      "block_hash": "d4ad3775150b103445babf2052ec62378ddd10362f940adfdb6823eb7d67e465",
+      "merkle_root": "113207f62ace4558329f4c71b259d4631c06c99d05e3f41589342b80920ae70d",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_002433_d4ad3775150b1034.json",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_days": 365,
+      "egress_timestamp": "2026-10-07T14:44:21Z",
+      "status": "MIRRORED_IMMUTABLE"
     }
   ]
 }

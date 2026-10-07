@@ -1,0 +1,55 @@
+# =============================================================================
+# Percipience Autonomous Agent Runner & Ephemeral Worktree Sandbox (TODO-DEWS-01)
+# Provides isolated, multi-runtime environment for LLM CLIs (Claude, Aider)
+# running on ephemeral Git worktrees with defense-in-depth isolation.
+# =============================================================================
+FROM python:3.11-slim
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /workspace
+
+# Install system utilities, compilation tools, git, and ca-certificates
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    jq \
+    ca-certificates \
+    procps \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x runtime (required for Claude Code CLI)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Claude Code CLI and core Python test/automation packages
+RUN npm install -g @anthropic-ai/claude-code \
+    && pip install --no-cache-dir \
+       pytest \
+       pyyaml \
+       requests
+
+# Create dedicated non-root user 'agent'
+RUN groupadd -g 1000 agent && \
+    useradd -u 1000 -g agent -m -s /bin/bash agent && \
+    mkdir -p /workspace /repo && \
+    chown -R agent:agent /workspace /repo
+
+# Copy and configure entrypoint script
+COPY workplace/infra/docker/entrypoint_agent.sh /usr/local/bin/entrypoint_agent.sh
+RUN chmod +x /usr/local/bin/entrypoint_agent.sh
+
+# Configure global git identity defaults for agent user
+USER agent
+RUN git config --global user.name "Percipience Agent" && \
+    git config --global user.email "agent@percipience.internal" && \
+    git config --global init.defaultBranch main && \
+    git config --global --add safe.directory "*"
+
+USER root
+ENTRYPOINT ["/usr/local/bin/entrypoint_agent.sh"]
+CMD ["bash"]
