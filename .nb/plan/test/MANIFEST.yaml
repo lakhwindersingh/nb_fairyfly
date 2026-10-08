@@ -1,0 +1,61 @@
+plan_id: percipience_master_test_plan
+plan_name: Percipience Master Test Governance & AI-Assisted Verification Framework
+version: 1.0.0
+capability_rating: L2
+plan_type: test-governance
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+- play_3_enterprise_os
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-10-08'
+    content_hash: d98efffc369faa7abe2d007f71755b0cd6a470b14ec3820e6aae4b117e7a5506
+    line_count: 109
+    primary_purpose: High-density testing specification for rapid AI context ingestion
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-10-08'
+    content_hash: b2396976f805fe2d80b77fc6cb55420b9ae8606371cae08c4579ca9d31414cfc
+    line_count: 432
+    primary_purpose: Comprehensive 360-degree test plan covering all 18 subsystems
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-10-08'
+    content_hash: 3dc3b9efa445a40398c2aa7f057d97e8f3daa880929befe902ff4538c2ea068e
+    line_count: 96
+    primary_purpose: Space overview, test pyramid, and execution guide
+  test_runner:
+    path: test_runner.py
+    version: 1.0.0
+    last_modified: '2026-10-08'
+    content_hash: 39d6e835aa81a0df5e97c975283bdde550cc2bab8f2d6e5a920fc67554db1307
+    line_count: 262
+    primary_purpose: Automatable AI test orchestrator, reporting engine, and failure triager
+key_capabilities:
+- 18-Subsystem Test Pyramid
+- Pytest 8.4+ Allure Test Reporting
+- DeepEval & Ragas GenAI Evaluation Harness
+- Playwright 1.48+ Web Quality & WCAG 2.1 AA CI
+- Terraform Multi-Cloud IaC Assertion
+- Automated AI Failure Diagnosis & Surgical Patching
+test_tiers:
+  tier_1: Core Unit Invariants & AST Compression
+  tier_2: Ephemeral Swarms & Redlock Leases
+  tier_3: Multi-Module Wire Contracts & VCS Integrations
+  tier_4: End-to-End SaaS Portal & Web Quality
+  tier_5: Quantitative GenAI Evaluations & Semantic Parity
+success_metrics:
+  unit_pass_rate: 100%
+  semantic_parity: '>= 0.95'
+  token_reduction: '>= 40.0%'
+  ast_pruning_latency: '<= 120ms'
+  a11y_violations: 0
+  broken_links: 0
+related_contracts:
+- .nb/context/contracts/
