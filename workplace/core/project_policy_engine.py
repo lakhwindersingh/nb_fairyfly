@@ -131,7 +131,7 @@ class ProjectPolicy:
     @property
     def certified_invariants(self) -> Dict[str, str]:
         return {
-            "attention_slicing": "15% Invariants / 25% Contracts / 35% AST / 10% Memory / 15% Headroom (Certified Zero Lost-in-Middle)",
+            "attention_slicing": "15/25/35/10/15 Ratio (15% Invariants / 25% Contracts / 35% AST / 10% Memory / 15% Headroom (Certified Zero Lost-in-Middle)",
             "ast_skeletonization": "Tree-Sitter 6D Polyglot Interface Preservation (Zero Body Leakage)",
             "self_healing_sla": "Bounded 3-Turn Convergence Loop with Surgical Rollback (RP_k)",
             "wire_contract_rule": "STRICT_BLOCK" if self.environment == "production" else "ALLOW_ADDITIVE_WARN",

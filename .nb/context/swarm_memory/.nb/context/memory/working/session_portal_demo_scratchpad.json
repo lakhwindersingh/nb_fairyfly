@@ -1,0 +1,17 @@
+{
+  "session_id": "session_portal_demo",
+  "in_flight_hypotheses": [
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified",
+    "Hypothesis A verified"
+  ],
+  "symbol_diffs": {},
+  "step_returns": [],
+  "metadata": {},
+  "updated_at": 1791475380.633606
+}

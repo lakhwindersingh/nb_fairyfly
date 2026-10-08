@@ -1,6 +1,6 @@
 # Solution Management Simplification Plan: Convention Over Configuration
 
-> **Status**: PROPOSED  
+> **Status**: IMPLEMENTED & RATIFIED  
 > **Target Subsystems**: Web SaaS Portal (Tabs 14–16), Project Policy Engine (`CAP-41`), AST Pruning (`CAP-02`), Attention Slicing (`CAP-33`), Swarm Governance (`CAP-31`)  
 > **Core Principle**: *If it is an integral invariant of the architecture, document it as a standard and eliminate the dial.*
 

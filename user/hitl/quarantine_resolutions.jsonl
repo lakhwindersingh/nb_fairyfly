@@ -1,0 +1,10 @@
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 2467, "resolved_at": "2026-10-07T16:36:57.300134+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 2468, "resolved_at": "2026-10-07T16:36:57.325607+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 2491, "resolved_at": "2026-10-07T17:45:16.078812+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 2492, "resolved_at": "2026-10-07T17:45:16.231254+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 2508, "resolved_at": "2026-10-07T18:08:54.839004+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 2509, "resolved_at": "2026-10-07T18:08:54.863323+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 2529, "resolved_at": "2026-10-07T20:40:24.950671+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 2530, "resolved_at": "2026-10-07T20:40:25.103020+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 2547, "resolved_at": "2026-10-07T23:19:37.050685+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 2548, "resolved_at": "2026-10-07T23:19:37.217494+00:00"}

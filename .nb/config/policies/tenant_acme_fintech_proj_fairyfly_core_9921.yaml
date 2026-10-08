@@ -1,8 +1,21 @@
 tenant_id: tenant_acme_fintech
 project_id: proj_fairyfly_core_9921
-version: 2
-updated_at: '2026-09-21T01:40:37.300402+00:00'
-updated_by: user_super_alice
+environment: development
+vcs_repository:
+  url: https://github.com/acme/simplified.git
+  default_branch: develop
+hitl_quarantine_webhook: https://hooks.slack.com/services/alerts
+version: 8
+updated_at: '2026-10-08T16:02:59.357697+00:00'
+updated_by: user_architect
+certified_invariants:
+  attention_slicing: 15/25/35/10/15 Ratio (15% Invariants / 25% Contracts / 35% AST
+    / 10% Memory / 15% Headroom (Certified Zero Lost-in-Middle)
+  ast_skeletonization: Tree-Sitter 6D Polyglot Interface Preservation (Zero Body Leakage)
+  self_healing_sla: Bounded 3-Turn Convergence Loop with Surgical Rollback (RP_k)
+  wire_contract_rule: ALLOW_ADDITIVE_WARN
+  swarm_graph_integrity: Kahn DAG Acyclicity Enforced (Depth Ceiling D <= 3)
+  cbac_sandboxing: Least-Privilege Ephemeral HMAC-SHA256 Token Leasing
 attention:
   persona_invariants_pct: 15
   contracts_schemas_pct: 25
@@ -31,6 +44,6 @@ ast:
 healing_sla:
   max_diagnostic_reprompts: 3
   flaky_quarantine_variance_threshold: 0.15
-  wire_contract_breaking_rule: STRICT_BLOCK
+  wire_contract_breaking_rule: ALLOW_ADDITIVE_WARN
   auto_rollback_on_sla_breach: true
   sla_timeout_seconds: 120

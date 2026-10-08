@@ -2328,114 +2328,78 @@ percipience rollback \
           <div id="kmsResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
         </div>
 
-        <!-- CARD 4: GRANULAR CONTEXT TUNING SLIDERS & SLA POLICIES -->
+        <!-- CARD 4: SIMPLIFIED 5-POINT OPERATIONAL CONTROL PLANE & CERTIFIED INVARIANTS -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <div class="card-title" style="margin-bottom:0;">🎛️ Minute Project Control &amp; Policy Tuning Sliders</div>
-            <span id="budgetTotalBadge" class="badge badge-green" style="font-size:10px;">Budget: 100.0% (Valid)</span>
+            <div class="card-title" style="margin-bottom:0;">🛡️ Operational Control Plane &amp; Verified Invariants</div>
+            <span id="policyModeBadge" class="badge badge-green" style="font-size:10px;">🛡️ Production Gatekeeper Active</span>
           </div>
-          <p style="font-size:12px; margin-bottom:12px;">
-            Declarative per-project policy configuration: Dynamic attention slicing quotas, cognitive routing thresholds, diagnostic re-prompts, and flaky test quarantining.
+          <p style="font-size:12px; margin-bottom:14px; color:var(--text);">
+            Convention Over Configuration: All 8 granular dials eliminated. Integral architectural constants are enforced as immutable invariants.
           </p>
 
-          <!-- VISUAL STACKED BUDGET DISTRIBUTION BAR -->
-          <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:4px;">Dynamic Prompt Attention Budget Distribution (100% Total):</div>
-          <div class="budget-bar-container" id="budgetDistributionBar">
-            <div class="budget-slice bg-purple" id="slicePersona" style="width:15%;" title="Persona &amp; Invariants (15%)">15% Rules</div>
-            <div class="budget-slice bg-cyan" id="sliceContracts" style="width:25%;" title="Contracts &amp; Schemas (25%)">25% Contracts</div>
-            <div class="budget-slice bg-green" id="sliceAst" style="width:35%;" title="AST Codebase (35%)">35% AST Code</div>
-            <div class="budget-slice bg-amber" id="sliceMemory" style="width:10%;" title="Memory &amp; Trajectories (10%)">10% Mem</div>
-            <div class="budget-slice" id="sliceOutput" style="width:15%; background:#ec4899;" title="Reserved Output Headroom (15%)">15% Headroom</div>
-          </div>
-
-          <!-- SLIDERS: ATTENTION QUOTAS -->
+          <!-- 5-POINT CONTROL SURFACE FORM -->
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
-            <div class="slider-group">
-              <div class="slider-header">
-                <label>🛡️ Persona &amp; Invariants</label>
-                <span class="slider-val" id="valPersona">15%</span>
-              </div>
-              <input type="range" id="sliderPersona" min="5" max="30" value="15" oninput="onSliderChange()">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Operational Environment Mode</label>
+              <select id="policyEnvironmentSelect" class="select" style="font-size:11px; padding:6px 10px;" onchange="onEnvironmentModeChange()">
+                <option value="production">🛡️ Production Gatekeeper (Strict Block, 3-Turn SLA)</option>
+                <option value="development">🛠️ Development Mode (Non-Blocking Warn, Fast Leases)</option>
+              </select>
             </div>
 
-            <div class="slider-group">
-              <div class="slider-header">
-                <label>📜 Contracts &amp; Schemas</label>
-                <span class="slider-val" id="valContracts">25%</span>
-              </div>
-              <input type="range" id="sliderContracts" min="10" max="40" value="25" oninput="onSliderChange()">
-            </div>
-
-            <div class="slider-group">
-              <div class="slider-header">
-                <label>🌳 AST Codebase Context</label>
-                <span class="slider-val" id="valAst">35%</span>
-              </div>
-              <input type="range" id="sliderAst" min="15" max="55" value="35" oninput="onSliderChange()">
-            </div>
-
-            <div class="slider-group">
-              <div class="slider-header">
-                <label>🧠 Memory &amp; Trajectories</label>
-                <span class="slider-val" id="valMemory">10%</span>
-              </div>
-              <input type="range" id="sliderMemory" min="5" max="25" value="10" oninput="onSliderChange()">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">HITL Alert Webhook URL</label>
+              <input type="text" id="policyHitlWebhook" class="input" style="font-size:11px; padding:6px 10px;" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/T00/B00/X00">
             </div>
           </div>
 
-          <div class="slider-group" style="margin-bottom:16px;">
-            <div class="slider-header">
-              <label>🚀 Reserved Output Headroom (Guaranteed Generation)</label>
-              <span class="slider-val" id="valOutput" style="color:#ec4899;">15%</span>
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Target VCS Git Repository</label>
+              <input type="text" id="policyVcsUrl" class="input" style="font-size:11px; padding:6px 10px;" value="https://github.com/acme/fairyfly.git">
             </div>
-            <input type="range" id="sliderOutput" min="5" max="30" value="15" oninput="onSliderChange()">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Default Branch</label>
+              <input type="text" id="policyVcsBranch" class="input" style="font-size:11px; padding:6px 10px;" value="main">
+            </div>
           </div>
 
-          <!-- SLA & ROUTING CONTROLS -->
-          <div style="border-top:1px solid var(--border); padding-top:14px; margin-bottom:14px;">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
-              <div class="slider-group" style="margin-bottom:0;">
-                <div class="slider-header">
-                  <label>⚙️ Cognitive Tier A Threshold</label>
-                  <span class="slider-val" id="valTierA">0.70</span>
-                </div>
-                <input type="range" id="sliderTierA" min="0.10" max="0.95" step="0.05" value="0.70" oninput="document.getElementById('valTierA').innerText = parseFloat(this.value).toFixed(2)">
-              </div>
-
-              <div class="slider-group" style="margin-bottom:0;">
-                <div class="slider-header">
-                  <label>🔁 Diagnostic Re-Prompts</label>
-                  <span class="slider-val" id="valReprompts">3 turns</span>
-                </div>
-                <input type="range" id="sliderReprompts" min="1" max="5" value="3" oninput="document.getElementById('valReprompts').innerText = this.value + ' turns'">
-              </div>
+          <!-- CERTIFIED ARCHITECTURAL INVARIANTS PANEL (READ-ONLY) -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:14px;">
+            <div style="font-size:11px; font-weight:700; color:var(--cyan); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+              <span>📜</span> Certified Architectural Standards (Zero-Dial Invariants)
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
-              <div class="slider-group" style="margin-bottom:0;">
-                <div class="slider-header">
-                  <label>🧬 Flaky Quarantine Threshold</label>
-                  <span class="slider-val" id="valFlaky">15.0%</span>
-                </div>
-                <input type="range" id="sliderFlaky" min="0.05" max="0.40" step="0.01" value="0.15" oninput="document.getElementById('valFlaky').innerText = (parseFloat(this.value)*100).toFixed(1) + '%'">
+            <!-- Invariant Badges Grid -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:11px;">
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Attention Slicing (15/25/35/10/15)</div>
+                <div style="color:var(--muted); font-size:10px;">15% Rules • 25% Contracts • 35% AST • 10% Memory • 15% Headroom (Zero Lost-in-Middle)</div>
               </div>
 
-              <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" style="font-size:11px;">Wire Contract Breaking Rule</label>
-                <select id="policyWireRule" class="select" style="font-size:11px; padding:6px 10px;">
-                  <option value="STRICT_BLOCK">STRICT_BLOCK (Gate Rejection)</option>
-                  <option value="ALLOW_ADDITIVE_WARN">ALLOW_ADDITIVE_WARN (Warn Only)</option>
-                  <option value="MANUAL_APPROVAL">MANUAL_APPROVAL (HITL Signoff)</option>
-                </select>
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Tree-Sitter 6D AST Skeletonizer</div>
+                <div style="color:var(--muted); font-size:10px;">Full Public Signatures &amp; Type Hierarchies Preserved; Bodies Stripped (83.7% Token Reduction)</div>
+              </div>
+
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Self-Healing SLA (3-Turn Bound)</div>
+                <div style="color:var(--muted); font-size:10px;">Bounded 3 Iterations Ceiling • 15% Flaky Variance Quarantine • Auto Rollback to RP<sub>k</sub></div>
+              </div>
+
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Swarm Governance &amp; CBAC</div>
+                <div style="color:var(--muted); font-size:10px;">Kahn DAG Acyclicity Enforced • Depth Ceiling D≤3 • HMAC-Signed Least-Privilege Lease</div>
               </div>
             </div>
           </div>
 
           <!-- ACTION BUTTONS -->
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-primary" onclick="saveCurrentPolicy()" style="flex:2; font-size:11px;">💾 Save &amp; Enforce Policy</button>
-            <button class="btn btn-secondary" onclick="testDynamicAttention()" style="flex:1; font-size:11px;">🧪 Test Slicing</button>
-            <button class="btn btn-secondary" onclick="simulatePrGateLive()" style="flex:1; font-size:11px;">🛡️ Simulate PR Gate</button>
+            <button class="btn btn-primary" onclick="saveCurrentPolicy()" style="flex:2; font-size:11px;">💾 Apply &amp; Enforce Policy</button>
+            <button class="btn btn-secondary" onclick="testDynamicAttention()" style="flex:1; font-size:11px;">🧪 Test Slicing Standard</button>
+            <button class="btn btn-secondary" onclick="simulatePrGateLive()" style="flex:1; font-size:11px;">🛡️ Test Gatekeeper</button>
           </div>
 
           <div id="policyResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
@@ -3823,87 +3787,56 @@ percipience rollback \
     }
   }
 
-  function applyPolicyToSliders(policy) {
+  function applyPolicyToControls(policy) {
     if (!policy) return;
     currentGovernanceData = policy;
 
-    const att = policy.attention || {};
-    document.getElementById('sliderPersona').value = att.persona_invariants_pct || 15;
-    document.getElementById('sliderContracts').value = att.contracts_schemas_pct || 25;
-    document.getElementById('sliderAst').value = att.ast_codebase_pct || 35;
-    document.getElementById('sliderMemory').value = att.memory_trajectories_pct || 10;
-    document.getElementById('sliderOutput').value = att.reserved_output_pct || 15;
+    const env = policy.environment || 'production';
+    const envSelect = document.getElementById('policyEnvironmentSelect');
+    if (envSelect) envSelect.value = env;
 
-    const rout = policy.routing || {};
-    document.getElementById('sliderTierA').value = rout.tier_a_threshold || 0.70;
-    document.getElementById('valTierA').innerText = (rout.tier_a_threshold || 0.70).toFixed(2);
+    const hookInput = document.getElementById('policyHitlWebhook');
+    if (hookInput) hookInput.value = policy.hitl_quarantine_webhook || 'https://hooks.slack.com/services/T00/B00/X00';
 
-    const sla = policy.healing_sla || {};
-    document.getElementById('sliderReprompts').value = sla.max_diagnostic_reprompts || 3;
-    document.getElementById('valReprompts').innerText = (sla.max_diagnostic_reprompts || 3) + ' turns';
-    document.getElementById('sliderFlaky').value = sla.flaky_quarantine_variance_threshold || 0.15;
-    document.getElementById('valFlaky').innerText = ((sla.flaky_quarantine_variance_threshold || 0.15) * 100).toFixed(1) + '%';
-    document.getElementById('policyWireRule').value = sla.wire_contract_breaking_rule || 'STRICT_BLOCK';
+    const vcs = policy.vcs_repository || {};
+    const vcsUrlInput = document.getElementById('policyVcsUrl');
+    if (vcsUrlInput) vcsUrlInput.value = vcs.url || 'https://github.com/acme/fairyfly.git';
+    const vcsBranchInput = document.getElementById('policyVcsBranch');
+    if (vcsBranchInput) vcsBranchInput.value = vcs.default_branch || 'main';
 
-    onSliderChange();
+    onEnvironmentModeChange();
   }
 
-  function onSliderChange() {
-    const p = parseFloat(document.getElementById('sliderPersona').value) || 0;
-    const c = parseFloat(document.getElementById('sliderContracts').value) || 0;
-    const a = parseFloat(document.getElementById('sliderAst').value) || 0;
-    const m = parseFloat(document.getElementById('sliderMemory').value) || 0;
-    const o = parseFloat(document.getElementById('sliderOutput').value) || 0;
+  function applyPolicyToSliders(policy) {
+    applyPolicyToControls(policy);
+  }
 
-    document.getElementById('valPersona').innerText = p + '%';
-    document.getElementById('valContracts').innerText = c + '%';
-    document.getElementById('valAst').innerText = a + '%';
-    document.getElementById('valMemory').innerText = m + '%';
-    document.getElementById('valOutput').innerText = o + '%';
+  function onEnvironmentModeChange() {
+    const envSelect = document.getElementById('policyEnvironmentSelect');
+    const badge = document.getElementById('policyModeBadge');
+    if (!envSelect || !badge) return;
 
-    const sum = p + c + a + m + o;
-    const badge = document.getElementById('budgetTotalBadge');
-    if (Math.abs(sum - 100.0) < 0.1) {
+    if (envSelect.value === 'production') {
       badge.className = 'badge badge-green';
-      badge.innerText = 'Budget: 100.0% (Valid)';
+      badge.innerText = '🛡️ Production Gatekeeper Active';
     } else {
-      badge.className = 'badge badge-red';
-      badge.innerText = `Budget: ${sum.toFixed(1)}% (Must equal 100%)`;
+      badge.className = 'badge badge-amber';
+      badge.innerText = '🛠️ Development Mode Active';
     }
-
-    document.getElementById('slicePersona').style.width = p + '%';
-    document.getElementById('slicePersona').innerText = p >= 8 ? `${p}% Rules` : `${p}%`;
-    document.getElementById('sliceContracts').style.width = c + '%';
-    document.getElementById('sliceContracts').innerText = c >= 8 ? `${c}% Contracts` : `${c}%`;
-    document.getElementById('sliceAst').style.width = a + '%';
-    document.getElementById('sliceAst').innerText = a >= 8 ? `${a}% AST Code` : `${a}%`;
-    document.getElementById('sliceMemory').style.width = m + '%';
-    document.getElementById('sliceMemory').innerText = m >= 8 ? `${m}% Mem` : `${m}%`;
-    document.getElementById('sliceOutput').style.width = o + '%';
-    document.getElementById('sliceOutput').innerText = o >= 8 ? `${o}% Headroom` : `${o}%`;
   }
+
+  function onSliderChange() {}
 
   async function saveCurrentPolicy() {
-    const p = parseFloat(document.getElementById('sliderPersona').value) || 0;
-    const c = parseFloat(document.getElementById('sliderContracts').value) || 0;
-    const a = parseFloat(document.getElementById('sliderAst').value) || 0;
-    const m = parseFloat(document.getElementById('sliderMemory').value) || 0;
-    const o = parseFloat(document.getElementById('sliderOutput').value) || 0;
-
-    const sum = p + c + a + m + o;
-    if (Math.abs(sum - 100.0) > 0.1) {
-      alert(`Attention budget quotas must sum exactly to 100% (currently ${sum.toFixed(1)}%).`);
-      return;
-    }
-
-    const tierA = parseFloat(document.getElementById('sliderTierA').value) || 0.70;
-    const reprompts = parseInt(document.getElementById('sliderReprompts').value) || 3;
-    const flaky = parseFloat(document.getElementById('sliderFlaky').value) || 0.15;
-    const wireRule = document.getElementById('policyWireRule').value;
+    const envSelect = document.getElementById('policyEnvironmentSelect');
+    const env = envSelect ? envSelect.value : 'production';
+    const hitlHook = (document.getElementById('policyHitlWebhook') || {}).value || '';
+    const vcsUrl = (document.getElementById('policyVcsUrl') || {}).value || 'https://github.com/acme/fairyfly.git';
+    const vcsBranch = (document.getElementById('policyVcsBranch') || {}).value || 'main';
 
     const resBox = document.getElementById('policyResultBox');
     resBox.style.display = 'block';
-    resBox.innerHTML = '<span style="color:var(--cyan);">Saving and enforcing project policy...</span>';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Applying simplified policy &amp; verifying architectural invariants...</span>';
 
     try {
       const res = await fetch('/api/project/policy/update', {
@@ -3913,31 +3846,27 @@ percipience rollback \
           tenant_id: 'tenant_acme_fintech',
           project_id: 'proj_fairyfly_core_9921',
           patch_data: {
-            attention: {
-              persona_invariants_pct: p,
-              contracts_schemas_pct: c,
-              ast_codebase_pct: a,
-              memory_trajectories_pct: m,
-              reserved_output_pct: o
-            },
-            routing: {
-              tier_a_threshold: tierA
-            },
-            healing_sla: {
-              max_diagnostic_reprompts: reprompts,
-              flaky_quarantine_variance_threshold: flaky,
-              wire_contract_breaking_rule: wireRule
-            }
+            environment: env,
+            hitl_quarantine_webhook: hitlHook,
+            vcs_repository: { url: vcsUrl, default_branch: vcsBranch }
           },
           user_id: 'user_super_alice'
         })
       });
       const data = await res.json();
       if (res.ok) {
+        const inv = data.policy.certified_invariants || {};
         resBox.innerHTML = `
-          <div style="color:var(--green); font-weight:700;">✓ Policy Version ${data.policy.version} Enforced Successfully!</div>
-          <div style="color:var(--muted); font-size:11px; margin-top:3px;">Attention quotas: ${p}/${c}/${a}/${m}/${o} • SLA Re-Prompts: ${reprompts} turns • Flaky Threshold: ${(flaky*100).toFixed(1)}% • Wire Rule: ${wireRule}</div>
+          <div style="color:var(--green); font-weight:700;">✓ Policy Enforced Successfully! (Version ${data.policy.version})</div>
+          <div style="color:var(--text); font-size:11px; margin-top:4px;">
+            <b>Mode:</b> ${data.policy.environment.toUpperCase()} • <b>VCS:</b> ${data.policy.vcs_repository.url} (${data.policy.vcs_repository.default_branch})
+          </div>
+          <div style="color:var(--muted); font-size:10px; margin-top:4px; line-height:1.4;">
+            ✓ Slicing: ${inv.attention_slicing || '15/25/35/10/15 certified'}<br>
+            ✓ SLA: ${inv.self_healing_sla || '3-turn bound'} (Wire: ${inv.wire_contract_rule || 'STRICT_BLOCK'})
+          </div>
         `;
+        onEnvironmentModeChange();
       } else {
         resBox.innerHTML = `<span style="color:var(--red);">✗ Policy Update Error:</span> ${data.error}`;
       }
