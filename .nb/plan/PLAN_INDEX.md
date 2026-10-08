@@ -2,7 +2,7 @@
 index_type: "master_navigation"
 purpose: "Unified entry point for agentic and human navigation of all plans"
 last_updated: "2026-10-05"
-total_plans: 7
+total_plans: 8
 organization_schema: "hierarchical_with_dual_format"
 ---
 
@@ -25,6 +25,12 @@ organization_schema: "hierarchical_with_dual_format"
 ├── 🧠 l2/                           ← Self-Evolution & Commercial OS
 │   ├── enterprise-context-engineering-os/ ← Play 3 Enterprise OS & Gatekeeper
 │   └── corp-site-saas-portal/       ← Play 3 Cloud SaaS Portal & Brand Site
+├── 🧪 test/                         ← Master Test Plan & AI-Assisted Verification
+│   ├── README.md                    ← Test Governance Overview & Pyramid
+│   ├── MANIFEST.yaml                ← Cryptographic Test Manifest
+│   ├── concise.md                   ← High-Density Test Specification
+│   ├── detailed.md                  ← Exhaustive 18-Subsystem Test Plan
+│   └── test_runner.py               ← Automatable AI Test Orchestrator
 ├── 📐 templates/                    ← Domain Layer Templates
 │   └── custom_domain_layer_template.md
 ├── ⚙️ scripts/                      ← Automation & Verification Tools
@@ -110,7 +116,20 @@ organization_schema: "hierarchical_with_dual_format"
 
 ---
 
-## 4. Templates, Tools & Historical Archives
+## 4. Test Governance & Verification Space
+
+### Percipience Master Test Governance & AI-Assisted Verification Framework
+- **ID**: `percipience_master_test_plan`
+- **Concise Spec**: [test/concise.md](./test/concise.md)
+- **Detailed Guide**: [test/detailed.md](./test/detailed.md)
+- **Overview**: [test/README.md](./test/README.md)
+- **Version Manifest**: [test/MANIFEST.yaml](./test/MANIFEST.yaml)
+- **Test Orchestrator**: [test/test_runner.py](./test/test_runner.py)
+- **Purpose**: Authoritative 18-subsystem automated test governance, Pytest 8.4+ Allure test execution, DeepEval AI quantitative evaluations, Playwright E2E testing, and autonomous self-healing test execution.
+
+---
+
+## 5. Templates, Tools & Historical Archives
 
 - **Custom Domain Layer Template**: [templates/custom_domain_layer_template.md](./templates/custom_domain_layer_template.md)
 - **Automated Version Sync Tool**: [scripts/sync_plan_versions.py](./scripts/sync_plan_versions.py)

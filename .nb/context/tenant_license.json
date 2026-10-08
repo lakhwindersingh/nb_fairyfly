@@ -1,0 +1,27 @@
+{
+  "license_id": "lic_plan_enterprise_755e02cbf950",
+  "tenant_id": "tenant_enterprise_acme",
+  "tenant_name": "Acme Global Financial Technologies",
+  "tier": "plan_enterprise",
+  "tier_name": "Enterprise Dedicated Tier",
+  "base_price_monthly_usd": 9999,
+  "included_seats": -1,
+  "included_concurrent_worktrees": -1,
+  "included_pr_audits_monthly": -1,
+  "entitled_features": {
+    "ast_token_pruning": true,
+    "merkle_chain_audit": true,
+    "basic_autonomous_cicd": true,
+    "platform_core_encryption": true,
+    "nbpack_obfuscation": true,
+    "user_plan_encryption": true,
+    "basic_platform_tools_exposure": true,
+    "private_vpc_deploy": true,
+    "dedicated_slack_sla": true
+  },
+  "payment_reference": null,
+  "issued_at": "2026-10-08T16:48:29.199504+00:00",
+  "expires_at": null,
+  "signature_sha256": "16f740d17414458cb39ae771b5526c8346d9a2587c8c063b14ecf93955284fb1",
+  "merkle_block_id": null
+}

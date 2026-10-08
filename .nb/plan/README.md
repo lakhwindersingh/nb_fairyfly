@@ -61,6 +61,9 @@ Every active plan directory adheres strictly to the **Percipience 4-File Convent
 - **[Enterprise Context Engineering OS (`enterprise-context-engineering-os/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l2/enterprise-context-engineering-os/detailed.md)**: Commercial CEPaaS operating system, BYOR multi-VCS adapter, `.nbpack` obfuscation, and enterprise pricing/deployment model (Play 3).
 - **[Cloud SaaS Portal & Brand Site (`corp-site-saas-portal/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l2/corp-site-saas-portal/detailed.md)**: Play 3 Cloud SaaS Portal, corporate public landing page, interactive pricing calculator, and enterprise self-serve onboarding.
 
+### 🧪 test/ (Test Governance & Verification)
+- **[Percipience Master Test Governance & Verification Framework (`test/detailed.md`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/detailed.md)**: 18-subsystem automated test governance, Pytest 8.4+ Allure test execution, DeepEval AI quantitative evaluations, Playwright E2E, and AI-assisted self-healing test orchestrator (`.nb/plan/test/test_runner.py`).
+
 ### 📐 Scaffolding Templates (`templates/`)
 - **[Custom Domain Layer Template](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md)**: Standardized template for scaffolding custom enterprise domain layers (FinTech, Healthcare, Web3, etc.).
 

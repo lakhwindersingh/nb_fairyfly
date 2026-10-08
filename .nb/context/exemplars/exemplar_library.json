@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "exemplars": [
+    {
+      "exemplar_id": "ex_fastapi_endpoint_01",
+      "title": "FastAPI Protected Endpoint with Pydantic Schema",
+      "language": "python",
+      "ast_pattern": "fastapi_endpoint",
+      "domain_tags": ["api", "rest", "authentication", "fastapi"],
+      "code_snippet": "from fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, Field\n\nrouter = APIRouter(prefix=\"/api/v1/auth\", tags=[\"auth\"])\n\nclass LoginRequest(BaseModel):\n    username: str = Field(..., min_length=3, max_length=50)\n    password: str = Field(..., min_length=8)\n\n@router.post(\"/login\", status_code=status.HTTP_200_OK)\nasync def login(req: LoginRequest):\n    if req.username == \"admin\" and req.password == \"secret123\":\n        return {\"access_token\": \"jwt_token_sample\", \"token_type\": \"bearer\"}\n    raise HTTPException(status_code=401, detail=\"Invalid credentials\")",
+      "explanation": "Standard production pattern for typed, validated REST endpoint with Pydantic v2 schemas and HTTP status codes.",
+      "is_negative": false
+    },
+    {
+      "exemplar_id": "ex_ast_visitor_01",
+      "title": "AST Node Visitor with Selective Pruning",
+      "language": "python",
+      "ast_pattern": "ast_visitor",
+      "domain_tags": ["ast", "compiler", "parser", "optimization"],
+      "code_snippet": "import ast\n\nclass MethodSkeletonizer(ast.NodeTransformer):\n    def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.AST:\n        # Preserve docstring if present, replace body with pass/ellipsis\n        docstring = ast.get_docstring(node)\n        new_body = []\n        if docstring:\n            new_body.append(ast.Expr(value=ast.Constant(value=docstring)))\n        new_body.append(ast.Expr(value=ast.Constant(value=Ellipsis)))\n        node.body = new_body\n        return node",
+      "explanation": "AST NodeTransformer that recursively strips method bodies to semantic skeletons while preserving docstrings.",
+      "is_negative": false
+    },
+    {
+      "exemplar_id": "ex_merkle_verification_01",
+      "title": "SHA-256 Merkle Ledger Block Chaining",
+      "language": "python",
+      "ast_pattern": "merkle_hook",
+      "domain_tags": ["crypto", "merkle", "ledger", "audit", "security"],
+      "code_snippet": "import hashlib\n\ndef compute_block_hash(block_id: str, prev_hash: str, merkle_root: str, git_sha: str, timestamp: str) -> str:\n    payload = f\"{block_id}:{prev_hash}:{merkle_root}:{git_sha}:{timestamp}\"\n    return hashlib.sha256(payload.encode(\"utf-8\")).hexdigest()\n\ndef verify_chain(current_block: dict, previous_block: dict) -> bool:\n    if current_block.get(\"prev_hash\") != previous_block.get(\"hash\"):\n        return False\n    recalculated = compute_block_hash(\n        current_block[\"id\"],\n        current_block[\"prev_hash\"],\n        current_block[\"merkle_root\"],\n        current_block[\"git_sha\"],\n        current_block[\"timestamp\"]\n    )\n    return recalculated == current_block.get(\"hash\")",
+      "explanation": "Deterministic cryptographic block hash computation and forward chain integrity verifier.",
+      "is_negative": false
+    },
+    {
+      "exemplar_id": "ex_wire_contract_01",
+      "title": "Wire Contract JSON Schema Validator with SemVer Compatibility",
+      "language": "python",
+      "ast_pattern": "openapi_contract",
+      "domain_tags": ["contract", "schema", "validation", "semver"],
+      "code_snippet": "from jsonschema import Draft7Validator, SchemaError\nfrom typing import Dict, Tuple, List\n\ndef validate_contract_payload(schema: Dict, payload: Dict) -> Tuple[bool, List[str]]:\n    validator = Draft7Validator(schema)\n    errors = [e.message for e in validator.iter_errors(payload)]\n    return (len(errors) == 0, errors)",
+      "explanation": "JSON Schema Draft-07 runtime validator returning structured error diagnostics for inter-service RPC payloads.",
+      "is_negative": false
+    },
+    {
+      "exemplar_id": "ex_state_machine_01",
+      "title": "Finite State Machine with Invariant Guard Transitions",
+      "language": "python",
+      "ast_pattern": "state_machine",
+      "domain_tags": ["state_machine", "workflow", "invariants", "concurrency"],
+      "code_snippet": "class WorkflowFSM:\n    VALID_TRANSITIONS = {\n        \"INIT\": [\"PLANNING\", \"ABORTED\"],\n        \"PLANNING\": [\"EXECUTING\", \"BLOCKED\"],\n        \"EXECUTING\": [\"VERIFYING\", \"FAILED\"],\n        \"VERIFYING\": [\"COMPLETED\", \"RETRYING\"],\n        \"RETRYING\": [\"EXECUTING\", \"FAILED\"]\n    }\n    def __init__(self):\n        self.state = \"INIT\"\n    def transition(self, target: str):\n        if target not in self.VALID_TRANSITIONS.get(self.state, []):\n            raise ValueError(f\"Illegal transition from {self.state} to {target}\")\n        self.state = target",
+      "explanation": "Strict FSM state transition guard preventing illegal lifecycle leaps.",
+      "is_negative": false
+    },
+    {
+      "exemplar_id": "ex_negative_dangerous_eval_01",
+      "title": "ANTI-PATTERN: Unsafe Dynamic Code Evaluation",
+      "language": "python",
+      "ast_pattern": "anti_pattern",
+      "domain_tags": ["security", "guardrails", "vulnerability"],
+      "code_snippet": "# DO NOT DO THIS:\ndef execute_user_script(code_str: str):\n    return eval(code_str)  # VULNERABLE: Arbitrary code execution vulnerability",
+      "explanation": "Counter-factual negative exemplar showing unsafe dynamic evaluation which must be replaced with AST parsing or sandboxed execution.",
+      "is_negative": true
+    }
+  ]
+}
