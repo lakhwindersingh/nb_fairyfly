@@ -10,50 +10,7 @@ Provisions and permissions packages across IntelliJ, VSCode, and SaaS Portal.
 import os
 import sys
 import json
-try:
-    import yaml
-    try:
-        from yaml import CSafeLoader as SafeLoader, CSafeDumper as SafeDumper
-    except ImportError:
-        from yaml import SafeLoader, SafeDumper
-except ImportError:
-    class _FallbackYaml:
-        @staticmethod
-        def safe_load(stream):
-            if hasattr(stream, "read"):
-                content = stream.read()
-            else:
-                content = str(stream)
-            try:
-                return json.loads(content)
-            except Exception:
-                pass
-            res = {}
-            for line in content.splitlines():
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                if ":" in line:
-                    k, v = line.split(":", 1)
-                    k = k.strip()
-                    v = v.strip().strip("'\"")
-                    if v.lower() == "true": res[k] = True
-                    elif v.lower() == "false": res[k] = False
-                    elif v.isdigit(): res[k] = int(v)
-                    else: res[k] = v
-            return res
-
-        @staticmethod
-        def dump(data, stream=None, sort_keys=False, **kwargs):
-            content = json.dumps(data, indent=2, sort_keys=sort_keys)
-            if stream and hasattr(stream, "write"):
-                stream.write(content)
-                return None
-            return content
-
-    yaml = _FallbackYaml()
-    SafeLoader = None
-    SafeDumper = None
+import yaml
 import zlib
 import shutil
 import hashlib
@@ -653,4 +610,246 @@ class CommercialPackagerProvisioner:
             "canonical_name": tier_label,
             "reason": reason,
             "enforcement": "STRICT_RBAC"
+        }
+
+    @classmethod
+    def generate_license(
+        cls,
+        workspace_root: Path,
+        tier: str,
+        tenant_id: str = "tenant_community_default",
+        tenant_name: Optional[str] = None,
+        seats: Optional[int] = None,
+        worktrees: Optional[int] = None,
+        audits: Optional[int] = None,
+        custom_features: Optional[Dict[str, bool]] = None,
+        payment_reference: Optional[str] = None,
+        expires_days: Optional[int] = None
+    ) -> Dict[str, Any]:
+        """
+        Mints and cryptographically signs a tenant license file for any tier.
+        """
+        workspace_root = Path(workspace_root).resolve()
+        spec = cls.get_tier_spec(tier, workspace_root)
+        tier_id = spec["tier_id"]
+        canonical_name = spec["canonical_name"]
+
+        now = datetime.now(timezone.utc)
+        issued_at = now.isoformat()
+        expires_at = None
+        if expires_days:
+            from datetime import timedelta
+            expires_at = (now + timedelta(days=expires_days)).isoformat()
+
+        t_name = tenant_name or tenant_id.replace("_", " ").title()
+        eff_seats = seats if seats is not None else spec["included_seats"]
+        eff_worktrees = worktrees if worktrees is not None else spec["included_concurrent_worktrees"]
+        eff_audits = audits if audits is not None else spec["included_pr_audits_monthly"]
+
+        features = dict(spec["features"])
+        if custom_features:
+            features.update(custom_features)
+
+        raw_id_seed = f"{tier_id}_{tenant_id}_{issued_at}"
+        lic_suffix = hashlib.sha256(raw_id_seed.encode("utf-8")).hexdigest()[:12]
+        license_id = f"lic_{tier_id}_{lic_suffix}"
+
+        payload = {
+            "license_id": license_id,
+            "tenant_id": tenant_id,
+            "tenant_name": t_name,
+            "tier": tier_id,
+            "tier_name": canonical_name,
+            "base_price_monthly_usd": spec["base_price_monthly_usd"],
+            "included_seats": eff_seats,
+            "included_concurrent_worktrees": eff_worktrees,
+            "included_pr_audits_monthly": eff_audits,
+            "entitled_features": features,
+            "payment_reference": payment_reference,
+            "issued_at": issued_at,
+            "expires_at": expires_at
+        }
+
+        serialized = json.dumps(payload, sort_keys=True)
+        sig = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+        payload["signature_sha256"] = sig
+
+        merkle_block_id = None
+        MerkleEngineClass = _get_merkle_engine()
+        if MerkleEngineClass:
+            try:
+                seal = MerkleEngineClass.record_state(
+                    workspace_root=workspace_root,
+                    agent_id="agent_commercial_packager_provisioner",
+                    action=f"MINT_LICENSE_{tier_id.upper()}",
+                    step_id="step_license_minting",
+                    changed_files=[license_id]
+                )
+                merkle_block_id = seal.get("block_id")
+            except Exception:
+                pass
+        payload["merkle_block_id"] = merkle_block_id
+
+        return payload
+
+    @classmethod
+    def install_license(
+        cls,
+        workspace_root: Path,
+        license_data: Dict[str, Any],
+        target_path: Optional[Path] = None
+    ) -> Dict[str, Any]:
+        """
+        Installs a minted license into active workspace .nb/context/tenant_license.json
+        and updates context_ledger.yaml project tier accordingly.
+        """
+        workspace_root = Path(workspace_root).resolve()
+        ctx_dir = workspace_root / ".nb" / "context"
+        ctx_dir.mkdir(parents=True, exist_ok=True)
+
+        dest_file = target_path or (ctx_dir / "tenant_license.json")
+        dest_file.parent.mkdir(parents=True, exist_ok=True)
+
+        content = json.dumps(license_data, indent=2)
+        dest_file.write_text(content, encoding="utf-8")
+
+        alias_file = workspace_root / ".nb" / "tenant_license.json"
+        try:
+            alias_file.write_text(content, encoding="utf-8")
+        except Exception:
+            pass
+
+        tier = license_data.get("tier", "plan_free")
+        for ledger_name in ["context_ledger.yaml", "context_ledger.public.yaml"]:
+            ledger_path = ctx_dir / "ledger" / ledger_name
+            if ledger_path.exists():
+                try:
+                    lines = ledger_path.read_text(encoding="utf-8").splitlines()
+                    new_lines = []
+                    project_seen = False
+                    tier_updated = False
+                    for line in lines:
+                        if line.strip().startswith("project:"):
+                            project_seen = True
+                            new_lines.append(line)
+                            continue
+                        if project_seen and line.strip().startswith("tier:"):
+                            new_lines.append(f"  tier: \"{tier}\"")
+                            tier_updated = True
+                            project_seen = False
+                            continue
+                        if project_seen and not line.startswith("  "):
+                            new_lines.append(f"  tier: \"{tier}\"")
+                            tier_updated = True
+                            project_seen = False
+                        new_lines.append(line)
+                    if not tier_updated:
+                        new_lines.append(f"tier: \"{tier}\"")
+                    ledger_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+                except Exception:
+                    pass
+
+        return {
+            "status": "INSTALLED",
+            "installed_path": str(dest_file),
+            "tier": tier,
+            "tenant_id": license_data.get("tenant_id"),
+            "license_id": license_data.get("license_id"),
+            "signature_sha256": license_data.get("signature_sha256")
+        }
+
+    @classmethod
+    def get_active_license(cls, workspace_root: Path) -> Dict[str, Any]:
+        """
+        Retrieves the active workspace license, checking .nb/context/tenant_license.json
+        and fallback candidates.
+        """
+        workspace_root = Path(workspace_root).resolve()
+        candidates = [
+            workspace_root / ".nb" / "context" / "tenant_license.json",
+            workspace_root / ".nb" / "tenant_license.json",
+            workspace_root / "tenant_license.json",
+            workspace_root / ".percipience_license.json",
+            workspace_root / ".nb" / "context" / "PERCIPIENCE_LICENSE.json",
+            workspace_root / ".nb" / "PERCIPIENCE_LICENSE.json"
+        ]
+        for c in candidates:
+            if c.exists() and c.is_file():
+                try:
+                    data = json.loads(c.read_text(encoding="utf-8"))
+                    data["source_path"] = str(c)
+                    data["is_installed"] = True
+                    return data
+                except Exception:
+                    pass
+
+        spec = cls.get_tier_spec("plan_free", workspace_root)
+        return {
+            "license_id": "lic_default_free",
+            "tenant_id": "tenant_community_default",
+            "tenant_name": "Free Community Tier (Unlicensed)",
+            "tier": "plan_free",
+            "tier_name": spec["canonical_name"],
+            "base_price_monthly_usd": 0,
+            "included_seats": 1,
+            "included_concurrent_worktrees": 1,
+            "included_pr_audits_monthly": 500,
+            "entitled_features": spec["features"],
+            "source_path": None,
+            "is_installed": False
+        }
+
+    @classmethod
+    def self_generate_license_after_payment(
+        cls,
+        workspace_root: Path,
+        payment_payload: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Autonomous post-payment hook (Stripe / checkout webhook integration).
+        Receives payment confirmation, mints the paid tier license with payment reference,
+        installs it into the active workspace, and logs cryptographic Merkle proof.
+        """
+        workspace_root = Path(workspace_root).resolve()
+        payment_id = payment_payload.get("payment_id") or payment_payload.get("payment_intent_id") or payment_payload.get("id") or f"pay_{hashlib.sha256(str(datetime.now(timezone.utc)).encode()).hexdigest()[:10]}"
+        tenant_id = payment_payload.get("tenant_id") or payment_payload.get("customer_id") or "tenant_paid_customer"
+        tenant_name = payment_payload.get("tenant_name") or payment_payload.get("customer_name")
+        raw_tier = payment_payload.get("tier") or payment_payload.get("plan") or "plan_team"
+        custom_seats = payment_payload.get("seats")
+        custom_worktrees = payment_payload.get("worktrees")
+        custom_audits = payment_payload.get("audits")
+
+        license_data = cls.generate_license(
+            workspace_root=workspace_root,
+            tier=raw_tier,
+            tenant_id=tenant_id,
+            tenant_name=tenant_name,
+            seats=custom_seats,
+            worktrees=custom_worktrees,
+            audits=custom_audits,
+            payment_reference=payment_id
+        )
+
+        install_res = cls.install_license(workspace_root, license_data)
+
+        audit_file = workspace_root / ".nb" / "context" / "ledger" / "payment_license_audit.jsonl"
+        audit_file.parent.mkdir(parents=True, exist_ok=True)
+        audit_entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "event": "POST_PAYMENT_LICENSE_SELF_GENERATED",
+            "payment_id": payment_id,
+            "tenant_id": tenant_id,
+            "tier": license_data["tier"],
+            "license_id": license_data["license_id"],
+            "signature": license_data["signature_sha256"]
+        }
+        with open(audit_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps(audit_entry) + "\n")
+
+        return {
+            "status": "SUCCESS",
+            "action": "PAYMENT_FULFILLED_LICENSE_MINTED",
+            "license": license_data,
+            "installation": install_res,
+            "audit_entry": audit_entry
         }

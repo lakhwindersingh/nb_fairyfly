@@ -131,18 +131,81 @@ PIISanitizer = _load_engine("pii_sanitizer", ["PIISanitizer"])
 PromptInjectionGuard = _load_engine("prompt_injection_guard", ["PromptInjectionGuard"])
 OutputGuardrailValidator = _load_engine("output_guardrail_validator", ["OutputGuardrailValidator"])
 
+def cmd_license(args):
+    """Manages, mints, installs, and verifies commercial tier licenses."""
+    action = getattr(args, "lic_action", "status")
+    if action == "status":
+        active = CommercialPackagerProvisioner.get_active_license(REPO_ROOT)
+        print("📜 Percipience Active Commercial License:")
+        print(f"   • License ID: {active.get('license_id')}")
+        print(f"   • Tier: {active.get('tier_name', active.get('tier')).upper()} ({active.get('tier')})")
+        print(f"   • Tenant ID: {active.get('tenant_id')}")
+        print(f"   • Tenant Name: {active.get('tenant_name')}")
+        seats = active.get("included_seats")
+        wts = active.get("included_concurrent_worktrees")
+        audits = active.get("included_pr_audits_monthly")
+        print(f"   • Quotas: {('Unlimited' if seats == -1 else seats)} Seats | {('Unlimited' if wts == -1 else wts)} Worktrees | {('Unlimited' if audits == -1 else audits)} Audits/mo")
+        if active.get("payment_reference"):
+            print(f"   • Payment Reference: {active.get('payment_reference')}")
+        print(f"   • Signature: {active.get('signature_sha256', 'N/A')}")
+        inst_label = f"Yes ({active.get('source_path')})" if active.get("is_installed") else "No (Using unauthenticated default)"
+        print(f"   • Installed: {inst_label}")
+    elif action in ["mint", "generate"]:
+        tier = getattr(args, "tier", "plan_team")
+        tenant_id = getattr(args, "tenant", "tenant_custom")
+        tenant_name = getattr(args, "name", None)
+        seats = getattr(args, "seats", None)
+        worktrees = getattr(args, "worktrees", None)
+        audits = getattr(args, "audits", None)
+        payment_ref = getattr(args, "payment_ref", None)
+        out_file = getattr(args, "out", None)
+
+        lic_data = CommercialPackagerProvisioner.generate_license(
+            workspace_root=REPO_ROOT,
+            tier=tier,
+            tenant_id=tenant_id,
+            tenant_name=tenant_name,
+            seats=seats,
+            worktrees=worktrees,
+            audits=audits,
+            payment_reference=payment_ref
+        )
+        if out_file:
+            p = Path(out_file)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(lic_data, indent=2), encoding="utf-8")
+            print(f"✓ License minted and saved to {p}")
+        else:
+            print(json.dumps(lic_data, indent=2))
+        if getattr(args, "install", False):
+            inst = CommercialPackagerProvisioner.install_license(REPO_ROOT, lic_data)
+            print(f"✓ Installed into active workspace: {inst['installed_path']}")
+    elif action == "install":
+        file_path = getattr(args, "file", None)
+        if file_path:
+            p = Path(file_path)
+            if not p.exists():
+                print(f"❌ File not found: {p}")
+                sys.exit(1)
+            lic_data = json.loads(p.read_text(encoding="utf-8"))
+        else:
+            tier = getattr(args, "tier", "plan_team")
+            tenant_id = getattr(args, "tenant", "tenant_custom")
+            lic_data = CommercialPackagerProvisioner.generate_license(
+                workspace_root=REPO_ROOT,
+                tier=tier,
+                tenant_id=tenant_id
+            )
+        inst = CommercialPackagerProvisioner.install_license(REPO_ROOT, lic_data)
+        print(f"✓ Successfully installed license {inst['license_id']} ({inst['tier']}) into {inst['installed_path']}")
+
+
 def cmd_status(args):
     """Reports active plan tier, loaded core engines, and unavailable features."""
-    active_plan = os.environ.get("PERCIPIENCE_PLAN", "plan_free")
-    lic_file = REPO_ROOT / "config" / "license.json"
-    if not lic_file.exists():
-        lic_file = REPO_ROOT / ".nb" / "config" / "license.json"
-    if lic_file.exists():
-        try:
-            lic = json.loads(lic_file.read_text(encoding="utf-8"))
-            active_plan = lic.get("tier", active_plan)
-        except Exception:
-            pass
+    active = CommercialPackagerProvisioner.get_active_license(REPO_ROOT)
+    active_plan = active.get("tier", "plan_free")
+    if "PERCIPIENCE_PLAN" in os.environ:
+        active_plan = os.environ["PERCIPIENCE_PLAN"]
 
     loaded = [k for k, v in AVAILABLE_ENGINES.items() if v]
     missing = [k for k, v in AVAILABLE_ENGINES.items() if not v]
@@ -1749,6 +1812,33 @@ def main():
     p_gr_out.add_argument("--file", default="", help="File path to validate")
     p_gr_out.add_argument("--lang", default="python", help="Language (python, typescript, json)")
     p_gr.set_defaults(func=cmd_guardrail)
+
+    # license
+    p_lic = subparsers.add_parser("license", help="Manage, mint, install, and audit commercial licenses")
+    p_lic_sub = p_lic.add_subparsers(dest="lic_action", help="License action")
+    
+    p_lic_stat = p_lic_sub.add_parser("status", help="Show active installed license status")
+    p_lic_stat.set_defaults(func=cmd_license)
+    
+    p_lic_mint = p_lic_sub.add_parser("mint", help="Mint and sign a new tenant license")
+    p_lic_mint.add_argument("--tier", default="plan_team", choices=["free", "team", "business", "enterprise", "plan_free", "plan_team", "plan_business", "plan_enterprise"])
+    p_lic_mint.add_argument("--tenant", default="tenant_custom", help="Tenant ID")
+    p_lic_mint.add_argument("--name", help="Tenant Name")
+    p_lic_mint.add_argument("--seats", type=int, help="Override seat count (-1 for unlimited)")
+    p_lic_mint.add_argument("--worktrees", type=int, help="Override worktree count (-1 for unlimited)")
+    p_lic_mint.add_argument("--audits", type=int, help="Override audit quota (-1 for unlimited)")
+    p_lic_mint.add_argument("--payment-ref", dest="payment_ref", help="Optional payment reference ID")
+    p_lic_mint.add_argument("--out", help="Output file path")
+    p_lic_mint.add_argument("--install", action="store_true", help="Install directly to workspace .nb/context/tenant_license.json")
+    p_lic_mint.set_defaults(func=cmd_license)
+
+    p_lic_inst = p_lic_sub.add_parser("install", help="Install a license into the active workspace")
+    p_lic_inst.add_argument("--file", help="Path to existing license JSON file")
+    p_lic_inst.add_argument("--tier", default="plan_team", choices=["free", "team", "business", "enterprise", "plan_free", "plan_team", "plan_business", "plan_enterprise"])
+    p_lic_inst.add_argument("--tenant", default="tenant_custom", help="Tenant ID")
+    p_lic_inst.set_defaults(func=cmd_license)
+
+    p_lic.set_defaults(func=cmd_license)
 
     # status / plan
     p_stat = subparsers.add_parser("status", help="Show active plan bundle tier, provisioned core engines, and feature availability")

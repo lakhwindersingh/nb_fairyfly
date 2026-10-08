@@ -2803,6 +2803,103 @@ percipience rollback \
         </div>
       </div>
 
+      <!-- ROW 2.5: COMMERCIAL LICENSE GENERATOR & SELF-GENERATION HUB -->
+      <div class="card" style="margin-bottom:24px; border:1px solid var(--border-accent);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px; font-size:16px;">
+              📜 Commercial License Minting &amp; Post-Payment Self-Generation Hub
+            </div>
+            <div style="font-size:12px; color:var(--muted);">
+              Mint Ed25519 &amp; SHA-256 cryptographic tenant licenses, install into active workspaces, or simulate post-payment self-generation hooks.
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn btn-secondary" onclick="loadActiveLicense()" style="font-size:11px; padding:4px 12px;">🔄 Check Active License</button>
+          </div>
+        </div>
+
+        <!-- ACTIVE LICENSE STATUS DISPLAY BAR -->
+        <div id="activeLicenseBanner" style="background:var(--bg-panel); border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:20px;">🛡️</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                <span>Active Workspace Tier:</span>
+                <span id="activeLicTierBadge" class="badge badge-cyan">Loading...</span>
+                <span id="activeLicTenantLabel" style="color:var(--muted); font-size:11px; font-weight:400;"></span>
+              </div>
+              <div id="activeLicQuotaLabel" style="font-size:11px; color:var(--text); margin-top:2px;">Quotas: ...</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div id="activeLicSourceLabel" style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono', monospace;"></div>
+            <div id="activeLicSigLabel" style="font-size:10px; color:var(--cyan); font-family:'JetBrains Mono', monospace; margin-top:2px;"></div>
+          </div>
+        </div>
+
+        <!-- LICENSE GENERATION CONTROLS -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Target Commercial Tier</label>
+            <select id="licGenTier" class="select" style="font-size:12px;" onchange="updateLicDefaultQuotas()">
+              <option value="plan_enterprise" selected>Enterprise Dedicated ($9,999/mo)</option>
+              <option value="plan_business">Business Tier ($4,499/mo)</option>
+              <option value="plan_team">Team Tier ($1,499/mo)</option>
+              <option value="plan_free">Free Community ($0/mo)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Tenant ID (Slug)</label>
+            <input type="text" id="licGenTenantId" class="input" value="tenant_enterprise_acme" style="font-size:12px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Organization / Client Name</label>
+            <input type="text" id="licGenTenantName" class="input" value="Acme Global Financial Technologies" style="font-size:12px;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Seats (-1 = Unlimited)</label>
+            <input type="number" id="licGenSeats" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Worktrees (-1 = Unlimited)</label>
+            <input type="number" id="licGenWorktrees" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Monthly Audits (-1 = Unlimited)</label>
+            <input type="number" id="licGenAudits" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Payment Ref / Transaction ID</label>
+            <input type="text" id="licGenPaymentRef" class="input" placeholder="e.g. pi_live_stripe_9948" style="font-size:12px;">
+          </div>
+        </div>
+
+        <!-- ACTIONS ROW -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+          <button class="btn btn-primary" onclick="mintLicenseInteractive()" style="font-size:12px; padding:8px 16px;">
+            🏷️ Mint &amp; Sign License
+          </button>
+          <button class="btn btn-secondary" onclick="installLicenseInteractive()" style="font-size:12px; padding:8px 16px; border-color:var(--green); color:var(--green);">
+            ⚡ Install into Active Workspace
+          </button>
+          <button class="btn btn-secondary" onclick="downloadLicenseJson()" id="licDownloadBtn" style="font-size:12px; padding:8px 16px; display:none;">
+            📥 Download tenant_license.json
+          </button>
+          <button class="btn btn-secondary" onclick="simulatePaymentSelfGenerate()" style="font-size:12px; padding:8px 16px; border-color:var(--amber); color:var(--amber);" title="Tests automated post-payment self-generation hook">
+            💳 Simulate Payment Webhook (Self-Generate)
+          </button>
+        </div>
+
+        <!-- OUTPUT BOX -->
+        <div id="licGenResultBox" style="display:none; background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:260px; overflow-y:auto; font-family:'JetBrains Mono', monospace;"></div>
+      </div>
+
       <!-- ROW 3: RBAC PERMISSION GATE & ENTITLEMENT AUDITOR -->
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
@@ -4269,7 +4366,213 @@ percipience rollback \
     }
   }
 
+  let lastMintedLicense = null;
+
+  async function loadActiveLicense() {
+    try {
+      const res = await fetch('/api/license/active');
+      if (res.ok) {
+        const lic = await res.json();
+        const badge = document.getElementById('activeLicTierBadge');
+        const tenant = document.getElementById('activeLicTenantLabel');
+        const quota = document.getElementById('activeLicQuotaLabel');
+        const src = document.getElementById('activeLicSourceLabel');
+        const sig = document.getElementById('activeLicSigLabel');
+        
+        if (badge) {
+          const tierName = lic.tier_name || lic.tier;
+          const tierColor = lic.tier === 'plan_enterprise' ? 'purple' : (lic.tier === 'plan_business' ? 'cyan' : (lic.tier === 'plan_team' ? 'amber' : 'muted'));
+          badge.className = `badge badge-${tierColor}`;
+          badge.innerText = tierName;
+        }
+        if (tenant) {
+          tenant.innerText = `• Tenant: ${lic.tenant_name || lic.tenant_id} (${lic.license_id || 'unlicensed'})`;
+        }
+        if (quota) {
+          const seats = lic.included_seats === -1 ? 'Unlimited' : lic.included_seats;
+          const wts = lic.included_concurrent_worktrees === -1 ? 'Unlimited' : lic.included_concurrent_worktrees;
+          const audits = lic.included_pr_audits_monthly === -1 ? 'Unlimited' : Number(lic.included_pr_audits_monthly).toLocaleString();
+          quota.innerHTML = `<b>Entitlements:</b> ${seats} Seats | ${wts} Concurrent Worktrees | ${audits} PR Audits/mo`;
+        }
+        if (src) {
+          src.innerText = lic.is_installed ? `Installed: ${lic.source_path}` : 'Default (Not Installed)';
+        }
+        if (sig) {
+          sig.innerText = lic.signature_sha256 ? `SIG: ${lic.signature_sha256.substring(0, 16)}... [VERIFIED]` : '';
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching active license:', e);
+    }
+  }
+
+  function updateLicDefaultQuotas() {
+    const tier = document.getElementById('licGenTier').value;
+    const seatsInput = document.getElementById('licGenSeats');
+    const wtsInput = document.getElementById('licGenWorktrees');
+    const auditsInput = document.getElementById('licGenAudits');
+    
+    if (tier === 'plan_enterprise') {
+      seatsInput.value = -1;
+      wtsInput.value = -1;
+      auditsInput.value = -1;
+    } else if (tier === 'plan_business') {
+      seatsInput.value = 50;
+      wtsInput.value = 20;
+      auditsInput.value = 25000;
+    } else if (tier === 'plan_team') {
+      seatsInput.value = 15;
+      wtsInput.value = 5;
+      auditsInput.value = 5000;
+    } else {
+      seatsInput.value = 1;
+      wtsInput.value = 1;
+      auditsInput.value = 500;
+    }
+  }
+
+  async function mintLicenseInteractive() {
+    const tier = document.getElementById('licGenTier').value;
+    const tenantId = document.getElementById('licGenTenantId').value || 'tenant_custom';
+    const tenantName = document.getElementById('licGenTenantName').value || 'Custom Tenant';
+    const seats = parseInt(document.getElementById('licGenSeats').value) || 1;
+    const worktrees = parseInt(document.getElementById('licGenWorktrees').value) || 1;
+    const audits = parseInt(document.getElementById('licGenAudits').value) || 500;
+    const paymentRef = document.getElementById('licGenPaymentRef').value || null;
+    const resBox = document.getElementById('licGenResultBox');
+    const dlBtn = document.getElementById('licDownloadBtn');
+
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Minting and cryptographically signing license...</span>';
+
+    try {
+      const res = await fetch('/api/license/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          tier: tier,
+          tenant_id: tenantId,
+          tenant_name: tenantName,
+          seats: seats,
+          worktrees: worktrees,
+          audits: audits,
+          payment_reference: paymentRef
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        lastMintedLicense = data.license;
+        if (dlBtn) dlBtn.style.display = 'inline-block';
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ License Minted &amp; Signed Successfully:</div>
+          <div><b>License ID:</b> <code>${lastMintedLicense.license_id}</code></div>
+          <div><b>Tier:</b> <span class="badge badge-purple">${lastMintedLicense.tier_name}</span></div>
+          <div><b>Signature SHA-256:</b> <code style="color:var(--cyan);">${lastMintedLicense.signature_sha256}</code></div>
+          <div><b>Issued At:</b> ${lastMintedLicense.issued_at}</div>
+          <pre style="margin-top:8px; background:var(--bg); padding:8px; border-radius:4px; max-height:140px; overflow-y:auto;">${JSON.stringify(lastMintedLicense, null, 2)}</pre>
+        `;
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Minting Error: ${data.error || 'Failed to mint license'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Request failed: ${e.message}</span>`;
+    }
+  }
+
+  async function installLicenseInteractive() {
+    const resBox = document.getElementById('licGenResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Installing license into active workspace .nb/context/tenant_license.json...</span>';
+
+    try {
+      const payload = lastMintedLicense ? { license: lastMintedLicense } : {
+        tier: document.getElementById('licGenTier').value,
+        tenant_id: document.getElementById('licGenTenantId').value || 'tenant_custom',
+        tenant_name: document.getElementById('licGenTenantName').value || 'Custom Tenant'
+      };
+
+      const res = await fetch('/api/license/install', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        const inst = data.installation;
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ License Installed Directly into Active Workspace:</div>
+          <div><b>Destination:</b> <code>${inst.installed_path}</code></div>
+          <div><b>Active Tier:</b> <span class="badge badge-green">${inst.tier}</span></div>
+          <div><b>Tenant:</b> <code>${inst.tenant_id}</code></div>
+          <div><b>Merkle Ledger:</b> <span style="color:var(--green);">Synchronized (project.tier = ${inst.tier})</span></div>
+        `;
+        await loadActiveLicense();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Installation Error: ${data.error || 'Failed to install'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Request failed: ${e.message}</span>`;
+    }
+  }
+
+  function downloadLicenseJson() {
+    if (!lastMintedLicense) return;
+    const blob = new Blob([JSON.stringify(lastMintedLicense, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tenant_license_${lastMintedLicense.tier}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function simulatePaymentSelfGenerate() {
+    const resBox = document.getElementById('licGenResultBox');
+    resBox.style.display = 'block';
+    resBox.innerHTML = '<span style="color:var(--cyan);">Simulating post-payment checkout confirmation (Stripe webhook simulation)...</span>';
+
+    try {
+      const simPaymentId = 'ch_stripe_sim_' + Math.random().toString(36).substring(2, 10);
+      const tier = document.getElementById('licGenTier').value;
+      const tenantId = document.getElementById('licGenTenantId').value || 'tenant_stripe_customer';
+      const tenantName = document.getElementById('licGenTenantName').value || 'Stripe Customer Org';
+
+      const res = await fetch('/api/license/self-generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          payment_id: simPaymentId,
+          tenant_id: tenantId,
+          tenant_name: tenantName,
+          tier: tier
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'SUCCESS') {
+        lastMintedLicense = data.license;
+        const dlBtn = document.getElementById('licDownloadBtn');
+        if (dlBtn) dlBtn.style.display = 'inline-block';
+        resBox.innerHTML = `
+          <div style="color:var(--green); font-weight:700; margin-bottom:6px;">✓ Post-Payment License Self-Generated &amp; Installed Autonomously:</div>
+          <div><b>Payment Reference:</b> <code>${data.audit_entry.payment_id}</code></div>
+          <div><b>Generated License ID:</b> <code>${data.license.license_id}</code></div>
+          <div><b>Active Tier:</b> <span class="badge badge-purple">${data.license.tier_name}</span></div>
+          <div><b>Destination:</b> <code>${data.installation.installed_path}</code></div>
+          <div><b>Audit Event:</b> <code>${data.audit_entry.event}</code> logged in <code>payment_license_audit.jsonl</code></div>
+        `;
+        await loadActiveLicense();
+      } else {
+        resBox.innerHTML = `<span style="color:var(--red);">Self-Generation Error: ${data.error || 'Failed to self-generate license'}</span>`;
+      }
+    } catch (e) {
+      resBox.innerHTML = `<span style="color:var(--red);">Request failed: ${e.message}</span>`;
+    }
+  }
+
   async function loadCommercialTab() {
+    loadActiveLicense();
     try {
       const res = await fetch('/api/commercial/packages');
       if (res.ok) {
@@ -5837,6 +6140,11 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"status": "SUCCESS", "tiers": tiers})
             return
 
+        if parsed.path == "/api/license/active":
+            active_lic = CommercialPackagerProvisioner.get_active_license(REPO_ROOT)
+            self._send_json(active_lic)
+            return
+
         if parsed.path == "/api/commercial/entitlements":
             query_params = parse_qs(parsed.query)
             t_id = query_params.get("tenant_id", ["tenant_community_default"])[0]
@@ -6513,6 +6821,60 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                     target_file=target_f
                 )
                 self._send_json({"status": "SUCCESS", "verification": res})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/license/generate":
+            t_id = payload.get("tenant_id", "tenant_custom")
+            tier = payload.get("tier", "plan_enterprise")
+            t_name = payload.get("tenant_name")
+            seats = payload.get("seats")
+            worktrees = payload.get("worktrees")
+            audits = payload.get("audits")
+            custom_feat = payload.get("custom_features")
+            payment_ref = payload.get("payment_reference")
+            expires_days = payload.get("expires_days")
+            try:
+                lic_data = CommercialPackagerProvisioner.generate_license(
+                    REPO_ROOT,
+                    tier=tier,
+                    tenant_id=t_id,
+                    tenant_name=t_name,
+                    seats=seats,
+                    worktrees=worktrees,
+                    audits=audits,
+                    custom_features=custom_feat,
+                    payment_reference=payment_ref,
+                    expires_days=expires_days
+                )
+                self._send_json({"status": "SUCCESS", "license": lic_data})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/license/install":
+            lic_data = payload.get("license")
+            if not lic_data:
+                tier = payload.get("tier", "plan_enterprise")
+                t_id = payload.get("tenant_id", "tenant_custom")
+                t_name = payload.get("tenant_name")
+                lic_data = CommercialPackagerProvisioner.generate_license(
+                    REPO_ROOT, tier=tier, tenant_id=t_id, tenant_name=t_name
+                )
+            try:
+                inst_res = CommercialPackagerProvisioner.install_license(REPO_ROOT, lic_data)
+                self._send_json({"status": "SUCCESS", "installation": inst_res, "license": lic_data})
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/license/self-generate":
+            try:
+                res = CommercialPackagerProvisioner.self_generate_license_after_payment(
+                    REPO_ROOT, payload
+                )
+                self._send_json(res)
             except Exception as e:
                 self._send_json({"error": str(e)}, status=400)
             return

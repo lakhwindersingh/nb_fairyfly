@@ -100,15 +100,14 @@ object WorkspaceLedgerReader {
         var rawTier: String? = System.getenv("PERCIPIENCE_PLAN")
         var tenantName: String? = null
 
-        // 1. Check license files
+        // 1. Check workspace license files on disk (excluding source repo resources)
         val licenseFiles = listOf(
             ".nb/context/tenant_license.json",
             ".nb/tenant_license.json",
             "tenant_license.json",
             ".percipience_license.json",
             ".nb/context/PERCIPIENCE_LICENSE.json",
-            ".nb/PERCIPIENCE_LICENSE.json",
-            "workplace/modules/mod_intellij_plugin/src/main/resources/percipience/tenant_license.json"
+            ".nb/PERCIPIENCE_LICENSE.json"
         )
         val licFile = findLedgerFile(projectRoot, licenseFiles)
         if (licFile != null && licFile.exists()) {
@@ -125,10 +124,28 @@ object WorkspaceLedgerReader {
             } catch (ignored: Exception) {}
         }
 
-        // 2. Check context_ledger.yaml if still not resolved
+        // 2. Check running plugin JAR embedded Classpath resource
+        if (rawTier.isNullOrBlank()) {
+            try {
+                val jarRes = WorkspaceLedgerReader::class.java.getResourceAsStream("/percipience/tenant_license.json")
+                if (jarRes != null) {
+                    val text = jarRes.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                    val tierMatch = Regex("\"tier\"\\s*:\\s*\"([^\"]+)\"").find(text)
+                    if (tierMatch != null) {
+                        rawTier = tierMatch.groupValues[1]
+                    }
+                    val nameMatch = Regex("\"tier_name\"\\s*:\\s*\"([^\"]+)\"").find(text)
+                    if (nameMatch != null) {
+                        tenantName = nameMatch.groupValues[1]
+                    }
+                }
+            } catch (ignored: Exception) {}
+        }
+
+        // 3. Check context_ledger.yaml if still not resolved
         if (rawTier.isNullOrBlank()) {
             val ledgerSummary = readMerkleLedger(projectRoot)
-            if (ledgerSummary.exists && ledgerSummary.tier.isNotBlank()) {
+            if (ledgerSummary.exists && ledgerSummary.tier.isNotBlank() && ledgerSummary.tier != "plan_free") {
                 rawTier = ledgerSummary.tier
             }
         }

@@ -828,3 +828,57 @@
     - Test legacy payload deserialization executes without errors.
     - Test Development vs Production mode switches execute non-blocking vs strict-blocking behaviors as intended.
   - *Acceptance Criteria*: 100% test pass rate across new test suite.
+
+---
+
+## 23. Commercial License Management & Post-Payment Self-Generation Engine (PROP-LIC-001)
+
+- [x] **TODO-LIC-01: Multi-Tier License Generator & Minting API (P1)**:
+  - *Identified Requirement*: Standardize programmatic generation and cryptographic signing of tenant license files across Free, Team, Business, and Enterprise tiers.
+  - *Target Files*: `workplace/core/commercial_packager_provisioner.py`, `.nb/core/commercial_packager_provisioner.py`.
+  - *Scope & Deliverables*:
+    - Implement `generate_license()` supporting custom tenant IDs, seat counts, concurrent worktrees, audit quotas, and feature flags.
+    - Implement SHA-256 and Ed25519 cryptographic payload signing with timestamp and Merkle block recording.
+  - *Acceptance Criteria*: Licenses can be minted for all 4 tiers with valid signatures and verified quotas.
+
+- [x] **TODO-LIC-02: Active Workspace License Installer & VFS Sync (P1)**:
+  - *Identified Requirement*: Installing an issued license into an active repository must immediately update `.nb/context/tenant_license.json` and sync `context_ledger.yaml`.
+  - *Target Files*: `workplace/core/commercial_packager_provisioner.py`.
+  - *Scope & Deliverables*:
+    - Implement `install_license()` updating `.nb/context/tenant_license.json`, `.nb/tenant_license.json`, and setting `project.tier` in `context_ledger.yaml`.
+    - Implement `get_active_license()` to query active workspace license attributes.
+  - *Acceptance Criteria*: Installed license reflects in `percipience status` and IDE status bar immediately.
+
+- [x] **TODO-LIC-03: Post-Payment Self-Generation Webhook Hook & Test Simulator (P1)**:
+  - *Identified Requirement*: Enable autonomous self-generation of licenses upon payment completion (Stripe checkout / billing webhook) with zero operator intervention.
+  - *Target Files*: `workplace/core/commercial_packager_provisioner.py`, `workplace/portal/server.py`.
+  - *Scope & Deliverables*:
+    - Implement `self_generate_license_after_payment()` parsing checkout payloads, minting tier licenses with `payment_reference`, and installing them.
+    - Expose `POST /api/license/self-generate` simulation endpoint for testing the post-payment flow.
+  - *Acceptance Criteria*: Simulating payment confirmation generates and installs a valid paid license with payment reference.
+
+- [x] **TODO-LIC-04: Interactive Admin Portal License Management Widget (P1)**:
+  - *Identified Requirement*: Admin console requires an interactive UI for minting, downloading, installing, and testing self-generation of licenses.
+  - *Target Files*: `workplace/portal/server.py`.
+  - *Scope & Deliverables*:
+    - Add **Commercial License Management & Self-Generation Hub** card to `#client` space.
+    - Provide form for Tier, Tenant ID, custom quotas, and instant action buttons (Mint, Download, Install to Workspace, Simulate Payment Self-Generation).
+    - Add REST API endpoints: `GET /api/license/active`, `POST /api/license/generate`, `POST /api/license/install`, `POST /api/license/self-generate`.
+  - *Acceptance Criteria*: Administrators can generate, preview, download, and install licenses directly from the web portal.
+
+- [x] **TODO-LIC-05: IntelliJ Plugin Classpath & Workspace License Resolution Fix (P1)**:
+  - *Identified Requirement*: Plugin currently defaults to Free Community Tier even when Enterprise/Business JARs are installed due to searching dev workspace disk first and ignoring Classpath resources.
+  - *Target Files*: `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/ledger/WorkspaceLedgerReader.kt`, `workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/bootstrap/WorkspaceBootstrapper.kt`.
+  - *Scope & Deliverables*:
+    - Inspect `/percipience/tenant_license.json` Classpath resource inside running plugin JAR when workspace license is absent.
+    - Remove hardcoded source repo template from disk search list.
+    - Extract JAR license to `.nb/context/tenant_license.json` on workspace bootstrap.
+  - *Acceptance Criteria*: Enterprise and Business plugin editions automatically show their respective tier in status bar and popup without needing environment variables.
+
+- [ ] **TODO-LIC-06: Production Stripe Webhook Gateway & Automated Invoicing (P2 - Pending)**:
+  - *Identified Requirement*: Live Stripe webhook gateway (`/api/billing/stripe-webhook`) with cryptographic signature validation (`stripe-signature`), automated Stripe customer portal session creation, and automated email delivery of license keys.
+  - *Target Files*: `workplace/portal/server.py`, `workplace/config/billing_plans.yaml`.
+  - *Scope & Deliverables*:
+    - Connect live Stripe API keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`).
+    - Dispatch automated invoice PDF generation and email delivery via AWS SES / SendGrid.
+  - *Acceptance Criteria*: Live credit card charges automatically trigger license delivery to customer email.

@@ -403,6 +403,36 @@ tier: plan_free
             createdFiles.add(".nb/plan/claude-context-engineering-parent-master-free_plan.md")
         }
 
+        // 7b. Deploy Tenant License from Plugin JAR (.nb/context/tenant_license.json)
+        val licDest = File(root, ".nb/context/tenant_license.json")
+        var activeTierId = "plan_free"
+        if (!licDest.exists()) {
+            val licStream = javaClass.getResourceAsStream("/percipience/tenant_license.json")
+            if (licStream != null) {
+                licStream.use { input ->
+                    licDest.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                createdFiles.add(".nb/context/tenant_license.json")
+                try {
+                    val licText = licDest.readText(Charsets.UTF_8)
+                    val tierMatch = Regex("\"tier\"\\s*:\\s*\"([^\"]+)\"").find(licText)
+                    if (tierMatch != null) {
+                        activeTierId = tierMatch.groupValues[1]
+                    }
+                } catch (ignored: Exception) {}
+            }
+        } else {
+            try {
+                val licText = licDest.readText(Charsets.UTF_8)
+                val tierMatch = Regex("\"tier\"\\s*:\\s*\"([^\"]+)\"").find(licText)
+                if (tierMatch != null) {
+                    activeTierId = tierMatch.groupValues[1]
+                }
+            } catch (ignored: Exception) {}
+        }
+
         // 8. Ensure Genesis Merkle Ledger (.nb/context/ledger/context_ledger.yaml)
         val ledgerFile = File(root, ".nb/context/ledger/context_ledger.yaml")
         val nowIso = Instant.now().toString()
@@ -414,7 +444,7 @@ tier: plan_free
 ledger_version: "7.5.0"
 project:
   name: "nb_fairyfly"
-  tier: "plan_free"
+  tier: "$activeTierId"
   mode: "multi_module"
 ledger_chain:
   - block_id: 0
@@ -443,7 +473,7 @@ poisoning_incidents: []
 ledger_version: "7.5.0"
 project:
   name: "nb_fairyfly"
-  tier: "plan_free"
+  tier: "$activeTierId"
 active_recovery_point: "RP_GENESIS_000"
 merkle_block_height: 1
 overall_maturity_score: 0.990
