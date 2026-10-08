@@ -768,3 +768,63 @@
   - *Identified Requirement*: Live Fleet Monitoring UI in the Portal displaying active worker container slots, Redis Redlock leases, active wave DAG executions, and cumulative FinOps token burn.
   - *Target Files*: `workplace/portal/server.py` (`#swarm-fleet`)
   - *Acceptance Criteria*: Live visual dashboard updating every 2s via `/api/swarm/fleet/status`; shows per-worker CPU/memory/token metrics.
+
+---
+
+## 22. Solution Management Simplification & Dial Elimination (Zero-Friction Invariants)
+
+> **Governing Proposal**: [`workplace/docs/proposals/solution_simplification_plan.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/proposals/solution_simplification_plan.md)  
+> **Core Objective**: Eliminate fine-grained configuration knobs, percentage sliders, and tuning thresholds across the Portal UI, Policy Engine, and CLI. Codify all mathematically calibrated or architectural invariants into documented standards, collapsing management down to a minimal 5-point operational control surface (`tenant_id`, `project_id`, `environment`, `vcs_repository`, `hitl_quarantine_webhook`).
+
+- [ ] **TODO-SIMP-01: Document Integral Invariants as Official Architecture Standards (P1)**:
+  - *Identified Requirement*: Granular dials (attention ratio sliders, AST stripping parameters, self-healing retries, DAG acyclicity toggles) exist because architectural invariants were not formally standardized and documented.
+  - *Scope & Deliverables*:
+    - Publish [`workplace/docs/methodologies/attention_slicing_standard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/methodologies/attention_slicing_standard.md) codifying the canonical 15% System / 25% Contract / 35% AST / 10% Trajectory / 15% Headroom ratio against Lost-in-the-Middle context decay.
+    - Publish [`workplace/docs/standards/ast_skeletonization_standard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/standards/ast_skeletonization_standard.md) codifying the Tree-Sitter 6D zero-body interface preservation specification.
+    - Publish [`workplace/docs/standards/self_healing_convergence_standard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/standards/self_healing_convergence_standard.md) codifying the bounded 3-turn repair loop, 15% statistical test variance quarantine rule, and strict wire-contract breaking change block.
+    - Publish [`workplace/docs/standards/swarm_graph_integrity_standard.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/docs/standards/swarm_graph_integrity_standard.md) codifying Kahn DAG acyclicity, depth ceiling $D \le 3$, and zero-disk HMAC CBAC token leasing.
+  - *Acceptance Criteria*: All 4 standard specifications published and integrated into platform documentation index.
+
+- [ ] **TODO-SIMP-02: Decommission UI Dials & Sliders in Web SaaS Portal (P1)**:
+  - *Identified Requirement*: Tab 14 (`#governance`) contains 8 manual range sliders (`sliderPersona`, `sliderContracts`, `sliderAst`, `sliderMemory`, `sliderOutput`, `sliderTierA`, `sliderReprompts`, `sliderFlaky`) and wire contract dropdowns that create friction and risk suboptimal configurations.
+  - *Target Files*: [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py).
+  - *Scope & Deliverables*:
+    - Remove all 8 sliders, manual percentage inputs, and dynamic JS sum recalculation functions.
+    - Introduce high-trust **"Certified Architectural Invariants"** card displaying verified green attestation badges and links to invariant documentation.
+    - Simplify operator controls to a 2-way Mode Switch: `[ Development Mode ]` vs `[ Production Gatekeeper Mode ]`, Tenant ID, Project ID, and HITL notification webhook.
+  - *Acceptance Criteria*: Tab 14 renders cleanly with zero sliders; policy updates submit cleanly via `POST /api/governance/project-policy`; UI tests pass.
+
+- [ ] **TODO-SIMP-03: Collapse Project Policy Engine Schemas into 5-Point Control Surface (P1)**:
+  - *Identified Requirement*: `ProjectPolicy` in [`workplace/core/project_policy_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/project_policy_engine.py) currently maintains 20+ granular configuration fields across 4 sub-policy objects.
+  - *Target Files*: [`workplace/core/project_policy_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/project_policy_engine.py), [`.nb/core/project_policy_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/project_policy_engine.py).
+  - *Scope & Deliverables*:
+    - Streamline `ProjectPolicy` to 5 parameters: `tenant_id`, `project_id`, `environment` (`development` | `production`), `vcs_repository`, `hitl_quarantine_webhook`.
+    - Internalize invariant getters (`get_attention_quotas()`, `get_ast_pruning_policy()`, `get_self_healing_sla()`, `get_cognitive_routing_policy()`) returning immutable standardized constants.
+    - Provide backward compatibility layer ensuring existing `.yaml` policy files deserialize gracefully without validation errors.
+  - *Acceptance Criteria*: Policy engine initializes with 5 core parameters; legacy config files load safely; unit tests pass.
+
+- [ ] **TODO-SIMP-04: Simplify CLI Flags & Deprecate Redundant Tuning Options (P2)**:
+  - *Identified Requirement*: Developer CLI has accumulated granular overrides (`--ast-depth`, `--preserve-docstrings`, `--tier-a-threshold`, `--max-reprompts`) that contradict convention-over-configuration.
+  - *Target Files*: [`.nb/bin/percipience`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/bin/percipience).
+  - *Scope & Deliverables*:
+    - Deprecate granular command-line arguments with migration warnings.
+    - Standardize on `--mode [dev|prod]` (default: `prod`) to select operational profile.
+  - *Acceptance Criteria*: CLI runs seamlessly with zero tuning flags required; help documentation is concise and focused.
+
+- [ ] **TODO-SIMP-05: Cleanse Static Rule Configurations in Workspace Repositories (P2)**:
+  - *Identified Requirement*: Repository configuration templates contain verbose manual tuning sections.
+  - *Target Files*: `.nb/config/token_compression_rules.yaml`, `.nb/config/policies/*.yaml`.
+  - *Scope & Deliverables*:
+    - Cleanse redundant dial fields from template YAML files.
+    - Replace with lean declarative descriptors referencing the architectural standards.
+  - *Acceptance Criteria*: Policy YAML files reduced in line count by > 70% while remaining 100% syntactically valid.
+
+- [ ] **TODO-SIMP-06: Verification & End-to-End Regression Harness for Zero-Dial Architecture (P1)**:
+  - *Identified Requirement*: Ensure that eliminating user-facing dials does not degrade system behavior, flexibility, or backward compatibility.
+  - *Target Files*: [`workplace/tests/test_solution_simplification.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_solution_simplification.py).
+  - *Scope & Deliverables*:
+    - Test Portal HTML rendering confirms zero slider elements and verified invariant badges.
+    - Test Policy Engine minimal initialization yields canonical 15/25/35/10/15 attention and 3-turn SLA defaults.
+    - Test legacy payload deserialization executes without errors.
+    - Test Development vs Production mode switches execute non-blocking vs strict-blocking behaviors as intended.
+  - *Acceptance Criteria*: 100% test pass rate across new test suite.

@@ -1087,8 +1087,11 @@ def cmd_swarm(args):
                 return {"result": f"Executed step {node.id}", "status": "SUCCESS"}
             executors = {nid: dummy_exec for nid in orch.nodes}
             res = orch.execute(executors)
-            print(f"   ✓ Executed {len(res.executed_steps)} steps in topological wave sequence.")
-            print(f"   Duration: {res.duration_ms:.1f}ms | Status: {res.status}")
+            executed_steps = res.get("executed_steps", []) if isinstance(res, dict) else getattr(res, "executed_steps", [])
+            dur = (res.get("duration_seconds", 0.0) * 1000.0) if isinstance(res, dict) else getattr(res, "duration_ms", 0.0)
+            st = res.get("status", "SUCCESS") if isinstance(res, dict) else getattr(res, "status", "SUCCESS")
+            print(f"   ✓ Executed {len(executed_steps)} steps in topological wave sequence.")
+            print(f"   Duration: {dur:.1f}ms | Status: {st}")
         order = orch.topological_sort()
         print(f"   Active DAG Nodes: {len(orch.nodes)}")
         for nid in order:

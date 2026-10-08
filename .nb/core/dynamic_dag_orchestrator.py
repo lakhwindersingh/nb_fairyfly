@@ -43,6 +43,24 @@ class StepNode:
         return asdict(self)
 
 
+class DAGExecutionResult(dict):
+    """
+    Execution summary dictionary with property accessors for executed_steps,
+    duration_ms, and status to ensure polymorphic compatibility across CLI and API callers.
+    """
+    @property
+    def executed_steps(self) -> List[str]:
+        return self.get("executed_steps", [])
+
+    @property
+    def duration_ms(self) -> float:
+        return self.get("duration_seconds", 0.0) * 1000.0
+
+    @property
+    def status(self) -> str:
+        return self.get("status", "SUCCESS")
+
+
 class DynamicDAGOrchestrator:
     """
     Manages non-linear, dynamic task graphs capable of runtime sub-goal expansion,
@@ -339,12 +357,12 @@ class DynamicDAGOrchestrator:
             try:
                 order = self.topological_sort()
             except CycleDetectedError as e:
-                return {
+                return DAGExecutionResult({
                     "status": "FAILED",
                     "error": str(e),
                     "executed_steps": executed_steps,
                     "nodes": {nid: n.to_dict() for nid, n in self.nodes.items()}
-                }
+                })
 
             # Find next PENDING node whose dependencies are all COMPLETED
             candidate: Optional[StepNode] = None
@@ -406,7 +424,7 @@ class DynamicDAGOrchestrator:
         }
 
         self._record_trace("DAG_FINISHED", summary)
-        return summary
+        return DAGExecutionResult(summary)
 
     def _get_descendants(self, step_id: str) -> Set[str]:
         """Finds all downstream descendant node IDs."""
