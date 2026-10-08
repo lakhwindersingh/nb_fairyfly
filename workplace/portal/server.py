@@ -1863,79 +1863,79 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
             <tr>
               <td class="feature-name">K8s Multi-AZ Control Plane</td>
               <td>AWS EKS (K8s 1.30+ Multi-AZ)</td>
-              <td>GKE Multi-Zonal Cluster</td>
-              <td> / </td>
+              <td>GKE Multi-Zonal Cluster (K8s 1.30+)</td>
+              <td>$73 / $73</td>
               <td>Multi-tenant control plane &amp; API gateways</td>
             </tr>
             <tr>
               <td class="feature-name">Worker Sandboxes &amp; DEWS Swarm Fleets</td>
-              <td>Karpenter Spot c6i.2xlarge + Bottlerocket</td>
-              <td>GKE Sandbox Spot VMs (gVisor runsc)</td>
-              <td>,320 / ,180</td>
+              <td>Karpenter Spot c6i.2xlarge + Bottlerocket (runsc)</td>
+              <td>GKE Sandbox Spot VMs (c2-standard-8 gVisor)</td>
+              <td>$4,320 / $4,180</td>
               <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runner swarms</td>
             </tr>
             <tr>
               <td class="feature-name">PostgreSQL Database (Multi-Tenant RLS)</td>
               <td>Aurora Serverless v2 (4-32 ACU)</td>
-              <td>Cloud SQL Enterprise Plus HA</td>
-              <td>,850 / ,780</td>
+              <td>Cloud SQL Enterprise Plus HA (4 vCPU / 32GB)</td>
+              <td>$1,850 / $1,780</td>
               <td>Tenant RLS state DAG &amp; recovery points</td>
             </tr>
             <tr>
               <td class="feature-name">Distributed Cache &amp; Redlock Leases</td>
-              <td>ElastiCache Redis 7.x</td>
-              <td>Cloud Memorystore Cluster</td>
-              <td> / </td>
+              <td>ElastiCache Redis 7.x (cache.m6g.large)</td>
+              <td>Cloud Memorystore Redis HA</td>
+              <td>$420 / $410</td>
               <td>Worktree lease TTL locks &amp; AST cache (&lt;15ms)</td>
             </tr>
             <tr>
               <td class="feature-name">Immutable WORM Vaults &amp; Streaming Git Sinks</td>
-              <td>Amazon S3 Object Lock + Transfer Acceleration</td>
-              <td>GCS Object Retention WORM + Cloud Storage FUSE</td>
-              <td> / </td>
+              <td>Amazon S3 Object Lock (Compliance Mode)</td>
+              <td>GCS Object Retention WORM (Locked)</td>
+              <td>$280 / $260</td>
               <td>Non-repudiable SHA-256 Merkle proofs &amp; streaming Git bundle transport</td>
             </tr>
             <tr>
               <td class="feature-name">Telemetry &amp; Context Burn Storage</td>
-              <td>TimescaleDB on EBS gp3</td>
-              <td>TimescaleDB on Hyperdisk</td>
-              <td> / </td>
+              <td>TimescaleDB on EBS gp3 (500GB / 3000 IOPS)</td>
+              <td>TimescaleDB on Regional Hyperdisk (500GB)</td>
+              <td>$225 / $215</td>
               <td>Real-time context burn &amp; visual DAG feeds</td>
             </tr>
             <tr>
               <td class="feature-name">Edge WAF &amp; Zero-Trust Ingress</td>
-              <td>Cloudflare Enterprise + NLB</td>
-              <td>Cloudflare Enterprise + TCP Proxy</td>
-              <td> / </td>
+              <td>Cloudflare Enterprise + AWS NLB (Multi-AZ)</td>
+              <td>Cloudflare Enterprise + GCP TCP Proxy</td>
+              <td>$895 / $850</td>
               <td>mTLS, DDoS protection, Ed25519 JWT injection</td>
             </tr>
             <tr>
               <td class="feature-name">APM Observability &amp; SLI Metrics</td>
-              <td>Datadog APM &amp; Pod Traces</td>
-              <td>Cloud Operations Suite</td>
-              <td>,150 / ,050</td>
+              <td>Datadog APM Tracing &amp; Pod Logs</td>
+              <td>Cloud Operations Suite (Trace &amp; Logging)</td>
+              <td>$1,150 / $1,050</td>
               <td>MicroVM saturation &amp; PR gate latency telemetry</td>
             </tr>
             <tr>
               <td class="feature-name">Tier B Verifier AI (Automated TDD)</td>
               <td>Claude 3.5 Haiku / Bedrock</td>
-              <td>Gemini 1.5 Flash / Vertex</td>
-              <td>,200 / ,100</td>
+              <td>Gemini 1.5 Flash / Vertex AI</td>
+              <td>$3,200 / $3,100</td>
               <td>Automated contract verification &amp; bounded TDD</td>
             </tr>
             <tr>
-              <td class="feature-name">In-Memory Security &amp; KMS Nitro Enclaves</td>
-              <td>AWS KMS Nitro Enclaves + GuardDuty</td>
-              <td>Cloud KMS CMEK + SCC</td>
-              <td> / </td>
+              <td class="feature-name">In-Memory Security &amp; KMS Enclaves</td>
+              <td>AWS KMS CMEK + GuardDuty</td>
+              <td>Cloud KMS CMEK + Security Command Center</td>
+              <td>$567 / $550</td>
               <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
             </tr>
             <tr style="background:var(--bg-panel); font-weight:700;">
               <td class="feature-name" style="color:var(--cyan);">Total Monthly OpEx</td>
-              <td>,980 / mo</td>
-              <td>,468 / mo</td>
-              <td class="text-emerald" style="font-weight:800;">,000 MRR</td>
-              <td class="text-emerald">91.2% / 91.5% Gross Margin</td>
+              <td>$12,980 / mo</td>
+              <td>$12,468 / mo</td>
+              <td class="text-emerald" style="font-weight:800;">$225,000 MRR</td>
+              <td class="text-emerald">91.2% (AWS) / 91.5% (GCP) Gross Margin</td>
             </tr>
           </tbody>
         </table>
@@ -5938,7 +5938,26 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 "gcp_50_clients_opex": 12468.0,
                 "projected_mrr_50_clients": 225000.0,
                 "gross_margin_pct": 91.5,
-                "breakeven_customers": 1.5
+                "gross_margin_pct_aws": 91.2,
+                "gross_margin_pct_gcp": 91.5,
+                "breakeven_customers": 1.5,
+                "subsystems": [
+                    {"subsystem": "K8s Multi-AZ Control Plane", "aws_asset": "AWS EKS (K8s 1.30+ Multi-AZ)", "gcp_asset": "Google Kubernetes Engine (GKE Multi-Zonal)", "monthly_cost_50_clients": {"aws": 73.0, "gcp": 73.0}, "capability": "Multi-tenant control plane & API gateways"},
+                    {"subsystem": "Worker Sandboxes & DEWS Swarms", "aws_asset": "Karpenter Spot c6i.2xlarge (gVisor runsc)", "gcp_asset": "GKE Sandbox Spot VMs (c2-standard-8)", "monthly_cost_50_clients": {"aws": 4320.0, "gcp": 4180.0}, "capability": "Ephemeral Git worktrees, AST daemon & Docker agent runner swarms"},
+                    {"subsystem": "PostgreSQL Database (Multi-Tenant RLS)", "aws_asset": "Aurora Serverless v2 (4-32 ACU)", "gcp_asset": "Cloud SQL Enterprise Plus HA (4 vCPU / 32GB)", "monthly_cost_50_clients": {"aws": 1850.0, "gcp": 1780.0}, "capability": "Tenant RLS state DAG & recovery points"},
+                    {"subsystem": "Distributed Cache & Redlock Leases", "aws_asset": "ElastiCache Redis 7.x (cache.m6g.large)", "gcp_asset": "Cloud Memorystore Redis HA", "monthly_cost_50_clients": {"aws": 420.0, "gcp": 410.0}, "capability": "Worktree lease TTL locks & AST cache (<15ms)"},
+                    {"subsystem": "Immutable WORM Vaults", "aws_asset": "Amazon S3 Object Lock (Compliance Mode)", "gcp_asset": "Google Cloud Storage Object Retention WORM", "monthly_cost_50_clients": {"aws": 280.0, "gcp": 260.0}, "capability": "Non-repudiable SHA-256 Merkle proofs & streaming Git bundle transport"},
+                    {"subsystem": "Telemetry & Context Burn Storage", "aws_asset": "TimescaleDB on EBS gp3 (500GB / 3000 IOPS)", "gcp_asset": "TimescaleDB on Regional Hyperdisk (500GB)", "monthly_cost_50_clients": {"aws": 225.0, "gcp": 215.0}, "capability": "Real-time context burn & visual DAG feeds"},
+                    {"subsystem": "Edge WAF & Zero-Trust Ingress", "aws_asset": "Cloudflare Enterprise + AWS NLB", "gcp_asset": "Cloudflare Enterprise + GCP TCP Proxy", "monthly_cost_50_clients": {"aws": 895.0, "gcp": 850.0}, "capability": "mTLS, DDoS protection, Ed25519 JWT injection"},
+                    {"subsystem": "APM Observability & SLI Metrics", "aws_asset": "Datadog APM & Pod Traces", "gcp_asset": "Cloud Operations Suite (Trace & Logging)", "monthly_cost_50_clients": {"aws": 1150.0, "gcp": 1050.0}, "capability": "MicroVM saturation & PR gate latency telemetry"},
+                    {"subsystem": "Tier B Verifier AI (Automated TDD)", "aws_asset": "Claude 3.5 Haiku / Bedrock", "gcp_asset": "Gemini 1.5 Flash / Vertex AI", "monthly_cost_50_clients": {"aws": 3200.0, "gcp": 3100.0}, "capability": "Automated contract verification & bounded TDD"},
+                    {"subsystem": "In-Memory Security & KMS CMEK", "aws_asset": "AWS KMS CMK Key Rotation + GuardDuty", "gcp_asset": "Cloud KMS CMEK + Security Command Center", "monthly_cost_50_clients": {"aws": 567.0, "gcp": 550.0}, "capability": "Sub-ms PII de-identification & RAM-only .nbpack decryption"}
+                ],
+                "milestones": {
+                    "10_clients": {"mrr": 45000.0, "aws_opex": 3850.0, "gcp_opex": 3690.0, "gross_margin_aws_pct": 86.8, "gross_margin_gcp_pct": 87.2},
+                    "50_clients": {"mrr": 225000.0, "aws_opex": 12980.0, "gcp_opex": 12468.0, "gross_margin_aws_pct": 91.2, "gross_margin_gcp_pct": 91.5},
+                    "200_clients": {"mrr": 900000.0, "aws_opex": 39450.0, "gcp_opex": 37830.0, "gross_margin_aws_pct": 94.1, "gross_margin_gcp_pct": 94.3}
+                }
             })
             return
 
