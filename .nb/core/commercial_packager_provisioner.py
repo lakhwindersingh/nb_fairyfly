@@ -133,6 +133,10 @@ class CommercialPackagerProvisioner:
         config_path = workspace_root / ".nb" / "config" / "billing_plans.yaml"
         if not config_path.exists():
             config_path = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "config" / "billing_plans.yaml"
+        if not config_path.exists():
+            repo_candidate = Path(__file__).resolve().parents[2] / ".nb" / "config" / "billing_plans.yaml"
+            if repo_candidate.exists():
+                config_path = repo_candidate
         if config_path.exists():
             try:
                 return yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
