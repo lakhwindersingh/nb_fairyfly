@@ -114,7 +114,7 @@ resource "google_container_node_pool" "sandbox_nodes" {
   }
 
   node_config {
-    machine_type = "c3-standard-4"
+    machine_type = var.sandbox_machine_type
     disk_size_gb = 100
     disk_type    = "pd-ssd"
     spot         = true

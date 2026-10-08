@@ -32,7 +32,7 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 resource "aws_eks_cluster" "percipience_eks" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.29"
+  version  = var.eks_version
 
   vpc_config {
     subnet_ids              = concat(aws_subnet.public[*].id, aws_subnet.private[*].id)
@@ -134,7 +134,7 @@ resource "aws_eks_node_group" "system_nodes" {
   ]
 }
 
-# Karpenter Controller Controller IAM Role & IRSA
+# Karpenter Controller IAM Role & IRSA
 resource "aws_iam_role" "karpenter_controller" {
   name = "percipience-${var.environment}-karpenter-controller"
 
@@ -192,4 +192,39 @@ resource "aws_iam_policy" "karpenter_controller_policy" {
 resource "aws_iam_role_policy_attachment" "karpenter_attach" {
   policy_arn = aws_iam_policy.karpenter_controller_policy.arn
   role       = aws_iam_role.karpenter_controller.name
+}
+
+# Karpenter Node Security Group (Tagged for Karpenter Subnet & Node Discovery)
+resource "aws_security_group" "karpenter_node_sg" {
+  name        = "percipience-${var.environment}-karpenter-node-sg"
+  description = "Security group for ephemeral gVisor worker nodes launched by Karpenter"
+  vpc_id      = aws_vpc.percipience_vpc.id
+
+  ingress {
+    description = "Cluster API to Karpenter nodes"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  ingress {
+    description = "Inter-pod communication"
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name                     = "percipience-${var.environment}-karpenter-node-sg"
+    "karpenter.sh/discovery" = var.cluster_name
+  }
 }

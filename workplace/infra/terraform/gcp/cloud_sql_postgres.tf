@@ -27,6 +27,7 @@ resource "google_sql_database_instance" "percipience_db" {
       ipv4_enabled                                  = false
       private_network                               = google_compute_network.percipience_vpc.id
       enable_private_path_for_google_cloud_services = true
+      ssl_mode                                      = "ENCRYPTED_ONLY"
     }
 
     backup_configuration {
@@ -37,17 +38,17 @@ resource "google_sql_database_instance" "percipience_db" {
     }
 
     database_flags {
-      name  = "rds.force_ssl"
-      value = "on"
-    }
-
-    database_flags {
       name  = "log_connections"
       value = "on"
     }
 
     database_flags {
       name  = "log_disconnections"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_checkpoints"
       value = "on"
     }
 

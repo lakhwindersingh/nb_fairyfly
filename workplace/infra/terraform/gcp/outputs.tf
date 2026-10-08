@@ -42,3 +42,13 @@ output "kms_cryptokey_id" {
   description = "Google Cloud KMS CMEK CryptoKey ID."
   value       = google_kms_crypto_key.percipience_key.id
 }
+
+output "ingress_lb_ip" {
+  description = "Google Cloud External TCP Proxy Load Balancer IPv4 address."
+  value       = google_compute_address.ingress_lb_ip.address
+}
+
+output "timescaledb_disk_id" {
+  description = "Regional TimescaleDB persistent disk ID."
+  value       = google_compute_region_disk.timescaledb_disk.id
+}

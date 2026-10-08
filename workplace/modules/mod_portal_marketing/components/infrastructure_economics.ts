@@ -81,8 +81,8 @@ export const CLOUD_EQUIVALENCE_DATA: CloudEquivalenceRow[] = [
     subsystem: "Security & KMS Enclave",
     awsAsset: "AWS KMS CMK Key Rotation + GuardDuty",
     gcpAsset: "Cloud KMS CMEK + Security Command Center",
-    monthlyCost50Clients: { aws: 767, gcp: 750 },
-    sizingNotes: "Envelope encryption keys for .nbpack hydration"
+    monthlyCost50Clients: { aws: 567, gcp: 550 },
+    sizingNotes: "Envelope encryption keys for .nbpack hydration (scales to $767/$750 with SecHub/SCC Premium)"
   }
 ];
 
