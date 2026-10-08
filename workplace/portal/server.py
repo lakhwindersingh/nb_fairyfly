@@ -976,6 +976,27 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td class="percipience-cell">✅ 4-Tier Authority (Orchestrator &gt; Architect &gt; Worker &gt; Gatekeeper) with D_max = 2 ceiling</td>
             </tr>
 
+            <!-- 5. CONCURRENCY & WORKSPACE ISOLATION -->
+            <tr>
+              <td colspan="6" class="cat-header">🌐 5. Distributed Concurrency &amp; Workspace Isolation Domain</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Distributed Redis Redlock Worktree Leases<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Active PID Liveness Probing</span></td>
+              <td>❌ Dirty working tree collisions during simultaneous agent runs</td>
+              <td>❌ None (relies on single environment or container)</td>
+              <td>❌ None</td>
+              <td>⚠️ Heavy Docker container per job (slow startup: 30s-2m)</td>
+              <td class="percipience-cell">✅ Ephemeral Git worktrees (&lt;180ms startup) with Redis Redlock leases and dead-PID auto-eviction</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Bring Your Own Repository (BYOR)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Enterprise Firewall &amp; VPC Peering</span></td>
+              <td>⚠️ Cloud GitHub.com or local desktop app required</td>
+              <td>⚠️ Hosted public SaaS cloud only</td>
+              <td>⚠️ Hosted public SaaS cloud only</td>
+              <td>⚠️ Self-hosted runners require heavy agent maintenance</td>
+              <td class="percipience-cell">✅ Native integration for self-hosted GitLab, GHES, Bitbucket DC with custom corporate CA certs</td>
+            </tr>
+
             <!-- 6. ZERO-DIAL GOVERNANCE & OPERATIONAL ERGONOMICS -->
             <tr>
               <td colspan="6" class="cat-header">🛡️ 6. Zero-Dial Governance &amp; Operational Ergonomics (Convention Over Configuration)</td>
@@ -1089,6 +1110,28 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <li>Strict Mermaid syntax linting catches unquoted brackets and broken connections.</li>
               <li>Continuous sync of sequence flows, data flows, entity relationships, and module catalogs.</li>
               <li>Zero human authoring overhead required to keep architecture living and accurate.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-badge" style="background:rgba(59,130,246,0.15); color:var(--blue);">Zero-Dial Standard</div>
+            <h3>5. Zero-Dial Invariant Architecture (CAP-41 – CAP-46)</h3>
+            <p>Traditional AI developer tooling bombards teams with dozens of manual knobs, sliders, and prompt engineering thresholds that drift and cause flaky pipeline breaks. Percipience replaces configuration sprawl with mathematically verified runtime invariants certified via STD-041 through STD-046.</p>
+            <ul class="bullet-list">
+              <li><b>Zero Slider Fatigue:</b> All 8 legacy tuning sliders permanently removed in favor of audited invariants.</li>
+              <li><b>5-Point Control Surface:</b> Intuitive Boolean policy flags (AST Pruning, Reflection Gate, Cache Pinning, Rollback Protection, Audit Trail).</li>
+              <li><b>Standard Invariants:</b> 70% AST prune ratio (STD-041), 3-attempt reflection cap (STD-042), SHA-256 Merkle chain integrity (STD-045).</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-badge" style="background:rgba(16,185,129,0.15); color:var(--green);">DEWS Swarm Engine</div>
+            <h3>6. Distributed Ephemeral Swarms &amp; Streaming Git Bundles (CAP-48 / CAP-52)</h3>
+            <p>Single-process agent architectures suffer from memory leakage, state pollution, and cluttered local git branches. Percipience orchestrates distributed ephemeral containerized swarms with topological wave scheduling and transports code changes purely via in-memory streaming Git bundles.</p>
+            <ul class="bullet-list">
+              <li><b>Isolated Worker Sandboxes:</b> Agents execute in ephemeral gVisor/Docker containers with no local branch clutter.</li>
+              <li><b>Streaming Git Bundles:</b> In-memory binary transport with sub-second commit unpacking and atomic Merkle state validation.</li>
+              <li><b>Topological Wave DAG (CAP-48):</b> Multi-agent dependency resolution guarantees flawless parallel execution across micro-modules.</li>
             </ul>
           </div>
         </div>
@@ -1818,94 +1861,80 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
           </thead>
           <tbody>
             <tr>
-              <td class="feature-name">K8s Control Plane</td>
+              <td class="feature-name">K8s Multi-AZ Control Plane</td>
               <td>AWS EKS (K8s 1.30+ Multi-AZ)</td>
               <td>GKE Multi-Zonal Cluster</td>
-              <td>$73 / $73</td>
+              <td> / </td>
               <td>Multi-tenant control plane &amp; API gateways</td>
             </tr>
             <tr>
-              <td class="feature-name">Worker Sandboxes &amp; DEWS Swarms</td>
+              <td class="feature-name">Worker Sandboxes &amp; DEWS Swarm Fleets</td>
               <td>Karpenter Spot c6i.2xlarge + Bottlerocket</td>
               <td>GKE Sandbox Spot VMs (gVisor runsc)</td>
-              <td>$4,320 / $4,180</td>
-              <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runners</td>
+              <td>,320 / ,180</td>
+              <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runner swarms</td>
             </tr>
             <tr>
-              <td class="feature-name">Streaming Git Transport Sinks</td>
-              <td>Amazon S3 Object Lock + Transfer Acceleration</td>
-              <td>GCS Object Retention WORM + Cloud Storage FUSE</td>
-              <td>$380 / $360</td>
-              <td>Zero-clutter cryptographic Git bundle streams &amp; Merkle rolls</td>
-            </tr>
-            <tr>
-              <td class="feature-name">In-Memory Security &amp; KMS Enclaves</td>
-              <td>AWS KMS Nitro Enclaves + ElastiCache</td>
-              <td>Cloud KMS CMEK + Memorystore HA</td>
-              <td>$767 / $750</td>
-              <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
-            </tr>
-            <tr>
-              <td class="feature-name">PostgreSQL Database</td>
+              <td class="feature-name">PostgreSQL Database (Multi-Tenant RLS)</td>
               <td>Aurora Serverless v2 (4-32 ACU)</td>
               <td>Cloud SQL Enterprise Plus HA</td>
-              <td>$1,850 / $1,780</td>
+              <td>,850 / ,780</td>
               <td>Tenant RLS state DAG &amp; recovery points</td>
             </tr>
             <tr>
-              <td class="feature-name">Distributed Cache</td>
+              <td class="feature-name">Distributed Cache &amp; Redlock Leases</td>
               <td>ElastiCache Redis 7.x</td>
               <td>Cloud Memorystore Cluster</td>
-              <td>$420 / $410</td>
+              <td> / </td>
               <td>Worktree lease TTL locks &amp; AST cache (&lt;15ms)</td>
             </tr>
             <tr>
-              <td class="feature-name">Immutable WORM Vault</td>
-              <td>Amazon S3 Object Lock</td>
-              <td>GCS Object Retention WORM</td>
-              <td>$280 / $260</td>
-              <td>Non-repudiable SHA-256 Merkle audit proof bundles</td>
+              <td class="feature-name">Immutable WORM Vaults &amp; Streaming Git Sinks</td>
+              <td>Amazon S3 Object Lock + Transfer Acceleration</td>
+              <td>GCS Object Retention WORM + Cloud Storage FUSE</td>
+              <td> / </td>
+              <td>Non-repudiable SHA-256 Merkle proofs &amp; streaming Git bundle transport</td>
             </tr>
             <tr>
-              <td class="feature-name">Telemetry Storage</td>
+              <td class="feature-name">Telemetry &amp; Context Burn Storage</td>
               <td>TimescaleDB on EBS gp3</td>
               <td>TimescaleDB on Hyperdisk</td>
-              <td>$225 / $215</td>
+              <td> / </td>
               <td>Real-time context burn &amp; visual DAG feeds</td>
             </tr>
             <tr>
-              <td class="feature-name">Edge WAF &amp; Ingress</td>
+              <td class="feature-name">Edge WAF &amp; Zero-Trust Ingress</td>
               <td>Cloudflare Enterprise + NLB</td>
               <td>Cloudflare Enterprise + TCP Proxy</td>
-              <td>$895 / $850</td>
+              <td> / </td>
               <td>mTLS, DDoS protection, Ed25519 JWT injection</td>
             </tr>
             <tr>
-              <td class="feature-name">APM Observability</td>
+              <td class="feature-name">APM Observability &amp; SLI Metrics</td>
               <td>Datadog APM &amp; Pod Traces</td>
               <td>Cloud Operations Suite</td>
-              <td>$1,150 / $1,050</td>
+              <td>,150 / ,050</td>
               <td>MicroVM saturation &amp; PR gate latency telemetry</td>
             </tr>
             <tr>
-              <td class="feature-name">Tier B Verifier AI</td>
+              <td class="feature-name">Tier B Verifier AI (Automated TDD)</td>
               <td>Claude 3.5 Haiku / Bedrock</td>
               <td>Gemini 1.5 Flash / Vertex</td>
-              <td>$3,200 / $3,100</td>
+              <td>,200 / ,100</td>
               <td>Automated contract verification &amp; bounded TDD</td>
             </tr>
             <tr>
-              <td class="feature-name">Security &amp; KMS</td>
-              <td>AWS KMS CMK + GuardDuty</td>
+              <td class="feature-name">In-Memory Security &amp; KMS Nitro Enclaves</td>
+              <td>AWS KMS Nitro Enclaves + GuardDuty</td>
               <td>Cloud KMS CMEK + SCC</td>
-              <td>$767 / $750</td>
-              <td>HKDF key derivation for .nbpack RAM decryption</td>
+              <td> / </td>
+              <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
             </tr>
             <tr style="background:var(--bg-panel); font-weight:700;">
               <td class="feature-name" style="color:var(--cyan);">Total Monthly OpEx</td>
-              <td>$12,980 / mo</td>
-              <td>$12,468 / mo</td>
-              <td class="text-emerald" style="font-weight:800;">$225,000 MRR</td>
+              <td>,980 / mo</td>
+              <td>,468 / mo</td>
+              <td class="text-emerald" style="font-weight:800;">,000 MRR</td>
               <td class="text-emerald">91.2% / 91.5% Gross Margin</td>
             </tr>
           </tbody>
