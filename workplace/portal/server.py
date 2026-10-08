@@ -431,6 +431,67 @@ PORTAL_HTML = """<!DOCTYPE html>
     .tree-node.level-3 { margin-left: 40px; border-left: 3px solid var(--purple); }
     .tree-node.level-4 { margin-left: 60px; border-left: 3px solid var(--green); }
 
+    
+    /* Dedicated Admin Portal Setup */
+    .admin-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .admin-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .admin-nav-bar {
+      display: flex;
+      gap: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 6px;
+      border-radius: 8px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .admin-nav-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .admin-nav-btn:hover {
+      color: var(--text);
+      background: var(--code-bg);
+    }
+    .admin-nav-btn.active {
+      color: var(--cyan);
+      background: var(--code-bg);
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+    }
+    .admin-view-pane {
+      display: none;
+    }
+    .admin-view-pane.active {
+      display: block;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     /* Responsive Navigation & Mobile Adaptation */
     @media (max-width: 1200px) {
       header {
@@ -551,12 +612,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('docs')">Docs</button>
       <button class="nav-btn" onclick="showTab('reports')">📑 Deep Reports</button>
       <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
-      <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔐 Client Space</button>
-      <button class="nav-btn" onclick="showTab('governance'); loadGovernanceTab();" id="govNavBtn" style="border:1px solid var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant &amp; Policies</button>
-      <button class="nav-btn" onclick="showTab('commercial-provisioner'); loadCommercialTab();" id="commercialNavBtn" style="border:1px solid var(--amber); color:var(--amber); font-weight:700;">📦 Commercial Provisioner</button>
-      <button class="nav-btn" onclick="showTab('swarm-governance'); loadSwarmTab();" id="swarmNavBtn" style="border:1px solid var(--emerald); color:var(--emerald); font-weight:700;">🤖 Swarm &amp; Governance</button>
-      <button class="nav-btn" onclick="showTab('fleet-monitor'); loadFleetTab();" id="fleetNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🖥️ Fleet &amp; FinOps</button>
-      <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn">🌙 Dark</button>
+      <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔑 Client Space</button>
     </nav>
   </header>
 
@@ -591,7 +647,7 @@ PORTAL_HTML = """<!DOCTYPE html>
           <button class="btn btn-primary" onclick="showTab('gateway')">🚀 Try Context Gateway</button>
           <button class="btn btn-secondary" onclick="showTab('tier-matrix')">📊 Plan Matrix &amp; Ceilings</button>
           <button class="btn btn-secondary" onclick="showTab('roi-calculator')">💰 FinOps ROI Calculator</button>
-          <button class="btn btn-secondary" onclick="showTab('governance')" style="border-color:var(--purple); color:var(--purple); font-weight:700;">🏛️ Multi-Tenant Policies</button>
+          <button class="btn btn-secondary" onclick="showTab('client')" style="border-color:var(--cyan); color:var(--cyan); font-weight:700;">🔑 Enterprise Client Space</button>
         </div>
       </div>
 
@@ -633,9 +689,10 @@ PORTAL_HTML = """<!DOCTYPE html>
     </section>
 
     <!-- TAB 2: CAPABILITIES -->
+        <!-- TAB 2: CAPABILITIES -->
     <section id="capabilities" class="tab-content">
-      <div class="section-title">Foundational Technical Subsystems (CAP-01 to CAP-39)</div>
-      <div class="section-desc">Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, and model drift in mission-critical enterprise codebases.</div>
+      <div class="section-title">Foundational Technical Subsystems (CAP-01 to CAP-52)</div>
+      <div class="section-desc">Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, model drift, and distributed swarm chaos in enterprise codebases.</div>
       
       <div class="grid-2">
         <div class="card">
@@ -701,6 +758,38 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
           <p>Streams standardized W3C <code>traceparent</code> headers, TTFT waterfalls, and multi-dimensional G-Eval quality scores (Faithfulness, Hallucination Freedom, Code Correctness) to enterprise APMs.</p>
           <pre>percipience otel export --target datadog --w3c-traceparent 00-4bf92...</pre>
           <div class="stat-box"><span>Composite G-Eval Score:</span><span class="stat-val text-emerald">0.962 / 1.00 (PASSED)</span></div>
+        </div>
+
+        <div class="card" style="border-color:var(--cyan); box-shadow:0 0 10px rgba(6,182,212,0.15);">
+          <div class="card-badge" style="background:var(--cyan); color:#000;">Zero-Dial Standard (CAP-41 / CAP-46)</div>
+          <h3>9. Zero-Dial Architecture &amp; 5-Point Control Surface</h3>
+          <p>Convention Over Configuration. All 8 manual tuning sliders permanently eliminated. Codifies 4 certified invariants (15/25/35/10/15, 6D AST pruning, 3-turn SLA convergence, and Kahn acyclicity). The entire management surface collapses to 5 operator settings: Tenant ID, Project ID, Environment Mode (dev/prod), VCS Target, and HITL Quarantine Webhook.</p>
+          <pre>percipience gate --mode prod   # Enforces STRICT_BLOCK on breaking contracts</pre>
+          <div class="stat-box"><span>Invariant Guarantee:</span><span class="stat-val text-cyan">100% Zero-Drift Standards</span></div>
+        </div>
+
+        <div class="card" style="border-color:var(--purple); box-shadow:0 0 10px rgba(168,85,247,0.15);">
+          <div class="card-badge" style="background:var(--purple); color:#fff;">Distributed Swarms (CAP-48 to CAP-52)</div>
+          <h3>10. Containerized Swarms &amp; Streaming Git Bundles (DEWS)</h3>
+          <p>Executes multi-agent plan derivation inside hardened <code>percipience/agent-runner</code> Docker containers using headless Claude Code and Aider. Packages and transmits diffs via cryptographic <code>git bundle</code> streams with SHA-256 validation, eliminating remote git branch clutter while providing topological 3-way consolidation across worker branches.</p>
+          <pre>percipience swarm exec --plan .nb/plan/mvs_spec.yaml --module mod_auth</pre>
+          <div class="stat-box"><span>Transport Protocol:</span><span class="stat-val text-purple">0% Remote Branch Clutter (SHA-256 Verified)</span></div>
+        </div>
+
+        <div class="card" style="border-color:var(--green); box-shadow:0 0 10px rgba(16,185,129,0.15);">
+          <div class="card-badge" style="background:var(--green); color:#000;">Developer Experience (CAP-12 to CAP-14)</div>
+          <h3>11. JetBrains &amp; VS Code Native IDE Control Plane</h3>
+          <p>First-class IDE extensions for IntelliJ IDEA, PyCharm, and VS Code. Bundles self-contained platform runtimes unpacked directly via <code>.nbpack</code> enclaves with zero external system dependencies. Features live AST token savings meters, in-IDE PR gatekeeper triggers, and real-time Virtual File System (VFS) refresh.</p>
+          <pre>percipience provision --target intellij --bundle .nbpack</pre>
+          <div class="stat-box"><span>IDE Latency:</span><span class="stat-val text-emerald">Sub-50ms VFS Sync (Zero Disk Leak)</span></div>
+        </div>
+
+        <div class="card" style="border-color:var(--amber); box-shadow:0 0 10px rgba(245,158,11,0.15);">
+          <div class="card-badge" style="background:var(--amber); color:#000;">Runtime Safety (CAP-38 to CAP-40)</div>
+          <h3>12. In-Memory PII Sanitizer &amp; Prompt Injection Firewall</h3>
+          <p>Real-time inbound and outbound safety firewall. Masks sensitive credentials and PII (API keys, SSNs, emails, hostnames) in sub-millisecond memory-only vaults with zero disk exposure. Intercepts indirect prompt injection attacks (base64 and zero-width Unicode de-cloaking) and blocks unsafe AST system calls (<code>eval</code>, <code>exec</code>, <code>os.system</code>).</p>
+          <pre>percipience guardrail injection --payload untrusted_issue.md</pre>
+          <div class="stat-box"><span>Inspection Overhead:</span><span class="stat-val text-amber">&lt; 1.2ms (100% In-Memory Vault)</span></div>
         </div>
       </div>
     </section>
@@ -885,6 +974,48 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
               <td>❌ No enforcement</td>
               <td>❌ None</td>
               <td class="percipience-cell">✅ 4-Tier Authority (Orchestrator &gt; Architect &gt; Worker &gt; Gatekeeper) with D_max = 2 ceiling</td>
+            </tr>
+
+            <!-- 6. ZERO-DIAL GOVERNANCE & OPERATIONAL ERGONOMICS -->
+            <tr>
+              <td colspan="6" class="cat-header">🛡️ 6. Zero-Dial Governance &amp; Operational Ergonomics (Convention Over Configuration)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Zero-Dial Invariant Architecture (CAP-41 / CAP-46)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Decommissioned Slider Friction</span></td>
+              <td>❌ Opaque heuristics; zero centralized project policy governance</td>
+              <td>❌ 50+ configuration knobs; prone to context starvation &amp; drift</td>
+              <td>❌ Read-only metric dashboards without architectural enforcement</td>
+              <td>❌ Complex 200-line fragile YAML pipelines that break constantly</td>
+              <td class="percipience-cell">✅ <strong>4 Ratified Standards + 5-Point Control Surface:</strong> 8 manual sliders eliminated; immutable zero lost-in-middle guarantee</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Environment-Aware Wire Contract Protection<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Dev Speed vs Prod Safety</span></td>
+              <td>❌ Silent breaking API contract drift unchecked</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>⚠️ Fails downstream runtime tests after deployment</td>
+              <td class="percipience-cell">✅ <strong>Automated Mode Toggling:</strong> <code>prod</code> enforces <code>STRICT_BLOCK</code>; <code>dev</code> provides non-blocking <code>ALLOW_ADDITIVE_WARN</code></td>
+            </tr>
+
+            <!-- 7. CONTAINERIZED SWARM FLEETS & DISTRIBUTED TRANSPORT -->
+            <tr>
+              <td colspan="6" class="cat-header">📦 7. Containerized Swarm Fleets &amp; Distributed Git Transport (DEWS)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Docker Agent Runner Swarms (CAP-48)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Headless CLI Derivation</span></td>
+              <td>⚠️ Single-process local execution on developer laptop</td>
+              <td>❌ No isolated execution sandbox</td>
+              <td>❌ No execution sandbox</td>
+              <td>❌ Heavy VM runners with multi-minute spinup overhead</td>
+              <td class="percipience-cell">✅ Hardened multi-runtime Docker image (<code>percipience/agent-runner</code>) driving headless Claude Code &amp; Aider</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Streaming Git Bundle Transport (CAP-49)<br><span style="font-size:11px; color:var(--muted); font-weight:400;">Zero-Cloud-Branch-Clutter</span></td>
+              <td>❌ Pollutes git branches with temporary agent commits</td>
+              <td>❌ None</td>
+              <td>❌ None</td>
+              <td>⚠️ Clutters remote repo with hundreds of ephemeral CI test branches</td>
+              <td class="percipience-cell">✅ <strong>Streaming Git Bundles:</strong> Zero remote branch clutter; SHA-256 chunk transport with topological 3-way consolidation</td>
             </tr>
 
             <!-- 5. CONCURRENCY & WORKSPACE ISOLATION -->
@@ -1694,11 +1825,25 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
               <td>Multi-tenant control plane &amp; API gateways</td>
             </tr>
             <tr>
-              <td class="feature-name">Worker Sandboxes</td>
-              <td>Karpenter Spot c6i.2xlarge</td>
-              <td>GKE Sandbox Spot VMs (runsc)</td>
+              <td class="feature-name">Worker Sandboxes &amp; DEWS Swarms</td>
+              <td>Karpenter Spot c6i.2xlarge + Bottlerocket</td>
+              <td>GKE Sandbox Spot VMs (gVisor runsc)</td>
               <td>$4,320 / $4,180</td>
-              <td>Ephemeral Git worktree execution &amp; AST daemon</td>
+              <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runners</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Streaming Git Transport Sinks</td>
+              <td>Amazon S3 Object Lock + Transfer Acceleration</td>
+              <td>GCS Object Retention WORM + Cloud Storage FUSE</td>
+              <td>$380 / $360</td>
+              <td>Zero-clutter cryptographic Git bundle streams &amp; Merkle rolls</td>
+            </tr>
+            <tr>
+              <td class="feature-name">In-Memory Security &amp; KMS Enclaves</td>
+              <td>AWS KMS Nitro Enclaves + ElastiCache</td>
+              <td>Cloud KMS CMEK + Memorystore HA</td>
+              <td>$767 / $750</td>
+              <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
             </tr>
             <tr>
               <td class="feature-name">PostgreSQL Database</td>
@@ -1767,7 +1912,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
         </table>
       </div>
 
-      <div class="grid-3">
+      <div class="grid-3" style="margin-bottom:24px;">
         <div class="card">
           <div class="card-badge">Breakeven</div>
           <h3>1.5 Customers</h3>
@@ -1782,6 +1927,27 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
           <div class="card-badge">SLA Guarantees</div>
           <h3>99.95% Availability</h3>
           <p>Backed by multi-AZ Aurora/Cloud SQL replication, automated failover, and dual-region immutable WORM proof backups across S3 and Google Cloud Storage.</p>
+        </div>
+      </div>
+
+      <!-- ENTERPRISE INFRASTRUCTURE TOPOLOGY & ZERO-TRUST BLUEPRINT -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">🌐 Multi-Cloud DEWS Topology &amp; Zero-Trust Blueprint</div>
+        <p style="margin-bottom:16px;">Production Kubernetes architecture running concurrent Docker agent runners with streaming Git bundle transport, volatile memory enclaves, and dual WORM ledger archiving.</p>
+
+        <div class="grid-3">
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--cyan); margin-bottom:6px;">1. Multi-AZ Control Plane</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">EKS/GKE Multi-AZ control plane managing tenant isolation, PostgreSQL Aurora Serverless with Row-Level Security (RLS), and sub-millisecond Redis Redlock worktree lease coordination.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--purple); margin-bottom:6px;">2. DEWS Spot Swarms</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Karpenter autoscaling spot nodes running isolated <code>percipience/agent-runner</code> Docker containers. Employs gVisor sandbox runtimes with zero plaintext repository persistence on host disks.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--green); margin-bottom:6px;">3. Cryptographic Storage &amp; Egress</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Streaming Git Bundle transport sinks and dual-cloud immutable WORM vaults (S3 Object Lock Compliance Mode &amp; GCS Bucket Retention) ensuring SEC Rule 17a-4 compliance and auditability.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -2109,8 +2275,8 @@ percipience rollback \
     <section id="client" class="tab-content">
       <!-- UNAUTHENTICATED LOGIN CARD -->
       <div id="clientLoginCard" class="card" style="max-width:540px; margin:32px auto; padding:28px;">
-        <div class="card-title" style="font-size:18px;">🔐 Secure Client Space</div>
-        <p style="margin-bottom:18px;">Access confidential project telemetry, itemized FinOps rev-share invoices, recovery points, and WORM compliance audit proofs.</p>
+        <div class="card-title" style="font-size:18px;">🔑 Secure Enterprise Client &amp; Admin Console</div>
+        <p style="margin-bottom:18px; font-size:13px; color:var(--text);">Access confidential project telemetry, itemized FinOps rev-share invoices, sovereign multi-tenant policies, commercial package provisioning, swarm governance, and workstation fleet monitors.</p>
         
         <div class="form-group">
           <label class="form-label">Client ID / Organization</label>
@@ -2123,14 +2289,57 @@ percipience rollback \
         </div>
 
         <div style="display:flex; gap:10px; margin-top:16px;">
-          <button class="btn btn-primary" onclick="loginClient(false)" style="flex:1;">🔐 Sign In to Client Workspace</button>
+          <button class="btn btn-primary" onclick="loginClient(false)" style="flex:1;">🔑 Sign In to Admin Console</button>
           <button class="btn btn-secondary" onclick="loginClient(true)">⚡ Demo Login</button>
         </div>
         <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:12px; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
       </div>
 
-      <!-- AUTHENTICATED CLIENT CONSOLE -->
-      <div id="clientAuthConsole" style="display:none;">
+      <!-- AUTHENTICATED CLIENT CONSOLE (ADMIN PORTAL SETUP) -->
+      <div id="clientAuthConsole" style="display:none;" class="admin-container">
+        <!-- ADMIN TOP HEADER BAR -->
+        <div class="admin-header-bar">
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="width:38px; height:38px; border-radius:8px; background:linear-gradient(135deg, var(--cyan), var(--purple)); display:flex; align-items:center; justify-content:center; font-size:18px;">🛡️</div>
+            <div>
+              <div style="font-size:17px; font-weight:800; color:var(--cyan); display:flex; align-items:center; gap:8px;">
+                <span id="clientOrgName">Acme Global Financial Technologies</span>
+                <span class="badge badge-green" style="font-size:10px;">Enterprise RLS Active</span>
+              </div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">
+                Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn" title="Toggle Light/Dark Theme">🌙 Dark</button>
+            <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 14px; font-size:11px;">🚪 Sign Out</button>
+          </div>
+        </div>
+
+        <!-- ADMIN TAB NAVIGATION BAR -->
+        <div class="admin-nav-bar">
+          <button class="admin-nav-btn active" id="adminTabOverviewBtn" onclick="switchAdminView('client-overview')">
+            <span>📊</span> Project &amp; FinOps
+          </button>
+          <button class="admin-nav-btn" id="govNavBtn" onclick="switchAdminView('governance')">
+            <span>🏛️</span> Multi-Tenant &amp; Policies
+          </button>
+          <button class="admin-nav-btn" id="commercialNavBtn" onclick="switchAdminView('commercial-provisioner')">
+            <span>📦</span> Commercial Provisioner
+          </button>
+          <button class="admin-nav-btn" id="swarmNavBtn" onclick="switchAdminView('swarm-governance')">
+            <span>🤖</span> Swarm &amp; Governance
+          </button>
+          <button class="admin-nav-btn" id="fleetNavBtn" onclick="switchAdminView('fleet-monitor')">
+            <span>🖥️</span> Fleet &amp; FinOps
+          </button>
+        </div>
+
+        <!-- ADMIN VIEW 1: CLIENT OVERVIEW & FINOPS -->
+        <div id="adminViewOverview" class="admin-view-pane active">
+          
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <div style="font-size:20px; font-weight:800; color:var(--cyan);" id="clientOrgName">Acme Global Financial Technologies</div>
@@ -2220,11 +2429,12 @@ percipience rollback \
             <div class="stat-box" style="background:transparent; border:none; padding:6px 0 0; border-top:1px dashed var(--border); font-size:13px; font-weight:700; margin-top:6px;"><span>Percipience Performance Fee (15%):</span><strong class="text-cyan">$2.3546 USD</strong></div>
           </div>
         </div>
-      </div>
-    </section>
+      
+        </div>
 
-    <!-- TAB 13: MULTI-TENANT ENTERPRISE GOVERNANCE & POLICY TUNING (CAP-40 / CAP-41) -->
-    <section id="governance" class="tab-content">
+        <!-- ADMIN VIEW 2: MULTI-TENANT & POLICIES -->
+        <div id="governance" class="admin-view-pane">
+          
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
         <div>
           <div style="font-size:22px; font-weight:800; color:var(--purple); display:flex; align-items:center; gap:8px;">
@@ -2406,10 +2616,12 @@ percipience rollback \
         </div>
 
       </div>
-    </section>
+    
+        </div>
 
-    <!-- TAB 14: COMMERCIAL PACKAGE PROVISIONER & TIER LICENSING (CAP-42) -->
-    <section id="commercial-provisioner" class="tab-content">
+        <!-- ADMIN VIEW 3: COMMERCIAL PROVISIONER -->
+        <div id="commercial-provisioner" class="admin-view-pane">
+          
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
         <div>
           <div style="font-size:22px; font-weight:800; color:var(--amber); display:flex; align-items:center; gap:8px;">
@@ -2601,10 +2813,12 @@ percipience rollback \
 
         <div id="commPermResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
       </div>
-    </section>
+    
+        </div>
 
-    <!-- TAB 15: SWARM TOPOLOGIES & AGENT GOVERNANCE (SECTION 17.1) -->
-    <section id="swarm-governance" class="tab-content">
+        <!-- ADMIN VIEW 4: SWARM & GOVERNANCE -->
+        <div id="swarm-governance" class="admin-view-pane">
+          
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
         <div>
           <div style="font-size:22px; font-weight:800; color:var(--emerald); display:flex; align-items:center; gap:8px;">
@@ -2888,10 +3102,12 @@ percipience rollback \
           <div id="cbacResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
         </div>
       </div>
-    </section>
+    
+        </div>
 
-    <!-- TAB 16: ENTERPRISE FLEET & FINOPS MONITOR -->
-    <section id="fleet-monitor" class="tab-content">
+        <!-- ADMIN VIEW 5: FLEET & FINOPS -->
+        <div id="fleet-monitor" class="admin-view-pane">
+          
       <div class="hero">
         <div class="hero-badge">🖥️ Enterprise Workstation &amp; Swarm Fleet</div>
         <h1>Distributed Machine Fleet Monitor<br>&amp; Real-Time FinOps Rollup</h1>
@@ -3007,8 +3223,13 @@ percipience rollback \
           </div>
         </div>
       </div>
+    
+        </div>
+
+      </div>
     </section>
-  </main>
+
+    </main>
 
   <script>
     function initTheme() {
@@ -3194,8 +3415,66 @@ percipience rollback \
     }
 
 
+
+    function switchAdminView(viewId) {
+      const viewMap = {
+        'client-overview': 'adminViewOverview',
+        'governance': 'governance',
+        'commercial-provisioner': 'commercial-provisioner',
+        'swarm-governance': 'swarm-governance',
+        'fleet-monitor': 'fleet-monitor'
+      };
+
+      // Update admin navigation buttons
+      document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
+      if (viewId === 'client-overview') {
+        document.getElementById('adminTabOverviewBtn')?.classList.add('active');
+      } else if (viewId === 'governance') {
+        document.getElementById('govNavBtn')?.classList.add('active');
+      } else if (viewId === 'commercial-provisioner') {
+        document.getElementById('commercialNavBtn')?.classList.add('active');
+      } else if (viewId === 'swarm-governance') {
+        document.getElementById('swarmNavBtn')?.classList.add('active');
+      } else if (viewId === 'fleet-monitor') {
+        document.getElementById('fleetNavBtn')?.classList.add('active');
+      }
+
+      // Hide all admin panes and show target
+      document.querySelectorAll('.admin-view-pane').forEach(el => el.classList.remove('active'));
+      const targetId = viewMap[viewId] || viewId;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // Trigger loaders
+      if (viewId === 'governance') {
+        loadGovernanceTab();
+      } else if (viewId === 'commercial-provisioner') {
+        loadCommercialTab();
+      } else if (viewId === 'swarm-governance') {
+        loadSwarmTab();
+      } else if (viewId === 'fleet-monitor') {
+        loadFleetTab();
+      } else if (viewId === 'client-overview') {
+        loadClientData();
+      }
+    }
+    window.switchAdminView = switchAdminView;
+
     function showTab(id) {
       if (!id) return;
+
+      const adminTabs = ['governance', 'commercial-provisioner', 'swarm-governance', 'fleet-monitor'];
+      if (adminTabs.includes(id)) {
+        showTab('client');
+        if (!clientSessionToken) {
+          loginClient(true);
+        }
+        switchAdminView(id);
+        return;
+      }
+
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(id);
