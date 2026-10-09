@@ -34,7 +34,7 @@ flowchart LR
    * Exposes **Port 8585**: High-speed AST body pruning daemon for ultra-low latency token optimization.
    * Built-in HTTP health check: `GET http://localhost:8585/health`.
 3. **`test-runner`** (`Dockerfile.test_runner`):
-   * Hermetic container pre-configured with Git identity, Pytest, Python 3.11, and cryptographic tools to execute the complete test suite and the 7-stage CI/CD gatekeeper.
+   * Hermetic container pre-configured with Git identity, Pytest, Python 3.14 (and 3.11+), and cryptographic tools to execute the complete test suite and the 7-stage CI/CD gatekeeper.
 
 ---
 

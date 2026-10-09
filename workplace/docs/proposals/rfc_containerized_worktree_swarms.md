@@ -148,7 +148,7 @@ Below are the drafted backlog items designed to be reviewed and incorporated int
 
 ### `TODO-DEWS-01`: Docker Agent Runner Base Image & Tooling Manifest
 * **Component:** `workplace/infra/docker/Dockerfile.agent_runner`, `workplace/infra/docker/entrypoint_agent.sh`
-* **Description:** Create a standardized, hardened multi-runtime Docker image equipped with Python 3.11, Node.js 20, Git, jq, curl, `@anthropic-ai/claude-code`, and `aider-chat`. Include non-root execution permissions, global git identity defaults, and dynamic safe-directory configuration.
+* **Description:** Create a standardized, hardened multi-runtime Docker image equipped with Python 3.14 (and 3.11+), Node.js 20, Git, jq, curl, `@anthropic-ai/claude-code`, and `aider-chat`. Include non-root execution permissions, global git identity defaults, and dynamic safe-directory configuration.
 * **Acceptance Criteria:** Image builds cleanly under 800MB; `claude --version` and `aider --version` execute successfully inside container; non-root user cannot access root filesystem.
 
 ### `TODO-DEWS-02`: Containerized Plan-to-Code Executor Engine

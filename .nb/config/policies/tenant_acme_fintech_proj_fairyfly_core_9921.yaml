@@ -5,8 +5,8 @@ vcs_repository:
   url: https://github.com/acme/simplified.git
   default_branch: develop
 hitl_quarantine_webhook: https://hooks.slack.com/services/alerts
-version: 91
-updated_at: '2026-10-09T18:33:54.589615+00:00'
+version: 94
+updated_at: '2026-10-09T18:46:21.651125+00:00'
 updated_by: user_architect
 certified_invariants:
   attention_slicing: 15/25/35/10/15 Ratio (15% Invariants / 25% Contracts / 35% AST

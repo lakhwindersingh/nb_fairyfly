@@ -675,7 +675,7 @@
   - *Identified Issue*: `README.md` previously began with heavy architectural specifications without a 30-second developer quick start.
   - *Implementation Scope*: Add prominent Quick Start section to `README.md` featuring one-click cloning, audit verification (`.nb/bin/percipience audit`), portal startup, and Merkle DAG dashboard exploration.
 - [ ] **TODO-REV-05: System Prerequisites & Dependency Matrix in HOWTO Guide (P0)**:
-  - *Identified Issue*: `HOWTO_WORKSPACE_GUIDE.md` lacked a dedicated prerequisites block specifying Python 3.11+, Git 2.30+, Redis 7.x (optional for distributed locks), and RAM recommendations (4GB min / 8GB for Tree-Sitter AST daemon).
+  - *Identified Issue*: `HOWTO_WORKSPACE_GUIDE.md` lacked a dedicated prerequisites block specifying Python 3.14+ (and 3.11+), Git 2.30+, Redis 7.x (optional for distributed locks), and RAM recommendations (4GB min / 8GB for Tree-Sitter AST daemon).
   - *Implementation Scope*: Add Prerequisites and installation verification section to `HOWTO_WORKSPACE_GUIDE.md` directly after the introduction.
 - [x] **TODO-REV-06: Transparent ROI Cost Calculator & AST Compression Limits (P0)**:
   - *Identified Issue*: Marketing materials claimed 60–85% token reduction without demonstrating exact dollar calculations across team sizes and PR volumes, or discussing when AST pruning is counter-productive.
@@ -756,7 +756,7 @@
 
 ### 21.1. Phase 1: Sandboxed Plan Derivation in Local Worktree Container
 - [x] **TODO-DEWS-01: Docker Agent Runner Base Image & Tooling Manifest (P1)**:
-  - *Identified Requirement*: Standardized, hardened multi-runtime Docker image equipped with Python 3.11, Node.js 20, Git, jq, curl, `@anthropic-ai/claude-code`, and `aider-chat`. Include non-root execution permissions, global git identity defaults, and dynamic safe-directory configuration.
+  - *Identified Requirement*: Standardized, hardened multi-runtime Docker image equipped with Python 3.14 (and 3.11+), Node.js 20, Git, jq, curl, `@anthropic-ai/claude-code`, and `aider-chat`. Include non-root execution permissions, global git identity defaults, and dynamic safe-directory configuration.
   - *Target Files*: [`workplace/infra/docker/Dockerfile.agent_runner`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/Dockerfile.agent_runner), [`workplace/infra/docker/entrypoint_agent.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/entrypoint_agent.sh), [`workplace/infra/docker/docker-compose.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-compose.yml), [`workplace/infra/docker/docker-test.sh`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/infra/docker/docker-test.sh)
   - *Acceptance Criteria*: Image builds cleanly; `claude --version` (2.1.197), `node --version` (v20.20.2), `python3 --version` (3.11.17) execute successfully inside container; non-root user `agent` (UID 1000) cannot access root filesystem; safe.directory properly initialized.
 - [x] **TODO-DEWS-02: Containerized Plan-to-Code Executor Engine (P1)**:

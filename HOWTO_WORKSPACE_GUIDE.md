@@ -72,6 +72,30 @@ To prevent agentic hallucinations from compromising the execution OS while grant
 
 ## 2. Quickstart: Bootstrapping & Mode Selection
 
+### System Prerequisites & Dependency Matrix
+Before bootstrapping or running agentic derivation, ensure the following tools are available on your system:
+
+| Dependency / Tool | Version Requirement | Purpose |
+| :--- | :--- | :--- |
+| **Python** | **3.14+** (3.11+ minimum supported) | Primary runtime for all 54 platform engines, CLI, and test runner |
+| **Git** | **2.30+** | Ephemeral worktree branching, Merkle state anchoring, and bundle transport |
+| **Redis** | **7.x+** *(Optional)* | Multi-node Karpenter distributed Redlock leases (`--redis`) |
+| **Node.js** | **20.x+** *(Optional)* | VS Code extension compilation and corporate portal frontend |
+| **Memory (RAM)** | **4 GB min / 8 GB rec** | In-memory AST caching, RAM enclave hydration (`.nbpack`), and Tree-Sitter daemon |
+
+#### Dependency Installation
+```bash
+# Using standard pip
+pip install -r requirements.txt
+
+# Or with ultra-fast uv
+uv pip install -r requirements.txt
+
+# Verify environment & runtime readiness
+./.nb/bin/percipience status
+```
+
+
 The workspace operates in one of two standardized modes configured in `context/ledger/context_ledger.yaml`:
 - **`single_module`**: Flat layout (`workplace/src/` and `workplace/config/`). Best for standalone libraries, single-page apps, or microservices.
 - **`multi_module`**: Poly-module layout (`workplace/modules/<module_id>/`, `workplace/shared/`, `context/contracts/`). Best for multi-system platforms (e.g., Cloud SaaS + Onboarding + Billing + Observability).
@@ -520,7 +544,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.14"
       - run: |
           chmod +x .nb/bin/percipience
           ./.nb/bin/percipience gate
@@ -535,7 +559,7 @@ stages:
 
 percipience_gatekeeper:
   stage: verify
-  image: python:3.11-slim
+  image: python:3.14-slim
   variables:
     PERCIPIENCE_API_URL: "https://percipience.corp.internal/api/v1"
     GIT_DEPTH: "0"
@@ -586,4 +610,20 @@ percipience_gatekeeper:
 | `./.nb/bin/percipience repo connect --url <git_url> --auth-type <ssh_key|pat>` | Connect a self-hosted or cloud Git repository (BYOR) with SSH deploy keys. |
 | `./.nb/bin/percipience repo status` | Inspect current BYOR remote status and mock deploy public keys. |
 | `./.nb/bin/percipience run --workflow <id> [--dry-run]` | Execute a multi-step SDLC workflow DAG. |
+| `./.nb/bin/percipience sandbox exec --cmd "<cmd>" [--runtime <auto|wasm|process_jail>]` | Execute arbitrary commands inside kernel-isolated sub-500ms ephemeral sandbox. |
+| `./.nb/bin/percipience sandbox list` | List active ephemeral sandboxes and memory usage. |
+| `./.nb/bin/percipience oidc token --subject <actor> --audience <aud>` | Mint cryptographically signed RS256 OpenID Connect Core 1.0 workload identity token. |
+| `./.nb/bin/percipience oidc exchange --token <jwt> --provider <aws|gcp|azure> --role <arn>` | Exchange OIDC token for short-lived cloud credentials (AWS STS / GCP / Azure AD). |
+| `./.nb/bin/percipience oidc audit` | Display non-sensitive audit trail of OIDC credential exchanges. |
+| `./.nb/bin/percipience license status` | View active commercial license tier, tenant details, signature, and quotas. |
+| `./.nb/bin/percipience license mint --tier <tier> --tenant <id> [--install]` | Mint and sign Ed25519 commercial license for Free, Team, Business, or Enterprise tiers. |
+| `./.nb/bin/percipience license install --file <path>` | Install commercial license JSON into workspace `.nb/context/tenant_license.json`. |
+| `./.nb/bin/percipience test --coverage` | Execute test pyramid with unified statement and branch code coverage reporting (ASCII/HTML/JSON). |
+| `./.nb/bin/percipience test --total-shards <n> --shard-index <i>` | Execute parallel test shard across distributed nodes with aggregated Merkle receipts. |
+| `./.nb/bin/percipience bot deploy` | Deploy interactive GitOps PR Gatekeeper Bot GitHub Actions / GitLab CI workflow. |
+| `./.nb/bin/percipience bot command --cmd "/verify"` | Dispatch developer slash-command (`/re-heal`, `/rollback`, `/verify`, `/gate`, `/preview`). |
+| `./.nb/bin/percipience daemon status` | Check high-speed native Tree-Sitter AST daemon status and latency. |
+| `./.nb/bin/percipience daemon prune --file <path>` | High-throughput AST prune source file via Tree-Sitter IPC daemon client. |
+| `./.nb/bin/percipience egress mirror --block-id <id>` | Mirror sealed Merkle block to immutable WORM vault (AWS S3 Compliance / GCP Retention / Local). |
+| `./.nb/bin/percipience egress list` | Inspect immutable WORM cloud egress audit trail. |
 | `./start_portal.sh [port]` | Launch the interactive Cloud SaaS Portal and API Gateway locally. |

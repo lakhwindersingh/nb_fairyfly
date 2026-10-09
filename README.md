@@ -2,9 +2,11 @@
 **Enterprise Context Engineering OS, Autonomous CI/CD Gatekeeper & Model Context Protocol (MCP) Hub**
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.14%20%7C%203.11+-blue.svg)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/Tests-314%20Passed%20(100%25)-brightgreen.svg)](workplace/tests/)
 [![Architecture](https://img.shields.io/badge/Architecture-Quad--Space%20Partitioning-emerald.svg)](HOWTO_WORKSPACE_GUIDE.md)
 [![Operating Mode](https://img.shields.io/badge/Operating%20Mode-Multi--Module%20(Play%203)-blueviolet.svg)](HOWTO_WORKSPACE_GUIDE.md)
-[![Context Maturity](https://img.shields.io/badge/Context%20Maturity-0.990%20(Enterprise)-green.svg)](workplace/docs/reports/context_maturity_report.md)
+[![Context Maturity](https://img.shields.io/badge/Context%20Maturity-0.98%20(Enterprise)-green.svg)](workplace/docs/reports/context_maturity_report.md)
 [![MCP Protocol](https://img.shields.io/badge/MCP-Compliant-orange.svg)](.claude/mcp.json)
 
 ---
@@ -20,6 +22,29 @@
 
 ---
 
+---
+
+## 🚀 Quick Start (5 Minutes)
+
+```bash
+# 1. Clone repository & install dependencies (Python 3.14 supported)
+git clone <repo> && cd nb_fairyfly
+pip install -r requirements.txt
+
+# 2. Inspect active commercial license & 54 provisioned platform engines
+./.nb/bin/percipience status
+
+# 3. Verify cryptographic Merkle chain & test pyramid (315 tests)
+./.nb/bin/percipience audit --enforce-merkle-chain
+pytest workplace/tests/
+
+# 4. Start the interactive Dashflat Enterprise SaaS Portal & Dashboard
+./start_portal.sh 3000
+# Open http://127.0.0.1:3000/ to explore the live control plane
+```
+
+---
+
 ## 🏛️ System Architecture: Quad-Space Partitioning
 
 Percipience organizes repositories into four strictly bounded spaces to prevent prompt pollution, enable deterministic agent execution, and guarantee cryptographic auditability:
@@ -32,7 +57,7 @@ nb_fairyfly/
 ├── .nb/             # ⚙️ Platform Agentic CI/CD System (Context Engineering OS)
 │   ├── bin/         # Unified Percipience CLI executable (.nb/bin/percipience)
 │   ├── config/      # Platform configurations (billing_plans, token_compression_rules, byor)
-│   ├── core/        # 38 Platform core engines (Merkle, AST Optimizer, Poisoning Sentinel, CI/CD, etc.)
+│   ├── core/        # 54 Platform core engines (Merkle, AST, OIDC, MicroVM, DEWS, CI/CD, etc.)
 │   ├── context/     # Governance, schemas, wire contracts, Merkle ledger & recovery points
 │   │   ├── contracts/   # Machine-readable wire contracts (.json / .yaml)
 │   │   ├── rules/       # Domain safety invariants and threading rules
@@ -115,28 +140,43 @@ The Kotlin-based JetBrains IDE plugin (`mod_intellij_plugin`) brings the full po
 The unified Percipience CLI (`.nb/bin/percipience`) serves as the central command-line interface:
 
 ```bash
-# 1. Run 7-stage CI/CD gatekeeper check
+# 1. Run 7-stage CI/CD gatekeeper check (AST prune, CVE sentinel, wire contracts, Merkle seal)
 ./.nb/bin/percipience gate
 
 # 2. Audit Merkle DAG ledger continuity and context maturity score
 ./.nb/bin/percipience audit --enforce-merkle-chain
 
-# 3. Optimize AST token footprint and display FinOps savings
+# 3. Run test pyramid with unified code coverage reporting (ASCII/HTML/JSON)
+./.nb/bin/percipience test --tier all --coverage
+
+# 4. Execute parallel test shard across distributed nodes
+./.nb/bin/percipience test --total-shards 4 --shard-index 0
+
+# 5. Execute command in sub-500ms kernel-isolated MicroVM / gVisor sandbox
+./.nb/bin/percipience sandbox exec --cmd "python3 -c 'print(42)'" --runtime process_jail
+
+# 6. Mint signed RS256 OIDC workload token & exchange for AWS/GCP cloud credentials
+./.nb/bin/percipience oidc token --subject "agent_worker" --audience "sts.amazonaws.com"
+./.nb/bin/percipience oidc exchange --token "$JWT" --provider aws --role "arn:aws:iam::123:role/Percipience"
+
+# 7. Check, mint, and install commercial licenses (Ed25519-signed)
+./.nb/bin/percipience license status
+./.nb/bin/percipience license mint --tier plan_enterprise --tenant tenant_acme --install
+
+# 8. Manage native Tree-Sitter AST daemon and view FinOps token savings
+./.nb/bin/percipience daemon status
 ./.nb/bin/percipience tokens summary
-./.nb/bin/percipience optimize --target workplace/
 
-# 4. Run autonomous CI/CD hygiene and bounded self-healing
-./.nb/bin/percipience cicd run
+# 9. Deploy and interact with GitOps PR Gatekeeper Bot
+./.nb/bin/percipience bot deploy
+./.nb/bin/percipience bot command --cmd "/verify"
 
-# 5. Manage isolated Git worktrees for concurrent subagents
+# 10. Manage isolated Git worktrees for concurrent subagents
+./.nb/bin/percipience worktree acquire --agent agent_dev_01 --ttl 3600
 ./.nb/bin/percipience worktree list
-./.nb/bin/percipience worktree create wt_feature_01
+./.nb/bin/percipience worktree release --agent agent_dev_01
 
-# 6. Package and provision commercial tiers
-./.nb/bin/percipience package --tier plan_free
-./.nb/bin/percipience provision --target all --tier plan_enterprise
-
-# 7. Compile and seal Ed25519-signed .nbpack layer envelope
+# 11. Compile and seal Ed25519-signed .nbpack layer envelope
 ./.nb/bin/percipience layer pack --plan .nb/plan/l1/intellij-pycharm-plugin/concise.md --output .nb/bundles/intellij_pycharm_plugin_domain.nbpack
 ```
 
