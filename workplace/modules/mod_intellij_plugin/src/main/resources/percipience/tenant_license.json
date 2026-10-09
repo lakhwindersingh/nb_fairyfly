@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_free_379ce7c8e485",
+  "license_id": "lic_plan_free_df93d770ce71",
   "tenant_id": "tenant_community_default",
   "tier": "plan_free",
   "tier_name": "Free Community Tier",
@@ -17,10 +17,10 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-08T16:41:52.222503+00:00",
+  "issued_at": "2026-10-09T03:17:57.601203+00:00",
   "total_files": 106,
   "file_manifest": {
-    "bin/percipience": "bbc2a086ee1c157ce2cbc2eb6360158025045f02417dd62bacf34814fd75b3da",
+    "bin/percipience": "2a03498b990c19396a5af49d617c74545d1c43573279b1a607357bbf0332aaeb",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
@@ -33,7 +33,7 @@
     "core/ast_optimizer.py": "e3a887af891a7e1e201ae1ccc21f7893a605563556e49c79438ad3d16b134144",
     "core/attention_budgeter.py": "22b14dea8e9d1209a07a63d5a57cb24a2077ec6985f1418141c886ecfef9ade3",
     "core/autonomous_cicd.py": "3456d53a7a182a54e94f36b098c4034686d3c463ff75dafdd14db726b45f5572",
-    "core/commercial_packager_provisioner.py": "6f8d7c3d298a4e670d6793f67e85e33348f60d8ee0ace492cb0aa7296f97f33f",
+    "core/commercial_packager_provisioner.py": "b1960195bf10cfcf50161cbe0f030341512e7bbc5dbfab0dd29de46fafc2b6eb",
     "core/consensus_quorum_engine.py": "53caaad2c6b2ad377bc6a768e9473a4f7b7088c53e3de37e2c6a7dfac79138ca",
     "core/container_plan_executor.py": "f8ab2a8a944767305c2338351a0c303ea27d934cdaa7d1816cf7160efd22a897",
     "core/contract_compatibility_checker.py": "5efba61538b319ecc86d6de7bf23382c91940c9831c6da8eb5259ebb6f6e62a5",
@@ -46,7 +46,7 @@
     "core/fleet_agent.py": "51cecef50bfdc085aaa4f573f7c7d0d16566f4fa00480d72dc23ee3d83d16f04",
     "core/fleet_manager.py": "1aa2ff10c518c6f63027c9fb7bb0161cac5e45274b0bf6844f451e15fd95a9b7",
     "core/git_bundle_transport.py": "abc4e183f82f99eebe7e95d35b64a8cec90c1687e0513a20f9a8188f540241d0",
-    "core/handoff_validator.py": "67375ff78caa9a85f24605f53c04e125602bb1336381b5488bad322a2bb20a60",
+    "core/handoff_validator.py": "73ac4dc3b0d50c88105306a641025877d0c01a37b74f3bad671964a5336fbb05",
     "core/hitl_checkpoint_manager.py": "67ac3eb02543b258f5faae517e9c710d275e1cfc5ad02c1c79435c94174f7498",
     "core/layered_context_validator.py": "0123017c5b77342f9106368ee60cfd89088d7821933f05e5fbb36cd3d75436d7",
     "core/living_doc_engine.py": "338c96a5dd261cb6e02f12ded87d085e10e59f8ea6f0a9cd1e8d308c89f3eb8e",
@@ -99,6 +99,7 @@
     "agentic/custom/agents/agent_adversarial_fuzzer.yaml": "a67fa7ee011200fd3669b30f1c4ec677f8e3c91ad2583ee45c6c862680418632",
     "agentic/custom/agents/agent_ambiguity_resolver.yaml": "9490f487779771558fdf0674fe45bfffeafd5a8bcfdb69ff282b8249c4a26a0b",
     "agentic/custom/agents/agent_commercial_packager_provisioner.yaml": "00657bd6305a00d1c4e6222e10921ae62aced88259a05b1378900f7673cdcdd5",
+    "agentic/custom/agents/agent_consolidation_synthesizer.yaml": "37dbb1fb1fed40c873cecbde072430d7b592aba3161b7a22d69d71ec2328bb1d",
     "agentic/custom/agents/agent_intellij_ui_ux_engineer.yaml": "9a394fceb2a36169bc849e66ed36a9b35e4247e58c88782e4eb4fa89b17251e7",
     "agentic/custom/agents/agent_jetbrains_plugin_architect.yaml": "33aaa081f8b513c1fc5cd19b6bdf8e2ee0df4362ced1ecee418bc8a41da513aa",
     "agentic/custom/agents/agent_living_doc_architect.yaml": "a462d05ab3fc462ae188a2b39143743fad51e7c3fc0416c62be58d820dd511d1",
@@ -112,7 +113,6 @@
     "agentic/custom/agents/dependency_cve_sentinel.yaml": "347ff1e279b418b1f34462c8e78594802bd93a45c6ecbc884282e2a3c6786572",
     "agentic/custom/agents/doc_drift_synchronizer.yaml": "3180bf9ec810b3e883d62d12695735e13cabce35b6e19824738c201a50f61460",
     "agentic/custom/agents/flaky_test_detector.yaml": "acb87c851cbc3ebba45d3f562a60ca7c1af739d10ce6e0a5cae2cc958dbf49a6",
-    "agentic/custom/agents/iot_developer.yaml": "b81b9f2f728c99aa1e15fa6ed3bdd143a6b5eda5992c4deaf7644314184e0da7",
     "agentic/custom/agents/mobile_developer.yaml": "e19ab27445db4e47e957d747dd90a5e32be634e9c89970d4c6f0a406157bd2f8",
     "agentic/custom/agents/portal_developer.yaml": "7169efcfca1f79ab100fe289da80a1813d2bb26b4b854b10d3e1d7486f231df7",
     "agentic/custom/agents/quality_guard.yaml": "9630405a27372e3c4a393ca436994aabe47e2d76a734226cb27601429cf19ccb",
@@ -120,12 +120,12 @@
     "agentic/custom/agents/security_auditor.yaml": "e55766d0649f32ae060a8e629f9c6990502b9b7b7d7da146617e830b01b53130",
     "agentic/custom/agents/test_finops_auditor.yaml": "932ad5142da7922995976f86797cfc6eada43cc3a63cd90d85859cb89dbdaade",
     "agentic/custom/agents/token_finops_auditor.yaml": "7893a4d1994007d4297ffbcca086e25263ece4b17731cb5a5125570de38502bf",
-    "agentic/custom/workflows/basic_autonomous_cicd.yaml": "3e00f72aa238ef6159a86fa206dae121777eb72e933c13c0e4ecca2f9caf1d33",
-    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "6c5ada100810f9bc3dd2acc51fc5dffd56cea8a736accf2ebc2277b6dea3fa15",
-    "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "78565049357644e0ed3be497742a79ca841c518c5b18bf4a627aafc155d48414",
-    "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "15a2a56734d32850631a7664617e8242e03600c43bdc1ce18b49afbbc2a25e6f",
-    "workflows/basic_autonomous_cicd.yaml": "3e00f72aa238ef6159a86fa206dae121777eb72e933c13c0e4ecca2f9caf1d33",
+    "agentic/custom/workflows/basic_autonomous_cicd.yaml": "4ba1c6481c772ddab92f2f68b479b0420002fcc1fc766c6b0bb5984ffd7c3d3d",
+    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "84a777049ab5680699d1bd046eb603c39c806e47d9b7c05b2586b9a76227196a",
+    "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "278fed06367b6a5a54f584f0499ab26d64a44972810155c3b6f9ae87f676caa7",
+    "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "a0d91daecac1ffc56b6bfd4c26b6cf56b68fee0c36d2e6f97fb2dff6e727c871",
+    "workflows/basic_autonomous_cicd.yaml": "4ba1c6481c772ddab92f2f68b479b0420002fcc1fc766c6b0bb5984ffd7c3d3d",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "2f3574de9f85870380aa4d4094e5074b0964c3968c72ab4aea20da4570a518f0"
+  "signature_sha256": "813c640c4d159318fac9c5010c7844e7ab9032d8f2633477f07d006bfe80ff08"
 }
