@@ -136,6 +136,9 @@ GitOpsPRBot = _load_engine("gitops_pr_bot", ["GitOpsPRBot"])
 HybridVectorRetrievalEngine = _load_engine("vector_retrieval_engine", ["HybridVectorRetrievalEngine"])
 ConventionalRepositoryMigrator = _load_engine("repository_migrator", ["ConventionalRepositoryMigrator"])
 InteractiveOnboardingWizard = _load_engine("onboarding_wizard", ["InteractiveOnboardingWizard"])
+MicroVMSandbox = _load_engine("microvm_sandbox", ["MicroVMSandbox"])
+OIDCAuthenticator = _load_engine("oidc_authenticator", ["OIDCAuthenticator"])
+DistributedTestRunner = _load_engine("distributed_test_runner", ["DistributedTestRunner"])
 
 def cmd_license(args):
     """Manages, mints, installs, and verifies commercial tier licenses."""
@@ -1755,7 +1758,81 @@ def cmd_guardrail(args):
             print(res["remediation_prompt"])
 
 
+def cmd_sandbox(args):
+    _require_engine(MicroVMSandbox, "microvm_sandbox", "sandbox", "Free / Team / Business / Enterprise")
+    action = args.sandbox_action
+    mgr = MicroVMSandbox(workspace_root=REPO_ROOT)
+    if action == "exec":
+        from core.microvm_sandbox import SandboxConfig
+        cfg = SandboxConfig(
+            runtime=getattr(args, "runtime", "auto"),
+            memory_limit_mb=getattr(args, "memory", 512),
+            timeout_seconds=getattr(args, "timeout", 30)
+        )
+        res = mgr.run_sandboxed(cmd=args.cmd, config=cfg)
+        print(f"⚡ MicroVM Sandbox Execution Completed [{res.runtime_used}]:")
+        print(f"   Exit Code: {res.exit_code} | Boot Latency: {res.boot_latency_ms}ms | Wall Time: {res.duration_ms}ms")
+        print(f"   Memory Peak: {res.memory_peak_mb}MB | Sandboxed: {res.sandboxed}")
+        if res.stdout.strip():
+            out_str = res.stdout.strip()
+            print(f"   Output: {out_str}")
+        if res.stderr.strip():
+            err_str = res.stderr.strip()
+            print(f"   Stderr: {err_str}")
+        if res.security_violations:
+            print(f"   ⚠️ Security Violations: {', '.join(res.security_violations)}")
+        sys.exit(res.exit_code)
+    elif action == "list":
+        boxes = mgr.list_sandboxes()
+        print(f"📋 Active Ephemeral Sandboxes ({len(boxes)} active):")
+        for b in boxes:
+            print(f"   • {b['sandbox_id']}: runtime={b['runtime']} boot={b['boot_latency_ms']}ms mem={b['memory_limit_mb']}MB")
+
+def cmd_oidc(args):
+    _require_engine(OIDCAuthenticator, "oidc_authenticator", "oidc", "Free / Team / Business / Enterprise")
+    action = args.oidc_action
+    auth = OIDCAuthenticator(workspace_root=REPO_ROOT)
+    if action == "token":
+        tok = auth.mint_workload_token(
+            subject=args.subject,
+            audience=args.audience,
+            ttl_seconds=getattr(args, "ttl", 900)
+        )
+        print(f"🔑 Minted OIDC Workload Identity Token:")
+        print(f"   Subject: {args.subject}")
+        print(f"   Audience: {args.audience}")
+        print(f"   JWT: {tok}")
+    elif action == "exchange":
+        res = auth.exchange_cloud_credentials(
+            token=args.token,
+            provider=args.provider,
+            role_arn_or_pool=args.role
+        )
+        print(f"✅ Cloud Workload Identity Federation Succeeded [{res.provider}]:")
+        print(f"   Target Role: {res.target_role}")
+        print(f"   Access Token ID: {res.access_token_id}")
+        print(f"   Token Type: {res.token_type} | Expires: {res.expiration}")
+    elif action == "audit":
+        records = auth.get_exchange_audit_trail()
+        print(f"📋 OIDC Credential Federation Audit Trail ({len(records)} events):")
+        for r in records:
+            print(f"   • [{r['timestamp']}] {r['provider']} -> {r['target_role']} (actor: {r['actor']}) status: {r['status']}")
+
 def cmd_test(args):
+    # Check if test sharding is requested
+    total_shards = getattr(args, "total_shards", 1)
+    shard_index = getattr(args, "shard_index", 0)
+    if total_shards > 1:
+        _require_engine(DistributedTestRunner, "distributed_test_runner", "test shard", "Free / Team / Business / Enterprise")
+        runner = DistributedTestRunner(workspace_root=REPO_ROOT)
+        all_tests = runner.discover_tests()
+        shard_receipt = runner.run_shard(shard_index=shard_index, total_shards=total_shards, tests=all_tests)
+        print(f"⚡ Distributed Test Shard [{shard_index + 1}/{total_shards}] Complete:")
+        print(f"   Tests in shard: {len(shard_receipt.test_files)}")
+        print(f"   Status: {shard_receipt.status} ({shard_receipt.passed_count} passed, {shard_receipt.failed_count} failed)")
+        print(f"   Duration: {shard_receipt.duration_ms}ms")
+        print(f"   Shard Hash: {shard_receipt.shard_hash[:16]}...")
+        sys.exit(0 if shard_receipt.failed_count == 0 else 1)
     test_runner_dir = REPO_ROOT / ".nb" / "plan" / "test"
     if str(test_runner_dir) not in sys.path:
         sys.path.insert(0, str(test_runner_dir))
@@ -2276,7 +2353,34 @@ def main():
     p_test.add_argument("--eval-ai", action="store_true", default=True, help="Run quantitative GenAI evaluation metrics")
     p_test.add_argument("--quiet", action="store_true", help="Suppress verbose test execution logs")
     p_test.add_argument("--coverage", action="store_true", help="Generate unified code coverage reporting, terminal summary tables, and HTML artifacts")
+    p_test.add_argument("--total-shards", type=int, default=1, help="Total parallel test shards")
+    p_test.add_argument("--shard-index", type=int, default=0, help="Shard index to execute (0-based)")
     p_test.set_defaults(func=cmd_test)
+
+    # sandbox (MicroVM / gVisor / WASM)
+    p_sb = subparsers.add_parser("sandbox", help="Sub-second MicroVM / gVisor & WASM Sandbox Isolation")
+    p_sb_subs = p_sb.add_subparsers(dest="sandbox_action", required=True)
+    p_sb_exec = p_sb_subs.add_parser("exec", help="Execute command inside isolated sandbox")
+    p_sb_exec.add_argument("--cmd", required=True, help="Command string to execute in sandbox")
+    p_sb_exec.add_argument("--runtime", default="auto", choices=["auto", "firecracker", "gvisor", "wasm", "process_jail"], help="Isolation runtime backend")
+    p_sb_exec.add_argument("--memory", type=int, default=512, help="Memory limit in MB")
+    p_sb_exec.add_argument("--timeout", type=int, default=30, help="Timeout in seconds")
+    p_sb_list = p_sb_subs.add_parser("list", help="List active ephemeral sandboxes")
+    p_sb.set_defaults(func=cmd_sandbox)
+
+    # oidc (Keyless Cloud Workload Identity Federation)
+    p_oidc = subparsers.add_parser("oidc", help="OIDC Keyless Cloud Authentication (Workload Identity Federation)")
+    p_oidc_subs = p_oidc.add_subparsers(dest="oidc_action", required=True)
+    p_oidc_tok = p_oidc_subs.add_parser("token", help="Mint an ephemeral signed OIDC workload token")
+    p_oidc_tok.add_argument("--subject", default="subagent_worker_01", help="Token subject / actor")
+    p_oidc_tok.add_argument("--audience", default="sts.amazonaws.com", help="Target cloud audience")
+    p_oidc_tok.add_argument("--ttl", type=int, default=900, help="Token validity in seconds")
+    p_oidc_exch = p_oidc_subs.add_parser("exchange", help="Exchange OIDC token for temporary cloud credentials")
+    p_oidc_exch.add_argument("--token", required=True, help="OIDC JWT token string")
+    p_oidc_exch.add_argument("--provider", default="aws", choices=["aws", "gcp", "azure"], help="Cloud IAM provider")
+    p_oidc_exch.add_argument("--role", required=True, help="Target role ARN or Workload Identity pool")
+    p_oidc_aud = p_oidc_subs.add_parser("audit", help="View OIDC credential exchange audit trail")
+    p_oidc.set_defaults(func=cmd_oidc)
 
     args = parser.parse_args()
     if not args.subcommand:
