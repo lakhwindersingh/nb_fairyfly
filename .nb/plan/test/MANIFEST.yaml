@@ -34,8 +34,8 @@ file_versions:
     path: test_runner.py
     version: 1.0.0
     last_modified: '2026-10-08'
-    content_hash: 39d6e835aa81a0df5e97c975283bdde550cc2bab8f2d6e5a920fc67554db1307
-    line_count: 262
+    content_hash: 22a938459ad0dacf48a9c21d412bcd49aa81ba9bcb8b51bcfa51af80a9967d5a
+    line_count: 317
     primary_purpose: Automatable AI test orchestrator, reporting engine, and failure triager
 key_capabilities:
 - 18-Subsystem Test Pyramid
@@ -48,14 +48,3 @@ test_tiers:
   tier_1: Core Unit Invariants & AST Compression
   tier_2: Ephemeral Swarms & Redlock Leases
   tier_3: Multi-Module Wire Contracts & VCS Integrations
-  tier_4: End-to-End SaaS Portal & Web Quality
-  tier_5: Quantitative GenAI Evaluations & Semantic Parity
-success_metrics:
-  unit_pass_rate: 100%
-  semantic_parity: '>= 0.95'
-  token_reduction: '>= 40.0%'
-  ast_pruning_latency: '<= 120ms'
-  a11y_violations: 0
-  broken_links: 0
-related_contracts:
-- .nb/context/contracts/

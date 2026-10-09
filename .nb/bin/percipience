@@ -1756,7 +1756,8 @@ def cmd_test(args):
         tier=getattr(args, "tier", "all"),
         output_dir=out_dir,
         eval_ai=getattr(args, "eval_ai", True),
-        ai_triage=getattr(args, "ai_triage", False)
+        ai_triage=getattr(args, "ai_triage", False),
+        coverage=getattr(args, "coverage", False)
     )
     results = orchestrator.run_tests(quiet=getattr(args, "quiet", False))
     sys.exit(results.get("exit_code", 0))
@@ -2260,6 +2261,7 @@ def main():
     p_test.add_argument("--ai-triage", action="store_true", help="Perform automated AI failure diagnosis and surgical patch synthesis on failures")
     p_test.add_argument("--eval-ai", action="store_true", default=True, help="Run quantitative GenAI evaluation metrics")
     p_test.add_argument("--quiet", action="store_true", help="Suppress verbose test execution logs")
+    p_test.add_argument("--coverage", action="store_true", help="Generate unified code coverage reporting, terminal summary tables, and HTML artifacts")
     p_test.set_defaults(func=cmd_test)
 
     args = parser.parse_args()

@@ -39,7 +39,7 @@
 | **Competitive Parity: IDE Extensions & Vector RAG** | Specified | Specified | Required | Specified | **[-] PLANNED** | **0.35** |
 | **Competitive Parity: Sandboxed Matrix & GitOps Bot** | Specified | Required | Specified | Specified | **[-] PLANNED** | **0.45** |
 | **Autonomous Agentic SDLC & Swarm Modernization** | Required | Required | Required | Required | **✅ COMPLETED** | **1.00** |
-| **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **[-] IN PROGRESS** | **0.85** |
+| **Enterprise Fleet & Multi-Tenant Project Portal** | Specified | Required | Required | Required | **✅ COMPLETED** | **1.00** |
 | **Distributed Worktree Swarms & Container Runner (DEWS)** | Specified | Required | Specified | Specified | **[-] IN PROGRESS** | **0.75** |
 
 **Current Composite Context Maturity**: **`0.990` (ENTERPRISE GRADE)**
@@ -320,9 +320,9 @@
 - [ ] **TODO-COMP-08: Language Server Protocol (LSP) Indexing & Cross-File Symbol Graphs (P1)**:
   - *Competitor Benchmark*: Cursor & Windsurf integrate directly with active LSP daemons (`pyright`, `typescript-language-server`, `rust-analyzer`, `gopls`) for precise go-to-definition, find-references, and multi-file type inference across millions of lines of code.
   - *Implementation Scope*: Implement `workplace/core/lsp_index_engine.py` communicating with local LSP servers to inject exact cross-file type hierarchies, interface implementations, and call graphs into compressed prompt context.
-- [ ] **TODO-COMP-09: Hybrid Sparse-Dense Vector Code Search alongside AST Pruning (P1)**:
+- [x] **TODO-COMP-09: Hybrid Sparse-Dense Vector Code Search alongside AST Pruning (P1)**:
   - *Competitor Benchmark*: Cursor & Claude Code utilize hybrid BM25 + dense embedding vector search (LanceDB / Qdrant / Chroma) with semantic reranking for natural-language conceptual codebase queries.
-  - *Implementation Scope*: Implement `workplace/core/vector_retrieval_engine.py` pairing AST structural skeletons with local embedded vector indices (LanceDB) and Voyage/OpenAI embeddings for multi-hop semantic code discovery.
+  - *Implementation*: Implemented `workplace/core/vector_retrieval_engine.py` (mirrored across all Quad-Space locations). Combines token-level BM25 sparse inverted indexing with deterministic multi-hash semantic code embeddings and pluggable vector search. Generates AST structural skeletons for every indexed code chunk, provides alpha-weighted score fusion (`score = alpha * dense + (1-alpha) * bm25`), executes multi-hop relational symbol graph expansion, and saves disk-persistent vector indices (`.nb/context/vector_index/`). Integrated into CLI via `percipience search <query> [--top-k] [--alpha] [--json]`. Verified in `test_tier3_enterprise_launch.py`.
 - [x] **TODO-COMP-10: VS Code & JetBrains / PyCharm IDE Extension Adapter (P2)**:
   - *Implemented via Section 19 (TODO-IDE-01..03) & TODO-REV-13*: Developed JetBrains IntelliJ/PyCharm plugin suite (`workplace/modules/mod_intellij_plugin/`), bundled platform engines, packaged `.nb/bundles/intellij_pycharm_plugin_domain.nbpack`, produced release zips/jars, and scaffolded VS Code extension bridge. Verified in `test_ide_plugins_space.py`.
 - [ ] **TODO-COMP-11: Multimodal UI & Design Token Context Ingestion (P2)**:
@@ -339,9 +339,9 @@
 - [ ] **TODO-COMP-14: Parallel Test Sharding & Multi-Architecture Matrix Dispatcher (P2)**:
   - *Competitor Benchmark*: GitHub Actions matrix strategies and GitLab CI parallel jobs dynamically shard large test suites across N runners and multiple operating systems/architectures (Linux AMD64/ARM64, macOS, Windows).
   - *Implementation Scope*: Implement `workplace/core/distributed_test_runner.py` capable of splitting pytest/vitest suites across distributed ephemeral worktree nodes with aggregated Merkle receipts.
-- [ ] **TODO-COMP-15: Interactive GitOps PR Bot & Ephemeral Preview Deployments (P2)**:
+- [x] **TODO-COMP-15: Interactive GitOps PR Bot & Ephemeral Preview Deployments (P2)**:
   - *Competitor Benchmark*: Modern CI/CD and developer tools (Vercel, ArgoCD, GitHub Apps) post interactive PR comments with live preview URLs, collapsible test breakdowns, and interactive bot commands (`/re-heal`, `/rollback`).
-  - *Implementation Scope*: Implement `workplace/core/gitops_pr_bot.py` posting rich Markdown status summaries, collapsible test traces, live preview staging links, and responding to developer slash-commands on GitHub/GitLab PRs.
+  - *Implementation*: Implemented `workplace/core/gitops_pr_bot.py` (mirrored across all Quad-Space locations). Generates rich GitHub/GitLab Markdown status cards with test results, token FinOps AST metrics, Merkle DAG seals, runtime security verdicts, ephemeral staging preview links (`https://pr-{id}-{sha}.preview.percipience.internal`), and collapsible execution traces. Dispatches interactive developer slash-commands (`/re-heal`, `/rollback <RP_k>`, `/verify`, `/gate`, `/preview`, `/audit`, `/help`) and persists audit entries to `.nb/context/ledger/gitops_bot_audit.jsonl`. Deploys workflows via `percipience bot deploy` and supports CLI comments and command handling (`percipience bot comment`, `percipience bot command`). Verified in `test_tier3_enterprise_launch.py`.
 
 ---
 
@@ -608,16 +608,24 @@
   - *Status*: Completed in `workplace/core/fleet_manager.py` (`get_active_tasks()`) and `GET /api/fleet/tasks`. Displays real-time progress bars, step status, and ETAs in Fleet Monitor UI and REST API.
 
 ### 18.5. Remote Machine Interventions & Governance Actions (`CAP-44`)
-- [ ] **TODO-PRT-11: Remote Admin Actions on Individual Machines (P1)**:
+- [x] **TODO-PRT-11: Remote Admin Actions on Individual Machines (P1)**:
   - *Shortcoming*: Stopping a malfunctioning agent or evicting a dead lease requires local terminal access on that machine.
-  - *Implementation Scope*: Allow Enterprise Admins and Project Leads to trigger authenticated remote actions from the portal UI:
-    - **Emergency Pause / Resume**: Freeze rogue subagent loops on a specific machine.
-    - **Surgical Rollback Trigger**: Remotely rewind a specific machine's micro-module to Recovery Point `RP_k`.
-    - **Force Worktree Lease Eviction**: Clean up dead leases on crashed or orphaned nodes.
-    - **Flush Local AST Cache**: Invalidate and refresh local Tree-Sitter caches.
-- [ ] **TODO-PRT-12: Enterprise Security & Quarantine Central Command (P1)**:
+  - *Implementation Scope*: Implemented authenticated remote interventions from the portal UI, REST API (`POST /api/fleet/action`, `GET /api/fleet/interventions`, `GET /api/fleet/commands/poll`), and CLI (`percipience swarm fleet --action ...`):
+    - **Emergency Pause / Resume**: Freeze rogue subagent loops on a specific machine (`health_status = "PAUSED"`, task `is_paused = True`, `step_status = "PAUSED_BY_ADMIN"` / `RESUMED_ACTIVE`).
+    - **Surgical Rollback Trigger**: Remotely rewind a specific machine's micro-module to Recovery Point `RP_k` while preserving sister modules.
+    - **Force Worktree Lease Eviction**: Clean up dead leases on crashed or orphaned nodes (`active_worktree = ""`, dirty flag cleared, `LEASE_EVICTED`).
+    - **Flush Local AST Cache**: Invalidate in-memory caches and purge Tree-Sitter disk artifacts (`.scratch/ast_cache/*`).
+    - **Audit Log & Polling Spool**: Centralized `interventions_history` audit tracking (`intervention_id`, machine, action, actor, timestamp, status, details) and daemon command spooling via [`workplace/core/fleet_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/fleet_manager.py) and [`workplace/core/fleet_agent.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/fleet_agent.py).
+  - *Verification*: Verified across unit, daemon, and REST integration tests in [`workplace/tests/test_fleet_telemetry_finops.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_fleet_telemetry_finops.py).
+- [x] **TODO-PRT-12: Enterprise Security & Quarantine Central Command (P1)**:
   - *Shortcoming*: Poisoning alerts and quarantined diffs are stored in local markdown files on each machine.
-  - *Implementation Scope*: Centralize fleet-wide context poisoning incidents, AST dependency CVE blocks, and drift evolutions in an interactive single-pane triage workflow, sealing all admin resolutions into the immutable SHA-256 Merkle ledger.
+  - *Implementation Scope*: Centralized fleet-wide context poisoning incidents, AST dependency CVE blocks, inbound prompt injection firewall attacks, and semantic drift evolutions into an interactive single-pane triage workflow:
+    - Built `FleetManager.get_quarantine_command_center()` aggregating prompt injections (`user/hitl/injection_quarantine.jsonl`), context poisoning (`user/hitl/poisoning_quarantine.md`), supply-chain CVE blocks (`DependencyCVESentinel`), spec evolution deltas (`user/hitl/proposed_spec_delta.md`), and flaky test quarantines (`user/hitl/flaky_quarantine.yaml`).
+    - Implemented `FleetManager.resolve_quarantine_incident(incident_id, resolution, resolution_notes, actor)` cryptographically sealing admin resolutions directly into the immutable SHA-256 Merkle ledger (`context_ledger.yaml`) via `MerkleEngine.seal_block(...)` and recording receipts in [`user/hitl/quarantine_resolutions.jsonl`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/user/hitl/quarantine_resolutions.jsonl).
+    - Exposed REST endpoints `GET /api/fleet/quarantine` and `POST /api/fleet/quarantine/resolve` in [`workplace/portal/server.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py).
+    - Integrated interactive triage and resolution UI into `#fleet-monitor` in Portal Server with live Merkle block badges.
+    - CLI commands: `percipience swarm fleet --quarantine` and `percipience swarm fleet --resolve-incident <id> --resolution <verdict> [--notes <notes>]`.
+  - *Verification*: Verified via [`TestEnterpriseQuarantineCentralCommand`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_fleet_telemetry_finops.py) and [`TestFleetPortalRestAPI`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_fleet_telemetry_finops.py).
 
 ---
 
@@ -690,41 +698,41 @@
 - [x] **TODO-REV-14: OpenTelemetry (OTel) GenAI Observability & APM Exporter (P1)**:
   - *Identified Issue*: Enterprise APM infrastructure (Datadog, Dynatrace, Honeycomb, Jaeger) requires standardized OTel GenAI semantic spans for model latency, prompt token counts, and cost telemetry.
   - *Implementation Scope*: Integrate `OpenTelemetryGenAIExporter` (`workplace/core/otel_exporter.py`) with W3C `traceparent` distributed headers, TTFT metrics, and streaming span sinks.
-- [ ] **TODO-REV-15: Interactive GitOps PR Bot (`percipience bot deploy`) (P2)** *(Consolidated with TODO-COMP-15)*:
+- [x] **TODO-REV-15: Interactive GitOps PR Bot (`percipience bot deploy`) (P2)** *(Consolidated with TODO-COMP-15)*:
   - *Identified Issue*: Automated pull request creation and interactive comment reviews currently require manual git workflows.
-  - *Implementation Scope*: Build `workplace/core/gitops_pr_bot.py` posting interactive Markdown status cards, collapsible test logs, ephemeral staging preview URLs, and handling slash commands (`/re-heal`, `/rollback`). Tracks unified PR bot lifecycle alongside `TODO-COMP-15`.
-- [ ] **TODO-REV-16: Hybrid Vector RAG Retrieval for Large Codebases (>1M LOC) (P2)** *(Consolidated with TODO-COMP-09)*:
+  - *Implementation*: Implemented `workplace/core/gitops_pr_bot.py` (mirrored in `.nb/core/gitops_pr_bot.py`). Automatically formats rich GitHub/GitLab PR status cards featuring test execution telemetry, AST FinOps savings metrics, Merkle cryptographic block hashes, runtime guardrail verdicts, ephemeral preview deployment links (`https://pr-{id}-{sha}.preview.percipience.internal`), and collapsible test logs. Dispatches interactive developer slash-commands (`/re-heal`, `/rollback <RP_k>`, `/verify`, `/gate`, `/preview`, `/audit`, `/help`) with tamper-evident logging to `.nb/context/ledger/gitops_bot_audit.jsonl`. Deploys CI workflows via `percipience bot deploy` and supports CLI comment generation and command processing. Verified in `test_tier3_enterprise_launch.py`.
+- [x] **TODO-REV-16: Hybrid Vector RAG Retrieval for Large Codebases (>1M LOC) (P2)** *(Consolidated with TODO-COMP-09)*:
   - *Identified Issue*: Massive enterprise monorepos require hybrid sparse-dense semantic search alongside deterministic AST pruning.
-  - *Implementation Scope*: Unified into `TODO-COMP-09` (`workplace/core/vector_retrieval_engine.py`) connecting LanceDB / Pinecone with Voyage Code 2 embeddings for semantic multi-hop code discovery within the Unified Context Retrieval Pipeline.
+  - *Implementation*: Implemented `workplace/core/vector_retrieval_engine.py` (mirrored in `.nb/core/vector_retrieval_engine.py`). Combines Okapi BM25 sparse inverted indexing over symbol tokens with deterministic semantic vector embeddings and pluggable LanceDB/vector store adapters. Pairs retrieved code symbols with AST structural skeletons to minimize prompt tokens, executes multi-hop relational dependency graph expansion (traversing callers, interfaces, implementations, and test fixtures), and persists index metadata to `.nb/context/vector_index/vector_index_meta.json`. Exposed via CLI command `percipience search <query> [--top-k] [--alpha] [--json]`. Verified in `test_tier3_enterprise_launch.py`.
 - [x] **TODO-REV-17: Restructured Enterprise Tier Commercial Package (P1)**:
   - *Identified Issue*: $9,999/mo Enterprise tier required stronger justification with tangible enterprise services.
   - *Implementation Scope*: Enrich Enterprise Tier specifications with: Dedicated Customer Success Manager (CSM), 40 hrs/quarter Custom MCP Server Development, 1-Hour Support SLA, Okta/Azure AD SAML/OIDC SSO, On-Premises Helm Charts, and SOC 2 Type II audit documentation.
-- [ ] **TODO-REV-18: Conventional-to-Quad-Space Repository Migration CLI Tool (P2)**:
+- [x] **TODO-REV-18: Conventional-to-Quad-Space Repository Migration CLI Tool (P2)**:
   - *Identified Issue*: Migrating legacy codebases into Percipience Quad-Space structure (`.nb/`, `workplace/`, `user/`, `.claude/`) required manual folder re-organization.
-  - *Implementation Scope*: Implement `percipience migrate --from-conventional [--analyze-only]` analyzing existing directory layouts and automatically refactoring files into Quad-Space partitions with dry-run reports.
-- [ ] **TODO-REV-19: Interactive Onboarding Setup Wizard (`percipience init --interactive`) (P2)**:
+  - *Implementation*: Implemented `workplace/core/repository_migrator.py` (mirrored in `.nb/core/repository_migrator.py`). Introspects conventional project layouts (Python packages, Node services, Go modules, monorepos, and polyglot codebases), maps files into Quad-Space partitions (`workplace/`, `user/`, `.nb/`, `.claude/`), detects path collisions, and outputs comprehensive dry-run migration reports. Executes physical migration preserving file metadata, scaffolds genesis Merkle ledger, and records operations in `migration_manifest.json` enabling one-click atomic rollback. Accessible via CLI command `percipience migrate --from-conventional [--analyze-only] [--execute] [--rollback]`. Verified in `test_tier3_enterprise_launch.py`.
+- [x] **TODO-REV-19: Interactive Onboarding Setup Wizard (`percipience init --interactive`) (P2)**:
   - *Identified Issue*: Initial setup required manual configuration of `mcp.json`, environment variables, and ledger genesis.
-  - *Implementation Scope*: Build interactive CLI wizard prompting for project type (Monorepo, Microservice, Package), primary language (Python, TypeScript, Go, Polyglot), and auto-provisioning MCP servers, hooks, and genesis Merkle ledger.
+  - *Implementation*: Implemented `workplace/core/onboarding_wizard.py` (mirrored in `.nb/core/onboarding_wizard.py`). Provides interactive terminal wizard and programmatic onboarding API prompting for Project Type, Primary Language, Commercial Tier, and MCP server selections. Automatically scaffolds Quad-Space directory partitions, generates customized `mcp.json` with active workspace paths, seals Genesis Block #0 Merkle ledger in `.nb/context/ledger/context_ledger.yaml`, creates initial Minimum Viable Specification (`user/specs/mvs_initial_feature.yaml`), and installs pre-commit hooks. Invoked via `percipience init --interactive`. Verified in `test_tier3_enterprise_launch.py`.
 
 ### 20.4. Documentation, Operational Guides & Architectural Clarifications
-- [ ] **TODO-REV-20: Concrete MVS Feature Specification Example in HOWTO Guide (P1)**:
+- [x] **TODO-REV-20: Concrete MVS Feature Specification Example in HOWTO Guide (P1)**:
   - *Identified Issue*: MVS documentation was conceptual without a concrete feature specification walkthrough.
-  - *Implementation Scope*: Add end-to-end OAuth2 authentication scenario in `HOWTO_WORKSPACE_GUIDE.md` showing MVS template population, automated type derivation, and FastAPI endpoint scaffolding.
-- [ ] **TODO-REV-21: Jira MCP Integration Alpha Disclaimer (P1)**:
+  - *Implementation*: Added concrete end-to-end OAuth2 JWT Authentication scenario to [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md). Documents full lifecycle: authoring declarative MVS input specification (`user/inputs/specs/mvs_oauth2_auth.yaml`), autonomous type derivation into Pydantic models (`workplace/modules/mod_auth/schemas.py`), scaffolding FastAPI endpoints (`workplace/modules/mod_auth/router.py`), binding cross-module contracts (`context/contracts/auth_v1.yaml`), and sealing Block #105 to the Merkle ledger.
+- [x] **TODO-REV-21: Jira MCP Integration Alpha Disclaimer (P1)**:
   - *Identified Issue*: Jira MCP ingestion command was presented without maturity context.
-  - *Implementation Scope*: Add alpha status callout (`Maturity: 0.80`) in `HOWTO_WORKSPACE_GUIDE.md` with instructions for manual `mvs_jira_story.json` fallback.
-- [ ] **TODO-REV-22: Ephemeral Worktree TTL & Automatic Cleanup Documentation (P1)**:
+  - *Implementation*: Added highlighted Alpha maturity status callout (`Maturity: 0.80`) in [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md) clarifying enterprise schema edge cases. Provided resilient manual fallback procedures via standard `user/inputs/templates/mvs_jira_story.json` export and `./.nb/bin/percipience formalize --file <story.json>`.
+- [x] **TODO-REV-22: Ephemeral Worktree TTL & Automatic Cleanup Documentation (P1)**:
   - *Identified Issue*: `--ttl` parameter was presented without detailed explanation of auto-merge vs quarantine behavior on timeout.
-  - *Implementation Scope*: Document TTL lifecycle mechanics, active POSIX PID probing, and automated lease reclamation in `HOWTO_WORKSPACE_GUIDE.md`.
-- [ ] **TODO-REV-23: Merkle Audit Trail Inspection & Benchmark Reference (P1)**:
+  - *Implementation*: Documented complete TTL lease lifecycle in [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md) with Mermaid state machine. Explains `--ttl <seconds>` tracking in `leases.json`, active POSIX PID probing (`kill -0 <pid>` / `/proc/<pid>`) to protect active long-running derivations, automated pre-merge canary verification, auto-consolidation of clean branches, safe quarantine archiving of dirty/conflicting worktrees to `user/hitl/quarantined_worktrees/`, and remote administrative eviction via `/api/fleet/action`.
+- [x] **TODO-REV-23: Merkle Audit Trail Inspection & Benchmark Reference (P1)**:
   - *Identified Issue*: Users had no reference for what a CLI audit output looks like or how the Merkle engine performs under high block counts.
-  - *Implementation Scope*: Add sample `percipience audit --block-id <id>` and `percipience audit --enforce-merkle-chain` output snippets alongside performance scalability tables (<10k LOC: 0.3s up to >1M LOC: 18s).
-- [ ] **TODO-REV-24: Platform Internals (`.nb/core/`) vs Application Code (`workplace/core/`) Clarification (P1)**:
+  - *Implementation*: Added realistic terminal output snippets in [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md) for individual block inspection (`percipience audit --block-id 142`) and full chain continuity verification (`percipience audit --enforce-merkle-chain`). Documented Merkle engine scalability benchmarks across 5 repository scale tiers (<10k LOC up to >1M LOC) showing sub-second sealing for standard services and mathematical tamper-evidence guarantees.
+- [x] **TODO-REV-24: Platform Internals (`.nb/core/`) vs Application Code (`workplace/core/`) Clarification (P1)**:
   - *Identified Issue*: Potential developer confusion between internal platform engines and extensible application logic.
-  - *Implementation Scope*: Add architectural boundary guide in `HOWTO_WORKSPACE_GUIDE.md` explaining `.nb/core/` (immutable platform runtime) vs `workplace/core/` (custom business logic, adapters, and domain engines).
-- [ ] **TODO-REV-25: Automated Code Coverage CLI Integration (`percipience test --coverage`) (P1)**:
+  - *Implementation*: Added comprehensive Architectural Boundaries section in [`HOWTO_WORKSPACE_GUIDE.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/HOWTO_WORKSPACE_GUIDE.md) with dimensional comparison matrix. Contrasts `.nb/core/` (immutable, cryptographically sealed platform runtime and daemons, protected against agent mutation) with `workplace/core/` and `workplace/modules/` (mutable application logic, customer endpoints, and test suites autonomously derived by subagents).
+- [x] **TODO-REV-25: Automated Code Coverage CLI Integration (`percipience test --coverage`) (P1)**:
   - *Identified Issue*: Need for unified test coverage reporting directly from the CLI.
-  - *Implementation Scope*: Add `--coverage` flag to `percipience test` generating terminal summary tables and HTML coverage artifacts.
+  - *Implementation*: Enhanced `PercipienceTestOrchestrator` in [`.nb/plan/test/test_runner.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/test_runner.py) and added `--coverage` flag to `percipience test` in [`.nb/bin/percipience`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/bin/percipience). Executes tests with `pytest-cov`, parses statement and branch coverage metrics, prints formatted ASCII terminal summary table, outputs HTML reports (`.scratch/test_reports/coverage_html/index.html`), writes structured `coverage.json`, and records coverage data in JSON/Markdown test summaries.
 
 ---
 
