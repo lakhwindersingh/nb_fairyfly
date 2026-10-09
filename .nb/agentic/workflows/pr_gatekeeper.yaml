@@ -35,6 +35,13 @@ steps:
   depends_on:
   - step_contract_compat
   fail_action: AUTO_HEAL_OR_ROLLBACK
+- id: step_test_finops_auditor
+  name: Test FinOps & Token Budget Audit (agent_test_finops_auditor)
+  executor: agent_test_finops_auditor
+  tier: Tier_B
+  depends_on:
+  - step_quality_guard
+  fail_action: AUTO_HEAL_OR_ROLLBACK
 - id: step_flaky_test_isolation
   name: Flaky Test Detection & Quarantine (agent_flaky_test_detector)
   executor: agent_flaky_test_detector
@@ -42,6 +49,13 @@ steps:
   depends_on:
   - step_quality_guard
   output_quarantine: user/hitl/flaky_quarantine.yaml
+- id: step_adversarial_fuzz_audit
+  name: Adversarial Red-Team & Mutation Fuzzing Audit (agent_adversarial_fuzzer)
+  executor: agent_adversarial_fuzzer
+  tier: Tier_A
+  depends_on:
+  - step_flaky_test_isolation
+  fail_action: QUARANTINE_AND_HALT
 - id: step_bounded_tdd
   name: Bounded Unit & Integration TDD
   executor: agent_tester

@@ -1,18 +1,18 @@
 version: 1.0.0
-last_updated: '2026-10-08T21:47:32.605909+00:00'
+last_updated: '2026-10-09T02:10:55.892770+00:00'
 performance_rev_share_pct: 15.0
 summary:
-  total_events: 13810
-  total_uncompressed_tokens: 25891166
-  total_pruned_tokens: 13598263
-  total_tokens_saved: 12292903
+  total_events: 14185
+  total_uncompressed_tokens: 26245374
+  total_pruned_tokens: 13784703
+  total_tokens_saved: 12460671
   average_reduction_pct: 47.48
-  total_gross_savings_usd: 36.874
-  total_rev_share_fee_usd: 5.5369
-  total_net_savings_usd: 31.3375
+  total_gross_savings_usd: 37.377
+  total_rev_share_fee_usd: 5.6125
+  total_net_savings_usd: 31.7649
 events:
-- event_id: tok_evt_20261008_214528_092921
-  timestamp: '2026-10-08T21:45:28.092950+00:00'
+- event_id: tok_evt_20261009_021028_674015
+  timestamp: '2026-10-09T02:10:28.674035+00:00'
   session_or_pr: test_suite_run
   file_path: workplace/core/test_sample.py
   model_id: claude-3-5-sonnet-20241022
@@ -23,8 +23,8 @@ events:
   gross_savings_usd: 0.0018
   rev_share_fee_usd: 0.00027
   net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214528_705581
-  timestamp: '2026-10-08T21:45:28.705603+00:00'
+- event_id: tok_evt_20261009_021029_326127
+  timestamp: '2026-10-09T02:10:29.326147+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -35,8 +35,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214528_705610
-  timestamp: '2026-10-08T21:45:28.705612+00:00'
+- event_id: tok_evt_20261009_021029_326154
+  timestamp: '2026-10-09T02:10:29.326157+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -47,8 +47,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214528_705615
-  timestamp: '2026-10-08T21:45:28.705617+00:00'
+- event_id: tok_evt_20261009_021029_326161
+  timestamp: '2026-10-09T02:10:29.326163+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -59,8 +59,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214528_705618
-  timestamp: '2026-10-08T21:45:28.705620+00:00'
+- event_id: tok_evt_20261009_021029_326165
+  timestamp: '2026-10-09T02:10:29.326166+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -71,8 +71,8 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214531_619115
-  timestamp: '2026-10-08T21:45:31.619144+00:00'
+- event_id: tok_evt_20261009_021032_233623
+  timestamp: '2026-10-09T02:10:32.233656+00:00'
   session_or_pr: test_suite_run
   file_path: workplace/core/test_sample.py
   model_id: claude-3-5-sonnet-20241022
@@ -83,8 +83,8 @@ events:
   gross_savings_usd: 0.0018
   rev_share_fee_usd: 0.00027
   net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214532_196240
-  timestamp: '2026-10-08T21:45:32.196265+00:00'
+- event_id: tok_evt_20261009_021032_833657
+  timestamp: '2026-10-09T02:10:32.833698+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -95,8 +95,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214532_196272
-  timestamp: '2026-10-08T21:45:32.196276+00:00'
+- event_id: tok_evt_20261009_021032_833715
+  timestamp: '2026-10-09T02:10:32.833718+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -107,8 +107,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214532_196279
-  timestamp: '2026-10-08T21:45:32.196281+00:00'
+- event_id: tok_evt_20261009_021032_833721
+  timestamp: '2026-10-09T02:10:32.833723+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -119,8 +119,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214532_196284
-  timestamp: '2026-10-08T21:45:32.196286+00:00'
+- event_id: tok_evt_20261009_021032_833725
+  timestamp: '2026-10-09T02:10:32.833732+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -131,8 +131,8 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214626_430154
-  timestamp: '2026-10-08T21:46:26.430176+00:00'
+- event_id: tok_evt_20261009_021047_502834
+  timestamp: '2026-10-09T02:10:47.502860+00:00'
   session_or_pr: test_suite_run
   file_path: workplace/core/test_sample.py
   model_id: claude-3-5-sonnet-20241022
@@ -143,8 +143,8 @@ events:
   gross_savings_usd: 0.0018
   rev_share_fee_usd: 0.00027
   net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214627_027032
-  timestamp: '2026-10-08T21:46:27.027056+00:00'
+- event_id: tok_evt_20261009_021048_077974
+  timestamp: '2026-10-09T02:10:48.077995+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -155,8 +155,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214627_027062
-  timestamp: '2026-10-08T21:46:27.027064+00:00'
+- event_id: tok_evt_20261009_021048_078003
+  timestamp: '2026-10-09T02:10:48.078006+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -167,8 +167,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214627_027068
-  timestamp: '2026-10-08T21:46:27.027070+00:00'
+- event_id: tok_evt_20261009_021048_078010
+  timestamp: '2026-10-09T02:10:48.078012+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -179,8 +179,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214627_027073
-  timestamp: '2026-10-08T21:46:27.027074+00:00'
+- event_id: tok_evt_20261009_021048_078015
+  timestamp: '2026-10-09T02:10:48.078016+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -191,8 +191,8 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214629_965818
-  timestamp: '2026-10-08T21:46:29.965843+00:00'
+- event_id: tok_evt_20261009_021051_050479
+  timestamp: '2026-10-09T02:10:51.050503+00:00'
   session_or_pr: test_suite_run
   file_path: workplace/core/test_sample.py
   model_id: claude-3-5-sonnet-20241022
@@ -203,8 +203,8 @@ events:
   gross_savings_usd: 0.0018
   rev_share_fee_usd: 0.00027
   net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214630_541467
-  timestamp: '2026-10-08T21:46:30.541494+00:00'
+- event_id: tok_evt_20261009_021051_696648
+  timestamp: '2026-10-09T02:10:51.696677+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -215,8 +215,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214630_541503
-  timestamp: '2026-10-08T21:46:30.541506+00:00'
+- event_id: tok_evt_20261009_021051_696687
+  timestamp: '2026-10-09T02:10:51.696690+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -227,8 +227,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214630_541508
-  timestamp: '2026-10-08T21:46:30.541510+00:00'
+- event_id: tok_evt_20261009_021051_696692
+  timestamp: '2026-10-09T02:10:51.696696+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -239,8 +239,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214630_541511
-  timestamp: '2026-10-08T21:46:30.541513+00:00'
+- event_id: tok_evt_20261009_021051_696698
+  timestamp: '2026-10-09T02:10:51.696700+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -251,8 +251,8 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214654_327881
-  timestamp: '2026-10-08T21:46:54.327911+00:00'
+- event_id: tok_evt_20261009_021055_275387
+  timestamp: '2026-10-09T02:10:55.275412+00:00'
   session_or_pr: test_suite_run
   file_path: workplace/core/test_sample.py
   model_id: claude-3-5-sonnet-20241022
@@ -263,8 +263,8 @@ events:
   gross_savings_usd: 0.0018
   rev_share_fee_usd: 0.00027
   net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214654_891638
-  timestamp: '2026-10-08T21:46:54.891663+00:00'
+- event_id: tok_evt_20261009_021055_892303
+  timestamp: '2026-10-09T02:10:55.892326+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
   model_id: claude-3-5-sonnet-20241022
@@ -275,8 +275,8 @@ events:
   gross_savings_usd: 1.5e-05
   rev_share_fee_usd: 2.0e-06
   net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214654_891671
-  timestamp: '2026-10-08T21:46:54.891673+00:00'
+- event_id: tok_evt_20261009_021055_892334
+  timestamp: '2026-10-09T02:10:55.892337+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
   model_id: claude-3-5-sonnet-20241022
@@ -287,8 +287,8 @@ events:
   gross_savings_usd: 0.00021
   rev_share_fee_usd: 3.1e-05
   net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214654_891676
-  timestamp: '2026-10-08T21:46:54.891678+00:00'
+- event_id: tok_evt_20261009_021055_892341
+  timestamp: '2026-10-09T02:10:55.892344+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
   model_id: claude-3-5-sonnet-20241022
@@ -299,8 +299,8 @@ events:
   gross_savings_usd: 0.000279
   rev_share_fee_usd: 4.2e-05
   net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214654_891680
-  timestamp: '2026-10-08T21:46:54.891684+00:00'
+- event_id: tok_evt_20261009_021055_892346
+  timestamp: '2026-10-09T02:10:55.892348+00:00'
   session_or_pr: agent_run_agent_test_perf_guard
   file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
   model_id: claude-3-5-sonnet-20241022
@@ -311,255 +311,3 @@ events:
   gross_savings_usd: 0.000138
   rev_share_fee_usd: 2.1e-05
   net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214657_790915
-  timestamp: '2026-10-08T21:46:57.790938+00:00'
-  session_or_pr: test_suite_run
-  file_path: workplace/core/test_sample.py
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1000
-  pruned_tokens: 400
-  tokens_saved: 600
-  reduction_percentage: 60.0
-  gross_savings_usd: 0.0018
-  rev_share_fee_usd: 0.00027
-  net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214658_348950
-  timestamp: '2026-10-08T21:46:58.348976+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1188
-  pruned_tokens: 1183
-  tokens_saved: 5
-  reduction_percentage: 0.42
-  gross_savings_usd: 1.5e-05
-  rev_share_fee_usd: 2.0e-06
-  net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214658_348984
-  timestamp: '2026-10-08T21:46:58.348987+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 464
-  pruned_tokens: 394
-  tokens_saved: 70
-  reduction_percentage: 15.09
-  gross_savings_usd: 0.00021
-  rev_share_fee_usd: 3.1e-05
-  net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214658_348989
-  timestamp: '2026-10-08T21:46:58.348991+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 119
-  pruned_tokens: 26
-  tokens_saved: 93
-  reduction_percentage: 78.15
-  gross_savings_usd: 0.000279
-  rev_share_fee_usd: 4.2e-05
-  net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214658_348993
-  timestamp: '2026-10-08T21:46:58.348995+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 87
-  pruned_tokens: 41
-  tokens_saved: 46
-  reduction_percentage: 52.87
-  gross_savings_usd: 0.000138
-  rev_share_fee_usd: 2.1e-05
-  net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214718_507025
-  timestamp: '2026-10-08T21:47:18.507052+00:00'
-  session_or_pr: test_suite_run
-  file_path: workplace/core/test_sample.py
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1000
-  pruned_tokens: 400
-  tokens_saved: 600
-  reduction_percentage: 60.0
-  gross_savings_usd: 0.0018
-  rev_share_fee_usd: 0.00027
-  net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214719_142690
-  timestamp: '2026-10-08T21:47:19.142714+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1188
-  pruned_tokens: 1183
-  tokens_saved: 5
-  reduction_percentage: 0.42
-  gross_savings_usd: 1.5e-05
-  rev_share_fee_usd: 2.0e-06
-  net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214719_142725
-  timestamp: '2026-10-08T21:47:19.142728+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 464
-  pruned_tokens: 394
-  tokens_saved: 70
-  reduction_percentage: 15.09
-  gross_savings_usd: 0.00021
-  rev_share_fee_usd: 3.1e-05
-  net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214719_142731
-  timestamp: '2026-10-08T21:47:19.142732+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 119
-  pruned_tokens: 26
-  tokens_saved: 93
-  reduction_percentage: 78.15
-  gross_savings_usd: 0.000279
-  rev_share_fee_usd: 4.2e-05
-  net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214719_142734
-  timestamp: '2026-10-08T21:47:19.142736+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 87
-  pruned_tokens: 41
-  tokens_saved: 46
-  reduction_percentage: 52.87
-  gross_savings_usd: 0.000138
-  rev_share_fee_usd: 2.1e-05
-  net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214722_098785
-  timestamp: '2026-10-08T21:47:22.098820+00:00'
-  session_or_pr: test_suite_run
-  file_path: workplace/core/test_sample.py
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1000
-  pruned_tokens: 400
-  tokens_saved: 600
-  reduction_percentage: 60.0
-  gross_savings_usd: 0.0018
-  rev_share_fee_usd: 0.00027
-  net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214722_743875
-  timestamp: '2026-10-08T21:47:22.743898+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1188
-  pruned_tokens: 1183
-  tokens_saved: 5
-  reduction_percentage: 0.42
-  gross_savings_usd: 1.5e-05
-  rev_share_fee_usd: 2.0e-06
-  net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214722_743906
-  timestamp: '2026-10-08T21:47:22.743908+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 464
-  pruned_tokens: 394
-  tokens_saved: 70
-  reduction_percentage: 15.09
-  gross_savings_usd: 0.00021
-  rev_share_fee_usd: 3.1e-05
-  net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214722_743911
-  timestamp: '2026-10-08T21:47:22.743913+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 119
-  pruned_tokens: 26
-  tokens_saved: 93
-  reduction_percentage: 78.15
-  gross_savings_usd: 0.000279
-  rev_share_fee_usd: 4.2e-05
-  net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214722_743917
-  timestamp: '2026-10-08T21:47:22.743918+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 87
-  pruned_tokens: 41
-  tokens_saved: 46
-  reduction_percentage: 52.87
-  gross_savings_usd: 0.000138
-  rev_share_fee_usd: 2.1e-05
-  net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214726_324841
-  timestamp: '2026-10-08T21:47:26.324866+00:00'
-  session_or_pr: test_suite_run
-  file_path: workplace/core/test_sample.py
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1000
-  pruned_tokens: 400
-  tokens_saved: 600
-  reduction_percentage: 60.0
-  gross_savings_usd: 0.0018
-  rev_share_fee_usd: 0.00027
-  net_savings_usd: 0.00153
-- event_id: tok_evt_20261008_214726_914228
-  timestamp: '2026-10-08T21:47:26.914250+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/competitive_matrix.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1188
-  pruned_tokens: 1183
-  tokens_saved: 5
-  reduction_percentage: 0.42
-  gross_savings_usd: 1.5e-05
-  rev_share_fee_usd: 2.0e-06
-  net_savings_usd: 1.3e-05
-- event_id: tok_evt_20261008_214726_914259
-  timestamp: '2026-10-08T21:47:26.914262+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/infrastructure_economics.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 464
-  pruned_tokens: 394
-  tokens_saved: 70
-  reduction_percentage: 15.09
-  gross_savings_usd: 0.00021
-  rev_share_fee_usd: 3.1e-05
-  net_savings_usd: 0.000179
-- event_id: tok_evt_20261008_214726_914266
-  timestamp: '2026-10-08T21:47:26.914268+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/ast_pruner_demo.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 119
-  pruned_tokens: 26
-  tokens_saved: 93
-  reduction_percentage: 78.15
-  gross_savings_usd: 0.000279
-  rev_share_fee_usd: 4.2e-05
-  net_savings_usd: 0.000237
-- event_id: tok_evt_20261008_214726_914271
-  timestamp: '2026-10-08T21:47:26.914273+00:00'
-  session_or_pr: agent_run_agent_test_perf_guard
-  file_path: workplace/modules/mod_portal_marketing/components/roi_calculator.ts
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 87
-  pruned_tokens: 41
-  tokens_saved: 46
-  reduction_percentage: 52.87
-  gross_savings_usd: 0.000138
-  rev_share_fee_usd: 2.1e-05
-  net_savings_usd: 0.000117
-- event_id: tok_evt_20261008_214732_605878
-  timestamp: '2026-10-08T21:47:32.605890+00:00'
-  session_or_pr: test_todo_suite
-  file_path: workplace/core/test_sample.py
-  model_id: claude-3-5-sonnet-20241022
-  uncompressed_tokens: 1000
-  pruned_tokens: 400
-  tokens_saved: 600
-  reduction_percentage: 60.0
-  gross_savings_usd: 0.0018
-  rev_share_fee_usd: 0.00027
-  net_savings_usd: 0.00153
