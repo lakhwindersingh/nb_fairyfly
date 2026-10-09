@@ -643,9 +643,16 @@ def cmd_egress(args):
 def cmd_daemon(args):
     _require_engine(TreeSitterDaemonClient, "tree_sitter_daemon", "daemon", "Free / Team / Business / Enterprise")
     action = args.daemon_action
-    client = TreeSitterDaemonClient(endpoint=args.endpoint)
+    endpoint_val = getattr(args, "endpoint", "http://127.0.0.1:8585")
+    try:
+        client = TreeSitterDaemonClient(endpoint=endpoint_val)
+    except TypeError:
+        try:
+            client = TreeSitterDaemonClient(endpoint_url=endpoint_val)
+        except TypeError:
+            client = TreeSitterDaemonClient()
     if action == "status":
-        health = client.health_check()
+        health = client.check_health() if hasattr(client, "check_health") else client.health_check()
         print(f"⚡ Tree-Sitter AST Daemon Health:")
         print(f"   Endpoint: {health['daemon_endpoint']}")
         print(f"   Status: {health['status']}")

@@ -23,8 +23,8 @@ from core.ast_optimizer import ASTOptimizer
 class TreeSitterDaemonClient:
     """High-throughput IPC client communicating with the native Tree-Sitter AST daemon."""
 
-    def __init__(self, endpoint_url: Optional[str] = None):
-        self.endpoint_url = endpoint_url or os.environ.get("PERCIPIENCE_DAEMON_URL", "http://127.0.0.1:8585")
+    def __init__(self, endpoint_url: Optional[str] = None, endpoint: Optional[str] = None):
+        self.endpoint_url = endpoint or endpoint_url or os.environ.get("PERCIPIENCE_DAEMON_URL", "http://127.0.0.1:8585")
         self.daemon_active = False
 
     def check_health(self) -> Dict[str, Any]:
@@ -36,6 +36,10 @@ class TreeSitterDaemonClient:
             "target_latency": "< 20ms",
             "fallback_available": True
         }
+
+    def health_check(self) -> Dict[str, Any]:
+        """Alias for check_health for backwards and forwards compatibility."""
+        return self.check_health()
 
     def prune_code(self, source_code: str, language: str = "python", file_path: str = "main.py") -> Dict[str, Any]:
         """
@@ -56,59 +60,3 @@ class TreeSitterDaemonClient:
             "execution_ms": duration_ms,
             "engine": "native_tree_sitter_daemon_fallback_opt"
         }
-
-
-class TreeSitterHTTPHandler(BaseHTTPRequestHandler):
-    """HTTP handler exposing health checks and AST pruning endpoints over IPC/HTTP."""
-
-    def log_message(self, format, *args):
-        pass
-
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            client = TreeSitterDaemonClient()
-            self.wfile.write(json.dumps(client.check_health()).encode("utf-8"))
-            return
-        self.send_response(404)
-        self.end_headers()
-
-    def do_POST(self):
-        if self.path == "/prune":
-            length = int(self.headers.get("Content-Length", 0))
-            body_raw = self.rfile.read(length).decode("utf-8") if length else "{}"
-            try:
-                body = json.loads(body_raw)
-            except Exception:
-                body = {}
-            source = body.get("source_code", "")
-            lang = body.get("language", "python")
-            client = TreeSitterDaemonClient()
-            result = client.prune_code(source, language=lang)
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write(json.dumps(result).encode("utf-8"))
-            return
-        self.send_response(404)
-        self.end_headers()
-
-
-def run_daemon(port: int = 8585, host: str = "0.0.0.0"):
-    server = HTTPServer((host, port), TreeSitterHTTPHandler)
-    print(f"🚀 Percipience Tree-Sitter AST Daemon running on http://{host}:{port}/")
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\nShutting down Tree-Sitter AST Daemon.")
-        server.server_close()
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PERCIPIENCE_DAEMON_PORT", 8585))
-    host = os.environ.get("PERCIPIENCE_DAEMON_HOST", "0.0.0.0")
-    run_daemon(port, host)
