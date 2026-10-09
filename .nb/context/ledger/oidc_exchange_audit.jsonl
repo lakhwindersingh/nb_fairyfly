@@ -1,0 +1,1 @@
+{"timestamp": "2026-10-09T18:18:45Z", "token_sha256": "aa7603491f1a456f", "provider": "AWS_IAM_STS", "target_role": "arn:aws:iam::123456789012:role/PercipienceAgentRole", "actor": "subagent_dev_01", "session_id": "sess_28d401df7413", "expiration": "2026-10-09T19:18:45Z", "status": "FEDERATION_SUCCESS"}
