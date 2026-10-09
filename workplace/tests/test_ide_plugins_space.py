@@ -499,5 +499,74 @@ class TestIdePluginsSpace(unittest.TestCase):
             self.assertEqual(res.returncode, 0, f"Command {' '.join(sub)} failed: {res.stderr} {res.stdout}")
 
 
+    def test_19_intellij_plugin_delivery_workflow_integrity(self):
+        """Validates end-to-end integrity of intellij_pycharm_plugin_delivery_flow."""
+        from workflow_orchestrator import WorkflowOrchestrator
+        from handoff_validator import HandoffValidator
+        from agent_plugin_engine import AgentPluginEngine
+
+        wf_path = self.repo_root / ".nb" / "agentic" / "custom" / "workflows" / "intellij_pycharm_plugin_delivery_flow.yaml"
+        self.assertTrue(wf_path.exists(), "Workflow manifest must exist")
+
+        wf_def = WorkflowOrchestrator.load_workflow(wf_path)
+        self.assertEqual(wf_def["workflow_id"], "intellij_pycharm_plugin_delivery_flow")
+        self.assertEqual(len(wf_def["steps"]), 5)
+
+        # 1. Verify all stage agents are registered and approved
+        registered_agents = {a["agent_id"]: a for a in AgentPluginEngine.list_agents(self.repo_root)}
+        expected_agents = [
+            "agent_jetbrains_plugin_architect",
+            "agent_psi_ast_bridge_specialist",
+            "agent_intellij_ui_ux_engineer",
+            "agent_terminal_mode_specialist"
+        ]
+        for ag_id in expected_agents:
+            self.assertIn(ag_id, registered_agents, f"Agent {ag_id} must be registered in AgentPluginEngine")
+            self.assertTrue(
+                HandoffValidator.verify_agent_approval(ag_id, self.repo_root),
+                f"Agent {ag_id} must be approved by HandoffValidator"
+            )
+
+        # 2. Verify all transitions are authorized in dynamic DAG
+        routes = [
+            ("agent_jetbrains_plugin_architect", "agent_psi_ast_bridge_specialist"),
+            ("agent_psi_ast_bridge_specialist", "agent_intellij_ui_ux_engineer"),
+            ("agent_intellij_ui_ux_engineer", "agent_jetbrains_plugin_architect"),
+            ("agent_jetbrains_plugin_architect", "agent_terminal_mode_specialist")
+        ]
+        for src, dst in routes:
+            authorized, gate = HandoffValidator.verify_route_authorization(
+                src, dst, "intellij_pycharm_plugin_delivery_flow", self.repo_root
+            )
+            self.assertTrue(authorized, f"Route {src} -> {dst} must be authorized")
+            self.assertIsNotNone(gate, f"Gate for {src} -> {dst} must be specified")
+
+            # 3. Verify cryptographic HMAC-SHA256 token exchange
+            token = HandoffValidator.generate_token(
+                from_agent=src,
+                to_agent=dst,
+                workflow_id="intellij_pycharm_plugin_delivery_flow",
+                stage=gate,
+                gate_id=gate,
+                workspace_root=self.repo_root
+            )
+            self.assertTrue(
+                HandoffValidator.verify_token(
+                    token_hash=token,
+                    from_agent=src,
+                    to_agent=dst,
+                    workflow_id="intellij_pycharm_plugin_delivery_flow",
+                    stage=gate,
+                    gate_id=gate,
+                    workspace_root=self.repo_root
+                ),
+                f"Token for {src} -> {dst} must verify"
+            )
+
+        # 4. Verify parallel fan-out / barrier execution simulation
+        exec_receipt = WorkflowOrchestrator.execute_workflow(wf_def)
+        self.assertEqual(exec_receipt["status"], "COMPLETED")
+
+
 if __name__ == "__main__":
     unittest.main()
