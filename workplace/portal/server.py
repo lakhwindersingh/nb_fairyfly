@@ -78,6 +78,9 @@ from core.commercial_packager_provisioner import CommercialPackagerProvisioner
 from core.dynamic_dag_orchestrator import DynamicDAGOrchestrator, StepNode
 from core.self_reflection_engine import SelfReflectionEngine, ReflexionVerificationError
 from core.agent_memory_engine import AgentMemoryEngine
+from core.swarm_fleet_dispatcher import SwarmFleetDispatcher, WorkerSlot, SwarmJobRecord
+from core.consolidation_synthesizer import ConsolidationSynthesizer
+from core.git_bundle_transport import GitBundleTransport
 from core.tool_contract_validator import ToolContractValidator
 from core.agent_capability_guard import AgentCapabilityGuard
 from core.fleet_manager import FleetManager
@@ -612,6 +615,7 @@ PORTAL_HTML = """<!DOCTYPE html>
       <button class="nav-btn" onclick="showTab('docs')">Docs</button>
       <button class="nav-btn" onclick="showTab('reports')">📑 Deep Reports</button>
       <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
+      <button class="nav-btn" onclick="showTab('swarm-fleet')">🖥️ Swarm Fleet &amp; DEWS</button>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔑 Client Space</button>
     </nav>
   </header>
@@ -2300,6 +2304,151 @@ percipience rollback \
       </div>
     </section>
 
+    <!-- TAB 11.5: SWARM FLEET & DEWS DASHBOARD -->
+    <section id="swarm-fleet" class="tab-content">
+      <div class="section-title">Distributed Multi-Container Swarm Fleet &amp; DEWS Engine</div>
+      <div class="section-desc">Live Telemetry &amp; Remote Dispatch Orchestrator: Multi-Container Worker Slots, Redis 7.x Redlock Lease Heartbeats, Dynamic Wave DAGs, and Sub-Penny Token FinOps.</div>
+
+      <!-- FLEET SUMMARY BANNER -->
+      <div class="card" style="margin-bottom:24px; padding:20px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.08)); border:1px solid rgba(16, 185, 129, 0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span id="swarmFleetStatusBadge" class="badge badge-emerald" style="font-size:13px; font-weight:700;">● FLEET HEALTHY</span>
+              <span style="font-size:12px; color:var(--muted);" id="swarmFleetUpdatedText">Polling every 2s</span>
+            </div>
+            <div style="font-size:13px; color:var(--text); margin-top:6px;">
+              <b>Architecture:</b> Containerized Git Worktrees &bull; Quorum Redlock &bull; 3-Way Topological Consolidation
+            </div>
+          </div>
+          <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--cyan);" id="sfTotalSlots">5</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Container Slots</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--green);" id="sfIdleSlots">5</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Idle Slots</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--amber);" id="sfBusySlots">0</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Active Tasks</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--purple);" id="sfActiveLeases">0</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Redlock Leases</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--emerald);" id="sfTotalTokens">135,000</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Tokens Burned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKER CONTAINER SLOTS GRID -->
+      <div style="margin-bottom:28px;">
+        <h3 style="font-size:17px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span>🐳</span> Multi-Container Worker Slots (DEWS Fleet)
+        </h3>
+        <div id="swarmSlotsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+        </div>
+      </div>
+
+      <!-- TWO-COLUMN LAYOUT: REDIS REDLOCK LEASES & INTERACTIVE DISPATCH -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px;">
+        <!-- COLUMN 1: REDIS REDLOCK LEASES -->
+        <div class="card" style="padding:20px;">
+          <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>🔒</span> Live Redis 7.x Redlock Leases
+          </h3>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+            Distributed cross-container serialization. Automatic TTL eviction prevents deadlocks; Lua scripts guarantee release safety.
+          </p>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; font-size:12px; border-collapse:collapse;" id="redlockLeasesTable">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); color:var(--muted); text-align:left;">
+                  <th style="padding:8px 6px;">Resource</th>
+                  <th style="padding:8px 6px;">Holder Agent</th>
+                  <th style="padding:8px 6px;">TTL Remaining</th>
+                  <th style="padding:8px 6px;">Quorum</th>
+                </tr>
+              </thead>
+              <tbody id="redlockLeasesBody">
+                <tr><td colspan="4" style="padding:14px; text-align:center; color:var(--muted);">No active locks. Cluster quorum ready.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- COLUMN 2: INTERACTIVE DISPATCH & CONSOLIDATION CONTROLS -->
+        <div class="card" style="padding:20px;">
+          <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>🚀</span> Swarm Dispatch &amp; Consolidation Controls
+          </h3>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">
+            Dispatch plan derivations to container worker slots or trigger 3-way topological merge synthesis.
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label" style="font-size:11px;">Plan Specification Path</label>
+            <input type="text" id="sfDispatchPlan" class="input" value=".nb/plan/test/concise.md" style="font-size:12px; padding:6px 10px;">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Target Module</label>
+              <input type="text" id="sfDispatchModule" class="input" value="workplace" style="font-size:12px; padding:6px 10px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Agent ID</label>
+              <input type="text" id="sfDispatchAgent" class="input" value="agent_worker" style="font-size:12px; padding:6px 10px;">
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+            <input type="checkbox" id="sfDispatchMock" checked style="accent-color:var(--cyan);">
+            <label for="sfDispatchMock" style="font-size:12px; color:var(--text); cursor:pointer;">Run with Mock Container Plan Executor</label>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="flex:1; font-size:12px; padding:8px;" onclick="triggerSwarmDispatch()">
+              <span>🚀</span> Dispatch Job
+            </button>
+            <button class="btn btn-secondary" style="flex:1; font-size:12px; padding:8px;" onclick="triggerSwarmConsolidate()">
+              <span>🔀</span> Consolidate Merges
+            </button>
+          </div>
+          <div id="sfActionFeedback" style="margin-top:10px; font-size:12px; min-height:18px;"></div>
+        </div>
+      </div>
+
+      <!-- RECENT JOBS & WAVE DAG EXECUTION MONITOR -->
+      <div class="card" style="padding:20px; margin-bottom:28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 style="font-size:16px; margin:0; display:flex; align-items:center; gap:8px;">
+            <span>⚡</span> Active Wave DAGs &amp; Fleet Execution History
+          </h3>
+          <span style="font-size:12px; color:var(--muted);" id="sfJobsSummaryCount">Total Jobs: 0</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; font-size:12px; border-collapse:collapse;" id="sfJobsTable">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted); text-align:left;">
+                <th style="padding:8px 6px;">Job ID</th>
+                <th style="padding:8px 6px;">Status</th>
+                <th style="padding:8px 6px;">Slot / Node</th>
+                <th style="padding:8px 6px;">Target Module</th>
+                <th style="padding:8px 6px;">Duration</th>
+                <th style="padding:8px 6px;">Bundle SHA256</th>
+                <th style="padding:8px 6px;">Logs</th>
+              </tr>
+            </thead>
+            <tbody id="sfJobsTableBody">
+              <tr><td colspan="7" style="padding:14px; text-align:center; color:var(--muted);">No jobs executed yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <!-- TAB 12: SECURE CLIENT SPACE -->
     <section id="client" class="tab-content">
       <!-- UNAUTHENTICATED LOGIN CARD -->
@@ -3606,6 +3755,9 @@ percipience rollback \
       const target = document.getElementById(id);
       if (target) {
         target.classList.add('active');
+      }
+      if (id === 'swarm-fleet') {
+        loadSwarmFleetTelemetry();
       }
       
       // Highlight matching nav button regardless of caller or inner elements
@@ -5209,6 +5361,195 @@ percipience rollback \
     }
   });
 
+  // Swarm Fleet Telemetry & DEWS Client Functions
+  async function loadSwarmFleetTelemetry() {
+    try {
+      const res = await fetch('/api/swarm/fleet/status');
+      if (!res.ok) return;
+      const data = await res.json();
+      renderSwarmFleetData(data);
+    } catch (e) {
+      console.warn('Swarm fleet fetch error:', e);
+    }
+  }
+
+  function renderSwarmFleetData(data) {
+    if (!data) return;
+    const badge = document.getElementById('swarmFleetStatusBadge');
+    if (badge) {
+      badge.textContent = data.status === 'HEALTHY' ? '● FLEET HEALTHY' : '● ' + data.status;
+      badge.className = data.status === 'HEALTHY' ? 'badge badge-emerald' : 'badge badge-amber';
+    }
+    const upd = document.getElementById('swarmFleetUpdatedText');
+    if (upd) {
+      const dt = data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString();
+      upd.textContent = `Last polled: ${dt} (every 2s)`;
+    }
+    if (document.getElementById('sfTotalSlots')) document.getElementById('sfTotalSlots').textContent = data.worker_slots_total || 5;
+    if (document.getElementById('sfIdleSlots')) document.getElementById('sfIdleSlots').textContent = data.worker_slots_idle || 0;
+    if (document.getElementById('sfBusySlots')) document.getElementById('sfBusySlots').textContent = data.worker_slots_busy || 0;
+    if (document.getElementById('sfActiveLeases')) document.getElementById('sfActiveLeases').textContent = data.active_redlock_leases_count || 0;
+    if (document.getElementById('sfTotalTokens')) {
+      const tok = (data.finops_rollup && data.finops_rollup.total_tokens_burned) || 0;
+      document.getElementById('sfTotalTokens').textContent = tok.toLocaleString();
+    }
+
+    // Render Worker Slots Grid
+    const grid = document.getElementById('swarmSlotsGrid');
+    if (grid && data.worker_slots) {
+      grid.innerHTML = data.worker_slots.map(s => {
+        const isIdle = s.status === 'IDLE';
+        const isExec = s.status === 'EXECUTING';
+        const isFail = s.status === 'FAILED';
+        const stClass = isIdle ? 'badge badge-purple' : isExec ? 'badge badge-cyan' : isFail ? 'badge badge-red' : 'badge badge-emerald';
+        const cpuPct = Math.min(100, Math.max(0, s.cpu_percent || 0));
+        return `
+          <div class="card" style="padding:14px; border:1px solid ${isExec ? 'var(--cyan)' : 'var(--border)'}; background:rgba(255,255,255,0.02);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:700; font-size:13px;">${s.slot_id}</span>
+              <span class="${stClass}" style="font-size:10px;">${s.status}</span>
+            </div>
+            <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">${s.hostname}</div>
+            <div style="font-size:11px; margin-bottom:4px; display:flex; justify-content:space-between;">
+              <span style="color:var(--muted);">Assigned Agent:</span>
+              <span style="font-weight:600;">${s.assigned_agent || 'None (Standby)'}</span>
+            </div>
+            <div style="font-size:11px; margin-bottom:8px; display:flex; justify-content:space-between;">
+              <span style="color:var(--muted);">Target Module:</span>
+              <span>${s.target_module || '&mdash;'}</span>
+            </div>
+            <div style="margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-bottom:2px;">
+                <span>CPU: ${cpuPct.toFixed(1)}%</span>
+                <span>RAM: ${(s.memory_mb || 0).toFixed(0)} MB</span>
+              </div>
+              <div class="bar-track" style="height:4px;"><div class="bar-fill bg-cyan" style="width:${cpuPct}%;"></div></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:8px;">
+              <span>Tokens: ${(s.tokens_burned || 0).toLocaleString()}</span>
+              <span>Job: ${s.active_job_id ? s.active_job_id.substring(0, 8) + '...' : 'Idle'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render Redlock Leases
+    const rBody = document.getElementById('redlockLeasesBody');
+    if (rBody) {
+      const leases = data.active_redlock_leases || [];
+      if (leases.length === 0) {
+        rBody.innerHTML = '<tr><td colspan="4" style="padding:14px; text-align:center; color:var(--muted);">No active locks. Cluster quorum ready.</td></tr>';
+      } else {
+        rBody.innerHTML = leases.map(l => `
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 6px; font-weight:600;"><code style="font-size:11px;">${l.resource_name}</code></td>
+            <td style="padding:8px 6px;">${l.holder_id}</td>
+            <td style="padding:8px 6px;"><span class="badge badge-emerald" style="font-size:10px;">${(l.ttl_remaining_s || 0).toFixed(1)}s</span></td>
+            <td style="padding:8px 6px;"><span style="color:var(--green); font-weight:700;">✓ Verified</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // Render Recent Jobs
+    const jBody = document.getElementById('sfJobsTableBody');
+    const jCount = document.getElementById('sfJobsSummaryCount');
+    if (jBody && data.jobs_summary) {
+      if (jCount) jCount.textContent = `Total Jobs: ${data.jobs_summary.total || 0}`;
+      const jobs = data.jobs_summary.recent || [];
+      if (jobs.length === 0) {
+        jBody.innerHTML = '<tr><td colspan="7" style="padding:14px; text-align:center; color:var(--muted);">No jobs executed yet.</td></tr>';
+      } else {
+        jBody.innerHTML = jobs.map(j => {
+          const isOk = j.status === 'SUCCESS';
+          const isRun = j.status === 'EXECUTING';
+          const stBadge = isOk ? '<span class="badge badge-emerald" style="font-size:10px;">SUCCESS</span>' :
+                          isRun ? '<span class="badge badge-cyan" style="font-size:10px;">EXECUTING</span>' :
+                          '<span class="badge badge-red" style="font-size:10px;">' + j.status + '</span>';
+          const sha = j.result_bundle_sha256 ? `<code style="font-size:10px;">${j.result_bundle_sha256.substring(0, 10)}...</code>` : '&mdash;';
+          const dur = j.duration_ms ? `${(j.duration_ms).toFixed(1)}ms` : '&mdash;';
+          const logSnippet = (j.logs && j.logs.length > 0) ? (j.logs[j.logs.length - 1]).replace(/"/g, '&quot;') : '';
+          return `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:8px 6px; font-weight:600;"><code style="font-size:11px;">${j.job_id.substring(0, 16)}</code></td>
+              <td style="padding:8px 6px;">${stBadge}</td>
+              <td style="padding:8px 6px;">${j.worker_slot_id || '&mdash;'}</td>
+              <td style="padding:8px 6px;">${j.target_module}</td>
+              <td style="padding:8px 6px;">${dur}</td>
+              <td style="padding:8px 6px;">${sha}</td>
+              <td style="padding:8px 6px;">
+                <button class="btn btn-secondary" style="font-size:10px; padding:2px 6px;" title="${logSnippet}" onclick="alert('${logSnippet}')">View</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+  }
+
+  async function triggerSwarmDispatch() {
+    const feedback = document.getElementById('sfActionFeedback');
+    feedback.innerHTML = '<span style="color:var(--cyan);">⏳ Dispatching plan to container fleet...</span>';
+    const plan = document.getElementById('sfDispatchPlan').value.trim();
+    const module = document.getElementById('sfDispatchModule').value.trim();
+    const agent = document.getElementById('sfDispatchAgent').value.trim();
+    const mock = document.getElementById('sfDispatchMock').checked;
+    try {
+      const res = await fetch('/api/swarm/fleet/dispatch', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          plan_path: plan,
+          target_module: module,
+          agent_id: agent,
+          mock: mock
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        feedback.innerHTML = `<span style="color:var(--green);">✓ Job Dispatched: <code>${data.job_id}</code> on slot <b>${data.worker_slot_id}</b></span>`;
+        loadSwarmFleetTelemetry();
+      } else {
+        feedback.innerHTML = `<span style="color:var(--red);">✗ Dispatch failed: ${data.error || 'Unknown error'}</span>`;
+      }
+    } catch (e) {
+      feedback.innerHTML = `<span style="color:var(--red);">✗ Network error: ${e.message}</span>`;
+    }
+  }
+
+  async function triggerSwarmConsolidate() {
+    const feedback = document.getElementById('sfActionFeedback');
+    feedback.innerHTML = '<span style="color:var(--cyan);">⏳ Running 3-Way Topological Consolidation...</span>';
+    try {
+      const res = await fetch('/api/swarm/fleet/consolidate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          branches: ['worker/worker_slot_01', 'worker/worker_slot_02'],
+          target_branch: 'integration'
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        feedback.innerHTML = `<span style="color:var(--green);">✓ Consolidated branches into <code>${data.result.target_branch}</code> (Commit: <code>${(data.result.merge_commit_sha || '').substring(0,8)}</code>)</span>`;
+        loadSwarmFleetTelemetry();
+      } else {
+        feedback.innerHTML = `<span style="color:var(--red);">✗ Consolidation failed: ${data.error || JSON.stringify(data)}</span>`;
+      }
+    } catch (e) {
+      feedback.innerHTML = `<span style="color:var(--red);">✗ Network error: ${e.message}</span>`;
+    }
+  }
+
+  // 2s Auto-Polling Interval for Swarm Fleet Tab
+  setInterval(() => {
+    const tab = document.getElementById('swarm-fleet');
+    if (tab && tab.classList.contains('active')) {
+      loadSwarmFleetTelemetry();
+    }
+  }, 2000);
+
   window.addEventListener('popstate', () => {
     const hash = (window.location.hash || '').replace('#', '');
     if (hash && document.getElementById(hash)) {
@@ -5364,10 +5705,17 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         return None
 
     def _read_json_body(self) -> dict:
+        if hasattr(self, "_cached_json_body"):
+            return self._cached_json_body
         content_len = int(self.headers.get("Content-Length", 0))
         if content_len > 0:
             raw = self.rfile.read(content_len).decode("utf-8")
-            return json.loads(raw)
+            try:
+                self._cached_json_body = json.loads(raw) if raw.strip() else {}
+            except Exception:
+                self._cached_json_body = {}
+            return self._cached_json_body
+        self._cached_json_body = {}
         return {}
 
     def do_GET(self):
@@ -5542,6 +5890,37 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             rep = SemanticParityEngine.compute_parity_report(REPO_ROOT)
             self._send_json(rep)
             return
+
+        if parsed.path == "/api/swarm/fleet/status":
+            dispatcher = SwarmFleetDispatcher.get_instance(REPO_ROOT)
+            self._send_json(dispatcher.get_fleet_status())
+            return
+
+        if parsed.path.startswith("/api/swarm/fleet/jobs/"):
+            parts = parsed.path.strip("/").split("/")
+            if len(parts) >= 5:
+                job_id = parts[4]
+                dispatcher = SwarmFleetDispatcher.get_instance(REPO_ROOT)
+                if len(parts) >= 6 and parts[5] == "bundle":
+                    bundle_tuple = dispatcher.get_job_bundle(job_id)
+                    if not bundle_tuple:
+                        self._send_json({"error": "Result bundle not found for job", "job_id": job_id}, status=404)
+                        return
+                    filename, bundle_bytes = bundle_tuple
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/octet-stream")
+                    self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+                    self.send_header("Content-Length", str(len(bundle_bytes)))
+                    self.end_headers()
+                    self.wfile.write(bundle_bytes)
+                    return
+                else:
+                    job_data = dispatcher.get_job_status(job_id)
+                    if not job_data:
+                        self._send_json({"error": "Job not found", "job_id": job_id}, status=404)
+                        return
+                    self._send_json({"status": "SUCCESS", "job": job_data})
+                    return
 
         if parsed.path == "/api/swarm/status":
             leases = WorktreeEngine.list_leases(REPO_ROOT)
@@ -7165,6 +7544,82 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 })
             except Exception as e:
                 self._send_json({"error": str(e)}, status=400)
+            return
+
+        if parsed.path == "/api/swarm/fleet/dispatch":
+            content_type = self.headers.get("Content-Type", "")
+            dispatcher = SwarmFleetDispatcher.get_instance(REPO_ROOT)
+            if "application/json" in content_type:
+                payload = self._read_json_body()
+                plan_path = payload.get("plan_path", ".nb/plan/test/concise.md")
+                target_module = payload.get("target_module", "workplace")
+                agent_id = payload.get("agent_id", "agent_worker")
+                prompt = payload.get("prompt", "Execute plan derivations")
+                mock = payload.get("mock", True)
+                bundle_b64 = payload.get("bundle_base64")
+                bundle_bytes = None
+                if bundle_b64:
+                    import base64
+                    bundle_bytes = base64.b64decode(bundle_b64)
+
+                job_data = dispatcher.dispatch_job(
+                    plan_path=plan_path,
+                    agent_id=agent_id,
+                    target_module=target_module,
+                    bundle_payload=bundle_bytes,
+                    prompt=prompt,
+                    mock_mode=mock
+                )
+                self._send_json({
+                    "status": "DISPATCHED",
+                    "job_id": job_data.get("job_id"),
+                    "worker_slot_id": job_data.get("worker_slot_id"),
+                    "job_status": job_data.get("status"),
+                    "target_module": job_data.get("target_module"),
+                    "agent_id": job_data.get("agent_id"),
+                    "receipt": job_data
+                })
+                return
+            elif "application/octet-stream" in content_type or "multipart/form-data" in content_type:
+                content_length = int(self.headers.get("Content-Length", 0))
+                body_bytes = self.rfile.read(content_length)
+                plan_path = self.headers.get("X-Plan-Path", ".nb/plan/test/concise.md")
+                target_module = self.headers.get("X-Target-Module", "workplace")
+                agent_id = self.headers.get("X-Agent-ID", "agent_worker")
+                mock = self.headers.get("X-Mock-Execution", "true").lower() in ("true", "1")
+                job_data = dispatcher.dispatch_job(
+                    plan_path=plan_path,
+                    agent_id=agent_id,
+                    target_module=target_module,
+                    bundle_payload=body_bytes,
+                    mock_mode=mock
+                )
+                self._send_json({
+                    "status": "DISPATCHED",
+                    "job_id": job_data.get("job_id"),
+                    "worker_slot_id": job_data.get("worker_slot_id"),
+                    "job_status": job_data.get("status"),
+                    "receipt": job_data
+                })
+                return
+            else:
+                self._send_json({"error": "Unsupported media type"}, status=415)
+                return
+
+        if parsed.path == "/api/swarm/fleet/consolidate":
+            payload = self._read_json_body()
+            branches = payload.get("branches", [])
+            target_branch = payload.get("target_branch", "integration")
+            synthesizer = ConsolidationSynthesizer(REPO_ROOT)
+            res = synthesizer.consolidate_branches(
+                branches=branches,
+                target_integration_branch=target_branch
+            )
+            is_ok = (res.status == "SUCCESS")
+            self._send_json({
+                "status": "SUCCESS" if is_ok else "FAILED",
+                "result": res.to_dict()
+            }, status=200 if is_ok else 400)
             return
 
         self._send_json({"error": "Not Found"}, 404)

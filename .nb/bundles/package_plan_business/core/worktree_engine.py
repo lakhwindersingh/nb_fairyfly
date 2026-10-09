@@ -23,37 +23,167 @@ def is_pid_alive(pid: Optional[int]) -> bool:
         return False
 
 class RedisRedlockBackend:
-    """Simulated or live Redis 7.x Redlock distributed lock adapter."""
+    """
+    Redis 7.x Redlock distributed lock adapter with connection pooling,
+    multi-node cluster quorum verification, heartbeat lease renewals,
+    and automatic TTL eviction.
+    """
 
-    def __init__(self, redis_url: Optional[str] = None):
-        self.redis_url = redis_url or os.environ.get("PERCIPIENCE_REDIS_URL", "redis://localhost:6379/0")
+    LUA_RELEASE_SCRIPT = """
+    if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("del", KEYS[1])
+    else
+        return 0
+    end
+    """
+
+    LUA_RENEW_SCRIPT = """
+    if redis.call("get", KEYS[1]) == ARGV[1] then
+        return redis.call("pexpire", KEYS[1], ARGV[2])
+    else
+        return 0
+    end
+    """
+
+    def __init__(self, redis_url: Optional[str] = None, redis_urls: Optional[List[str]] = None):
+        primary_url = redis_url or os.environ.get("PERCIPIENCE_REDIS_URL", "redis://localhost:6379/0")
+        self.node_urls = redis_urls or [primary_url]
+        self._pools = []
+        self._clients = []
+        self._live_nodes_count = 0
         self._memory_distributed_store: Dict[str, Dict[str, Any]] = {}
 
-    def acquire_lock(self, resource_key: str, ttl_ms: int = 3600000) -> Optional[str]:
+        try:
+            import redis
+            for url in self.node_urls:
+                try:
+                    pool = redis.ConnectionPool.from_url(
+                        url, max_connections=10, socket_timeout=0.3, socket_connect_timeout=0.3
+                    )
+                    client = redis.Redis(connection_pool=pool)
+                    client.ping()
+                    self._pools.append(pool)
+                    self._clients.append(client)
+                    self._live_nodes_count += 1
+                except Exception:
+                    pass
+        except ImportError:
+            pass
+
+    @property
+    def is_live(self) -> bool:
+        return self._live_nodes_count > 0
+
+    def acquire_lock(self, resource_key: str, ttl_ms: int = 3600000, retry_count: int = 3, retry_delay_ms: int = 100) -> Optional[str]:
         now_ms = int(time.time() * 1000)
-        existing = self._memory_distributed_store.get(resource_key)
-        if existing and existing.get("expires_at_ms", 0) > now_ms:
-            return None # Locked by another node
         lock_token = f"redlock_{resource_key}_{now_ms}"
-        self._memory_distributed_store[resource_key] = {
-            "token": lock_token,
-            "acquired_at_ms": now_ms,
-            "expires_at_ms": now_ms + ttl_ms
-        }
-        return lock_token
+        quorum = (len(self._clients) // 2) + 1 if self._clients else 1
+
+        for attempt in range(retry_count):
+            if self.is_live:
+                n_locked = 0
+                for client in self._clients:
+                    try:
+                        ok = client.set(f"lock:{resource_key}", lock_token, px=ttl_ms, nx=True)
+                        if ok:
+                            n_locked += 1
+                    except Exception:
+                        pass
+                if n_locked >= quorum:
+                    return lock_token
+                # Failed quorum, roll back acquired locks
+                for client in self._clients:
+                    try:
+                        client.eval(self.LUA_RELEASE_SCRIPT, 1, f"lock:{resource_key}", lock_token)
+                    except Exception:
+                        pass
+            else:
+                self.purge_expired_leases()
+                existing = self._memory_distributed_store.get(resource_key)
+                if not existing or existing.get("expires_at_ms", 0) <= now_ms:
+                    self._memory_distributed_store[resource_key] = {
+                        "resource_key": resource_key,
+                        "token": lock_token,
+                        "acquired_at_ms": now_ms,
+                        "expires_at_ms": now_ms + ttl_ms,
+                        "ttl_ms": ttl_ms
+                    }
+                    return lock_token
+
+            if attempt < retry_count - 1:
+                time.sleep(retry_delay_ms / 1000.0)
+
+        return None
 
     def release_lock(self, resource_key: str, lock_token: str) -> bool:
+        released = False
+        if self.is_live:
+            for client in self._clients:
+                try:
+                    res = client.eval(self.LUA_RELEASE_SCRIPT, 1, f"lock:{resource_key}", lock_token)
+                    if res:
+                        released = True
+                except Exception:
+                    pass
+            return released
+
         existing = self._memory_distributed_store.get(resource_key)
         if existing and existing.get("token") == lock_token:
             del self._memory_distributed_store[resource_key]
             return True
         return False
 
+    def renew_lease(self, resource_key: str, lock_token: str, ttl_ms: int = 3600000) -> bool:
+        if self.is_live:
+            renewed = False
+            for client in self._clients:
+                try:
+                    res = client.eval(self.LUA_RENEW_SCRIPT, 1, f"lock:{resource_key}", lock_token, ttl_ms)
+                    if res:
+                        renewed = True
+                except Exception:
+                    pass
+            return renewed
+
+        existing = self._memory_distributed_store.get(resource_key)
+        if existing and existing.get("token") == lock_token:
+            now_ms = int(time.time() * 1000)
+            existing["expires_at_ms"] = now_ms + ttl_ms
+            existing["renewed_at_ms"] = now_ms
+            return True
+        return False
+
+    def get_active_leases(self) -> List[Dict[str, Any]]:
+        self.purge_expired_leases()
+        leases = []
+        now_ms = int(time.time() * 1000)
+        for k, v in self._memory_distributed_store.items():
+            remaining_ms = max(0, v.get("expires_at_ms", 0) - now_ms)
+            leases.append({
+                "resource_key": k,
+                "lock_token": v.get("token"),
+                "remaining_ttl_ms": remaining_ms,
+                "acquired_at_ms": v.get("acquired_at_ms"),
+                "is_active": remaining_ms > 0
+            })
+        return leases
+
+    def purge_expired_leases(self) -> int:
+        now_ms = int(time.time() * 1000)
+        expired = [k for k, v in self._memory_distributed_store.items() if v.get("expires_at_ms", 0) <= now_ms]
+        for k in expired:
+            del self._memory_distributed_store[k]
+        return len(expired)
+
 
 class WorktreeEngine:
     """Manages ephemeral git worktree allocations, leases, distributed locks, and canary verification."""
 
     _redlock_backend = RedisRedlockBackend()
+
+    @classmethod
+    def get_redlock_backend(cls) -> RedisRedlockBackend:
+        return cls._redlock_backend
 
     @staticmethod
     def _lease_file(workspace_root: Path) -> Path:

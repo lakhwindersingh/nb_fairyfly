@@ -48,7 +48,6 @@ Every layerable domain plan directory must contain exactly four standardized fil
 | [**`concise.md`**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/concise.md) | Compact domain plan template featuring frontmatter, Mermaid graph, quad-space layout, and CLI commands. |
 | [**`detailed.md`**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/detailed.md) | Exhaustive implementation blueprint template covering architecture, contracts, agents, and testing. |
 | [**`custom_domain_layer_template.md`**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md) | Standalone reference guide unifying concise and detailed specifications. |
-| [**`sample/`**](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/sample/) | Concrete reference implementation of an IoT & Mobile Ecosystem layerable plan. |
 
 ---
 
@@ -86,7 +85,7 @@ mkdir -p .nb/plan/l1/my-new-domain
 cp .nb/plan/templates/MANIFEST.yaml .nb/plan/l1/my-new-domain/
 cp .nb/plan/templates/concise.md .nb/plan/l1/my-new-domain/
 cp .nb/plan/templates/detailed.md .nb/plan/l1/my-new-domain/
-cp .nb/plan/templates/sample/README.md .nb/plan/l1/my-new-domain/README.md
+cp .nb/plan/templates/README.md .nb/plan/l1/my-new-domain/README.md
 ```
 
 ### Step 3: Populate Placeholders

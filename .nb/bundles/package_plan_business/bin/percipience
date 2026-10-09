@@ -130,6 +130,8 @@ CommercialPackagerProvisioner = _load_engine("commercial_packager_provisioner", 
 PIISanitizer = _load_engine("pii_sanitizer", ["PIISanitizer"])
 PromptInjectionGuard = _load_engine("prompt_injection_guard", ["PromptInjectionGuard"])
 OutputGuardrailValidator = _load_engine("output_guardrail_validator", ["OutputGuardrailValidator"])
+SwarmFleetDispatcher = _load_engine("swarm_fleet_dispatcher", ["SwarmFleetDispatcher"])
+ConsolidationSynthesizer = _load_engine("consolidation_synthesizer", ["ConsolidationSynthesizer"])
 
 def cmd_license(args):
     """Manages, mints, installs, and verifies commercial tier licenses."""
@@ -1218,6 +1220,153 @@ def cmd_swarm(args):
             task = m.get("active_task", {}).get("task_name", "Idle")
             pct = m.get("active_task", {}).get("progress_pct", 0)
             print(f"   • [{m.get('health_status'):7}] {m.get('hostname'):22} | {task} ({pct:.0f}%)")
+    elif action == "dispatch":
+        _require_engine(SwarmFleetDispatcher, "swarm_fleet_dispatcher", "swarm dispatch", "Business / Enterprise")
+        print("🐝 Initializing Distributed Swarm Fleet (DEWS) Remote Dispatch...")
+        print(f"   Remote Fleet:   {args.remote}")
+        print(f"   Plan:           {args.plan}")
+        print(f"   Target Module:  {args.target_module}")
+        print(f"   Agent ID:       {args.agent_id}")
+        print(f"   Mock Mode:      {args.mock}")
+        if args.sync_back:
+            print(f"   Sync Back Dest: {args.sync_back}")
+
+        remote = args.remote
+        if remote == "local" or not remote.startswith("http"):
+            dispatcher = SwarmFleetDispatcher.get_instance(REPO_ROOT)
+            print("🚀 Enqueuing plan derivation onto container worker slot...")
+            job_data = dispatcher.dispatch_job(
+                plan_path=args.plan,
+                agent_id=args.agent_id,
+                target_module=args.target_module,
+                prompt=getattr(args, "prompt", "Remote swarm execution"),
+                mock_mode=args.mock
+            )
+            print(f"   Job ID:         {job_data.get('job_id')}")
+            print(f"   Allocated Slot: {job_data.get('worker_slot_id')}")
+            print(f"   Execution Logs:")
+            for log in job_data.get("logs", []):
+                print(f"     {log}")
+
+            if job_data.get("status") == "SUCCESS":
+                dur = job_data.get("duration_ms") or 0.0
+                print(f"✅ Remote Swarm Execution Succeeded in {dur:.1f}ms!")
+                bundle_path = job_data.get("result_bundle_path")
+                if bundle_path:
+                    print(f"   Result Bundle:  {bundle_path}")
+                    print(f"   Bundle SHA256:  {job_data.get('result_bundle_sha256')}")
+                if args.sync_back and bundle_path:
+                    _require_engine(GitBundleTransport, "git_bundle_transport", "sync-back", "Business / Enterprise")
+                    sync_dest = Path(args.sync_back).resolve()
+                    sync_dest.mkdir(parents=True, exist_ok=True)
+                    print(f"📦 Extracting result bundle into sync-back destination: {sync_dest}...")
+                    transport = GitBundleTransport(workspace_root=REPO_ROOT)
+                    extract_res = transport.extract_bundle(
+                        bundle_path=Path(bundle_path),
+                        target_repo_path=sync_dest
+                    )
+                    commit_str = extract_res.head_commit[:8] if extract_res.head_commit else 'N/A'
+                    print(f"✅ Sync-back verified: Branch '{extract_res.target_branch}' unpacked (Commit: {commit_str}).")
+            else:
+                print(f"❌ Remote Swarm Execution Failed: {job_data.get('error_message')}")
+                sys.exit(job_data.get("exit_code") or 1)
+        else:
+            import urllib.request
+            import urllib.error
+            url = remote.rstrip("/")
+            dispatch_url = f"{url}/api/swarm/fleet/dispatch"
+            payload = {
+                "plan_path": args.plan,
+                "target_module": args.target_module,
+                "agent_id": args.agent_id,
+                "prompt": getattr(args, "prompt", "Remote swarm execution"),
+                "mock": args.mock
+            }
+            req = urllib.request.Request(
+                dispatch_url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Content-Type": "application/json"}
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    resp_data = json.loads(resp.read().decode("utf-8"))
+            except Exception as e:
+                print(f"❌ Failed to dispatch to remote fleet at {dispatch_url}: {e}")
+                sys.exit(1)
+
+            job_id = resp_data.get("job_id")
+            slot_id = resp_data.get("worker_slot_id")
+            print(f"🚀 Dispatched to remote fleet. Job ID: {job_id} on Slot: {slot_id}")
+
+            status_url = f"{url}/api/swarm/fleet/jobs/{job_id}"
+            deadline = time.time() + args.timeout
+            final_job = None
+            last_log_count = 0
+            while time.time() < deadline:
+                try:
+                    with urllib.request.urlopen(status_url, timeout=10) as r:
+                        job_wrap = json.loads(r.read().decode("utf-8"))
+                        final_job = job_wrap.get("job") or {}
+                except Exception:
+                    time.sleep(1)
+                    continue
+
+                logs = final_job.get("logs", [])
+                if len(logs) > last_log_count:
+                    for l in logs[last_log_count:]:
+                        print(f"     {l}")
+                    last_log_count = len(logs)
+
+                status = final_job.get("status")
+                if status in ("SUCCESS", "FAILED"):
+                    break
+                time.sleep(1)
+
+            if not final_job or final_job.get("status") != "SUCCESS":
+                err = final_job.get("error_message") if final_job else "Timed out waiting for completion"
+                print(f"❌ Remote execution failed: {err}")
+                sys.exit(1)
+
+            print(f"✅ Remote Swarm Execution Succeeded in {final_job.get('duration_ms', 0):.1f}ms!")
+
+            if args.sync_back:
+                _require_engine(GitBundleTransport, "git_bundle_transport", "sync-back", "Business / Enterprise")
+                bundle_url = f"{url}/api/swarm/fleet/jobs/{job_id}/bundle"
+                sync_dest = Path(args.sync_back).resolve()
+                sync_dest.mkdir(parents=True, exist_ok=True)
+                print(f"📥 Downloading result bundle from {bundle_url}...")
+                tmp_bundle = REPO_ROOT / ".nb" / "workspaces" / "bundles" / f"dl_{job_id}.bundle"
+                tmp_bundle.parent.mkdir(parents=True, exist_ok=True)
+                urllib.request.urlretrieve(bundle_url, str(tmp_bundle))
+                print(f"📦 Extracting result bundle into {sync_dest}...")
+                transport = GitBundleTransport(workspace_root=REPO_ROOT)
+                extract_res = transport.extract_bundle(bundle_path=tmp_bundle, target_repo_path=sync_dest)
+                commit_str = extract_res.head_commit[:8] if extract_res.head_commit else 'N/A'
+                print(f"✅ Sync-back verified: Branch '{extract_res.target_branch}' unpacked (Commit: {commit_str}).")
+    elif action == "consolidate":
+        _require_engine(ConsolidationSynthesizer, "consolidation_synthesizer", "swarm consolidate", "Business / Enterprise")
+        print("🔀 Initializing Topological Consolidation & 3-Way Merge...")
+        print(f"   Worker Branches: {args.branches}")
+        print(f"   Target Branch:   {args.target_branch}")
+        print(f"   Author Agent:    {args.author_agent}")
+        synthesizer = ConsolidationSynthesizer(REPO_ROOT)
+        target_b = getattr(args, "target_branch", "integration")
+        res = synthesizer.consolidate_branches(
+            branches=args.branches,
+            target_integration_branch=target_b
+        )
+        if res.status == "SUCCESS":
+            print(f"✅ Consolidation Succeeded!")
+            print(f"   Merged Branches: {', '.join(res.merged_branches)}")
+            print(f"   Merge Commit:    {res.merkle_block_hash}")
+            print(f"   Merkle Block ID: {res.merkle_block_id}")
+            if res.consolidated_bundle_path:
+                print(f"   Result Bundle:   {res.consolidated_bundle_path}")
+        else:
+            print(f"❌ Consolidation Failed: {res.error_message}")
+            if res.violations:
+                print(f"   Breaking Contracts: {res.violations}")
+            sys.exit(1)
 
 
 
@@ -1640,6 +1789,23 @@ def main():
     # swarm fleet
     p_sw_flt = p_swarm_subs.add_parser("fleet", help="Inspect distributed workstation and node fleet metrics")
     p_sw_flt.add_argument("--simulate-pulse", action="store_true", help="Inject simulated pulse with +50k tokens")
+
+    # swarm dispatch (DEWS remote fleet)
+    p_sw_disp = p_swarm_subs.add_parser("dispatch", help="Dispatch plan derivation to distributed container fleet (DEWS)")
+    p_sw_disp.add_argument("--remote", default="local", help="Remote fleet HTTP URL or 'local'")
+    p_sw_disp.add_argument("--plan", required=True, help="Path to .nb/plan/ specification")
+    p_sw_disp.add_argument("--target-module", default="workplace", help="Target module to modify")
+    p_sw_disp.add_argument("--agent-id", default="agent_percipience_swarm", help="Unique agent identifier")
+    p_sw_disp.add_argument("--prompt", default="Execute distributed plan derivation", help="Prompt or task instructions")
+    p_sw_disp.add_argument("--sync-back", help="Target worktree path to extract verified result bundle into")
+    p_sw_disp.add_argument("--mock", action="store_true", help="Run in mock/simulation container mode")
+    p_sw_disp.add_argument("--timeout", type=int, default=120, help="Polling timeout in seconds")
+
+    # swarm consolidate
+    p_sw_cons = p_swarm_subs.add_parser("consolidate", help="Perform topological 3-way merge consolidation of completed worker branches")
+    p_sw_cons.add_argument("--branches", nargs="+", required=True, help="List of worker git branches to consolidate")
+    p_sw_cons.add_argument("--target-branch", default="integration", help="Integration target branch")
+    p_sw_cons.add_argument("--author-agent", default="agent_consolidation_synthesizer", help="Agent identifier")
     p_swarm.set_defaults(func=cmd_swarm)
 
     # hitl
