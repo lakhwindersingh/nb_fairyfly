@@ -22,7 +22,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 class TestPlanBundleImports:
 
     @pytest.fixture(scope="class")
-    def packaged_bundles(self):
+    @classmethod
+    def packaged_bundles(cls):
         """Generates temporary packaged bundles for Free, Team, and Business tiers."""
         from core.commercial_packager_provisioner import CommercialPackagerProvisioner
 

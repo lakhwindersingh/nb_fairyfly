@@ -223,7 +223,8 @@ class TestPortalServerEndpointsAndUI:
     """Validates TODO-DEWS-04 & TODO-DEWS-08: Portal server REST API and Dashboard Tab."""
 
     @pytest.fixture(scope="class")
-    def portal_server(self):
+    @classmethod
+    def portal_server(cls):
         from workplace.portal.server import PortalRequestHandler
         server = ThreadingHTTPServer(("127.0.0.1", 9005), PortalRequestHandler)
         t = threading.Thread(target=server.serve_forever, daemon=True)

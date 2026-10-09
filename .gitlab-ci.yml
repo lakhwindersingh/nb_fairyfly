@@ -3,7 +3,7 @@ stages:
 
 percipience_gatekeeper:
   stage: verify
-  image: python:3.11-slim
+  image: python:3.14-slim
   variables:
     PERCIPIENCE_API_URL: "https://percipience.corp.internal/api/v1"
     GIT_DEPTH: "0"
