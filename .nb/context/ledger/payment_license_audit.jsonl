@@ -1,0 +1,1 @@
+{"timestamp": "2026-10-08T16:45:03.877278+00:00", "event": "POST_PAYMENT_LICENSE_SELF_GENERATED", "payment_id": "ch_stripe_test_8849", "tenant_id": "tenant_portal_paid", "tier": "plan_business", "license_id": "lic_plan_business_d72703e9376b", "signature": "321aad635dca3223bca25080ef9715e81f42e02fb1522bfda8306cabdbf0edf2"}

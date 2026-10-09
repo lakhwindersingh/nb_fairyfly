@@ -635,10 +635,17 @@ def cmd_egress(args):
         print(f"   Injected Env: {list(wrapped['env'].keys())}")
 
     elif action == "list":
-        records = WORMEgressManager.get_audit_trail(REPO_ROOT)
+        if hasattr(WORMEgressManager, "get_audit_trail"):
+            records = WORMEgressManager.get_audit_trail(REPO_ROOT)
+        else:
+            records = WORMEgressManager.list_egress_records(REPO_ROOT)
         print(f"📋 Immutable WORM Cloud Audit Trail ({len(records)} blocks):")
         for r in records:
-            print(f"   • Block {r['block_id']}: {r['object_key']} -> {r['vault_id']} ({r['cloud_target']})")
+            b_id = r.get("block_id", "N/A")
+            obj = r.get("object_key") or (f"block_{b_id:06d}" if isinstance(b_id, int) else f"block_{b_id}")
+            vault = r.get("vault_id") or r.get("vault_uri", "N/A")
+            target = r.get("cloud_target") or r.get("provider", "local")
+            print(f"   • Block {b_id}: {obj} -> {vault} ({target})")
 
 def cmd_daemon(args):
     _require_engine(TreeSitterDaemonClient, "tree_sitter_daemon", "daemon", "Free / Team / Business / Enterprise")

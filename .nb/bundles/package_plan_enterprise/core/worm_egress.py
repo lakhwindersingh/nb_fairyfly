@@ -43,13 +43,15 @@ class WORMEgressManager:
         aws_bucket = os.environ.get("PERCIPIENCE_WORM_S3_BUCKET")
         gcp_bucket = os.environ.get("PERCIPIENCE_WORM_GCS_BUCKET")
 
+        object_key = f"merkle_blocks/block_{block_id:06d}_{block_hash[:16]}.json"
+
         if cloud_target == "aws" or (cloud_target == "auto" and aws_bucket):
             provider = "AWS_S3_OBJECT_LOCK"
-            vault_uri = f"s3://{aws_bucket or 'percipience-prod-worm-ledger'}/merkle_blocks/block_{block_id:06d}_{block_hash[:16]}.json"
+            vault_uri = f"s3://{aws_bucket or 'percipience-prod-worm-ledger'}/{object_key}"
             compliance_mode = "COMPLIANCE"
         elif cloud_target == "gcp" or (cloud_target == "auto" and gcp_bucket):
             provider = "GCP_GCS_RETENTION"
-            vault_uri = f"gs://{gcp_bucket or 'percipience-prod-worm-ledger'}/merkle_blocks/block_{block_id:06d}_{block_hash[:16]}.json"
+            vault_uri = f"gs://{gcp_bucket or 'percipience-prod-worm-ledger'}/{object_key}"
             compliance_mode = "LOCKED_RETENTION"
         else:
             provider = "LOCAL_WORM_VAULT_EMULATION"
@@ -82,7 +84,12 @@ class WORMEgressManager:
             "merkle_root": merkle_root,
             "provider": provider,
             "vault_uri": vault_uri,
+            "vault_id": vault_uri,
+            "object_key": object_key,
+            "cloud_target": cloud_target,
             "compliance_mode": compliance_mode,
+            "retention_mode": compliance_mode,
+            "legal_hold": True,
             "retention_days": retention_days,
             "egress_timestamp": timestamp,
             "status": "MIRRORED_IMMUTABLE"
@@ -110,3 +117,8 @@ class WORMEgressManager:
                 return data.get("egress_records", [])
             except Exception:
                 return []
+
+    @classmethod
+    def get_audit_trail(cls, workspace_root: Path) -> List[Dict[str, Any]]:
+        """Alias for list_egress_records providing audit trail querying."""
+        return cls.list_egress_records(workspace_root)
