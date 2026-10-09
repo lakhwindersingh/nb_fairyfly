@@ -60,6 +60,12 @@ class SlashCommandResult:
     audit_record: Dict[str, Any] = field(default_factory=dict)
 
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
+
 class GitOpsPRBot:
     """
     Interactive GitOps PR Bot managing CI/CD gatekeeper status reporting,
@@ -69,12 +75,14 @@ class GitOpsPRBot:
     def __init__(
         self,
         repo_root: Optional[Path] = None,
-        preview_domain: str = "preview.percipience.internal",
-        platform: str = "github"
+        preview_domain: Optional[str] = None,
+        platform: Optional[str] = None
     ):
         self.repo_root = Path(repo_root or os.getcwd()).resolve()
-        self.preview_domain = preview_domain
-        self.platform = platform
+        def_preview = config.get_str("gitops.preview_domain", "preview.percipience.internal") if config else "preview.percipience.internal"
+        def_platform = config.get_str("gitops.default_platform", "github") if config else "github"
+        self.preview_domain = preview_domain or os.environ.get("PERCIPIENCE_PREVIEW_DOMAIN", def_preview)
+        self.platform = platform or os.environ.get("PERCIPIENCE_VCS_PLATFORM", def_platform)
         self.audit_file = self.repo_root / ".nb" / "context" / "ledger" / "gitops_bot_audit.jsonl"
         self.audit_file.parent.mkdir(parents=True, exist_ok=True)
 

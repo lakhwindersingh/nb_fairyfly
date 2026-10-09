@@ -8890,11 +8890,16 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json({"error": "Not Found"}, 404)
 
-def run_server(port: int = 3000, host: Optional[str] = None):
-    bind_host = host or os.environ.get("PORTAL_HOST", "0.0.0.0")
-    server_address = (bind_host, port)
+def run_server(port: Optional[int] = None, host: Optional[str] = None):
+    try:
+        from core.config_manager import config
+    except (ImportError, ModuleNotFoundError):
+        config = None
+    target_port = port or (config.get_int("portal.port", 3000) if config else int(os.environ.get("PORTAL_PORT", "3000")))
+    bind_host = host or (config.get_str("portal.host", "0.0.0.0") if config else os.environ.get("PORTAL_HOST", "0.0.0.0"))
+    server_address = (bind_host, target_port)
     httpd = HTTPServer(server_address, PortalRequestHandler)
-    print(f"🌍 Percipience Cloud SaaS Portal running at http://localhost:{port}/ (bound to {bind_host}:{port})")
+    print(f"🌍 Percipience Cloud SaaS Portal running at http://localhost:{target_port}/ (bound to {bind_host}:{target_port})")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -8902,5 +8907,5 @@ def run_server(port: int = 3000, host: Optional[str] = None):
         httpd.server_close()
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 3000
-    run_server(port)
+    cli_port = int(sys.argv[1]) if len(sys.argv) > 1 else None
+    run_server(cli_port)

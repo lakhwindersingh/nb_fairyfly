@@ -38,9 +38,10 @@ def compile_kotlin_sources():
         return
 
     kotlinc_candidates = [
-        Path("/Users/lakhwinder/Applications/IntelliJ IDEA.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+        Path(os.environ.get("KOTLINC_PATH", "")) if os.environ.get("KOTLINC_PATH") else None,
+        Path.home() / "Applications/IntelliJ IDEA.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc",
         Path("/Applications/IntelliJ IDEA.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
-        Path("/Users/lakhwinder/Applications/PyCharm.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
+        Path.home() / "Applications/PyCharm.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc",
         Path("/Applications/PyCharm.app/Contents/plugins/Kotlin/kotlinc/bin/kotlinc"),
     ]
     which_kotlinc = shutil.which("kotlinc")
@@ -59,9 +60,10 @@ def compile_kotlin_sources():
 
     idea_root = None
     for cand_root in [
-        Path("/Users/lakhwinder/Applications/IntelliJ IDEA.app/Contents"),
+        Path(os.environ.get("IDEA_HOME", "")) if os.environ.get("IDEA_HOME") else None,
+        Path.home() / "Applications/IntelliJ IDEA.app/Contents",
         Path("/Applications/IntelliJ IDEA.app/Contents"),
-        Path("/Users/lakhwinder/Applications/PyCharm.app/Contents"),
+        Path.home() / "Applications/PyCharm.app/Contents",
         Path("/Applications/PyCharm.app/Contents"),
     ]:
         if cand_root.is_dir():

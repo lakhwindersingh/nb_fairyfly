@@ -96,6 +96,42 @@ uv pip install -r requirements.txt
 ```
 
 
+### Platform Configuration & Externalization (`.nb/config/platform_config.yaml`)
+
+To avoid hardcoded operational constants and provide flexible management across developer workstations, staging nodes, and air-gapped enterprise enclaves, Percipience centralizes all configurable parameters into [`platform_config.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/config/platform_config.yaml).
+
+#### Resolution Precedence
+1. **Explicit CLI Flags** (e.g. `--ttl 1800`, `--port 8080`)
+2. **Environment Variables**: `PERCIPIENCE_*` prefix matching dot-notated keys (e.g. `PERCIPIENCE_PORTAL_PORT=8080`, `PERCIPIENCE_WORKTREE_DEFAULT_TTL_SECONDS=7200`) or standard aliases (`PORTAL_PORT`, `PORTAL_HOST`, `OTEL_SERVICE_NAME`)
+3. **YAML Configuration File**: [`.nb/config/platform_config.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/config/platform_config.yaml)
+4. **Built-in Safe Fallback Defaults**: Zero-config execution out of the box
+
+#### Key Configuration Subsystems
+| Configuration Key | Environment Variable | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `portal.port` | `PORTAL_PORT` / `PERCIPIENCE_PORTAL_PORT` | `3000` | SaaS Portal HTTP port |
+| `portal.host` | `PORTAL_HOST` / `PERCIPIENCE_PORTAL_HOST` | `0.0.0.0` | SaaS Portal bind host |
+| `daemon.endpoint_url` | `PERCIPIENCE_DAEMON_URL` | `http://127.0.0.1:8585` | High-speed Tree-Sitter daemon endpoint |
+| `redis.url` | `PERCIPIENCE_REDIS_URL` | `redis://localhost:6379/0` | Redlock distributed lock cluster URL |
+| `worktree.default_ttl_seconds` | `PERCIPIENCE_WORKTREE_DEFAULT_TTL_SECONDS` | `3600` | Ephemeral worktree lease timeout |
+| `merkle.auto_checkpoint_threshold` | `PERCIPIENCE_MERKLE_CHECKPOINT_THRESHOLD` | `50` | Ledger epoch rollover checkpoint frequency |
+| `cicd.healing_max_retries` | `PERCIPIENCE_HEAL_MAX_RETRIES` | `3` | Maximum autonomous healing attempts |
+| `token_optimization.performance_rev_share_pct` | `PERCIPIENCE_REV_SHARE_PCT` | `15.0` | FinOps performance fee percentage |
+| `sandbox.default_runtime` | `PERCIPIENCE_SANDBOX_RUNTIME` | `auto` | MicroVM sandbox runtime (`auto`, `firecracker`, `gvisor`, `process_jail`) |
+| `oidc.issuer_url` | `PERCIPIENCE_OIDC_ISSUER` | `https://auth.percipience.internal` | OIDC workload identity token issuer |
+| `otel.service_name` | `OTEL_SERVICE_NAME` | `percipience-context-os` | OpenTelemetry distributed trace service name |
+
+Inspect active configuration at any time:
+```bash
+# View complete active configuration
+./.nb/bin/percipience config show
+
+# Query a specific configuration value
+./.nb/bin/percipience config get portal.port
+./.nb/bin/percipience config get daemon.endpoint_url
+```
+
+
 The workspace operates in one of two standardized modes configured in `context/ledger/context_ledger.yaml`:
 - **`single_module`**: Flat layout (`workplace/src/` and `workplace/config/`). Best for standalone libraries, single-page apps, or microservices.
 - **`multi_module`**: Poly-module layout (`workplace/modules/<module_id>/`, `workplace/shared/`, `context/contracts/`). Best for multi-system platforms (e.g., Cloud SaaS + Onboarding + Billing + Observability).
@@ -627,3 +663,5 @@ percipience_gatekeeper:
 | `./.nb/bin/percipience egress mirror --block-id <id>` | Mirror sealed Merkle block to immutable WORM vault (AWS S3 Compliance / GCP Retention / Local). |
 | `./.nb/bin/percipience egress list` | Inspect immutable WORM cloud egress audit trail. |
 | `./start_portal.sh [port]` | Launch the interactive Cloud SaaS Portal and API Gateway locally. |
+| `./.nb/bin/percipience config show` | Display all externalized configuration parameters from `.nb/config/platform_config.yaml`. |
+| `./.nb/bin/percipience config get <key>` | Query a specific configuration parameter by dot-notated key path. |

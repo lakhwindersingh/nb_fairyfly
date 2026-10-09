@@ -38,16 +38,24 @@ class CloudCredentialResult:
         return asdict(self)
 
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
+
 class OIDCAuthenticator:
     """Manages OIDC token minting, verification, and cloud workload identity federation."""
 
-    DEFAULT_ISSUER = "https://auth.percipience.internal"
+    DEFAULT_ISSUER = config.get_str("oidc.issuer_url", "https://auth.percipience.internal") if config else os.environ.get("PERCIPIENCE_OIDC_ISSUER", "https://auth.percipience.internal")
 
     def __init__(self, workspace_root: Optional[Path] = None):
         self.workspace_root = workspace_root or REPO_ROOT
-        self.keys_dir = self.workspace_root / ".nb" / "context" / "oidc_keys"
+        keys_cfg = config.get_str("oidc.keys_dir", ".nb/context/oidc_keys") if config else os.environ.get("PERCIPIENCE_OIDC_KEYS_DIR", ".nb/context/oidc_keys")
+        self.keys_dir = self.workspace_root / keys_cfg
         self.keys_dir.mkdir(parents=True, exist_ok=True)
-        self.audit_log_path = self.workspace_root / ".nb" / "context" / "ledger" / "oidc_exchange_audit.jsonl"
+        audit_cfg = config.get_str("oidc.audit_log_path", ".nb/context/ledger/oidc_exchange_audit.jsonl") if config else os.environ.get("PERCIPIENCE_OIDC_AUDIT_LOG_PATH", ".nb/context/ledger/oidc_exchange_audit.jsonl")
+        self.audit_log_path = self.workspace_root / audit_cfg
         self.audit_log_path.parent.mkdir(parents=True, exist_ok=True)
 
         self._private_key, self._public_key = self._load_or_generate_keypair()

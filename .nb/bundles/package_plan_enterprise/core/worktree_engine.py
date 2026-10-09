@@ -46,7 +46,12 @@ class RedisRedlockBackend:
     """
 
     def __init__(self, redis_url: Optional[str] = None, redis_urls: Optional[List[str]] = None):
-        primary_url = redis_url or os.environ.get("PERCIPIENCE_REDIS_URL", "redis://localhost:6379/0")
+        try:
+            from core.config_manager import config
+        except (ImportError, ModuleNotFoundError):
+            config = None
+        def_redis = config.get_str("redis.url", "redis://localhost:6379/0") if config else "redis://localhost:6379/0"
+        primary_url = redis_url or os.environ.get("PERCIPIENCE_REDIS_URL", def_redis)
         self.node_urls = redis_urls or [primary_url]
         self._pools = []
         self._clients = []
@@ -196,6 +201,12 @@ class WorktreeEngine:
 
     @classmethod
     def acquire(cls, workspace_root: Path, agent_id: str, base_branch: str = "main", ttl_seconds: int = 3600, use_redis: bool = False) -> Dict[str, Any]:
+        try:
+            from core.config_manager import config
+        except (ImportError, ModuleNotFoundError):
+            config = None
+        if ttl_seconds == 3600 and config:
+            ttl_seconds = config.get_int("worktree.default_ttl_seconds", 3600)
         wt_dir = workspace_root / ".nb" / "workspaces" / f"wt_{agent_id}"
         branch_name = f"wt_branch_{agent_id}"
         lease_path = cls._lease_file(workspace_root)

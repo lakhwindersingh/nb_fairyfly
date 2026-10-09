@@ -35,17 +35,22 @@ class SandboxRuntime(str, Enum):
     AUTO = "auto"
 
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
 @dataclass
 class SandboxConfig:
-    runtime: str = "auto"
-    memory_limit_mb: int = 512
-    vcpu_count: int = 2
-    timeout_seconds: int = 30
-    read_only_root: bool = True
-    network_egress: bool = False
+    runtime: str = field(default_factory=lambda: config.get_str("sandbox.default_runtime", "auto") if config else os.environ.get("PERCIPIENCE_SANDBOX_RUNTIME", "auto"))
+    memory_limit_mb: int = field(default_factory=lambda: config.get_int("sandbox.memory_limit_mb", 512) if config else int(os.environ.get("PERCIPIENCE_SANDBOX_MEMORY_MB", "512")))
+    vcpu_count: int = field(default_factory=lambda: config.get_int("sandbox.vcpu_count", 2) if config else int(os.environ.get("PERCIPIENCE_SANDBOX_VCPU_COUNT", "2")))
+    timeout_seconds: int = field(default_factory=lambda: config.get_int("sandbox.timeout_seconds", 30) if config else int(os.environ.get("PERCIPIENCE_SANDBOX_TIMEOUT_SEC", "30")))
+    read_only_root: bool = field(default_factory=lambda: config.get_bool("sandbox.read_only_root", True) if config else os.environ.get("PERCIPIENCE_SANDBOX_READONLY", "true").lower() in ("true", "1", "yes"))
+    network_egress: bool = field(default_factory=lambda: config.get_bool("sandbox.network_egress", False) if config else os.environ.get("PERCIPIENCE_SANDBOX_NETWORK_EGRESS", "false").lower() in ("true", "1", "yes"))
     env_vars: Dict[str, str] = field(default_factory=dict)
-    wasm_engine: str = "wasmtime"
-    kernel_image: Optional[str] = None
+    wasm_engine: str = field(default_factory=lambda: config.get_str("sandbox.wasm_engine", "wasmtime") if config else os.environ.get("PERCIPIENCE_WASM_ENGINE", "wasmtime"))
+    kernel_image: Optional[str] = field(default_factory=lambda: config.get("sandbox.kernel_image", None) if config else os.environ.get("PERCIPIENCE_KERNEL_IMAGE", None))
 
 
 @dataclass

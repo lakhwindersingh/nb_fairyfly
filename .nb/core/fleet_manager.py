@@ -1,3 +1,5 @@
+import socket
+import getpass
 #!/usr/bin/env python3
 """
 Enterprise Fleet Coordinator & FinOps Aggregator (TODO-PRT-07, 08, 09, 10 / CAP-43)
@@ -73,15 +75,15 @@ class FleetManager:
         self.machines = {
             "node_mac_lakhwinder": {
                 "machine_id": "node_mac_lakhwinder",
-                "hostname": "macbook-pro.local",
+                "hostname": os.environ.get("PERCIPIENCE_FLEET_HOSTNAME", socket.gethostname() if "socket" in globals() else "macbook-pro.local"),
                 "os_name": "macOS",
                 "os_version": "Darwin 24.1.0",
-                "user_id": "lakhwinder",
+                "user_id": os.environ.get("PERCIPIENCE_USER_ID", os.environ.get("USER", "lakhwinder")),
                 "org_id": "org_enterprise",
                 "project_id": "proj_fairyfly",
                 "health_status": "HEALTHY",
                 "last_seen_utc": now,
-                "workspace_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly",
+                "workspace_path": os.environ.get("PERCIPIENCE_WORKSPACE_PATH", str(Path.cwd())),
                 "active_worktree": "wt_branch_worker_1",
                 "git_branch": "feature/dews-fleet",
                 "git_commit": "ce77d0d3c21c",

@@ -3,7 +3,7 @@
 # Provides isolated, multi-runtime environment for LLM CLIs (Claude, Aider)
 # running on ephemeral Git worktrees with defense-in-depth isolation.
 # =============================================================================
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive

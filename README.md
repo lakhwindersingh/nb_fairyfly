@@ -178,6 +178,10 @@ The unified Percipience CLI (`.nb/bin/percipience`) serves as the central comman
 
 # 11. Compile and seal Ed25519-signed .nbpack layer envelope
 ./.nb/bin/percipience layer pack --plan .nb/plan/l1/intellij-pycharm-plugin/concise.md --output .nb/bundles/intellij_pycharm_plugin_domain.nbpack
+
+# 12. Inspect and manage externalized platform configuration (.nb/config/platform_config.yaml)
+./.nb/bin/percipience config show
+./.nb/bin/percipience config get portal.port
 ```
 
 ---

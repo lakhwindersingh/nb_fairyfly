@@ -4,6 +4,7 @@ Emits W3C-compliant distributed trace spans with standardized GenAI semantic att
 (gen_ai.system, gen_ai.request.model, gen_ai.usage.input_tokens, TTFT) to enterprise APMs.
 """
 
+import os
 import time
 import uuid
 import json
@@ -21,8 +22,13 @@ class OpenTelemetryGenAIExporter:
 
     SPANS_LOG_PATH = (REPO_ROOT / ".nb" / "context" / "ledger" / "otel_spans.jsonl" if (REPO_ROOT / ".nb" / "context").exists() else REPO_ROOT / "context" / "ledger" / "otel_spans.jsonl")
 
-    def __init__(self, service_name: str = "percipience-context-os"):
-        self.service_name = service_name
+    def __init__(self, service_name: Optional[str] = None):
+        try:
+            from core.config_manager import config
+        except (ImportError, ModuleNotFoundError):
+            config = None
+        def_svc = config.get_str("otel.service_name", "percipience-context-os") if config else "percipience-context-os"
+        self.service_name = service_name or os.environ.get("OTEL_SERVICE_NAME", def_svc)
         self.active_spans: Dict[str, Dict[str, Any]] = {}
         self.completed_spans: List[Dict[str, Any]] = []
 

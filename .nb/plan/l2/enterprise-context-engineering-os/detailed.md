@@ -550,6 +550,14 @@ percipience run --workflow wf_enterprise_pr_gate --dry-run
 
 ---
 
+### 4.9. Centralized Platform Configuration & Zero-Dial Externalization Engine
+
+To eliminate brittle hardcoded constants across multi-cloud environments, container swarms, and CI/CD pipelines, Percipience implements a centralized configuration hierarchy:
+- **Canonical Configuration**: [`.nb/config/platform_config.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/config/platform_config.yaml) manages all platform settings (ports, URLs, Redis connections, worktree TTLs, Merkle checkpoints, healing retry SLAs, model pricing rates, MicroVM memory ceilings, and OIDC federation endpoints).
+- **Resolution Precedence**: Process Environment Variables (`PERCIPIENCE_*` and legacy aliases) override YAML configurations, which in turn override safe internal fallbacks.
+- **Unified Engine**: Implemented via [`core.config_manager.ConfigManager`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/config_manager.py) with dot-notated queries, type-safe getters (`get_int`, `get_bool`, `get_float`), and dynamic runtime reloads.
+- **Operator Introspection**: Operators can inspect active runtime configuration using `.nb/bin/percipience config show` and query individual keys via `.nb/bin/percipience config get <key>`.
+
 ### 5.3. Multi-Tenant Workspace Bootstrap, Management & Interaction Lifecycle Architecture
 
 In an enterprise multi-tenant deployment, client organizations, human engineers, and autonomous agent swarms interact with Percipience across four coordinated lifecycle phases:

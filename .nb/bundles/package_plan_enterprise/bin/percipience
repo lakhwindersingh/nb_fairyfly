@@ -49,6 +49,11 @@ else:
     REPO_ROOT = current_p.parents[1]
 
 # Dynamic, plan-aware core engine loader
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
 AVAILABLE_ENGINES = {}
 
 def _load_engine(module_name: str, class_names: list):
@@ -649,6 +654,27 @@ def cmd_egress(args):
             vault = r.get("vault_id") or r.get("vault_uri", "N/A")
             target = r.get("cloud_target") or r.get("provider", "local")
             print(f"   • Block {b_id}: {obj} -> {vault} ({target})")
+
+def cmd_config(args):
+    """Inspect or retrieve externalized platform configuration values."""
+    action = args.config_action
+    if action == "show":
+        import yaml
+        print("\U0001f527 Percipience Platform Configuration (.nb/config/platform_config.yaml):\n")
+        if config and config._config_data:
+            print(yaml.dump(config._config_data, default_flow_style=False, sort_keys=False))
+        else:
+            print("{}\n(No configuration file loaded, using built-in defaults)")
+    elif action == "get":
+        val = config.get(args.key) if config else None
+        if val is None:
+            print(f"Key \x27{args.key}\x27 not found in configuration.")
+            sys.exit(1)
+        if isinstance(val, (dict, list)):
+            import yaml
+            print(yaml.dump(val, default_flow_style=False))
+        else:
+            print(val)
 
 def cmd_daemon(args):
     _require_engine(TreeSitterDaemonClient, "tree_sitter_daemon", "daemon", "Free / Team / Business / Enterprise")
@@ -2381,6 +2407,14 @@ def main():
     p_oidc_exch.add_argument("--role", required=True, help="Target role ARN or Workload Identity pool")
     p_oidc_aud = p_oidc_subs.add_parser("audit", help="View OIDC credential exchange audit trail")
     p_oidc.set_defaults(func=cmd_oidc)
+
+    # config
+    p_cfg = subparsers.add_parser("config", help="Manage externalized platform configuration (.nb/config/platform_config.yaml)")
+    p_cfg_subs = p_cfg.add_subparsers(dest="config_action", required=True)
+    p_cfg_show = p_cfg_subs.add_parser("show", help="Display all active configuration values")
+    p_cfg_get = p_cfg_subs.add_parser("get", help="Get a specific configuration value by key path")
+    p_cfg_get.add_argument("key", help="Dot-notated key path (e.g. portal.port, daemon.endpoint_url)")
+    p_cfg.set_defaults(func=cmd_config)
 
     args = parser.parse_args()
     if not args.subcommand:

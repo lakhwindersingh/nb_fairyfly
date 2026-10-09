@@ -25,12 +25,18 @@ except ImportError:
     SafeDumper = None
 
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
+
 class MerkleEngine:
     """Computes Merkle trees and manages ledger chain state transitions."""
 
-    AUTO_CHECKPOINT_THRESHOLD = 50
-    RETAIN_ACTIVE_BLOCKS = 25
-    RETAIN_ACTIVE_RECOVERY_POINTS = 20
+    AUTO_CHECKPOINT_THRESHOLD = config.get_int("merkle.auto_checkpoint_threshold", 50) if config else int(os.environ.get("PERCIPIENCE_MERKLE_CHECKPOINT_THRESHOLD", "50"))
+    RETAIN_ACTIVE_BLOCKS = config.get_int("merkle.retain_active_blocks", 25) if config else int(os.environ.get("PERCIPIENCE_MERKLE_RETAIN_BLOCKS", "25"))
+    RETAIN_ACTIVE_RECOVERY_POINTS = config.get_int("merkle.retain_active_recovery_points", 20) if config else int(os.environ.get("PERCIPIENCE_MERKLE_RETAIN_RECOVERY_POINTS", "20"))
 
     @staticmethod
     def atomic_write_data(file_path: Path, data: Dict[str, Any]) -> str:

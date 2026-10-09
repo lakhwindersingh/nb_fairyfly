@@ -31,6 +31,11 @@ sys.path.insert(0, str(REPO_ROOT / "workplace"))
 
 from core.ast_optimizer import ASTOptimizer
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
 DEFAULT_MODEL_RATES = {
     "claude-3-5-sonnet-20241022": {
         "input_per_mtok": 3.00,
@@ -48,6 +53,10 @@ DEFAULT_MODEL_RATES = {
         "output_per_mtok": 10.00,
     }
 }
+if config:
+    cfg_rates = config.get_dict("token_optimization.pricing_rates")
+    if cfg_rates:
+        DEFAULT_MODEL_RATES.update(cfg_rates)
 
 
 class TokenTracker:
@@ -70,7 +79,7 @@ class TokenTracker:
             default_ledger = {
                 "version": "1.0.0",
                 "last_updated": datetime.now(timezone.utc).isoformat(),
-                "performance_rev_share_pct": 15.0,
+                "performance_rev_share_pct": config.get_float("token_optimization.performance_rev_share_pct", 15.0) if config else float(os.environ.get("PERCIPIENCE_REV_SHARE_PCT", "15.0")),
                 "summary": {
                     "total_events": 0,
                     "total_uncompressed_tokens": 0,

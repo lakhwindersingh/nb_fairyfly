@@ -5,7 +5,9 @@
 
 set -e
 
-PORT="${1:-3000}"
+PORT="${1:-${PORTAL_PORT:-3000}}"
+HOST="${PORTAL_HOST:-0.0.0.0}"
+LOG_LEVEL="${PORTAL_LOG_LEVEL:-info}"
 
 # Set required environment variables
 export PYTHONPATH=".:.nb:.nb/core:workplace:workplace/core"
@@ -50,10 +52,10 @@ echo "🔄 Starting FastAPI server with uvicorn..."
 echo ""
 
 cd workplace/portal && uvicorn server:app \
-    --host 0.0.0.0 \
-    --port $PORT \
+    --host "$HOST" \
+    --port "$PORT" \
     --reload \
     --reload-dir . \
     --reload-dir ../core \
     --reload-dir ../../.nb/core \
-    --log-level info
+    --log-level "$LOG_LEVEL"

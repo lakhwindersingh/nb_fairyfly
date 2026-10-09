@@ -5,7 +5,7 @@ import os
 import hashlib
 from datetime import datetime
 
-BEEHIVE_ROOT = "/Users/lakhwinder/PycharmProjects/nb_beehive"
+BEEHIVE_ROOT = os.environ.get("BEEHIVE_ROOT", os.path.expanduser("~/PycharmProjects/nb_beehive"))
 
 # 1. Base Plan: performance-ledger/detailed.md
 PERF_LEDGER_DETAILED = """---
