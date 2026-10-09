@@ -430,7 +430,13 @@ class HandoffValidator:
 
         ws = _resolve_repo_root(workspace_root)
         try:
-            from .agent_plugin_engine import AgentPluginEngine
+            try:
+                from .agent_plugin_engine import AgentPluginEngine
+            except (ImportError, ValueError):
+                try:
+                    from core.agent_plugin_engine import AgentPluginEngine
+                except ImportError:
+                    from agent_plugin_engine import AgentPluginEngine
             installed = AgentPluginEngine.list_agents(workspace_root=ws)
             if any(a.get("agent_id") == agent_id for a in installed):
                 return True

@@ -107,7 +107,7 @@ class CommercialPackagerProvisioner:
                 "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
                 "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py",
-                "otel_exporter.py", "context_gateway.py"
+                "otel_exporter.py", "context_gateway.py", "swarm_fleet_dispatcher.py", "consolidation_synthesizer.py"
             },
             "allow_nbpack_compilation": True,
             "allow_custom_agent_creation": True,
@@ -133,6 +133,10 @@ class CommercialPackagerProvisioner:
         config_path = workspace_root / ".nb" / "config" / "billing_plans.yaml"
         if not config_path.exists():
             config_path = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "config" / "billing_plans.yaml"
+        if not config_path.exists():
+            repo_candidate = Path(__file__).resolve().parents[2] / ".nb" / "config" / "billing_plans.yaml"
+            if repo_candidate.exists():
+                config_path = repo_candidate
         if config_path.exists():
             try:
                 return yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}

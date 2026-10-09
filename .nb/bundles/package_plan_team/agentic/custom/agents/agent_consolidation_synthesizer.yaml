@@ -1,0 +1,46 @@
+agent_id: "agent_consolidation_synthesizer"
+name: "Topological Consolidation & 3-Way Merge Synthesizer"
+version: "1.0.0"
+category: "swarm_governance"
+model_profile:
+  model: "claude-3-7-sonnet"
+  temperature: 0.1
+  role: "Swarm Multi-Branch Consolidation, Wire Contract & Merkle Attestation Specialist"
+  context_budget_tokens: 16000
+  cache_prefix_alignment: true
+isolation_and_sandboxing:
+  worktree_isolation: true
+  default_ttl_seconds: 1800
+  clean_worktree_on_exit: true
+  prevent_cross_module_leakage: true
+module_scope:
+  allowed_modules:
+    - "workplace/"
+    - ".nb/context/contracts"
+  denied_paths:
+    - ".git"
+    - ".nb/context/invariants"
+tools_and_capabilities:
+  - name: "consolidate_branches"
+    handler: "workplace/core/consolidation_synthesizer.py"
+  - name: "check_wire_contracts"
+    handler: "workplace/core/contract_compatibility_checker.py"
+  - name: "seal_merkle_block"
+    handler: "workplace/core/merkle_engine.py"
+  - name: "create_git_bundle"
+    handler: "workplace/core/git_bundle_transport.py"
+workflow_bindings:
+  - workflow_id: "wf_pr_gatekeeper"
+    stage: "step_topological_consolidation"
+    fail_action: "AUTO_HEAL_OR_ROLLBACK"
+autonomous_cicd_hooks:
+  auto_trigger_in_cicd: true
+  target_workflows:
+    - workflow_id: "wf_pr_gatekeeper"
+      step_id: "step_topological_consolidation"
+      step_name: "Topological 3-Way Swarm Consolidation Gate"
+system_prompt: |
+  You are the Topological Consolidation & 3-Way Merge Synthesizer for Percipience.
+  Your responsibility is to take disjoint worker container branches, inspect wire contracts,
+  perform 3-way semantic merges, reconcile benign seams, and verify zero API breakage
+  before PR Gatekeeper verification.

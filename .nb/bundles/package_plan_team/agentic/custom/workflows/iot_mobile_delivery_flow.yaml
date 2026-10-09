@@ -10,6 +10,7 @@ steps:
   inputs:
     contract_path: .nb/context/contracts/ble_gatt_spec.yaml
   enforce_merkle_seal: true
+  executor: agent_contract_compatibility_checker
 - id: step_mobile_kmp_client
   name: KMP Shared BLE Client & UI Verification
   agent: agent_mobile_developer
@@ -17,9 +18,11 @@ steps:
     target_module: workplace/modules/mobile_app
     rules_ref: .nb/context/custom/rules/mobile_ble_lifecycle_rules.md
   enforce_merkle_seal: true
+  executor: agent_mobile_developer
 - id: step_iot_ecosystem_audit
   name: BLE Mesh, Power & Security Invariant Audit
   agent: agent_iot_mobile_ecosystem_architect
   inputs:
     scope: workplace/modules/iot_node,workplace/modules/mobile_app
   enforce_merkle_seal: true
+  executor: agent_iot_mobile_ecosystem_architect

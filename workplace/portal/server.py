@@ -435,7 +435,7 @@ PORTAL_HTML = """<!DOCTYPE html>
     .tree-node.level-4 { margin-left: 60px; border-left: 3px solid var(--green); }
 
     
-    /* Dedicated Admin Portal Setup */
+    /* Dedicated Admin Portal Setup & Dashflat Vertical Default Light Integration */
     .admin-container {
       display: flex;
       flex-direction: column;
@@ -493,6 +493,459 @@ PORTAL_HTML = """<!DOCTYPE html>
     .admin-view-pane.active {
       display: block;
       animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Dashflat Vertical Default Light Theme Structure */
+    .dashflat-container {
+      display: flex;
+      min-height: 860px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+    #clientAuthConsole:not([style*="display: none"]):not([style*="display:none"]) {
+      display: flex !important;
+    }
+    .dashflat-sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 14px;
+      transition: width 0.25s ease, min-width 0.25s ease;
+      z-index: 20;
+    }
+    .dashflat-sidebar.collapsed {
+      width: 72px;
+      min-width: 72px;
+    }
+    .dashflat-sidebar.collapsed .df-sidebar-hide {
+      display: none !important;
+    }
+    .dashflat-sidebar.collapsed .df-user-profile {
+      justify-content: center;
+      padding: 8px 0;
+    }
+    .dashflat-sidebar.collapsed .admin-nav-btn {
+      justify-content: center;
+      padding: 10px 0;
+    }
+    .df-user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    .df-avatar {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284C7 0%, #2563EB 50%, #7C3AED 100%);
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+    }
+    .df-status-dot {
+      width: 10px;
+      height: 10px;
+      background: #10B981;
+      border: 2px solid var(--bg-card);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+    .df-user-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .df-user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .df-user-role {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .df-category-header {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 10px 6px;
+    }
+    .df-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      list-style: none;
+    }
+    .dashflat-sidebar .admin-nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dashflat-sidebar .admin-nav-btn:hover {
+      background: var(--code-bg);
+      color: var(--text);
+      transform: translateX(2px);
+    }
+    .dashflat-sidebar .admin-nav-btn.active {
+      background: rgba(2, 132, 199, 0.08);
+      color: var(--cyan);
+      border-left: 3px solid var(--cyan);
+      font-weight: 700;
+      box-shadow: none;
+    }
+    [data-theme="dark"] .dashflat-sidebar .admin-nav-btn.active {
+      background: rgba(0, 242, 254, 0.12);
+      color: var(--cyan);
+      border-left: 3px solid var(--cyan);
+    }
+    .df-nav-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .df-nav-icon {
+      font-size: 15px;
+      width: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .df-direct-plan-card {
+      margin-top: auto;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(147, 51, 234, 0.08) 100%);
+      border: 1px dashed var(--border-accent);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 11px;
+    }
+    [data-theme="dark"] .df-direct-plan-card {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+    }
+
+    /* Dashflat Main Panel */
+    .dashflat-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    .dashflat-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .df-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      max-width: 440px;
+    }
+    .df-search-input {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+    }
+    .df-search-input:focus {
+      border-color: var(--border-accent);
+    }
+    .df-topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .df-icon-btn {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+    .df-icon-btn:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+    .df-badge-dot {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--red);
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 800;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-card);
+    }
+    .df-dropdown-menu {
+      position: absolute;
+      top: 42px;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      padding: 10px 0;
+      min-width: 250px;
+      display: none;
+      z-index: 50;
+    }
+    .df-dropdown-item {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .df-dropdown-item:hover {
+      background: var(--code-bg);
+      color: var(--cyan);
+    }
+    .df-content-area {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    /* Welcome Banner */
+    .df-welcome-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .df-breadcrumb {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .df-welcome-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .df-welcome-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* 4-Card Dashflat Metric KPI Grid */
+    .df-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .df-kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .df-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+    .df-kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .df-kpi-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .df-kpi-trend {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 50px;
+    }
+    .df-trend-up {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10B981;
+    }
+    .df-trend-purple {
+      background: rgba(168, 85, 247, 0.12);
+      color: #A855F7;
+    }
+    .df-trend-cyan {
+      background: rgba(2, 132, 199, 0.12);
+      color: #0284C7;
+    }
+    .df-trend-amber {
+      background: rgba(245, 158, 11, 0.12);
+      color: #F59E0B;
+    }
+    .df-kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .df-kpi-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .df-kpi-bar {
+      height: 4px;
+      width: 100%;
+      border-radius: 2px;
+      margin-top: 14px;
+    }
+    .df-bar-emerald { background: linear-gradient(90deg, #10B981, rgba(16, 185, 129, 0.2)); }
+    .df-bar-cyan { background: linear-gradient(90deg, #00F2FE, rgba(0, 242, 254, 0.2)); }
+    .df-bar-purple { background: linear-gradient(90deg, #A855F7, rgba(168, 85, 247, 0.2)); }
+    .df-bar-amber { background: linear-gradient(90deg, #F59E0B, rgba(245, 158, 11, 0.2)); }
+
+    /* 2-Column Analytics & Services Row */
+    .df-analytics-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 992px) {
+      .df-analytics-row {
+        grid-template-columns: 1fr;
+      }
+      .dashflat-container {
+        flex-direction: column;
+      }
+      .dashflat-sidebar {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+    .df-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .df-stat-tile {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .df-stat-tile-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .df-stat-tile-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 4px 0 2px;
+    }
+    .df-stat-tile-desc {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .df-service-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .df-service-item:last-child {
+      border-bottom: none;
     }
 
     /* Responsive Navigation & Mobile Adaptation */
@@ -2449,166 +2902,487 @@ percipience rollback \
       </div>
     </section>
 
-    <!-- TAB 12: SECURE CLIENT SPACE -->
+    <!-- TAB 12: SECURE CLIENT SPACE (DASHFLAT VERTICAL DEFAULT LIGHT TEMPLATE) -->
     <section id="client" class="tab-content">
-      <!-- UNAUTHENTICATED LOGIN CARD -->
-      <div id="clientLoginCard" class="card" style="max-width:540px; margin:32px auto; padding:28px;">
-        <div class="card-title" style="font-size:18px;">🔑 Secure Enterprise Client &amp; Admin Console</div>
-        <p style="margin-bottom:18px; font-size:13px; color:var(--text);">Access confidential project telemetry, itemized FinOps rev-share invoices, sovereign multi-tenant policies, commercial package provisioning, swarm governance, and workstation fleet monitors.</p>
+      <!-- UNAUTHENTICATED DASHFLAT LOGIN CARD -->
+      <div id="clientLoginCard" class="card dashflat-login-card" style="max-width:520px; margin:32px auto; padding:32px; border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow-card);">
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, var(--cyan), var(--purple)); display:inline-flex; align-items:center; justify-content:center; font-size:24px; box-shadow:var(--shadow-glow); margin-bottom:12px;">⚡</div>
+          <div style="font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.02em;">Percipience Client Portal</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Sign in to access your sovereign workspace, FinOps telemetry, and WORM ledger</div>
+        </div>
         
-        <div class="form-group">
-          <label class="form-label">Client ID / Organization</label>
-          <input type="text" id="loginClientId" class="input" placeholder="e.g. acme_corp_fintech" value="acme_corp_fintech">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">Client ID / Organization</label>
+          <div style="position:relative;">
+            <input type="text" id="loginClientId" class="input" placeholder="e.g. acme_corp_fintech" value="acme_corp_fintech" style="width:100%; padding:10px 14px; font-size:13px; border-radius:8px;">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">API Key / Secret Token</label>
-          <input type="password" id="loginApiKey" class="input" placeholder="e.g. nb_sec_client_9948" value="nb_sec_client_9948">
+        <div class="form-group" style="margin-bottom:18px;">
+          <label class="form-label" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">API Key / Secret Token</label>
+          <div style="position:relative;">
+            <input type="password" id="loginApiKey" class="input" placeholder="e.g. nb_sec_client_9948" value="nb_sec_client_9948" style="width:100%; padding:10px 14px; font-size:13px; border-radius:8px;">
+          </div>
         </div>
 
-        <div style="display:flex; gap:10px; margin-top:16px;">
-          <button class="btn btn-primary" onclick="loginClient(false)" style="flex:1;">🔑 Sign In to Admin Console</button>
-          <button class="btn btn-secondary" onclick="loginClient(true)">⚡ Demo Login</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:12px; color:var(--muted);">
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" checked style="accent-color:var(--cyan);"> Keep me signed in
+          </label>
+          <a href="#gateway" onclick="showTab('gateway')" style="color:var(--cyan); text-decoration:none;">Need API Key?</a>
         </div>
-        <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:12px; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-primary" onclick="loginClient(false)" style="padding:11px; font-size:13px; font-weight:700; border-radius:8px; width:100%;">🔑 Sign In to Enterprise Space</button>
+          <button class="btn btn-secondary" onclick="loginClient(true)" style="padding:10px; font-size:12px; font-weight:600; border-radius:8px; width:100%;">⚡ Instant Demo Login (Acme Global)</button>
+        </div>
+        <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:14px; text-align:center; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
+
+        <div style="display:flex; justify-content:center; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border); flex-wrap:wrap;">
+          <span class="badge badge-emerald" style="font-size:10px;">SEC 17a-4 WORM</span>
+          <span class="badge badge-purple" style="font-size:10px;">PostgreSQL RLS Active</span>
+          <span class="badge badge-cyan" style="font-size:10px;">Ed25519 Enclaves</span>
+        </div>
       </div>
 
-      <!-- AUTHENTICATED CLIENT CONSOLE (ADMIN PORTAL SETUP) -->
-      <div id="clientAuthConsole" style="display:none;" class="admin-container">
-        <!-- ADMIN TOP HEADER BAR -->
-        <div class="admin-header-bar">
-          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <div style="width:38px; height:38px; border-radius:8px; background:linear-gradient(135deg, var(--cyan), var(--purple)); display:flex; align-items:center; justify-content:center; font-size:18px;">🛡️</div>
-            <div>
-              <div style="font-size:17px; font-weight:800; color:var(--cyan); display:flex; align-items:center; gap:8px;">
-                <span id="clientOrgName">Acme Global Financial Technologies</span>
-                <span class="badge badge-green" style="font-size:10px;">Enterprise RLS Active</span>
-              </div>
-              <div style="font-size:11px; color:var(--muted); margin-top:2px;">
-                Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span>
-              </div>
+      <!-- AUTHENTICATED DASHFLAT CLIENT CONSOLE -->
+      <div id="clientAuthConsole" style="display:none;" class="dashflat-container">
+        <!-- DASHFLAT VERTICAL SIDEBAR -->
+        <aside class="dashflat-sidebar" id="dashflatSidebar">
+          <!-- SIDEBAR USER PROFILE WIDGET (Dashflat Vertical Light Parity) -->
+          <div class="df-user-profile">
+            <div class="df-avatar">
+              <span>AG</span>
+              <span class="df-status-dot" title="Online & Synced"></span>
+            </div>
+            <div class="df-user-info df-sidebar-hide">
+              <div class="df-user-name" id="dfSidebarUserName">Acme Global Admin</div>
+              <div class="df-user-role">Enterprise Super Admin</div>
+            </div>
+            <div class="df-sidebar-hide" style="display:flex; gap:4px;">
+              <button class="df-icon-btn" style="width:26px; height:26px; font-size:11px;" onclick="loadClientData()" title="Refresh">🔄</button>
+              <button class="df-icon-btn" style="width:26px; height:26px; font-size:11px;" onclick="logoutClient()" title="Sign Out">🚪</button>
             </div>
           </div>
 
-          <div style="display:flex; align-items:center; gap:10px;">
-            <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn" title="Toggle Light/Dark Theme">🌙 Dark</button>
-            <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 14px; font-size:11px;">🚪 Sign Out</button>
+          <!-- SIDEBAR SEARCH BAR -->
+          <div class="df-sidebar-hide" style="margin-bottom:14px;">
+            <input type="text" class="df-search-input" placeholder="Quick filter..." style="padding:6px 10px; font-size:11px;" onkeyup="filterSidebarNav(this.value)">
           </div>
-        </div>
 
-        <!-- ADMIN TAB NAVIGATION BAR -->
-        <div class="admin-nav-bar">
-          <button class="admin-nav-btn active" id="adminTabOverviewBtn" onclick="switchAdminView('client-overview')">
-            <span>📊</span> Project &amp; FinOps
-          </button>
-          <button class="admin-nav-btn" id="govNavBtn" onclick="switchAdminView('governance')">
-            <span>🏛️</span> Multi-Tenant &amp; Policies
-          </button>
-          <button class="admin-nav-btn" id="commercialNavBtn" onclick="switchAdminView('commercial-provisioner')">
-            <span>📦</span> Commercial Provisioner
-          </button>
-          <button class="admin-nav-btn" id="swarmNavBtn" onclick="switchAdminView('swarm-governance')">
-            <span>🤖</span> Swarm &amp; Governance
-          </button>
-          <button class="admin-nav-btn" id="fleetNavBtn" onclick="switchAdminView('fleet-monitor')">
-            <span>🖥️</span> Fleet &amp; FinOps
-          </button>
-        </div>
+          <!-- SIDEBAR NAVIGATION MENU -->
+          <div class="df-nav-list" style="overflow-y:auto; flex:1;">
+            <div class="df-category-header df-sidebar-hide">Navigation</div>
+            <button class="admin-nav-btn active" id="adminTabOverviewBtn" onclick="switchAdminView('client-overview')">
+              <span class="df-nav-label"><span class="df-nav-icon">📊</span><span class="df-sidebar-hide">Dashboard &amp; FinOps</span></span>
+              <span class="badge badge-cyan df-sidebar-hide" style="font-size:9px;">15% Fee</span>
+            </button>
 
-        <!-- ADMIN VIEW 1: CLIENT OVERVIEW & FINOPS -->
-        <div id="adminViewOverview" class="admin-view-pane active">
-          
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; flex-wrap:wrap; gap:10px;">
-          <div>
-            <div style="font-size:20px; font-weight:800; color:var(--cyan);" id="clientOrgName">Acme Global Financial Technologies</div>
-            <div style="font-size:12px; color:var(--muted); margin-top:3px;">Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span></div>
-          </div>
-          <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 14px; font-size:11px;">🚪 Sign Out</button>
-        </div>
+            <div class="df-category-header df-sidebar-hide">Sovereign Governance</div>
+            <button class="admin-nav-btn" id="govNavBtn" onclick="switchAdminView('governance')">
+              <span class="df-nav-label"><span class="df-nav-icon">🏛️</span><span class="df-sidebar-hide">Multi-Tenant &amp; Policies</span></span>
+              <span class="badge badge-purple df-sidebar-hide" style="font-size:9px;">RLS Active</span>
+            </button>
 
-        <!-- CLIENT CARDS -->
-        <div class="grid-cards" style="margin-bottom:22px;">
-          <div class="metric-card">
-            <div class="metric-val text-emerald" id="clientGrossSavings">$15.6974</div>
-            <div class="metric-label">Verified Gross Token Savings</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-val text-cyan" id="clientRevShareDue">$2.3546</div>
-            <div class="metric-label">15% Rev-Share Performance Fee Due</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-val text-purple">multi_module</div>
-            <div class="metric-label">Active Workspace Mode</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-val text-amber" id="clientWormStatus">LOCKED (S3 WORM)</div>
-            <div class="metric-label">SEC 17a-4 / FINRA Compliance Vault</div>
-          </div>
-        </div>
+            <div class="df-category-header df-sidebar-hide">Commercial &amp; Licensing</div>
+            <button class="admin-nav-btn" id="commercialNavBtn" onclick="switchAdminView('commercial-provisioner')">
+              <span class="df-nav-label"><span class="df-nav-icon">📦</span><span class="df-sidebar-hide">Commercial Provisioner</span></span>
+              <span class="badge badge-green df-sidebar-hide" style="font-size:9px;">Tier A</span>
+            </button>
 
-        <!-- MODULES & SURGICAL ROLLBACK CONTROL -->
-        <div class="card" style="margin-bottom:22px;">
-          <div class="card-title">🛡️ Project Micro-Modules &amp; Surgical Recovery Points</div>
-          <p style="margin-bottom:14px;">Isolated module recovery points allow surgical rollback of individual sub-modules without disturbing sibling services.</p>
-          <div class="table-wrap" style="margin:8px 0 0;">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Module Identifier</th>
-                  <th>Status</th>
-                  <th>Active Recovery Point</th>
-                  <th>WORM Block Hash</th>
-                  <th>Surgical Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>mod_auth</code></td>
-                  <td><span class="status-pill status-active">HEALTHY</span></td>
-                  <td><code>RP_AUTH_008</code></td>
-                  <td><code>fa19a510c7f48ff7...</code></td>
-                  <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="triggerSurgicalRollback('mod_auth')">Rewind to RP</button></td>
-                </tr>
-                <tr>
-                  <td><code>mod_billing</code></td>
-                  <td><span class="status-pill status-active">HEALTHY</span></td>
-                  <td><code>RP_BILL_012</code></td>
-                  <td><code>6d01c481ce9e5817...</code></td>
-                  <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="triggerSurgicalRollback('mod_billing')">Rewind to RP</button></td>
-                </tr>
-                <tr>
-                  <td><code>mod_portal_marketing</code></td>
-                  <td><span class="status-pill status-active">HEALTHY</span></td>
-                  <td><code>RP_PORTAL_006</code></td>
-                  <td><code>2303ddbecaaab5f3...</code></td>
-                  <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="triggerSurgicalRollback('mod_portal_marketing')">Rewind to RP</button></td>
-                </tr>
-                <tr>
-                  <td><code>mod_trading</code></td>
-                  <td><span class="status-pill status-active">HEALTHY</span></td>
-                  <td><code>RP_TRAD_009</code></td>
-                  <td><code>8ca12b9199fe014b...</code></td>
-                  <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="triggerSurgicalRollback('mod_trading')">Rewind to RP</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+            <div class="df-category-header df-sidebar-hide">Swarm Orchestration</div>
+            <button class="admin-nav-btn" id="swarmNavBtn" onclick="switchAdminView('swarm-governance')">
+              <span class="df-nav-label"><span class="df-nav-icon">🤖</span><span class="df-sidebar-hide">Swarm Governance</span></span>
+              <span class="badge badge-cyan df-sidebar-hide" style="font-size:9px;">12 Nodes</span>
+            </button>
 
-        <!-- ITEMIZED FINOPS INVOICE -->
-        <div class="card">
-          <div class="card-title">🧾 Itemized FinOps Rev-Share Accounting Invoice</div>
-          <p style="margin-bottom:14px;">Transparent, zero-risk performance fee billing: You pay only 15% of verified cloud token cost reductions.</p>
-          <div style="background:var(--code-bg); padding:16px; border-radius:8px; border:1px solid var(--border); font-family:'JetBrains Mono', monospace; font-size:12px;">
-            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Raw Base Tokens Processed:</span><strong style="color:var(--text);">5,232,080 tokens</strong></div>
-            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>AST Pruning Reduction (50.3%):</span><strong class="text-emerald">-2,631,736 tokens</strong></div>
-            <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Semantic Cache Hits Reduction:</span><strong class="text-emerald">-1,240,000 tokens</strong></div>
-            <div class="stat-box" style="background:transparent; border:none; padding:6px 0 3px; border-top:1px solid var(--border); margin-top:6px;"><span>Gross Client Cloud Savings ($0.003/1K tok):</span><strong class="text-emerald">$15.6974 USD</strong></div>
-            <div class="stat-box" style="background:transparent; border:none; padding:6px 0 0; border-top:1px dashed var(--border); font-size:13px; font-weight:700; margin-top:6px;"><span>Percipience Performance Fee (15%):</span><strong class="text-cyan">$2.3546 USD</strong></div>
+            <div class="df-category-header df-sidebar-hide">Infrastructure &amp; Fleet</div>
+            <button class="admin-nav-btn" id="fleetNavBtn" onclick="switchAdminView('fleet-monitor')">
+              <span class="df-nav-label"><span class="df-nav-icon">🖥️</span><span class="df-sidebar-hide">Fleet &amp; FinOps</span></span>
+              <span class="badge badge-emerald df-sidebar-hide" style="font-size:9px;">Healthy</span>
+            </button>
           </div>
-        </div>
-      
-        </div>
+
+          <!-- DIRECT ENTERPRISE PLANS PROMO CARD (Dashflat Signature) -->
+          <div class="df-direct-plan-card df-sidebar-hide">
+            <div style="font-weight:700; color:var(--text); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              <span>⭐</span> Enterprise Direct Plan
+            </div>
+            <div style="color:var(--muted); line-height:1.4; margin-bottom:8px;">
+              650 GB S3 WORM Vault<br>
+              24/7 Dedicated Concierge SLA
+            </div>
+            <a href="#tier-matrix" onclick="showTab('tier-matrix')" style="color:var(--cyan); font-weight:700; text-decoration:none;">View Plan Matrix &rarr;</a>
+          </div>
+
+          <!-- SIDEBAR FOOTER -->
+          <div class="df-sidebar-hide" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border); font-size:10px; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">
+            <span>🔒 Merkle #828 Locked</span>
+            <span class="badge badge-green" style="font-size:8px;">SOC 2</span>
+          </div>
+        </aside>
+
+        <!-- DASHFLAT MAIN PANEL -->
+        <div class="dashflat-main">
+          <!-- TOPBAR NAVBAR -->
+          <div class="dashflat-topbar">
+            <div class="df-search-wrap">
+              <button class="df-icon-btn" onclick="toggleDashflatSidebar()" title="Toggle Sidebar">☰</button>
+              <input type="text" class="df-search-input" placeholder="🔍 Search micro-modules, recovery points, invoices, WORM blocks...">
+            </div>
+
+            <div class="df-topbar-actions">
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span class="badge badge-green" style="font-size:10px;">Enterprise RLS Active</span>
+                <span class="badge badge-purple" id="clientTierBadgeTop" style="font-size:10px;">Enterprise Tier A</span>
+              </div>
+
+              <!-- NOTIFICATIONS DROPDOWN -->
+              <div style="position:relative;">
+                <button class="df-icon-btn" onclick="toggleDropdown('dfNotifDropdown')" title="Alerts & Audit Notifications">
+                  🔔<span class="df-badge-dot">3</span>
+                </button>
+                <div id="dfNotifDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; font-weight:700; font-size:12px; border-bottom:1px solid var(--border); color:var(--text);">System Notifications</div>
+                  <div class="df-dropdown-item"><span>✅</span><div><div style="font-weight:600;">WORM Ledger Sealed</div><div style="font-size:10px; color:var(--muted);">Block #828 committed to S3</div></div></div>
+                  <div class="df-dropdown-item"><span>⚡</span><div><div style="font-weight:600;">AST Compression Active</div><div style="font-size:10px; color:var(--muted);">50.3% token reduction verified</div></div></div>
+                  <div class="df-dropdown-item"><span>🛡️</span><div><div style="font-weight:600;">RLS Boundary Enforced</div><div style="font-size:10px; color:var(--muted);">Zero cross-tenant leakage</div></div></div>
+                </div>
+              </div>
+
+              <!-- MESSAGES DROPDOWN -->
+              <div style="position:relative;">
+                <button class="df-icon-btn" onclick="toggleDropdown('dfMsgDropdown')" title="Messages & Team">
+                  💬<span class="df-badge-dot">2</span>
+                </button>
+                <div id="dfMsgDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; font-weight:700; font-size:12px; border-bottom:1px solid var(--border); color:var(--text);">Messages &amp; Advisories</div>
+                  <div class="df-dropdown-item"><span>👤</span><div><div style="font-weight:600;">David Grey (Audit Lead)</div><div style="font-size:10px; color:var(--muted);">Quarterly SOC2 audit ready</div></div></div>
+                  <div class="df-dropdown-item"><span>👤</span><div><div style="font-weight:600;">Tim Cook (FinOps Lead)</div><div style="font-size:10px; color:var(--muted);">New model arbitrage enabled</div></div></div>
+                </div>
+              </div>
+
+              <!-- USER PROFILE DROPDOWN -->
+              <div style="position:relative;">
+                <div class="df-user-dropdown" onclick="toggleDropdown('dfUserDropdown')" style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 8px; border-radius:6px;">
+                  <div class="df-avatar" style="width:30px; height:30px; font-size:11px;">AG</div>
+                  <span id="dfTopbarOrgName" style="font-weight:700; font-size:12px; color:var(--text); max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Acme Global</span>
+                  <span style="font-size:10px; color:var(--muted);">▼</span>
+                </div>
+                <div id="dfUserDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; border-bottom:1px solid var(--border);">
+                    <div style="font-weight:700; font-size:12px; color:var(--text);" id="dfDropdownOrgName">Acme Global Financial</div>
+                    <div style="font-size:10px; color:var(--muted);">Client ID: acme_corp_fintech</div>
+                  </div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('client-overview')"><span>👤</span> My Profile &amp; Overview</div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('client-overview')"><span>🧾</span> Billing &amp; Invoices</div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('governance')"><span>🛡️</span> Sovereign Policies</div>
+                  <div style="border-top:1px solid var(--border); margin:4px 0;"></div>
+                  <div class="df-dropdown-item" onclick="logoutClient()" style="color:var(--red);"><span>🚪</span> Sign Out</div>
+                </div>
+              </div>
+
+              <!-- THEME TOGGLE -->
+              <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn" title="Toggle Light/Dark Theme">🌓 Theme</button>
+              <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 12px; font-size:11px;">🚪 Sign Out</button>
+            </div>
+          </div>
+
+          <!-- DASHFLAT CONTENT AREA -->
+          <div class="df-content-area">
+            <!-- WELCOME HEADER BANNER -->
+            <div class="df-welcome-banner">
+              <div>
+                <div class="df-breadcrumb">Client Space &bull; Enterprise Console &bull; Live Telemetry</div>
+                <div class="df-welcome-title">Welcome back, <span id="clientOrgName">Acme Global Financial Technologies</span>!</div>
+                <div class="df-welcome-meta">
+                  Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; 
+                  Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; 
+                  Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span> &bull; 
+                  Merkle Root: <code>f881b2be12...</code>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-secondary" onclick="loadClientData()" style="padding:7px 14px; font-size:12px;">🔄 Sync Telemetry</button>
+                <button class="btn btn-primary" onclick="alert('Exporting itemized FinOps accounting statement (PDF/CSV)...')" style="padding:7px 14px; font-size:12px;">📄 Export Statement</button>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 1: CLIENT OVERVIEW & FINOPS -->
+            <div id="adminViewOverview" class="admin-view-pane active">
+              <!-- 4-CARD DASHFLAT TOP KPI METRIC GRID -->
+              <div class="df-kpi-grid">
+                <!-- Card 1: Active Workspaces -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Active Workspaces</span>
+                    <span class="df-kpi-trend df-trend-up">+5.27% MoM</span>
+                  </div>
+                  <div class="df-kpi-val text-emerald">4 Modules</div>
+                  <div class="df-kpi-sub">Mode: <strong id="clientWorkspaceMode" class="text-purple">multi_module</strong> &bull; 12 Swarm Nodes</div>
+                  <div class="df-kpi-bar df-bar-emerald"></div>
+                </div>
+
+                <!-- Card 2: Recovery Points -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Recovery Points</span>
+                    <span class="df-kpi-trend df-trend-cyan">100% Deterministic</span>
+                  </div>
+                  <div class="df-kpi-val text-cyan">4 Active RPs</div>
+                  <div class="df-kpi-sub">Sub-1.2s Surgical Rewind &bull; Zero Sibling Drift</div>
+                  <div class="df-kpi-bar df-bar-cyan"></div>
+                </div>
+
+                <!-- Card 3: AST Token Compression -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">AST Token Compression</span>
+                    <span class="df-kpi-trend df-trend-purple">+50.3% Reductions</span>
+                  </div>
+                  <div class="df-kpi-val text-purple">2.63M Tokens</div>
+                  <div class="df-kpi-sub">AST Skeletons &bull; Zero Semantic Loss</div>
+                  <div class="df-kpi-bar df-bar-purple"></div>
+                </div>
+
+                <!-- Card 4: Verified Cloud Savings -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Net Cloud Savings</span>
+                    <span class="df-kpi-trend df-trend-amber">+7.00% Net Profit</span>
+                  </div>
+                  <div class="df-kpi-val text-emerald" id="clientGrossSavings">$15.6974</div>
+                  <div class="df-kpi-sub">15% Rev-Share Due: <strong id="clientRevShareDue" class="text-cyan">$2.3546</strong></div>
+                  <div class="df-kpi-bar df-bar-amber"></div>
+                </div>
+              </div>
+
+              <!-- 2-COLUMN ANALYTICS & SERVICES ROW (Dashflat Layout) -->
+              <div class="df-analytics-row">
+                <!-- Column 1: Context Analytics & FinOps Cost Reduction -->
+                <div class="card" style="margin-bottom:0;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <div class="card-title" style="margin-bottom:2px;">📈 Context Analytics &amp; FinOps Reduction</div>
+                      <div style="font-size:12px; color:var(--muted);">Breakdown of token compression and cost elimination against unpruned baselines</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                      <span class="badge badge-cyan" style="font-size:10px;">Today</span>
+                      <span class="badge" style="background:var(--code-bg); border:1px solid var(--border); font-size:10px; color:var(--muted);">Weekly</span>
+                      <span class="badge" style="background:var(--code-bg); border:1px solid var(--border); font-size:10px; color:var(--muted);">Monthly</span>
+                    </div>
+                  </div>
+
+                  <!-- Token Flow Progress Bar -->
+                  <div style="margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
+                      <span>Total Base Tokens: <strong>5,232,080</strong></span>
+                      <span class="text-emerald" style="font-weight:700;">74.0% Total Optimization</span>
+                    </div>
+                    <div style="height:10px; background:var(--code-bg); border-radius:5px; overflow:hidden; display:flex;">
+                      <div style="width:50.3%; background:var(--emerald);" title="AST Pruning (50.3%)"></div>
+                      <div style="width:23.7%; background:var(--cyan);" title="Semantic Cache (23.7%)"></div>
+                      <div style="width:26.0%; background:var(--purple);" title="Delivered Window (26.0%)"></div>
+                    </div>
+                    <div style="display:flex; gap:14px; margin-top:8px; font-size:10px; color:var(--muted); flex-wrap:wrap;">
+                      <span><span style="color:var(--emerald);">■</span> AST Pruned: 2.63M (50.3%)</span>
+                      <span><span style="color:var(--cyan);">■</span> Cache Hits: 1.24M (23.7%)</span>
+                      <span><span style="color:var(--purple);">■</span> Delivered: 1.36M (26.0%)</span>
+                    </div>
+                  </div>
+
+                  <!-- 4-Stat Overview Tiles (Dashflat Parity: Active vs Inactive Resource) -->
+                  <div class="df-stat-grid">
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Active Optimized Compute</div>
+                      <div class="df-stat-tile-val text-emerald">$123,657</div>
+                      <div class="df-stat-tile-desc">High-yield cognitive inference pool</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Eliminated Waste Spend</div>
+                      <div class="df-stat-tile-val text-cyan">$100,278</div>
+                      <div class="df-stat-tile-desc">Pruned unreferenced AST tokens</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Avg. Performance Fee</div>
+                      <div class="df-stat-tile-val text-purple">15.0%</div>
+                      <div class="df-stat-tile-desc">Pure pay-on-verified-savings</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Daily Gate Throughput</div>
+                      <div class="df-stat-tile-val text-amber">142,800</div>
+                      <div class="df-stat-tile-desc">In-flight gateway evaluations/day</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Column 2: Direct Enterprise Services & Security -->
+                <div class="card" style="margin-bottom:0;">
+                  <div class="card-title" style="margin-bottom:6px;">🛡️ Sovereign Services</div>
+                  <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">Instant status of platform enclaves and SLAs</div>
+
+                  <div class="df-service-item">
+                    <span>🏢 Profile &amp; PostgreSQL RLS</span>
+                    <span class="badge badge-green" style="font-size:10px;">Verified Active</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🔒 Compliance Vault</span>
+                    <span class="badge badge-amber" id="clientWormStatus" style="font-size:10px;">LOCKED (S3 WORM)</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🔑 KMS Key Broker</span>
+                    <span class="badge badge-cyan" style="font-size:10px;">Ed25519 Sealed</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>💾 Storage Capacity</span>
+                    <span class="badge badge-purple" style="font-size:10px;">650 GB S3 WORM</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>⏱️ Support SLA</span>
+                    <span class="badge badge-green" style="font-size:10px;">24/7 Dedicated</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🧪 Flaky Quarantine</span>
+                    <span class="badge badge-emerald" style="font-size:10px;">0 Blockers</span>
+                  </div>
+
+                  <div style="margin-top:16px;">
+                    <button class="btn btn-secondary" onclick="switchAdminView('governance')" style="width:100%; font-size:11px; padding:7px;">Manage Policies &amp; Enclaves &rarr;</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MICRO-MODULES & SURGICAL ROLLBACK CONTROL -->
+              <div class="card" style="margin-top:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                  <div>
+                    <div class="card-title" style="margin-bottom:2px;">🛡️ Project Micro-Modules &amp; Surgical Recovery Points</div>
+                    <div style="font-size:12px; color:var(--muted);">Sub-1.2s surgical rollback of individual sub-modules without disturbing sibling services</div>
+                  </div>
+                  <div style="display:flex; gap:8px;">
+                    <span class="badge badge-cyan" style="font-size:10px;">4 Modules Healthy</span>
+                    <span class="badge badge-green" style="font-size:10px;">Merkle Verified</span>
+                  </div>
+                </div>
+                
+                <div class="table-wrap" style="margin:8px 0 0;">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Module Identifier</th>
+                        <th>Status</th>
+                        <th>Active Recovery Point</th>
+                        <th>WORM Block Hash</th>
+                        <th>Surgical Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>mod_auth</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_AUTH_008</code></td>
+                        <td><code>fa19a510c7f48ff7...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_auth')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_billing</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_BILL_012</code></td>
+                        <td><code>6d01c481ce9e5817...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_billing')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_portal_marketing</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_PORTAL_006</code></td>
+                        <td><code>2303ddbecaaab5f3...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_portal_marketing')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_trading</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_TRAD_009</code></td>
+                        <td><code>8ca12b9199fe014b...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_trading')">Rewind to RP</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- ITEMIZED FINOPS INVOICE & TRANSACTION HISTORY -->
+              <div class="card" style="margin-top:24px;">
+                <div class="card-title">🧾 Itemized FinOps Rev-Share Accounting Invoice &amp; Transaction Ledger</div>
+                <p style="margin-bottom:14px; font-size:12px;">Transparent, zero-risk performance fee billing: You pay only 15% of verified cloud token cost reductions.</p>
+                <div style="background:var(--code-bg); padding:16px; border-radius:8px; border:1px solid var(--border); font-family:'JetBrains Mono', monospace; font-size:12px; margin-bottom:18px;">
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Raw Base Tokens Processed:</span><strong style="color:var(--text);">5,232,080 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>AST Pruning Reduction (50.3%):</span><strong class="text-emerald">-2,631,736 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Semantic Cache Hits Reduction:</span><strong class="text-emerald">-1,240,000 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:6px 0 3px; border-top:1px solid var(--border); margin-top:6px;"><span>Gross Client Cloud Savings ($0.003/1K tok):</span><strong class="text-emerald">$15.6974 USD</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:6px 0 0; border-top:1px dashed var(--border); font-size:13px; font-weight:700; margin-top:6px;"><span>Percipience Performance Fee (15%):</span><strong class="text-cyan">$2.3546 USD</strong></div>
+                </div>
+
+                <!-- Transaction History (Dashflat Parity: HSBC, G4S, John Lewis, Clarks, Lush) -->
+                <div style="font-size:13px; font-weight:700; margin-bottom:10px; color:var(--text);">Recent Tenant Statements &amp; Settled Invoices</div>
+                <div class="table-wrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Statement ID</th>
+                        <th>Settlement Entity</th>
+                        <th>Billing Period</th>
+                        <th>Gross Savings</th>
+                        <th>15% Performance Fee</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>INV-2026-0901</code></td>
+                        <td><strong>Acme Global Financial (HSBC Node)</strong></td>
+                        <td>Sep 01 - Sep 30, 2026</td>
+                        <td class="text-emerald">$14,000.00</td>
+                        <td class="text-cyan">$2,100.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0801</code></td>
+                        <td><strong>Acme Global Financial (G4S Node)</strong></td>
+                        <td>Aug 01 - Aug 31, 2026</td>
+                        <td class="text-emerald">$34,000.00</td>
+                        <td class="text-cyan">$5,100.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0701</code></td>
+                        <td><strong>Acme Global Financial (John Lewis Cluster)</strong></td>
+                        <td>Jul 01 - Jul 31, 2026</td>
+                        <td class="text-emerald">$23,000.00</td>
+                        <td class="text-cyan">$3,450.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0601</code></td>
+                        <td><strong>Acme Global Financial (Clarks Cluster)</strong></td>
+                        <td>Jun 01 - Jun 30, 2026</td>
+                        <td class="text-emerald">$65,000.00</td>
+                        <td class="text-cyan">$9,750.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0501</code></td>
+                        <td><strong>Acme Global Financial (Lush Cosmetics)</strong></td>
+                        <td>May 01 - May 31, 2026</td>
+                        <td class="text-emerald">$77,000.00</td>
+                        <td class="text-cyan">$11,550.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
 
         <!-- ADMIN VIEW 2: MULTI-TENANT & POLICIES -->
         <div id="governance" class="admin-view-pane">
@@ -3499,10 +4273,12 @@ percipience rollback \
         </div>
       </div>
     
-        </div>
+        </div> <!-- End of fleet-monitor pane -->
 
-      </div>
-    </section>
+            </div> <!-- End of df-content-area -->
+          </div> <!-- End of dashflat-main -->
+        </div> <!-- End of clientAuthConsole (dashflat-container) -->
+      </section>
 
     </main>
 
@@ -3935,6 +4711,37 @@ percipience rollback \
       }
     }
   
+  // Dashflat Vertical Default Light Navigation & UI Helpers
+  function toggleDashflatSidebar() {
+    const sb = document.getElementById("dashflatSidebar");
+    if (sb) sb.classList.toggle("collapsed");
+  }
+  window.toggleDashflatSidebar = toggleDashflatSidebar;
+
+  function toggleDropdown(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const isShown = target.style.display === "block";
+    document.querySelectorAll(".df-dropdown-menu").forEach(el => el.style.display = "none");
+    target.style.display = isShown ? "none" : "block";
+  }
+  window.toggleDropdown = toggleDropdown;
+
+  function filterSidebarNav(term) {
+    const filter = (term || "").toLowerCase();
+    document.querySelectorAll(".dashflat-sidebar .admin-nav-btn").forEach(btn => {
+      const text = btn.innerText.toLowerCase();
+      btn.style.display = text.includes(filter) ? "flex" : "none";
+    });
+  }
+  window.filterSidebarNav = filterSidebarNav;
+
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest(".df-icon-btn") && !e.target.closest(".df-user-dropdown")) {
+      document.querySelectorAll(".df-dropdown-menu").forEach(el => el.style.display = "none");
+    }
+  });
+
   // Client Authentication & Observability Handlers
   let clientSessionToken = localStorage.getItem("nb_client_token") || null;
 
@@ -3953,7 +4760,7 @@ percipience rollback \
         clientSessionToken = data.session_token;
         localStorage.setItem("nb_client_token", clientSessionToken);
         document.getElementById("clientLoginCard").style.display = "none";
-        document.getElementById("clientAuthConsole").style.display = "block";
+        document.getElementById("clientAuthConsole").style.display = "flex";
         document.getElementById("loginErrorMsg").style.display = "none";
         document.getElementById("clientNavBtn").innerText = "🔐 " + data.client.client_name.split(" ")[0];
         loadClientData();
@@ -3981,8 +4788,9 @@ percipience rollback \
       if (res.ok) {
         const data = await res.json();
         document.getElementById("clientLoginCard").style.display = "none";
-        document.getElementById("clientAuthConsole").style.display = "block";
+        document.getElementById("clientAuthConsole").style.display = "flex";
         document.getElementById("clientNavBtn").innerText = "🔐 " + data.client.client_name.split(" ")[0];
+        loadClientData();
       } else {
         logoutClient();
       }
@@ -3997,11 +4805,14 @@ percipience rollback \
       const res = await fetch("/api/client/project-details?token=" + clientSessionToken);
       if (res.ok) {
         const data = await res.json();
-        document.getElementById("clientOrgName").innerText = data.client_name;
-        document.getElementById("clientIdDisplay").innerText = data.client_id;
-        document.getElementById("clientProjectName").innerText = data.project_name;
-        document.getElementById("clientGrossSavings").innerText = "$" + data.gross_savings_usd.toFixed(4);
-        document.getElementById("clientRevShareDue").innerText = "$" + data.rev_share_due_usd.toFixed(4);
+        if (document.getElementById("clientOrgName")) document.getElementById("clientOrgName").innerText = data.client_name;
+        if (document.getElementById("dfSidebarUserName")) document.getElementById("dfSidebarUserName").innerText = data.client_name;
+        if (document.getElementById("dfTopbarOrgName")) document.getElementById("dfTopbarOrgName").innerText = data.client_name.split(" ")[0];
+        if (document.getElementById("dfDropdownOrgName")) document.getElementById("dfDropdownOrgName").innerText = data.client_name;
+        if (document.getElementById("clientIdDisplay")) document.getElementById("clientIdDisplay").innerText = data.client_id;
+        if (document.getElementById("clientProjectName")) document.getElementById("clientProjectName").innerText = data.project_name;
+        if (document.getElementById("clientGrossSavings")) document.getElementById("clientGrossSavings").innerText = "$" + data.gross_savings_usd.toFixed(4);
+        if (document.getElementById("clientRevShareDue")) document.getElementById("clientRevShareDue").innerText = "$" + data.rev_share_due_usd.toFixed(4);
       }
     } catch(e) {}
   }

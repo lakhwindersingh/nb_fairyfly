@@ -748,23 +748,23 @@
   - *Identified Requirement*: Cryptographic packaging and extraction of Git commits and uncommitted diffs using `git bundle create` and `git bundle verify`. Provide streaming HTTP upload/download adapters to transmit state between developer workstations and remote fleets without polluting remote Git branches.
   - *Target Files*: [`.nb/core/git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/git_bundle_transport.py), [`workplace/core/git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/core/git_bundle_transport.py), [`workplace/tests/test_git_bundle_transport.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/tests/test_git_bundle_transport.py)
   - *Acceptance Criteria*: Round-trip test: local uncommitted branch -> bundle -> remote extraction -> remote commit -> result bundle -> local merge passes with 100% hash parity; chunk streaming generator and SHA-256 integrity verified; tested via 5/5 passing unit/integration tests.
-- [ ] **TODO-DEWS-04: Enterprise Swarm Fleet Dispatch API & Endpoints (P1)**:
+- [x] **TODO-DEWS-04: Enterprise Swarm Fleet Dispatch API & Endpoints (P1)**:
   - *Identified Requirement*: REST endpoints under `/api/swarm/fleet/*` (`POST /api/swarm/fleet/dispatch`, `GET /api/swarm/fleet/jobs/{job_id}`, `GET /api/swarm/fleet/jobs/{job_id}/bundle`) supporting asynchronous task ingestion, worker allocation, and streaming results.
   - *Target Files*: `workplace/portal/server.py`, `.nb/core/swarm_fleet_dispatcher.py`
   - *Acceptance Criteria*: Authenticated multipart upload accepts bundles; returns task execution receipt; provides live WebSocket / SSE job status updates.
-- [ ] **TODO-DEWS-05: Distributed Worktree Coordinator with Live Redis 7.x Redlock (P1)**:
+- [x] **TODO-DEWS-05: Distributed Worktree Coordinator with Live Redis 7.x Redlock (P1)**:
   - *Identified Requirement*: Enhance `RedisRedlockBackend` in `workplace/core/worktree_engine.py` with real `redis-py` connection pooling, distributed lease renewal heartbeats, and cluster quorum verification for multi-node deployments.
   - *Target Files*: `.nb/core/worktree_engine.py`, `workplace/core/worktree_engine.py`
   - *Acceptance Criteria*: Concurrent worktree requests across 5 containers correctly serialize; dead container lease auto-evicts within TTL window.
-- [ ] **TODO-DEWS-06: Topological Consolidation & 3-Way Merge Agent Plugin (P1)**:
+- [x] **TODO-DEWS-06: Topological Consolidation & 3-Way Merge Agent Plugin (P1)**:
   - *Identified Requirement*: Specialist agent that takes $N$ completed worker branches, performs topological 3-way merges into an integration worktree, verifies wire contracts, and resolves non-conflicting seam differences before triggering the PR Gatekeeper.
   - *Target Files*: `.nb/agentic/custom/agents/agent_consolidation_synthesizer.yaml`, `.nb/core/consolidation_synthesizer.py`
   - *Acceptance Criteria*: Merges 3 disjoint module branches with 0 human intervention; rejects breaking contract divergences with actionable diagnostics.
-- [ ] **TODO-DEWS-07: Percipience CLI Remote Dispatch Subcommand (P1)**:
+- [x] **TODO-DEWS-07: Percipience CLI Remote Dispatch Subcommand (P1)**:
   - *Identified Requirement*: Add `./.nb/bin/percipience swarm dispatch --remote <fleet-url> --plan <path> --sync-back <target-wt>` to wrap bundle creation, API dispatch, progress polling, and local unbundle checkout into a seamless developer command.
   - *Target Files*: `.nb/bundles/package_plan_business/bin/percipience`, `.nb/bin/percipience`
   - *Acceptance Criteria*: Single CLI command dispatches local plan, displays live remote container wave progress in terminal, and checks out verified code locally.
-- [ ] **TODO-DEWS-08: Portal Fleet Telemetry & Swarm Dashboard Tab (P2)**:
+- [x] **TODO-DEWS-08: Portal Fleet Telemetry & Swarm Dashboard Tab (P2)**:
   - *Identified Requirement*: Live Fleet Monitoring UI in the Portal displaying active worker container slots, Redis Redlock leases, active wave DAG executions, and cumulative FinOps token burn.
   - *Target Files*: `workplace/portal/server.py` (`#swarm-fleet`)
   - *Acceptance Criteria*: Live visual dashboard updating every 2s via `/api/swarm/fleet/status`; shows per-worker CPU/memory/token metrics.

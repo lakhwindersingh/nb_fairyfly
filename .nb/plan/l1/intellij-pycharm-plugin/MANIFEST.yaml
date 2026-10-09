@@ -12,14 +12,14 @@ file_versions:
   concise:
     path: concise.md
     version: 1.1.0
-    last_modified: '2026-10-06'
+    last_modified: '2026-10-09'
     content_hash: 29e566f9427494f4bf3fd6ac01b150381af535fa845bfeb249831ec15803986d
     line_count: 95
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.1.0
-    last_modified: '2026-10-06'
+    last_modified: '2026-10-09'
     content_hash: 535eebae0ae64da0f1da4ae531538fdd7a43ec29d9829b8552146c655bde8cf5
     line_count: 625
     primary_purpose: Extended implementation guide with JetBrains SDK, PSI architecture,
@@ -27,7 +27,7 @@ file_versions:
   readme:
     path: README.md
     version: 1.1.0
-    last_modified: '2026-10-06'
+    last_modified: '2026-10-09'
     content_hash: 545aac132c1630906880004bd00d6d33fccb89f673e0cf85ca71d91a86543cce
     line_count: 33
     primary_purpose: Quick reference and navigation

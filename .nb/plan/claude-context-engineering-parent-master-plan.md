@@ -165,8 +165,8 @@ The Free Community Plan (`plan_free`) provides high-efficiency AST Token Reducti
 - **Distributed Concurrency Leasing (Redis Redlock)**:
   - Redis-backed distributed lock coordination for multi-host and CI-scale agent swarms.
 
-- **Enterprise Context Observability Hub & Telemetry Gateway**:
-  - Interactive 5-tab browser control plane (`user/outputs/dashboard/index.html`) with real-time REST API integration (`workplace/portal/server.py`).
+- **Enterprise Context Observability Hub & Dashflat Client Space Gateway**:
+  - Interactive browser control plane (`user/outputs/dashboard/index.html`) and dedicated authenticated Client Space (`#client`) in `workplace/portal/server.py` constructed with the **Dashflat Vertical-Default-Light** template architecture (collapsible vertical sidebar, user profile card, 4-card metric KPI grid, token flow breakdown, micro-module recovery datatable, and itemized 15% FinOps rev-share ledger).
   - Self-healing trigger, agent plugin manager, ROI calculator, and context maturity radar with automated remediation playbooks.
 - **3-Tier Layered Context Precedence Hierarchy & Multi-VCS BYOR Adapter**:
   - Invariant protection in `.nb/core/layered_context_validator.py` maintaining strict priority: Tier 1 (Platform) > Tier 2 (Enterprise) > Tier 3 (User).
@@ -441,8 +441,8 @@ The canonical location for MVS ingestion templates is **`user/inputs/templates/`
 - **3-Tier Layered Context Precedence Hierarchy & BYOR Multi-VCS Adapter**:
   - Guarantees Tier 1 (Platform Invariants / Enclave) cannot be overridden by user prompts or custom schemas.
   - Native BYOR adapter (`BYORAdapter`) connecting self-hosted GitLab, GitHub Enterprise, and Bitbucket Data Center with SSH deploy keys and internal Root CA validation.
-- **Decoupled Enterprise Observability Hub & Telemetry Gateway**:
-  - Zero-dependency interactive 5-tab dashboard (`user/outputs/dashboard/index.html`) backed by production HTTP/API gateway (`workplace/portal/server.py`).
+- **Decoupled Enterprise Observability Hub & Dashflat Client Space Gateway**:
+  - Zero-dependency interactive 5-tab dashboard (`user/outputs/dashboard/index.html`) and full-featured Enterprise Client Space (`#client`) in `workplace/portal/server.py` styled in **Dashflat Vertical-Default-Light** template layout with 4 KPI metric cards, micro-module sub-1.2s surgical recovery datatables, and itemized FinOps rev-share accounting.
 - **Atomic Ledger Disk Serialization & Rolling Epoch Checkpointing (Reliability & Scalability)**:
   - Eliminates file truncation risks via write-to-temp, `os.fsync()`, and atomic `os.replace()` in `MerkleEngine` and `TokenTracker`.
   - Checkpoints historical Merkle blocks into `.nb/context/ledger/archive/epoch_{start}_{end}.json` once chain height reaches scale thresholds, sealing an `epoch_rollup_hash` in `context_ledger.yaml` to maintain $O(1)$ disk/memory access times while guaranteeing 100% cryptographic audit continuity.

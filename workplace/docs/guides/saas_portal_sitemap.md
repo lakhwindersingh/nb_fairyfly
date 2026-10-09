@@ -26,13 +26,40 @@
 
 ---
 
-## 2. Authenticated Client Space (`#client`)
+## 2. Authenticated Client Space (`#client`) — Dashflat Vertical-Default-Light Template
 
-- **`/client` (`#client`)**: Dedicated authenticated client dashboard for enterprise tenant organizations.
-  - **Module Architecture View**: Protected view of multi-module workspace structure and module health.
-  - **FinOps Ledger**: Itemized token savings and 15% performance fee invoice ledger.
-  - **WORM Audit Log**: SEC 17a-4 / FINRA compliance audit trail linked to cryptographic Merkle blocks.
-  - **Surgical Micro-Module Rollback**: One-click rollback triggering rewind of specific poisoned modules to prior recovery points ($\text{RP}_k$) in under 1.2s without sibling disruption.
+- **`/client` (`#client`)**: Dedicated authenticated enterprise client portal structured using the **Dashflat Admin Vertical-Default-Light** template architecture ([Dashflat Reference](https://demo.bootstrapdash.com/dashflat-new/themes/vertical-default-light/)).
+  - **Vertical Collapsible Sidebar (`.dashflat-sidebar`)**:
+    - **User Profile Widget**: Tenant user avatar, online status indicator, user name (*Acme Global Admin*), and enterprise super admin role badge with quick action buttons.
+    - **Categorized Multi-View Navigation**:
+      - `NAVIGATION`: Dashboard & FinOps (`#client-overview`) with 15% fee badge.
+      - `SOVEREIGN GOVERNANCE`: Multi-Tenant & RLS Policies (`#governance`) with active badge.
+      - `COMMERCIAL & LICENSING`: Commercial Provisioner & Slicing (`#commercial-provisioner`) with tier badge.
+      - `SWARM ORCHESTRATION`: Swarm Governance & Reflexion (`#swarm-governance`) with node count badge.
+      - `INFRASTRUCTURE & FLEET`: Workstation Fleet & Telemetry (`#fleet-monitor`) with health badge.
+    - **Direct Enterprise Plans Promo Card**: Dedicated storage allocations (650 GB S3 WORM) and 24/7 Concierge SLA link.
+    - **WORM Chain Footer**: Live display of Merkle Block hash continuity (#828 Locked).
+  - **Top Navigation Bar (`.dashflat-topbar`)**:
+    - Hamburger sidebar collapse toggle (`☰`).
+    - Flat global search bar (`🔍 Search micro-modules, recovery points, invoices, WORM blocks...`).
+    - Security status pills (`Enterprise RLS Active`, `SOC 2 Type II`, `Enterprise Tier A`).
+    - Interactive notifications dropdown (3 system alerts) & advisories dropdown (2 messages).
+    - User profile dropdown with quick links to Profile, Billing, Policies, and Session Sign Out.
+    - Responsive dark/light theme switch button.
+  - **Dashboard Content Canvas (`.df-content-area`)**:
+    - **Welcome Banner**: Client ID, Project Name, Tier Badge, and live sync timestamps.
+    - **4-Card KPI Metric Grid**:
+      - *Active Workspaces*: 4 Micro-Modules / 12 Swarm Nodes (+5.27% MoM).
+      - *Recovery Points*: 4 Active Points (100% Deterministic, sub-1.2s rewind).
+      - *AST Token Reductions*: 2.63M Tokens (50.3% Compression with zero semantic loss).
+      - *Verified Gross Savings*: $15.6974 USD (15% Rev-Share Due: $2.3546 USD, 85% Client Retained: $13.3428 USD).
+    - **2-Column Analytics & Direct Services Row**:
+      - *Token Flow Breakdown & Resource Compute*: Progress bar visualization of token budget (AST Pruned vs Cache Hits vs Delivered Window), alongside Active Optimized Compute ($123,657), Eliminated Waste ($100,278), Performance Fee (15.0%), and Gate Throughput (142,800/day).
+      - *Direct Enterprise Services*: Live status pills for PostgreSQL RLS, S3 WORM, Ed25519 Enclave, and 0 Flaky Quarantine Blockers.
+    - **Micro-Modules & Surgical Recovery Datatable**: Sub-1.2s single-click surgical rollback (`POST /api/client/surgical-rollback`) for isolated micro-modules (`mod_auth`, `mod_billing`, `mod_portal_marketing`, `mod_trading`).
+    - **Itemized FinOps Invoice & Transaction Ledger**: Mathematical audit breakdown and settled transaction ledger across enterprise tenant nodes (HSBC, G4S, John Lewis & Partners, Clarks, Lush Cosmetics).
+  - **Unauthenticated Authentication State**:
+    - Centered Dashflat authentication card with client ID, API key, persistent session checkbox, instant demo login, and SOC 2 / SEC 17a-4 compliance badges.
 
 ---
 

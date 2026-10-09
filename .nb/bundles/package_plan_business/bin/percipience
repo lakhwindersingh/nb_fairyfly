@@ -1563,6 +1563,27 @@ def cmd_guardrail(args):
             print("   --- Remediation Prompt ---")
             print(res["remediation_prompt"])
 
+
+def cmd_test(args):
+    test_runner_dir = REPO_ROOT / ".nb" / "plan" / "test"
+    if str(test_runner_dir) not in sys.path:
+        sys.path.insert(0, str(test_runner_dir))
+    try:
+        from test_runner import PercipienceTestOrchestrator, DEFAULT_OUTPUT_DIR
+    except ImportError as e:
+        print(f"❌ Failed to load test orchestrator: {e}")
+        sys.exit(1)
+
+    out_dir = Path(args.output_dir) if getattr(args, "output_dir", None) else DEFAULT_OUTPUT_DIR
+    orchestrator = PercipienceTestOrchestrator(
+        tier=getattr(args, "tier", "all"),
+        output_dir=out_dir,
+        eval_ai=getattr(args, "eval_ai", True),
+        ai_triage=getattr(args, "ai_triage", False)
+    )
+    results = orchestrator.run_tests(quiet=getattr(args, "quiet", False))
+    sys.exit(results.get("exit_code", 0))
+
 def main():
     parser = argparse.ArgumentParser(prog="percipience", description="Neutron Binary Percipience CLI")
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
@@ -2012,6 +2033,15 @@ def main():
 
     p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan information and engine status")
     p_plan_cmd.set_defaults(func=cmd_status)
+
+    # test
+    p_test = subparsers.add_parser("test", help="Execute automatable AI-assisted test suites across architectural tiers")
+    p_test.add_argument("--tier", choices=["all", "unit", "integration", "portal", "guardrails", "governance", "benchmarks"], default="all", help="Target test tier")
+    p_test.add_argument("--output-dir", default="", help="Custom output directory for test reports")
+    p_test.add_argument("--ai-triage", action="store_true", help="Perform automated AI failure diagnosis and surgical patch synthesis on failures")
+    p_test.add_argument("--eval-ai", action="store_true", default=True, help="Run quantitative GenAI evaluation metrics")
+    p_test.add_argument("--quiet", action="store_true", help="Suppress verbose test execution logs")
+    p_test.set_defaults(func=cmd_test)
 
     args = parser.parse_args()
     if not args.subcommand:

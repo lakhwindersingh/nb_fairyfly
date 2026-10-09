@@ -284,3 +284,92 @@ sequenceDiagram
 # Audit billing entitlements
 ./bin/percipience commercial audit-entitlements --tenant tenant_acme_fintech
 ```
+
+---
+
+## 7. Dashflat Vertical-Default-Light Dashboard Architecture for Client Space
+
+The enterprise client portal space (`#client`) is constructed in strict alignment with the industry-standard **Dashflat Admin Vertical-Default-Light** template architecture ([reference](https://demo.bootstrapdash.com/dashflat-new/themes/vertical-default-light/)), providing a high-density, low-latency sovereign management plane.
+
+### 7.1. Structural Layout & Component Hierarchy
+
+```mermaid
+graph TD
+  subgraph Dashflat_Container["Dashflat Vertical Layout Container (#clientAuthConsole)"]
+    subgraph Sidebar["Vertical Collapsible Sidebar (.dashflat-sidebar)"]
+      UserProfile["User Profile Header<br/>(Avatar 'AG' + Online Dot + Super Admin)"]
+      QuickFilter["View Filter Input Bar"]
+      NavMenu["Categorized Navigation Menu<br/>• NAVIGATION: Overview & FinOps (15% Fee)<br/>• GOVERNANCE: Multi-Tenant & RLS<br/>• COMMERCIAL: Provisioner & Entitlements<br/>• SWARM: Orchestration & Reflexion<br/>• FLEET: Telemetry & Workstations"]
+      DirectPromo["Direct Enterprise Plans Card<br/>(650GB WORM + 24/7 Concierge)"]
+      SidebarFoot["Merkle Integrity Block #828 Locked"]
+    end
+
+    subgraph MainPanel["Main Dashboard Panel (.dashflat-main)"]
+      subgraph Topbar["Sticky Top Navigation Bar (.dashflat-topbar)"]
+        Hamburger["Sidebar Collapse Toggle (☰)"]
+        Search["Global Search Bar<br/>(Modules, Recovery Points, Invoices)"]
+        Badges["Security Badges<br/>(RLS Active, Enterprise Tier A)"]
+        Alerts["Alerts & Notifications Dropdown (3)"]
+        Messages["Advisories & Messages Dropdown (2)"]
+        ProfileMenu["User Profile Dropdown & Logout"]
+        ThemeToggle["Dark/Light Theme Toggle"]
+      end
+
+      subgraph ContentArea["Content Canvas (.df-content-area)"]
+        Banner["Welcome & Breadcrumb Banner<br/>(Client ID, Project Name, Merkle Root)"]
+        
+        subgraph PaneOverview["#adminViewOverview (Active Pane)"]
+          KPICards["4-Card Dashflat Metric KPI Grid<br/>1. Active Workspaces (4 Modules / +5.27% MoM)<br/>2. Recovery Points (4 Active RPs / 100% Deterministic)<br/>3. AST Token Reductions (2.63M / +50.3% Compression)<br/>4. Verified Gross Savings ($15.6974 / 15% Fee Due: $2.3546)"]
+          AnalyticsRow["2-Column Analytics & Direct Services Row<br/>• Left: Token Flow Graph & Active vs Inactive Resource Compute<br/>• Right: Sovereign Services Status (PostgreSQL RLS, S3 WORM, Ed25519)"]
+          Datatable["Micro-Modules & Sub-1.2s Surgical Recovery Datatable<br/>(mod_auth, mod_billing, mod_portal, mod_trading)"]
+          FinOpsLedger["Itemized FinOps Invoice & Transaction Ledger<br/>(Breakdown formula + Tenant Statements: HSBC, G4S, John Lewis)"]
+        end
+
+        subgraph PaneGov["#governance (Multi-Tenant & Policies)"]
+          GovContent["Hierarchy Tree, Scaffolding Wizard, KMS CMEK Enclaves"]
+        end
+
+        subgraph PaneComm["#commercial-provisioner"]
+          CommContent["Dynamic Slicing, Plan Matrices, Cryptographic Minting"]
+        end
+
+        subgraph PaneSwarm["#swarm-governance"]
+          SwarmContent["Dynamic DAG, 5-Pillar Reflexion Critic, 3-Tier Memory"]
+        end
+
+        subgraph PaneFleet["#fleet-monitor"]
+          FleetContent["Workstation Daemons, Heartbeats, FinOps Leaderboard"]
+        end
+      end
+    end
+  end
+
+  UserProfile --> NavMenu
+  NavMenu --> ContentArea
+  Hamburger --> Sidebar
+```
+
+### 7.2. Core Telemetry Widgets & 4-Card KPI Grid
+Dashflat's signature top metric row is mapped to core context engineering invariants:
+1. **Active Workspaces & Nodes**: Tracks multi-module isolation state (`multi_module`), concurrency leases, and active DAG worker slots.
+2. **Recovery Points ($\text{RP}_k$)**: Displays deterministic rollback checkpoints with sub-1.2s surgical rewind guarantees.
+3. **AST Token Compression**: Real-time ratio of tokens eliminated via tree-sitter AST pruning ($50.3\%$ savings) with zero semantic drift.
+4. **Net FinOps Cloud Savings**: Quantifies gross cloud cost reductions ($0.003/1K tokens) alongside the $15\%$ performance fee obligation and $85\%$ retained client profit.
+
+### 7.3. Analytics & Resource Overview Engine
+Mirrors Dashflat's resource utilization module:
+- **Active Optimized Compute**: Dollars spent on high-yield, instruction-following inference.
+- **Eliminated Waste Spend**: Dollars saved by dropping unreferenced AST branches before context injection.
+- **Performance Fee Rate**: Immutable $15\%$ rate computed against verified Merkle receipts.
+- **Daily Gate Throughput**: Number of CI/CD pre-commit gate evaluations conducted across tenant repositories.
+
+### 7.4. Micro-Modules & Surgical Recovery Datatable
+- Datatable formatted to Dashflat specifications with responsive horizontal scrolling, status pills (`HEALTHY`, `REWOUND`), and direct single-click action buttons executing `POST /api/client/surgical-rollback`.
+- Bounded rollback execution latency SLA: $< 1.20\text{s}$ to restore clean state while leaving sibling modules untouched.
+
+### 7.5. Design Tokens & Dual Theme Parity
+- Fully supports dual-theme persistence (`data-theme="light"` and `data-theme="dark"`).
+- In light mode (`vertical-default-light`):
+  - Background: `#F8FAFC`, Panels & Cards: `#FFFFFF`, Borders: `#E2E8F0`.
+  - Accent brand gradients: Cyan (`#0284C7`) to Blue (`#2563EB`).
+  - Contrast meets WCAG 2.1 AA accessibility standards across all interactive controls.
