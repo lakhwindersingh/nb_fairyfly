@@ -96,6 +96,9 @@ Percipience exposes a rich suite of local MCP tools allowing Anthropic Claude (C
 | **`merkle_auditor`**| `python3 .nb/bin/percipience audit` | SHA-256 Merkle DAG state auditor, recovery point validator, and maturity scorecard. |
 | **`worktree_manager`**| `python3 .nb/bin/percipience worktree` | Ephemeral isolated Git worktree allocator preventing concurrent agent clobbering. |
 | **`living_doc_engine`**| `python3 .nb/bin/percipience doc` | Continuous AST-to-Mermaid architecture synchronizer and contract doc generator. |
+| **`sandbox_manager`**| `python3 .nb/bin/percipience sandbox` | Sub-500ms kernel-isolated MicroVM (Firecracker/gVisor) and process jail sandbox. |
+| **`oidc_authenticator`**| `python3 .nb/bin/percipience oidc` | RS256 OpenID Connect Core 1.0 workload identity token minting & cloud credential federation. |
+| **`config_manager`**| `python3 .nb/bin/percipience config` | Centralized platform configuration manager and runtime introspection. |
 
 > [!NOTE]
 > When the IntelliJ/PyCharm plugin bootstraps any project in **any** tier (`free`, `team`, `business`, `enterprise`, or universal), it automatically provisions and verifies `.claude/mcp.json` and `.claude/settings.json` in the project root.

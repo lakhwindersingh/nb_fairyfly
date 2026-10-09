@@ -8,25 +8,38 @@ on:
 jobs:
   percipience-verify:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.14"]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Python
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
-      - name: Install Runtime Dependencies
+      - name: Install Runtime & Verification Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install pyyaml pytest pydantic cryptography fastapi redis numpy
+          fi
+
+      - name: Validate Externalized Platform Configuration
+        run: |
+          chmod +x .nb/bin/percipience
+          ./.nb/bin/percipience config show
 
       - name: Run Percipience PR Gatekeeper & AST Token Pruning
         run: |
-          chmod +x .nb/bin/percipience
           ./.nb/bin/percipience gate
           ./.nb/bin/percipience tokens summary
 
@@ -38,25 +51,31 @@ jobs:
         run: |
           ./.nb/bin/percipience validate --layered
 
+      - name: Execute Full Test Pyramid with Unified Code Coverage
+        run: |
+          ./.nb/bin/percipience test --tier all --coverage
+
       - name: Post Reports to GitHub Actions Step Summary
         if: always()
         run: |
-          if [ -f user/outputs/token_savings_report.md ]; then
+          if [ -f workplace/docs/reports/token_savings_report.md ]; then
             echo "## ⚡ Percipience Token Savings Summary" >> $GITHUB_STEP_SUMMARY
-            cat user/outputs/token_savings_report.md >> $GITHUB_STEP_SUMMARY
+            cat workplace/docs/reports/token_savings_report.md >> $GITHUB_STEP_SUMMARY
           fi
-          if [ -f user/outputs/context_maturity_report.md ]; then
+          if [ -f workplace/docs/reports/context_maturity_report.md ]; then
             echo "## 🛡️ Context Maturity Scorecard" >> $GITHUB_STEP_SUMMARY
-            cat user/outputs/context_maturity_report.md >> $GITHUB_STEP_SUMMARY
+            cat workplace/docs/reports/context_maturity_report.md >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Upload Percipience Verification Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: percipience-gate-reports
+          name: percipience-gate-reports-py${{ matrix.python-version }}
           path: |
-            user/outputs/token_savings_report.md
-            user/outputs/context_maturity_report.md
-            context/ledger/token_savings_ledger.yaml
-            context/ledger/context_ledger.yaml
+            workplace/docs/reports/token_savings_report.md
+            workplace/docs/reports/context_maturity_report.md
+            .nb/context/ledger/token_savings_ledger.yaml
+            .nb/context/ledger/context_ledger.yaml
+            .nb/config/platform_config.yaml
+            .coverage

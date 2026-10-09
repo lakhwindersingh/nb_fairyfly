@@ -66,6 +66,39 @@
         "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
       },
       "description": "AST-to-Mermaid architecture synchronizer and living contract documentation generator."
+    },
+    "sandbox_manager": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "sandbox"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Sub-500ms kernel-isolated MicroVM (Firecracker/gVisor) and process jail sandbox executor."
+    },
+    "oidc_authenticator": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "oidc"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "RS256 OpenID Connect Core 1.0 workload identity token minting and cloud credential federation (AWS STS / GCP / Azure)."
+    },
+    "config_manager": {
+      "command": "python3",
+      "args": [
+        ".nb/bin/percipience",
+        "config"
+      ],
+      "env": {
+        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
+      },
+      "description": "Inspect and manage externalized platform configuration (.nb/config/platform_config.yaml)."
     }
   }
 }

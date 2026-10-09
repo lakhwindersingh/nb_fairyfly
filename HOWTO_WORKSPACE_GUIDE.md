@@ -583,9 +583,11 @@ jobs:
           python-version: "3.14"
       - run: |
           chmod +x .nb/bin/percipience
+          ./.nb/bin/percipience config show
           ./.nb/bin/percipience gate
           ./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
           ./.nb/bin/percipience validate --layered
+          ./.nb/bin/percipience test --tier all --coverage
 ```
 
 ### GitLab CI ([`.gitlab-ci.yml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.gitlab-ci.yml))

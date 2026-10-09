@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-settings.json",
   "project_name": "nb_fairyfly",
   "canonical_title": "Neutron Binary Percipience - Enterprise Context Engineering OS & Autonomous CI/CD Gatekeeper",
-  "version": "7.5.0",
+  "version": "8.0.0",
   "architecture": "Quad-Space Context Engineering (.nb / workplace / user / .claude)",
   "settings_file": ".nb/config/claude_agents_settings.yaml",
   "model_tiering_policy": {
@@ -29,7 +29,9 @@
     "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
     "PERCIPIENCE_CLI": ".nb/bin/percipience",
     "PERCIPIENCE_TERMINAL_MODE": "1",
-    "PERCIPIENCE_AST_COMPRESSION": "1"
+    "PERCIPIENCE_AST_COMPRESSION": "1",
+    "PYTHON_VERSION": "3.14",
+    "PERCIPIENCE_CONFIG": ".nb/config/platform_config.yaml"
   },
   "context_rules": {
     "jetbrains_threading": ".nb/context/rules/jetbrains_platform_threading_rules.md",
@@ -37,7 +39,8 @@
     "jcef_security": ".nb/context/rules/jcef_security_invariants.md",
     "sandbox_security": ".nb/context/rules/sandbox_security_rules.md",
     "secret_storage": ".nb/context/rules/secret_storage_rules.md",
-    "merkle_ledger": ".nb/context/ledger/context_ledger.yaml"
+    "merkle_ledger": ".nb/context/ledger/context_ledger.yaml",
+    "platform_config": ".nb/config/platform_config.yaml"
   },
   "context_contracts": {
     "intellij_manifest": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
@@ -70,6 +73,13 @@
     "flaky_test_detector",
     "security_auditor",
     "token_finops_auditor",
-    "quality_guard"
+    "quality_guard",
+    "microvm_sandbox_manager",
+    "oidc_workload_authenticator",
+    "parallel_test_sharder",
+    "swarm_triad_orchestrator",
+    "vector_rag_retriever",
+    "commercial_license_manager",
+    "config_manager_auditor"
   ]
 }

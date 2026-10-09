@@ -6,7 +6,7 @@
       "slug": "tenant-acme-fintech",
       "tier": "plan_enterprise",
       "status": "ACTIVE",
-      "created_at": "2026-10-09T18:25:30.854969+00:00",
+      "created_at": "2026-10-09T19:09:46.683973+00:00",
       "settings": {
         "max_concurrent_worktrees": -1,
         "monthly_pr_audits_quota": -1
@@ -23,7 +23,7 @@
           "private_vpc_deploy": true,
           "dedicated_slack_sla": true
         },
-        "provisioned_at": "2026-10-09T18:25:30.854972+00:00"
+        "provisioned_at": "2026-10-09T19:09:46.683975+00:00"
       }
     },
     "tenant_acme_corp": {
