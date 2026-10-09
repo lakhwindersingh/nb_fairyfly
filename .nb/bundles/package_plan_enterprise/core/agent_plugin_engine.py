@@ -103,11 +103,22 @@ class AgentPluginEngine:
         p.mkdir(parents=True, exist_ok=True)
         return p
 
+    CUSTOM_WORKFLOWS_DIR = ".nb/agentic/custom/workflows"
+
     @classmethod
     def get_workflows_dir(cls, workspace_root: Path = REPO_ROOT) -> Path:
         p = workspace_root / cls.WORKFLOWS_DIR
         p.mkdir(parents=True, exist_ok=True)
         return p
+
+    @classmethod
+    def get_workflows_dirs(cls, workspace_root: Path = REPO_ROOT) -> List[Path]:
+        dirs = []
+        for rel in [cls.WORKFLOWS_DIR, cls.CUSTOM_WORKFLOWS_DIR]:
+            p = workspace_root / rel
+            if p.exists() and p not in dirs:
+                dirs.append(p)
+        return dirs
 
     @classmethod
     def create_agent(
@@ -243,8 +254,10 @@ class AgentPluginEngine:
         Dynamically attaches a custom agent into an existing workflow DAG,
         validates DAG acyclicity, and seals a Merkle block.
         """
-        wf_dir = cls.get_workflows_dir(workspace_root)
-        wf_files = list(wf_dir.glob("*.yaml")) + list(wf_dir.glob("*.yml"))
+        wf_dirs = cls.get_workflows_dirs(workspace_root)
+        wf_files = []
+        for d in wf_dirs:
+            wf_files.extend(list(d.glob("*.yaml")) + list(d.glob("*.yml")))
         target_file = None
         wf_data = None
 
@@ -260,7 +273,7 @@ class AgentPluginEngine:
                 continue
 
         if not target_file or not wf_data:
-            raise FileNotFoundError(f"Workflow '{workflow_id}' not found in {wf_dir}")
+            raise FileNotFoundError(f"Workflow '{workflow_id}' not found in {wf_dirs}")
 
         steps = wf_data.get("steps", [])
         clean_step_id = f"step_{agent_id.replace('agent_', '')}"
@@ -482,24 +495,28 @@ class AgentPluginEngine:
         yaml_files = list(agents_dir.glob("*.yaml")) + list(agents_dir.glob("*.yml"))
         results = []
 
-        # Find workflows
-        wf_dir = cls.get_workflows_dir(workspace_root)
+        # Find workflows across standard and custom workflow directories
+        wf_dirs = cls.get_workflows_dirs(workspace_root)
         workflow_steps_map = {}
-        for wf in wf_dir.glob("*.yaml"):
-            try:
-                with open(wf, "r", encoding="utf-8") as f:
-                    data = yaml.safe_load(f)
-                    wf_id = data.get("workflow_id", wf.stem)
-                    for step in data.get("steps", []):
-                        ex = step.get("executor")
-                        if ex:
-                            workflow_steps_map.setdefault(ex, []).append({
-                                "workflow_id": wf_id,
-                                "step_id": step.get("id"),
-                                "name": step.get("name")
-                            })
-            except Exception:
-                continue
+        for wf_dir in wf_dirs:
+            for wf in list(wf_dir.glob("*.yaml")) + list(wf_dir.glob("*.yml")):
+                try:
+                    with open(wf, "r", encoding="utf-8") as f:
+                        data = yaml.safe_load(f) or {}
+                        wf_id = data.get("workflow_id") or data.get("id") or wf.stem
+                        items = data.get("steps") or data.get("stages") or []
+                        for item in items:
+                            ex = item.get("executor") or item.get("agent")
+                            sid = item.get("id") or item.get("step_id")
+                            sname = item.get("name")
+                            if ex:
+                                workflow_steps_map.setdefault(ex, []).append({
+                                    "workflow_id": wf_id,
+                                    "step_id": sid,
+                                    "name": sname
+                                })
+                except Exception:
+                    continue
 
         for yf in sorted(yaml_files):
             stem_id = yf.stem if yf.stem.startswith("agent_") else f"agent_{yf.stem}"
@@ -528,7 +545,19 @@ class AgentPluginEngine:
                     "role": mod_prof.get("role") or data.get("role", "Custom Specialist"),
                     "allowed_modules": allowed_modules,
                     "file_path": str(yf.relative_to(workspace_root)),
-                    "workflow_bindings": workflow_steps_map.get(aid, []),
+                    "workflow_bindings": (
+                        workflow_steps_map.get(aid)
+                        or workflow_steps_map.get(stem_id)
+                        or [
+                            {"workflow_id": wb.get("workflow_id"), "step_id": wb.get("stage") or wb.get("step_id"), "name": wb.get("name") or f"Direct Binding ({aid})"}
+                            for wb in data.get("workflow_bindings", [])
+                        ]
+                        or [
+                            {"workflow_id": tw.get("workflow_id"), "step_id": tw.get("step_id"), "name": tw.get("step_name") or f"Hook Binding ({aid})"}
+                            for tw in data.get("autonomous_cicd_hooks", {}).get("target_workflows", [])
+                        ]
+                        or []
+                    ),
                     "status": "ACTIVE"
                 })
             except Exception as e:
