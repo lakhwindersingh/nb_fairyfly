@@ -17,7 +17,6 @@ model_tiering_policy:
 # Layerable Context Engineering Plan: {{DOMAIN_NAME}} Space
 
 > **Standard Template Kit**: [`.nb/plan/templates/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/)  
-> **Concrete Reference Sample**: [`.nb/plan/templates/sample/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/sample/)  
 > **Parent Master Framework**: [`.nb/plan/master/parent-master-plan/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/)
 
 ---

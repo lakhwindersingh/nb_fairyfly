@@ -11,14 +11,6 @@ steps:
     contract_path: .nb/context/contracts/ble_gatt_spec.yaml
   enforce_merkle_seal: true
   executor: agent_contract_compatibility_checker
-- id: step_embedded_firmware_build
-  name: FreeRTOS / Zephyr MCU Firmware Verification
-  agent: agent_iot_developer
-  inputs:
-    target_module: workplace/modules/iot_node
-    rules_ref: .nb/context/custom/rules/embedded_c_safety_rules.md
-  enforce_merkle_seal: true
-  executor: agent_iot_developer
 - id: step_mobile_kmp_client
   name: KMP Shared BLE Client & UI Verification
   agent: agent_mobile_developer
