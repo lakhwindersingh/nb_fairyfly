@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python workplace/portal/server.py)",
+      "Bash(curl -s http://localhost:8000/)",
+      "Bash(python3 -m py_compile /Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/portal/server.py)",
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(git add *)",
+      "Bash(git reset *)",
+      "Bash(git commit -m 'Refactor portal: consolidate 14 tabs into 7 with organized sub-tabs *)"
+    ]
+  }
+}
