@@ -100,130 +100,67 @@ PORTAL_HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neutron Binary Percipience | Enterprise Context Engineering OS &amp; CI/CD Gatekeeper</title>
+  <title>Percipience | Enterprise Context Engineering OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-
     :root {
-      /* Dark Theme Tokens (Default) */
-      --bg: #070B14;
-      --bg-panel: #0D1527;
-      --bg-card: #111C33;
-      --bg-card-hover: #182849;
-      --border: #1E2D4A;
-      --border-accent: #00F2FE;
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --code-bg: #050811;
-      --cyan: #00F2FE;
-      --cyan-glow: rgba(0, 242, 254, 0.18);
+      --bg: #070B14; --bg-card: #111C33; --border: #1E2D4A; --border-accent: #00F2FE;
+      --text: #F8FAFC; --muted: #94A3B8; --cyan: #00F2FE; --green: #10B981; --purple: #A855F7; --amber: #F59E0B;
       --gradient-brand: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
-      --gradient-purple: linear-gradient(135deg, #A855F7 0%, #6366F1 100%);
-      --gradient-card: linear-gradient(180deg, rgba(17, 28, 51, 0.8) 0%, rgba(13, 21, 39, 0.95) 100%);
-      --green: #10B981;
-      --green-glow: rgba(16, 185, 129, 0.18);
-      --emerald: #10B981;
-      --purple: #A855F7;
-      --amber: #F59E0B;
-      --red: #F43F5E;
-      --header-bg: rgba(7, 11, 20, 0.94);
-      --table-th: #091021;
-      --cat-header: #0D172E;
-      --toggle-bg: #1A263F;
       --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 20px rgba(0, 242, 254, 0.15);
-      /* Compatibility aliases */
-      --text-muted: var(--muted);
-      --text-color: var(--text);
-      --card-bg: var(--bg-card);
-      --border-color: var(--border);
     }
-
-    [data-theme="light"] {
-      /* Light Theme Tokens */
-      --bg: #F8FAFC;
-      --bg-panel: #FFFFFF;
-      --bg-card: #FFFFFF;
-      --bg-card-hover: #F1F5F9;
-      --border: #E2E8F0;
-      --border-accent: #0284C7;
-      --text: #0F172A;
-      --muted: #64748B;
-      --code-bg: #F8FAFC;
-      --cyan: #0284C7;
-      --cyan-glow: rgba(2, 132, 199, 0.12);
-      --gradient-brand: linear-gradient(135deg, #0284C7 0%, #2563EB 100%);
-      --gradient-purple: linear-gradient(135deg, #9333EA 0%, #4F46E5 100%);
-      --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
-      --green: #059669;
-      --green-glow: rgba(5, 150, 105, 0.12);
-      --emerald: #059669;
-      --purple: #9333EA;
-      --amber: #D97706;
-      --red: #E11D48;
-      --header-bg: rgba(255, 255, 255, 0.94);
-      --table-th: #F1F5F9;
-      --cat-header: #F8FAFC;
-      --toggle-bg: #E2E8F0;
-      --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
-      --shadow-glow: 0 0 16px rgba(2, 132, 199, 0.1);
-      /* Compatibility aliases */
-      --text-muted: var(--muted);
-      --text-color: var(--text);
-      --card-bg: var(--bg-card);
-      --border-color: var(--border);
+    [data-theme="light"] { --bg: #F8FAFC; --bg-card: #FFFFFF; --border: #E2E8F0; --border-accent: #0284C7;
+      --text: #0F172A; --muted: #64748B; --cyan: #0284C7; --green: #059669; --purple: #9333EA; --amber: #D97706;
+      --gradient-brand: linear-gradient(135deg, #0284C7 0%, #2563EB 100%); --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-
-    /* Header */
-    header { background: var(--header-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 12px 28px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-    .brand-wrap { display: flex; align-items: center; gap: 12px; }
-    .logo-badge { background: var(--gradient-brand); color: #070B14; font-weight: 900; font-size: 18px; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glow); }
-    .brand-title { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-sub { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
-    .nav { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--muted); padding: 6px 11px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
-    .nav-btn:hover { color: var(--text); background: var(--bg-card-hover); }
-    .nav-btn.active { color: var(--text); background: var(--bg-card); border-color: var(--border-accent); box-shadow: var(--shadow-glow); }
-    .theme-toggle-btn { background: var(--toggle-bg); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin-left: 8px; }
-
-    /* Main Container */
-    main { flex: 1; max-width: 1320px; margin: 0 auto; width: 100%; padding: 24px 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: rgba(7, 11, 20, 0.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border);
+      padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { background: var(--gradient-brand); color: #070B14; font-weight: 900; font-size: 16px; width: 32px; height: 32px;
+      border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .brand-title { font-size: 15px; font-weight: 700; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav { display: flex; gap: 6px; align-items: center; overflow-x: auto; }
+    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--muted); padding: 6px 12px;
+      border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
+    .nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-btn.active { color: var(--cyan); border-color: var(--cyan); background: rgba(0,242,254,0.08); }
+    .theme-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text);
+      padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-left: 8px; }
+    main { flex: 1; width: 100%; padding: 32px 48px; max-width: 100%; overflow-x: hidden; }
     .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Section Typography */
-    .section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; color: var(--text); }
-    .section-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.55; max-width: 860px; }
+    /* Sub-tab navigation (Economics) */
+    .subtab-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 24px; padding-bottom: 12px; overflow-x: auto; }
+    .econ-subtab-btn { background: transparent; border: none; color: var(--muted); padding: 8px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.2s ease; white-space: nowrap; }
+    .econ-subtab-btn:hover { color: var(--text); }
+    .econ-subtab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+    [data-econ-subtab] { display: none; }
+    [data-econ-subtab].active { display: block; animation: fadeIn 0.2s ease; }
 
-    /* Hero */
-    .hero { text-align: center; padding: 32px 16px 24px; max-width: 980px; margin: 0 auto 24px; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--cyan-glow); border: 1px solid var(--border-accent); color: var(--cyan); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 12px; }
-    .hero p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 780px; margin: 0 auto 20px; }
-    .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
-    .hero-stat-item { background: var(--gradient-card); border: 1px solid var(--border); padding: 14px 12px; border-radius: 10px; text-align: center; box-shadow: var(--shadow-card); }
-    .hero-stat-val { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin-bottom: 3px; letter-spacing: -0.02em; }
-    .hero-stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-
-    /* Cards & Grids */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 18px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
-    
-    .card, .panel-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; position: relative; box-shadow: var(--shadow-card); transition: transform 0.2s ease, border-color 0.2s ease; margin-bottom: 18px; }
-    .card:hover, .panel-card:hover { border-color: var(--border-accent); transform: translateY(-1px); }
-    .card-title, .panel-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--text); line-height: 1.35; }
-    .card-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 5px; background: var(--cyan-glow); color: var(--cyan); margin-bottom: 8px; }
-    .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); line-height: 1.35; }
-    .card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-top: 14px; margin-bottom: 6px; }
-    .card p, .panel-card p { font-size: 12px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .section-desc { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; max-width: 920px; }
+    .hero { text-align: center; padding: 28px 16px 20px; margin-bottom: 20px; }
+    .hero h1 { font-size: 28px; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+    .hero p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 18px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; }
+    .hero-stat-item { background: rgba(17, 28, 51, 0.6); border: 1px solid var(--border); padding: 12px 10px; border-radius: 8px; text-align: center; }
+    .hero-stat-val { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--cyan); margin-bottom: 2px; }
+    .hero-stat-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card, .panel-card { background: rgba(17, 28, 51, 0.6); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px;
+      transition: all 0.15s ease; }
+    .card:hover, .panel-card:hover { border-color: var(--cyan); background: rgba(17, 28, 51, 0.8); }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .card p { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
     
     .metric-card { background: var(--gradient-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; text-align: center; box-shadow: var(--shadow-card); }
     .metric-val { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; letter-spacing: -0.02em; line-height: 1.2; }
@@ -1184,9 +1121,22 @@ PORTAL_HTML = """<!DOCTYPE html>
         if (typeof loadSwarmTab === 'function') loadSwarmTab();
       } else if (id === 'client') {
         if (typeof checkClientSession === 'function') checkClientSession();
+      } else if (id === 'economics') {
+        if (typeof recalcRoi === 'function') recalcRoi();
       }
     }
     window.showTab = showTab;
+
+    // Sub-tab support for Economics section
+    window.showEconomicsSubtab = function(subtabId) {
+      document.querySelectorAll('[data-econ-subtab]').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.econ-subtab-btn').forEach(btn => btn.classList.remove('active'));
+      const target = document.querySelector(`[data-econ-subtab="${subtabId}"]`);
+      if (target) {
+        target.classList.add('active');
+        document.querySelector(`[data-econ-btn="${subtabId}"]`)?.classList.add('active');
+      }
+    };
   </script>
 </head>
 <body>
@@ -1200,18 +1150,11 @@ PORTAL_HTML = """<!DOCTYPE html>
     </div>
     <nav class="nav">
       <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
-      <button class="nav-btn" onclick="showTab('capabilities')">Capabilities</button>
+      <button class="nav-btn" onclick="showTab('platform')">Platform</button>
+      <button class="nav-btn" onclick="showTab('economics')">Economics</button>
       <button class="nav-btn" onclick="showTab('comparatives')">Comparatives</button>
-      <button class="nav-btn" onclick="showTab('tier-matrix')">📊 Plan Matrix &amp; Ceilings</button>
-      <button class="nav-btn" onclick="showTab('gateway')">Context Gateway</button>
-      <button class="nav-btn" onclick="showTab('roi-calculator')">ROI &amp; Benefits</button>
-      <button class="nav-btn" onclick="showTab('sandboxes')">Live Sandboxes</button>
-      <button class="nav-btn" onclick="showTab('infrastructure')">Cloud &amp; OpEx</button>
-      <button class="nav-btn" onclick="showTab('pricing')">Pricing</button>
-      <button class="nav-btn" onclick="showTab('docs')">Docs</button>
-      <button class="nav-btn" onclick="showTab('reports')">📑 Deep Reports</button>
-      <button class="nav-btn" onclick="showTab('observability')">📈 Observability</button>
-      <button class="nav-btn" onclick="showTab('swarm-fleet')">🖥️ Swarm Fleet &amp; DEWS</button>
+      <button class="nav-btn" onclick="showTab('lab')">Interactive Lab</button>
+      <button class="nav-btn" onclick="showTab('resources')">Resources</button>
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border:1px solid var(--cyan); color:var(--cyan); font-weight:700;">🔑 Client Space</button>
     </nav>
   </header>
@@ -1290,7 +1233,7 @@ PORTAL_HTML = """<!DOCTYPE html>
 
     <!-- TAB 2: CAPABILITIES -->
         <!-- TAB 2: CAPABILITIES -->
-    <section id="capabilities" class="tab-content">
+    <section id="platform" class="tab-content">
       <div class="section-title">Foundational Technical Subsystems (CAP-01 to CAP-52)</div>
       <div class="section-desc">Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, model drift, and distributed swarm chaos in enterprise codebases.</div>
       
@@ -1783,8 +1726,56 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
       </div>
     </section>
 
+    <!-- ECONOMICS TAB: Consolidated ROI, Pricing, Infrastructure, and Marketing -->
+    <section id="economics" class="tab-content">
+      <div class="subtab-nav">
+        <button class="econ-subtab-btn active" data-econ-btn="econ-roi" onclick="showEconomicsSubtab('econ-roi')">ROI Calculator</button>
+        <button class="econ-subtab-btn" data-econ-btn="econ-pricing" onclick="showEconomicsSubtab('econ-pricing')">Plan Matrix &amp; Pricing</button>
+        <button class="econ-subtab-btn" data-econ-btn="econ-infra" onclick="showEconomicsSubtab('econ-infra')">Infrastructure Economics</button>
+        <button class="econ-subtab-btn" data-econ-btn="econ-competitive" onclick="showEconomicsSubtab('econ-competitive')">Competitive Analysis</button>
+        <button class="econ-subtab-btn" data-econ-btn="econ-ast" onclick="showEconomicsSubtab('econ-ast')">AST Optimization Demo</button>
+      </div>
+
+      <div data-econ-subtab="econ-roi" class="active" id="econ-roi-content"></div>
+      <div data-econ-subtab="econ-pricing" id="econ-pricing-content"></div>
+      <div data-econ-subtab="econ-infra" id="econ-infra-content"></div>
+      <div data-econ-subtab="econ-competitive" id="econ-competitive-content"></div>
+      <div data-econ-subtab="econ-ast" id="econ-ast-content"></div>
+
+      <script>
+        // Load sub-tab content by moving content from old sections
+        document.addEventListener('DOMContentLoaded', function() {
+          const roiSection = document.getElementById('roi-calculator');
+          const pricingSection = document.getElementById('tier-matrix');
+          const infraSection = document.getElementById('infrastructure');
+
+          if (roiSection) {
+            document.getElementById('econ-roi-content').innerHTML = roiSection.innerHTML;
+            roiSection.style.display = 'none';
+          }
+          if (pricingSection) {
+            document.getElementById('econ-pricing-content').innerHTML = pricingSection.innerHTML;
+            pricingSection.style.display = 'none';
+          }
+          if (infraSection) {
+            document.getElementById('econ-infra-content').innerHTML = infraSection.innerHTML;
+            infraSection.style.display = 'none';
+          }
+
+          // Hide old pricing section if exists
+          const priceSection = document.getElementById('pricing');
+          if (priceSection) {
+            const priceContent = priceSection.innerHTML;
+            document.getElementById('econ-pricing-content').innerHTML += priceContent;
+            priceSection.style.display = 'none';
+          }
+        });
+      </script>
+    </section>
+
     <!-- TAB: PLAN TIER MATRIX & BOUNDARY CEILINGS (Section 2 of Parent Master Plan) -->
-    <section id="tier-matrix" class="tab-content">
+    <section id="tier-matrix" class="tab-content" style="display:none;">
+
       <div class="section-title">2. Plan Tier Matrix &amp; Boundary Ceilings</div>
       <div class="section-desc">Comprehensive architectural entitlement matrix, boundary ceilings, concurrency quotas, security enclaves, and full 35-capability mapping across Free Community, Team, Business, and Enterprise tiers (governed by <code>.nb/plan/claude-context-engineering-parent-master-free_plan.md</code>).</div>
 
@@ -2072,8 +2063,35 @@ percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
       </div>
     </section>
 
+    <!-- INTERACTIVE LAB TAB: Consolidated Gateway and Sandboxes -->
+    <section id="lab" class="tab-content">
+      <div class="subtab-nav">
+        <button class="econ-subtab-btn active" data-econ-btn="lab-gateway" onclick="showEconomicsSubtab('lab-gateway')">Context Gateway</button>
+        <button class="econ-subtab-btn" data-econ-btn="lab-sandbox" onclick="showEconomicsSubtab('lab-sandbox')">Live Sandboxes</button>
+      </div>
+
+      <div data-econ-subtab="lab-gateway" class="active" id="lab-gateway-content"></div>
+      <div data-econ-subtab="lab-sandbox" id="lab-sandbox-content"></div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const gatewaySection = document.getElementById('gateway');
+          const sandboxSection = document.getElementById('sandboxes');
+
+          if (gatewaySection) {
+            document.getElementById('lab-gateway-content').innerHTML = gatewaySection.innerHTML;
+            gatewaySection.style.display = 'none';
+          }
+          if (sandboxSection) {
+            document.getElementById('lab-sandbox-content').innerHTML = sandboxSection.innerHTML;
+            sandboxSection.style.display = 'none';
+          }
+        });
+      </script>
+    </section>
+
     <!-- TAB 4: CONTEXT GATEWAY (OPTION 1) -->
-    <section id="gateway" class="tab-content">
+    <section id="gateway" class="tab-content" style="display:none;">
       <div class="section-title">Context Gateway (Option 1) &amp; Sealed Plan Bundles</div>
       <div class="section-desc">Enforces zero plaintext blueprint leakage. Proprietary plans and KMS decryption keys reside strictly inside the Gateway server-side RAM enclave with in-flight prompt injection and sealed binary envelopes (.nbpack).</div>
 
@@ -2257,7 +2275,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
     </section>
 
     <!-- TAB 5: ROI & BENEFITS -->
-    <section id="roi-calculator" class="tab-content">
+    <section id="roi-calculator" class="tab-content" style="display:none;">
       <div class="section-title">Quantified Customer ROI &amp; ICP Value Models</div>
       <div class="section-desc">Percipience delivers concrete, audited cost reductions and risk elimination across three core target enterprise segments.</div>
 
@@ -2315,7 +2333,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
     </section>
 
     <!-- TAB 6: LIVE SANDBOXES -->
-    <section id="sandboxes" class="tab-content">
+    <section id="sandboxes" class="tab-content" style="display:none;">
       <div class="section-title">Live Interactive Sandboxes &amp; Consoles</div>
       <div class="section-desc">Test real AST symbol extraction, verify live cryptographic Merkle DAG blocks, and execute simulated surgical module rollbacks.</div>
 
@@ -2582,7 +2600,7 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
     </section>
 
     <!-- TAB 8: PRICING & ONBOARDING -->
-    <section id="pricing" class="tab-content">
+    <section id="pricing" class="tab-content" style="display:none;">
       <div class="section-title">Licensing Tiers &amp; Instant Self-Serve Provisioning</div>
       <div class="section-desc">Choose your licensing tier or deploy directly inside your own private AWS or GCP VPC.</div>
 
@@ -2661,8 +2679,42 @@ export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
       </div>
     </section>
 
+    <!-- RESOURCES TAB: Consolidated Docs, Reports, and Observability -->
+    <section id="resources" class="tab-content">
+      <div class="subtab-nav">
+        <button class="econ-subtab-btn active" data-econ-btn="res-docs" onclick="showEconomicsSubtab('res-docs')">Documentation</button>
+        <button class="econ-subtab-btn" data-econ-btn="res-reports" onclick="showEconomicsSubtab('res-reports')">Deep Reports</button>
+        <button class="econ-subtab-btn" data-econ-btn="res-observability" onclick="showEconomicsSubtab('res-observability')">Observability</button>
+      </div>
+
+      <div data-econ-subtab="res-docs" class="active" id="res-docs-content"></div>
+      <div data-econ-subtab="res-reports" id="res-reports-content"></div>
+      <div data-econ-subtab="res-observability" id="res-observability-content"></div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const docsSection = document.getElementById('docs');
+          const reportsSection = document.getElementById('reports');
+          const obsSection = document.getElementById('observability');
+
+          if (docsSection) {
+            document.getElementById('res-docs-content').innerHTML = docsSection.innerHTML;
+            docsSection.style.display = 'none';
+          }
+          if (reportsSection) {
+            document.getElementById('res-reports-content').innerHTML = reportsSection.innerHTML;
+            reportsSection.style.display = 'none';
+          }
+          if (obsSection) {
+            document.getElementById('res-observability-content').innerHTML = obsSection.innerHTML;
+            obsSection.style.display = 'none';
+          }
+        });
+      </script>
+    </section>
+
     <!-- TAB 9: DOCS -->
-    <section id="docs" class="tab-content">
+    <section id="docs" class="tab-content" style="display:none;">
       <div class="section-title">Documentation Hub</div>
       <div class="section-desc">Comprehensive technical integration guides covering CLI, CI/CD Gatekeepers, .nbpack Enclaves, and Surgical Rollback.</div>
 
@@ -2730,7 +2782,7 @@ percipience rollback \
     </section>
 
     <!-- TAB 10: DEEP REPORTS & WHITE PAPERS -->
-    <section id="reports" class="tab-content">
+    <section id="reports" class="tab-content" style="display:none;">
       <div class="section-title">Engineering Whitepapers, Audits &amp; Formal Reports</div>
       <div class="section-desc">Authoritative technical reports generated by the Percipience control plane, covering token reduction mathematics, 20-point SDLC drift audits, context maturity evaluations, and competitive benchmarks.</div>
 
@@ -2771,7 +2823,7 @@ percipience rollback \
     </section>
 
     <!-- TAB 11: OBSERVABILITY DASHBOARD -->
-    <section id="observability" class="tab-content">
+    <section id="observability" class="tab-content" style="display:none;">
       <div class="section-title">OpenTelemetry GenAI &amp; Quantitative Quality Hub</div>
       <div class="section-desc">Enterprise telemetry streaming OpenTelemetry GenAI spans, 5-dimensional G-Eval quality scores, semantic prompt caching FinOps, and attention budget quotas.</div>
 
@@ -2901,7 +2953,7 @@ percipience rollback \
     </section>
 
     <!-- TAB 11.5: SWARM FLEET & DEWS DASHBOARD -->
-    <section id="swarm-fleet" class="tab-content">
+    <section id="swarm-fleet" class="tab-content" style="display:none;">
       <div class="section-title">Distributed Multi-Container Swarm Fleet &amp; DEWS Engine</div>
       <div class="section-desc">Live Telemetry &amp; Remote Dispatch Orchestrator: Multi-Container Worker Slots, Redis 7.x Redlock Lease Heartbeats, Dynamic Wave DAGs, and Sub-Penny Token FinOps.</div>
 
