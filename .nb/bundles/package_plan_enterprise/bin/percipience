@@ -132,6 +132,10 @@ PromptInjectionGuard = _load_engine("prompt_injection_guard", ["PromptInjectionG
 OutputGuardrailValidator = _load_engine("output_guardrail_validator", ["OutputGuardrailValidator"])
 SwarmFleetDispatcher = _load_engine("swarm_fleet_dispatcher", ["SwarmFleetDispatcher"])
 ConsolidationSynthesizer = _load_engine("consolidation_synthesizer", ["ConsolidationSynthesizer"])
+GitOpsPRBot = _load_engine("gitops_pr_bot", ["GitOpsPRBot"])
+HybridVectorRetrievalEngine = _load_engine("vector_retrieval_engine", ["HybridVectorRetrievalEngine"])
+ConventionalRepositoryMigrator = _load_engine("repository_migrator", ["ConventionalRepositoryMigrator"])
+InteractiveOnboardingWizard = _load_engine("onboarding_wizard", ["InteractiveOnboardingWizard"])
 
 def cmd_license(args):
     """Manages, mints, installs, and verifies commercial tier licenses."""
@@ -281,6 +285,22 @@ def cmd_permission(args):
         print(f"   Reason: {res['reason']}")
 
 def cmd_init(args):
+    if getattr(args, "interactive", False):
+        _require_engine(InteractiveOnboardingWizard, "onboarding_wizard", "Interactive Onboarding Wizard")
+        wizard = InteractiveOnboardingWizard(REPO_ROOT)
+        print("🪄 Launching Percipience Interactive Onboarding Wizard...")
+        res = wizard.run_interactive()
+        print(f"✅ Onboarding Complete! Status: {res.status}")
+        print(f"   Project: {res.config.project_name} ({res.config.project_type}) | Language: {res.config.primary_language} | Tier: {res.config.tier.upper()}")
+        print(f"   Provisioned {len(res.provisioned_files)} files including mcp.json, genesis ledger, and git hooks.")
+        for step in res.next_steps:
+            print(f"   👉 {step}")
+        return
+
+    if not getattr(args, "parent_plan", None):
+        print("❌ Error: --parent-plan is required when not running with --interactive.")
+        sys.exit(1)
+
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
     print(f"   Mode: {args.mode}")
     print(f"   Parent Plan: {args.parent_plan}")
@@ -297,6 +317,90 @@ def cmd_init(args):
         (REPO_ROOT / d).mkdir(parents=True, exist_ok=True)
 
     print("✅ Workspace successfully initialized into Quad-Space architecture.")
+
+def cmd_bot(args):
+    """Dispatches GitOps PR Bot workflows, Markdown cards, and slash commands."""
+    _require_engine(GitOpsPRBot, "gitops_pr_bot", "Interactive GitOps PR Bot")
+    bot = GitOpsPRBot(REPO_ROOT)
+    action = getattr(args, "bot_action", "deploy")
+
+    if action == "deploy":
+        res = bot.deploy_bot()
+        print("🤖 Percipience GitOps PR Bot Deployed Successfully!")
+        print(f"   Workflow File: {res['workflow_file']}")
+        print(f"   Preview Domain: {res['preview_domain']}")
+        print(f"   Active Commands: {', '.join(res['commands'])}")
+    elif action == "comment":
+        pr_id = str(getattr(args, "pr", "1"))
+        branch = str(getattr(args, "branch", "main"))
+        sha = str(getattr(args, "sha", "HEAD"))
+        card = bot.format_status_card(pr_id=pr_id, branch=branch, commit_sha=sha)
+        print(card)
+    elif action == "command":
+        cmd_str = getattr(args, "cmd", "/verify")
+        pr_id = str(getattr(args, "pr", "1"))
+        actor = getattr(args, "actor", "developer")
+        res = bot.handle_slash_command(command_str=cmd_str, pr_id=pr_id, actor=actor)
+        print(f"Status: {res.status}")
+        print(f"Action Executed: {res.action_executed}")
+        print(res.reply_markdown)
+
+def cmd_search(args):
+    """Executes hybrid sparse-dense vector code retrieval alongside AST pruning."""
+    _require_engine(HybridVectorRetrievalEngine, "vector_retrieval_engine", "Hybrid Vector Code Retrieval")
+    engine = HybridVectorRetrievalEngine(REPO_ROOT)
+    if getattr(args, "reindex", False):
+        print("🔄 Indexing codebase...")
+        idx_res = engine.index_codebase()
+        print(f"   Indexed {idx_res['indexed_files']} files ({idx_res['indexed_chunks']} chunks, {idx_res['vocabulary_size']} terms).")
+
+    query = args.query
+    top_k = getattr(args, "top_k", 5)
+    alpha = getattr(args, "alpha", 0.5)
+    multi_hop = not getattr(args, "no_multi_hop", False)
+
+    results = engine.search(query=query, top_k=top_k, alpha=alpha, multi_hop=multi_hop)
+    if getattr(args, "json", False):
+        out = [{"chunk_id": r.chunk.chunk_id, "score": r.combined_score, "dense": r.dense_score, "sparse": r.sparse_score, "hop": r.retrieval_hop} for r in results]
+        print(json.dumps(out, indent=2))
+    else:
+        ctx = engine.format_prompt_context(results)
+        print(ctx)
+
+def cmd_migrate(args):
+    """Analyzes and executes conventional codebase migration into Quad-Space architecture."""
+    _require_engine(ConventionalRepositoryMigrator, "repository_migrator", "Conventional Repository Migrator")
+    migrator = ConventionalRepositoryMigrator(REPO_ROOT)
+
+    if getattr(args, "rollback", False):
+        print("⏪ Rolling back Quad-Space migration from manifest...")
+        res = migrator.rollback_migration()
+        print(f"Status: {res['status']} | Files Reverted: {res.get('files_reverted', 0)}")
+        return
+
+    analyze_only = getattr(args, "analyze_only", False) or not getattr(args, "execute", False)
+    if analyze_only:
+        print("📊 Analyzing conventional repository layout for Quad-Space migration...")
+        rep = migrator.analyze_repository()
+        print(f"   Detected Project Type: {rep.detected_project_type}")
+        print(f"   Total Files Analyzed: {rep.total_files:,} ({rep.total_loc:,} LOC)")
+        print("   Planned Partition Breakdown:")
+        for part, count in rep.partition_counts.items():
+            print(f"     - {part}/: {count} files")
+        if rep.conflicts:
+            print(f"   ⚠️ Potential Conflicts ({len(rep.conflicts)}):")
+            for c in rep.conflicts[:5]:
+                print(f"     - {c}")
+        print("   Recommended Actions:")
+        for r in rep.recommendations:
+            print(f"     👉 {r}")
+        print("\n💡 Run percipience migrate --from-conventional --execute to apply migration.")
+    else:
+        print("🚀 Executing Quad-Space repository migration...")
+        res = migrator.execute_migration(dry_run=False)
+        print(f"✅ Migration Complete! Files Migrated: {res['files_migrated']}")
+        print(f"   Partition Counts: {res['partition_counts']}")
+        print(f"   Rollback Manifest Saved: {res['manifest_file']}")
 
 def check_basic_tools_permission() -> bool:
     """
@@ -1203,6 +1307,79 @@ def cmd_swarm(args):
     elif action == "fleet":
         _require_engine(FleetManager, "fleet_manager", "swarm fleet", "Business / Enterprise")
         mgr = FleetManager()
+
+        # Remote Intervention Action
+        if getattr(args, "action", None):
+            machine = getattr(args, "machine", None)
+            if not machine:
+                print("❌ Error: --machine <id> is required when triggering --action.")
+                sys.exit(1)
+            params = {}
+            if getattr(args, "params", None):
+                try:
+                    params = json.loads(args.params)
+                except Exception as e:
+                    print(f"❌ Error parsing --params JSON: {e}")
+                    sys.exit(1)
+            actor = getattr(args, "actor", "admin@enterprise.internal")
+            try:
+                res = mgr.execute_remote_action(machine_id=machine, action=args.action, params=params, actor=actor)
+                inv = res["intervention"]
+                print(f"✅ Remote Intervention Executed: {inv['intervention_id']}")
+                print(f"   Target Machine: {inv['machine_id']}")
+                print(f"   Action:         {inv['action'].upper()}")
+                print(f"   Actor:          {inv['actor']}")
+                print(f"   Details:        {inv['details']}")
+                print(f"   Machine Status: {res['machine']['health_status']}")
+            except Exception as e:
+                print(f"❌ Intervention failed: {e}")
+                sys.exit(1)
+            return
+
+        # Quarantine Incident Resolution
+        if getattr(args, "resolve_incident", None):
+            iid = args.resolve_incident
+            verdict = getattr(args, "resolution", "APPROVED_PATCH")
+            notes = getattr(args, "notes", "Resolved via CLI")
+            actor = getattr(args, "actor", "admin@enterprise.internal")
+            try:
+                res = mgr.resolve_quarantine_incident(incident_id=iid, resolution=verdict, resolution_notes=notes, actor=actor)
+                seal = res["merkle_seal"]
+                print(f"🛡️ Quarantine Incident Resolved: {iid}")
+                print(f"   Resolution:     [{verdict}]")
+                print(f"   Actor:          {actor}")
+                print(f"   Notes:          {notes}")
+                print(f"   Merkle Block:   #{seal.get('block_id', 'SEALED')}")
+                print(f"   Block Hash:     {seal.get('block_hash', seal.get('current_block_hash'))}")
+                print(f"   Merkle Root:    {seal.get('merkle_root')}")
+            except Exception as e:
+                print(f"❌ Quarantine resolution failed: {e}")
+                sys.exit(1)
+            return
+
+        # Quarantine Central Command Display
+        if getattr(args, "quarantine", False):
+            qc = mgr.get_quarantine_command_center()
+            st = qc["stats"]
+            print("🛡️ Enterprise Security & Quarantine Central Command (CAP-44):")
+            print(f"   Total Incidents: {st['total']} | Quarantined: {st['quarantined']} | Merkle Sealed: {st['resolved']}")
+            print(f"   Risk Breakdown:  Critical: {st['critical']} | High: {st['high']} | Medium: {st['medium']} | Low: {st['low']}")
+            print("\n   Active / Tracked Incidents:")
+            for inc in qc["incidents"]:
+                status_icon = "✔" if inc["status"] == "RESOLVED" else "🛑"
+                seal_str = f" [Sealed #{inc['merkle_seal']['block_id']}]" if inc.get("merkle_seal") else ""
+                print(f"   {status_icon} [{inc['severity']:8}] {inc['incident_id']:35} | {inc['category']:17} | {inc['target']:25} | {inc['status']}{seal_str}")
+            return
+
+        # Interventions Audit Log Display
+        if getattr(args, "interventions", False):
+            hist = mgr.get_interventions_audit(machine_id=getattr(args, "machine", None))
+            print("📜 Remote Admin Interventions Audit Log (CAP-44):")
+            print(f"   Total Logged: {len(hist)}")
+            for item in hist:
+                print(f"   • [{item['timestamp_utc'][:19]}] {item['intervention_id']} | {item['machine_id']} | {item['action'].upper():16} | {item['actor']} | {item['details']}")
+            return
+
         if getattr(args, "simulate_pulse", False):
             mgr.simulate_pulse(delta_tokens=50000, advance_task=True)
             print("⚡ Injected activity pulse (+50k tokens & milestone advancement) into fleet.")
@@ -1591,8 +1768,41 @@ def main():
     # init
     p_init = subparsers.add_parser("init", help="Bootstrap Quad-Space workspace")
     p_init.add_argument("--mode", default="multi_module", choices=["single_module", "multi_module"])
-    p_init.add_argument("--parent-plan", required=True)
+    p_init.add_argument("--parent-plan", default=None, help="Path to parent plan or .nbpack")
+    p_init.add_argument("--interactive", action="store_true", help="Launch interactive onboarding setup wizard")
     p_init.set_defaults(func=cmd_init)
+
+    # bot (GitOps PR Bot)
+    p_bot = subparsers.add_parser("bot", help="Interactive GitOps PR Bot (deploy, comment, slash-commands)")
+    p_bot_subs = p_bot.add_subparsers(dest="bot_action", required=True)
+    p_bot_deploy = p_bot_subs.add_parser("deploy", help="Deploy GitOps PR bot workflow & webhook configuration")
+    p_bot_comment = p_bot_subs.add_parser("comment", help="Format and post rich Markdown PR status card")
+    p_bot_comment.add_argument("--pr", default="1", help="PR number")
+    p_bot_comment.add_argument("--branch", default="main", help="Target branch")
+    p_bot_comment.add_argument("--sha", default="HEAD", help="Commit SHA")
+    p_bot_cmd = p_bot_subs.add_parser("command", help="Handle developer slash-command (/re-heal, /rollback, /verify)")
+    p_bot_cmd.add_argument("--cmd", required=True, help="Slash command text e.g. /verify")
+    p_bot_cmd.add_argument("--pr", default="1", help="PR number")
+    p_bot_cmd.add_argument("--actor", default="developer", help="Command author")
+    p_bot.set_defaults(func=cmd_bot)
+
+    # search (Hybrid Sparse-Dense Vector RAG)
+    p_search = subparsers.add_parser("search", help="Hybrid sparse-dense vector code retrieval alongside AST pruning")
+    p_search.add_argument("query", help="Code search or conceptual question query")
+    p_search.add_argument("--top-k", type=int, default=5, help="Number of results to retrieve")
+    p_search.add_argument("--alpha", type=float, default=0.5, help="Weight between dense vector (1.0) and sparse BM25 (0.0)")
+    p_search.add_argument("--reindex", action="store_true", help="Reindex codebase prior to search")
+    p_search.add_argument("--no-multi-hop", action="store_true", help="Disable multi-hop dependency expansion")
+    p_search.add_argument("--json", action="store_true", help="Output raw JSON results")
+    p_search.set_defaults(func=cmd_search)
+
+    # migrate (Conventional to Quad-Space)
+    p_migrate = subparsers.add_parser("migrate", help="Migrate conventional codebase into Quad-Space architecture")
+    p_migrate.add_argument("--from-conventional", action="store_true", help="Migrate from conventional layout")
+    p_migrate.add_argument("--analyze-only", action="store_true", help="Analyze and output dry-run report without moving files")
+    p_migrate.add_argument("--execute", action="store_true", help="Execute physical migration into workplace, user, .nb, .claude")
+    p_migrate.add_argument("--rollback", action="store_true", help="Roll back previously executed migration")
+    p_migrate.set_defaults(func=cmd_migrate)
 
     # pack
     p_pack = subparsers.add_parser("pack", help="Compile proprietary .nbpack bundle")
@@ -1810,6 +2020,15 @@ def main():
     # swarm fleet
     p_sw_flt = p_swarm_subs.add_parser("fleet", help="Inspect distributed workstation and node fleet metrics")
     p_sw_flt.add_argument("--simulate-pulse", action="store_true", help="Inject simulated pulse with +50k tokens")
+    p_sw_flt.add_argument("--action", choices=["pause", "resume", "surgical_rollback", "evict_lease", "flush_ast_cache"], help="Trigger remote admin intervention on a machine")
+    p_sw_flt.add_argument("--machine", help="Target machine ID for remote intervention")
+    p_sw_flt.add_argument("--params", help="JSON parameters for intervention")
+    p_sw_flt.add_argument("--actor", default="admin@enterprise.internal", help="Administrator email / identity")
+    p_sw_flt.add_argument("--interventions", action="store_true", help="List remote intervention audit log")
+    p_sw_flt.add_argument("--quarantine", action="store_true", help="Display Enterprise Security & Quarantine Central Command triage")
+    p_sw_flt.add_argument("--resolve-incident", help="Resolve a quarantined incident by ID")
+    p_sw_flt.add_argument("--resolution", choices=["APPROVED_PATCH", "DISMISSED", "SURGICALLY_ROLLED_BACK", "QUARANTINE_LIFTED", "RESOLVED"], default="APPROVED_PATCH", help="Resolution verdict to seal into Merkle ledger")
+    p_sw_flt.add_argument("--notes", default="Resolved via CLI triage", help="Triage notes for incident resolution")
 
     # swarm dispatch (DEWS remote fleet)
     p_sw_disp = p_swarm_subs.add_parser("dispatch", help="Dispatch plan derivation to distributed container fleet (DEWS)")

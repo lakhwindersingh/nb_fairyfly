@@ -355,3 +355,91 @@ class FleetAgentDaemon:
                 return resp.status in (200, 201)
         except Exception:
             return False
+
+
+    def poll_remote_commands(
+        self,
+        portal_url: str = "http://127.0.0.1:3000",
+        auth_token: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Polls portal control plane for pending remote intervention commands (TODO-PRT-11 / CAP-44).
+        """
+        url = f"{portal_url.rstrip('/')}/api/fleet/commands/poll?machine_id={self._machine_id}"
+        req = urllib.request.Request(url, headers={"Content-Type": "application/json"})
+        if auth_token:
+            req.add_header("Authorization", f"Bearer {auth_token}")
+
+        try:
+            with urllib.request.urlopen(req, timeout=3.0) as resp:
+                if resp.status in (200, 201):
+                    payload = json.loads(resp.read().decode("utf-8"))
+                    return payload.get("commands", [])
+        except Exception:
+            return []
+        return []
+
+    def execute_remote_command(self, command: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Executes a received remote intervention command locally on this workstation node.
+        """
+        action = command.get("action")
+        params = command.get("params") or {}
+        cmd_id = command.get("command_id", f"cmd_{uuid.uuid4().hex[:8]}")
+        result: Dict[str, Any] = {
+            "command_id": cmd_id,
+            "action": action,
+            "machine_id": self._machine_id,
+            "status": "SUCCESS"
+        }
+
+        if action == "pause":
+            if self.current_task:
+                self.current_task.is_stuck = False
+                self.current_task.step_status = "PAUSED_BY_ADMIN"
+            result["details"] = "Node task execution loop frozen by remote admin."
+
+        elif action == "resume":
+            if self.current_task:
+                self.current_task.step_status = "RESUMED_ACTIVE"
+            result["details"] = "Node task execution loop resumed active by remote admin."
+
+        elif action == "surgical_rollback":
+            rp = params.get("recovery_point", "RP_SURGICAL_PREV")
+            mod = params.get("module_id", "workplace")
+            if self.current_task:
+                self.current_task.step_status = f"ROLLED_BACK_TO_{rp}"
+            result["details"] = f"Module {mod} rolled back to {rp}."
+
+        elif action == "evict_lease":
+            wt = params.get("worktree", "")
+            if self.current_task:
+                self.current_task.step_status = "LEASE_EVICTED"
+            result["details"] = f"Worktree lease {wt or 'active'} evicted."
+
+        elif action == "flush_ast_cache":
+            cache_dir = self.workspace_root / ".scratch" / "ast_cache"
+            cleared_files = 0
+            if cache_dir.exists():
+                for f in cache_dir.glob("*"):
+                    try:
+                        f.unlink()
+                        cleared_files += 1
+                    except Exception:
+                        pass
+            try:
+                import sys
+                for mod_name in list(sys.modules.keys()):
+                    if "ast_optimizer" in mod_name:
+                        opt = getattr(sys.modules[mod_name], "ASTOptimizer", None)
+                        if opt and hasattr(opt, "_MEMORY_CACHE"):
+                            opt._MEMORY_CACHE.clear()
+            except Exception:
+                pass
+            result["details"] = f"Flushed Tree-Sitter AST cache ({cleared_files} files cleared)."
+
+        else:
+            result["status"] = "UNRECOGNIZED_ACTION"
+            result["details"] = f"Action '{action}' is not supported by agent daemon."
+
+        return result

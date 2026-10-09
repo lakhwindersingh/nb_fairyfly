@@ -1045,6 +1045,149 @@ PORTAL_HTML = """<!DOCTYPE html>
       .tree-node.level-4 { margin-left: 26px; }
     }
   </style>
+  <script>
+    // Immediate Theme Initialization (prevents FOUC & localStorage exceptions)
+    function initTheme() {
+      try {
+        const saved = localStorage.getItem('nb_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', saved);
+        updateThemeIcon(saved);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+    function toggleTheme() {
+      try {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('nb_theme', next);
+        updateThemeIcon(next);
+      } catch (e) {}
+    }
+    function updateThemeIcon(theme) {
+      const btn = document.getElementById('portalThemeBtn');
+      if (btn) btn.innerText = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+    }
+    initTheme();
+
+    // Global session state initialized safely before DOM rendering
+    var clientSessionToken = null;
+    try {
+      clientSessionToken = localStorage.getItem('nb_client_token') || null;
+    } catch (e) {}
+    window.clientSessionToken = clientSessionToken;
+
+    // View switcher for Enterprise Client Space Admin Views
+    function switchAdminView(viewId) {
+      const viewMap = {
+        'client-overview': 'adminViewOverview',
+        'governance': 'governance',
+        'commercial-provisioner': 'commercial-provisioner',
+        'swarm-governance': 'swarm-governance',
+        'fleet-monitor': 'fleet-monitor'
+      };
+
+      // Update admin navigation buttons
+      document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
+      if (viewId === 'client-overview') {
+        document.getElementById('adminTabOverviewBtn')?.classList.add('active');
+      } else if (viewId === 'governance') {
+        document.getElementById('govNavBtn')?.classList.add('active');
+      } else if (viewId === 'commercial-provisioner') {
+        document.getElementById('commercialNavBtn')?.classList.add('active');
+      } else if (viewId === 'swarm-governance') {
+        document.getElementById('swarmNavBtn')?.classList.add('active');
+      } else if (viewId === 'fleet-monitor') {
+        document.getElementById('fleetNavBtn')?.classList.add('active');
+      }
+
+      // Hide all admin panes and show target
+      document.querySelectorAll('.admin-view-pane').forEach(el => el.classList.remove('active'));
+      const targetId = viewMap[viewId] || viewId;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // Trigger loaders if available
+      if (viewId === 'governance') {
+        if (typeof loadGovernanceTab === 'function') loadGovernanceTab();
+      } else if (viewId === 'commercial-provisioner') {
+        if (typeof loadCommercialTab === 'function') loadCommercialTab();
+      } else if (viewId === 'swarm-governance') {
+        if (typeof loadSwarmTab === 'function') loadSwarmTab();
+      } else if (viewId === 'fleet-monitor') {
+        if (typeof loadFleetTab === 'function') loadFleetTab();
+      } else if (viewId === 'client-overview') {
+        if (typeof loadClientData === 'function') loadClientData();
+      }
+    }
+    window.switchAdminView = switchAdminView;
+
+    // Main Tab Routing - hoisted and attached to window so header buttons never fail with ReferenceError
+    function showTab(id) {
+      if (!id) return;
+
+      const adminTabs = ['governance', 'commercial-provisioner', 'swarm-governance', 'fleet-monitor'];
+      if (adminTabs.includes(id)) {
+        showTab('client');
+        if (!window.clientSessionToken) {
+          if (typeof loginClient === 'function') loginClient(true);
+        }
+        switchAdminView(id);
+        return;
+      }
+
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+      }
+      if (id === 'swarm-fleet') {
+        if (typeof loadSwarmFleetTelemetry === 'function') loadSwarmFleetTelemetry();
+      }
+      
+      // Highlight matching nav button regardless of caller or inner elements
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const oc = btn.getAttribute('onclick') || '';
+        if (oc.includes("'" + id + "'") || oc.includes('"' + id + '"')) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Update URL hash for deep linking and back/forward browser navigation
+      if (window.location.hash !== '#' + id) {
+        try {
+          history.replaceState ? history.replaceState(null, null, '#' + id) : location.hash = '#' + id;
+        } catch (e) {}
+      }
+
+      // Smooth scroll to top on tab switch
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {}
+
+      // Tab-specific live data activations
+      if (id === 'governance') {
+        if (typeof loadGovernanceTab === 'function') loadGovernanceTab();
+      } else if (id === 'tier-matrix') {
+        if (typeof calculateCeilings === 'function') calculateCeilings();
+      } else if (id === 'roi-calculator') {
+        if (typeof recalcRoi === 'function') recalcRoi();
+      } else if (id === 'observability') {
+        if (typeof fetchOtelSpans === 'function') fetchOtelSpans();
+      } else if (id === 'reports') {
+        if (typeof fetchPortalTokenSavings === 'function') fetchPortalTokenSavings();
+      } else if (id === 'swarm-governance') {
+        if (typeof loadSwarmTab === 'function') loadSwarmTab();
+      } else if (id === 'client') {
+        if (typeof checkClientSession === 'function') checkClientSession();
+      }
+    }
+    window.showTab = showTab;
+  </script>
 </head>
 <body>
   <header>
@@ -4232,6 +4375,7 @@ percipience rollback \
                 <th style="padding:10px 8px;">Progress</th>
                 <th style="padding:10px 8px;">Gross Saved</th>
                 <th style="padding:10px 8px;">Status</th>
+                <th style="padding:10px 8px; text-align:right;">Remote Admin Interventions</th>
               </tr>
             </thead>
             <tbody id="fleetMachineTableBody">
@@ -4273,6 +4417,96 @@ percipience rollback \
         </div>
       </div>
     
+
+      <!-- Enterprise Security & Quarantine Central Command (TODO-PRT-12 / CAP-44) -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--text); display:flex; align-items:center; gap:8px;">
+              <span>🛡️ Enterprise Security &amp; Quarantine Central Command</span>
+              <span id="qcQuarantineBadge" style="background:rgba(239,68,68,0.15); color:#f87171; font-size:11px; padding:2px 8px; border-radius:12px; font-weight:700;">Active Triage</span>
+            </div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+              Single-pane triage for context poisoning, prompt injections, AST dependency CVE blocks, and drift evolutions. Sealed into immutable Merkle state ledger.
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button onclick="loadFleetTab()" class="nav-btn" style="border:1px solid var(--border-accent); color:var(--cyan); font-size:12px; cursor:pointer; padding:6px 12px; border-radius:6px;">🔄 Refresh Triage</button>
+          </div>
+        </div>
+
+        <!-- Quarantine Summary Metrics -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:18px;">
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--muted); font-weight:600;">Total Incidents</div>
+            <div id="qcTotalCount" style="font-size:20px; font-weight:800; color:var(--text); margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:#f87171; font-weight:600;">Active Quarantined</div>
+            <div id="qcActiveCount" style="font-size:20px; font-weight:800; color:#f87171; margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--green); font-weight:600;">Merkle Sealed</div>
+            <div id="qcResolvedCount" style="font-size:20px; font-weight:800; color:var(--green); margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--amber); font-weight:600;">Critical Risk</div>
+            <div id="qcCriticalCount" style="font-size:20px; font-weight:800; color:var(--amber); margin-top:4px;">--</div>
+          </div>
+        </div>
+
+        <!-- Quarantine Triage Table -->
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:10px 8px;">Incident ID</th>
+                <th style="padding:10px 8px;">Vector / Type</th>
+                <th style="padding:10px 8px;">Target / Module</th>
+                <th style="padding:10px 8px;">Severity</th>
+                <th style="padding:10px 8px;">Detected (UTC)</th>
+                <th style="padding:10px 8px;">Status</th>
+                <th style="padding:10px 8px;">Merkle Seal / Resolution</th>
+                <th style="padding:10px 8px; text-align:right;">Triage Action</th>
+              </tr>
+            </thead>
+            <tbody id="qcTriageTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Remote Admin Interventions Audit Log (TODO-PRT-11 / CAP-44) -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h3 style="margin:0; font-size:17px; color:var(--text);">📜 Remote Machine Interventions Audit Log</h3>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+              Immutable chronological record of administrator interventions across workstations, leases, and AST caches.
+            </div>
+          </div>
+          <span style="font-size:11px; color:var(--cyan); background:rgba(6,182,212,0.1); padding:3px 8px; border-radius:6px; font-weight:600;">Enterprise RBAC Audit</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:8px 6px;">Intervention ID</th>
+                <th style="padding:8px 6px;">Timestamp (UTC)</th>
+                <th style="padding:8px 6px;">Target Machine</th>
+                <th style="padding:8px 6px;">Action</th>
+                <th style="padding:8px 6px;">Actor</th>
+                <th style="padding:8px 6px;">Status</th>
+                <th style="padding:8px 6px;">Details &amp; Audit Trail</th>
+              </tr>
+            </thead>
+            <tbody id="fleetInterventionsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
         </div> <!-- End of fleet-monitor pane -->
 
             </div> <!-- End of df-content-area -->
@@ -4326,10 +4560,12 @@ percipience rollback \
     async function loadFleetTab() {
       updateDockerStatusBadge();
       try {
-        const [resMach, resFin, resTasks] = await Promise.all([
+        const [resMach, resFin, resTasks, resQc, resInt] = await Promise.all([
           fetch('/api/fleet/machines'),
           fetch('/api/fleet/finops-rollup'),
-          fetch('/api/fleet/tasks')
+          fetch('/api/fleet/tasks'),
+          fetch('/api/fleet/quarantine'),
+          fetch('/api/fleet/interventions?limit=25')
         ]);
         if (resMach.ok) {
           const mData = await resMach.json();
@@ -4342,11 +4578,20 @@ percipience rollback \
               const taskName = m.active_task ? m.active_task.task_name : 'Idle';
               const progress = m.active_task ? m.active_task.progress_pct : 100;
               const saved = m.finops ? ('$' + Number(m.finops.gross_savings_usd).toFixed(4)) : '$0.00';
+              const isPaused = m.health_status === 'PAUSED';
+              const pauseBtn = isPaused ?
+                `<button onclick="execRemoteAction('${m.machine_id}', 'resume')" class="nav-btn" style="padding:3px 7px; font-size:11px; background:rgba(16,185,129,0.15); color:var(--green); border:1px solid var(--green); border-radius:4px; cursor:pointer;" title="Resume subagent loop">▶ Resume</button>` :
+                `<button onclick="execRemoteAction('${m.machine_id}', 'pause')" class="nav-btn" style="padding:3px 7px; font-size:11px; background:rgba(239,68,68,0.1); color:#f87171; border:1px solid rgba(239,68,68,0.4); border-radius:4px; cursor:pointer;" title="Emergency pause subagent">⏸ Pause</button>`;
+
+              const rollbackBtn = `<button onclick="triggerRemoteRollback('${m.machine_id}')" class="nav-btn" style="padding:3px 7px; font-size:11px; background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid var(--amber); border-radius:4px; cursor:pointer;" title="Surgical Rollback to RP_k">⏪ Rollback</button>`;
+              const evictBtn = `<button onclick="execRemoteAction('${m.machine_id}', 'evict_lease', {worktree:'${m.active_worktree || ''}'})" class="nav-btn" style="padding:3px 7px; font-size:11px; background:rgba(139,92,246,0.15); color:var(--purple); border:1px solid var(--purple); border-radius:4px; cursor:pointer;" title="Evict dead worktree lease">🧹 Evict</button>`;
+              const flushAstBtn = `<button onclick="execRemoteAction('${m.machine_id}', 'flush_ast_cache')" class="nav-btn" style="padding:3px 7px; font-size:11px; background:rgba(6,182,212,0.15); color:var(--cyan); border:1px solid var(--cyan); border-radius:4px; cursor:pointer;" title="Flush local Tree-Sitter AST cache">⚡ Flush AST</button>`;
+
               return '<tr style="border-bottom:1px solid var(--border);">' +
                 '<td style="padding:10px 8px; font-weight:600;">' + m.hostname + '<br><span style="font-size:11px; color:var(--muted);">' + m.machine_id + ' (' + m.os_name + ')</span></td>' +
                 '<td style="padding:10px 8px;">' + m.user_id + '</td>' +
                 '<td style="padding:10px 8px;"><code>' + m.project_id + '</code></td>' +
-                '<td style="padding:10px 8px;"><code>' + m.active_worktree + '</code><br><span style="font-size:11px; color:var(--muted);">' + m.git_branch + ' @ ' + m.git_commit + '</span></td>' +
+                '<td style="padding:10px 8px;"><code>' + (m.active_worktree || 'none') + '</code><br><span style="font-size:11px; color:var(--muted);">' + m.git_branch + ' @ ' + m.git_commit + '</span></td>' +
                 '<td style="padding:10px 8px;">' + taskName + '</td>' +
                 '<td style="padding:10px 8px; width:120px;">' +
                   '<div style="background:var(--code-bg); height:8px; border-radius:4px; overflow:hidden;">' +
@@ -4356,6 +4601,11 @@ percipience rollback \
                 '</td>' +
                 '<td style="padding:10px 8px; color:var(--cyan); font-weight:700;">' + saved + '</td>' +
                 '<td style="padding:10px 8px;">' + statusBadge + '</td>' +
+                '<td style="padding:10px 8px; text-align:right;">' +
+                  '<div style="display:inline-flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">' +
+                    pauseBtn + rollbackBtn + evictBtn + flushAstBtn +
+                  '</div>' +
+                '</td>' +
               '</tr>';
             }).join('');
           }
@@ -4416,8 +4666,142 @@ percipience rollback \
             }).join('');
           }
         }
+        // Populate Quarantine Command Center
+        if (resQc && resQc.ok) {
+          const qData = await resQc.json();
+          const cc = qData.command_center || {};
+          const stats = cc.stats || {};
+          if (document.getElementById('qcTotalCount')) document.getElementById('qcTotalCount').innerText = stats.total || 0;
+          if (document.getElementById('qcActiveCount')) document.getElementById('qcActiveCount').innerText = stats.quarantined || 0;
+          if (document.getElementById('qcResolvedCount')) document.getElementById('qcResolvedCount').innerText = stats.resolved || 0;
+          if (document.getElementById('qcCriticalCount')) document.getElementById('qcCriticalCount').innerText = stats.critical || 0;
+
+          const qtbody = document.getElementById('qcTriageTableBody');
+          if (qtbody) {
+            const incList = cc.incidents || [];
+            if (incList.length === 0) {
+              qtbody.innerHTML = '<tr><td colspan="8" style="padding:16px; text-align:center; color:var(--muted);">No quarantined security incidents. Fleet is pure.</td></tr>';
+            } else {
+              qtbody.innerHTML = incList.map(inc => {
+                const isResolved = inc.status === 'RESOLVED';
+                const sevBadge = inc.severity === 'CRITICAL' ? '<span style="background:rgba(239,68,68,0.2); color:#f87171; padding:2px 6px; border-radius:4px; font-weight:700;">CRITICAL</span>' :
+                                 inc.severity === 'HIGH' ? '<span style="background:rgba(245,158,11,0.2); color:var(--amber); padding:2px 6px; border-radius:4px; font-weight:700;">HIGH</span>' :
+                                 inc.severity === 'MEDIUM' ? '<span style="background:rgba(139,92,246,0.2); color:var(--purple); padding:2px 6px; border-radius:4px; font-weight:700;">MEDIUM</span>' :
+                                 '<span style="background:rgba(16,185,129,0.2); color:var(--green); padding:2px 6px; border-radius:4px; font-weight:700;">LOW</span>';
+
+                const statusLabel = isResolved ? '<span style="color:var(--green); font-weight:700;">✔ RESOLVED</span>' :
+                                    '<span style="color:#f87171; font-weight:700;">🛑 ' + inc.status + '</span>';
+
+                const sealInfo = isResolved ? (
+                  '<div style="font-size:11px; color:var(--green); font-weight:600;">' + (inc.resolution || 'SEALED') + '<br>' +
+                  '<code style="font-size:10px; color:var(--muted);">Block #' + (inc.merkle_seal ? inc.merkle_seal.block_id : 'LEDGER') + '</code></div>'
+                ) : '<span style="color:var(--muted); font-size:11px;">Awaiting Admin Triage</span>';
+
+                const actions = isResolved ?
+                  '<span style="font-size:11px; color:var(--muted);">Sealed in Merkle Ledger</span>' :
+                  '<div style="display:inline-flex; gap:6px; justify-content:flex-end;">' +
+                    `<button onclick="resolveQuarantineIncident('${inc.incident_id}', 'APPROVED_PATCH')" class="nav-btn" style="padding:3px 6px; font-size:11px; background:rgba(16,185,129,0.15); color:var(--green); border:1px solid var(--green); border-radius:4px; cursor:pointer;">Approve</button>` +
+                    `<button onclick="resolveQuarantineIncident('${inc.incident_id}', 'SURGICALLY_ROLLED_BACK')" class="nav-btn" style="padding:3px 6px; font-size:11px; background:rgba(245,158,11,0.15); color:var(--amber); border:1px solid var(--amber); border-radius:4px; cursor:pointer;">Rollback</button>` +
+                    `<button onclick="resolveQuarantineIncident('${inc.incident_id}', 'DISMISSED')" class="nav-btn" style="padding:3px 6px; font-size:11px; background:rgba(239,68,68,0.1); color:#f87171; border:1px solid rgba(239,68,68,0.4); border-radius:4px; cursor:pointer;">Dismiss</button>` +
+                  '</div>';
+
+                return '<tr style="border-bottom:1px solid var(--border);">' +
+                  '<td style="padding:8px 6px; font-weight:700;"><code>' + inc.incident_id + '</code></td>' +
+                  '<td style="padding:8px 6px;"><span style="font-size:11px; color:var(--cyan); font-weight:600;">' + inc.category + '</span></td>' +
+                  '<td style="padding:8px 6px;"><code>' + inc.target + '</code><br><span style="font-size:10px; color:var(--muted);">' + (inc.summary || '').substring(0, 60) + '...</span></td>' +
+                  '<td style="padding:8px 6px;">' + sevBadge + '</td>' +
+                  '<td style="padding:8px 6px; font-size:11px; color:var(--muted);">' + (inc.detected_at || '').substring(0, 19).replace('T', ' ') + '</td>' +
+                  '<td style="padding:8px 6px;">' + statusLabel + '</td>' +
+                  '<td style="padding:8px 6px;">' + sealInfo + '</td>' +
+                  '<td style="padding:8px 6px; text-align:right;">' + actions + '</td>' +
+                '</tr>';
+              }).join('');
+            }
+          }
+        }
+
+        // Populate Interventions Audit Log
+        if (resInt && resInt.ok) {
+          const iData = await resInt.json();
+          const itbody = document.getElementById('fleetInterventionsTableBody');
+          if (itbody) {
+            const list = iData.interventions || [];
+            if (list.length === 0) {
+              itbody.innerHTML = '<tr><td colspan="7" style="padding:16px; text-align:center; color:var(--muted);">No remote interventions recorded yet.</td></tr>';
+            } else {
+              itbody.innerHTML = list.map(item => {
+                return '<tr style="border-bottom:1px solid var(--border);">' +
+                  '<td style="padding:8px 6px; font-weight:700;"><code>' + item.intervention_id + '</code></td>' +
+                  '<td style="padding:8px 6px; font-size:11px; color:var(--muted);">' + (item.timestamp_utc || '').substring(0, 19).replace('T', ' ') + '</td>' +
+                  '<td style="padding:8px 6px;"><code>' + item.machine_id + '</code></td>' +
+                  '<td style="padding:8px 6px;"><span style="background:rgba(6,182,212,0.15); color:var(--cyan); padding:2px 6px; border-radius:4px; font-weight:700; font-size:11px;">' + item.action.toUpperCase() + '</span></td>' +
+                  '<td style="padding:8px 6px; font-size:11px;">' + item.actor + '</td>' +
+                  '<td style="padding:8px 6px;"><span style="color:var(--green); font-weight:700;">' + item.status + '</span></td>' +
+                  '<td style="padding:8px 6px; font-size:11px; color:var(--muted);">' + item.details + '</td>' +
+                '</tr>';
+              }).join('');
+            }
+          }
+        }
       } catch (e) {
         console.error("Fleet tab load error", e);
+      }
+    }
+
+    async function execRemoteAction(machineId, action, params = {}) {
+      try {
+        const res = await fetch('/api/fleet/action', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            machine_id: machineId,
+            action: action,
+            params: params,
+            actor: 'admin@enterprise.internal'
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'SUCCESS') {
+          await loadFleetTab();
+        } else {
+          alert('Remote action failed: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Network error executing remote action: ' + err.message);
+      }
+    }
+
+    async function triggerRemoteRollback(machineId) {
+      const rp = prompt('Enter target Recovery Point ID (e.g. RP_SURGICAL_PREV or RP_PLAY3_BOOTSTRAP_001):', 'RP_SURGICAL_PREV');
+      if (rp) {
+        await execRemoteAction(machineId, 'surgical_rollback', {recovery_point: rp.trim(), module_id: 'workplace'});
+      }
+    }
+
+    async function resolveQuarantineIncident(incidentId, resolution) {
+      const notes = prompt('Enter admin triage notes for ' + incidentId + ' [' + resolution + ']:', 'Triaged and sealed via Quarantine Central Command');
+      if (notes === null) return;
+      try {
+        const res = await fetch('/api/fleet/quarantine/resolve', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            incident_id: incidentId,
+            resolution: resolution,
+            resolution_notes: notes,
+            actor: 'admin@enterprise.internal'
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'SUCCESS') {
+          const seal = data.merkle_seal || {};
+          alert(`🛡️ Incident ${incidentId} resolved with [${resolution}]!\nCryptographically sealed into Merkle Block #${seal.block_id || 'SEALED'}\nHash: ${seal.block_hash || seal.current_block_hash || 'SHA256_VERIFIED'}`);
+          await loadFleetTab();
+        } else {
+          alert('Resolution failed: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Network error resolving quarantine incident: ' + err.message);
       }
     }
 
@@ -4568,10 +4952,12 @@ percipience rollback \
       } else if (id === 'reports') {
         fetchPortalTokenSavings();
       } else if (id === 'swarm-governance') {
-        loadSwarmTab();
+        if (typeof loadSwarmTab === 'function') loadSwarmTab();
+      } else if (id === 'client') {
+        if (typeof checkClientSession === 'function') checkClientSession();
       }
-    window.showTab = showTab;
     }
+    window.showTab = showTab;
 
     async function runContextGatewayDemo() {
       const planId = document.getElementById('gwPlanSelect').value;
@@ -4743,7 +5129,12 @@ percipience rollback \
   });
 
   // Client Authentication & Observability Handlers
-  let clientSessionToken = localStorage.getItem("nb_client_token") || null;
+  try {
+    if (!window.clientSessionToken) {
+      window.clientSessionToken = localStorage.getItem("nb_client_token") || null;
+    }
+  } catch (e) {}
+  var clientSessionToken = window.clientSessionToken || null;
 
   async function loginClient(isDemo) {
     const clientId = isDemo ? "acme_corp_fintech" : document.getElementById("loginClientId").value;
@@ -4758,7 +5149,8 @@ percipience rollback \
       const data = await res.json();
       if (data.status === "AUTHENTICATED") {
         clientSessionToken = data.session_token;
-        localStorage.setItem("nb_client_token", clientSessionToken);
+        window.clientSessionToken = clientSessionToken;
+        try { localStorage.setItem("nb_client_token", clientSessionToken); } catch (e) {}
         document.getElementById("clientLoginCard").style.display = "none";
         document.getElementById("clientAuthConsole").style.display = "flex";
         document.getElementById("loginErrorMsg").style.display = "none";
@@ -4774,7 +5166,8 @@ percipience rollback \
 
   async function logoutClient() {
     clientSessionToken = null;
-    localStorage.removeItem("nb_client_token");
+    window.clientSessionToken = null;
+    try { localStorage.removeItem("nb_client_token"); } catch (e) {}
     document.getElementById("clientLoginCard").style.display = "block";
     document.getElementById("clientAuthConsole").style.display = "none";
     document.getElementById("clientNavBtn").innerText = "🔐 Client Space";
@@ -7551,6 +7944,26 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"status": "SUCCESS", "count": len(tasks), "tasks": tasks})
             return
 
+        if parsed.path == "/api/fleet/interventions":
+            query = parse_qs(parsed.query)
+            machine_id = query.get("machine_id", [None])[0]
+            limit = int(query.get("limit", [50])[0])
+            history = GLOBAL_FLEET_MGR.get_interventions_audit(machine_id=machine_id, limit=limit)
+            self._send_json({"status": "SUCCESS", "count": len(history), "interventions": history})
+            return
+
+        if parsed.path == "/api/fleet/quarantine":
+            qc = GLOBAL_FLEET_MGR.get_quarantine_command_center()
+            self._send_json({"status": "SUCCESS", "command_center": qc})
+            return
+
+        if parsed.path == "/api/fleet/commands/poll":
+            query = parse_qs(parsed.query)
+            machine_id = query.get("machine_id", [""])[0]
+            cmds = GLOBAL_FLEET_MGR.poll_commands(machine_id=machine_id)
+            self._send_json({"status": "SUCCESS", "machine_id": machine_id, "commands": cmds})
+            return
+
         if parsed.path == "/api/fleet/docker-status":
             import shutil, subprocess
             docker_installed = shutil.which("docker") is not None
@@ -7596,7 +8009,6 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/fleet/simulate":
-            from urllib.parse import parse_qs
             query_params = parse_qs(parsed.query)
             advance = query_params.get("advance", ["true"])[0].lower() in ("true", "1")
             delta_tokens = int(query_params.get("tokens", ["50000"])[0])
@@ -7607,6 +8019,38 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/fleet/reset":
             res = GLOBAL_FLEET_MGR.reset_fleet()
             self._send_json(res)
+            return
+
+        if parsed.path == "/api/fleet/action":
+            data = self._read_json_body()
+            machine_id = data.get("machine_id")
+            action = data.get("action")
+            params = data.get("params") or {}
+            actor = data.get("actor", "admin@enterprise.internal")
+            if not machine_id or not action:
+                self._send_json({"status": "ERROR", "message": "Missing required machine_id or action parameter."}, 400)
+                return
+            try:
+                res = GLOBAL_FLEET_MGR.execute_remote_action(machine_id=machine_id, action=action, params=params, actor=actor)
+                self._send_json(res)
+            except Exception as e:
+                self._send_json({"status": "ERROR", "message": str(e)}, 400)
+            return
+
+        if parsed.path == "/api/fleet/quarantine/resolve":
+            data = self._read_json_body()
+            incident_id = data.get("incident_id")
+            resolution = data.get("resolution", "APPROVED_PATCH")
+            notes = data.get("resolution_notes", data.get("notes", ""))
+            actor = data.get("actor", "admin@enterprise.internal")
+            if not incident_id:
+                self._send_json({"status": "ERROR", "message": "Missing required incident_id parameter."}, 400)
+                return
+            try:
+                res = GLOBAL_FLEET_MGR.resolve_quarantine_incident(incident_id=incident_id, resolution=resolution, resolution_notes=notes, actor=actor)
+                self._send_json(res)
+            except Exception as e:
+                self._send_json({"status": "ERROR", "message": str(e)}, 400)
             return
 
         if parsed.path == "/api/auth/login":
