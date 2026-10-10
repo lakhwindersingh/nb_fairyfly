@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_50c155aee9bb",
+  "license_id": "lic_plan_enterprise_02cce4337601",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,7 +18,7 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-09T19:09:46.683748+00:00",
+  "issued_at": "2026-10-09T20:29:25.424124+00:00",
   "total_files": 138,
   "file_manifest": {
     "bin/percipience": "bfffe7c0b1bf2c20a4e1a7c004afc412d4f5b89704948016dffa4e4f665d8840",
@@ -160,5 +160,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "036a59cbf97c966e16a6913f86582766e5d54655ee4762c6c01694931f6e640c",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "06b92c63601708ad51a05923f72b7739cda87f960ea5a6ef090fed18d47288f1"
+  "signature_sha256": "95149cb6a362a568dd6eaafb43818e48959e42afa1082295aceca33992f56781"
 }

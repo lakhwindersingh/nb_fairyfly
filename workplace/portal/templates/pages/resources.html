@@ -1,0 +1,418 @@
+<section id="resources" class="tab-content">
+      <div class="subtab-nav">
+        <button class="econ-subtab-btn active" data-econ-btn="res-docs" onclick="showEconomicsSubtab('res-docs')">Documentation</button>
+        <button class="econ-subtab-btn" data-econ-btn="res-reports" onclick="showEconomicsSubtab('res-reports')">Deep Reports</button>
+        <button class="econ-subtab-btn" data-econ-btn="res-observability" onclick="showEconomicsSubtab('res-observability')">Observability</button>
+      </div>
+
+      <div data-econ-subtab="res-docs" class="active" id="res-docs-content"></div>
+      <div data-econ-subtab="res-reports" id="res-reports-content"></div>
+      <div data-econ-subtab="res-observability" id="res-observability-content"></div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const docsSection = document.getElementById('docs');
+          const reportsSection = document.getElementById('reports');
+          const obsSection = document.getElementById('observability');
+
+          if (docsSection) {
+            document.getElementById('res-docs-content').innerHTML = docsSection.innerHTML;
+            docsSection.style.display = 'none';
+          }
+          if (reportsSection) {
+            document.getElementById('res-reports-content').innerHTML = reportsSection.innerHTML;
+            reportsSection.style.display = 'none';
+          }
+          if (obsSection) {
+            document.getElementById('res-observability-content').innerHTML = obsSection.innerHTML;
+            obsSection.style.display = 'none';
+          }
+        });
+      </script>
+    </section>
+
+    <!-- TAB 9: DOCS -->
+    <section id="docs" class="tab-content" style="display:none;">
+      <div class="section-title">Documentation Hub</div>
+      <div class="section-desc">Comprehensive technical integration guides covering CLI, CI/CD Gatekeepers, .nbpack Enclaves, and Surgical Rollback.</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-badge">CLI Quickstart</div>
+          <h3>Getting Started (90 Seconds)</h3>
+          <p>Install the Percipience CLI and initialize your repository into the Quad-Space standard:</p>
+          <pre>npm install -g @neutronbinary/percipience
+# Bootstrap Quad-Space with sealed .nbpack
+percipience init --mode multi_module --parent-plan parent.nbpack
+# Audit Merkle chain continuity
+percipience audit --enforce-merkle-chain</pre>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">CI/CD Gatekeeper</div>
+          <h3>GitHub Actions &amp; GitLab CI</h3>
+          <p>Drop the automated gatekeeper action into your PR validation workflow:</p>
+          <pre>- name: Run Percipience Gatekeeper
+  uses: neutronbinary/percipience-action@v2
+  with:
+    api_key: ${{ secrets.PERCIPIENCE_API_KEY }}
+    enforce_merkle_chain: true
+    min_maturity_score: 0.85</pre>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">IP Defense</div>
+          <h3>Compiling Obfuscated Plans (.nbpack)</h3>
+          <p>Compile and sign proprietary context plans with zero disk leakage:</p>
+          <pre>percipience pack \
+  --input parent_master.md \
+  --include-spaces .nb/context,.nb/agentic \
+  --output .percipience/parent.nbpack \
+  --obfuscate \
+  --sign</pre>
+        </div>
+
+        <div class="card" style="border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+          <div class="card-badge" style="background:var(--cyan); color:#000;">Empirical Study</div>
+          <h3>Benchmark Whitepaper: -62% Claude Token Bills</h3>
+          <p>Read our empirical research paper analyzing 250 tasks across 565k LOC in TypeScript, Python, Go, Rust, and Java:</p>
+          <ul class="bullet-list">
+            <li><b>-62.4% Context Tokens</b> via Tree-Sitter AST body stripping</li>
+            <li><b>88.6% Prompt Cache Hit Rate</b> via static invariant alignment</li>
+            <li><b>-71.8% Direct Cost Drop</b> ($1.42 -> $0.40 blended cost per task)</li>
+            <li><b>0% Workspace Collisions</b> across 10 concurrent agent worktrees</li>
+          </ul>
+          <div style="margin-top:12px;">
+            <a href="/api/docs/whitepaper" target="_blank" style="color:var(--cyan); font-weight:700; text-decoration:none; font-size:12px;">Download / View Full Whitepaper Markdown &rarr;</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Recovery</div>
+          <h3>Surgical Module Rollback Protocol</h3>
+          <p>Recover from context poisoning without breaking concurrent micro-modules:</p>
+          <pre># Sparing sibling micro-modules:
+percipience rollback \
+  --module mod_observability_usage \
+  --target-point RP_PLAY3_BOOTSTRAP_001</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 10: DEEP REPORTS & WHITE PAPERS -->
+    <section id="reports" class="tab-content" style="display:none;">
+      <div class="section-title">Engineering Whitepapers, Audits &amp; Formal Reports</div>
+      <div class="section-desc">Authoritative technical reports generated by the Percipience control plane, covering token reduction mathematics, 20-point SDLC drift audits, context maturity evaluations, and competitive benchmarks.</div>
+
+      <div class="grid-3" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-badge">Mathematical Whitepaper</div>
+          <h3>Token Reduction &amp; Attention Slicing</h3>
+          <p>Formal mathematical proof of 50%–75% prompt context reduction using 6D AST skeletonization and Static Prefix KV-Cache pinning.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>T_opt = ∑ AST(m) + Prefix + Diag</div>
+            <div class="text-emerald" style="margin-top:4px; font-weight:700;">Savings: 5.45M Tokens ($16.36 Saved)</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('docs')" style="width:100%; font-size:11px;">View Full Whitepaper &rarr;</button>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">SDLC Governance Review</div>
+          <h3>20-Point Autonomous SDLC Audit</h3>
+          <p>Comprehensive architectural analysis of shortcomings, drifts, and fixes across Swarm governance, D_max=2 anti-usurpation, and ReAct trajectory recording.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>Shortcomings Identified: 20</div>
+            <div class="text-cyan" style="margin-top:4px; font-weight:700;">Remediation Status: 100% Implemented</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('capabilities')" style="width:100%; font-size:11px;">Explore SDLC Subsystems &rarr;</button>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Autonomous Maturity Scorecard</div>
+          <h3>Context Maturity Evaluation (Level 5)</h3>
+          <p>Scoring the repository across 5 maturity tiers (Ad-hoc to Level 5 Self-Sustaining Autonomous OS) with 100% Quad-Space boundary compliance.</p>
+          <div class="stat-box" style="flex-direction:column; align-items:flex-start; margin-bottom:12px;">
+            <div>Maturity Score: <strong>100.0 / 100 (Level 5)</strong></div>
+            <div class="text-purple" style="margin-top:4px; font-weight:700;">Merkle Blocks: 1007 Continuous</div>
+          </div>
+          <button class="btn btn-secondary" onclick="showTab('observability')" style="width:100%; font-size:11px;">Open Observability Radar &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 11: OBSERVABILITY DASHBOARD -->
+    <section id="observability" class="tab-content" style="display:none;">
+      <div class="section-title">OpenTelemetry GenAI &amp; Quantitative Quality Hub</div>
+      <div class="section-desc">Enterprise telemetry streaming OpenTelemetry GenAI spans, 5-dimensional G-Eval quality scores, semantic prompt caching FinOps, and attention budget quotas.</div>
+
+      <div class="grid-cards" style="margin-bottom:22px;">
+        <div class="metric-card">
+          <div class="metric-val text-cyan">W3C Standard</div>
+          <div class="metric-label">Distributed Tracing (OTel GenAI)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-emerald" id="gevalScoreVal">0.962 / 1.00</div>
+          <div class="metric-label">Composite G-Eval Quality Score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-purple" id="cacheHitRateVal">64.8%</div>
+          <div class="metric-label">Semantic Prompt Cache Hit Rate</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-amber">100% Pinned</div>
+          <div class="metric-label">Static Prefix KV-Cache Alignment</div>
+        </div>
+      </div>
+
+      <!-- OTEL SPANS TABLE -->
+      <div class="card" style="margin-bottom:22px;">
+        <div class="card-title">
+          <span>⚡ Real-Time OpenTelemetry GenAI Spans</span>
+          <button class="btn btn-secondary" onclick="fetchOtelSpans()" style="padding:4px 10px; font-size:11px;">🔄 Refresh Spans</button>
+        </div>
+        <div class="table-wrap" style="margin:8px 0 0;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Traceparent / Span Name</th>
+                <th>Model &amp; Vendor</th>
+                <th>TTFT</th>
+                <th>Latency</th>
+                <th>Token Usage (In / Out)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="otelSpansBody">
+              <tr>
+                <td><code>00-4bf92f35...-00f067aa...-01</code><br><strong>agent_living_doc_architect</strong></td>
+                <td><code>claude-3-7-sonnet</code> (anthropic)</td>
+                <td>340 ms</td>
+                <td>1,120 ms</td>
+                <td>2,450 / 620 tok</td>
+                <td><span class="status-pill status-active">STATUS_OK</span></td>
+              </tr>
+              <tr>
+                <td><code>00-8ca12b91...-11a084bc...-01</code><br><strong>agent_adversarial_fuzzer</strong></td>
+                <td><code>claude-3-5-haiku</code> (anthropic)</td>
+                <td>180 ms</td>
+                <td>640 ms</td>
+                <td>1,100 / 280 tok</td>
+                <td><span class="status-pill status-active">STATUS_OK</span></td>
+              </tr>
+              <tr>
+                <td><code>00-9ef34a10...-22c095de...-01</code><br><strong>agent_ambiguity_resolver</strong></td>
+                <td><code>claude-3-5-haiku</code> (anthropic)</td>
+                <td>150 ms</td>
+                <td>490 ms</td>
+                <td>850 / 190 tok</td>
+                <td><span class="status-pill status-active">STATUS_OK</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5D QUALITY & ATTENTION SLICING GRID -->
+      <div class="grid-2" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-title">🎯 5-Dimensional Quantitative Evals &amp; Hallucination Radar</div>
+          <p>Automated G-Eval rubric evaluations across code correctness, hallucination freedom, and ground-truth parity.</p>
+          <div class="vector-list">
+            <div class="vector-item">
+              <div class="vector-header"><span>Faithfulness (Grounding):</span><strong class="text-emerald">0.980 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:98%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Hallucination Freedom:</span><strong class="text-emerald">0.995 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:99.5%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Context Relevancy:</span><strong class="text-cyan">0.940 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:94%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Code Correctness &amp; Syntax:</span><strong class="text-purple">1.000 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-purple" style="width:100%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>Semantic Parity vs Spec:</span><strong class="text-amber">0.996 / 1.00</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-amber" style="width:99.6%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🧠 Context Attention Slicing &amp; Token Budget Quotas</div>
+          <p>Mathematical quota budgeting preventing context overflow and lost-in-the-middle attention degradation.</p>
+          <div class="vector-list">
+            <div class="vector-item">
+              <div class="vector-header"><span>1. System Persona &amp; Invariants (15%):</span><strong>15.0% (Protected)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:15%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>2. Schemas &amp; Wire Contracts (25%):</span><strong>25.0% (Active)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-purple" style="width:25%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>3. AST Codebase Skeleton (35%):</span><strong>35.0% (Tree-Sitter)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-emerald" style="width:35%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>4. Memory &amp; ReAct Trajectories (10%):</span><strong>10.0% (Serialized)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-amber" style="width:10%;"></div></div>
+            </div>
+            <div class="vector-item">
+              <div class="vector-header"><span>5. LLM Generation Target Space (15%):</span><strong>15.0% (Reserved)</strong></div>
+              <div class="bar-track"><div class="bar-fill bg-cyan" style="width:15%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 11.5: SWARM FLEET & DEWS DASHBOARD -->
+    <section id="swarm-fleet" class="tab-content" style="display:none;">
+      <div class="section-title">Distributed Multi-Container Swarm Fleet &amp; DEWS Engine</div>
+      <div class="section-desc">Live Telemetry &amp; Remote Dispatch Orchestrator: Multi-Container Worker Slots, Redis 7.x Redlock Lease Heartbeats, Dynamic Wave DAGs, and Sub-Penny Token FinOps.</div>
+
+      <!-- FLEET SUMMARY BANNER -->
+      <div class="card" style="margin-bottom:24px; padding:20px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.08)); border:1px solid rgba(16, 185, 129, 0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span id="swarmFleetStatusBadge" class="badge badge-emerald" style="font-size:13px; font-weight:700;">● FLEET HEALTHY</span>
+              <span style="font-size:12px; color:var(--muted);" id="swarmFleetUpdatedText">Polling every 2s</span>
+            </div>
+            <div style="font-size:13px; color:var(--text); margin-top:6px;">
+              <b>Architecture:</b> Containerized Git Worktrees &bull; Quorum Redlock &bull; 3-Way Topological Consolidation
+            </div>
+          </div>
+          <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--cyan);" id="sfTotalSlots">5</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Container Slots</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--green);" id="sfIdleSlots">5</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Idle Slots</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--amber);" id="sfBusySlots">0</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Active Tasks</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--purple);" id="sfActiveLeases">0</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Redlock Leases</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:22px; font-weight:800; color:var(--emerald);" id="sfTotalTokens">135,000</div>
+              <div style="font-size:11px; color:var(--muted); text-transform:uppercase;">Tokens Burned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKER CONTAINER SLOTS GRID -->
+      <div style="margin-bottom:28px;">
+        <h3 style="font-size:17px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span>🐳</span> Multi-Container Worker Slots (DEWS Fleet)
+        </h3>
+        <div id="swarmSlotsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+        </div>
+      </div>
+
+      <!-- TWO-COLUMN LAYOUT: REDIS REDLOCK LEASES & INTERACTIVE DISPATCH -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px;">
+        <!-- COLUMN 1: REDIS REDLOCK LEASES -->
+        <div class="card" style="padding:20px;">
+          <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>🔒</span> Live Redis 7.x Redlock Leases
+          </h3>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+            Distributed cross-container serialization. Automatic TTL eviction prevents deadlocks; Lua scripts guarantee release safety.
+          </p>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; font-size:12px; border-collapse:collapse;" id="redlockLeasesTable">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); color:var(--muted); text-align:left;">
+                  <th style="padding:8px 6px;">Resource</th>
+                  <th style="padding:8px 6px;">Holder Agent</th>
+                  <th style="padding:8px 6px;">TTL Remaining</th>
+                  <th style="padding:8px 6px;">Quorum</th>
+                </tr>
+              </thead>
+              <tbody id="redlockLeasesBody">
+                <tr><td colspan="4" style="padding:14px; text-align:center; color:var(--muted);">No active locks. Cluster quorum ready.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- COLUMN 2: INTERACTIVE DISPATCH & CONSOLIDATION CONTROLS -->
+        <div class="card" style="padding:20px;">
+          <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span>🚀</span> Swarm Dispatch &amp; Consolidation Controls
+          </h3>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">
+            Dispatch plan derivations to container worker slots or trigger 3-way topological merge synthesis.
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label" style="font-size:11px;">Plan Specification Path</label>
+            <input type="text" id="sfDispatchPlan" class="input" value=".nb/plan/test/concise.md" style="font-size:12px; padding:6px 10px;">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Target Module</label>
+              <input type="text" id="sfDispatchModule" class="input" value="workplace" style="font-size:12px; padding:6px 10px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Agent ID</label>
+              <input type="text" id="sfDispatchAgent" class="input" value="agent_worker" style="font-size:12px; padding:6px 10px;">
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+            <input type="checkbox" id="sfDispatchMock" checked style="accent-color:var(--cyan);">
+            <label for="sfDispatchMock" style="font-size:12px; color:var(--text); cursor:pointer;">Run with Mock Container Plan Executor</label>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="flex:1; font-size:12px; padding:8px;" onclick="triggerSwarmDispatch()">
+              <span>🚀</span> Dispatch Job
+            </button>
+            <button class="btn btn-secondary" style="flex:1; font-size:12px; padding:8px;" onclick="triggerSwarmConsolidate()">
+              <span>🔀</span> Consolidate Merges
+            </button>
+          </div>
+          <div id="sfActionFeedback" style="margin-top:10px; font-size:12px; min-height:18px;"></div>
+        </div>
+      </div>
+
+      <!-- RECENT JOBS & WAVE DAG EXECUTION MONITOR -->
+      <div class="card" style="padding:20px; margin-bottom:28px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 style="font-size:16px; margin:0; display:flex; align-items:center; gap:8px;">
+            <span>⚡</span> Active Wave DAGs &amp; Fleet Execution History
+          </h3>
+          <span style="font-size:12px; color:var(--muted);" id="sfJobsSummaryCount">Total Jobs: 0</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; font-size:12px; border-collapse:collapse;" id="sfJobsTable">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted); text-align:left;">
+                <th style="padding:8px 6px;">Job ID</th>
+                <th style="padding:8px 6px;">Status</th>
+                <th style="padding:8px 6px;">Slot / Node</th>
+                <th style="padding:8px 6px;">Target Module</th>
+                <th style="padding:8px 6px;">Duration</th>
+                <th style="padding:8px 6px;">Bundle SHA256</th>
+                <th style="padding:8px 6px;">Logs</th>
+              </tr>
+            </thead>
+            <tbody id="sfJobsTableBody">
+              <tr><td colspan="7" style="padding:14px; text-align:center; color:var(--muted);">No jobs executed yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 12: SECURE CLIENT SPACE (DASHFLAT VERTICAL DEFAULT LIGHT TEMPLATE) -->

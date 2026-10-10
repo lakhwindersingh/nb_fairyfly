@@ -1,0 +1,72 @@
+{
+  "currency": "USD",
+  "billing_cycle": "monthly",
+  "rev_share_pct": 15.0,
+  "tiers": [
+    {
+      "id": "plan_free",
+      "name": "Community / Free",
+      "price_monthly": 0,
+      "seats": 1,
+      "max_worktrees": 1,
+      "monthly_tokens": "1,000,000",
+      "target": "Individual developers and OSS hobbyists",
+      "features": [
+        "Single-module context optimization",
+        "Local AST skeleton pruning",
+        "Community support & docs",
+        "Standard JSON logging"
+      ]
+    },
+    {
+      "id": "plan_team",
+      "name": "Team Tier",
+      "price_monthly": 1499,
+      "seats": 5,
+      "max_worktrees": 5,
+      "monthly_tokens": "25,000,000",
+      "target": "Fast-moving AI startups & boutique studios",
+      "features": [
+        "Ephemeral Git worktree sandboxing",
+        "AST tree-sitter pruning (< 120ms)",
+        "Automated PR gatekeeping",
+        "15% Token savings rev-share metering",
+        "Email & Discord engineering support"
+      ]
+    },
+    {
+      "id": "plan_business",
+      "name": "Business Tier",
+      "price_monthly": 4499,
+      "seats": 20,
+      "max_worktrees": 20,
+      "monthly_tokens": "100,000,000",
+      "target": "Mid-market software orgs & scaling SaaS",
+      "features": [
+        "Multi-module Quad-Space isolation",
+        "Continuous Merkle DAG proofs & time-travel",
+        "Autonomous CI/CD self-healing triad",
+        "Dynamic Swarm Task DAG orchestration",
+        "SSO & SAML 2.0 tenant integration",
+        "Dedicated customer success architect"
+      ]
+    },
+    {
+      "id": "plan_enterprise",
+      "name": "Enterprise Tier",
+      "price_monthly": 9999,
+      "seats": 100,
+      "max_worktrees": 50,
+      "monthly_tokens": "Unlimited (metered)",
+      "target": "Regulated FinTech, Healthcare & Global 2000",
+      "features": [
+        "BYOK / KMS envelope sealing (AES-256-GCM)",
+        "Immutable S3/GCS WORM ledger egress",
+        "Sub-1.2s surgical recovery points",
+        "Capability-Based Access Control (CBAC)",
+        "Air-gapped deployment option",
+        "24/7 SLA with 15-minute response"
+      ]
+    }
+  ]
+}

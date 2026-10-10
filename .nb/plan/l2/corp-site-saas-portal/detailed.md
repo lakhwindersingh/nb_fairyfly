@@ -60,6 +60,13 @@ The platform is structured strictly under the standardized `multi_module` Quad-S
 ├── .nb/core/
 │   └── commercial_packager_provisioner.py    # Commercial tier packaging & multi-IDE provisioning
 ├── workplace/                                # [TRANSPARENT CLIENT REPO] Customer Source & Modules
+│   ├── portal/                               # Modular Percipience SaaS Portal & API Gateway Control Plane
+│   │   ├── server.py                         # Lean server orchestrator (Uvicorn ASGI app & native HTTPServer)
+│   │   ├── core/                             # Runtime state singletons (state.py), session store & ASGI adapter
+│   │   ├── content/                          # Centralized JSON content manager (tiers, SLAs, metadata, economics)
+│   │   ├── templates/                        # Modular HTML templates & TemplateRenderer (pages, header, base)
+│   │   ├── static/                           # Externalized CSS (portal.css) and JS (head_nav.js, portal_app.js)
+│   │   └── routes/                           # Modular API route handlers (/api/*)
 │   ├── config/                               # Global site configs, feature flags, Tailwind themes
 │   │   ├── site_config.yaml                  # Multi-module routing, domain bindings, locales
 │   │   ├── billing_plans.yaml                # Pricing tiers, quotas, rev-share formulas

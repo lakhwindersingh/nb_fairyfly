@@ -1,0 +1,68 @@
+{
+  "capabilities": [
+    {
+      "id": "cap_ast",
+      "number": 1,
+      "title": "Tree-Sitter AST Skeleton Pruning",
+      "sla": "< 120ms execution",
+      "reduction": "50% - 70%",
+      "description": "Strips function bodies and non-exported helpers while preserving type signatures, docstrings, and structural contracts."
+    },
+    {
+      "id": "cap_merkle",
+      "number": 2,
+      "title": "Cryptographic Merkle State DAG",
+      "sla": "Continuous real-time attestation",
+      "reduction": "100% verifiable",
+      "description": "Maintains an immutable hash-chained DAG of prompt inputs, code transformations, and validation receipts."
+    },
+    {
+      "id": "cap_worktrees",
+      "number": 3,
+      "title": "Ephemeral Git Worktree Isolation",
+      "sla": "Sub-500ms lease creation",
+      "reduction": "0 working-tree collisions",
+      "description": "Each subagent executes inside an isolated git worktree branch preventing catastrophic multi-agent merge conflicts."
+    },
+    {
+      "id": "cap_reconciliation",
+      "number": 4,
+      "title": "Dual Reconciliation Engine",
+      "sla": "< 2.0s AST diff verification",
+      "reduction": "Zero silent regressions",
+      "description": "Validates semantic parity across branch merges and verifies that generated code satisfies original interface specifications."
+    },
+    {
+      "id": "cap_poisoning",
+      "number": 5,
+      "title": "Context Poisoning Sentinel",
+      "sla": "Instant PR quarantine",
+      "reduction": "0 poisoned contexts",
+      "description": "Scans ASTs and memory logs for adversarial prompt injections, hallucinated imports, and toxic dependencies."
+    },
+    {
+      "id": "cap_cicd",
+      "number": 6,
+      "title": "Autonomous Self-Healing CI/CD",
+      "sla": "Sub-1.2s surgical rollback",
+      "reduction": "3-pass bounded retry",
+      "description": "Autonomously detects flaky tests, rolls back broken micro-modules, and refactors failing implementations."
+    },
+    {
+      "id": "cap_swarm",
+      "number": 7,
+      "title": "Dynamic Swarm DAG Orchestrator",
+      "sla": "Kahn acyclicity verification",
+      "reduction": "Max recursion depth: 3",
+      "description": "Coordinates multi-agent fleets with runtime sub-goal expansion, 3-tier persistent memory, and CBAC sandbox tokens."
+    },
+    {
+      "id": "cap_worm",
+      "number": 8,
+      "title": "WORM Ledger Egress & Audit",
+      "sla": "Immutable hash-locked storage",
+      "reduction": "100% compliance audit trail",
+      "description": "Cryptographically archives context blocks and audit logs into immutable WORM vaults for regulatory attestation."
+    }
+  ]
+}

@@ -190,6 +190,34 @@ recovery_points:
   timestamp: '2026-10-09T19:10:07.201146+00:00'
   status: VERIFIED
   description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-09T20:16:36.277550+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-09T20:25:13.760347+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-09T20:25:24.628781+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-09T20:29:23.346244+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
 ledger_chain:
 - block_id: 3854
   block_type: STATE_UPDATE
@@ -447,6 +475,86 @@ ledger_chain:
   current_block_hash: ad7cf928c5174ed16588ba2cf62a131de7cda76412ff9e05be043403b4342b6b
   action: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
   block_hash: ad7cf928c5174ed16588ba2cf62a131de7cda76412ff9e05be043403b4342b6b
+- block_id: 3886
+  block_type: STATE_UPDATE
+  prev_block_hash: ad7cf928c5174ed16588ba2cf62a131de7cda76412ff9e05be043403b4342b6b
+  timestamp: '2026-10-09T19:14:15.582145+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: c7d41ec0663578032f2d3127416772d8fbbde7c7c117333b7b662f36cea3b810
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: c7d41ec0663578032f2d3127416772d8fbbde7c7c117333b7b662f36cea3b810
+- block_id: 3887
+  block_type: STATE_UPDATE
+  prev_block_hash: c7d41ec0663578032f2d3127416772d8fbbde7c7c117333b7b662f36cea3b810
+  timestamp: '2026-10-09T19:19:53.481604+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 0ccbfedeff6687a9ca941767ce6180e7c73c74fd3b3476f14c7b54ca274fe022
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 0ccbfedeff6687a9ca941767ce6180e7c73c74fd3b3476f14c7b54ca274fe022
+- block_id: 3888
+  block_type: STATE_UPDATE
+  prev_block_hash: 0ccbfedeff6687a9ca941767ce6180e7c73c74fd3b3476f14c7b54ca274fe022
+  timestamp: '2026-10-09T20:02:28.923541+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 894facd3a7e4816d07c8a48fc417fc4cfb19a91688fdb2bc0b494b5ffa7a5e09
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 894facd3a7e4816d07c8a48fc417fc4cfb19a91688fdb2bc0b494b5ffa7a5e09
+- block_id: 3889
+  block_type: STATE_UPDATE
+  prev_block_hash: 894facd3a7e4816d07c8a48fc417fc4cfb19a91688fdb2bc0b494b5ffa7a5e09
+  timestamp: '2026-10-09T20:06:48.455888+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: a59ac405a404c0de59acedf599fc54505759ddfffb31c4790cc13f4fbd7a3326
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: a59ac405a404c0de59acedf599fc54505759ddfffb31c4790cc13f4fbd7a3326
+- block_id: 3890
+  block_type: STATE_UPDATE
+  prev_block_hash: a59ac405a404c0de59acedf599fc54505759ddfffb31c4790cc13f4fbd7a3326
+  timestamp: '2026-10-09T20:10:11.055360+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 123441029a3d7b085ab6d5fd94c99aa31c1b87cb38b8cceaf2710d854d77046c
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 123441029a3d7b085ab6d5fd94c99aa31c1b87cb38b8cceaf2710d854d77046c
+- block_id: 3891
+  block_type: STATE_UPDATE
+  prev_block_hash: 123441029a3d7b085ab6d5fd94c99aa31c1b87cb38b8cceaf2710d854d77046c
+  timestamp: '2026-10-09T20:10:38.451692+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: c231f6d8aa1e9a65ea93390e2c71893bc82116cee5758afa0fa2a8bfeb551d2a
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: c231f6d8aa1e9a65ea93390e2c71893bc82116cee5758afa0fa2a8bfeb551d2a
+- block_id: 3892
+  block_type: STATE_UPDATE
+  prev_block_hash: c231f6d8aa1e9a65ea93390e2c71893bc82116cee5758afa0fa2a8bfeb551d2a
+  timestamp: '2026-10-09T20:16:36.277550+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 6c2df28d684d5e0ce683a24513b0ecdc671b02b181e0516b54cc40d6ca4a69b1
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 6c2df28d684d5e0ce683a24513b0ecdc671b02b181e0516b54cc40d6ca4a69b1
+- block_id: 3893
+  block_type: STATE_UPDATE
+  prev_block_hash: 6c2df28d684d5e0ce683a24513b0ecdc671b02b181e0516b54cc40d6ca4a69b1
+  timestamp: '2026-10-09T20:25:13.760347+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: aa976378bd10d46fd49497c782d59048e7c1053dfb739a4537344c0086da298d
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: aa976378bd10d46fd49497c782d59048e7c1053dfb739a4537344c0086da298d
+- block_id: 3894
+  block_type: STATE_UPDATE
+  prev_block_hash: aa976378bd10d46fd49497c782d59048e7c1053dfb739a4537344c0086da298d
+  timestamp: '2026-10-09T20:25:24.628781+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 7770800933f2b6e1efbddc990fd2d7efed4efab2b0b25c1e342e7fad85989e4b
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 7770800933f2b6e1efbddc990fd2d7efed4efab2b0b25c1e342e7fad85989e4b
+- block_id: 3895
+  block_type: STATE_UPDATE
+  prev_block_hash: 7770800933f2b6e1efbddc990fd2d7efed4efab2b0b25c1e342e7fad85989e4b
+  timestamp: '2026-10-09T20:29:23.346244+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 2686fe0091a137f333b92cd2d30142a1b9683415996a57153ccfdc3fe0ed99ff
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 2686fe0091a137f333b92cd2d30142a1b9683415996a57153ccfdc3fe0ed99ff
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:

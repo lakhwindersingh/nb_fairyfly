@@ -1,0 +1,26 @@
+{
+  "cloud_hosting": {
+    "aws": {
+      "provider": "Amazon Web Services",
+      "compute": "EKS Cluster (t4g.large)",
+      "database": "Aurora PostgreSQL Serverless v2",
+      "storage": "S3 Standard + Object Lock WORM",
+      "monthly_base_cost": 380,
+      "advantages": ["Native KMS hardware modules", "WORM Object Lock compliance", "Bedrock VPC endpoints"]
+    },
+    "gcp": {
+      "provider": "Google Cloud Platform",
+      "compute": "GKE Autopilot",
+      "database": "Cloud SQL PostgreSQL",
+      "storage": "Cloud Storage Bucket Lock",
+      "monthly_base_cost": 365,
+      "advantages": ["Sub-3s pod scale up", "BigQuery analytics integration", "Gemini enterprise VPC-SC"]
+    }
+  },
+  "token_finops": {
+    "uncompressed_rate_per_m": 3.00,
+    "pruned_rate_per_m": 0.30,
+    "rev_share_rate": 0.15,
+    "roi_multiplier": 5.7
+  }
+}

@@ -56,6 +56,13 @@ Structured under the `mode: multi_module` Quad-Space convention:
 │   ├── agentic/custom/        # agent_commercial_packager_provisioner, commercial_packaging_flow
 │   └── core/                  # commercial_packager_provisioner.py
 ├── workplace/
+│   ├── portal/                  # Modular Percipience SaaS Portal & API Gateway
+│   │   ├── server.py            # Lean orchestrator (Uvicorn ASGI app & HTTPServer)
+│   │   ├── core/                # Runtime singletons, session store & ASGI adapter
+│   │   ├── content/             # Centralized JSON content manager (tiers, SLAs, metadata)
+│   │   ├── templates/           # Modular HTML templates & TemplateRenderer (pages, header, base)
+│   │   ├── static/              # Externalized CSS (portal.css) and JS (head_nav.js, portal_app.js)
+│   │   └── routes/              # Modular API route handlers (/api/*)
 │   ├── modules/
 │   │   ├── mod_corp_site/       # Next.js 14 public site & MDX documentation
 │   │   ├── mod_saas_portal/     # Multi-tenant customer dashboard & commercial provisioner console

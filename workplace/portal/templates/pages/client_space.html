@@ -1,0 +1,1467 @@
+<section id="client" class="tab-content">
+      <!-- UNAUTHENTICATED DASHFLAT LOGIN CARD -->
+      <div id="clientLoginCard" class="card dashflat-login-card" style="max-width:520px; margin:32px auto; padding:32px; border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow-card);">
+        <div style="text-align:center; margin-bottom:24px;">
+          <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, var(--cyan), var(--purple)); display:inline-flex; align-items:center; justify-content:center; font-size:24px; box-shadow:var(--shadow-glow); margin-bottom:12px;">⚡</div>
+          <div style="font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.02em;">Percipience Client Portal</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Sign in to access your sovereign workspace, FinOps telemetry, and WORM ledger</div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">Client ID / Organization</label>
+          <div style="position:relative;">
+            <input type="text" id="loginClientId" class="input" placeholder="e.g. acme_corp_fintech" value="acme_corp_fintech" style="width:100%; padding:10px 14px; font-size:13px; border-radius:8px;">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:18px;">
+          <label class="form-label" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted);">API Key / Secret Token</label>
+          <div style="position:relative;">
+            <input type="password" id="loginApiKey" class="input" placeholder="e.g. nb_sec_client_9948" value="nb_sec_client_9948" style="width:100%; padding:10px 14px; font-size:13px; border-radius:8px;">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:12px; color:var(--muted);">
+          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" checked style="accent-color:var(--cyan);"> Keep me signed in
+          </label>
+          <a href="#gateway" onclick="showTab('gateway')" style="color:var(--cyan); text-decoration:none;">Need API Key?</a>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-primary" onclick="loginClient(false)" style="padding:11px; font-size:13px; font-weight:700; border-radius:8px; width:100%;">🔑 Sign In to Enterprise Space</button>
+          <button class="btn btn-secondary" onclick="loginClient(true)" style="padding:10px; font-size:12px; font-weight:600; border-radius:8px; width:100%;">⚡ Instant Demo Login (Acme Global)</button>
+        </div>
+        <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:14px; text-align:center; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
+
+        <div style="display:flex; justify-content:center; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border); flex-wrap:wrap;">
+          <span class="badge badge-emerald" style="font-size:10px;">SEC 17a-4 WORM</span>
+          <span class="badge badge-purple" style="font-size:10px;">PostgreSQL RLS Active</span>
+          <span class="badge badge-cyan" style="font-size:10px;">Ed25519 Enclaves</span>
+        </div>
+      </div>
+
+      <!-- AUTHENTICATED DASHFLAT CLIENT CONSOLE -->
+      <div id="clientAuthConsole" style="display:none;" class="dashflat-container">
+        <!-- DASHFLAT VERTICAL SIDEBAR -->
+        <aside class="dashflat-sidebar" id="dashflatSidebar">
+          <!-- SIDEBAR USER PROFILE WIDGET (Dashflat Vertical Light Parity) -->
+          <div class="df-user-profile">
+            <div class="df-avatar">
+              <span>AG</span>
+              <span class="df-status-dot" title="Online & Synced"></span>
+            </div>
+            <div class="df-user-info df-sidebar-hide">
+              <div class="df-user-name" id="dfSidebarUserName">Acme Global Admin</div>
+              <div class="df-user-role">Enterprise Super Admin</div>
+            </div>
+            <div class="df-sidebar-hide" style="display:flex; gap:4px;">
+              <button class="df-icon-btn" style="width:26px; height:26px; font-size:11px;" onclick="loadClientData()" title="Refresh">🔄</button>
+              <button class="df-icon-btn" style="width:26px; height:26px; font-size:11px;" onclick="logoutClient()" title="Sign Out">🚪</button>
+            </div>
+          </div>
+
+          <!-- SIDEBAR SEARCH BAR -->
+          <div class="df-sidebar-hide" style="margin-bottom:14px;">
+            <input type="text" class="df-search-input" placeholder="Quick filter..." style="padding:6px 10px; font-size:11px;" onkeyup="filterSidebarNav(this.value)">
+          </div>
+
+          <!-- SIDEBAR NAVIGATION MENU -->
+          <div class="df-nav-list" style="overflow-y:auto; flex:1;">
+            <div class="df-category-header df-sidebar-hide">Navigation</div>
+            <button class="admin-nav-btn active" id="adminTabOverviewBtn" onclick="switchAdminView('client-overview')">
+              <span class="df-nav-label"><span class="df-nav-icon">📊</span><span class="df-sidebar-hide">Dashboard &amp; FinOps</span></span>
+              <span class="badge badge-cyan df-sidebar-hide" style="font-size:9px;">15% Fee</span>
+            </button>
+
+            <div class="df-category-header df-sidebar-hide">Sovereign Governance</div>
+            <button class="admin-nav-btn" id="govNavBtn" onclick="switchAdminView('governance')">
+              <span class="df-nav-label"><span class="df-nav-icon">🏛️</span><span class="df-sidebar-hide">Multi-Tenant &amp; Policies</span></span>
+              <span class="badge badge-purple df-sidebar-hide" style="font-size:9px;">RLS Active</span>
+            </button>
+
+            <div class="df-category-header df-sidebar-hide">Commercial &amp; Licensing</div>
+            <button class="admin-nav-btn" id="commercialNavBtn" onclick="switchAdminView('commercial-provisioner')">
+              <span class="df-nav-label"><span class="df-nav-icon">📦</span><span class="df-sidebar-hide">Commercial Provisioner</span></span>
+              <span class="badge badge-green df-sidebar-hide" style="font-size:9px;">Tier A</span>
+            </button>
+
+            <div class="df-category-header df-sidebar-hide">Swarm Orchestration</div>
+            <button class="admin-nav-btn" id="swarmNavBtn" onclick="switchAdminView('swarm-governance')">
+              <span class="df-nav-label"><span class="df-nav-icon">🤖</span><span class="df-sidebar-hide">Swarm Governance</span></span>
+              <span class="badge badge-cyan df-sidebar-hide" style="font-size:9px;">12 Nodes</span>
+            </button>
+
+            <div class="df-category-header df-sidebar-hide">Infrastructure &amp; Fleet</div>
+            <button class="admin-nav-btn" id="fleetNavBtn" onclick="switchAdminView('fleet-monitor')">
+              <span class="df-nav-label"><span class="df-nav-icon">🖥️</span><span class="df-sidebar-hide">Fleet &amp; FinOps</span></span>
+              <span class="badge badge-emerald df-sidebar-hide" style="font-size:9px;">Healthy</span>
+            </button>
+          </div>
+
+          <!-- DIRECT ENTERPRISE PLANS PROMO CARD (Dashflat Signature) -->
+          <div class="df-direct-plan-card df-sidebar-hide">
+            <div style="font-weight:700; color:var(--text); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              <span>⭐</span> Enterprise Direct Plan
+            </div>
+            <div style="color:var(--muted); line-height:1.4; margin-bottom:8px;">
+              650 GB S3 WORM Vault<br>
+              24/7 Dedicated Concierge SLA
+            </div>
+            <a href="#tier-matrix" onclick="showTab('tier-matrix')" style="color:var(--cyan); font-weight:700; text-decoration:none;">View Plan Matrix &rarr;</a>
+          </div>
+
+          <!-- SIDEBAR FOOTER -->
+          <div class="df-sidebar-hide" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border); font-size:10px; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">
+            <span>🔒 Merkle #828 Locked</span>
+            <span class="badge badge-green" style="font-size:8px;">SOC 2</span>
+          </div>
+        </aside>
+
+        <!-- DASHFLAT MAIN PANEL -->
+        <div class="dashflat-main">
+          <!-- TOPBAR NAVBAR -->
+          <div class="dashflat-topbar">
+            <div class="df-search-wrap">
+              <button class="df-icon-btn" onclick="toggleDashflatSidebar()" title="Toggle Sidebar">☰</button>
+              <input type="text" class="df-search-input" placeholder="🔍 Search micro-modules, recovery points, invoices, WORM blocks...">
+            </div>
+
+            <div class="df-topbar-actions">
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span class="badge badge-green" style="font-size:10px;">Enterprise RLS Active</span>
+                <span class="badge badge-purple" id="clientTierBadgeTop" style="font-size:10px;">Enterprise Tier A</span>
+              </div>
+
+              <!-- NOTIFICATIONS DROPDOWN -->
+              <div style="position:relative;">
+                <button class="df-icon-btn" onclick="toggleDropdown('dfNotifDropdown')" title="Alerts & Audit Notifications">
+                  🔔<span class="df-badge-dot">3</span>
+                </button>
+                <div id="dfNotifDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; font-weight:700; font-size:12px; border-bottom:1px solid var(--border); color:var(--text);">System Notifications</div>
+                  <div class="df-dropdown-item"><span>✅</span><div><div style="font-weight:600;">WORM Ledger Sealed</div><div style="font-size:10px; color:var(--muted);">Block #828 committed to S3</div></div></div>
+                  <div class="df-dropdown-item"><span>⚡</span><div><div style="font-weight:600;">AST Compression Active</div><div style="font-size:10px; color:var(--muted);">50.3% token reduction verified</div></div></div>
+                  <div class="df-dropdown-item"><span>🛡️</span><div><div style="font-weight:600;">RLS Boundary Enforced</div><div style="font-size:10px; color:var(--muted);">Zero cross-tenant leakage</div></div></div>
+                </div>
+              </div>
+
+              <!-- MESSAGES DROPDOWN -->
+              <div style="position:relative;">
+                <button class="df-icon-btn" onclick="toggleDropdown('dfMsgDropdown')" title="Messages & Team">
+                  💬<span class="df-badge-dot">2</span>
+                </button>
+                <div id="dfMsgDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; font-weight:700; font-size:12px; border-bottom:1px solid var(--border); color:var(--text);">Messages &amp; Advisories</div>
+                  <div class="df-dropdown-item"><span>👤</span><div><div style="font-weight:600;">David Grey (Audit Lead)</div><div style="font-size:10px; color:var(--muted);">Quarterly SOC2 audit ready</div></div></div>
+                  <div class="df-dropdown-item"><span>👤</span><div><div style="font-weight:600;">Tim Cook (FinOps Lead)</div><div style="font-size:10px; color:var(--muted);">New model arbitrage enabled</div></div></div>
+                </div>
+              </div>
+
+              <!-- USER PROFILE DROPDOWN -->
+              <div style="position:relative;">
+                <div class="df-user-dropdown" onclick="toggleDropdown('dfUserDropdown')" style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 8px; border-radius:6px;">
+                  <div class="df-avatar" style="width:30px; height:30px; font-size:11px;">AG</div>
+                  <span id="dfTopbarOrgName" style="font-weight:700; font-size:12px; color:var(--text); max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Acme Global</span>
+                  <span style="font-size:10px; color:var(--muted);">▼</span>
+                </div>
+                <div id="dfUserDropdown" class="df-dropdown-menu">
+                  <div style="padding:10px 16px; border-bottom:1px solid var(--border);">
+                    <div style="font-weight:700; font-size:12px; color:var(--text);" id="dfDropdownOrgName">Acme Global Financial</div>
+                    <div style="font-size:10px; color:var(--muted);">Client ID: acme_corp_fintech</div>
+                  </div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('client-overview')"><span>👤</span> My Profile &amp; Overview</div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('client-overview')"><span>🧾</span> Billing &amp; Invoices</div>
+                  <div class="df-dropdown-item" onclick="switchAdminView('governance')"><span>🛡️</span> Sovereign Policies</div>
+                  <div style="border-top:1px solid var(--border); margin:4px 0;"></div>
+                  <div class="df-dropdown-item" onclick="logoutClient()" style="color:var(--red);"><span>🚪</span> Sign Out</div>
+                </div>
+              </div>
+
+              <!-- THEME TOGGLE -->
+              <button class="theme-toggle-btn" onclick="toggleTheme()" id="portalThemeBtn" title="Toggle Light/Dark Theme">🌓 Theme</button>
+              <button class="btn btn-secondary" onclick="logoutClient()" style="padding:6px 12px; font-size:11px;">🚪 Sign Out</button>
+            </div>
+          </div>
+
+          <!-- DASHFLAT CONTENT AREA -->
+          <div class="df-content-area">
+            <!-- WELCOME HEADER BANNER -->
+            <div class="df-welcome-banner">
+              <div>
+                <div class="df-breadcrumb">Client Space &bull; Enterprise Console &bull; Live Telemetry</div>
+                <div class="df-welcome-title">Welcome back, <span id="clientOrgName">Acme Global Financial Technologies</span>!</div>
+                <div class="df-welcome-meta">
+                  Client ID: <code id="clientIdDisplay">acme_corp_fintech</code> &bull; 
+                  Project: <strong id="clientProjectName" style="color:var(--text);">NB Fairyfly Core</strong> &bull; 
+                  Tier: <span class="badge badge-purple" id="clientTierBadge">Enterprise Tier A</span> &bull; 
+                  Merkle Root: <code>f881b2be12...</code>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-secondary" onclick="loadClientData()" style="padding:7px 14px; font-size:12px;">🔄 Sync Telemetry</button>
+                <button class="btn btn-primary" onclick="alert('Exporting itemized FinOps accounting statement (PDF/CSV)...')" style="padding:7px 14px; font-size:12px;">📄 Export Statement</button>
+              </div>
+            </div>
+
+            <!-- ADMIN VIEW 1: CLIENT OVERVIEW & FINOPS -->
+            <div id="adminViewOverview" class="admin-view-pane active">
+              <!-- 4-CARD DASHFLAT TOP KPI METRIC GRID -->
+              <div class="df-kpi-grid">
+                <!-- Card 1: Active Workspaces -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Active Workspaces</span>
+                    <span class="df-kpi-trend df-trend-up">+5.27% MoM</span>
+                  </div>
+                  <div class="df-kpi-val text-emerald">4 Modules</div>
+                  <div class="df-kpi-sub">Mode: <strong id="clientWorkspaceMode" class="text-purple">multi_module</strong> &bull; 12 Swarm Nodes</div>
+                  <div class="df-kpi-bar df-bar-emerald"></div>
+                </div>
+
+                <!-- Card 2: Recovery Points -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Recovery Points</span>
+                    <span class="df-kpi-trend df-trend-cyan">100% Deterministic</span>
+                  </div>
+                  <div class="df-kpi-val text-cyan">4 Active RPs</div>
+                  <div class="df-kpi-sub">Sub-1.2s Surgical Rewind &bull; Zero Sibling Drift</div>
+                  <div class="df-kpi-bar df-bar-cyan"></div>
+                </div>
+
+                <!-- Card 3: AST Token Compression -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">AST Token Compression</span>
+                    <span class="df-kpi-trend df-trend-purple">+50.3% Reductions</span>
+                  </div>
+                  <div class="df-kpi-val text-purple">2.63M Tokens</div>
+                  <div class="df-kpi-sub">AST Skeletons &bull; Zero Semantic Loss</div>
+                  <div class="df-kpi-bar df-bar-purple"></div>
+                </div>
+
+                <!-- Card 4: Verified Cloud Savings -->
+                <div class="df-kpi-card">
+                  <div class="df-kpi-top">
+                    <span class="df-kpi-label">Net Cloud Savings</span>
+                    <span class="df-kpi-trend df-trend-amber">+7.00% Net Profit</span>
+                  </div>
+                  <div class="df-kpi-val text-emerald" id="clientGrossSavings">$15.6974</div>
+                  <div class="df-kpi-sub">15% Rev-Share Due: <strong id="clientRevShareDue" class="text-cyan">$2.3546</strong></div>
+                  <div class="df-kpi-bar df-bar-amber"></div>
+                </div>
+              </div>
+
+              <!-- 2-COLUMN ANALYTICS & SERVICES ROW (Dashflat Layout) -->
+              <div class="df-analytics-row">
+                <!-- Column 1: Context Analytics & FinOps Cost Reduction -->
+                <div class="card" style="margin-bottom:0;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <div class="card-title" style="margin-bottom:2px;">📈 Context Analytics &amp; FinOps Reduction</div>
+                      <div style="font-size:12px; color:var(--muted);">Breakdown of token compression and cost elimination against unpruned baselines</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                      <span class="badge badge-cyan" style="font-size:10px;">Today</span>
+                      <span class="badge" style="background:var(--code-bg); border:1px solid var(--border); font-size:10px; color:var(--muted);">Weekly</span>
+                      <span class="badge" style="background:var(--code-bg); border:1px solid var(--border); font-size:10px; color:var(--muted);">Monthly</span>
+                    </div>
+                  </div>
+
+                  <!-- Token Flow Progress Bar -->
+                  <div style="margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
+                      <span>Total Base Tokens: <strong>5,232,080</strong></span>
+                      <span class="text-emerald" style="font-weight:700;">74.0% Total Optimization</span>
+                    </div>
+                    <div style="height:10px; background:var(--code-bg); border-radius:5px; overflow:hidden; display:flex;">
+                      <div style="width:50.3%; background:var(--emerald);" title="AST Pruning (50.3%)"></div>
+                      <div style="width:23.7%; background:var(--cyan);" title="Semantic Cache (23.7%)"></div>
+                      <div style="width:26.0%; background:var(--purple);" title="Delivered Window (26.0%)"></div>
+                    </div>
+                    <div style="display:flex; gap:14px; margin-top:8px; font-size:10px; color:var(--muted); flex-wrap:wrap;">
+                      <span><span style="color:var(--emerald);">■</span> AST Pruned: 2.63M (50.3%)</span>
+                      <span><span style="color:var(--cyan);">■</span> Cache Hits: 1.24M (23.7%)</span>
+                      <span><span style="color:var(--purple);">■</span> Delivered: 1.36M (26.0%)</span>
+                    </div>
+                  </div>
+
+                  <!-- 4-Stat Overview Tiles (Dashflat Parity: Active vs Inactive Resource) -->
+                  <div class="df-stat-grid">
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Active Optimized Compute</div>
+                      <div class="df-stat-tile-val text-emerald">$123,657</div>
+                      <div class="df-stat-tile-desc">High-yield cognitive inference pool</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Eliminated Waste Spend</div>
+                      <div class="df-stat-tile-val text-cyan">$100,278</div>
+                      <div class="df-stat-tile-desc">Pruned unreferenced AST tokens</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Avg. Performance Fee</div>
+                      <div class="df-stat-tile-val text-purple">15.0%</div>
+                      <div class="df-stat-tile-desc">Pure pay-on-verified-savings</div>
+                    </div>
+                    <div class="df-stat-tile">
+                      <div class="df-stat-tile-title">Daily Gate Throughput</div>
+                      <div class="df-stat-tile-val text-amber">142,800</div>
+                      <div class="df-stat-tile-desc">In-flight gateway evaluations/day</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Column 2: Direct Enterprise Services & Security -->
+                <div class="card" style="margin-bottom:0;">
+                  <div class="card-title" style="margin-bottom:6px;">🛡️ Sovereign Services</div>
+                  <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">Instant status of platform enclaves and SLAs</div>
+
+                  <div class="df-service-item">
+                    <span>🏢 Profile &amp; PostgreSQL RLS</span>
+                    <span class="badge badge-green" style="font-size:10px;">Verified Active</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🔒 Compliance Vault</span>
+                    <span class="badge badge-amber" id="clientWormStatus" style="font-size:10px;">LOCKED (S3 WORM)</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🔑 KMS Key Broker</span>
+                    <span class="badge badge-cyan" style="font-size:10px;">Ed25519 Sealed</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>💾 Storage Capacity</span>
+                    <span class="badge badge-purple" style="font-size:10px;">650 GB S3 WORM</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>⏱️ Support SLA</span>
+                    <span class="badge badge-green" style="font-size:10px;">24/7 Dedicated</span>
+                  </div>
+                  <div class="df-service-item">
+                    <span>🧪 Flaky Quarantine</span>
+                    <span class="badge badge-emerald" style="font-size:10px;">0 Blockers</span>
+                  </div>
+
+                  <div style="margin-top:16px;">
+                    <button class="btn btn-secondary" onclick="switchAdminView('governance')" style="width:100%; font-size:11px; padding:7px;">Manage Policies &amp; Enclaves &rarr;</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MICRO-MODULES & SURGICAL ROLLBACK CONTROL -->
+              <div class="card" style="margin-top:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                  <div>
+                    <div class="card-title" style="margin-bottom:2px;">🛡️ Project Micro-Modules &amp; Surgical Recovery Points</div>
+                    <div style="font-size:12px; color:var(--muted);">Sub-1.2s surgical rollback of individual sub-modules without disturbing sibling services</div>
+                  </div>
+                  <div style="display:flex; gap:8px;">
+                    <span class="badge badge-cyan" style="font-size:10px;">4 Modules Healthy</span>
+                    <span class="badge badge-green" style="font-size:10px;">Merkle Verified</span>
+                  </div>
+                </div>
+                
+                <div class="table-wrap" style="margin:8px 0 0;">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Module Identifier</th>
+                        <th>Status</th>
+                        <th>Active Recovery Point</th>
+                        <th>WORM Block Hash</th>
+                        <th>Surgical Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>mod_auth</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_AUTH_008</code></td>
+                        <td><code>fa19a510c7f48ff7...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_auth')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_billing</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_BILL_012</code></td>
+                        <td><code>6d01c481ce9e5817...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_billing')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_portal_marketing</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_PORTAL_006</code></td>
+                        <td><code>2303ddbecaaab5f3...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_portal_marketing')">Rewind to RP</button></td>
+                      </tr>
+                      <tr>
+                        <td><code>mod_trading</code></td>
+                        <td><span class="status-pill status-active">HEALTHY</span></td>
+                        <td><code>RP_TRAD_009</code></td>
+                        <td><code>8ca12b9199fe014b...</code></td>
+                        <td><button class="btn btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="triggerSurgicalRollback('mod_trading')">Rewind to RP</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- ITEMIZED FINOPS INVOICE & TRANSACTION HISTORY -->
+              <div class="card" style="margin-top:24px;">
+                <div class="card-title">🧾 Itemized FinOps Rev-Share Accounting Invoice &amp; Transaction Ledger</div>
+                <p style="margin-bottom:14px; font-size:12px;">Transparent, zero-risk performance fee billing: You pay only 15% of verified cloud token cost reductions.</p>
+                <div style="background:var(--code-bg); padding:16px; border-radius:8px; border:1px solid var(--border); font-family:'JetBrains Mono', monospace; font-size:12px; margin-bottom:18px;">
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Raw Base Tokens Processed:</span><strong style="color:var(--text);">5,232,080 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>AST Pruning Reduction (50.3%):</span><strong class="text-emerald">-2,631,736 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:3px 0;"><span>Semantic Cache Hits Reduction:</span><strong class="text-emerald">-1,240,000 tokens</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:6px 0 3px; border-top:1px solid var(--border); margin-top:6px;"><span>Gross Client Cloud Savings ($0.003/1K tok):</span><strong class="text-emerald">$15.6974 USD</strong></div>
+                  <div class="stat-box" style="background:transparent; border:none; padding:6px 0 0; border-top:1px dashed var(--border); font-size:13px; font-weight:700; margin-top:6px;"><span>Percipience Performance Fee (15%):</span><strong class="text-cyan">$2.3546 USD</strong></div>
+                </div>
+
+                <!-- Transaction History (Dashflat Parity: HSBC, G4S, John Lewis, Clarks, Lush) -->
+                <div style="font-size:13px; font-weight:700; margin-bottom:10px; color:var(--text);">Recent Tenant Statements &amp; Settled Invoices</div>
+                <div class="table-wrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Statement ID</th>
+                        <th>Settlement Entity</th>
+                        <th>Billing Period</th>
+                        <th>Gross Savings</th>
+                        <th>15% Performance Fee</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>INV-2026-0901</code></td>
+                        <td><strong>Acme Global Financial (HSBC Node)</strong></td>
+                        <td>Sep 01 - Sep 30, 2026</td>
+                        <td class="text-emerald">$14,000.00</td>
+                        <td class="text-cyan">$2,100.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0801</code></td>
+                        <td><strong>Acme Global Financial (G4S Node)</strong></td>
+                        <td>Aug 01 - Aug 31, 2026</td>
+                        <td class="text-emerald">$34,000.00</td>
+                        <td class="text-cyan">$5,100.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0701</code></td>
+                        <td><strong>Acme Global Financial (John Lewis Cluster)</strong></td>
+                        <td>Jul 01 - Jul 31, 2026</td>
+                        <td class="text-emerald">$23,000.00</td>
+                        <td class="text-cyan">$3,450.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0601</code></td>
+                        <td><strong>Acme Global Financial (Clarks Cluster)</strong></td>
+                        <td>Jun 01 - Jun 30, 2026</td>
+                        <td class="text-emerald">$65,000.00</td>
+                        <td class="text-cyan">$9,750.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                      <tr>
+                        <td><code>INV-2026-0501</code></td>
+                        <td><strong>Acme Global Financial (Lush Cosmetics)</strong></td>
+                        <td>May 01 - May 31, 2026</td>
+                        <td class="text-emerald">$77,000.00</td>
+                        <td class="text-cyan">$11,550.00</td>
+                        <td><span class="badge badge-emerald" style="font-size:10px;">PAID / WORM SEALED</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+        <!-- ADMIN VIEW 2: MULTI-TENANT & POLICIES -->
+        <div id="governance" class="admin-view-pane">
+          
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--purple); display:flex; align-items:center; gap:8px;">
+            <span>🏛️</span> Sovereign Enterprise Multi-Tenant Governance &amp; Minute Policy Control
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Row-Level Security (RLS) • One-Click Scaffolding • Automated KMS Sealed Enclaves • Granular Context Tuning &amp; Healing SLA
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge badge-purple" style="font-size:11px;">PostgreSQL RLS Active</span>
+          <span class="badge badge-green" style="font-size:11px;">Role: Enterprise Super Admin</span>
+          <button class="btn btn-secondary" onclick="loadGovernanceTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh State</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: TENANT HIERARCHY & SCAFFOLDING WIZARD -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px; margin-bottom:24px;">
+        
+        <!-- CARD 1: HIERARCHY & RLS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🏢 Sovereign Organization &amp; Project Hierarchy</div>
+            <button class="btn btn-secondary" onclick="toggleRlsSchema()" style="font-size:11px; padding:4px 10px;">🔎 Inspect RLS DDL</button>
+          </div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Strict 4-level isolation: <code>Tenant</code> → <code>Project</code> → <code>Repository</code> → <code>Workstation Nodes</code>. PostgreSQL RLS enforces zero data leakage across multi-tenant queries.
+          </p>
+
+          <div id="govHierarchyContainer" style="background:var(--code-bg); padding:14px; border-radius:8px; border:1px solid var(--border); min-height:180px;">
+            <div style="color:var(--muted); font-size:12px;">Loading organization hierarchy...</div>
+          </div>
+
+          <div id="rlsSchemaWrapper" style="display:none; margin-top:14px;">
+            <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:6px;">Generated PostgreSQL Row-Level Security DDL:</div>
+            <pre id="rlsDdlText" style="max-height:220px;">-- Loading DDL...</pre>
+          </div>
+        </div>
+
+        <!-- CARD 2: ONE-CLICK SCAFFOLDING WIZARD -->
+        <div class="card">
+          <div class="card-title">🧙 One-Click Quad-Space Project Scaffolder</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Automates directory initialization (<code>.nb/context</code>, <code>.nb/agentic</code>, <code>workplace</code>, <code>user</code>), mints Genesis cryptographic recovery block <code>RP_GENESIS_000</code>, and provisions isolated KMS keys.
+          </p>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Project Identifier</label>
+              <input type="text" id="scaffoldProjectId" class="input" value="proj_crypto_arbitrage_01" style="font-size:12px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Architecture Mode</label>
+              <select id="scaffoldMode" class="select" style="font-size:12px;">
+                <option value="multi_module">multi_module (Quad-Space)</option>
+                <option value="isolated_micro_service">isolated_micro_service</option>
+                <option value="monolith">monolith</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:11px;">Project Display Name</label>
+            <input type="text" id="scaffoldProjectName" class="input" value="Crypto High-Frequency Arbitrage Engine" style="font-size:12px;">
+          </div>
+
+          <button class="btn btn-primary" onclick="triggerProjectScaffold()" style="width:100%; font-size:12px;">🚀 Scaffold Quad-Space Architecture &amp; Mint Genesis Block</button>
+
+          <div id="scaffoldResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+      </div>
+
+      <!-- ROW 2: KMS SEALED ENCLAVES & GRANULAR POLICY TUNING -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px;">
+
+        <!-- CARD 3: AUTOMATED KMS ENCLAVE VAULT -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🔐 Automated KMS Key Broker &amp; In-Memory Enclaves</div>
+            <span class="badge badge-green" style="font-size:10px;">Ed25519 + AES-256-GCM Active</span>
+          </div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Authenticates digital signatures and decrypts proprietary <code>.nbpack</code> domain bundles directly in volatile RAM with zero plaintext written to disk.
+          </p>
+
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" style="font-size:11px;">Enclave Payload Data (JSON)</label>
+            <textarea id="kmsPayloadInput" class="textarea" rows="4" style="font-size:11px; font-family:'JetBrains Mono', monospace;">{
+  "prompt_system": "Act as an autonomous institutional risk &amp; execution agent.",
+  "max_var_loss_usd": 50000.0,
+  "approved_symbols": ["BTC-USD", "ETH-USD"]
+}</textarea>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-bottom:14px;">
+            <button class="btn btn-primary" onclick="triggerKmsSeal()" style="flex:1; font-size:11px;">📦 Seal In-Memory .nbpack</button>
+            <button class="btn btn-secondary" onclick="triggerKmsMount()" style="flex:1; font-size:11px;">⚡ Mount in RAM (0% Disk Residue)</button>
+            <button class="btn btn-secondary" onclick="triggerKmsAudit()" style="font-size:11px; padding:6px 12px;">📜 Audit Log</button>
+          </div>
+
+          <div id="kmsResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+
+        <!-- CARD 4: SIMPLIFIED 5-POINT OPERATIONAL CONTROL PLANE & CERTIFIED INVARIANTS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin-bottom:0;">🛡️ Operational Control Plane &amp; Verified Invariants</div>
+            <span id="policyModeBadge" class="badge badge-green" style="font-size:10px;">🛡️ Production Gatekeeper Active</span>
+          </div>
+          <p style="font-size:12px; margin-bottom:14px; color:var(--text);">
+            Convention Over Configuration: All 8 granular dials eliminated. Integral architectural constants are enforced as immutable invariants.
+          </p>
+
+          <!-- 5-POINT CONTROL SURFACE FORM -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Operational Environment Mode</label>
+              <select id="policyEnvironmentSelect" class="select" style="font-size:11px; padding:6px 10px;" onchange="onEnvironmentModeChange()">
+                <option value="production">🛡️ Production Gatekeeper (Strict Block, 3-Turn SLA)</option>
+                <option value="development">🛠️ Development Mode (Non-Blocking Warn, Fast Leases)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">HITL Alert Webhook URL</label>
+              <input type="text" id="policyHitlWebhook" class="input" style="font-size:11px; padding:6px 10px;" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/T00/B00/X00">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Target VCS Git Repository</label>
+              <input type="text" id="policyVcsUrl" class="input" style="font-size:11px; padding:6px 10px;" value="https://github.com/acme/fairyfly.git">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Default Branch</label>
+              <input type="text" id="policyVcsBranch" class="input" style="font-size:11px; padding:6px 10px;" value="main">
+            </div>
+          </div>
+
+          <!-- CERTIFIED ARCHITECTURAL INVARIANTS PANEL (READ-ONLY) -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:14px;">
+            <div style="font-size:11px; font-weight:700; color:var(--cyan); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+              <span>📜</span> Certified Architectural Standards (Zero-Dial Invariants)
+            </div>
+
+            <!-- Invariant Badges Grid -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:11px;">
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Attention Slicing (15/25/35/10/15)</div>
+                <div style="color:var(--muted); font-size:10px;">15% Rules • 25% Contracts • 35% AST • 10% Memory • 15% Headroom (Zero Lost-in-Middle)</div>
+              </div>
+
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Tree-Sitter 6D AST Skeletonizer</div>
+                <div style="color:var(--muted); font-size:10px;">Full Public Signatures &amp; Type Hierarchies Preserved; Bodies Stripped (83.7% Token Reduction)</div>
+              </div>
+
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Self-Healing SLA (3-Turn Bound)</div>
+                <div style="color:var(--muted); font-size:10px;">Bounded 3 Iterations Ceiling • 15% Flaky Variance Quarantine • Auto Rollback to RP<sub>k</sub></div>
+              </div>
+
+              <div style="background:var(--card-bg); padding:8px; border-radius:4px; border:1px solid var(--border);">
+                <div style="font-weight:700; color:var(--text); margin-bottom:2px;">🟢 Swarm Governance &amp; CBAC</div>
+                <div style="color:var(--muted); font-size:10px;">Kahn DAG Acyclicity Enforced • Depth Ceiling D≤3 • HMAC-Signed Least-Privilege Lease</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS -->
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="saveCurrentPolicy()" style="flex:2; font-size:11px;">💾 Apply &amp; Enforce Policy</button>
+            <button class="btn btn-secondary" onclick="testDynamicAttention()" style="flex:1; font-size:11px;">🧪 Test Slicing Standard</button>
+            <button class="btn btn-secondary" onclick="simulatePrGateLive()" style="flex:1; font-size:11px;">🛡️ Test Gatekeeper</button>
+          </div>
+
+          <div id="policyResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+
+      </div>
+    
+        </div>
+
+        <!-- ADMIN VIEW 3: COMMERCIAL PROVISIONER -->
+        <div id="commercial-provisioner" class="admin-view-pane">
+          
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--amber); display:flex; align-items:center; gap:8px;">
+            <span>📦</span> Percipience Commercial Packager, Multi-Tier Provisioner &amp; Entitlement Engine
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Automated Tier-Specific Runtime Packaging • Cross-IDE Cryptographic Provisioning • Ed25519 License Minting • RBAC Permission Gate
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge badge-amber" style="font-size:11px;">Zero-Trust Tier Enforcement</span>
+          <span class="badge badge-green" style="font-size:11px;">SHA-256 Merkle Sealed</span>
+          <button class="btn btn-secondary" onclick="loadCommercialTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh Tiers</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4-TIER COMMERCIAL SPECIFICATION MATRIX -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:24px;">
+        <!-- TIER: FREE -->
+        <div class="card" style="border-top: 3px solid var(--muted);">
+          <div class="card-badge" style="background:rgba(148,163,184,0.15); color:var(--muted);">Free Community</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$0 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Solo developers &amp; open-source projects with local AST optimization.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>1 Included Seat</b></div>
+            <div>⚡ <b>1 Concurrent Worktree</b></div>
+            <div>🛡️ <b>500 PR Audits / month</b></div>
+            <div>🔒 Tree-Sitter &amp; Merkle Core</div>
+            <div style="color:var(--muted);">❌ Custom Agents &amp; Enclaves</div>
+          </div>
+        </div>
+
+        <!-- TIER: TEAM -->
+        <div class="card" style="border-top: 3px solid var(--cyan);">
+          <div class="card-badge" style="background:var(--cyan-glow); color:var(--cyan);">Team</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$1,499 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Growing engineering pods with custom agent workflows and prompt drift tracking.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>15 Included Seats</b></div>
+            <div>⚡ <b>5 Concurrent Worktrees</b></div>
+            <div>🛡️ <b>5,000 PR Audits / month</b></div>
+            <div>🤖 Custom Agent Definitions</div>
+            <div style="color:var(--muted);">❌ Private VPC &amp; WORM</div>
+          </div>
+        </div>
+
+        <!-- TIER: BUSINESS -->
+        <div class="card" style="border-top: 3px solid var(--purple);">
+          <div class="card-badge" style="background:var(--purple-glow); color:var(--purple);">Business</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$4,999 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Scale-ups requiring .nbpack enclave compilation &amp; Cognitive Routing.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>50 Included Seats</b></div>
+            <div>⚡ <b>20 Concurrent Worktrees</b></div>
+            <div>🛡️ <b>25,000 PR Audits / month</b></div>
+            <div>📦 .nbpack Enclave Bundling</div>
+            <div>🧠 Cognitive Routing &amp; Gateways</div>
+          </div>
+        </div>
+
+        <!-- TIER: ENTERPRISE -->
+        <div class="card" style="border-top: 3px solid var(--amber);">
+          <div class="card-badge" style="background:var(--amber-glow); color:var(--amber);">Enterprise Dedicated</div>
+          <div style="font-size:24px; font-weight:800; font-family:'JetBrains Mono', monospace; margin:6px 0;">$12,499 <span style="font-size:12px; color:var(--muted); font-weight:400;">/ mo</span></div>
+          <p style="font-size:12px; margin-bottom:12px;">Full sovereign compliance, air-gapped VPCs, CMEK, and S3 WORM vaults.</p>
+          <div style="font-size:11.5px; display:flex; flex-direction:column; gap:6px; color:var(--text);">
+            <div>👥 <b>Unlimited Seats</b></div>
+            <div>⚡ <b>100+ Concurrent Worktrees</b></div>
+            <div>🛡️ <b>Unlimited PR Audits</b></div>
+            <div>🏛️ Air-Gapped VPC &amp; CMEK</div>
+            <div>🔒 S3/GCS Immutable WORM Egress</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: INTERACTIVE PACKAGING & PROVISIONING OPERATIONS -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px; margin-bottom:24px;">
+        
+        <!-- CARD 1: ON-DEMAND COMMERCIAL TIER PACKAGER -->
+        <div class="card">
+          <div class="card-title">🚀 On-Demand Commercial Tier Packager</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Filters core engine modules, CLI binaries, and prompt templates for the selected tier, sealing the bundle with SHA-256 Merkle proofs.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <div class="form-group">
+              <label class="form-label">Select Commercial Plan Tier</label>
+              <select id="commPkgTier" class="select" style="font-size:12px;">
+                <option value="plan_enterprise" selected>Enterprise Dedicated (All engines &amp; capabilities)</option>
+                <option value="plan_business">Business (.nbpack, cognitive routing, plugins)</option>
+                <option value="plan_team">Team (Worktree engine, custom agents, drift sentinels)</option>
+                <option value="plan_free">Free Community (Offline AST optimizer, Merkle core)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tenant ID for Packaging Manifest</label>
+              <input type="text" id="commPkgTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+            </div>
+
+            <button class="btn btn-primary" onclick="packageCommercialTier()" style="font-size:12px; padding:8px 16px;">
+              📦 Assemble &amp; Seal Commercial Bundle
+            </button>
+          </div>
+
+          <div id="commPkgResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- CARD 2: CROSS-PLATFORM TENANT PROVISIONER -->
+        <div class="card">
+          <div class="card-title">🛡️ Cross-Platform Tenant Provisioner &amp; Licensing</div>
+          <p style="font-size:12px; margin-bottom:14px;">
+            Mints cryptographic Ed25519 licenses and deploys tier-specific runtime configs into IntelliJ, VSCode, or SaaS Gateway.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="form-group">
+                <label class="form-label">Target Tenant ID</label>
+                <input type="text" id="commProvTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Commercial Tier</label>
+                <select id="commProvTier" class="select" style="font-size:12px;">
+                  <option value="plan_enterprise" selected>Enterprise Dedicated</option>
+                  <option value="plan_business">Business</option>
+                  <option value="plan_team">Team</option>
+                  <option value="plan_free">Free Community</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Deployment Target</label>
+              <select id="commProvTarget" class="select" style="font-size:12px;">
+                <option value="all" selected>All Targets (IntelliJ, VSCode &amp; SaaS Gateway)</option>
+                <option value="mod_intellij_plugin">IntelliJ IDEA Plugin Module</option>
+                <option value="mod_vscode_extension">VSCode Extension Module</option>
+                <option value="saas_portal_gateway">Cloud SaaS Portal Gateway</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="provisionCommercialTarget()" style="font-size:12px; padding:8px 16px;">
+              ⚡ Provision Target &amp; Mint License
+            </button>
+          </div>
+
+          <div id="commProvResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <!-- ROW 2.5: COMMERCIAL LICENSE GENERATOR & SELF-GENERATION HUB -->
+      <div class="card" style="margin-bottom:24px; border:1px solid var(--border-accent);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px; font-size:16px;">
+              📜 Commercial License Minting &amp; Post-Payment Self-Generation Hub
+            </div>
+            <div style="font-size:12px; color:var(--muted);">
+              Mint Ed25519 &amp; SHA-256 cryptographic tenant licenses, install into active workspaces, or simulate post-payment self-generation hooks.
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn btn-secondary" onclick="loadActiveLicense()" style="font-size:11px; padding:4px 12px;">🔄 Check Active License</button>
+          </div>
+        </div>
+
+        <!-- ACTIVE LICENSE STATUS DISPLAY BAR -->
+        <div id="activeLicenseBanner" style="background:var(--bg-panel); border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-size:20px;">🛡️</div>
+            <div>
+              <div style="font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;">
+                <span>Active Workspace Tier:</span>
+                <span id="activeLicTierBadge" class="badge badge-cyan">Loading...</span>
+                <span id="activeLicTenantLabel" style="color:var(--muted); font-size:11px; font-weight:400;"></span>
+              </div>
+              <div id="activeLicQuotaLabel" style="font-size:11px; color:var(--text); margin-top:2px;">Quotas: ...</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div id="activeLicSourceLabel" style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono', monospace;"></div>
+            <div id="activeLicSigLabel" style="font-size:10px; color:var(--cyan); font-family:'JetBrains Mono', monospace; margin-top:2px;"></div>
+          </div>
+        </div>
+
+        <!-- LICENSE GENERATION CONTROLS -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Target Commercial Tier</label>
+            <select id="licGenTier" class="select" style="font-size:12px;" onchange="updateLicDefaultQuotas()">
+              <option value="plan_enterprise" selected>Enterprise Dedicated ($9,999/mo)</option>
+              <option value="plan_business">Business Tier ($4,499/mo)</option>
+              <option value="plan_team">Team Tier ($1,499/mo)</option>
+              <option value="plan_free">Free Community ($0/mo)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Tenant ID (Slug)</label>
+            <input type="text" id="licGenTenantId" class="input" value="tenant_enterprise_acme" style="font-size:12px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Organization / Client Name</label>
+            <input type="text" id="licGenTenantName" class="input" value="Acme Global Financial Technologies" style="font-size:12px;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Seats (-1 = Unlimited)</label>
+            <input type="number" id="licGenSeats" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Worktrees (-1 = Unlimited)</label>
+            <input type="number" id="licGenWorktrees" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Monthly Audits (-1 = Unlimited)</label>
+            <input type="number" id="licGenAudits" class="input" value="-1" style="font-size:12px;">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Payment Ref / Transaction ID</label>
+            <input type="text" id="licGenPaymentRef" class="input" placeholder="e.g. pi_live_stripe_9948" style="font-size:12px;">
+          </div>
+        </div>
+
+        <!-- ACTIONS ROW -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+          <button class="btn btn-primary" onclick="mintLicenseInteractive()" style="font-size:12px; padding:8px 16px;">
+            🏷️ Mint &amp; Sign License
+          </button>
+          <button class="btn btn-secondary" onclick="installLicenseInteractive()" style="font-size:12px; padding:8px 16px; border-color:var(--green); color:var(--green);">
+            ⚡ Install into Active Workspace
+          </button>
+          <button class="btn btn-secondary" onclick="downloadLicenseJson()" id="licDownloadBtn" style="font-size:12px; padding:8px 16px; display:none;">
+            📥 Download tenant_license.json
+          </button>
+          <button class="btn btn-secondary" onclick="simulatePaymentSelfGenerate()" style="font-size:12px; padding:8px 16px; border-color:var(--amber); color:var(--amber);" title="Tests automated post-payment self-generation hook">
+            💳 Simulate Payment Webhook (Self-Generate)
+          </button>
+        </div>
+
+        <!-- OUTPUT BOX -->
+        <div id="licGenResultBox" style="display:none; background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:260px; overflow-y:auto; font-family:'JetBrains Mono', monospace;"></div>
+      </div>
+
+      <!-- ROW 3: RBAC PERMISSION GATE & ENTITLEMENT AUDITOR -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🔍 Zero-Trust Permission Gate &amp; Entitlement Simulator</div>
+          <button class="btn btn-secondary" onclick="auditCommercialEntitlements()" style="font-size:11px; padding:4px 12px;">📊 Audit Tenant Quotas</button>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Simulates runtime policy evaluation and feature gate enforcement against tenant tier configurations.
+        </p>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:flex-end; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Tenant ID</label>
+            <input type="text" id="commPermTenant" class="input" value="tenant_acme_fintech" style="font-size:12px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Capability / Action to Evaluate</label>
+            <select id="commPermAction" class="select" style="font-size:12px;">
+              <option value="allow_worm_egress">allow_worm_egress (S3 Immutable Vault)</option>
+              <option value="allow_nbpack_compilation">allow_nbpack_compilation (.nbpack Enclave)</option>
+              <option value="allow_custom_agent_creation">allow_custom_agent_creation (Agent Workflows)</option>
+              <option value="allow_private_vpc">allow_private_vpc (Air-Gapped Cloud)</option>
+              <option value="allow_multi_tenant_gateway">allow_multi_tenant_gateway (SaaS Gateway)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Target File (Optional)</label>
+            <input type="text" id="commPermFile" class="input" placeholder=".nb/core/worm_egress.py" style="font-size:12px;">
+          </div>
+
+          <button class="btn btn-primary" onclick="verifyCommercialPermission()" style="font-size:12px; height:38px;">
+            🛡️ Verify Permission
+          </button>
+        </div>
+
+        <div id="commPermResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+    
+        </div>
+
+        <!-- ADMIN VIEW 4: SWARM & GOVERNANCE -->
+        <div id="swarm-governance" class="admin-view-pane">
+          
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:22px; font-weight:800; color:var(--emerald); display:flex; align-items:center; gap:8px;">
+            <span>🤖</span> Percipience Swarm Topologies, Agent Coordination &amp; Cryptographic Governance
+          </div>
+          <div style="font-size:13px; color:var(--muted); margin-top:4px;">
+            Dynamic Task DAGs • Multi-Pass Reflexion &amp; Critic Loops • 3-Tier Persistent Memory • Declarative Tool Contracts • Capability-Based Access Control (CBAC)
+          </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" onclick="loadSwarmTab()" style="padding:6px 14px; font-size:11px;">🔄 Refresh Swarm State</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: DYNAMIC DAG ORCHESTRATION & RUNTIME SUB-GOAL EXPANSION -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🕸️ GAP-AGT-01: Dynamic Task DAGs &amp; Runtime Sub-Goal Expansion</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald" id="swarmDagAcyclicityBadge">✓ Kahn Acyclicity Enforced</span>
+            <span class="badge badge-purple" id="swarmDagMaxDepthBadge">Max Depth: 3</span>
+            <span class="badge badge-cyan" id="swarmDagTotalNodesBadge">Nodes: 4 / 20 Max</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:16px;">
+          Autonomous agents dynamically break down complex tasks into runtime sub-goals. Downstream dependencies are automatically rewired to wait for terminal sub-goals while preventing circular deadlock cycles.
+        </p>
+
+        <!-- DAG VISUALIZER -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text); margin-bottom:8px;">Execution Graph &amp; Dependency Chain:</div>
+          <div id="swarmDagOrderContainer" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); min-height:48px;">
+            <span style="color:var(--muted); font-size:11px;">Loading execution DAG...</span>
+          </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; align-items:flex-end;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Select Parent Step to Expand</label>
+            <select id="swarmDagParentSelect" class="select" style="font-size:12px;">
+              <option value="step_code_derivation">step_code_derivation (Derive Implementation)</option>
+              <option value="step_plan_architecture">step_plan_architecture (Synthesize Architecture)</option>
+              <option value="step_verify_gate">step_verify_gate (Attest Verification Gate)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Sub-Goal Template</label>
+            <select id="swarmDagTemplateSelect" class="select" style="font-size:12px;">
+              <option value="ast_and_critic">AST Type Check + Critic Invariant Evaluation</option>
+              <option value="fuzz_and_benchmark">Fuzz Testing + Latency Micro-Benchmark</option>
+              <option value="security_cve_scan">CVE Sentinel Scan + Memory Safety Check</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" onclick="expandDynamicDAGSubgoals()" style="font-size:12px; height:38px; flex:1;">
+              ⚡ Expand Sub-Goals
+            </button>
+            <button class="btn btn-secondary" onclick="simulateDynamicDAGExecution()" style="font-size:12px; height:38px;">
+              ▶️ Simulate DAG
+            </button>
+            <button class="btn btn-secondary" onclick="resetDynamicDAG()" style="font-size:12px; height:38px;">
+              ↺ Reset
+            </button>
+          </div>
+        </div>
+
+        <div id="swarmDagResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:200px; overflow-y:auto;"></div>
+      </div>
+
+      <!-- ROW 2: REFLEXION & 5-PILLAR CRITIC ENGINE + ZERO DISK WRITE -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🧠 GAP-AGT-02: Structured Multi-Pass Reflexion &amp; Critic Verification</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-purple">Zero-Disk-Write Sandbox</span>
+            <span class="badge badge-amber">Gate Threshold: ≥ 0.95</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Multi-turn critic evaluates generated code across 5 mathematical invariant pillars. Disk writes are strictly prohibited unless the composite score passes the 0.95 threshold with 0 critical defects.
+        </p>
+
+        <!-- 5 PILLAR METRICS DISPLAY -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:16px;">
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">1. Wire Conformity</div>
+            <div id="pillarScoreWire" style="font-size:18px; font-weight:800; color:var(--cyan);">1.00</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">2. Edge Case Coverage</div>
+            <div id="pillarScoreEdge" style="font-size:18px; font-weight:800; color:var(--amber);">0.50</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">3. Type Signature Purity</div>
+            <div id="pillarScoreType" style="font-size:18px; font-weight:800; color:var(--purple);">0.90</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">4. Guardrail Compliance</div>
+            <div id="pillarScoreGuard" style="font-size:18px; font-weight:800; color:var(--emerald);">1.00</div>
+          </div>
+          <div style="background:var(--card-bg); border:1px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">5. Token Budget Adherence</div>
+            <div id="pillarScoreToken" style="font-size:18px; font-weight:800; color:var(--emerald);">1.00</div>
+          </div>
+        </div>
+
+        <!-- CODE EVALUATION INPUT -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" style="font-size:11px;">Candidate Code / Artifact for Critic Analysis</label>
+          <textarea id="reflexionCodeInput" class="input" rows="4" style="font-family:'JetBrains Mono', monospace; font-size:11px; resize:vertical;">def process_payment(account_id: str, amount_usd: float) -> bool:
+    if not account_id or amount_usd <= 0:
+        raise ValueError("Invalid payment parameters")
+    try:
+        # Secure ledger commit
+        return True
+    except Exception as exc:
+        return False</textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-primary" onclick="runReflexionEvaluation()" style="font-size:12px;">
+            🔬 Evaluate Candidate Against 5 Pillars
+          </button>
+          <button class="btn btn-secondary" onclick="loadDefectiveSnippet()" style="font-size:12px;">
+            ⚠️ Load Defective Snippet
+          </button>
+        </div>
+
+        <div id="reflexionResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+
+      <!-- ROW 3: 3-TIER PERSISTENT MEMORY & EPISODIC RETRIEVAL -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">💾 GAP-AGT-03: 3-Tier Persistent Memory Engine (Working, Episodic &amp; Semantic)</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-cyan" id="memWorkingBadge">Tier 1: In-Flight RAM</span>
+            <span class="badge badge-purple" id="memEpisodicCountBadge">Tier 2: 1 Episode</span>
+            <span class="badge badge-emerald" id="memSemanticCountBadge">Tier 3: 2 Concepts</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Tier 1 holds working scratchpad &amp; hypotheses. Tier 2 indexes failure episodes with cosine TF-IDF similarity. Tier 3 stores cross-session architectural concepts sealed into Merkle blocks.
+        </p>
+
+        <div style="display:grid; grid-template-columns: 1fr auto auto; gap:10px; align-items:center; margin-bottom:14px;">
+          <input type="text" id="memorySearchQuery" class="input" placeholder="Search episodic memory (e.g. 'cycle detected', 'type annotation', 'bootstrap')" style="font-size:12px;">
+          <button class="btn btn-primary" onclick="searchEpisodicMemory()" style="font-size:12px; white-space:nowrap;">
+            🔍 Search Episodes
+          </button>
+          <button class="btn btn-secondary" onclick="consolidateWorkingMemory()" style="font-size:12px; white-space:nowrap;">
+            💾 Consolidate Working Memory
+          </button>
+        </div>
+
+        <div id="memoryResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px; max-height:220px; overflow-y:auto;"></div>
+      </div>
+
+      <!-- ROW 4: DECLARATIVE TOOL CONTRACTS (JSON SCHEMA DRAFT-07) -->
+      <div class="card" style="margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">📐 GAP-AGT-04: Declarative Tool Contracts &amp; Schema Validation</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald">JSON Schema Draft-07</span>
+            <span class="badge badge-cyan">Idempotency Caching</span>
+            <span class="badge badge-purple">4 Registered Tools</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Every subagent tool defines strict declarative contracts. Arguments and outputs are validated with runtime type checking and deterministic execution caches.
+        </p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Select Tool Contract</label>
+            <select id="swarmToolSelect" class="select" style="font-size:12px;" onchange="updateToolArgsTemplate()">
+              <option value="ast_pruner">ast_pruner (Polyglot AST Skeletonizer &amp; Token Compressor)</option>
+              <option value="contract_checker">contract_checker (Cross-Module Interface Validator)</option>
+              <option value="merkle_auditor">merkle_auditor (Cryptographic SHA-256 Audit Tree)</option>
+              <option value="cve_sentinel">cve_sentinel (Vulnerability Scanner)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:11px;">Contract Spec Overview</label>
+            <div id="swarmToolSpecBadge" style="font-size:11.5px; color:var(--muted); padding-top:6px;">
+              Idempotent: <b>True</b> | Mutates Disk: <b>False</b> | Timeout: <b>15s</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label" style="font-size:11px;">Tool Arguments (JSON)</label>
+          <textarea id="swarmToolArgsInput" class="input" rows="3" style="font-family:'JetBrains Mono', monospace; font-size:11px;">{"source_code": "def calculate_risk(account: str) -> float:\n    # Large docstring\n    return 0.05", "language": "python"}</textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="validateAndExecuteTool()" style="font-size:12px; padding:8px 18px;">
+          🧪 Validate Contract &amp; Execute Tool
+        </button>
+
+        <div id="swarmToolResultBox" style="display:none; margin-top:14px; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+      </div>
+
+      <!-- ROW 5: CAPABILITY-BASED ACCESS CONTROL (CBAC) SANDBOX TOKENS -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">🛡️ GAP-AGT-05: Capability-Based Access Control (CBAC) Sandbox Tokens</div>
+          <div style="display:flex; gap:6px;">
+            <span class="badge badge-emerald">HMAC-SHA256 Signed</span>
+            <span class="badge badge-red">Loopback &amp; Core Protected</span>
+          </div>
+        </div>
+        <p style="font-size:12px; margin-bottom:14px;">
+          Subagents run in capability-scoped sandboxes. Cryptographic tokens grant least-privilege access to filesystem worktrees, subprocess commands, and network egress destinations.
+        </p>
+
+        <!-- TOKEN MINTER -->
+        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:16px;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:8px; color:var(--text);">🔑 Mint Scoped Agent Capability Token:</div>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:10px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Agent ID</label>
+              <input type="text" id="cbacAgentId" class="input" value="agent_sandbox_coder" style="font-size:12px;">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Token TTL (Seconds)</label>
+              <input type="number" id="cbacTtl" class="input" value="3600" style="font-size:12px;">
+            </div>
+          </div>
+
+          <div style="font-size:11px; margin-bottom:8px; color:var(--muted);">Granted Capabilities:</div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px; font-size:11.5px;">
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capFsRead" checked> <code>CAP_FS_READ</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capFsWriteMod" checked> <code>CAP_FS_WRITE_MODULE_ONLY</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capExecSubprocess"> <code>CAP_EXEC_SUBPROCESS</code>
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="capNetEgress"> <code>CAP_NET_EGRESS</code>
+            </label>
+          </div>
+
+          <button class="btn btn-primary" onclick="mintCbacToken()" style="font-size:11.5px; padding:6px 14px;">
+            ⚡ Mint Cryptographic Token
+          </button>
+        </div>
+
+        <!-- LIVE SANDBOX TESTER -->
+        <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:12px;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:8px; color:var(--text);">🧪 Live Sandbox Policy Gate Evaluation:</div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label" style="font-size:11px;">Active Capability Token</label>
+            <input type="text" id="cbacActiveToken" class="input" placeholder="Mint a token above or paste here..." style="font-size:11px; font-family:'JetBrains Mono', monospace;">
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px; align-items:flex-end;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:11px;">Evaluation Gate Type</label>
+              <select id="cbacGateType" class="select" style="font-size:12px;" onchange="updateCbacTestInputs()">
+                <option value="fs_valid">Filesystem Write (Permitted Module File)</option>
+                <option value="fs_blocked_core">Filesystem Write (Forbidden Protected Core: .nb/core)</option>
+                <option value="subproc_safe">Subprocess Command (Whitelisted: pytest)</option>
+                <option value="subproc_blocked">Subprocess Command (Dangerous / Blocked: rm -rf)</option>
+                <option value="net_loopback">Network Egress (Blocked Loopback: 127.0.0.1)</option>
+                <option value="net_external">Network Egress (External: api.github.com:443)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="testCbacSandboxAccess()" style="font-size:12px; height:38px;">
+              🛡️ Test Sandbox Access
+            </button>
+          </div>
+
+          <div id="cbacResultBox" style="display:none; background:var(--code-bg); padding:12px; border-radius:6px; border:1px solid var(--border); font-size:11px;"></div>
+        </div>
+      </div>
+    
+        </div>
+
+        <!-- ADMIN VIEW 5: FLEET & FINOPS -->
+        <div id="fleet-monitor" class="admin-view-pane">
+          
+      <div class="hero">
+        <div class="hero-badge">🖥️ Enterprise Workstation &amp; Swarm Fleet</div>
+        <h1>Distributed Machine Fleet Monitor<br>&amp; Real-Time FinOps Rollup</h1>
+        <p style="color:var(--muted); max-width:750px; margin:10px auto 0;">
+          Consolidated control plane for distributed developer workstations, runner nodes, and container swarms.
+          Tracks real-time task progression, active worktree leases, and enterprise-wide 15% revenue share token savings.
+        </p>
+      </div>
+
+      <!-- Fleet & Docker Testing Harness Control Banner -->
+      <div style="background:var(--bg-card); padding:16px 20px; border-radius:10px; border:1px solid var(--cyan); margin:18px 0; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+        <div>
+          <div style="font-weight:700; font-size:15px; color:var(--cyan); display:flex; align-items:center; gap:8px;">
+            <span>⚡ Fleet &amp; Docker Testing Harness</span>
+            <span id="dockerStatusBadge" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:11px; padding:2px 8px; border-radius:12px; font-weight:600;">Checking Docker...</span>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+            Test real-time node telemetry ingestion, task progression animation, and 15% revenue share FinOps rollup.
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+          <button onclick="triggerSimulateActivity(50000)" class="nav-btn" style="background:rgba(6,182,212,0.15); border:1px solid var(--cyan); color:var(--cyan); font-size:12px; font-weight:600; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            ⚡ Inject Pulse (+50k tokens)
+          </button>
+          <button onclick="triggerAdvanceMilestone()" class="nav-btn" style="background:rgba(16,185,129,0.15); border:1px solid var(--green); color:var(--green); font-size:12px; font-weight:600; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            ⏩ Advance Milestones (+15%)
+          </button>
+          <button onclick="triggerResetFleet()" class="nav-btn" style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.4); color:#f87171; font-size:12px; cursor:pointer; padding:6px 12px; border-radius:6px;">
+            🔄 Reset Baseline
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin:24px 0;">
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">Connected Machines</div>
+          <div id="fleetTotalMachines" style="font-size:26px; font-weight:800; color:var(--text); margin-top:6px;">--</div>
+          <div id="fleetActiveSubtitle" style="color:var(--green); font-size:12px; margin-top:4px;">● All nodes communicating</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">Enterprise Gross Cloud Savings</div>
+          <div id="fleetGrossSavings" style="font-size:26px; font-weight:800; color:var(--cyan); margin-top:6px;">$0.00</div>
+          <div id="fleetTokensSubtitle" style="color:var(--muted); font-size:12px; margin-top:4px;">0 tokens reduced</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">85% Customer Net Retained</div>
+          <div id="fleetNetSavings" style="font-size:26px; font-weight:800; color:var(--green); margin-top:6px;">$0.00</div>
+          <div style="color:var(--muted); font-size:12px; margin-top:4px;">Direct customer savings retained</div>
+        </div>
+        <div style="background:var(--bg-card); padding:18px; border-radius:10px; border:1px solid var(--border);">
+          <div style="color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase;">15% Percipience Fee</div>
+          <div id="fleetFee" style="font-size:26px; font-weight:800; color:var(--amber); margin-top:6px;">$0.00</div>
+          <div style="color:var(--muted); font-size:12px; margin-top:4px;">Billed only on verified savings</div>
+        </div>
+      </div>
+
+      <!-- Live Machine Grid -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="margin:0; font-size:18px;">🖥️ Distributed Machine Fleet Grid</h3>
+          <button onclick="loadFleetTab()" class="nav-btn" style="border:1px solid var(--border-accent); color:var(--cyan); font-size:12px; cursor:pointer;">🔄 Refresh Fleet</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:10px 8px;">Machine / Host</th>
+                <th style="padding:10px 8px;">User / Agent</th>
+                <th style="padding:10px 8px;">Project</th>
+                <th style="padding:10px 8px;">Active Worktree &amp; Branch</th>
+                <th style="padding:10px 8px;">Current Task</th>
+                <th style="padding:10px 8px;">Progress</th>
+                <th style="padding:10px 8px;">Gross Saved</th>
+                <th style="padding:10px 8px;">Status</th>
+                <th style="padding:10px 8px; text-align:right;">Remote Admin Interventions</th>
+              </tr>
+            </thead>
+            <tbody id="fleetMachineTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Task Progression & FinOps Leaderboard Split -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(400px, 1fr)); gap:20px;">
+        <!-- Real-time Task Progression -->
+        <div style="background:var(--bg-card); padding:20px; border-radius:10px; border:1px solid var(--border);">
+          <h3 style="margin-top:0; font-size:16px; margin-bottom:16px;">⚡ Real-Time Task Progression &amp; Milestones</h3>
+          <div id="fleetTaskCards" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Project & Machine Savings Rollup -->
+        <div style="background:var(--bg-card); padding:20px; border-radius:10px; border:1px solid var(--border);">
+          <h3 style="margin-top:0; font-size:16px; margin-bottom:16px;">🏆 Project &amp; Node FinOps Leaderboard</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                  <th style="padding:8px 6px;">Scope</th>
+                  <th style="padding:8px 6px;">Identifier</th>
+                  <th style="padding:8px 6px;">Tokens Saved</th>
+                  <th style="padding:8px 6px;">Gross Savings</th>
+                  <th style="padding:8px 6px;">Customer Net (85%)</th>
+                </tr>
+              </thead>
+              <tbody id="fleetLeaderboardBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    
+
+      <!-- Enterprise Security & Quarantine Central Command (TODO-PRT-12 / CAP-44) -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--text); display:flex; align-items:center; gap:8px;">
+              <span>🛡️ Enterprise Security &amp; Quarantine Central Command</span>
+              <span id="qcQuarantineBadge" style="background:rgba(239,68,68,0.15); color:#f87171; font-size:11px; padding:2px 8px; border-radius:12px; font-weight:700;">Active Triage</span>
+            </div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+              Single-pane triage for context poisoning, prompt injections, AST dependency CVE blocks, and drift evolutions. Sealed into immutable Merkle state ledger.
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button onclick="loadFleetTab()" class="nav-btn" style="border:1px solid var(--border-accent); color:var(--cyan); font-size:12px; cursor:pointer; padding:6px 12px; border-radius:6px;">🔄 Refresh Triage</button>
+          </div>
+        </div>
+
+        <!-- Quarantine Summary Metrics -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:18px;">
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--muted); font-weight:600;">Total Incidents</div>
+            <div id="qcTotalCount" style="font-size:20px; font-weight:800; color:var(--text); margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:#f87171; font-weight:600;">Active Quarantined</div>
+            <div id="qcActiveCount" style="font-size:20px; font-weight:800; color:#f87171; margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--green); font-weight:600;">Merkle Sealed</div>
+            <div id="qcResolvedCount" style="font-size:20px; font-weight:800; color:var(--green); margin-top:4px;">--</div>
+          </div>
+          <div style="background:var(--code-bg); padding:12px; border-radius:8px; border:1px solid var(--border);">
+            <div style="font-size:11px; color:var(--amber); font-weight:600;">Critical Risk</div>
+            <div id="qcCriticalCount" style="font-size:20px; font-weight:800; color:var(--amber); margin-top:4px;">--</div>
+          </div>
+        </div>
+
+        <!-- Quarantine Triage Table -->
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:10px 8px;">Incident ID</th>
+                <th style="padding:10px 8px;">Vector / Type</th>
+                <th style="padding:10px 8px;">Target / Module</th>
+                <th style="padding:10px 8px;">Severity</th>
+                <th style="padding:10px 8px;">Detected (UTC)</th>
+                <th style="padding:10px 8px;">Status</th>
+                <th style="padding:10px 8px;">Merkle Seal / Resolution</th>
+                <th style="padding:10px 8px; text-align:right;">Triage Action</th>
+              </tr>
+            </thead>
+            <tbody id="qcTriageTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Remote Admin Interventions Audit Log (TODO-PRT-11 / CAP-44) -->
+      <div style="background:var(--bg-card); padding:24px; border-radius:10px; border:1px solid var(--border); margin-top:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <h3 style="margin:0; font-size:17px; color:var(--text);">📜 Remote Machine Interventions Audit Log</h3>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+              Immutable chronological record of administrator interventions across workstations, leases, and AST caches.
+            </div>
+          </div>
+          <span style="font-size:11px; color:var(--cyan); background:rgba(6,182,212,0.1); padding:3px 8px; border-radius:6px; font-weight:600;">Enterprise RBAC Audit</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); color:var(--muted);">
+                <th style="padding:8px 6px;">Intervention ID</th>
+                <th style="padding:8px 6px;">Timestamp (UTC)</th>
+                <th style="padding:8px 6px;">Target Machine</th>
+                <th style="padding:8px 6px;">Action</th>
+                <th style="padding:8px 6px;">Actor</th>
+                <th style="padding:8px 6px;">Status</th>
+                <th style="padding:8px 6px;">Details &amp; Audit Trail</th>
+              </tr>
+            </thead>
+            <tbody id="fleetInterventionsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+        </div> <!-- End of fleet-monitor pane -->
+
+            </div> <!-- End of df-content-area -->
+          </div> <!-- End of dashflat-main -->
+        </div> <!-- End of clientAuthConsole (dashflat-container) -->
+      </section>

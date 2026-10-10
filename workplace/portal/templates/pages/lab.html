@@ -1,0 +1,616 @@
+<section id="lab" class="tab-content">
+      <div class="subtab-nav">
+        <button class="econ-subtab-btn active" data-econ-btn="lab-gateway" onclick="showEconomicsSubtab('lab-gateway')">Context Gateway</button>
+        <button class="econ-subtab-btn" data-econ-btn="lab-sandbox" onclick="showEconomicsSubtab('lab-sandbox')">Live Sandboxes</button>
+      </div>
+
+      <div data-econ-subtab="lab-gateway" class="active" id="lab-gateway-content"></div>
+      <div data-econ-subtab="lab-sandbox" id="lab-sandbox-content"></div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const gatewaySection = document.getElementById('gateway');
+          const sandboxSection = document.getElementById('sandboxes');
+
+          if (gatewaySection) {
+            document.getElementById('lab-gateway-content').innerHTML = gatewaySection.innerHTML;
+            gatewaySection.style.display = 'none';
+          }
+          if (sandboxSection) {
+            document.getElementById('lab-sandbox-content').innerHTML = sandboxSection.innerHTML;
+            sandboxSection.style.display = 'none';
+          }
+        });
+      </script>
+    </section>
+
+    <!-- TAB 4: CONTEXT GATEWAY (OPTION 1) -->
+    <section id="gateway" class="tab-content" style="display:none;">
+      <div class="section-title">Context Gateway (Option 1) &amp; Sealed Plan Bundles</div>
+      <div class="section-desc">Enforces zero plaintext blueprint leakage. Proprietary plans and KMS decryption keys reside strictly inside the Gateway server-side RAM enclave with in-flight prompt injection and sealed binary envelopes (.nbpack).</div>
+
+      <div class="grid-4" style="margin-bottom:22px;">
+        <div class="metric-card">
+          <div class="metric-val text-emerald">0.0%</div>
+          <div class="metric-label">Client Plan Exposure</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-cyan">100%</div>
+          <div class="metric-label">Invariant Enforcement</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-purple">AES-256-GCM</div>
+          <div class="metric-label">Binary Envelope Seal</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val text-amber">&lt; 25ms</div>
+          <div class="metric-label">In-Flight Enclave Latency</div>
+        </div>
+      </div>
+
+      <!-- Core Security Pillars -->
+      <div class="grid-3" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-badge">Architecture</div>
+          <h3>1. Server-Side RAM Enclave</h3>
+          <p>Domain blueprints, wire contracts, and KMS decryption keys reside strictly in ephemeral Gateway memory. No plaintext plan file is ever shipped or exposed to client developer workstations.</p>
+          <div class="stat-box"><span>KMS Key Broker:</span><span class="stat-val text-cyan" style="font-size:11px;">CMEK-Vault-Enclave</span></div>
+          <div class="stat-box"><span>Plaintext Residue:</span><span class="stat-val text-emerald">0.0% Disk Residue</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Runtime Interception</div>
+          <h3>2. In-Flight Prompt Injection</h3>
+          <p>The Gateway transparently intercepts LLM completions, injects architectural constraints and invariants into the provider context in-flight, and sanitizes output before streaming code back to the client.</p>
+          <div class="stat-box"><span>Drop-in Compatibility:</span><span class="stat-val text-cyan">OpenAI / Claude API</span></div>
+          <div class="stat-box"><span>Sanitization Guard:</span><span class="stat-val text-emerald">100% Redacted Invariants</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Distribution</div>
+          <h3>3. Encrypted .nbpack Bundles</h3>
+          <p>Encrypted domain layers (e.g. <code>iot_mobile_domain.nbpack</code>) can be downloaded and bootstrapped via <code>npm / npx</code> or native CLI into RAM with zero client filesystem exposure.</p>
+          <div class="stat-box"><span>Cryptographic Format:</span><span class="stat-val text-cyan">NBPACK_V2_SEALED</span></div>
+          <div class="stat-box"><span>Space Hydration:</span><span class="stat-val text-emerald">Volatile Memory Only</span></div>
+        </div>
+      </div>
+
+      <!-- ENCRYPTED BUNDLES DOWNLOAD & SPACE BOOTSTRAPPING CENTER -->
+      <div class="card" style="margin-bottom:22px;">
+        <div class="card-badge">Distribution Center</div>
+        <h3>📦 Encrypted Plan Bundles (.nbpack) &amp; Zero-Exposure Space Bootstrapping</h3>
+        <p>Download pre-compiled, Ed25519-signed AES-256-GCM binary envelopes. Developers and autonomous subagents can install and hydrate these sealed packages directly in volatile memory via <code>npm / npx</code> or the native Percipience CLI without exposing the proprietary blueprint content.</p>
+
+        <div class="table-wrap" style="margin:14px 0;">
+          <table>
+            <thead>
+              <tr>
+                <th>Plan Bundle / File</th>
+                <th>Target Domain Architecture</th>
+                <th>Envelope Format &amp; Seal</th>
+                <th>Size</th>
+                <th>Client Exposure</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="gatewayBundlesTableBody">
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:var(--text);">IoT Edge &amp; Mobile Domain</div>
+                  <code style="font-size:11px; color:var(--cyan);">iot_mobile_domain.nbpack</code>
+                </td>
+                <td>Embedded FreeRTOS, BLE GATT telemetry, ring-buffer concurrency &amp; dual-bank OTA invariants.</td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
+                <td>8.2 KB</td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/iot_mobile_domain.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:var(--text);">Enterprise SaaS &amp; Cloud Portal</div>
+                  <code style="font-size:11px; color:var(--cyan);">saas_portal_domain.nbpack</code>
+                </td>
+                <td>Multi-tenant RBAC, PostgreSQL RLS, Stripe 15% FinOps billing &amp; portal UI design tokens.</td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
+                <td>7.8 KB</td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/saas_portal_domain.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="feature-name">
+                  <div style="font-weight:700; color:var(--text);">Context Engineering OS Kernel</div>
+                  <code style="font-size:11px; color:var(--cyan);">percipience_parent.nbpack</code>
+                </td>
+                <td>Complete Quad-Space kernel, Merkle state chain DAG, active PID worktrees &amp; CI/CD gatekeeper.</td>
+                <td><span class="badge badge-cyan">AES-256-GCM / Ed25519</span></td>
+                <td>70.2 KB</td>
+                <td><span class="text-emerald" style="font-weight:700;">0.0% (RAM-Only)</span></td>
+                <td style="text-align:right;">
+                  <a href="/api/gateway/bundles/percipience_parent.nbpack" download class="action-btn" style="padding:5px 10px; font-size:11px;">⬇️ Download</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Zero-Exposure Space Bootstrapping Quickstart</h4>
+        <p>Choose your preferred toolchain to bootstrap and hydrate domain quad-spaces in volatile memory:</p>
+
+        <div class="grid-2">
+          <div>
+            <div class="form-label" style="color:var(--cyan);">Option A: npm / npx Developer CLI Quickstart</div>
+            <pre># 1. Download sealed bundle via Gateway (Zero Plaintext Exposure)
+curl -fsSL https://portal.percipience.dev/api/gateway/bundles/iot_mobile_domain.nbpack -o ./iot_mobile_domain.nbpack
+
+# 2. Bootstrap workspace in volatile RAM (0% disk residue)
+npx @percipience/cli layer apply --pack ./iot_mobile_domain.nbpack --mode in-memory
+
+# 3. Or install as local npm dependency package
+npm install --save-dev @percipience/context-gateway</pre>
+          </div>
+
+          <div>
+            <div class="form-label" style="color:var(--green);">Option B: Native Percipience Control Plane &amp; Proxy</div>
+            <pre># 1. Mount encrypted layer directly into volatile memory
+./workplace/bin/percipience layer apply --pack .nb/bundles/iot_mobile_domain.nbpack
+
+# 2. Verify active in-memory mounts
+./workplace/bin/percipience layer list
+
+# 3. Set drop-in proxy environment for local agent
+export OPENAI_BASE_URL="http://localhost:8080/v1"
+export PERCIPIENCE_PLAN_ID="plan_iot_mobile"</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE IN-FLIGHT PROMPT INJECTION PLAYGROUND -->
+      <div class="card">
+        <div class="card-badge">Live Interactive Proxy</div>
+        <h3>⚡ Drop-in Proxy Playground (In-Flight Invariant Injection)</h3>
+        <p>Simulate an autonomous coding subagent querying the Context Gateway. Watch how proprietary invariants are injected in-flight server-side, while only sanitized, compliant code is streamed back to the client.</p>
+
+        <div class="grid-2" style="margin-top:14px;">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Governing Proprietary Plan:</label>
+              <select id="gwPlanSelect">
+                <option value="plan_iot_mobile">IoT Edge &amp; Mobile Plan (BLE GATT &amp; Ring-Buffer Mutex)</option>
+                <option value="plan_saas_portal">SaaS Cloud Portal Plan (Multi-Tenant &amp; 15% FinOps)</option>
+                <option value="plan_parent_master">Parent Master Plan (Quad-Space OS &amp; Merkle Ledger)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Client Context / Local Error Trace (Repo State):</label>
+              <textarea id="gwRepoState" rows="3">{"module": "mod_telemetry_stream", "test_error": "AssertionError: ring-buffer mutex lock violated on characteristic 0xFF01"}</textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Client Subagent Query Prompt:</label>
+              <textarea id="gwPrompt" rows="3">Fix the ring-buffer mutex lock violation in the telemetry characteristic and ensure process liveness.</textarea>
+            </div>
+
+            <button class="action-btn" onclick="runContextGatewayDemo()">🚀 Route Through Context Gateway</button>
+          </div>
+
+          <div>
+            <div class="form-label" style="color:var(--cyan);">Live Gateway Execution &amp; Sanitization Audit:</div>
+            <div id="gwDemoResults" style="background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px; min-height:240px; font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted); line-height:1.5;">
+              <span style="color:var(--muted);">Click "Route Through Context Gateway" to execute in-flight prompt injection...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ROI & BENEFITS -->
+    <section id="roi-calculator" class="tab-content" style="display:none;">
+      <div class="section-title">Quantified Customer ROI &amp; ICP Value Models</div>
+      <div class="section-desc">Percipience delivers concrete, audited cost reductions and risk elimination across three core target enterprise segments.</div>
+
+      <div class="grid-3" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-badge">ICP 1</div>
+          <h3>AI Dev Agencies &amp; Studios</h3>
+          <p>Enables 20+ autonomous subagents to write code concurrently without git locks. Cuts client token pass-through costs by 60%, expanding agency margins from 30% to 55%.</p>
+          <div class="stat-box"><span>Key Metric:</span><span class="stat-val text-cyan">3.5x Faster Delivery</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">ICP 2</div>
+          <h3>Mid-Market &amp; Enterprise Orgs</h3>
+          <p>50–500 engineer organizations burning $15k–$100k/mo on LLMs. Eliminates 12+ hours/week per senior engineer spent untangling agent hallucination drift and broken APIs.</p>
+          <div class="stat-box"><span>Annual Net ROI:</span><span class="stat-val text-emerald">$118,800 / year</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">ICP 3</div>
+          <h3>Regulated FinTech &amp; HealthTech</h3>
+          <p>Banks and healthcare platforms requiring strict SOC 2, HIPAA, and EU AI Act compliance. Tamper-proof WORM Merkle logs provide non-repudiable proof for compliance auditors.</p>
+          <div class="stat-box"><span>Audit Readiness:</span><span class="stat-val text-purple">100% Non-Repudiable</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="max-width:800px; margin:0 auto;">
+        <div class="card-badge">Interactive FinOps Calculator</div>
+        <h3>Enterprise Token Savings &amp; ROI Calculator</h3>
+        <p>Adjust team size, monthly model API spend, and daily PR volume to calculate projected monthly and annualized net financial returns.</p>
+        
+        <div class="grid-3" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Engineers:</label>
+            <input type="number" id="calcEngineers" class="input" value="50" oninput="recalcRoi()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly LLM Spend ($):</label>
+            <input type="number" id="calcSpend" class="input" value="18000" oninput="recalcRoi()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Daily PR Count:</label>
+            <input type="number" id="calcPrs" class="input" value="45" oninput="recalcRoi()">
+          </div>
+        </div>
+
+        <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <div class="stat-box"><span>Gross Monthly Token Savings (55% AST Reduction):</span><span id="roiGrossVal" class="stat-val text-emerald">$9,900 / mo</span></div>
+          <div class="stat-box"><span>15% Percipience Verified Performance Fee:</span><span id="roiFeeVal" class="stat-val text-cyan">$1,485 / mo</span></div>
+          <div class="stat-box"><span>Net Monthly Customer Savings (Post-Fee):</span><span id="roiNetVal" class="stat-val text-emerald">$8,415 / mo</span></div>
+          <div class="stat-box"><span>Annualized Net Financial Savings:</span><span id="roiAnnualVal" class="stat-val text-emerald" style="font-weight:800;">$100,980 / yr</span></div>
+          <div class="stat-box"><span>Engineering Hours Reclaimed (Eliminated Drift):</span><span class="stat-val text-purple">520 hrs / mo</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: LIVE SANDBOXES -->
+    <section id="sandboxes" class="tab-content" style="display:none;">
+      <div class="section-title">Live Interactive Sandboxes &amp; Consoles</div>
+      <div class="section-desc">Test real AST symbol extraction, verify live cryptographic Merkle DAG blocks, and execute simulated surgical module rollbacks.</div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-badge">Live AST Demo</div>
+          <h3>Structural AST Pruner Playground</h3>
+          <p>Paste any TypeScript or Python snippet below and click Prune to see how internal method bodies are stripped into semantic skeletons:</p>
+          <textarea id="astInput" rows="7" style="margin-bottom:10px;">export class PaymentProcessor {
+  private secretKey: string;
+  constructor(key: string) {
+    this.secretKey = key;
+  }
+  public async executeCharge(accountId: string, amountCents: number): Promise<boolean> {
+    // 50 lines of complex fraud scoring and ledger balancing
+    const fee = amountCents * 0.029 + 30;
+    console.log("Charging account " + accountId);
+    return true;
+  }
+}</textarea>
+          <button class="action-btn" onclick="runAstPruner()">Prune AST Skeleton</button>
+          <div style="margin-top:14px;">
+            <div class="stat-box"><span>Token Compression Ratio:</span><span id="astSavings" class="stat-val text-emerald">0%</span></div>
+            <pre id="astOutput">// Output AST skeleton will appear here...</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Cryptographic DAG</div>
+          <h3>Merkle State Explorer &amp; Rollback</h3>
+          <p>Current verifiable SHA-256 state chain from <code>.nb/context/ledger/context_ledger.yaml</code>:</p>
+          <div id="dagBlocks">
+            <div class="stat-box"><span>Block 0 (GENESIS):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">7f8b9e4a3d2c1b0a...</span></div>
+            <div class="stat-box"><span>Block 1 (BOOTSTRAP):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">a3b2c1d0e9f8a7b6...</span></div>
+            <div class="stat-box"><span>Block 2 (PR_GATE_PASS):</span><span class="stat-val" style="font-size:11px; color:var(--muted);">f881b2be129be959...</span></div>
+          </div>
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="action-btn" onclick="loadDag()">Verify Merkle Chain</button>
+            <button class="action-btn" style="background:var(--red); color:#fff;" onclick="triggerRollback()">Test Surgical Rollback</button>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="stat-box"><span>Prompt Cache Hit Rate:</span><span class="stat-val text-cyan">88.4%</span></div>
+            <div class="stat-box"><span>Context Poisoning Incidents:</span><span class="stat-val text-emerald">0 Active</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px; border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+        <div class="card-badge" style="background:var(--cyan); color:#000;">Live FinOps Telemetry</div>
+        <h3>Repository Token Savings &amp; Metering Ledger</h3>
+        <p>Continuous context token reduction metrics calculated from <code>.nb/context/ledger/token_savings_ledger.yaml</code>:</p>
+        <div class="grid-3" style="margin-top:12px;">
+          <div class="stat-box"><span>Tokens Saved:</span><span id="portalTokensSaved" class="stat-val text-cyan">46,169</span></div>
+          <div class="stat-box"><span>Gross Bill Savings:</span><span id="portalGrossSaved" class="stat-val text-emerald">$0.1385</span></div>
+          <div class="stat-box"><span>15% Performance Fee:</span><span id="portalFee" class="stat-val text-purple">$0.0208</span></div>
+        </div>
+        <div class="grid-3" style="margin-top:8px;">
+          <div class="stat-box"><span>Net Client Retained:</span><span id="portalNetSaved" class="stat-val text-emerald">$0.1177</span></div>
+          <div class="stat-box"><span>Avg Token Reduction:</span><span id="portalReductionPct" class="stat-val text-cyan">39.3%</span></div>
+          <div class="stat-box"><span>Pruning Events:</span><span id="portalEventsCount" class="stat-val text-amber">113</span></div>
+        </div>
+        <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <a href="/api/tokens/savings" target="_blank" style="color:var(--cyan); font-size:12px; font-weight:600; text-decoration:none;">View Raw YAML/JSON Ledger &rarr;</a>
+          <button class="action-btn" style="padding:6px 12px; font-size:11px;" onclick="fetchPortalTokenSavings()">Refresh FinOps Telemetry</button>
+        </div>
+      </div>
+
+      <!-- Additional Consoles for Cognitive Router & Specialist Fleet -->
+      <div class="grid-2" style="margin-top:18px;">
+        <!-- Cognitive Router Interactive Simulator -->
+        <div class="card">
+          <div class="card-badge">Model-Agnostic Router</div>
+          <h3>Cognitive Tiering Router Simulator</h3>
+          <p>Test dynamic cognitive tier dispatch based on prompt complexity, target scope, and AST risk profile:</p>
+          <div class="form-group">
+            <select id="routerPromptSelect" onchange="updateCustomPromptText()">
+              <option value="Verify unit test assertions and check for flaky retries in test suite">Verify unit test assertions &amp; flaky retries (Routine Task)</option>
+              <option value="Scan AST imports and third-party dependencies for CVE supply-chain risks">Scan AST imports for dependency CVEs (Routine Security)</option>
+              <option value="Synchronize architectural blueprint with live exported AST symbol signatures">Synchronize doc drift against AST exports (Routine Documentation)</option>
+              <option value="Evolve cross-module RPC schema contract and verify backward compatibility">Evolve wire contract &amp; SemVer breaking change analysis (Complex Reasoning)</option>
+              <option value="Perform multi-module context security audit and investigate hardcoded secrets">Infosec audit &amp; hardcoded secrets quarantine (High Risk)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea id="routerPromptText" rows="3">Verify unit test assertions and check for flaky retries in test suite</textarea>
+          </div>
+          <button class="action-btn" onclick="simulateCognitiveRoute()">Dispatch Cognitive Route</button>
+          <div id="routerResultBox" style="margin-top:14px; display:none; background:var(--code-bg); border:1px solid var(--border); border-radius:6px; padding:12px;">
+            <div class="stat-box"><span>Selected Tier:</span><span id="routeTierVal" class="stat-val text-cyan">Tier B</span></div>
+            <div class="stat-box"><span>Dispatched Model:</span><span id="routeModelVal" class="stat-val" style="font-weight:600;">claude-3-5-haiku / flash</span></div>
+            <div class="stat-box"><span>Estimated Cost Savings:</span><span id="routeSavingsVal" class="stat-val text-emerald">90.0% Cost Discount</span></div>
+            <p id="routeRationale" style="font-size:11px; color:var(--muted); margin-top:8px;"></p>
+          </div>
+        </div>
+
+        <!-- Flaky Test & Specialist Agent Fleet Console -->
+        <div class="card">
+          <div class="card-badge">Autonomous CI/CD Fleet</div>
+          <h3>Specialist Plugins &amp; Quarantine Console</h3>
+          <p>Inspect the status of the 4 autonomous CI/CD specialist plugins and active quarantine ledgers:</p>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+            <div class="stat-box">
+              <div><strong style="color:var(--cyan); font-size:12px;">agent_flaky_test_detector</strong><br><span style="font-size:11px; color:var(--muted);">Non-blocking quarantine (user/hitl/flaky_quarantine.yaml)</span></div>
+              <span class="badge badge-emerald">ACTIVE</span>
+            </div>
+            <div class="stat-box">
+              <div><strong style="color:var(--cyan); font-size:12px;">agent_contract_compatibility_checker</strong><br><span style="font-size:11px; color:var(--muted);">JSON Schema Draft-07 &amp; SemVer guard (Tier A)</span></div>
+              <span class="badge badge-emerald">ACTIVE</span>
+            </div>
+            <div class="stat-box">
+              <div><strong style="color:var(--cyan); font-size:12px;">agent_dependency_cve_sentinel</strong><br><span style="font-size:11px; color:var(--muted);">Supply-chain AST import auditor &amp; license guard</span></div>
+              <span class="badge badge-emerald">ACTIVE</span>
+            </div>
+            <div class="stat-box">
+              <div><strong style="color:var(--cyan); font-size:12px;">agent_doc_drift_synchronizer</strong><br><span style="font-size:11px; color:var(--muted);">Verifies exported AST symbols against architecture plans</span></div>
+              <span class="badge badge-emerald">ACTIVE</span>
+            </div>
+          </div>
+          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <span style="font-size:11px; color:var(--muted);">Active Flaky Quarantine Blockers: <strong class="text-emerald">0 Active</strong></span>
+            <button class="action-btn" style="padding:6px 12px; font-size:11px;" onclick="runFlakyCheckSimulation()">Run Determinism Check</button>
+          </div>
+          <div id="flakyCheckResult" style="display:none; font-size:11px; color:var(--green); margin-top:8px; font-family:'JetBrains Mono', monospace;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: CLOUD & OPEX -->
+    <section id="infrastructure" class="tab-content">
+      <div class="section-title">Target Hosting Infrastructure &amp; Economics</div>
+      <div class="section-desc">Production-grade Multi-AZ / Multi-Zone deployment blueprints for AWS and Google Cloud with itemized box costs and margin models.</div>
+
+      <div class="table-wrap" style="margin-bottom:22px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Subsystem Component</th>
+              <th>AWS Architecture Asset</th>
+              <th>Google Cloud Asset</th>
+              <th>50 Clients AWS / GCP</th>
+              <th>Functional Capability Powered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature-name">K8s Multi-AZ Control Plane</td>
+              <td>AWS EKS (K8s 1.30+ Multi-AZ)</td>
+              <td>GKE Multi-Zonal Cluster (K8s 1.30+)</td>
+              <td>$73 / $73</td>
+              <td>Multi-tenant control plane &amp; API gateways</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Worker Sandboxes &amp; DEWS Swarm Fleets</td>
+              <td>Karpenter Spot c6i.2xlarge + Bottlerocket (runsc)</td>
+              <td>GKE Sandbox Spot VMs (c2-standard-8 gVisor)</td>
+              <td>$4,320 / $4,180</td>
+              <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runner swarms</td>
+            </tr>
+            <tr>
+              <td class="feature-name">PostgreSQL Database (Multi-Tenant RLS)</td>
+              <td>Aurora Serverless v2 (4-32 ACU)</td>
+              <td>Cloud SQL Enterprise Plus HA (4 vCPU / 32GB)</td>
+              <td>$1,850 / $1,780</td>
+              <td>Tenant RLS state DAG &amp; recovery points</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Distributed Cache &amp; Redlock Leases</td>
+              <td>ElastiCache Redis 7.x (cache.m6g.large)</td>
+              <td>Cloud Memorystore Redis HA</td>
+              <td>$420 / $410</td>
+              <td>Worktree lease TTL locks &amp; AST cache (&lt;15ms)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Immutable WORM Vaults &amp; Streaming Git Sinks</td>
+              <td>Amazon S3 Object Lock (Compliance Mode)</td>
+              <td>GCS Object Retention WORM (Locked)</td>
+              <td>$280 / $260</td>
+              <td>Non-repudiable SHA-256 Merkle proofs &amp; streaming Git bundle transport</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Telemetry &amp; Context Burn Storage</td>
+              <td>TimescaleDB on EBS gp3 (500GB / 3000 IOPS)</td>
+              <td>TimescaleDB on Regional Hyperdisk (500GB)</td>
+              <td>$225 / $215</td>
+              <td>Real-time context burn &amp; visual DAG feeds</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Edge WAF &amp; Zero-Trust Ingress</td>
+              <td>Cloudflare Enterprise + AWS NLB (Multi-AZ)</td>
+              <td>Cloudflare Enterprise + GCP TCP Proxy</td>
+              <td>$895 / $850</td>
+              <td>mTLS, DDoS protection, Ed25519 JWT injection</td>
+            </tr>
+            <tr>
+              <td class="feature-name">APM Observability &amp; SLI Metrics</td>
+              <td>Datadog APM Tracing &amp; Pod Logs</td>
+              <td>Cloud Operations Suite (Trace &amp; Logging)</td>
+              <td>$1,150 / $1,050</td>
+              <td>MicroVM saturation &amp; PR gate latency telemetry</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Tier B Verifier AI (Automated TDD)</td>
+              <td>Claude 3.5 Haiku / Bedrock</td>
+              <td>Gemini 1.5 Flash / Vertex AI</td>
+              <td>$3,200 / $3,100</td>
+              <td>Automated contract verification &amp; bounded TDD</td>
+            </tr>
+            <tr>
+              <td class="feature-name">In-Memory Security &amp; KMS Enclaves</td>
+              <td>AWS KMS CMEK + GuardDuty</td>
+              <td>Cloud KMS CMEK + Security Command Center</td>
+              <td>$567 / $550</td>
+              <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
+            </tr>
+            <tr style="background:var(--bg-panel); font-weight:700;">
+              <td class="feature-name" style="color:var(--cyan);">Total Monthly OpEx</td>
+              <td>$12,980 / mo</td>
+              <td>$12,468 / mo</td>
+              <td class="text-emerald" style="font-weight:800;">$225,000 MRR</td>
+              <td class="text-emerald">91.2% (AWS) / 91.5% (GCP) Gross Margin</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-badge">Breakeven</div>
+          <h3>1.5 Customers</h3>
+          <p>Baseline cluster base costs (~$3,850/mo AWS / $3,690/mo GCP) are fully covered by just two business tier customers. Customer 2 generates immediate cash-flow positive EBITDA.</p>
+        </div>
+        <div class="card">
+          <div class="card-badge">Spot Resilience</div>
+          <h3>60% Spot Node Pools</h3>
+          <p>Ephemeral worktrees use dynamic Spot VMs. In the event of cloud spot eviction, Percipience auto-falls back to On-Demand capacity in under 4 seconds without failing builds.</p>
+        </div>
+        <div class="card">
+          <div class="card-badge">SLA Guarantees</div>
+          <h3>99.95% Availability</h3>
+          <p>Backed by multi-AZ Aurora/Cloud SQL replication, automated failover, and dual-region immutable WORM proof backups across S3 and Google Cloud Storage.</p>
+        </div>
+      </div>
+
+      <!-- ENTERPRISE INFRASTRUCTURE TOPOLOGY & ZERO-TRUST BLUEPRINT -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">🌐 Multi-Cloud DEWS Topology &amp; Zero-Trust Blueprint</div>
+        <p style="margin-bottom:16px;">Production Kubernetes architecture running concurrent Docker agent runners with streaming Git bundle transport, volatile memory enclaves, and dual WORM ledger archiving.</p>
+
+        <div class="grid-3">
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--cyan); margin-bottom:6px;">1. Multi-AZ Control Plane</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">EKS/GKE Multi-AZ control plane managing tenant isolation, PostgreSQL Aurora Serverless with Row-Level Security (RLS), and sub-millisecond Redis Redlock worktree lease coordination.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--purple); margin-bottom:6px;">2. DEWS Spot Swarms</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Karpenter autoscaling spot nodes running isolated <code>percipience/agent-runner</code> Docker containers. Employs gVisor sandbox runtimes with zero plaintext repository persistence on host disks.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--green); margin-bottom:6px;">3. Cryptographic Storage &amp; Egress</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Streaming Git Bundle transport sinks and dual-cloud immutable WORM vaults (S3 Object Lock Compliance Mode &amp; GCS Bucket Retention) ensuring SEC Rule 17a-4 compliance and auditability.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: PRICING & ONBOARDING -->
+    <section id="pricing" class="tab-content" style="display:none;">
+      <div class="section-title">Licensing Tiers &amp; Instant Self-Serve Provisioning</div>
+      <div class="section-desc">Choose your licensing tier or deploy directly inside your own private AWS or GCP VPC.</div>
+
+      <div class="grid-3" style="margin-bottom:28px;">
+        <div class="card">
+          <div class="card-badge">Team Tier</div>
+          <h3>Developer</h3>
+          <div class="price-val">$1,499<span class="price-period"> / month</span></div>
+          <p>For boutique AI agencies and startups running up to 15 engineers.</p>
+          <ul class="bullet-list">
+            <li>Up to 15 developer seats</li>
+            <li>5 concurrent Git worktree sandboxes</li>
+            <li>Structural AST token pruner daemon</li>
+            <li>Cryptographic Merkle ledger &amp; CLI</li>
+            <li>Community Slack &amp; standard support</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-color:var(--cyan); box-shadow:0 0 16px var(--cyan-glow);">
+          <div class="card-badge" style="background:var(--cyan); color:#000;">Most Popular</div>
+          <h3>Business</h3>
+          <div class="price-val">$4,499<span class="price-period"> / month</span></div>
+          <p>For high-growth mid-market engineering orgs running up to 50 engineers.</p>
+          <ul class="bullet-list">
+            <li>Up to 50 developer seats</li>
+            <li>20 concurrent Git worktree sandboxes</li>
+            <li>Full Quad-Space architecture</li>
+            <li>Context Poisoning &amp; Surgical Rollback</li>
+            <li>CI/CD PR Gatekeeper (GitHub &amp; GitLab)</li>
+            <li>Proprietary Plan Obfuscation (.nbpack)</li>
+            <li>99.9% uptime SLA guarantee</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">Enterprise</div>
+          <h3>Dedicated VPC</h3>
+          <div class="price-val">$9,999+<span class="price-period"> / month</span></div>
+          <p>For large enterprises and regulated FinTech / HealthTech platforms.</p>
+          <ul class="bullet-list">
+            <li>Unlimited developer seats</li>
+            <li>Unlimited worktree concurrency</li>
+            <li>Dedicated single-tenant VPC deployment</li>
+            <li>BYOR for self-hosted GitLab / GHES</li>
+            <li>Custom KMS CMEK hardware keys</li>
+            <li>15% Token Savings Rev-Share add-on</li>
+            <li>SOC 2 &amp; EU AI Act automated proofs</li>
+            <li>24/7 dedicated engineering support</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="max-width:700px; margin:0 auto;">
+        <div class="card-badge">Instant Provisioning</div>
+        <h3>Instant Self-Serve Quad-Space Provisioning</h3>
+        <p>Register your organization to provision an isolated tenant partition (Postgres RLS), register a KMS CMEK key, and receive an instant API key:</p>
+        
+        <div class="form-group">
+          <label class="form-label">Organization Name:</label>
+          <input type="text" id="onboardOrg" class="input" value="Acme Financial Engineering">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Admin Work Email:</label>
+          <input type="email" id="onboardEmail" class="input" value="lead.architect@acme-fin.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subscription Tier:</label>
+          <select id="onboardTier" class="input">
+            <option value="plan_business">Business Tier ($4,499/mo)</option>
+            <option value="plan_team">Developer Team ($1,499/mo)</option>
+            <option value="plan_enterprise">Enterprise Dedicated VPC ($9,999+/mo)</option>
+          </select>
+        </div>
+        <button class="action-btn" onclick="submitOnboard()">Provision Workspace &amp; Issue API Key</button>
+        <pre id="onboardResult" style="margin-top:14px; display:none;"></pre>
+      </div>
+    </section>
+
+    <!-- RESOURCES TAB: Consolidated Docs, Reports, and Observability -->

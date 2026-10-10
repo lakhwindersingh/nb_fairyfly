@@ -62,6 +62,7 @@ graph TD
 - `.nb/agentic/custom/agents/`: `agent_saas_portal_architect.yaml`, `agent_commercial_packager_provisioner.yaml`, `agent_billing_integration_engineer.yaml`, `agent_observability_frontend_specialist.yaml`
 - `.nb/agentic/custom/workflows/`: `saas_portal_delivery_flow.yaml`, `commercial_packaging_provisioning_flow.yaml`
 - `.nb/core/`: `commercial_packager_provisioner.py`
+- `workplace/portal/`: Modular Enterprise SaaS Portal (`server.py`, `core/`, `content/`, `templates/`, `static/`, `routes/`)
 - `workplace/modules/`: `mod_corp_site/`, `mod_saas_portal/`, `mod_billing_engine/`, `mod_api_gateway/`
 - `user/outputs/`: Maturity reports, commercial bundle packages, and live dashboard feeds.
 

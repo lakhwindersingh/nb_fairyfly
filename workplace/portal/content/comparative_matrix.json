@@ -1,0 +1,62 @@
+{
+  "competitors": ["Percipience", "Cursor", "LangChain", "Arize Phoenix"],
+  "categories": [
+    {
+      "name": "Subagent Isolation",
+      "features": [
+        {
+          "name": "Ephemeral Git Worktrees",
+          "percipience": "Native (sub-500ms lease creation)",
+          "cursor": "None (single working copy)",
+          "langchain": "None (in-memory execution)",
+          "phoenix": "N/A (Observability only)"
+        },
+        {
+          "name": "Multi-Agent Merge Conflict Prevention",
+          "percipience": "Deterministic DAG consolidation",
+          "cursor": "Manual git resolution",
+          "langchain": "N/A",
+          "phoenix": "N/A"
+        }
+      ]
+    },
+    {
+      "name": "Context Optimization",
+      "features": [
+        {
+          "name": "AST Skeleton Pruning",
+          "percipience": "Tree-sitter native (<120ms, 58% savings)",
+          "cursor": "Basic file truncation",
+          "langchain": "Token window chunking",
+          "phoenix": "None"
+        },
+        {
+          "name": "Semantic Prompt Cache Alignment",
+          "percipience": "Anthropic 90% cache prefix matching",
+          "cursor": "None",
+          "langchain": "Redis/Vector cache",
+          "phoenix": "Tracing only"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic Verification & Governance",
+      "features": [
+        {
+          "name": "Merkle Hash Chain Attestation",
+          "percipience": "Continuous SHA-256 state DAG",
+          "cursor": "None",
+          "langchain": "None",
+          "phoenix": "None"
+        },
+        {
+          "name": "WORM Vault Ledger Egress",
+          "percipience": "S3 Object Lock / GCS Retention",
+          "cursor": "None",
+          "langchain": "None",
+          "phoenix": "Cloud export"
+        }
+      ]
+    }
+  ]
+}

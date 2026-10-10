@@ -1,0 +1,30 @@
+{
+  "page_title": "Percipience | Enterprise Context Engineering OS",
+  "brand": {
+    "title": "Neutron Binary Percipience",
+    "subtitle": "Context Engineering OS & CI/CD Gatekeeper",
+    "badge_icon": "⚡",
+    "version": "7.2.0-prod",
+    "play": "Play 3 CEaaS OS & SaaS Portal"
+  },
+  "navigation": [
+    {"id": "overview", "label": "Overview", "active": true},
+    {"id": "platform", "label": "Platform", "active": false},
+    {"id": "economics", "label": "Economics", "active": false},
+    {"id": "comparatives", "label": "Comparatives", "active": false},
+    {"id": "lab", "label": "Interactive Lab", "active": false},
+    {"id": "resources", "label": "Resources", "active": false},
+    {"id": "client", "label": "🔑 Client Space", "active": false, "highlight": true}
+  ],
+  "hero": {
+    "badge": "⚡ Commercial Play 3 Architecture",
+    "title": "Enterprise Context Engineering OS<br>&amp; Autonomous CI/CD Gatekeeper",
+    "subtitle": "The first enterprise control plane that stops agentic context drift, isolates subagents in ephemeral Git worktrees, enforces cross-module contracts, and cuts LLM context token consumption by 50% to 70%.",
+    "metrics": [
+      {"label": "Measured Token Reduction", "value": "58.4%"},
+      {"label": "Tree-Sitter AST Pruning", "value": "< 120ms"},
+      {"label": "Cryptographic Merkle Proofs", "value": "100%"},
+      {"label": "Plaintext Disk Residue (.nbpack)", "value": "0%"}
+    ]
+  }
+}
