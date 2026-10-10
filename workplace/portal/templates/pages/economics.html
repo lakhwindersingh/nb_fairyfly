@@ -1,53 +1,69 @@
 <section id="economics" class="tab-content">
-      <div class="subtab-nav">
-        <button class="econ-subtab-btn active" data-econ-btn="econ-roi" onclick="showEconomicsSubtab('econ-roi')">ROI Calculator</button>
-        <button class="econ-subtab-btn" data-econ-btn="econ-pricing" onclick="showEconomicsSubtab('econ-pricing')">Plan Matrix &amp; Pricing</button>
-        <button class="econ-subtab-btn" data-econ-btn="econ-infra" onclick="showEconomicsSubtab('econ-infra')">Infrastructure Economics</button>
-        <button class="econ-subtab-btn" data-econ-btn="econ-competitive" onclick="showEconomicsSubtab('econ-competitive')">Competitive Analysis</button>
-        <button class="econ-subtab-btn" data-econ-btn="econ-ast" onclick="showEconomicsSubtab('econ-ast')">AST Optimization Demo</button>
+  <div class="subtab-nav">
+    <button class="econ-subtab-btn active" data-econ-btn="econ-roi" onclick="showEconomicsSubtab('econ-roi')">💰 FinOps ROI Calculator</button>
+    <button class="econ-subtab-btn" data-econ-btn="econ-pricing" onclick="showEconomicsSubtab('econ-pricing')">📊 Plan Matrix &amp; Ceilings</button>
+    <button class="econ-subtab-btn" data-econ-btn="econ-infra" onclick="showEconomicsSubtab('econ-infra')">☁️ Infrastructure Economics</button>
+  </div>
+
+  <div id="roi-calculator" data-econ-subtab="econ-roi" class="econ-subtab-pane active">
+    <div class="section-title">Quantified Customer ROI &amp; ICP Value Models</div>
+      <div class="section-desc">Percipience delivers concrete, audited cost reductions and risk elimination across three core target enterprise segments.</div>
+
+      <div class="grid-3" style="margin-bottom:22px;">
+        <div class="card">
+          <div class="card-badge">ICP 1</div>
+          <h3>AI Dev Agencies &amp; Studios</h3>
+          <p>Enables 20+ autonomous subagents to write code concurrently without git locks. Cuts client token pass-through costs by 60%, expanding agency margins from 30% to 55%.</p>
+          <div class="stat-box"><span>Key Metric:</span><span class="stat-val text-cyan">3.5x Faster Delivery</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">ICP 2</div>
+          <h3>Mid-Market &amp; Enterprise Orgs</h3>
+          <p>50–500 engineer organizations burning $15k–$100k/mo on LLMs. Eliminates 12+ hours/week per senior engineer spent untangling agent hallucination drift and broken APIs.</p>
+          <div class="stat-box"><span>Annual Net ROI:</span><span class="stat-val text-emerald">$118,800 / year</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-badge">ICP 3</div>
+          <h3>Regulated FinTech &amp; HealthTech</h3>
+          <p>Banks and healthcare platforms requiring strict SOC 2, HIPAA, and EU AI Act compliance. Tamper-proof WORM Merkle logs provide non-repudiable proof for compliance auditors.</p>
+          <div class="stat-box"><span>Audit Readiness:</span><span class="stat-val text-purple">100% Non-Repudiable</span></div>
+        </div>
       </div>
 
-      <div data-econ-subtab="econ-roi" class="active" id="econ-roi-content"></div>
-      <div data-econ-subtab="econ-pricing" id="econ-pricing-content"></div>
-      <div data-econ-subtab="econ-infra" id="econ-infra-content"></div>
-      <div data-econ-subtab="econ-competitive" id="econ-competitive-content"></div>
-      <div data-econ-subtab="econ-ast" id="econ-ast-content"></div>
+      <div class="card" style="max-width:800px; margin:0 auto;">
+        <div class="card-badge">Interactive FinOps Calculator</div>
+        <h3>Enterprise Token Savings &amp; ROI Calculator</h3>
+        <p>Adjust team size, monthly model API spend, and daily PR volume to calculate projected monthly and annualized net financial returns.</p>
+        
+        <div class="grid-3" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Engineers:</label>
+            <input type="number" id="calcEngineers" class="input" value="50" oninput="recalcRoi()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly LLM Spend ($):</label>
+            <input type="number" id="calcSpend" class="input" value="18000" oninput="recalcRoi()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Daily PR Count:</label>
+            <input type="number" id="calcPrs" class="input" value="45" oninput="recalcRoi()">
+          </div>
+        </div>
 
-      <script>
-        // Load sub-tab content by moving content from old sections
-        document.addEventListener('DOMContentLoaded', function() {
-          const roiSection = document.getElementById('roi-calculator');
-          const pricingSection = document.getElementById('tier-matrix');
-          const infraSection = document.getElementById('infrastructure');
+        <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <div class="stat-box"><span>Gross Monthly Token Savings (55% AST Reduction):</span><span id="roiGrossVal" class="stat-val text-emerald">$9,900 / mo</span></div>
+          <div class="stat-box"><span>15% Percipience Verified Performance Fee:</span><span id="roiFeeVal" class="stat-val text-cyan">$1,485 / mo</span></div>
+          <div class="stat-box"><span>Net Monthly Customer Savings (Post-Fee):</span><span id="roiNetVal" class="stat-val text-emerald">$8,415 / mo</span></div>
+          <div class="stat-box"><span>Annualized Net Financial Savings:</span><span id="roiAnnualVal" class="stat-val text-emerald" style="font-weight:800;">$100,980 / yr</span></div>
+          <div class="stat-box"><span>Engineering Hours Reclaimed (Eliminated Drift):</span><span class="stat-val text-purple">520 hrs / mo</span></div>
+        </div>
+      </div>
+  </div>
 
-          if (roiSection) {
-            document.getElementById('econ-roi-content').innerHTML = roiSection.innerHTML;
-            roiSection.style.display = 'none';
-          }
-          if (pricingSection) {
-            document.getElementById('econ-pricing-content').innerHTML = pricingSection.innerHTML;
-            pricingSection.style.display = 'none';
-          }
-          if (infraSection) {
-            document.getElementById('econ-infra-content').innerHTML = infraSection.innerHTML;
-            infraSection.style.display = 'none';
-          }
-
-          // Hide old pricing section if exists
-          const priceSection = document.getElementById('pricing');
-          if (priceSection) {
-            const priceContent = priceSection.innerHTML;
-            document.getElementById('econ-pricing-content').innerHTML += priceContent;
-            priceSection.style.display = 'none';
-          }
-        });
-      </script>
-    </section>
-
-    <!-- TAB: PLAN TIER MATRIX & BOUNDARY CEILINGS (Section 2 of Parent Master Plan) -->
-    <section id="tier-matrix" class="tab-content" style="display:none;">
-
-      <div class="section-title">2. Plan Tier Matrix &amp; Boundary Ceilings</div>
+  <div id="tier-matrix" data-econ-subtab="econ-pricing" class="econ-subtab-pane" style="display:none;">
+    <div class="section-title">2. Plan Tier Matrix &amp; Boundary Ceilings</div>
       <div class="section-desc">Comprehensive architectural entitlement matrix, boundary ceilings, concurrency quotas, security enclaves, and full 35-capability mapping across Free Community, Team, Business, and Enterprise tiers (governed by <code>.nb/plan/claude-context-engineering-parent-master-free_plan.md</code>).</div>
 
       <div class="grid-4" style="margin-bottom:22px;">
@@ -332,6 +348,142 @@
 
         <div id="simResult" style="margin-top:12px;"></div>
       </div>
-    </section>
+  </div>
 
-    <!-- INTERACTIVE LAB TAB: Consolidated Gateway and Sandboxes -->
+  <div id="infrastructure" data-econ-subtab="econ-infra" class="econ-subtab-pane" style="display:none;">
+    <div class="section-title">Target Hosting Infrastructure &amp; Economics</div>
+      <div class="section-desc">Production-grade Multi-AZ / Multi-Zone deployment blueprints for AWS and Google Cloud with itemized box costs and margin models.</div>
+
+      <div class="table-wrap" style="margin-bottom:22px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Subsystem Component</th>
+              <th>AWS Architecture Asset</th>
+              <th>Google Cloud Asset</th>
+              <th>50 Clients AWS / GCP</th>
+              <th>Functional Capability Powered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature-name">K8s Multi-AZ Control Plane</td>
+              <td>AWS EKS (K8s 1.30+ Multi-AZ)</td>
+              <td>GKE Multi-Zonal Cluster (K8s 1.30+)</td>
+              <td>$73 / $73</td>
+              <td>Multi-tenant control plane &amp; API gateways</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Worker Sandboxes &amp; DEWS Swarm Fleets</td>
+              <td>Karpenter Spot c6i.2xlarge + Bottlerocket (runsc)</td>
+              <td>GKE Sandbox Spot VMs (c2-standard-8 gVisor)</td>
+              <td>$4,320 / $4,180</td>
+              <td>Ephemeral Git worktrees, AST daemon &amp; Docker agent runner swarms</td>
+            </tr>
+            <tr>
+              <td class="feature-name">PostgreSQL Database (Multi-Tenant RLS)</td>
+              <td>Aurora Serverless v2 (4-32 ACU)</td>
+              <td>Cloud SQL Enterprise Plus HA (4 vCPU / 32GB)</td>
+              <td>$1,850 / $1,780</td>
+              <td>Tenant RLS state DAG &amp; recovery points</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Distributed Cache &amp; Redlock Leases</td>
+              <td>ElastiCache Redis 7.x (cache.m6g.large)</td>
+              <td>Cloud Memorystore Redis HA</td>
+              <td>$420 / $410</td>
+              <td>Worktree lease TTL locks &amp; AST cache (&lt;15ms)</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Immutable WORM Vaults &amp; Streaming Git Sinks</td>
+              <td>Amazon S3 Object Lock (Compliance Mode)</td>
+              <td>GCS Object Retention WORM (Locked)</td>
+              <td>$280 / $260</td>
+              <td>Non-repudiable SHA-256 Merkle proofs &amp; streaming Git bundle transport</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Telemetry &amp; Context Burn Storage</td>
+              <td>TimescaleDB on EBS gp3 (500GB / 3000 IOPS)</td>
+              <td>TimescaleDB on Regional Hyperdisk (500GB)</td>
+              <td>$225 / $215</td>
+              <td>Real-time context burn &amp; visual DAG feeds</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Edge WAF &amp; Zero-Trust Ingress</td>
+              <td>Cloudflare Enterprise + AWS NLB (Multi-AZ)</td>
+              <td>Cloudflare Enterprise + GCP TCP Proxy</td>
+              <td>$895 / $850</td>
+              <td>mTLS, DDoS protection, Ed25519 JWT injection</td>
+            </tr>
+            <tr>
+              <td class="feature-name">APM Observability &amp; SLI Metrics</td>
+              <td>Datadog APM Tracing &amp; Pod Logs</td>
+              <td>Cloud Operations Suite (Trace &amp; Logging)</td>
+              <td>$1,150 / $1,050</td>
+              <td>MicroVM saturation &amp; PR gate latency telemetry</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Tier B Verifier AI (Automated TDD)</td>
+              <td>Claude 3.5 Haiku / Bedrock</td>
+              <td>Gemini 1.5 Flash / Vertex AI</td>
+              <td>$3,200 / $3,100</td>
+              <td>Automated contract verification &amp; bounded TDD</td>
+            </tr>
+            <tr>
+              <td class="feature-name">In-Memory Security &amp; KMS Enclaves</td>
+              <td>AWS KMS CMEK + GuardDuty</td>
+              <td>Cloud KMS CMEK + Security Command Center</td>
+              <td>$567 / $550</td>
+              <td>Sub-ms PII de-identification vault &amp; RAM-only .nbpack decryption</td>
+            </tr>
+            <tr style="background:var(--bg-panel); font-weight:700;">
+              <td class="feature-name" style="color:var(--cyan);">Total Monthly OpEx</td>
+              <td>$12,980 / mo</td>
+              <td>$12,468 / mo</td>
+              <td class="text-emerald" style="font-weight:800;">$225,000 MRR</td>
+              <td class="text-emerald">91.2% (AWS) / 91.5% (GCP) Gross Margin</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-3" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="card-badge">Breakeven</div>
+          <h3>1.5 Customers</h3>
+          <p>Baseline cluster base costs (~$3,850/mo AWS / $3,690/mo GCP) are fully covered by just two business tier customers. Customer 2 generates immediate cash-flow positive EBITDA.</p>
+        </div>
+        <div class="card">
+          <div class="card-badge">Spot Resilience</div>
+          <h3>60% Spot Node Pools</h3>
+          <p>Ephemeral worktrees use dynamic Spot VMs. In the event of cloud spot eviction, Percipience auto-falls back to On-Demand capacity in under 4 seconds without failing builds.</p>
+        </div>
+        <div class="card">
+          <div class="card-badge">SLA Guarantees</div>
+          <h3>99.95% Availability</h3>
+          <p>Backed by multi-AZ Aurora/Cloud SQL replication, automated failover, and dual-region immutable WORM proof backups across S3 and Google Cloud Storage.</p>
+        </div>
+      </div>
+
+      <!-- ENTERPRISE INFRASTRUCTURE TOPOLOGY & ZERO-TRUST BLUEPRINT -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-title">🌐 Multi-Cloud DEWS Topology &amp; Zero-Trust Blueprint</div>
+        <p style="margin-bottom:16px;">Production Kubernetes architecture running concurrent Docker agent runners with streaming Git bundle transport, volatile memory enclaves, and dual WORM ledger archiving.</p>
+
+        <div class="grid-3">
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--cyan); margin-bottom:6px;">1. Multi-AZ Control Plane</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">EKS/GKE Multi-AZ control plane managing tenant isolation, PostgreSQL Aurora Serverless with Row-Level Security (RLS), and sub-millisecond Redis Redlock worktree lease coordination.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--purple); margin-bottom:6px;">2. DEWS Spot Swarms</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Karpenter autoscaling spot nodes running isolated <code>percipience/agent-runner</code> Docker containers. Employs gVisor sandbox runtimes with zero plaintext repository persistence on host disks.</p>
+          </div>
+          <div style="background:var(--code-bg); padding:14px; border-radius:6px; border:1px solid var(--border);">
+            <div style="font-weight:700; color:var(--green); margin-bottom:6px;">3. Cryptographic Storage &amp; Egress</div>
+            <p style="font-size:11px; color:var(--text); margin-bottom:0;">Streaming Git Bundle transport sinks and dual-cloud immutable WORM vaults (S3 Object Lock Compliance Mode &amp; GCS Bucket Retention) ensuring SEC Rule 17a-4 compliance and auditability.</p>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>

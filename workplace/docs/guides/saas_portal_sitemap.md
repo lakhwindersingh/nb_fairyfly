@@ -10,7 +10,7 @@
 
 1. **`/` (Hero & AST Pruning Simulator)**: Interactive hero experience with real-time AST pruning demonstration, customer validation metrics, and token arbitrage calculators.
 2. **`/tier-matrix` (`#tier-matrix`)**: **Plan Tier Matrix & Boundary Ceilings** &mdash; Full comparative matrix across Free Community (`plan_free`), Team (`plan_team`), Business (`plan_business`), and Enterprise (`plan_enterprise`). Deep dives into 6 boundary ceilings, capability allotments, and live tier ceiling validator.
-3. **`/capabilities` (`#capabilities`)**: **SDLC Capabilities Catalog** &mdash; Interactive catalog of all 47 engineering capabilities (CAP-01 through CAP-47), organized across Core Context, Autonomous CI/CD, Multi-Tenant Governance, and Agent Coordination Swarms.
+3. **`/capabilities` (`#capabilities`)**: **SDLC Capabilities Catalog** &mdash; Interactive catalog of all 52 engineering capabilities (CAP-01 through CAP-52), organized across Core Context, Autonomous CI/CD, Multi-Tenant Governance, and Agent Coordination Swarms.
 4. **`/comparatives` (`#comparatives`)**: **5-Way Competitive Matrix** &mdash; Comparative differentiation against Cursor, LangSmith, Arize Phoenix, AutoGen/CrewAI, and GitHub Actions.
 5. **`/gateway` (`#gateway`)**: **Context Gateway Console** &mdash; In-flight prompt injection simulator, zero client-side plan exposure demonstrator, and `.nbpack` encryption console.
 6. **`/roi-calculator` (`#roi-calculator`)**: **FinOps ROI & Token Savings Calculator** &mdash; Dynamic 15% performance fee calculator, model arbitrage savings estimator, and gross/net financial projections.

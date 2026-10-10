@@ -64,60 +64,6 @@ contracts:
   version: 1.0.0
   status: VALID
 recovery_points:
-- id: RP_HO_PR_STAGE_01
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:37.304552+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-- id: RP_HO_ATTESTED_1791572977331
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:37.341366+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
-- id: RP_AGENT_REGISTER_TEST_PERF_GUARD_1791572979
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:39.491037+00:00'
-  status: VERIFIED
-  description: AGENT_REGISTERED (agent_test_perf_guard)
-- id: RP_WF_INTEGRATE_AGENT_TEST_PERF_GUARD_1791572979
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:39.520619+00:00'
-  status: VERIFIED
-  description: WORKFLOW_INTEGRATED (wf_pr_gatekeeper + agent_test_perf_guard)
-- id: RP_AGENT_TASK_AGENT_TEST_PERF_GUARD_1791572979
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:39.991495+00:00'
-  status: VERIFIED
-  description: AGENT_TASK_VERIFIED (agent_test_perf_guard)
-- id: RP_AGENT_ROLLBACK_AGENT_TEST_PERF_GUARD_1791572980
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:40.032893+00:00'
-  status: VERIFIED
-  description: AGENT_SURGICAL_ROLLBACK (agent_test_perf_guard -> RP_PLAY3_BOOTSTRAP_001)
-- id: RP_HEALED_MOD_PORTAL_MARKETING_1791572981
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:41.474070+00:00'
-  status: VERIFIED
-  description: DIAGNOSTIC_REPROMPT_HEAL_APPLIED (mod_portal_marketing)
-- id: RP_PLAY3_BOOTSTRAP_001
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:41.515037+00:00'
-  status: VERIFIED
-  description: SURGICAL_ROLLBACK_AFTER_FAILED_REPROMPT (mod_portal_marketing -> RP_PLAY3_BOOTSTRAP_001)
-- id: RP_HO_PR_STAGE_01
-  module_scope: global_system
-  git_commit: HEAD
-  timestamp: '2026-10-09T19:09:41.552982+00:00'
-  status: VERIFIED
-  description: HANDOFF_CONFIRMED:agent_ast_optimizer->agent_dependency_cve_sentinel:wf_pr_gatekeeper
 - id: RP_HO_ATTESTED_1791572981582
   module_scope: global_system
   git_commit: HEAD
@@ -215,6 +161,41 @@ recovery_points:
   module_scope: global_system
   git_commit: HEAD
   timestamp: '2026-10-09T20:29:23.346244+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-10T03:14:30.672712+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-10T03:15:18.401276+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-10T03:30:39.601280+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-10T03:35:01.129247+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-10T03:36:40.877309+00:00'
   status: VERIFIED
   description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
     secops@enterprise.corp'
@@ -555,6 +536,62 @@ ledger_chain:
   current_block_hash: 2686fe0091a137f333b92cd2d30142a1b9683415996a57153ccfdc3fe0ed99ff
   action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
   block_hash: 2686fe0091a137f333b92cd2d30142a1b9683415996a57153ccfdc3fe0ed99ff
+- block_id: 3896
+  block_type: STATE_UPDATE
+  prev_block_hash: 2686fe0091a137f333b92cd2d30142a1b9683415996a57153ccfdc3fe0ed99ff
+  timestamp: '2026-10-10T00:41:08.950758+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 58234d1c7b0ab7aca255fe2808debf2d03c5f3f0c3581d01ddd506225a7277d8
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 58234d1c7b0ab7aca255fe2808debf2d03c5f3f0c3581d01ddd506225a7277d8
+- block_id: 3897
+  block_type: STATE_UPDATE
+  prev_block_hash: 58234d1c7b0ab7aca255fe2808debf2d03c5f3f0c3581d01ddd506225a7277d8
+  timestamp: '2026-10-10T03:06:42.179631+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 9c89b10a42c9d5b5024954fee94c0f2161dc3871262a945789dc69919631b9e0
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 9c89b10a42c9d5b5024954fee94c0f2161dc3871262a945789dc69919631b9e0
+- block_id: 3898
+  block_type: STATE_UPDATE
+  prev_block_hash: 9c89b10a42c9d5b5024954fee94c0f2161dc3871262a945789dc69919631b9e0
+  timestamp: '2026-10-10T03:14:30.672712+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 3bb3ff3504700ef0f6f5f90ec0d3831fbe3867cd53b75ffdc1e7ea1358686c87
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 3bb3ff3504700ef0f6f5f90ec0d3831fbe3867cd53b75ffdc1e7ea1358686c87
+- block_id: 3899
+  block_type: STATE_UPDATE
+  prev_block_hash: 3bb3ff3504700ef0f6f5f90ec0d3831fbe3867cd53b75ffdc1e7ea1358686c87
+  timestamp: '2026-10-10T03:15:18.401276+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 6f600b6bfd1f0d3c7ef1e7277ac16583ef53dfe9c46197b70937c77b2d7750d0
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 6f600b6bfd1f0d3c7ef1e7277ac16583ef53dfe9c46197b70937c77b2d7750d0
+- block_id: 3900
+  block_type: STATE_UPDATE
+  prev_block_hash: 6f600b6bfd1f0d3c7ef1e7277ac16583ef53dfe9c46197b70937c77b2d7750d0
+  timestamp: '2026-10-10T03:30:39.601280+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: bdab475beab31f8c59ac0ce2c583547a9a5659d5fa5d9636898035a2902aa5b8
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: bdab475beab31f8c59ac0ce2c583547a9a5659d5fa5d9636898035a2902aa5b8
+- block_id: 3901
+  block_type: STATE_UPDATE
+  prev_block_hash: bdab475beab31f8c59ac0ce2c583547a9a5659d5fa5d9636898035a2902aa5b8
+  timestamp: '2026-10-10T03:35:01.129247+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 57eeb5bc8213b78ad9a259a05fc108160c62b94a7af73406bf7fae0a9ef15faf
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 57eeb5bc8213b78ad9a259a05fc108160c62b94a7af73406bf7fae0a9ef15faf
+- block_id: 3902
+  block_type: STATE_UPDATE
+  prev_block_hash: 57eeb5bc8213b78ad9a259a05fc108160c62b94a7af73406bf7fae0a9ef15faf
+  timestamp: '2026-10-10T03:36:40.877309+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: c79f853a0124a800ca54cefe2f5b3d78b53a300fb3ac7219c106e7ae6da86df2
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: c79f853a0124a800ca54cefe2f5b3d78b53a300fb3ac7219c106e7ae6da86df2
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:

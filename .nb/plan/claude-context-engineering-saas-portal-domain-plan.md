@@ -87,6 +87,13 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │   ├── saas_portal_data_flow.md               # Topological data flow & contract exchange DAGs (Mermaid)
 │   │   ├── saas_portal_entity_relation.md         # Entity-relationship & state transition models (Mermaid)
 │   │   └── saas_portal_contracts_registry.md      # Machine-readable contract registry & artifact handoff matrix
+│   ├── portal/                                    # Modular Percipience SaaS Portal & API Gateway
+│   │   ├── server.py                              # Lean orchestrator (Uvicorn ASGI app & native HTTPServer)
+│   │   ├── core/                                  # Runtime singletons (state.py), session store & ASGI adapter
+│   │   ├── content/                               # Centralized JSON content manager (tiers, SLAs, metadata)
+│   │   ├── templates/                             # Modular HTML templates & TemplateRenderer (pages, header, base)
+│   │   ├── static/                                # Externalized CSS (portal.css) and JS (head_nav.js, portal_app.js)
+│   │   └── routes/                                # Modular API route handlers (/api/*)
 │   └── modules/
 │       ├── mod_corp_site/                         # Public marketing site, MDX docs, AST ROI calculator
 │       ├── mod_saas_portal/                       # Tenant customer portal, RBAC, commercial provisioner UI
@@ -265,7 +272,7 @@ sequenceDiagram
 
 ## 6. Commercial Packaging & SaaS Control Plane Endpoints
 
-### 6.1. API Gateway Endpoints (`workplace/portal/server.py`)
+### 6.1. API Gateway Endpoints (`workplace/portal/server.py` & `workplace/portal/routes/`)
 - `GET /api/commercial/tiers`: Returns specifications, pricing, seats, worktrees, PR audits, and allowed engine matrix for all 4 commercial tiers.
 - `GET /api/commercial/entitlements?tenant_id={id}`: Audits active tenant entitlements and quota utilization.
 - `GET /api/commercial/packages`: Lists compiled commercial bundles and cryptographic SHA-256 hashes in `.nb/bundles/`.

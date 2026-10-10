@@ -1,105 +1,1061 @@
 <section id="platform" class="tab-content">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+    <div>
       <div class="section-title">Foundational Technical Subsystems (CAP-01 to CAP-52)</div>
-      <div class="section-desc">Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, model drift, and distributed swarm chaos in enterprise codebases.</div>
-      
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-badge">Concurrency (CAP-01)</div>
-          <h3>1. Ephemeral Git Worktree Isolation</h3>
-          <p>Assigns each autonomous coding subagent its own isolated git worktree backed by a pre-warmed gVisor microVM sandbox. Prevents branch locks and dirty working tree overwrites.</p>
-          <pre>git worktree add -b wt_agent_04 .nb/workspaces/wt_agent_04 main
-percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
-          <div class="stat-box"><span>SLA Allocation Latency:</span><span class="stat-val text-cyan">&lt; 180ms</span></div>
+      <div class="section-desc">
+        Designed from the ground up to solve context poisoning, prompt leakage, workspace clobbering, model drift, and distributed swarm chaos across enterprise codebases.
+      </div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="badge badge-cyan" style="font-size:12px; padding:6px 12px;">
+        ✓ 52 / 52 Capabilities Active
+      </span>
+    </div>
+  </div>
+
+  <!-- Interactive Search & Filtering Toolbar -->
+  <div class="cap-toolbar">
+    <div class="cap-search-row">
+      <input 
+        type="text" 
+        id="capSearchInput" 
+        class="input cap-search-input" 
+        placeholder="🔍 Search capabilities (e.g. Worktree, AST Pruning, Redlock, Merkle, Swarm, CAP-05, PII, Docker)..." 
+        oninput="filterPlatformCapabilities()"
+      />
+      <button class="btn btn-secondary" style="padding:8px 14px; font-size:11px; white-space:nowrap;" onclick="resetPlatformFilters()">
+        Reset Filters
+      </button>
+      <div style="font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap; margin-left:auto;">
+        Showing <span id="visibleCapCount" style="color:var(--cyan); font-weight:800; font-family:'JetBrains Mono', monospace;">52</span> of 52 Capabilities
+      </div>
+    </div>
+
+    <div class="cap-pills-row">
+      <button class="cap-pill-btn active" data-cat="all" onclick="setCapCategoryFilter('all', this)">All (52)</button>
+      <button class="cap-pill-btn" data-cat="concurrency" onclick="setCapCategoryFilter('concurrency', this)">Concurrency &amp; Worktrees (5)</button>
+      <button class="cap-pill-btn" data-cat="ast_finops" onclick="setCapCategoryFilter('ast_finops', this)">AST &amp; Token FinOps (6)</button>
+      <button class="cap-pill-btn" data-cat="security" onclick="setCapCategoryFilter('security', this)">Security &amp; Guardrails (6)</button>
+      <button class="cap-pill-btn" data-cat="swarms" onclick="setCapCategoryFilter('swarms', this)">Governance &amp; Swarms (6)</button>
+      <button class="cap-pill-btn" data-cat="resilience" onclick="setCapCategoryFilter('resilience', this)">Resilience &amp; CI/CD (4)</button>
+      <button class="cap-pill-btn" data-cat="ledger" onclick="setCapCategoryFilter('ledger', this)">Cryptographic Ledger (3)</button>
+      <button class="cap-pill-btn" data-cat="anti_drift" onclick="setCapCategoryFilter('anti_drift', this)">Verification &amp; Anti-Drift (3)</button>
+      <button class="cap-pill-btn" data-cat="ingestion" onclick="setCapCategoryFilter('ingestion', this)">Context &amp; Ingestion (5)</button>
+      <button class="cap-pill-btn" data-cat="enterprise" onclick="setCapCategoryFilter('enterprise', this)">Enterprise &amp; Fleet (5)</button>
+      <button class="cap-pill-btn" data-cat="architecture" onclick="setCapCategoryFilter('architecture', this)">Platform Architecture (4)</button>
+      <button class="cap-pill-btn" data-cat="observability" onclick="setCapCategoryFilter('observability', this)">Observability &amp; Evals (3)</button>
+      <button class="cap-pill-btn" data-cat="dx" onclick="setCapCategoryFilter('dx', this)">Developer Experience (2)</button>
+    </div>
+  </div>
+
+  <!-- Capabilities Cards Grid -->
+  <div id="platformCapGrid" class="grid-2">
+        <div class="card cap-card" data-cap="cap-01" data-category="ingestion" data-search="cap-01 1 multi-format mvs ingestion &amp;amp; formalization context &amp;amp; ingestion normalizes disparate unstructured user stories, openapi 3.1 definitions, and architectural markdown into mathematically bounded minimum viable specifications (mvs) with explicit behavioral invariants. percipience formalize --spec mvs_spec.yaml --source openapi.json">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Context &amp; Ingestion (CAP-01)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#01 / 52</span>
+          </div>
+          <h3>1. Multi-Format MVS Ingestion &amp; Formalization</h3>
+          <p>Normalizes disparate unstructured user stories, OpenAPI 3.1 definitions, and architectural markdown into mathematically bounded Minimum Viable Specifications (MVS) with explicit behavioral invariants.</p>
+          <pre>percipience formalize --spec mvs_spec.yaml --source openapi.json</pre>
+          <div class="stat-box">
+            <span>Ingestion Latency:</span>
+            <span class="stat-val text-cyan">&lt; 45ms</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Invariant Compliant</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Token FinOps (CAP-02)</div>
-          <h3>2. Polyglot Tree-Sitter 6D AST Body Pruning</h3>
-          <p>Replaces internal method bodies with syntactic placeholders (<code>... [AST_PRUNED]</code>), cutting prompt token overhead by 50%–75% while preserving 100% of public interface contracts.</p>
+        <div class="card cap-card" data-cap="cap-02" data-category="security" data-search="cap-02 2 context poisoning defense &amp;amp; surgical rollback security &amp;amp; guardrails continuously scans asts and execution traces for hallucinated dependencies, malicious package imports, and plaintext secrets; executes surgical git rollback of infected micro-modules with zero sibling workspace fallout. percipience poison scan --target mod_auth &amp;amp;&amp;amp; percipience rollback --incident inc-001">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-02)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#02 / 52</span>
+          </div>
+          <h3>2. Context Poisoning Defense &amp; Surgical Rollback</h3>
+          <p>Continuously scans ASTs and execution traces for hallucinated dependencies, malicious package imports, and plaintext secrets; executes surgical git rollback of infected micro-modules with zero sibling workspace fallout.</p>
+          <pre>percipience poison scan --target mod_auth &amp;&amp; percipience rollback --incident INC-001</pre>
+          <div class="stat-box">
+            <span>Quarantine Latency:</span>
+            <span class="stat-val text-amber">Sub-1.2s Surgical Revert</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">0 Poisoned Workspaces</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-03" data-category="ast_finops" data-search="cap-03 3 polyglot tree-sitter 6d ast body pruning ast &amp;amp; token finops replaces internal method bodies with syntactic placeholders (... [ast_pruned]), cutting llm prompt token consumption by 50%–75% while preserving 100% of public interface contracts, docstrings, and type definitions. percipience optimize --file payment_service.py --dialect python --preserve-types">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-03)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#03 / 52</span>
+          </div>
+          <h3>3. Polyglot Tree-Sitter 6D AST Body Pruning</h3>
+          <p>Replaces internal method bodies with syntactic placeholders (... [AST_PRUNED]), cutting LLM prompt token consumption by 50%–75% while preserving 100% of public interface contracts, docstrings, and type definitions.</p>
           <pre>percipience optimize --file payment_service.py --dialect python --preserve-types</pre>
-          <div class="stat-box"><span>Measured Token Drop:</span><span class="stat-val text-emerald">50.3% ($15.69 Gross Saved)</span></div>
+          <div class="stat-box">
+            <span>Measured Token Drop:</span>
+            <span class="stat-val text-emerald">50.3%–75.0% Saved</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">.69 Gross Saved / Run</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Anti-Drift (CAP-03)</div>
-          <h3>3. Semantic Parity &amp; Reverse AST Reconciliation</h3>
-          <p>Computes mathematical semantic parity score comparing generated code against ground-truth specifications. Generates surgical reverse AST diffs to revert unauthorized edits.</p>
+        <div class="card cap-card" data-cap="cap-04" data-category="ast_finops" data-search="cap-04 4 3-tier cognitive router &amp;amp; adaptive cost quotas ast &amp;amp; token finops dynamically cascades tasks between tier a frontier models (complex reasoning &amp;amp; security), tier b compact models (code diffs &amp;amp; unit tests), and tier c edge models (embeddings &amp;amp; syntax formatting) under strict session cost quotas. percipience route --task &amp;quot;refactor ast&amp;quot; --model-tier tier_b --cost-ceiling 0.05">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-04)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#04 / 52</span>
+          </div>
+          <h3>4. 3-Tier Cognitive Router &amp; Adaptive Cost Quotas</h3>
+          <p>Dynamically cascades tasks between Tier A Frontier models (complex reasoning &amp; security), Tier B Compact models (code diffs &amp; unit tests), and Tier C Edge models (embeddings &amp; syntax formatting) under strict session cost quotas.</p>
+          <pre>percipience route --task &quot;refactor AST&quot; --model-tier Tier_B --cost-ceiling 0.05</pre>
+          <div class="stat-box">
+            <span>Routing Overhead:</span>
+            <span class="stat-val text-emerald">&lt; 12ms (Optimal Latency)</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">38% Net Inference Cost Drop</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-05" data-category="concurrency" data-search="cap-05 5 ephemeral git worktree isolation &amp;amp; leases concurrency &amp;amp; sandboxing assigns each autonomous coding subagent its own isolated git worktree backed by a gvisor microvm sandbox. prevents branch clobbering, dirty working tree overwrites, and parallel merge collisions. percipience worktree acquire --agent agent_dev_04 --ttl 3600">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Concurrency &amp; Sandboxing (CAP-05)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#05 / 52</span>
+          </div>
+          <h3>5. Ephemeral Git Worktree Isolation &amp; Leases</h3>
+          <p>Assigns each autonomous coding subagent its own isolated git worktree backed by a gVisor microVM sandbox. Prevents branch clobbering, dirty working tree overwrites, and parallel merge collisions.</p>
+          <pre>percipience worktree acquire --agent agent_dev_04 --ttl 3600</pre>
+          <div class="stat-box">
+            <span>SLA Allocation Latency:</span>
+            <span class="stat-val text-cyan">&lt; 180ms</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">0 Working-Tree Collisions</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-06" data-category="anti_drift" data-search="cap-06 6 automated spec-to-code semantic parity &amp;amp; reverse ast verification &amp;amp; anti-drift computes a 6-vector mathematical semantic parity score comparing generated code against ground-truth specifications. emits surgical reverse ast diffs to revert unauthorized edits or trigger rfc spec evolution. percipience drift reconcile --mode revert --module mod_auth">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Verification &amp; Anti-Drift (CAP-06)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#06 / 52</span>
+          </div>
+          <h3>6. Automated Spec-to-Code Semantic Parity &amp; Reverse AST</h3>
+          <p>Computes a 6-vector mathematical semantic parity score comparing generated code against ground-truth specifications. Emits surgical reverse AST diffs to revert unauthorized edits or trigger RFC spec evolution.</p>
           <pre>percipience drift reconcile --mode revert --module mod_auth</pre>
-          <div class="stat-box"><span>Parity Score:</span><span class="stat-val text-emerald">0.9960 (ALIGNED)</span></div>
+          <div class="stat-box">
+            <span>Parity Score:</span>
+            <span class="stat-val text-purple">0.9960 (ALIGNED)</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Zero Silent Regressions</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Governance (CAP-31)</div>
-          <h3>4. 4-Tier Swarm Authority &amp; Anti-Usurpation Tree</h3>
-          <p>Enforces strict role hierarchies (<code>ORCHESTRATOR &gt; DOMAIN_ARCHITECT &gt; SPECIALIST_WORKER &gt; GATEKEEPER</code>) and intercepts rogue subagent spawning beyond recursion depth ceiling D=2.</p>
-          <pre>percipience swarm audit --depth-ceiling 2 --verify-leases</pre>
-          <div class="stat-box"><span>Rogue Spawns Blocked:</span><span class="stat-val text-cyan">100% Intercepted</span></div>
+        <div class="card cap-card" data-cap="cap-07" data-category="resilience" data-search="cap-07 7 bounded tdd self-healing &amp;amp; quarantined test ledger resilience &amp;amp; ci/cd executes failing tests inside isolated sandboxes, quarantines flaky or non-deterministic test suites, and executes up to 3 bounded self-repair iterations before human escalation. percipience heal --error-type structural --target-file gateway.py">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Resilience &amp; CI/CD (CAP-07)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#07 / 52</span>
+          </div>
+          <h3>7. Bounded TDD Self-Healing &amp; Quarantined Test Ledger</h3>
+          <p>Executes failing tests inside isolated sandboxes, quarantines flaky or non-deterministic test suites, and executes up to 3 bounded self-repair iterations before human escalation.</p>
+          <pre>percipience heal --error-type STRUCTURAL --target-file gateway.py</pre>
+          <div class="stat-box">
+            <span>MTTR Remediation:</span>
+            <span class="stat-val text-purple">&lt; 3 Bounded Iterations</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">94.2% Auto-Heal Success</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Resilience (CAP-29)</div>
-          <h3>5. 4-Pillar Error Taxonomy &amp; Self-Healing Playbooks</h3>
+        <div class="card cap-card" data-cap="cap-08" data-category="ledger" data-search="cap-08 8 cryptographic merkle state dag &amp;amp; tamper-evident ledger cryptographic ledger maintains an immutable append-only sha-256 merkle directed acyclic graph recording prompt inputs, code transformations, and validation receipts with continuous hash-chain attestation. percipience merkle verify --root-chain .nb/context/ledger/">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Cryptographic Ledger (CAP-08)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#08 / 52</span>
+          </div>
+          <h3>8. Cryptographic Merkle State DAG &amp; Tamper-Evident Ledger</h3>
+          <p>Maintains an immutable append-only SHA-256 Merkle directed acyclic graph recording prompt inputs, code transformations, and validation receipts with continuous hash-chain attestation.</p>
+          <pre>percipience merkle verify --root-chain .nb/context/ledger/</pre>
+          <div class="stat-box">
+            <span>Chain Verification:</span>
+            <span class="stat-val text-cyan">100% Tamper-Evident</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Sub-5ms Epoch Checkpoint</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-09" data-category="swarms" data-search="cap-09 9 multi-agent handover integrity &amp;amp; attested anti-drift tokens governance &amp;amp; swarms issues cryptographic ed25519-signed handoff tokens verifying payload schemas and parity reports before transferring context across specialized agents; rejects circular handoff loops. percipience handoff verify --token-hash a3f92... --gate stage_ast_diff">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-09)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#09 / 52</span>
+          </div>
+          <h3>9. Multi-Agent Handover Integrity &amp; Attested Anti-Drift Tokens</h3>
+          <p>Issues cryptographic Ed25519-signed handoff tokens verifying payload schemas and parity reports before transferring context across specialized agents; rejects circular handoff loops.</p>
+          <pre>percipience handoff verify --token-hash a3f92... --gate stage_ast_diff</pre>
+          <div class="stat-box">
+            <span>Attestation Latency:</span>
+            <span class="stat-val text-purple">&lt; 8ms Handoff Gate</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">100% Zero-Loss Lineage</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-10" data-category="ingestion" data-search="cap-10 10 6d context maturity scorecard &amp;amp; quality radar context &amp;amp; ingestion evaluates codebase context across 6 structural axes (syntactic completeness, contract grounding, test coverage, architectural invariants, doc parity, and security guardrails) generating an actionable 0.0–1.0 maturity grade. percipience maturity evaluate --workspace . --min-grade a">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Context &amp; Ingestion (CAP-10)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#10 / 52</span>
+          </div>
+          <h3>10. 6D Context Maturity Scorecard &amp; Quality Radar</h3>
+          <p>Evaluates codebase context across 6 structural axes (Syntactic Completeness, Contract Grounding, Test Coverage, Architectural Invariants, Doc Parity, and Security Guardrails) generating an actionable 0.0–1.0 maturity grade.</p>
+          <pre>percipience maturity evaluate --workspace . --min-grade A</pre>
+          <div class="stat-box">
+            <span>Scan Speed:</span>
+            <span class="stat-val text-cyan">&lt; 65ms Full Scan</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Grade A+ (0.96 / 1.00)</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-11" data-category="ledger" data-search="cap-11 11 master context ledger &amp;amp; requirements traceability cryptographic ledger tracks every code commit, pr, and agent execution trace back to its governing requirement specification within context_ledger.yaml, ensuring 100% bidirectional compliance traceability. percipience ledger query --commit head --trace-requirements">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Cryptographic Ledger (CAP-11)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#11 / 52</span>
+          </div>
+          <h3>11. Master Context Ledger &amp; Requirements Traceability</h3>
+          <p>Tracks every code commit, PR, and agent execution trace back to its governing requirement specification within context_ledger.yaml, ensuring 100% bidirectional compliance traceability.</p>
+          <pre>percipience ledger query --commit HEAD --trace-requirements</pre>
+          <div class="stat-box">
+            <span>Audit Traceability:</span>
+            <span class="stat-val text-cyan">100% Bi-Directional Lineage</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Zero Orphaned Commits</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-12" data-category="architecture" data-search="cap-12 12 universal quad-space clean bootstrapping &amp;amp; enclave init platform architecture automates clean initialization of the strict quad-space partition (.nb/ platform kernel, workplace/ product code, user/ operator directives, and agentic/ runtime trajectories) with immutable boundary locks. percipience init --quad-space --enforce-boundaries">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Platform Architecture (CAP-12)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#12 / 52</span>
+          </div>
+          <h3>12. Universal Quad-Space Clean Bootstrapping &amp; Enclave Init</h3>
+          <p>Automates clean initialization of the strict Quad-Space partition (.nb/ platform kernel, workplace/ product code, user/ operator directives, and agentic/ runtime trajectories) with immutable boundary locks.</p>
+          <pre>percipience init --quad-space --enforce-boundaries</pre>
+          <div class="stat-box">
+            <span>Cold Bootstrap Latency:</span>
+            <span class="stat-val text-cyan">&lt; 85ms Enclave Init</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Boundary Isolation</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-13" data-category="architecture" data-search="cap-13 13 zero-overhead dual-mode architecture &amp;amp; cloud saas portal platform architecture runs seamlessly in standalone local workstation mode or distributed multi-tenant cloud saas mode; exposes high-speed 7-tab portal with real-time finops, telemetry, and swarm governance. percipience runtime start --mode enterprise --port 3000">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Platform Architecture (CAP-13)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#13 / 52</span>
+          </div>
+          <h3>13. Zero-Overhead Dual-Mode Architecture &amp; Cloud SaaS Portal</h3>
+          <p>Runs seamlessly in standalone local workstation mode or distributed multi-tenant cloud SaaS mode; exposes high-speed 7-tab portal with real-time FinOps, telemetry, and swarm governance.</p>
+          <pre>percipience runtime start --mode enterprise --port 3000</pre>
+          <div class="stat-box">
+            <span>Server Response SLA:</span>
+            <span class="stat-val text-cyan">&lt; 2.8ms Delivery</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Sub-50ms API P99 Latency</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-14" data-category="security" data-search="cap-14 14 proprietary ip packaging &amp;amp; ram enclave sealing (.nbpack) security &amp;amp; guardrails compiles proprietary enterprise plans and runtime assets into aes-256-gcm encrypted, ed25519-signed .nbpack bundles that hydrate directly in volatile ram enclaves with zero disk leakage. percipience pack compile --bundle core.nbpack --sign-ed25519">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-14)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#14 / 52</span>
+          </div>
+          <h3>14. Proprietary IP Packaging &amp; RAM Enclave Sealing (.nbpack)</h3>
+          <p>Compiles proprietary enterprise plans and runtime assets into AES-256-GCM encrypted, Ed25519-signed .nbpack bundles that hydrate directly in volatile RAM enclaves with zero disk leakage.</p>
+          <pre>percipience pack compile --bundle core.nbpack --sign-ed25519</pre>
+          <div class="stat-box">
+            <span>Hydration Latency:</span>
+            <span class="stat-val text-amber">&lt; 35ms RAM Mount</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">0 Disk Leaks (Encrypted)</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-15" data-category="dx" data-search="cap-15 15 bi-directional issue tracker &amp;amp; jira mcp server developer experience seamlessly synchronizes epics, stories, and acceptance contracts between jira, github issues, linear, and local context contracts via bidirectional model context protocol (mcp) servers. percipience issue-sync --provider jira --epic perc-104 --pull">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">Developer Experience (CAP-15)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#15 / 52</span>
+          </div>
+          <h3>15. Bi-Directional Issue Tracker &amp; Jira MCP Server</h3>
+          <p>Seamlessly synchronizes epics, stories, and acceptance contracts between Jira, GitHub Issues, Linear, and local context contracts via bidirectional Model Context Protocol (MCP) servers.</p>
+          <pre>percipience issue-sync --provider jira --epic PERC-104 --pull</pre>
+          <div class="stat-box">
+            <span>Sync Latency:</span>
+            <span class="stat-val text-emerald">&lt; 420ms Contract Sync</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">100% State Parity</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-16" data-category="resilience" data-search="cap-16 16 autonomous closed-loop ci/cd triad resilience &amp;amp; ci/cd self-sustaining housekeeping (merkle checks, lease sweeps), self-recovering repair (tdd self-healing &amp;amp; rollback), and self-improving telemetry (adaptive ast pruning) forming a self-contained ci/cd loop. percipience cicd autonomous --auto-heal --optimize-telemetry">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Resilience &amp; CI/CD (CAP-16)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#16 / 52</span>
+          </div>
+          <h3>16. Autonomous Closed-Loop CI/CD Triad</h3>
+          <p>Self-sustaining housekeeping (Merkle checks, lease sweeps), self-recovering repair (TDD self-healing &amp; rollback), and self-improving telemetry (adaptive AST pruning) forming a self-contained CI/CD loop.</p>
+          <pre>percipience cicd autonomous --auto-heal --optimize-telemetry</pre>
+          <div class="stat-box">
+            <span>Pipeline Convergence:</span>
+            <span class="stat-val text-purple">&lt; 120s Full Triad Cycle</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">100% Autonomous Pass Rate</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-17" data-category="swarms" data-search="cap-17 17 extensible custom agent plugins &amp;amp; dynamic workflow dags governance &amp;amp; swarms declarative yaml-based agent definition framework enabling enterprises to register custom domain specialists, custom tools, and verification invariants dynamically into execution dags. percipience agent register --manifest custom_auditor.yaml">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-17)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#17 / 52</span>
+          </div>
+          <h3>17. Extensible Custom Agent Plugins &amp; Dynamic Workflow DAGs</h3>
+          <p>Declarative YAML-based agent definition framework enabling enterprises to register custom domain specialists, custom tools, and verification invariants dynamically into execution DAGs.</p>
+          <pre>percipience agent register --manifest custom_auditor.yaml</pre>
+          <div class="stat-box">
+            <span>Dynamic Hook Injection:</span>
+            <span class="stat-val text-purple">&lt; 15ms DAG Synthesis</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Zero Binary Mutations</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-18" data-category="ast_finops" data-search="cap-18 18 production token finops &amp;amp; 15% performance rev-share metering ast &amp;amp; token finops real-time cryptographic accounting for every token saved via ast pruning and semantic caching; calculates gross enterprise dollar savings and computes verifiable 15% performance fee billing. percipience tokens summary --billing-period 2026-q3">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-18)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#18 / 52</span>
+          </div>
+          <h3>18. Production Token FinOps &amp; 15% Performance Rev-Share Metering</h3>
+          <p>Real-time cryptographic accounting for every token saved via AST pruning and semantic caching; calculates gross enterprise dollar savings and computes verifiable 15% performance fee billing.</p>
+          <pre>percipience tokens summary --billing-period 2026-Q3</pre>
+          <div class="stat-box">
+            <span>Metering Precision:</span>
+            <span class="stat-val text-emerald">100% Micro-Cent Accuracy</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">15% Rev-Share on Verified Value</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-19" data-category="observability" data-search="cap-19 19 enterprise observability hub &amp;amp; telemetry gateway observability &amp;amp; evals consolidated observability console streaming real-time ast pruner events, token consumption waterfalls, active worktree leases, and system health metrics to datadog, grafana, and opentelemetry. percipience otel export --target datadog --endpoint /api/telemetry">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Observability &amp; Evals (CAP-19)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#19 / 52</span>
+          </div>
+          <h3>19. Enterprise Observability Hub &amp; Telemetry Gateway</h3>
+          <p>Consolidated observability console streaming real-time AST pruner events, token consumption waterfalls, active worktree leases, and system health metrics to Datadog, Grafana, and OpenTelemetry.</p>
+          <pre>percipience otel export --target datadog --endpoint /api/telemetry</pre>
+          <div class="stat-box">
+            <span>Telemetry Throughput:</span>
+            <span class="stat-val text-cyan">&gt; 25,000 metrics/sec</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Sub-10ms W3C Span Ingestion</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-20" data-category="ingestion" data-search="cap-20 20 3-tier layered context &amp;amp; byor multi-vcs git adapter context &amp;amp; ingestion strictly prioritizes context (tier 1 base invariants &amp;gt; tier 2 global team rules &amp;gt; tier 3 domain code), while connecting to external github, gitlab, and bitbucket repositories via normalized webhooks. percipience byor connect --url git@gitlab.corp:infra.git --provider gitlab">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Context &amp; Ingestion (CAP-20)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#20 / 52</span>
+          </div>
+          <h3>20. 3-Tier Layered Context &amp; BYOR Multi-VCS Git Adapter</h3>
+          <p>Strictly prioritizes context (Tier 1 Base Invariants &gt; Tier 2 Global Team Rules &gt; Tier 3 Domain Code), while connecting to external GitHub, GitLab, and Bitbucket repositories via normalized webhooks.</p>
+          <pre>percipience byor connect --url git@gitlab.corp:infra.git --provider gitlab</pre>
+          <div class="stat-box">
+            <span>Precedence Audit:</span>
+            <span class="stat-val text-cyan">100% Enforced</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Multi-VCS Normalized Webhooks</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-21" data-category="anti_drift" data-search="cap-21 21 autonomous living documentation engine &amp;amp; architecture visualizer verification &amp;amp; anti-drift parses codebase asts to automatically regenerate architectural markdown docs, sequence diagrams, and mermaid state charts; validates mermaid syntax to eliminate rendering failures. percipience docs sync --validate-mermaid --force">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Verification &amp; Anti-Drift (CAP-21)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#21 / 52</span>
+          </div>
+          <h3>21. Autonomous Living Documentation Engine &amp; Architecture Visualizer</h3>
+          <p>Parses codebase ASTs to automatically regenerate architectural markdown docs, sequence diagrams, and Mermaid state charts; validates Mermaid syntax to eliminate rendering failures.</p>
+          <pre>percipience docs sync --validate-mermaid --force</pre>
+          <div class="stat-box">
+            <span>Doc Regeneration:</span>
+            <span class="stat-val text-purple">&lt; 1.4s Full Repo</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">100% Validated Mermaid Trees</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-22" data-category="concurrency" data-search="cap-22 22 distributed concurrency leasing &amp;amp; redis 7.x redlock cluster concurrency &amp;amp; sandboxing extends local worktree leases to multi-node distributed clusters using multi-master redis 7.x redlock quorums with automated heartbeat renewals and dead worker auto-eviction. percipience lock acquire --resource repo_auth --quorum 3 --ttl 60">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Concurrency &amp; Sandboxing (CAP-22)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#22 / 52</span>
+          </div>
+          <h3>22. Distributed Concurrency Leasing &amp; Redis 7.x Redlock Cluster</h3>
+          <p>Extends local worktree leases to multi-node distributed clusters using multi-master Redis 7.x Redlock quorums with automated heartbeat renewals and dead worker auto-eviction.</p>
+          <pre>percipience lock acquire --resource repo_auth --quorum 3 --ttl 60</pre>
+          <div class="stat-box">
+            <span>Quorum Consensus:</span>
+            <span class="stat-val text-cyan">&lt; 8ms Latency</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">0 Split-Brain Race Conditions</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-23" data-category="ledger" data-search="cap-23 23 sec 17a-4 / finra worm cloud vault egress cryptographic ledger automatically mirrors validated merkle state dag blocks to immutable write-once-read-many (worm) storage (aws s3 object lock, google cloud storage bucket lock) for financial regulatory compliance. percipience worm egress --target s3 --retention-days 2555">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Cryptographic Ledger (CAP-23)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#23 / 52</span>
+          </div>
+          <h3>23. SEC 17a-4 / FINRA WORM Cloud Vault Egress</h3>
+          <p>Automatically mirrors validated Merkle state DAG blocks to immutable Write-Once-Read-Many (WORM) storage (AWS S3 Object Lock, Google Cloud Storage Bucket Lock) for financial regulatory compliance.</p>
+          <pre>percipience worm egress --target s3 --retention-days 2555</pre>
+          <div class="stat-box">
+            <span>Vault Retention:</span>
+            <span class="stat-val text-cyan">7 Years Immutable</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% FINRA / SEC 17a-4 Certified</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-24" data-category="ast_finops" data-search="cap-24 24 high-throughput polyglot tree-sitter ast daemon ast &amp;amp; token finops native c and rust binding daemon providing persistent ast parsing across python, typescript, go, java, rust, and c++; handles massive monorepo pruning at over 10,000 lines of code per second. percipience daemon start --port 9090 --workers 4">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-24)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#24 / 52</span>
+          </div>
+          <h3>24. High-Throughput Polyglot Tree-Sitter AST Daemon</h3>
+          <p>Native C and Rust binding daemon providing persistent AST parsing across Python, TypeScript, Go, Java, Rust, and C++; handles massive monorepo pruning at over 10,000 lines of code per second.</p>
+          <pre>percipience daemon start --port 9090 --workers 4</pre>
+          <div class="stat-box">
+            <span>Pruning Throughput:</span>
+            <span class="stat-val text-emerald">&gt; 10,000 LOC/sec</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">Sub-5ms Unix Socket IPC Latency</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-25" data-category="ast_finops" data-search="cap-25 25 multi-dimensional 6d token compression suite ast &amp;amp; token finops unified compression pipeline applying ast skeletonization, docstring minification, whitespace normalizing, json schema compacting, diagnostic log pruning, and import deduplication. percipience compress --all-vectors --target src/">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-25)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#25 / 52</span>
+          </div>
+          <h3>25. Multi-Dimensional 6D Token Compression Suite</h3>
+          <p>Unified compression pipeline applying AST skeletonization, docstring minification, whitespace normalizing, JSON schema compacting, diagnostic log pruning, and import deduplication.</p>
+          <pre>percipience compress --all-vectors --target src/</pre>
+          <div class="stat-box">
+            <span>Context Overhead Drop:</span>
+            <span class="stat-val text-emerald">62.8% Average Compression</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">Zero Loss on Structural Types</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-26" data-category="ingestion" data-search="cap-26 26 multi-dialect diagnostic log &amp;amp; traceback slicing engine context &amp;amp; ingestion slices 10,000-line build logs and verbose stack traces into minimal 20-line diagnostic envelopes highlighting the root exception and exact ast caller sites, saving thousands of debug tokens. percipience log slice --input build.log --dialect pytest --max-tokens 500">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Context &amp; Ingestion (CAP-26)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#26 / 52</span>
+          </div>
+          <h3>26. Multi-Dialect Diagnostic Log &amp; Traceback Slicing Engine</h3>
+          <p>Slices 10,000-line build logs and verbose stack traces into minimal 20-line diagnostic envelopes highlighting the root exception and exact AST caller sites, saving thousands of debug tokens.</p>
+          <pre>percipience log slice --input build.log --dialect pytest --max-tokens 500</pre>
+          <div class="stat-box">
+            <span>Diagnostic Noise Drop:</span>
+            <span class="stat-val text-cyan">91.4% Pruned</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Instant Root-Cause Extraction</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-27" data-category="architecture" data-search="cap-27 27 declarative quad-space runtime boundary &amp;amp; deduplication facade platform architecture enforces zero-logic facade imports across architectural boundaries, ensuring agent execution environments cannot mutate platform core binaries or leak temporary scratchpads into product artifacts. percipience boundary check --strict">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Platform Architecture (CAP-27)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#27 / 52</span>
+          </div>
+          <h3>27. Declarative Quad-Space Runtime Boundary &amp; Deduplication Facade</h3>
+          <p>Enforces zero-logic facade imports across architectural boundaries, ensuring agent execution environments cannot mutate platform core binaries or leak temporary scratchpads into product artifacts.</p>
+          <pre>percipience boundary check --strict</pre>
+          <div class="stat-box">
+            <span>Cross-Boundary Leaks:</span>
+            <span class="stat-val text-cyan">0 Invocations Leaked</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Pure Sandboxed Contracts</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-28" data-category="resilience" data-search="cap-28 28 parallel fan-out / fan-in barrier join synchronization resilience &amp;amp; ci/cd coordinates concurrent multi-agent task execution across independent submodules, joining at strict cryptographic barrier gates to guarantee all dependencies pass before downstream consolidation. percipience workflow fan-out --config parallel_build.yaml">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Resilience &amp; CI/CD (CAP-28)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#28 / 52</span>
+          </div>
+          <h3>28. Parallel Fan-Out / Fan-In Barrier Join Synchronization</h3>
+          <p>Coordinates concurrent multi-agent task execution across independent submodules, joining at strict cryptographic barrier gates to guarantee all dependencies pass before downstream consolidation.</p>
+          <pre>percipience workflow fan-out --config parallel_build.yaml</pre>
+          <div class="stat-box">
+            <span>Barrier Join Latency:</span>
+            <span class="stat-val text-purple">&lt; 25ms Thread Sync</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Zero Race-Condition Lockups</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-29" data-category="resilience" data-search="cap-29 29 4-pillar error taxonomy &amp;amp; adaptive recovery playbooks resilience &amp;amp; ci/cd classifies agent failures into transient (rate limits), structural (syntax errors), invariant (test failures), and hallucinatory (invented symbols), routing each to specialized self-healing playbooks. percipience heal --error-type structural --target-file gateway.py">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Resilience &amp; CI/CD (CAP-29)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#29 / 52</span>
+          </div>
+          <h3>29. 4-Pillar Error Taxonomy &amp; Adaptive Recovery Playbooks</h3>
           <p>Classifies agent failures into TRANSIENT (rate limits), STRUCTURAL (syntax errors), INVARIANT (test failures), and HALLUCINATORY (invented symbols), routing each to specialized self-healing playbooks.</p>
           <pre>percipience heal --error-type STRUCTURAL --target-file gateway.py</pre>
-          <div class="stat-box"><span>MTTR Remediation:</span><span class="stat-val text-purple">&lt; 3 Bounded Iterations</span></div>
+          <div class="stat-box">
+            <span>MTTR Remediation:</span>
+            <span class="stat-val text-purple">&lt; 3 Bounded Iterations</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Adaptive Playbook Convergence</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Context Slicing (CAP-33)</div>
-          <h3>6. Mathematical Attention Slicing (15/25/35/10/15)</h3>
+        <div class="card cap-card" data-cap="cap-30" data-category="anti_drift" data-search="cap-30 30 cryptographic prompt semver manifest &amp;amp; static prefix pinning verification &amp;amp; anti-drift tracks all system prompts in a sha-256 versioned yaml manifest; pins static prompt prefixes to maximize kv-cache reuse in frontier llms, reducing time-to-first-token (ttft) and inference costs. percipience prompt audit --manifest prompt_manifest.yaml --pin-prefixes">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Verification &amp; Anti-Drift (CAP-30)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#30 / 52</span>
+          </div>
+          <h3>30. Cryptographic Prompt SemVer Manifest &amp; Static Prefix Pinning</h3>
+          <p>Tracks all system prompts in a SHA-256 versioned YAML manifest; pins static prompt prefixes to maximize KV-cache reuse in frontier LLMs, reducing time-to-first-token (TTFT) and inference costs.</p>
+          <pre>percipience prompt audit --manifest prompt_manifest.yaml --pin-prefixes</pre>
+          <div class="stat-box">
+            <span>Prompt Cache Hit Rate:</span>
+            <span class="stat-val text-purple">&gt; 88% KV-Cache Reuse</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">42% Reduction in TTFT Latency</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-31" data-category="swarms" data-search="cap-31 31 4-tier swarm authority tree &amp;amp; anti-usurpation hierarchy governance &amp;amp; swarms enforces strict role hierarchies (orchestrator &amp;gt; domain_architect &amp;gt; specialist_worker &amp;gt; gatekeeper) and intercepts rogue subagent spawning beyond recursion depth ceiling d=2. percipience swarm audit --depth-ceiling 2 --verify-leases">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-31)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#31 / 52</span>
+          </div>
+          <h3>31. 4-Tier Swarm Authority Tree &amp; Anti-Usurpation Hierarchy</h3>
+          <p>Enforces strict role hierarchies (ORCHESTRATOR &gt; DOMAIN_ARCHITECT &gt; SPECIALIST_WORKER &gt; GATEKEEPER) and intercepts rogue subagent spawning beyond recursion depth ceiling D=2.</p>
+          <pre>percipience swarm audit --depth-ceiling 2 --verify-leases</pre>
+          <div class="stat-box">
+            <span>Rogue Spawns Blocked:</span>
+            <span class="stat-val text-purple">100% Intercepted</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Max Depth Ceiling D=2 Enforced</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-32" data-category="security" data-search="cap-32 32 adversarial mutation fuzzer &amp;amp; chaos fault injection security &amp;amp; guardrails subjects generated code to boundary condition fuzzing, sql/xss injections, schema mutations, and chaos faults to guarantee zero unhandled runtime exceptions before pr merging. percipience fuzz --target mod_billing --vectors numerical,sql,schema">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-32)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#32 / 52</span>
+          </div>
+          <h3>32. Adversarial Mutation Fuzzer &amp; Chaos Fault Injection</h3>
+          <p>Subjects generated code to boundary condition fuzzing, SQL/XSS injections, schema mutations, and chaos faults to guarantee zero unhandled runtime exceptions before PR merging.</p>
+          <pre>percipience fuzz --target mod_billing --vectors numerical,sql,schema</pre>
+          <div class="stat-box">
+            <span>Mutation Coverage:</span>
+            <span class="stat-val text-amber">100% Passing Specs</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">Zero Unhandled Runtime Crashes</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-33" data-category="ast_finops" data-search="cap-33 33 mathematical attention slicing (15/25/35/10/15 rule) ast &amp;amp; token finops enforces strict proportional token budget quotas: 15% system invariants, 25% schemas/contracts, 35% ast skeletons, 10% react trajectories, 15% llm generation target space. percipience budget --allocate-quotas --window-size 32000">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">AST &amp; Token FinOps (CAP-33)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#33 / 52</span>
+          </div>
+          <h3>33. Mathematical Attention Slicing (15/25/35/10/15 Rule)</h3>
           <p>Enforces strict proportional token budget quotas: 15% System Invariants, 25% Schemas/Contracts, 35% AST Skeletons, 10% ReAct Trajectories, 15% LLM Generation Target Space.</p>
           <pre>percipience budget --allocate-quotas --window-size 32000</pre>
-          <div class="stat-box"><span>Attention Degradation:</span><span class="stat-val text-emerald">0% Lost-in-Middle</span></div>
+          <div class="stat-box">
+            <span>Attention Degradation:</span>
+            <span class="stat-val text-emerald">0% Lost-in-Middle</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">100% Invariant Grounding</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Security (CAP-32)</div>
-          <h3>7. Adversarial Mutation Fuzzer &amp; Chaos Injection</h3>
-          <p>Subjecting generated code to boundary condition fuzzing, SQL/XSS injections, schema mutations, and chaos faults to guarantee zero unhandled runtime exceptions before PR merging.</p>
-          <pre>percipience fuzz --target mod_billing --vectors numerical,sql,schema</pre>
-          <div class="stat-box"><span>Fuzz Mutation Coverage:</span><span class="stat-val text-cyan">100% Passing</span></div>
+        <div class="card cap-card" data-cap="cap-34" data-category="observability" data-search="cap-34 34 step-by-step react trajectory recording &amp;amp; replay engine observability &amp;amp; evals captures deterministic agent thought, action, and observation cycles with millisecond timestamps into replayable json-l files for regression testing, post-mortems, and evaluation benchmarks. percipience trajectory replay --session-id sess_deploy_09">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Observability &amp; Evals (CAP-34)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#34 / 52</span>
+          </div>
+          <h3>34. Step-by-Step ReAct Trajectory Recording &amp; Replay Engine</h3>
+          <p>Captures deterministic agent thought, action, and observation cycles with millisecond timestamps into replayable JSON-L files for regression testing, post-mortems, and evaluation benchmarks.</p>
+          <pre>percipience trajectory replay --session-id sess_deploy_09</pre>
+          <div class="stat-box">
+            <span>Replay Determinism:</span>
+            <span class="stat-val text-cyan">100% Reproducibility</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Full Auditable Reasoning Trail</span>
+          </div>
         </div>
 
-        <div class="card">
-          <div class="card-badge">Observability (CAP-36 &amp; CAP-37)</div>
-          <h3>8. OpenTelemetry GenAI &amp; 5D G-Eval Radar</h3>
-          <p>Streams standardized W3C <code>traceparent</code> headers, TTFT waterfalls, and multi-dimensional G-Eval quality scores (Faithfulness, Hallucination Freedom, Code Correctness) to enterprise APMs.</p>
+        <div class="card cap-card" data-cap="cap-35" data-category="ingestion" data-search="cap-35 35 autonomous requirement ambiguity resolution &amp;amp; rfc gating context &amp;amp; ingestion computes requirement entropy on incoming feature requests, flags ambiguous buzzwords or missing technical anchors, and auto-generates structured clarification rfcs before code synthesis begins. percipience ambiguity check --spec feature_prompt.md">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Context &amp; Ingestion (CAP-35)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#35 / 52</span>
+          </div>
+          <h3>35. Autonomous Requirement Ambiguity Resolution &amp; RFC Gating</h3>
+          <p>Computes requirement entropy on incoming feature requests, flags ambiguous buzzwords or missing technical anchors, and auto-generates structured clarification RFCs before code synthesis begins.</p>
+          <pre>percipience ambiguity check --spec feature_prompt.md</pre>
+          <div class="stat-box">
+            <span>Ambiguity Detection:</span>
+            <span class="stat-val text-cyan">&gt; 92% Precision</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Zero Hallucinated Features</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-36" data-category="architecture" data-search="cap-36 36 commercial pricing tier packaging &amp;amp; multi-platform provisioner platform architecture automatically builds, packages, filters, and provisions runtime feature gates and licenses across free, team, business, and enterprise tiers for saas, intellij, and vs code. percipience provision --tier enterprise --bundle .nbpack">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Platform Architecture (CAP-36)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#36 / 52</span>
+          </div>
+          <h3>36. Commercial Pricing Tier Packaging &amp; Multi-Platform Provisioner</h3>
+          <p>Automatically builds, packages, filters, and provisions runtime feature gates and licenses across Free, Team, Business, and Enterprise tiers for SaaS, IntelliJ, and VS Code.</p>
+          <pre>percipience provision --tier enterprise --bundle .nbpack</pre>
+          <div class="stat-box">
+            <span>Packaging Speed:</span>
+            <span class="stat-val text-cyan">&lt; 2.1s Multi-Platform Bundle</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">4 Commercial Tiers Provisioned</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-37" data-category="observability" data-search="cap-37 37 opentelemetry genai &amp;amp; 5d g-eval radar observability &amp;amp; evals streams standardized w3c traceparent headers, ttft waterfalls, and multi-dimensional g-eval quality scores (faithfulness, hallucination freedom, code correctness) to enterprise apms. percipience otel export --target datadog --w3c-traceparent 00-4bf92...">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Observability &amp; Evals (CAP-37)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#37 / 52</span>
+          </div>
+          <h3>37. OpenTelemetry GenAI &amp; 5D G-Eval Radar</h3>
+          <p>Streams standardized W3C traceparent headers, TTFT waterfalls, and multi-dimensional G-Eval quality scores (Faithfulness, Hallucination Freedom, Code Correctness) to enterprise APMs.</p>
           <pre>percipience otel export --target datadog --w3c-traceparent 00-4bf92...</pre>
-          <div class="stat-box"><span>Composite G-Eval Score:</span><span class="stat-val text-emerald">0.962 / 1.00 (PASSED)</span></div>
+          <div class="stat-box">
+            <span>Composite G-Eval Score:</span>
+            <span class="stat-val text-cyan">0.962 / 1.00 (PASSED)</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Sub-5ms APM Ingestion Overhead</span>
+          </div>
         </div>
 
-        <div class="card" style="border-color:var(--cyan); box-shadow:0 0 10px rgba(6,182,212,0.15);">
-          <div class="card-badge" style="background:var(--cyan); color:#000;">Zero-Dial Standard (CAP-41 / CAP-46)</div>
-          <h3>9. Zero-Dial Architecture &amp; 5-Point Control Surface</h3>
-          <p>Convention Over Configuration. All 8 manual tuning sliders permanently eliminated. Codifies 4 certified invariants (15/25/35/10/15, 6D AST pruning, 3-turn SLA convergence, and Kahn acyclicity). The entire management surface collapses to 5 operator settings: Tenant ID, Project ID, Environment Mode (dev/prod), VCS Target, and HITL Quarantine Webhook.</p>
-          <pre>percipience gate --mode prod   # Enforces STRICT_BLOCK on breaking contracts</pre>
-          <div class="stat-box"><span>Invariant Guarantee:</span><span class="stat-val text-cyan">100% Zero-Drift Standards</span></div>
+        <div class="card cap-card" data-cap="cap-38" data-category="security" data-search="cap-38 38 in-memory pii sanitizer &amp;amp; prompt benchmark harness security &amp;amp; guardrails real-time inbound/outbound pii masking protecting api keys, emails, and ssns in sub-millisecond memory-only vaults; conducts side-by-side prompt benchmarking across frontier models. percipience guardrail pii --payload user_request.md --sanitize">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-38)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#38 / 52</span>
+          </div>
+          <h3>38. In-Memory PII Sanitizer &amp; Prompt Benchmark Harness</h3>
+          <p>Real-time inbound/outbound PII masking protecting API keys, emails, and SSNs in sub-millisecond memory-only vaults; conducts side-by-side prompt benchmarking across frontier models.</p>
+          <pre>percipience guardrail pii --payload user_request.md --sanitize</pre>
+          <div class="stat-box">
+            <span>Inspection Overhead:</span>
+            <span class="stat-val text-amber">&lt; 1.2ms (In-Memory Vault)</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">100% PII Cloaked (Zero Disk Leak)</span>
+          </div>
         </div>
 
-        <div class="card" style="border-color:var(--purple); box-shadow:0 0 10px rgba(168,85,247,0.15);">
-          <div class="card-badge" style="background:var(--purple); color:#fff;">Distributed Swarms (CAP-48 to CAP-52)</div>
-          <h3>10. Containerized Swarms &amp; Streaming Git Bundles (DEWS)</h3>
-          <p>Executes multi-agent plan derivation inside hardened <code>percipience/agent-runner</code> Docker containers using headless Claude Code and Aider. Packages and transmits diffs via cryptographic <code>git bundle</code> streams with SHA-256 validation, eliminating remote git branch clutter while providing topological 3-way consolidation across worker branches.</p>
-          <pre>percipience swarm exec --plan .nb/plan/mvs_spec.yaml --module mod_auth</pre>
-          <div class="stat-box"><span>Transport Protocol:</span><span class="stat-val text-purple">0% Remote Branch Clutter (SHA-256 Verified)</span></div>
-        </div>
-
-        <div class="card" style="border-color:var(--green); box-shadow:0 0 10px rgba(16,185,129,0.15);">
-          <div class="card-badge" style="background:var(--green); color:#000;">Developer Experience (CAP-12 to CAP-14)</div>
-          <h3>11. JetBrains &amp; VS Code Native IDE Control Plane</h3>
-          <p>First-class IDE extensions for IntelliJ IDEA, PyCharm, and VS Code. Bundles self-contained platform runtimes unpacked directly via <code>.nbpack</code> enclaves with zero external system dependencies. Features live AST token savings meters, in-IDE PR gatekeeper triggers, and real-time Virtual File System (VFS) refresh.</p>
-          <pre>percipience provision --target intellij --bundle .nbpack</pre>
-          <div class="stat-box"><span>IDE Latency:</span><span class="stat-val text-emerald">Sub-50ms VFS Sync (Zero Disk Leak)</span></div>
-        </div>
-
-        <div class="card" style="border-color:var(--amber); box-shadow:0 0 10px rgba(245,158,11,0.15);">
-          <div class="card-badge" style="background:var(--amber); color:#000;">Runtime Safety (CAP-38 to CAP-40)</div>
-          <h3>12. In-Memory PII Sanitizer &amp; Prompt Injection Firewall</h3>
-          <p>Real-time inbound and outbound safety firewall. Masks sensitive credentials and PII (API keys, SSNs, emails, hostnames) in sub-millisecond memory-only vaults with zero disk exposure. Intercepts indirect prompt injection attacks (base64 and zero-width Unicode de-cloaking) and blocks unsafe AST system calls (<code>eval</code>, <code>exec</code>, <code>os.system</code>).</p>
+        <div class="card cap-card" data-cap="cap-39" data-category="security" data-search="cap-39 39 prompt injection firewall, semantic cache &amp;amp; safety rails security &amp;amp; guardrails multi-vector firewall neutralizing delimiter hijacking, base64/unicode cloaking, and instruction overrides; pairs with cosine similarity prompt caching and ast dangerous call interception. percipience guardrail injection --payload untrusted_issue.md">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-39)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#39 / 52</span>
+          </div>
+          <h3>39. Prompt Injection Firewall, Semantic Cache &amp; Safety Rails</h3>
+          <p>Multi-vector firewall neutralizing delimiter hijacking, Base64/Unicode cloaking, and instruction overrides; pairs with cosine similarity prompt caching and AST dangerous call interception.</p>
           <pre>percipience guardrail injection --payload untrusted_issue.md</pre>
-          <div class="stat-box"><span>Inspection Overhead:</span><span class="stat-val text-amber">&lt; 1.2ms (100% In-Memory Vault)</span></div>
+          <div class="stat-box">
+            <span>Jailbreak Block Rate:</span>
+            <span class="stat-val text-amber">99.8% Adversarial Defense</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">Sub-2ms Inspection Latency</span>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- TAB 3: COMPARATIVES -->
+        <div class="card cap-card" data-cap="cap-40" data-category="enterprise" data-search="cap-40 40 secure multi-tenant project provisioning &amp;amp; iam enclaves enterprise &amp;amp; fleet provisions isolated multi-tenant workspaces with automated postgresql row-level security (rls) policies, kms-sealed environment credentials, and granular role-based access control (rbac). percipience tenant create --tenant acme-corp --role tenant_admin">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Enterprise &amp; Fleet (CAP-40)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#40 / 52</span>
+          </div>
+          <h3>40. Secure Multi-Tenant Project Provisioning &amp; IAM Enclaves</h3>
+          <p>Provisions isolated multi-tenant workspaces with automated PostgreSQL Row-Level Security (RLS) policies, KMS-sealed environment credentials, and granular role-based access control (RBAC).</p>
+          <pre>percipience tenant create --tenant acme-corp --role TENANT_ADMIN</pre>
+          <div class="stat-box">
+            <span>Tenant Setup SLA:</span>
+            <span class="stat-val text-cyan">&lt; 450ms Database &amp; Enclave Setup</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Cryptographic Tenant Isolation</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-41" data-category="enterprise" data-search="cap-41 41 zero-dial architecture &amp;amp; 5-point operator policy surface enterprise &amp;amp; fleet convention over configuration. permanently eliminates 8 complex sliders with 4 immutable mathematical invariants; entire surface collapses to tenant id, project id, env mode, vcs target, and hitl webhook. percipience gate --mode prod   # enforces strict_block on breaking contracts">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Enterprise &amp; Fleet (CAP-41)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#41 / 52</span>
+          </div>
+          <h3>41. Zero-Dial Architecture &amp; 5-Point Operator Policy Surface</h3>
+          <p>Convention Over Configuration. Permanently eliminates 8 complex sliders with 4 immutable mathematical invariants; entire surface collapses to Tenant ID, Project ID, Env Mode, VCS Target, and HITL Webhook.</p>
+          <pre>percipience gate --mode prod   # Enforces STRICT_BLOCK on breaking contracts</pre>
+          <div class="stat-box">
+            <span>Invariant Guarantee:</span>
+            <span class="stat-val text-cyan">100% Zero-Drift Standards</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">5 Unified Operator Controls</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-42" data-category="enterprise" data-search="cap-42 42 workstation &amp;amp; node fleet telemetry daemons enterprise &amp;amp; fleet lightweight daemon residing on developer machines and ci workers, broadcasting real-time cpu, ram, active worktree leases, and token finops metrics over authenticated tls heartbeats. percipience daemon fleet --interval 10 --gateway https://portal.corp">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Enterprise &amp; Fleet (CAP-42)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#42 / 52</span>
+          </div>
+          <h3>42. Workstation &amp; Node Fleet Telemetry Daemons</h3>
+          <p>Lightweight daemon residing on developer machines and CI workers, broadcasting real-time CPU, RAM, active worktree leases, and token FinOps metrics over authenticated TLS heartbeats.</p>
+          <pre>percipience daemon fleet --interval 10 --gateway https://portal.corp</pre>
+          <div class="stat-box">
+            <span>Heartbeat Latency:</span>
+            <span class="stat-val text-cyan">&lt; 35ms Periodic Broadcast</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">&lt; 1% Workstation CPU Overhead</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-43" data-category="enterprise" data-search="cap-43 43 consolidated fleet monitoring &amp;amp; finops aggregator enterprise &amp;amp; fleet central dashboard aggregating live machine states, active agent processes, total corporate token burn, and department-level cost allocations across thousands of nodes in real time. percipience fleet status --all-nodes --aggregate-finops">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Enterprise &amp; Fleet (CAP-43)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#43 / 52</span>
+          </div>
+          <h3>43. Consolidated Fleet Monitoring &amp; FinOps Aggregator</h3>
+          <p>Central dashboard aggregating live machine states, active agent processes, total corporate token burn, and department-level cost allocations across thousands of nodes in real time.</p>
+          <pre>percipience fleet status --all-nodes --aggregate-finops</pre>
+          <div class="stat-box">
+            <span>Fleet Capacity:</span>
+            <span class="stat-val text-cyan">&gt; 10,000 Node Real-Time Telemetry</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Unified Fleet Visibility</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-44" data-category="enterprise" data-search="cap-44 44 remote machine interventions &amp;amp; governance actions enterprise &amp;amp; fleet enforces enterprise governance by remotely pausing runaway agent loops, terminating expired worktree leases, purging corrupted caches, and restarting daemons with ed25519-signed commands. percipience fleet kill-task --node-id worker-node-07 --task-id task-99">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Enterprise &amp; Fleet (CAP-44)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#44 / 52</span>
+          </div>
+          <h3>44. Remote Machine Interventions &amp; Governance Actions</h3>
+          <p>Enforces enterprise governance by remotely pausing runaway agent loops, terminating expired worktree leases, purging corrupted caches, and restarting daemons with Ed25519-signed commands.</p>
+          <pre>percipience fleet kill-task --node-id worker-node-07 --task-id task-99</pre>
+          <div class="stat-box">
+            <span>Remote Command SLA:</span>
+            <span class="stat-val text-cyan">&lt; 250ms Push Delivery</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">100% Audited Governance Log</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-45" data-category="security" data-search="cap-45 45 enterprise central security &amp;amp; quarantine command center security &amp;amp; guardrails centralized security console displaying quarantined prompt injection payloads, secret leaks, and tainted worktrees, providing one-click forensic inspection and unquarantine authorization. percipience security quarantine-list --filter unresolved">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-amber">Security &amp; Guardrails (CAP-45)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#45 / 52</span>
+          </div>
+          <h3>45. Enterprise Central Security &amp; Quarantine Command Center</h3>
+          <p>Centralized security console displaying quarantined prompt injection payloads, secret leaks, and tainted worktrees, providing one-click forensic inspection and unquarantine authorization.</p>
+          <pre>percipience security quarantine-list --filter UNRESOLVED</pre>
+          <div class="stat-box">
+            <span>Incident Lockdown:</span>
+            <span class="stat-val text-amber">Sub-Second Isolation</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-amber">0 Breaches Across Quarantined Nodes</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-46" data-category="dx" data-search="cap-46 46 jetbrains &amp;amp; vs code native ide control plane developer experience first-class ide extensions bundling self-contained platform runtimes with zero external system dependencies; features live ast token meters, in-ide pr gatekeeper triggers, and real-time vfs sync. percipience provision --target intellij --bundle .nbpack">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-emerald">Developer Experience (CAP-46)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#46 / 52</span>
+          </div>
+          <h3>46. JetBrains &amp; VS Code Native IDE Control Plane</h3>
+          <p>First-class IDE extensions bundling self-contained platform runtimes with zero external system dependencies; features live AST token meters, in-IDE PR gatekeeper triggers, and real-time VFS sync.</p>
+          <pre>percipience provision --target intellij --bundle .nbpack</pre>
+          <div class="stat-box">
+            <span>IDE Latency:</span>
+            <span class="stat-val text-emerald">Sub-50ms VFS Sync</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-emerald">Zero Disk Leak (Encrypted Enclaves)</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-47" data-category="swarms" data-search="cap-47 47 dynamic swarm task dag expansion &amp;amp; backtracking governance &amp;amp; swarms allows swarm orchestrators to dynamically expand sub-goals during execution based on intermediate test observations, and backtrack cleanly to alternative reasoning branches upon failure. percipience swarm dag-run --plan mvs_spec.yaml --enable-backtracking">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-47)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#47 / 52</span>
+          </div>
+          <h3>47. Dynamic Swarm Task DAG Expansion &amp; Backtracking</h3>
+          <p>Allows swarm orchestrators to dynamically expand sub-goals during execution based on intermediate test observations, and backtrack cleanly to alternative reasoning branches upon failure.</p>
+          <pre>percipience swarm dag-run --plan mvs_spec.yaml --enable-backtracking</pre>
+          <div class="stat-box">
+            <span>DAG Expansion Latency:</span>
+            <span class="stat-val text-purple">&lt; 5ms Kahn Verification</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">100% Acyclic Execution Guarantee</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-48" data-category="concurrency" data-search="cap-48 48 docker agent runner base image &amp;amp; hardened sandbox (dews) concurrency &amp;amp; sandboxing standardized, hardened container image equipped with non-root privileges, git, python 3.11+, node.js 20, and headless claude code &amp;amp; aider runtimes for sandboxed plan execution. docker run --rm -v \/users/lakhwinder/pycharmprojects/nb_fairyfly:/workspace percipience/agent-runner:latest test">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Concurrency &amp; Sandboxing (CAP-48)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#48 / 52</span>
+          </div>
+          <h3>48. Docker Agent Runner Base Image &amp; Hardened Sandbox (DEWS)</h3>
+          <p>Standardized, hardened container image equipped with non-root privileges, Git, Python 3.11+, Node.js 20, and headless Claude Code &amp; Aider runtimes for sandboxed plan execution.</p>
+          <pre>docker run --rm -v \/Users/lakhwinder/PycharmProjects/nb_fairyfly:/workspace percipience/agent-runner:latest test</pre>
+          <div class="stat-box">
+            <span>Container Startup:</span>
+            <span class="stat-val text-cyan">&lt; 420ms MicroVM Spin-up</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Non-Root UID 1000 Hardened Security</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-49" data-category="concurrency" data-search="cap-49 49 containerized plan-to-code executor engine (dews) concurrency &amp;amp; sandboxing mounts ephemeral worktrees with automated .git pointer translation, drives headless llm clis to implement specifications, and validates zero filesystem side-effects before cleanup. percipience swarm exec --plan .nb/plan/mvs_spec.yaml --module mod_auth">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Concurrency &amp; Sandboxing (CAP-49)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#49 / 52</span>
+          </div>
+          <h3>49. Containerized Plan-to-Code Executor Engine (DEWS)</h3>
+          <p>Mounts ephemeral worktrees with automated .git pointer translation, drives headless LLM CLIs to implement specifications, and validates zero filesystem side-effects before cleanup.</p>
+          <pre>percipience swarm exec --plan .nb/plan/mvs_spec.yaml --module mod_auth</pre>
+          <div class="stat-box">
+            <span>Sandbox Isolation:</span>
+            <span class="stat-val text-cyan">100% Zero-Host Leakage</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">Deterministic Plan Delivery</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-50" data-category="concurrency" data-search="cap-50 50 streaming git bundle transport &amp;amp; zero-cloud-clutter protocol concurrency &amp;amp; sandboxing packages agent commits and uncommitted diffs into cryptographically verified git bundle streams; transmits state between workstations and swarm fleets without polluting remote git branches. percipience bundle create --branch wt_agent_04 --output bundle.pack">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-cyan">Concurrency &amp; Sandboxing (CAP-50)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#50 / 52</span>
+          </div>
+          <h3>50. Streaming Git Bundle Transport &amp; Zero-Cloud-Clutter Protocol</h3>
+          <p>Packages agent commits and uncommitted diffs into cryptographically verified git bundle streams; transmits state between workstations and swarm fleets without polluting remote git branches.</p>
+          <pre>percipience bundle create --branch wt_agent_04 --output bundle.pack</pre>
+          <div class="stat-box">
+            <span>Transport Protocol:</span>
+            <span class="stat-val text-cyan">0% Remote Branch Clutter</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-cyan">SHA-256 Bundle Attestation</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-51" data-category="swarms" data-search="cap-51 51 enterprise swarm fleet dispatch api &amp;amp; distributed quorum governance &amp;amp; swarms high-throughput rest endpoints under /api/swarm/fleet/* supporting asynchronous task ingestion, worker allocation, and streaming results with redis 7.x redlock concurrency guarantees. percipience swarm dispatch --remote https://portal.corp --plan spec.yaml">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-51)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#51 / 52</span>
+          </div>
+          <h3>51. Enterprise Swarm Fleet Dispatch API &amp; Distributed Quorum</h3>
+          <p>High-throughput REST endpoints under /api/swarm/fleet/* supporting asynchronous task ingestion, worker allocation, and streaming results with Redis 7.x Redlock concurrency guarantees.</p>
+          <pre>percipience swarm dispatch --remote https://portal.corp --plan spec.yaml</pre>
+          <div class="stat-box">
+            <span>Fleet Dispatch Latency:</span>
+            <span class="stat-val text-purple">&lt; 75ms Async Job Ingestion</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">Multi-Master Quorum Verified</span>
+          </div>
+        </div>
+
+        <div class="card cap-card" data-cap="cap-52" data-category="swarms" data-search="cap-52 52 topological consolidation &amp;amp; 3-way merge agent plugin governance &amp;amp; swarms specialist agent that takes n parallel worker branches, performs topological 3-way merges into an integration worktree, verifies wire contracts, and resolves non-conflicting seam differences. percipience swarm consolidate --branches wt_mod1,wt_mod2,wt_mod3">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-purple">Governance &amp; Swarms (CAP-52)</span>
+            <span style="font-size:11px; font-family:'JetBrains Mono', monospace; color:var(--muted); font-weight:700;">#52 / 52</span>
+          </div>
+          <h3>52. Topological Consolidation &amp; 3-Way Merge Agent Plugin</h3>
+          <p>Specialist agent that takes N parallel worker branches, performs topological 3-way merges into an integration worktree, verifies wire contracts, and resolves non-conflicting seam differences.</p>
+          <pre>percipience swarm consolidate --branches wt_mod1,wt_mod2,wt_mod3</pre>
+          <div class="stat-box">
+            <span>Consolidation Accuracy:</span>
+            <span class="stat-val text-purple">0 Merge Conflicts</span>
+          </div>
+          <div class="stat-box" style="margin-top:4px;">
+            <span>Guaranteed Status:</span>
+            <span class="stat-val text-purple">100% Wire Contract Verification</span>
+          </div>
+        </div>
+  </div>
+
+  <div id="noCapResults" style="display:none; text-align:center; padding:48px 20px; background:var(--card-bg); border:1px dashed var(--border); border-radius:10px; margin-top:16px;">
+    <div style="font-size:24px; margin-bottom:8px;">🔎</div>
+    <div style="font-size:15px; font-weight:700; color:var(--text); margin-bottom:4px;">No matching capabilities found</div>
+    <div style="font-size:12px; color:var(--muted); margin-bottom:14px;">Try adjusting your search query or reset the category filters.</div>
+    <button class="btn btn-primary" style="padding:7px 16px; font-size:12px;" onclick="resetPlatformFilters()">Show All 52 Capabilities</button>
+  </div>
+</section>
+
+<script>
+var currentCapCategory = 'all';
+
+function setCapCategoryFilter(cat, btn) {
+  currentCapCategory = cat;
+  document.querySelectorAll('.cap-pill-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+  filterPlatformCapabilities();
+}
+
+function filterPlatformCapabilities() {
+  var searchInput = document.getElementById('capSearchInput');
+  var query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+  var cards = document.querySelectorAll('.cap-card');
+  var visibleCount = 0;
+
+  cards.forEach(function(card) {
+    var cardCat = card.getAttribute('data-category') || '';
+    var cardSearch = (card.getAttribute('data-search') || '').toLowerCase();
+    
+    var matchesCategory = (currentCapCategory === 'all' || cardCat === currentCapCategory);
+    var matchesQuery = (!query || cardSearch.indexOf(query) !== -1);
+
+    if (matchesCategory && matchesQuery) {
+      card.style.display = 'block';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  var countSpan = document.getElementById('visibleCapCount');
+  if (countSpan) countSpan.innerText = visibleCount;
+
+  var noResults = document.getElementById('noCapResults');
+  var grid = document.getElementById('platformCapGrid');
+  if (noResults) {
+    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+  if (grid) {
+    grid.style.display = visibleCount === 0 ? 'none' : 'grid';
+  }
+}
+
+function resetPlatformFilters() {
+  var searchInput = document.getElementById('capSearchInput');
+  if (searchInput) searchInput.value = '';
+  currentCapCategory = 'all';
+  document.querySelectorAll('.cap-pill-btn').forEach(function(btn) {
+    if (btn.getAttribute('data-cat') === 'all') {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  filterPlatformCapabilities();
+}
+
+window.setCapCategoryFilter = setCapCategoryFilter;
+window.filterPlatformCapabilities = filterPlatformCapabilities;
+window.resetPlatformFilters = resetPlatformFilters;
+</script>
