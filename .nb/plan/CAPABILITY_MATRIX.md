@@ -33,7 +33,6 @@
 - **Location**: [l1/intellij-pycharm-plugin](./l1/intellij-pycharm-plugin)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_AST_PARSE`, `OP_AST_PRUNE`
 - **Key Capabilities**:
   - JetBrains Platform SDK & ToolWindow Control Plane
   - Dynamic Tier-Aware Control Plane Action Button Matrix
@@ -47,7 +46,6 @@
 - **Location**: [l1/npx-installer](./l1/npx-installer)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_MERKLE_SEAL`, `OP_GATE_EVAL`
 - **Key Capabilities**:
   - Zero-Install Ephemeral PR Gatekeeper Execution
   - Single-Command Quad-Space Initialization (<3s)
@@ -59,7 +57,6 @@
 - **Location**: [l1/saas-portal-domain](./l1/saas-portal-domain)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`, `master_enterprise_ui_design_system`, `generic_multitenant_security_mesh`
-- **ISA Opcodes**: `OP_GUARD_RBAC`, `OP_GUARD_RLS`, `OP_FINOPS_METER`, `OP_FINOPS_LIMIT`, `OP_UI_RENDER`
 - **Key Capabilities**:
   - Modern Frontend & Corporate Web Systems (Next.js 14 App Router)
   - Multi-Tenant SaaS Portals & PostgreSQL Row-Level Security
@@ -72,7 +69,6 @@
 - **Location**: [l1/tiered-wheel-packaging](./l1/tiered-wheel-packaging)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_MERKLE_SEAL`, `OP_PKG_OBFUSCATE`
 - **Key Capabilities**:
   - Automated Multi-Tier Wheel Compilation (Free, Team, Business, Enterprise)
   - Build-Time Proprietary Engine Exclusion Boundaries
@@ -84,7 +80,6 @@
 - **Location**: [l1/vscode-plugin](./l1/vscode-plugin)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_AST_PARSE`, `OP_AST_PRUNE`
 - **Key Capabilities**:
   - VSCode Extension API & VSIX Packaging Architecture
   - Language Server Protocol (LSP 3.17) Client-Server Subsystem
@@ -96,7 +91,6 @@
 - **Location**: [l2/corp-site-saas-portal](./l2/corp-site-saas-portal)
 - **Layer**: `l2`
 - **Requires**: `master_parent_framework`, `play_3_enterprise_os`, `domain_saas_portal`
-- **ISA Opcodes**: `OP_GUARD_RLS`, `OP_FINOPS_METER`, `OP_UI_RENDER`
 - **Key Capabilities**:
   - Unified Enterprise Portal & Corporate Brand (Next.js 14)
   - Autonomous Multi-Tenant Onboarding (SSO / WorkOS / Clerk)
@@ -109,7 +103,6 @@
 - **Location**: [l2/enterprise-context-engineering-os](./l2/enterprise-context-engineering-os)
 - **Layer**: `l2`
 - **Requires**: `master_parent_framework`, `generic_multitenant_security_mesh`, `domain_tiered_wheel_packaging`
-- **ISA Opcodes**: `OP_DAG_EXEC`, `OP_SWARM_ELECT`, `OP_SWARM_HEARTBEAT`, `OP_PKG_OBFUSCATE`
 - **Key Capabilities**:
   - Zero-Drift Git Worktree Isolation
   - Automated 40-70% AST Token Compression
@@ -122,7 +115,6 @@
 - **Location**: [master/cloud-agnostic-infrastructure-substrate](./master/cloud-agnostic-infrastructure-substrate)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_MERKLE_INIT`, `OP_DAG_EXEC`
 - **Key Capabilities**:
   - target_platforms: ['openshift_onprem', 'gcp_gke_and_cloudrun', 'aws_eks_and_fargate', 'azure_aks_and_container_apps']
   - iac_framework: opentofu_terraform_agnostic_modules
@@ -139,7 +131,6 @@
 - **Location**: [master/enterprise-ui-design-system](./master/enterprise-ui-design-system)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_UI_RENDER`
 - **Key Capabilities**:
   - unified_design_tokens: True
   - universal_look_and_feel_system: True
@@ -158,7 +149,6 @@
 - **Location**: [master/parent-master-free-plan](./master/parent-master-free-plan)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_AST_PARSE`, `OP_AST_PRUNE`, `OP_AST_DIFF`, `OP_MERKLE_INIT`
 - **Key Capabilities**:
   - Single Canonical Gatekeeper Binary (.nb/bin/percipience)
   - Embedded Free Tier Plugin Assets & Startup Notification
@@ -170,7 +160,6 @@
 - **Location**: [master/parent-master-plan](./master/parent-master-plan)
 - **Layer**: `master`
 - **Requires**: *None (Root)*
-- **ISA Opcodes**: `OP_AST_PARSE`, `OP_AST_PRUNE`, `OP_AST_DIFF`, `OP_MERKLE_INIT`, `OP_MERKLE_SEAL`, `OP_MERKLE_VERIFY`, `OP_FINOPS_METER`, `OP_SWARM_ELECT`
 - **Key Capabilities**:
   - Autonomous Operations on MVS Inputs (CAP-01)
   - Context Poisoning Detection & Rollback (CAP-02)
@@ -185,7 +174,6 @@
 - **Location**: [master/plan-assessment](./master/plan-assessment)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_GATE_EVAL`, `OP_MERKLE_VERIFY`
 - **Key Capabilities**:
   - assessment_dimensions: 7
   - hard_gate_interlocks: 6
@@ -198,7 +186,6 @@
 - **Location**: [master/security-mesh](./master/security-mesh)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
-- **ISA Opcodes**: `OP_GUARD_RBAC`, `OP_GUARD_RLS`, `OP_DAG_BARRIER`
 - **Key Capabilities**:
   - Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh Core Engine & Runtime Governance
 
@@ -206,7 +193,6 @@
 - **Location**: [master/sequential-plan-orchestrator](./master/sequential-plan-orchestrator)
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`, `master_plan_assessment`
-- **ISA Opcodes**: `OP_DAG_ORDER`, `OP_DAG_EXEC`, `OP_DAG_BARRIER`
 - **Key Capabilities**:
   - sequential_topological_execution: True
   - token_budget_phased_gating: True
@@ -228,7 +214,6 @@
 - **Location**: [test](./test)
 - **Layer**: `test`
 - **Requires**: `master_parent_framework`, `play_3_enterprise_os`
-- **ISA Opcodes**: `OP_MERKLE_VERIFY`, `OP_GATE_EVAL`
 - **Key Capabilities**:
   - 18-Subsystem Test Pyramid
   - Pytest 8.4+ Allure Test Reporting

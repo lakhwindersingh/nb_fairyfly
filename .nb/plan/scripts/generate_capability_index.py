@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Automated Capability Matrix Generator.
-Extracts capabilities, maturity levels, ISA opcodes, and dependencies from all 15 plan manifests
+Extracts capabilities, maturity levels, and dependencies from all 15 plan manifests
 and compiles .nb/plan/CAPABILITY_MATRIX.md.
 """
 
@@ -70,7 +70,6 @@ def generate_capability_matrix():
         name = d.get("plan_name", pid)
         layer = d.get("layer", "master")
         caps = d.get("key_capabilities") or d.get("capabilities") or []
-        opcodes = d.get("isa_opcodes", [])
         deps = d.get("dependencies", {})
         reqs = deps.get("requires", []) if isinstance(deps, dict) else deps
 
@@ -79,7 +78,6 @@ def generate_capability_matrix():
             f"- **Location**: [{item['rel_dir']}](./{item['rel_dir']})",
             f"- **Layer**: `{layer}`",
             f"- **Requires**: {', '.join(f'`{r}`' for r in reqs) if reqs else '*None (Root)*'}",
-            f"- **ISA Opcodes**: {', '.join(f'`{op}`' for op in opcodes) if opcodes else '*None*'}",
             "- **Key Capabilities**:"
         ])
 

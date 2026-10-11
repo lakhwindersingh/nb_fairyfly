@@ -16,7 +16,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 ├── 📑 PLAN_INDEX.md                 ← YOU ARE HERE (Active Plan Catalog)
 ├── 📚 PLAN_GUIDE.md                 ← Human & Agentic Usage Guide
 ├── 📊 CAPABILITY_MATRIX.md          ← Master Capability Cross-Reference Index
-├── ⚙️ ISA_OPCODE_MAP.md             ← Quant-RISC ISA Opcode Mapping
 ├── 📐 PARITY_AUDIT_CHECKLIST.md     ← 6-Vector Semantic Parity Audit Guide
 ├── 🎯 master/                       ← Orchestration Layer (7 Plans)
 │   ├── parent-master-plan/          ← Parent Master Framework (CAP-01 - CAP-35)

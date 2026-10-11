@@ -26,7 +26,6 @@ All 15 active plans conform to Canonical Schema v3.0 (`.nb/plan/MANIFEST_SCHEMA.
 - **Maturity Lifecycle**: `stage` (`PLANNED`, `ACTIVE_DRAFT`, `IMPLEMENTATION_READY`, `COMPLETED`, `DEPRECATED`), `implementation_status`, `test_coverage`, `production_ready`.
 - **Semantic Parity Gate**: 6-vector composite score ($S_{SP} \ge 0.950$) covering AST, contract, behavior, handover, doc, and supply-chain parity.
 - **Acyclic Dependency Hierarchy**: `requires` and `enables` lists strictly validated via Kahn's algorithm (`.nb/plan/scripts/validate_dag.py`).
-- **ISA Opcode Mapping**: Quant-RISC instruction set opcodes (`.nb/plan/ISA_OPCODE_MAP.md`).
 - **Cryptographic File Tracking**: `file_versions` with SHA-256 digests and line counts for `concise.md`, `detailed.md`, and `README.md`.
 
 ---

@@ -116,10 +116,6 @@
       "type": "array",
       "items": { "type": "string" }
     },
-    "isa_opcodes": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
     "file_versions": {
       "type": "object",
       "required": ["concise", "detailed", "readme"],

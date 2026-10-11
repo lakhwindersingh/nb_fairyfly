@@ -18,9 +18,9 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 2. **Dangling Dependencies & Unverified Cycles**: Plans referenced nonexistent external plans (`quantlib-financial-app`, `options-advisor-rewrite-plan`, `l3/*`), and dependency lists were not programmatically validated.
 3. **Missing Validation Tooling**: Tooling referenced in historical notes (`validate_dag.py`, `validate.sh`, `verify_hashes.py`, `generate_capability_index.py`) did not physically exist on disk.
 4. **Missing Semantic Parity Declarations**: None of the plans included the mandated 6-vector `semantic_parity` block ($S_{SP} \ge 0.950$).
-5. **Missing Cross-Plan Indexes**: `CAPABILITY_MATRIX.md`, `ISA_OPCODE_MAP.md`, and `MANIFEST_SCHEMA.json` were absent.
+5. **Missing Cross-Plan Indexes**: `CAPABILITY_MATRIX.md` and `MANIFEST_SCHEMA.json` were absent.
 
-**Resolution**: All 15 plans have been migrated to the **Canonical MANIFEST.yaml Schema v3.0**, automated validation tooling has been implemented and executed, and all gates have passed.
+**Resolution**: All 15 plans have been migrated to the **Canonical MANIFEST.yaml Schema v3.0**, automated validation tooling has been implemented and executed, non-applicable virtual machine / ISA opcode references have been purged, and all gates have passed.
 
 ---
 
@@ -87,13 +87,15 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 - [x] Auto-generate `.nb/plan/CAPABILITY_MATRIX.md` across all 15 plans
 - [x] Integrate regeneration into `.nb/plan/scripts/validate.sh`
 
-### 6. Quant-RISC ISA Opcode Coverage Mapping [RESOLVED]
-**Issue**: Quant-RISC ISA opcodes were not mapped to implementing plans
+### 6. Elimination of Virtual Machine & ISA Opcode References [RESOLVED]
+**Clarification**: There is no virtual machine setup in this project; ISA opcode mappings do not apply.
 
 **Actions**:
-- [x] Create `.nb/plan/ISA_OPCODE_MAP.md` mapping 32 opcodes
-- [x] Add `isa_opcodes` array to all 15 plan manifests
-- [x] Link opcodes to AST engine, Merkle ledger, orchestration, security, and packaging plans
+- [x] Deleted `.nb/plan/ISA_OPCODE_MAP.md`
+- [x] Removed `isa_opcodes` array from all 15 plan manifests and template
+- [x] Removed `isa_opcodes` specification from `MANIFEST_SCHEMA.json`
+- [x] Removed opcode extraction from `generate_capability_index.py` and `CAPABILITY_MATRIX.md`
+- [x] Cleaned all references from `PLAN_INDEX.md` and `PLAN_GUIDE.md`
 
 ### 7. Maturity Stage Lifecycle Definition [RESOLVED]
 **Issue**: Maturity stages unclear and inconsistently applied across plans
@@ -145,6 +147,6 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 | :--- | :--- | :---: | :--- |
 | **`validate_dag.py`** | 15 Plans | ✅ **PASSED** | Acyclic Kahn's sort verified, 0 dangling references, 0 cycle nodes. |
 | **`verify_hashes.py`** | 46 Files | ✅ **PASSED** | 100% SHA-256 hash match, 0 mismatches, 0 missing. |
-| **`generate_capability_index.py`** | Matrix | ✅ **PASSED** | Generated `CAPABILITY_MATRIX.md` for all 15 plans. |
+| **`generate_capability_index.py`** | Matrix | ✅ **PASSED** | Generated `CAPABILITY_MATRIX.md` for all 15 plans without opcodes. |
 | **`validate.sh`** | All Gates | ✅ **PASSED** | End-to-end automated suite passed. |
 | **`pytest workplace/tests/`** | Tests | ✅ **PASSED** | 341/341 passed in 50.17s. |
