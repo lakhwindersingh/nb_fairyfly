@@ -217,6 +217,7 @@ window.showResourceSubtab = function(subtabId) {
   if (subtabId === 'res-reports' && typeof fetchPortalTokenSavings === 'function') fetchPortalTokenSavings();
   if (subtabId === 'res-observability' && typeof fetchOtelSpans === 'function') fetchOtelSpans();
   if (subtabId === 'res-swarm' && typeof loadSwarmFleetTelemetry === 'function') loadSwarmFleetTelemetry();
+  if (subtabId === 'res-pipelines' && typeof loadWorkflowsPipelineVisualizer === 'function') loadWorkflowsPipelineVisualizer();
 };
 
 // Main Tab Routing - hoisted and attached to window

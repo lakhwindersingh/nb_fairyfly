@@ -11,6 +11,14 @@ steps:
     contract_path: .nb/context/contracts/portal_openapi_spec.yaml
   enforce_merkle_seal: true
   executor: agent_contract_compatibility_checker
+  handled_contracts:
+  - contract_id: portal_openapi_spec
+    name: OpenAPI 3.1 REST API Specification Contract
+    path: .nb/context/contracts/portal_openapi_spec.yaml
+    type: openapi_spec
+    action: verify_api_contract
+    description: Validates REST route schemas, response codes, and request bodies for SaaS portal endpoints.
+
 - id: step_portal_frontend_scaffold
   name: Build Responsive React/Tailwind Frontend
   agent: agent_portal_developer
@@ -19,6 +27,20 @@ steps:
     theme_tokens: workplace/modules/mod_portal_marketing/config/tailwind.config.js
   enforce_merkle_seal: true
   executor: agent_portal_developer
+  handled_contracts:
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System Tokens Contract
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_theme_tokens
+    description: Ensures zero dark-grey tints in Corporate Light mode, 4.5:1 WCAG contrast, and zero mobile frame restrictions.
+  - contract_id: data_grid_contract
+    name: Interactive Data Grid & Table Schema Contract
+    path: .nb/context/contracts/data_grid_contract.json
+    type: json_schema
+    action: validate_grid_components
+    description: Validates responsive data table rendering, pagination, and sorting structures in the portal UI.
+
 - id: step_saas_backend_gateway
   name: Gateway & Stripe Webhook Integration
   agent: agent_saas_backend_developer
@@ -27,6 +49,20 @@ steps:
     webhook_contract: .nb/context/contracts/billing_webhook_contract.json
   enforce_merkle_seal: true
   executor: agent_saas_backend_developer
+  handled_contracts:
+  - contract_id: billing_webhook_contract
+    name: Billing Webhook & Event Schema Contract
+    path: .nb/context/contracts/billing_webhook_contract.json
+    type: json_schema
+    action: verify_webhook_signatures
+    description: Enforces HMAC SHA-256 signature verification and webhook event payloads for subscription lifecycle events.
+  - contract_id: billing_meter_contract
+    name: Subscription Entitlements & Metering Contract
+    path: .nb/context/contracts/billing_meter_contract.yaml
+    type: yaml_schema
+    action: verify_metering_limits
+    description: Enforces tenant seat quotas, token consumption limits, and tier feature gates.
+
 - id: step_saas_security_audit
   name: Multi-Tenant SOC 2 & RLS Security Audit
   agent: agent_enterprise_saas_portal_architect
@@ -34,3 +70,16 @@ steps:
     scope: workplace/modules/mod_portal_admin
   enforce_merkle_seal: true
   executor: agent_enterprise_saas_portal_architect
+  handled_contracts:
+  - contract_id: security_tenant_profile_contract
+    name: Multi-Tenant Profile & Isolation Contract
+    path: .nb/context/contracts/security_tenant_profile_contract.json
+    type: json_schema
+    action: verify_tenant_isolation
+    description: Verifies database row-level security (RLS) tenant isolation and JWT tenant claims.
+  - contract_id: security_rebac_policy_contract
+    name: Relationship-Based Access Control Policy Contract
+    path: .nb/context/contracts/security_rebac_policy_contract.json
+    type: json_schema
+    action: enforce_rebac_policies
+    description: Asserts role relationships and admin workspace boundaries before gateway deployment.

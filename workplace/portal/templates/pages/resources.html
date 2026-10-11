@@ -3,6 +3,7 @@
     <button class="res-subtab-btn active" data-res-btn="res-docs" onclick="showResourceSubtab('res-docs')">📖 Documentation</button>
     <button class="res-subtab-btn" data-res-btn="res-reports" onclick="showResourceSubtab('res-reports')">📄 Deep Reports</button>
     <button class="res-subtab-btn" data-res-btn="res-observability" onclick="showResourceSubtab('res-observability')">📡 Observability Hub</button>
+    <button class="res-subtab-btn" data-res-btn="res-pipelines" onclick="showResourceSubtab('res-pipelines')">🔄 Delivery Pipelines &amp; Contracts</button>
     <button class="res-subtab-btn" data-res-btn="res-swarm" onclick="showTab('swarm-fleet')">🐝 Swarm Fleet Telemetry</button>
   </div>
 
@@ -384,5 +385,82 @@ percipience rollback \
           </table>
         </div>
       </div>
+  </div>
+
+  <div id="pipelines" data-res-subtab="res-pipelines" class="res-subtab-pane" style="display:none;">
+    <div class="section-title">Visual Delivery Pipelines &amp; Stage Contract Governance</div>
+    <div class="section-desc">Interactive DAG workflow visualizer detailing stage execution progressions, assigned agent executors, and cryptographic contracts handled by each stage across all 7 autonomous delivery flows.</div>
+
+    <!-- PIPELINE SELECTOR AND SUMMARY CARD -->
+    <div class="card" style="margin-bottom:20px; padding:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">Select Delivery Flow</label>
+          <select id="pipelineSelect" class="input" style="min-width:380px; font-weight:600; padding:8px 12px; font-size:13px;" onchange="selectWorkflowPipeline(this.value)">
+            <!-- Options populated by loadWorkflowsPipelineVisualizer() -->
+          </select>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-secondary" onclick="loadWorkflowsPipelineVisualizer(true)" style="padding:6px 12px; font-size:12px;">
+            <span>🔄</span> Refresh Workflows
+          </button>
+        </div>
+      </div>
+
+      <div id="pipelineSummaryCard" style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:14px; margin-top:10px;">
+        <!-- Dynamic workflow metadata -->
+      </div>
+    </div>
+
+    <!-- VISUAL PIPELINE DAG PROGRESSION -->
+    <div class="card" style="margin-bottom:24px; padding:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:15px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+          <span>⚡</span> Stage Execution Progression &amp; Handled Contract Graph
+        </h3>
+        <span class="badge badge-cyan" id="pipelineStageCountBadge" style="font-size:11px;">Loading Stages...</span>
+      </div>
+      <div id="pipelineDagContainer" style="display:flex; gap:16px; overflow-x:auto; padding:12px 4px; align-items:stretch;">
+        <!-- Dynamic DAG nodes rendered here -->
+      </div>
+    </div>
+
+    <!-- DETAILED STAGES & HANDLED CONTRACTS TABLE -->
+    <div class="card" style="margin-bottom:24px; padding:20px;">
+      <h3 style="font-size:15px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+        <span>📜</span> Stage Handled Contracts Registry
+      </h3>
+      <div class="table-wrap" style="margin:0;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:20%;">Stage / Executor</th>
+              <th style="width:22%;">Handled Contract</th>
+              <th style="width:12%;">Contract Type</th>
+              <th style="width:14%;">Action / Gate</th>
+              <th style="width:24%;">Contract Role &amp; Description</th>
+              <th style="width:8%; text-align:center;">Schema</th>
+            </tr>
+          </thead>
+          <tbody id="pipelineStagesTbody">
+            <!-- Dynamic rows populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LIVE CONTRACT PREVIEW MODAL / DRAWER -->
+    <div id="contractPreviewDrawer" style="display:none; margin-top:20px;" class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+        <div>
+          <h3 style="font-size:15px; margin:0; display:flex; align-items:center; gap:8px;" id="contractDrawerTitle">
+            <span>📄</span> Contract Inspector: <code id="contractDrawerFileName"></code>
+          </h3>
+          <span style="font-size:12px; color:var(--text-secondary);" id="contractDrawerPath"></span>
+        </div>
+        <button class="btn btn-secondary" onclick="closeContractDrawer()" style="padding:4px 10px; font-size:12px;">✕ Close</button>
+      </div>
+      <pre id="contractDrawerContent" style="max-height:420px; overflow-y:auto; background:var(--bg-alt); padding:14px; border-radius:6px; font-size:12px; line-height:1.45;"></pre>
+    </div>
   </div>
 </section>

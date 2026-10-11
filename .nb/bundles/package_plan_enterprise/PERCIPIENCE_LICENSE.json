@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_f05076102d81",
+  "license_id": "lic_plan_enterprise_dbf074273027",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,7 +18,7 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-11T04:19:10.369295+00:00",
+  "issued_at": "2026-10-11T13:47:28.927127+00:00",
   "total_files": 156,
   "file_manifest": {
     "bin/percipience": "bfffe7c0b1bf2c20a4e1a7c004afc412d4f5b89704948016dffa4e4f665d8840",
@@ -167,16 +167,16 @@
     "agentic/custom/agents/security_auditor.yaml": "e55766d0649f32ae060a8e629f9c6990502b9b7b7d7da146617e830b01b53130",
     "agentic/custom/agents/test_finops_auditor.yaml": "932ad5142da7922995976f86797cfc6eada43cc3a63cd90d85859cb89dbdaade",
     "agentic/custom/agents/token_finops_auditor.yaml": "7893a4d1994007d4297ffbcca086e25263ece4b17731cb5a5125570de38502bf",
-    "agentic/custom/workflows/basic_autonomous_cicd.yaml": "4ba1c6481c772ddab92f2f68b479b0420002fcc1fc766c6b0bb5984ffd7c3d3d",
-    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "84a777049ab5680699d1bd046eb603c39c806e47d9b7c05b2586b9a76227196a",
-    "agentic/custom/workflows/enterprise_sdlc.yaml": "82a9764023a0696c69edacc7a4815f45b028d0c47da32a4f45d99d9dc719cdaa",
-    "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "278fed06367b6a5a54f584f0499ab26d64a44972810155c3b6f9ae87f676caa7",
-    "agentic/custom/workflows/iot_mobile_delivery_flow.yaml": "740728dbf0793a7df0e0f8ca6250a7944ce19f2c98d06436c0475fb3638f1135",
-    "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "925d6f332b28e0fe3a4e74e82542734fb7fd024b5a77e2031ceac596f91acfff",
-    "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "a0d91daecac1ffc56b6bfd4c26b6cf56b68fee0c36d2e6f97fb2dff6e727c871",
-    "workflows/basic_autonomous_cicd.yaml": "4ba1c6481c772ddab92f2f68b479b0420002fcc1fc766c6b0bb5984ffd7c3d3d",
+    "agentic/custom/workflows/basic_autonomous_cicd.yaml": "7b6ab57c8f627ee947c43c510f1a6cf5fb5271b3d1ff101137635357bd301d70",
+    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "2ed6a0d6ca79343faba4ba9dc39118f7da87243385acd28f716bf64cc0b18597",
+    "agentic/custom/workflows/enterprise_sdlc.yaml": "4e9c6f0d9481b30b1704991a366cdd0d4fc34bee37709fc1c0b4541d61a7fdf7",
+    "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "f353817e75864228bb21009b8d8ccb743ae6a1888fbce48adf6e0c3fab747ba4",
+    "agentic/custom/workflows/iot_mobile_delivery_flow.yaml": "14f466d00f4dbd9e489fa2ee5a7de8dfaab24efaa54f29ded23fe7082c2a95fe",
+    "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "2bd8453f19220b6be26dd7b88bb23303bef286c3439108342186a641154ed3d1",
+    "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "8c0fb8b5e57a8e5134c5e686d7fd6c50db0a5e7f4241119e54a4c20d26d48c14",
+    "workflows/basic_autonomous_cicd.yaml": "7b6ab57c8f627ee947c43c510f1a6cf5fb5271b3d1ff101137635357bd301d70",
     "plan/claude-context-engineering-parent-master-plan.md": "036a59cbf97c966e16a6913f86582766e5d54655ee4762c6c01694931f6e640c",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "a91a231c514b9c6be10b81eacad1a207069c3af4ebe67442865bb00b71609c44"
+  "signature_sha256": "cecc46fc400b1b9abaae4ab73c24ab6ce4f6e03ae8b9fc2fbf8d2d967544d250"
 }

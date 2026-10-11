@@ -2571,3 +2571,227 @@ window.addEventListener('themeChanged', function() {
   renderCorporatePerformanceChart();
   renderAdminWorkloadChart();
 });
+
+
+// ============================================================================
+// 4. DELIVERY PIPELINES & HANDLED CONTRACTS VISUALIZER
+// ============================================================================
+window.cachedWorkflows = [];
+
+window.loadWorkflowsPipelineVisualizer = async function(forceRefresh = false) {
+  try {
+    const select = document.getElementById('pipelineSelect');
+    if (!select) return;
+
+    if (!window.cachedWorkflows.length || forceRefresh) {
+      const res = await fetch('/api/observability/workflows');
+      if (!res.ok) throw new Error('Failed to load workflows: ' + res.status);
+      const data = await res.json();
+      window.cachedWorkflows = data.workflows || [];
+    }
+
+    const previousValue = select.value;
+    select.innerHTML = '';
+
+    window.cachedWorkflows.forEach(wf => {
+      const opt = document.createElement('option');
+      opt.value = wf.workflow_id;
+      const stepCount = (wf.steps || wf.stages || []).length;
+      opt.textContent = `${wf.name} (${stepCount} stages)`;
+      select.appendChild(opt);
+    });
+
+    if (previousValue && window.cachedWorkflows.some(w => w.workflow_id === previousValue)) {
+      select.value = previousValue;
+    } else if (select.options.length > 0) {
+      select.selectedIndex = 0;
+    }
+
+    if (select.value) {
+      window.selectWorkflowPipeline(select.value);
+    }
+  } catch (err) {
+    console.error('Error loading pipeline workflows:', err);
+    const dagContainer = document.getElementById('pipelineDagContainer');
+    if (dagContainer) {
+      dagContainer.innerHTML = `<div style="color:var(--rose); padding:12px;">Failed to load workflows: ${err.message}</div>`;
+    }
+  }
+};
+
+window.selectWorkflowPipeline = function(workflowId) {
+  if (!window.cachedWorkflows || !window.cachedWorkflows.length) return;
+  const wf = window.cachedWorkflows.find(w => w.workflow_id === workflowId) || window.cachedWorkflows[0];
+  if (!wf) return;
+
+  const steps = wf.steps || wf.stages || [];
+
+  // 1. Calculate statistics
+  let totalContracts = 0;
+  steps.forEach(s => {
+    totalContracts += (s.handled_contracts || []).length;
+  });
+
+  // 2. Render Summary Card
+  const summaryCard = document.getElementById('pipelineSummaryCard');
+  if (summaryCard) {
+    summaryCard.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <h4 style="margin:0; font-size:15px; font-weight:700;">${wf.name}</h4>
+            <span class="badge badge-cyan">v${wf.version || '1.0.0'}</span>
+          </div>
+          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">${wf.description || 'Autonomous delivery pipeline orchestrator.'}</div>
+          <div style="font-size:12px; color:var(--text);">
+            <b>Source:</b> <code style="font-size:11px;">${wf.source || '.nb/agentic/custom/workflows/' + wf.workflow_id + '.yaml'}</code>
+            &bull; <b>Trigger:</b> <span class="text-cyan">${typeof wf.trigger === 'string' ? wf.trigger : (wf.trigger?.type || 'Autonomous Event')}</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <div style="text-align:center; min-width:70px;">
+            <div style="font-size:20px; font-weight:800; color:var(--cyan);">${steps.length}</div>
+            <div style="font-size:10px; color:var(--text-secondary); text-transform:uppercase;">Stages</div>
+          </div>
+          <div style="text-align:center; min-width:70px;">
+            <div style="font-size:20px; font-weight:800; color:var(--emerald);">${totalContracts}</div>
+            <div style="font-size:10px; color:var(--text-secondary); text-transform:uppercase;">Contracts Handled</div>
+          </div>
+          <div style="text-align:center; min-width:70px;">
+            <div style="font-size:20px; font-weight:800; color:var(--purple);">SHA-256</div>
+            <div style="font-size:10px; color:var(--text-secondary); text-transform:uppercase;">Merkle Sealed</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. Update Badge
+  const countBadge = document.getElementById('pipelineStageCountBadge');
+  if (countBadge) {
+    countBadge.textContent = `${steps.length} Stages Active • ${totalContracts} Handled Contracts`;
+  }
+
+  // 4. Render Visual DAG Container
+  const dagContainer = document.getElementById('pipelineDagContainer');
+  if (dagContainer) {
+    let dagHtml = '';
+    steps.forEach((st, idx) => {
+      const isLast = idx === steps.length - 1;
+      const contracts = st.handled_contracts || [];
+      const contractsPills = contracts.map(c => `
+        <span onclick="inspectPipelineContract('${c.path || ''}', '${c.name || c.contract_id || ''}')" title="Click to inspect contract schema: ${c.path || ''}" style="display:inline-block; margin:2px; padding:3px 7px; background:rgba(6, 182, 212, 0.12); border:1px solid rgba(6, 182, 212, 0.3); border-radius:4px; font-size:11px; cursor:pointer; font-family:var(--font-mono); color:var(--cyan); transition:all 0.15s;">
+          📄 ${c.contract_id || (c.path ? c.path.split('/').pop() : 'contract')}
+        </span>
+      `).join('');
+
+      dagHtml += `
+        <div style="flex:1; min-width:240px; max-width:320px; background:var(--bg-card); border:1px solid var(--border); border-top:3px solid var(--cyan); border-radius:8px; padding:14px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--text-secondary); letter-spacing:0.5px;">Stage ${idx + 1} of ${steps.length}</span>
+              <span class="status-pill status-active" style="font-size:10px;">HEALTHY</span>
+            </div>
+            <div style="font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.3;">${st.name}</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-bottom:8px;">
+              <b>Executor:</b> <code style="font-size:11px;">${st.executor || st.agent || 'platform.executor'}</code>
+            </div>
+            ${st.depends_on && st.depends_on.length ? `<div style="font-size:10px; color:var(--text-secondary); margin-bottom:8px;"><b>Depends:</b> ${st.depends_on.join(', ')}</div>` : ''}
+          </div>
+          <div style="margin-top:10px; border-top:1px dashed var(--border); padding-top:8px;">
+            <div style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:4px;">Handled Contracts (${contracts.length}):</div>
+            <div style="display:flex; flex-wrap:wrap; gap:2px;">
+              ${contractsPills || '<span style="font-size:11px; color:var(--text-secondary); font-style:italic;">No external wire contracts</span>'}
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (!isLast) {
+        dagHtml += `
+          <div style="display:flex; align-items:center; justify-content:center; color:var(--cyan); font-size:22px; font-weight:800; opacity:0.75; padding:0 4px;">
+            ➔
+          </div>
+        `;
+      }
+    });
+    dagContainer.innerHTML = dagHtml;
+  }
+
+  // 5. Render Detailed Stages Table
+  const tbody = document.getElementById('pipelineStagesTbody');
+  if (tbody) {
+    let rowsHtml = '';
+    steps.forEach((st, sIdx) => {
+      const contracts = st.handled_contracts || [];
+      if (!contracts.length) {
+        rowsHtml += `
+          <tr>
+            <td>
+              <div style="font-weight:700;">${st.name}</div>
+              <code style="font-size:10px;">${st.id || st.step_id}</code><br>
+              <span style="font-size:11px; color:var(--text-secondary);">${st.executor || st.agent || 'platform.executor'}</span>
+            </td>
+            <td colspan="5" style="color:var(--text-secondary); font-style:italic;">Internal platform maintenance stage (no external contract schema registered).</td>
+          </tr>
+        `;
+      } else {
+        contracts.forEach((c, cIdx) => {
+          const typeBadgeClass = c.type === 'openapi_spec' ? 'badge-purple' : (c.type === 'yaml_schema' ? 'badge-cyan' : 'badge-emerald');
+          rowsHtml += `
+            <tr>
+              ${cIdx === 0 ? `<td rowspan="${contracts.length}" style="vertical-align:top; border-right:1px solid var(--border);">
+                <div style="font-weight:700; font-size:13px;">${st.name}</div>
+                <code style="font-size:11px;">${st.id || st.step_id}</code><br>
+                <span style="font-size:11px; color:var(--text-secondary); font-weight:600;">Executor:</span> <code style="font-size:11px;">${st.executor || st.agent || 'platform.executor'}</code>
+              </td>` : ''}
+              <td>
+                <div style="font-weight:700; color:var(--text);">${c.name || c.contract_id}</div>
+                <code style="font-size:10px; color:var(--text-secondary);">${c.path || ''}</code>
+              </td>
+              <td><span class="badge ${typeBadgeClass}" style="font-size:10px;">${c.type || 'schema'}</span></td>
+              <td><code style="font-size:11px; color:var(--cyan); font-weight:700;">${c.action || 'validate'}</code></td>
+              <td style="font-size:12px; line-height:1.4;">${c.description || 'Stage invariant contract.'}</td>
+              <td style="text-align:center;">
+                <button class="btn btn-secondary" style="padding:3px 8px; font-size:11px;" onclick="inspectPipelineContract('${c.path || ''}', '${c.name || c.contract_id || ''}')">
+                  👁 View
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+    });
+    tbody.innerHTML = rowsHtml || '<tr><td colspan="6" style="text-align:center; padding:16px;">No stages registered for this pipeline.</td></tr>';
+  }
+};
+
+window.inspectPipelineContract = async function(contractPath, contractName) {
+  const drawer = document.getElementById('contractPreviewDrawer');
+  const fileNameElem = document.getElementById('contractDrawerFileName');
+  const pathElem = document.getElementById('contractDrawerPath');
+  const contentElem = document.getElementById('contractDrawerContent');
+
+  if (!drawer || !contentElem) return;
+
+  drawer.style.display = 'block';
+  drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  fileNameElem.textContent = contractPath ? contractPath.split('/').pop() : (contractName || 'contract');
+  pathElem.textContent = contractPath ? `Repository Location: ${contractPath}` : '';
+  contentElem.textContent = 'Loading contract schema content...';
+
+  try {
+    const res = await fetch(`/api/observability/contract-detail?path=${encodeURIComponent(contractPath)}`);
+    if (!res.ok) throw new Error(`Contract fetch failed (HTTP ${res.status})`);
+    const data = await res.json();
+    contentElem.textContent = data.content || 'Contract file is empty.';
+  } catch (err) {
+    contentElem.textContent = `Error loading contract: ${err.message}`;
+  }
+};
+
+window.closeContractDrawer = function() {
+  const drawer = document.getElementById('contractPreviewDrawer');
+  if (drawer) drawer.style.display = 'none';
+};

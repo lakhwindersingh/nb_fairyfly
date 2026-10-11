@@ -149,6 +149,93 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
                 return CLIENT_SESSIONS[token]
         return None
 
+    def _load_all_workflows(self) -> List[Dict[str, Any]]:
+        workflows = []
+        custom_dir = REPO_ROOT / ".nb" / "agentic" / "custom" / "workflows"
+        flow_files = [
+            ("basic_autonomous_cicd.yaml", "Free Community Autonomous CI/CD Pipeline", "Free Plan / Pre-Commit / Local CLI"),
+            ("commercial_packaging_provisioning_flow.yaml", "Commercial Packaging & Provisioning Delivery Flow", "Billing Event / Tier Packaging Request"),
+            ("enterprise_sdlc.yaml", "Enterprise PR Gate with Infosec & FinOps Audit", "Enterprise Branch Merge Event"),
+            ("intellij_pycharm_plugin_delivery_flow.yaml", "IntelliJ IDEA & PyCharm Plugin Delivery Flow", "JetBrains Platform Release Event"),
+            ("iot_mobile_delivery_flow.yaml", "Connected IoT & Mobile Delivery Flow", "Embedded Firmware & KMP Release"),
+            ("saas_portal_delivery_flow.yaml", "Enterprise SaaS Portal Multi-Module Delivery Flow", "Portal Webhook / Production Gate"),
+            ("vscode_plugin_delivery_flow.yaml", "VS Code Extension & LSP Delivery Flow", "VSIX Publish & LSP Verification")
+        ]
+        
+        for fname, default_name, default_trigger in flow_files:
+            fpath = custom_dir / fname
+            if fpath.exists():
+                try:
+                    data = yaml.safe_load(fpath.read_text(encoding="utf-8")) or {}
+                    wf_id = data.get("workflow_id", fname.replace(".yaml", ""))
+                    wf_name = data.get("name", default_name)
+                    wf_desc = data.get("description", "")
+                    wf_trigger = data.get("trigger", default_trigger)
+                    if isinstance(wf_trigger, dict):
+                        wf_trigger = wf_trigger.get("type", default_trigger)
+                    
+                    steps = data.get("steps") or data.get("stages") or []
+                    sanitized_steps = []
+                    for idx, s in enumerate(steps, 1):
+                        step_id = s.get("id") or s.get("step_id") or f"step_{idx}"
+                        step_name = s.get("name") or step_id
+                        executor = s.get("executor") or s.get("agent") or "platform.executor"
+                        handled_contracts = s.get("handled_contracts", [])
+                        sanitized_steps.append({
+                            "id": step_id,
+                            "step_id": step_id,
+                            "name": step_name,
+                            "executor": executor,
+                            "agent": s.get("agent"),
+                            "action": s.get("action", ""),
+                            "description": s.get("description", ""),
+                            "depends_on": s.get("depends_on", []),
+                            "tasks": s.get("tasks", []),
+                            "handled_contracts": handled_contracts
+                        })
+                    
+                    workflows.append({
+                        "workflow_id": wf_id,
+                        "name": wf_name,
+                        "description": wf_desc,
+                        "source": f".nb/agentic/custom/workflows/{fname}",
+                        "trigger": wf_trigger,
+                        "version": data.get("version", "1.0.0"),
+                        "steps": sanitized_steps,
+                        "stages": sanitized_steps
+                    })
+                except Exception:
+                    pass
+        
+        # Standard workflows for backwards compatibility
+        workflows.append({
+            "workflow_id": "wf_pr_gatekeeper",
+            "name": "PR Gatekeeper & Token Metering Pipeline",
+            "source": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+            "trigger": "GitHub PR / GitLab Merge Request / Local Pre-Commit",
+            "steps": [
+                {"id": "step_ast_prune", "name": "[1/6] Content-Addressable AST Pruning & Token Metering", "executor": "platform.ast_pruner", "handled_contracts": [{"contract_id": "psi_ast_bridge_contract", "name": "PSI AST Bridge Contract", "path": ".nb/context/contracts/psi_ast_bridge_contract.yaml", "type": "yaml_schema", "action": "prune_ast", "description": "Strips AST function bodies for token compression"}]},
+                {"id": "step_dependency_cve_sentinel", "name": "[2/6] Supply-Chain Security & CVE Sentinel", "executor": "agent_dependency_cve_sentinel", "handled_contracts": [{"contract_id": "sandbox_permission_contract", "name": "Sandbox Permission Contract", "path": ".nb/context/contracts/sandbox_permission_contract.json", "type": "json_schema", "action": "audit_cve", "description": "Scans dependency vulnerabilities"}]},
+                {"id": "step_contract_compat", "name": "[3/6] Wire Contracts & SemVer Compatibility", "executor": "agent_contract_compatibility_checker", "handled_contracts": [{"contract_id": "portal_openapi_spec", "name": "OpenAPI Spec Contract", "path": ".nb/context/contracts/portal_openapi_spec.yaml", "type": "openapi_spec", "action": "check_semver", "description": "Wire contracts & SemVer compatibility"}]},
+                {"id": "step_flaky_test_detector", "name": "[4/6] Test Stability & Flaky Quarantine Guard", "executor": "agent_flaky_test_detector", "handled_contracts": [{"contract_id": "hierarchical_rule_contract", "name": "Hierarchical Rule Contract", "path": ".nb/context/contracts/hierarchical_rule_contract.json", "type": "json_schema", "action": "quarantine", "description": "Flaky test quarantine guard"}]},
+                {"id": "step_bounded_tdd", "name": "[5/6] Bounded TDD Validation & Doc Drift Sync", "executor": "agent_doc_drift_synchronizer", "handled_contracts": [{"contract_id": "observability_contract", "name": "Observability Contract", "path": ".nb/context/contracts/observability_contract.yaml", "type": "yaml_schema", "action": "verify_sync", "description": "Documentation drift synchronization"}]},
+                {"id": "step_merkle_seal", "name": "[6/6] Atomic Merkle Sealing & Epoch Checkpointing", "executor": "platform.merkle_ledger", "action": "SEAL_BLOCK", "handled_contracts": [{"contract_id": "security_four_eyes_contract", "name": "Four-Eyes Seal Contract", "path": ".nb/context/contracts/security_four_eyes_contract.json", "type": "json_schema", "action": "seal_block", "description": "Atomic Merkle sealing & epoch checkpointing"}]}
+            ]
+        })
+        workflows.append({
+            "workflow_id": "wf_derivation_pipeline",
+            "name": "Quad-Space Plan-to-Code Derivation Pipeline",
+            "source": ".nb/agentic/workflows/derivation_pipeline.yaml",
+            "trigger": "Plan Ingestion Event (.nbpack or Markdown Plan)",
+            "steps": [
+                {"id": "step_hydrate_plan", "name": "In-Memory Enclave Hydration", "executor": "platform.nbpack_envelope", "handled_contracts": [{"contract_id": "commercial_provisioning_contract", "name": "Commercial Provisioning Contract", "path": ".nb/context/contracts/commercial_provisioning_contract.yaml", "type": "yaml_schema", "action": "hydrate", "description": "In-memory enclave hydration"}]},
+                {"id": "step_scaffold_spaces", "name": "Quad-Space Directory Scaffolding", "executor": "platform.bootstrapper", "handled_contracts": [{"contract_id": "hierarchical_rule_contract", "name": "Hierarchical Rule Contract", "path": ".nb/context/contracts/hierarchical_rule_contract.json", "type": "json_schema", "action": "scaffold", "description": "Quad-space directory scaffolding"}]},
+                {"id": "step_derive_contracts", "name": "Contract Schema Synthesis", "executor": "agent_architect", "handled_contracts": [{"contract_id": "portal_openapi_spec", "name": "OpenAPI Spec Contract", "path": ".nb/context/contracts/portal_openapi_spec.yaml", "type": "openapi_spec", "action": "synthesize", "description": "Contract schema synthesis"}]},
+                {"id": "step_genesis_seal", "name": "Genesis Merkle Root Sealing", "executor": "platform.merkle_ledger", "handled_contracts": [{"contract_id": "security_four_eyes_contract", "name": "Four-Eyes Seal Contract", "path": ".nb/context/contracts/security_four_eyes_contract.json", "type": "json_schema", "action": "seal_root", "description": "Genesis Merkle root sealing"}]}
+            ]
+        })
+        return workflows
+
     def _read_json_body(self) -> dict:
         if hasattr(self, "_cached_json_body"):
             return self._cached_json_body
@@ -711,48 +798,38 @@ class PortalRequestHandler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/observability/workflows":
-            workflows = [
-                {
-                    "workflow_id": "wf_pr_gatekeeper",
-                    "name": "PR Gatekeeper & Token Metering Pipeline",
-                    "source": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-                    "trigger": "GitHub PR / GitLab Merge Request / Local Pre-Commit",
-                    "steps": [
-                        {"id": "step_ast_prune", "name": "[1/6] Content-Addressable AST Pruning & Token Metering", "executor": "platform.ast_pruner"},
-                        {"id": "step_dependency_cve_sentinel", "name": "[2/6] Supply-Chain Security & CVE Sentinel", "executor": "agent_dependency_cve_sentinel"},
-                        {"id": "step_contract_compat", "name": "[3/6] Wire Contracts & SemVer Compatibility", "executor": "agent_contract_compatibility_checker"},
-                        {"id": "step_flaky_test_detector", "name": "[4/6] Test Stability & Flaky Quarantine Guard", "executor": "agent_flaky_test_detector"},
-                        {"id": "step_bounded_tdd", "name": "[5/6] Bounded TDD Validation & Doc Drift Sync", "executor": "agent_doc_drift_synchronizer"},
-                        {"id": "step_merkle_seal", "name": "[6/6] Atomic Merkle Sealing & Epoch Checkpointing", "executor": "platform.merkle_ledger", "action": "SEAL_BLOCK"}
-                    ]
-                },
-                {
-                    "workflow_id": "wf_enterprise_pr_gate",
-                    "name": "Enterprise PR Gate with Infosec & FinOps Audit",
-                    "source": ".nb/agentic/custom/workflows/enterprise_sdlc.yaml",
-                    "trigger": "Enterprise Branch Merge Event",
-                    "steps": [
-                        {"id": "ast_prune", "name": "Structural AST Token Pruner", "executor": "platform.ast_pruner"},
-                        {"id": "token_savings_audit", "name": "Token FinOps Audit", "executor": "agent_token_finops_auditor"},
-                        {"id": "custom_security_audit", "name": "Infosec & Banking Security Audit", "executor": "agent_security_auditor"},
-                        {"id": "contract_verification", "name": "Cross-Module Schema Verification", "executor": "platform.contract_verifier"},
-                        {"id": "merkle_seal", "name": "Merkle State DAG Sealer", "executor": "platform.merkle_ledger", "action": "SEAL_BLOCK"}
-                    ]
-                },
-                {
-                    "workflow_id": "wf_derivation_pipeline",
-                    "name": "Quad-Space Plan-to-Code Derivation Pipeline",
-                    "source": ".nb/agentic/workflows/derivation_pipeline.yaml",
-                    "trigger": "Plan Ingestion Event (.nbpack or Markdown Plan)",
-                    "steps": [
-                        {"id": "step_hydrate_plan", "name": "In-Memory Enclave Hydration", "executor": "platform.nbpack_envelope"},
-                        {"id": "step_scaffold_spaces", "name": "Quad-Space Directory Scaffolding", "executor": "platform.bootstrapper"},
-                        {"id": "step_derive_contracts", "name": "Contract Schema Synthesis", "executor": "agent_architect"},
-                        {"id": "step_genesis_seal", "name": "Genesis Merkle Root Sealing", "executor": "platform.merkle_ledger"}
-                    ]
-                }
-            ]
+            workflows = self._load_all_workflows()
             self._send_json({"total_workflows": len(workflows), "workflows": workflows})
+            return
+
+        if parsed.path == "/api/observability/contract-detail":
+            qs = parse_qs(parsed.query)
+            cpath_raw = qs.get("path", [""])[0] or qs.get("file", [""])[0]
+            cid_raw = qs.get("contract_id", [""])[0]
+            contracts_dir = REPO_ROOT / ".nb" / "context" / "contracts"
+            target_file = None
+            if cpath_raw:
+                candidate = (REPO_ROOT / cpath_raw.lstrip("/")).resolve()
+                if candidate.exists() and (contracts_dir in candidate.parents or candidate.parent == contracts_dir):
+                    target_file = candidate
+            elif cid_raw:
+                for ext in [".yaml", ".json", ".yml"]:
+                    candidate = contracts_dir / f"{cid_raw}{ext}"
+                    if candidate.exists():
+                        target_file = candidate
+                        break
+            if target_file and target_file.exists():
+                content_text = target_file.read_text(encoding="utf-8")
+                self._send_json({
+                    "status": "OK",
+                    "file_name": target_file.name,
+                    "relative_path": str(target_file.relative_to(REPO_ROOT)),
+                    "size_bytes": target_file.stat().st_size,
+                    "content": content_text,
+                    "format": "yaml" if target_file.suffix in (".yaml", ".yml") else "json"
+                })
+            else:
+                self._send_json({"status": "NOT_FOUND", "error": f"Contract not found for path='{cpath_raw}' id='{cid_raw}'"}, status=404)
             return
 
         if parsed.path == "/api/observability/hooks":
