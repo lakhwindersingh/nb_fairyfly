@@ -623,3 +623,18 @@ When `WorkspaceBootstrapper.kt` initializes any workspace (or when `package_plug
    - The token savings are logged to `.nb/context/ledger/token_savings_ledger.yaml` with gross USD cost avoidance metrics.
 3. **Multi-Bundle Uniformity**:
    - Regardless of whether the user installs the **Free Community Edition** or the **Enterprise Dedicated Edition**, `.claude/mcp.json` and `.claude/settings.json` are automatically provisioned and kept in sync.
+
+### 7.5. Visual Delivery Pipelines & Stage Handled Contracts Governance
+
+1. **ToolWindow Visual Inspector (`createAgentsAndFlowsPanel`)**:
+   - The IntelliJ ToolWindow provides an interactive multi-stage visual DAG inspector presenting each stage's execution order, assigned agent/executor, dependencies, and specific wire contracts handled.
+2. **Comprehensive 7-Flow Coverage**:
+   - `basic_autonomous_cicd.yaml`: Free Community Autonomous CI/CD Pipeline (5 stages, 7 handled contracts).
+   - `commercial_packaging_provisioning_flow.yaml`: Commercial Packaging, Multi-IDE Provisioning & Tier Permissions Flow (5 stages, 7 handled contracts).
+   - `enterprise_sdlc.yaml`: Enterprise PR Gate with Infosec & FinOps Audit (5 stages, 7 handled contracts).
+   - `intellij_pycharm_plugin_delivery_flow.yaml`: IntelliJ IDEA & PyCharm Plugin Delivery Flow (5 stages, 8 handled contracts).
+   - `iot_mobile_delivery_flow.yaml`: Connected IoT & Mobile Delivery Flow (3 stages, 5 handled contracts).
+   - `saas_portal_delivery_flow.yaml`: Enterprise SaaS Portal Multi-Module Delivery Flow (4 stages, 7 handled contracts).
+   - `vscode_plugin_delivery_flow.yaml`: Visual Studio Code Extension Delivery Flow (4 stages, 7 handled contracts).
+3. **Stage-to-Contract Traceability**:
+   - Every stage explicitly binds handled contracts with relative repository paths (`.nb/context/contracts/*`), schema formats (`yaml_schema`, `json_schema`, `openapi_spec`), verification actions, and invariant descriptions.

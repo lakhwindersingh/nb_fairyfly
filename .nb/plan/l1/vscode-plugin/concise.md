@@ -85,3 +85,8 @@ python workplace/modules/mod_vscode_extension/package_extension.py --tier all
 # Apply layer bundle
 ./.nb/bin/percipience layer apply --pack .nb/bundles/vscode_plugin_domain.nbpack --in-memory-only
 ```
+
+## 4. Visual Delivery Pipelines & Stage Handled Contracts Governance
+
+- **Hierarchical Tree View**: `WorkflowTreeProvider.ts` renders all 7 delivery pipelines, expanding into stages and concrete handled wire contracts (`.nb/context/contracts/*`) with click-to-open contract file navigation.
+- **Webview Pipeline Inspector**: `DashboardPanel.ts` provides visual DAG workflow cards detailing stage order, executors, and handled contract badges.

@@ -12,22 +12,22 @@ file_versions:
   concise:
     path: concise.md
     version: 3.1.0
-    last_modified: '2026-10-09'
-    content_hash: b583337dcd8fa26c583007b08e6d7ba5dc3430a87474da71b78f281c0abac9d3
-    line_count: 75
+    last_modified: '2026-10-11'
+    content_hash: 3238bbaa94acc675172a64786fe6fa1fa2e727dc5945591c8c3e810a17ac5aaf
+    line_count: 82
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 3.1.0
-    last_modified: '2026-10-09'
-    content_hash: 3bd14a346cc5a9530b5ba74c1d3eacb133e75ddd383fed78f1893cd66fe061a7
-    line_count: 169
+    last_modified: '2026-10-11'
+    content_hash: 720cfb10d0b9d194e61da2a3345d967adf1314d2b7e281b3115c73a36be3ac41
+    line_count: 176
     primary_purpose: Extended implementation guide with web architecture, multi-module
       layout, commercial packager provisioner, and billing
   readme:
     path: README.md
     version: 3.0.0
-    last_modified: '2026-10-09'
+    last_modified: '2026-10-11'
     content_hash: c85615e7612a8c637f04d7a444ad2abdd45f27994ba054633ab28a0a3485c2f2
     line_count: 28
     primary_purpose: Quick reference and navigation

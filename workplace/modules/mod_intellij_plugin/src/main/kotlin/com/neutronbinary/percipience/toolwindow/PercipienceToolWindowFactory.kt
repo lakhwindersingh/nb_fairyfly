@@ -737,36 +737,319 @@ class PercipienceToolWindowFactory : ToolWindowFactory {
         val isDark = UIUtil.isUnderDarcula()
         val metrics = WorkspaceLedgerReader.readWorkspaceMetrics(project.basePath)
         val tierInfo = metrics.tierInfo
+        val borderColor = if (isDark) "#334155" else "#cbd5e1"
+        val dagBg = if (isDark) "#0f172a" else "#f1f5f9"
 
         val sb = StringBuilder()
         sb.append("<html><head>").append(getThemeCss(isDark)).append("</head><body>")
-        sb.append("<h2>🤖 Specialist Agents &amp; Delivery Flows</h2>")
-        sb.append("<p>Pre-configured agents and workflows active for <b>${tierInfo.tierName}</b>:</p>")
+        sb.append("<h2>🔄 Visual Delivery Pipelines &amp; Stage Contract Governance</h2>")
+        sb.append("<p>Interactive multi-stage DAG workflow visualizer detailing stage execution progressions, assigned agent executors, and cryptographic contracts handled across all 7 autonomous delivery flows. Active Tier: <b>${tierInfo.tierName}</b>.</p>")
 
-        sb.append("<h3>Active Specialist Agents</h3>")
-        sb.append("<ul>")
-        sb.append("<li><code>agent_psi_ast_bridge_specialist</code> - Fast AST skeletonization</li>")
-        sb.append("<li><code>agent_jetbrains_plugin_architect</code> - Plugin structure and threading</li>")
-        sb.append("<li><code>agent_autonomous_healer</code> - Bounded TDD auto-healing</li>")
-        sb.append("<li><code>agent_merkle_ledger</code> - Cryptographic state blocks</li>")
-        if (tierInfo.canCreateCustomAgents) {
-            sb.append("<li><code>agent_commercial_packager_provisioner</code> - Tier packaging and license provisioning [Team+]</li>")
-        }
-        if (tierInfo.canUseSwarmOrchestrator) {
-            sb.append("<li><code>agent_enterprise_saas_portal_architect</code> - Full swarm orchestration [Enterprise]</li>")
-        }
-        sb.append("</ul>")
+        // Helper lambda for rendering a pipeline block
+        fun renderPipelineSection(
+            title: String,
+            wfFile: String,
+            desc: String,
+            trigger: String,
+            stagesFlow: String,
+            stagesTableHtml: String
+        ) {
+            sb.append("<hr style='border:0; border-top:1px solid $borderColor; margin:14px 0;'>")
+            sb.append("<table width='100%' cellpadding='0' cellspacing='0'><tr>")
+            sb.append("<td><h3 style='margin-bottom:2px;'>⚡ $title</h3></td>")
+            sb.append("<td align='right'><span class='badge-info'>$wfFile</span></td>")
+            sb.append("</tr></table>")
+            sb.append("<p class='muted' style='margin-top:0;'><b>Trigger:</b> $trigger &bull; <b>Description:</b> $desc</p>")
 
-        sb.append("<h3>Active Workflows</h3>")
+            // Visual DAG flow box
+            sb.append("<div style='background-color:$dagBg; border:1px solid $borderColor; padding:8px; margin:6px 0 10px 0;'>")
+            sb.append("<p style='margin:0; font-size:10.5pt;'><b>Execution DAG:</b> $stagesFlow</p>")
+            sb.append("</div>")
+
+            // Handled contracts table
+            sb.append("<table border='1' cellspacing='0' cellpadding='5' style='border-color:$borderColor; width:100%; margin-bottom:12px;'>")
+            sb.append("<tr>")
+            sb.append("<th width='24%'>Stage / Executor</th>")
+            sb.append("<th width='26%'>Handled Contract</th>")
+            sb.append("<th width='14%'>Type / Action</th>")
+            sb.append("<th width='36%'>Description &amp; Invariants</th>")
+            sb.append("</tr>")
+            sb.append(stagesTableHtml)
+            sb.append("</table>")
+        }
+
+        // 1. Basic Autonomous CI/CD Pipeline
+        renderPipelineSection(
+            "Free Community Autonomous CI/CD Pipeline",
+            ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml",
+            "Automated maintenance, AST token compression, bounded self-repair, and Merkle block sealing for the Free Plan.",
+            "Free Plan / Pre-Commit / Local CLI",
+            "[1. Workspace Hygiene] ➔ [2. AST Token Reduction] ➔ [3. Contract & Test Gate] ➔ [4. Single-Attempt Auto-Heal] ➔ [5. Merkle Block Seal]",
+            """
+            <tr>
+              <td><b>sustain_maintenance</b><br><code>platform.self_sustaining_engine</code></td>
+              <td><b>observability_contract.yaml</b><br><code class='muted'>.nb/context/contracts/observability_contract.yaml</code><br><br><b>hierarchical_rule_contract.json</b><br><code class='muted'>.nb/context/contracts/hierarchical_rule_contract.json</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [validate]<br><br><span class='badge-info'>json_schema</span> [enforce]</td>
+              <td>Enforces structured logging, health status schema, and hygiene execution metrics.<br><br>Verifies boundary rules ensuring scratch directory cleanup does not violate quad-space isolation.</td>
+            </tr>
+            <tr>
+              <td><b>ast_token_reduction</b><br><code>platform.ast_pruner</code></td>
+              <td><b>psi_ast_bridge_contract.yaml</b><br><code class='muted'>.nb/context/contracts/psi_ast_bridge_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [inspect_and_prune]</td>
+              <td>Preserves function signatures and type annotations while stripping execution bodies to achieve 65% token compression.</td>
+            </tr>
+            <tr>
+              <td><b>contract_and_test_gate</b><br><code>platform.contract_verifier</code></td>
+              <td><b>rbac_permission_matrix.json</b><br><code class='muted'>.nb/context/contracts/rbac_permission_matrix.json</code><br><br><b>data_grid_contract.json</b><br><code class='muted'>.nb/context/contracts/data_grid_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [validate]<br><br><span class='badge-info'>json_schema</span> [validate]</td>
+              <td>Asserts baseline permission matrices and role access controls before test execution.<br><br>Validates data structure formats across test payloads and fixture outputs.</td>
+            </tr>
+            <tr>
+              <td><b>bounded_auto_heal</b><br><code>platform.autonomous_healer</code></td>
+              <td><b>hierarchical_rule_contract.json</b><br><code class='muted'>.nb/context/contracts/hierarchical_rule_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [enforce]</td>
+              <td>Bounds repair loops to a single attempt and triggers quarantine on second failure.</td>
+            </tr>
+            <tr>
+              <td><b>merkle_state_seal</b><br><code>platform.merkle_ledger</code></td>
+              <td><b>security_four_eyes_contract.json</b><br><code class='muted'>.nb/context/contracts/security_four_eyes_contract.json</code></td>
+              <td><span class='badge-success'>json_schema</span> [seal_block]</td>
+              <td>Signs block hash with SHA-256 and records immutable state transition in context ledger.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 2. Commercial Packaging & Provisioning Flow
+        renderPipelineSection(
+            "Commercial Packaging, Multi-IDE Provisioning & Tier Permissions Flow",
+            ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
+            "End-to-end commercial packaging, multi-IDE provisioning, and cross-platform RBAC feature gating.",
+            "Billing Plan Update / Tier Packaging Request",
+            "[1. Validate Billing Plans] ➔ [2. Filter Runtime Assets] ➔ [3. Seal License & Merkle] ➔ [4. Provision Multi-IDE/Portal] ➔ [5. Verify RBAC Permissions]",
+            """
+            <tr>
+              <td><b>step_validate_billing_rules</b><br><code>agent_commercial_packager_provisioner</code></td>
+              <td><b>billing_meter_contract.yaml</b><br><code class='muted'>.nb/context/contracts/billing_meter_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [validate]</td>
+              <td>Verifies subscription tiers, feature flags, and token budget ceilings against billing specifications.</td>
+            </tr>
+            <tr>
+              <td><b>step_filter_and_package_tier</b><br><code>agent_commercial_packager_provisioner</code></td>
+              <td><b>commercial_provisioning_contract.yaml</b><br><code class='muted'>.nb/context/contracts/commercial_provisioning_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [filter_and_bundle]</td>
+              <td>Governs selective file packaging per tier, enforcing platform core encryption and plaintext user plans.</td>
+            </tr>
+            <tr>
+              <td><b>step_sign_and_seal_license</b><br><code>agent_commercial_packager_provisioner</code></td>
+              <td><b>security_tenant_profile_contract.json</b><br><code class='muted'>.nb/context/contracts/security_tenant_profile_contract.json</code></td>
+              <td><span class='badge-success'>json_schema</span> [seal_license]</td>
+              <td>Encodes tenant profile attributes, tier expiration, and cryptographic signature in license payload.</td>
+            </tr>
+            <tr>
+              <td><b>step_provision_ide_and_portal</b><br><code>agent_commercial_packager_provisioner</code></td>
+              <td><b>intellij_plugin_manifest_contract.json</b><br><code class='muted'>.nb/context/contracts/intellij_plugin_manifest_contract.json</code><br><br><b>package_json_manifest_contract.json</b><br><code class='muted'>.nb/context/contracts/package_json_manifest_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_manifest]<br><br><span class='badge-info'>json_schema</span> [verify_manifest]</td>
+              <td>Validates plugin.xml extension point compatibility and bundled toolwindow components.<br><br>Validates package.json contributes layout, commands, and activation events for the extension.</td>
+            </tr>
+            <tr>
+              <td><b>step_verify_tier_permissions</b><br><code>agent_commercial_packager_provisioner</code></td>
+              <td><b>sandbox_permission_contract.json</b><br><code class='muted'>.nb/context/contracts/sandbox_permission_contract.json</code><br><br><b>rbac_permission_matrix.json</b><br><code class='muted'>.nb/context/contracts/rbac_permission_matrix.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_security_sandbox]<br><br><span class='badge-info'>json_schema</span> [enforce_entitlements]</td>
+              <td>Enforces read/write sandboxing policies and AST token pruning constraints on LLM plugins.<br><br>Guarantees Free Community users cannot execute unexposed basic platform tools or enterprise private VPC endpoints.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 3. Enterprise SDLC PR Gate
+        renderPipelineSection(
+            "Enterprise PR Gate with Infosec & FinOps Audit",
+            ".nb/agentic/custom/workflows/enterprise_sdlc.yaml",
+            "Demonstrates hybrid composition of sealed platform executors with customer custom agents.",
+            "Enterprise Branch Merge Event",
+            "[1. AST Prune] ➔ [2. Token FinOps Audit] ➔ [3. Infosec & Banking Security] ➔ [4. Cross-Module Contracts] ➔ [5. Merkle DAG Block Seal]",
+            """
+            <tr>
+              <td><b>ast_prune</b><br><code>platform.ast_pruner</code></td>
+              <td><b>psi_ast_bridge_contract.yaml</b><br><code class='muted'>.nb/context/contracts/psi_ast_bridge_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [prune_ast]</td>
+              <td>Extracts function declarations and docstrings while pruning implementation blocks to maximize prompt cache hits.</td>
+            </tr>
+            <tr>
+              <td><b>token_savings_audit</b><br><code>agent_token_finops_auditor</code></td>
+              <td><b>billing_meter_contract.yaml</b><br><code class='muted'>.nb/context/contracts/billing_meter_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [audit_metering]</td>
+              <td>Verifies cumulative token savings, calculates USD economic value, and compares against billing tier ceilings.</td>
+            </tr>
+            <tr>
+              <td><b>custom_security_audit</b><br><code>agent_security_auditor</code></td>
+              <td><b>security_rebac_policy_contract.json</b><br><code class='muted'>.nb/context/contracts/security_rebac_policy_contract.json</code><br><br><b>security_pii_vault_contract.json</b><br><code class='muted'>.nb/context/contracts/security_pii_vault_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [audit_policy]<br><br><span class='badge-info'>json_schema</span> [inspect_payload]</td>
+              <td>Verifies multi-tenant graph relationships and enterprise access boundaries.<br><br>Scans payloads for unredacted sensitive tokens, cryptographic secrets, or customer PII.</td>
+            </tr>
+            <tr>
+              <td><b>contract_verification</b><br><code>platform.contract_verifier</code></td>
+              <td><b>portal_openapi_spec.yaml</b><br><code class='muted'>.nb/context/contracts/portal_openapi_spec.yaml</code><br><br><b>rbac_permission_matrix.json</b><br><code class='muted'>.nb/context/contracts/rbac_permission_matrix.json</code></td>
+              <td><span class='badge-info'>openapi_spec</span> [verify_endpoints]<br><br><span class='badge-info'>json_schema</span> [verify_matrix]</td>
+              <td>Enforces backward compatibility, schema validation, and route invariants across all exposed REST endpoints.<br><br>Validates access scopes across modules to prevent privilege escalation.</td>
+            </tr>
+            <tr>
+              <td><b>merkle_seal</b><br><code>platform.merkle_ledger</code></td>
+              <td><b>security_four_eyes_contract.json</b><br><code class='muted'>.nb/context/contracts/security_four_eyes_contract.json</code></td>
+              <td><span class='badge-success'>json_schema</span> [seal_dag_block]</td>
+              <td>Validates dual cryptographic signoffs before sealing the state transition block into the immutable Merkle DAG.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 4. IntelliJ & PyCharm Plugin Delivery Flow
+        renderPipelineSection(
+            "IntelliJ IDEA & PyCharm Plugin End-to-End Delivery Flow",
+            ".nb/agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml",
+            "Multi-stage automated delivery pipeline for JetBrains IntelliJ & PyCharm IDE plugins.",
+            "JetBrains Platform Release Event",
+            "[1. Manifest & Contracts] ➔ [2. PSI Engine & Token Meter] ➔ [3. ToolWindow & UI] ➔ [4. Daemon RPC & Merkle] ➔ [5. Terminal Mode Interceptor]",
+            """
+            <tr>
+              <td><b>stage_1_manifest_and_contracts</b><br><code>agent_jetbrains_plugin_architect</code></td>
+              <td><b>intellij_plugin_manifest_contract.json</b><br><code class='muted'>.nb/context/contracts/intellij_plugin_manifest_contract.json</code><br><br><b>psi_ast_bridge_contract.yaml</b><br><code class='muted'>.nb/context/contracts/psi_ast_bridge_contract.yaml</code></td>
+              <td><span class='badge-info'>json_schema</span> [validate_manifest]<br><br><span class='badge-info'>yaml_schema</span> [verify_protocol]</td>
+              <td>Verifies plugin ID, depends tags (platform, lang), toolWindow declarations, and external annotators.<br><br>Specifies in-memory PyFile/PsiFile AST traversal and token reduction invariants (&lt;35ms latency).</td>
+            </tr>
+            <tr>
+              <td><b>stage_2_psi_engine_and_token_meter</b><br><code>agent_psi_ast_bridge_specialist</code></td>
+              <td><b>psi_ast_bridge_contract.yaml</b><br><code class='muted'>.nb/context/contracts/psi_ast_bridge_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [benchmark_ast_pruner]</td>
+              <td>Evaluates symbol extraction accuracy and ensures &gt;60% token compression ratio across Python &amp; Kotlin ASTs.</td>
+            </tr>
+            <tr>
+              <td><b>stage_3_toolwindow_and_ui</b><br><code>agent_intellij_ui_ux_engineer</code></td>
+              <td><b>ui_theme_token_contract.json</b><br><code class='muted'>.nb/context/contracts/ui_theme_token_contract.json</code><br><br><b>data_grid_contract.json</b><br><code class='muted'>.nb/context/contracts/data_grid_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [audit_theme_tokens]<br><br><span class='badge-info'>json_schema</span> [validate_ui_grid]</td>
+              <td>Enforces Corporate Light &amp; Enterprise Dark color tokens, WCAG AA contrast (&gt;= 4.5:1), and terminology-neutral styling.<br><br>Validates high-density audit grids and telemetry views in the ToolWindow tab panels.</td>
+            </tr>
+            <tr>
+              <td><b>stage_4_daemon_rpc_and_merkle_seal</b><br><code>agent_jetbrains_plugin_architect</code></td>
+              <td><b>daemon_rpc_contract.json</b><br><code class='muted'>.nb/context/contracts/daemon_rpc_contract.json</code><br><br><b>security_four_eyes_contract.json</b><br><code class='muted'>.nb/context/contracts/security_four_eyes_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [test_ipc_bridge]<br><br><span class='badge-success'>json_schema</span> [seal_recovery_block]</td>
+              <td>Verifies bidirectional UNIX socket/IPC communication between IDE ToolWindow and .nb/bin/percipience binary.<br><br>Cryptographically seals verified build hash into local Merkle ledger before deployment.</td>
+            </tr>
+            <tr>
+              <td><b>stage_5_terminal_agent_interceptor</b><br><code>agent_terminal_mode_specialist</code></td>
+              <td><b>terminal_agent_ast_contract.yaml</b><br><code class='muted'>.nb/context/contracts/terminal_agent_ast_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [verify_terminal_hook]</td>
+              <td>Injects AST-compressed context into Claude Code, Gemini CLI, and Aider sessions with zero disk contamination.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 5. Connected IoT & Mobile Delivery Flow
+        renderPipelineSection(
+            "Connected IoT, Embedded Firmware & Mobile Delivery Flow",
+            ".nb/agentic/custom/workflows/iot_mobile_delivery_flow.yaml",
+            "Orchestrates BLE GATT contract verification, FreeRTOS/Zephyr firmware, and KMP mobile client.",
+            "Embedded Firmware & KMP Release",
+            "[1. BLE GATT Contract Gate] ➔ [2. Mobile KMP Client & UI] ➔ [3. IoT Ecosystem Invariant Audit]",
+            """
+            <tr>
+              <td><b>step_ble_gatt_contract_gate</b><br><code>agent_contract_compatibility_checker</code></td>
+              <td><b>ble_gatt_spec.yaml</b><br><code class='muted'>.nb/context/contracts/ble_gatt_spec.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [verify_gatt_services]</td>
+              <td>Validates primary UUIDs, MTU constraints (up to 512 bytes), and characteristic read/write/notify permission profiles.</td>
+            </tr>
+            <tr>
+              <td><b>step_mobile_kmp_client</b><br><code>agent_mobile_developer</code></td>
+              <td><b>ota_firmware_manifest.json</b><br><code class='muted'>.nb/context/contracts/ota_firmware_manifest.json</code><br><br><b>ui_theme_token_contract.json</b><br><code class='muted'>.nb/context/contracts/ui_theme_token_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_ota_payload]<br><br><span class='badge-info'>json_schema</span> [audit_mobile_tokens]</td>
+              <td>Verifies cryptographic hash, firmware version semver, and target hardware architecture metadata.<br><br>Enforces design token consistency and WCAG compliance for Kotlin Multiplatform mobile screens.</td>
+            </tr>
+            <tr>
+              <td><b>step_iot_ecosystem_audit</b><br><code>agent_iot_mobile_ecosystem_architect</code></td>
+              <td><b>security_pii_vault_contract.json</b><br><code class='muted'>.nb/context/contracts/security_pii_vault_contract.json</code><br><br><b>security_four_eyes_contract.json</b><br><code class='muted'>.nb/context/contracts/security_four_eyes_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [sanitize_telemetry]<br><br><span class='badge-success'>json_schema</span> [seal_firmware_release]</td>
+              <td>Guarantees sensor and location metrics sent from embedded nodes do not leak unredacted PII.<br><br>Cryptographically seals binary firmware payload hash and KMP client artifacts before publication.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 6. Enterprise SaaS Portal Multi-Module Delivery Flow
+        renderPipelineSection(
+            "Enterprise SaaS & Portal Multi-Module Delivery Flow",
+            ".nb/agentic/custom/workflows/saas_portal_delivery_flow.yaml",
+            "Orchestrates Next.js/Tailwind frontend, API gateway, Stripe billing webhooks, and security audit.",
+            "Portal Webhook / Production Gate",
+            "[1. OpenAPI 3.1 Contract Gate] ➔ [2. Frontend UI Scaffold] ➔ [3. SaaS Backend Gateway] ➔ [4. Multi-Tenant Security Audit]",
+            """
+            <tr>
+              <td><b>step_openapi_contract_gate</b><br><code>agent_contract_compatibility_checker</code></td>
+              <td><b>portal_openapi_spec.yaml</b><br><code class='muted'>.nb/context/contracts/portal_openapi_spec.yaml</code></td>
+              <td><span class='badge-info'>openapi_spec</span> [verify_api_contract]</td>
+              <td>Validates REST route schemas, response codes, and request bodies for SaaS portal endpoints.</td>
+            </tr>
+            <tr>
+              <td><b>step_portal_frontend_scaffold</b><br><code>agent_portal_developer</code></td>
+              <td><b>ui_theme_token_contract.json</b><br><code class='muted'>.nb/context/contracts/ui_theme_token_contract.json</code><br><br><b>data_grid_contract.json</b><br><code class='muted'>.nb/context/contracts/data_grid_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [audit_theme_tokens]<br><br><span class='badge-info'>json_schema</span> [validate_grid_components]</td>
+              <td>Ensures zero dark-grey tints in Corporate Light mode, 4.5:1 WCAG contrast, and zero mobile frame restrictions.<br><br>Validates responsive data table rendering, pagination, and sorting structures in the portal UI.</td>
+            </tr>
+            <tr>
+              <td><b>step_saas_backend_gateway</b><br><code>agent_saas_backend_developer</code></td>
+              <td><b>billing_webhook_contract.json</b><br><code class='muted'>.nb/context/contracts/billing_webhook_contract.json</code><br><br><b>billing_meter_contract.yaml</b><br><code class='muted'>.nb/context/contracts/billing_meter_contract.yaml</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_webhook_signatures]<br><br><span class='badge-info'>yaml_schema</span> [verify_metering_limits]</td>
+              <td>Enforces HMAC SHA-256 signature verification and webhook event payloads for subscription lifecycle events.<br><br>Enforces tenant seat quotas, token consumption limits, and tier feature gates.</td>
+            </tr>
+            <tr>
+              <td><b>step_saas_security_audit</b><br><code>agent_enterprise_saas_portal_architect</code></td>
+              <td><b>security_tenant_profile_contract.json</b><br><code class='muted'>.nb/context/contracts/security_tenant_profile_contract.json</code><br><br><b>security_rebac_policy_contract.json</b><br><code class='muted'>.nb/context/contracts/security_rebac_policy_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_tenant_isolation]<br><br><span class='badge-info'>json_schema</span> [enforce_rebac_policies]</td>
+              <td>Verifies database row-level security (RLS) tenant isolation and JWT tenant claims.<br><br>Asserts role relationships and admin workspace boundaries before gateway deployment.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        // 7. Visual Studio Code Extension Delivery Flow
+        renderPipelineSection(
+            "Visual Studio Code Extension End-to-End Delivery Flow",
+            ".nb/agentic/custom/workflows/vscode_plugin_delivery_flow.yaml",
+            "Multi-stage automated delivery pipeline for Visual Studio Code VSIX Extension &amp; LSP Client.",
+            "VSIX Publish & LSP Verification",
+            "[1. Package Manifest Gate] ➔ [2. LSP 3.17 Subsystem] ➔ [3. Webview Dashboard] ➔ [4. Socket IPC & Merkle Seal]",
+            """
+            <tr>
+              <td><b>stage_1_manifest_and_activation</b><br><code>agent_vscode_extension_architect</code></td>
+              <td><b>package_json_manifest_contract.json</b><br><code class='muted'>.nb/context/contracts/package_json_manifest_contract.json</code><br><br><b>sandbox_permission_contract.json</b><br><code class='muted'>.nb/context/contracts/sandbox_permission_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [validate_manifest]<br><br><span class='badge-info'>json_schema</span> [enforce_sandbox_isolation]</td>
+              <td>Verifies contributes schemas, views, commands, and activationEvents configuration.<br><br>Prohibits wildcard onStartupFinished activation, requiring explicit onCommand or onLanguage triggers.</td>
+            </tr>
+            <tr>
+              <td><b>stage_2_lsp_subsystem</b><br><code>agent_lsp_language_features_specialist</code></td>
+              <td><b>lsp_protocol_contract.yaml</b><br><code class='muted'>.nb/context/contracts/lsp_protocol_contract.yaml</code></td>
+              <td><span class='badge-info'>yaml_schema</span> [test_lsp_compliance]</td>
+              <td>Tests textDocument/publishDiagnostics, codeLens, and incremental synchronization latency (&lt;50ms).</td>
+            </tr>
+            <tr>
+              <td><b>stage_3_webview_dashboard</b><br><code>agent_vscode_webview_ux_engineer</code></td>
+              <td><b>webview_message_rpc_contract.json</b><br><code class='muted'>.nb/context/contracts/webview_message_rpc_contract.json</code><br><br><b>ui_theme_token_contract.json</b><br><code class='muted'>.nb/context/contracts/ui_theme_token_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [verify_csp_and_rpc]<br><br><span class='badge-info'>json_schema</span> [audit_theme_sync]</td>
+              <td>Ensures zero inline script execution without cryptographic nonces, and validates postMessage RPC schemas.<br><br>Synchronizes VS Code CSS variables (--vscode-*) with corporate design tokens for light and dark modes.</td>
+            </tr>
+            <tr>
+              <td><b>stage_4_ipc_and_gate_seal</b><br><code>agent_vscode_extension_architect</code></td>
+              <td><b>daemon_rpc_contract.json</b><br><code class='muted'>.nb/context/contracts/daemon_rpc_contract.json</code><br><br><b>security_four_eyes_contract.json</b><br><code class='muted'>.nb/context/contracts/security_four_eyes_contract.json</code></td>
+              <td><span class='badge-info'>json_schema</span> [test_socket_ipc]<br><br><span class='badge-success'>json_schema</span> [seal_recovery_block]</td>
+              <td>Verifies UNIX socket IPC throughput and error handling between extension and CLI daemon.<br><br>Signs VSIX package distribution hash into the local Merkle ledger before publication.</td>
+            </tr>
+            """.trimIndent()
+        )
+
+        sb.append("<h3>🤖 Active Specialist Agents Registry</h3>")
         sb.append("<ul>")
-        sb.append("<li><code>basic_autonomous_cicd.yaml</code> - Free community autonomous CI/CD</li>")
-        sb.append("<li><code>intellij_pycharm_plugin_delivery_flow.yaml</code> - IDE plugin delivery pipeline</li>")
-        if (tierInfo.canPackNbpack) {
-            sb.append("<li><code>commercial_packaging_provisioning_flow.yaml</code> - Multi-tier packaging workflow [Business+]</li>")
-        }
-        if (tierInfo.canUseSwarmOrchestrator) {
-            sb.append("<li><code>enterprise_sdlc.yaml</code> - Enterprise multi-stage closed loop swarm [Enterprise]</li>")
-        }
+        sb.append("<li><code>agent_psi_ast_bridge_specialist</code> - Fast AST skeletonization &amp; signature preservation</li>")
+        sb.append("<li><code>agent_jetbrains_plugin_architect</code> - Plugin structure, threading, and toolwindow registration</li>")
+        sb.append("<li><code>agent_autonomous_healer</code> - Bounded TDD auto-healing (1-attempt bound)</li>")
+        sb.append("<li><code>agent_merkle_ledger</code> - Cryptographic SHA-256 state DAG block sealing</li>")
+        sb.append("<li><code>agent_commercial_packager_provisioner</code> - Tier packaging and license provisioning [Team+]</li>")
+        sb.append("<li><code>agent_vscode_extension_architect</code> - VS Code extension packaging and IPC bridge [Team+]</li>")
+        sb.append("<li><code>agent_enterprise_saas_portal_architect</code> - Multi-tenant SaaS and swarm orchestration [Enterprise]</li>")
         sb.append("</ul>")
 
         sb.append("</body></html>")

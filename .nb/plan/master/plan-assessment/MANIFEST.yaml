@@ -43,3 +43,25 @@ maturity:
   implementation_status: standardized
   test_coverage: 95
   production_ready: true
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: 027c6800f1571f66605bed90ce9d8fb9412cf30f2db903969f17bd88b1114c8e
+    line_count: 669
+    primary_purpose: Concise documentation
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: 8557aa88125ed55b69aef029c772b891fd72036cbdbaab0020f7a270ee24fa1d
+    line_count: 1681
+    primary_purpose: Detailed documentation
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: 518e026b219e058d372e5025fec36a35dd38ddc6850a5218b9d9e0203e235778
+    line_count: 39
+    primary_purpose: Readme documentation

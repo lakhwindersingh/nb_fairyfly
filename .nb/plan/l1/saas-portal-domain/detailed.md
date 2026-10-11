@@ -291,3 +291,16 @@ sequenceDiagram
 # Audit billing entitlements
 ./bin/percipience commercial audit-entitlements --tenant tenant_acme_fintech
 ```
+
+## 7. Visual Delivery Pipelines & Stage Handled Contracts Hub
+
+### 7.1. Interactive Pipeline & Contracts Explorer (`resources.html` & `portal_app.js`)
+- The SaaS Portal **Resources** section includes a dedicated **🔄 Delivery Pipelines & Contracts** subtab:
+  - **Pipeline Selector**: Switches between all 7 autonomous delivery flows.
+  - **Visual DAG Flowchart**: Horizontal card progression with stage numbering, executors, dependencies, and contract chips.
+  - **Stage Handled Contracts Registry**: Full-width data table detailing stage ID, executor, handled contracts, schema type, gate action, and description.
+  - **Live Schema Inspector**: Modal/drawer loading contract schema content directly from `/api/observability/contract-detail`.
+
+### 7.2. Backend Endpoints (`request_handler.py`)
+- `GET /api/observability/workflows`: Dynamically parses and serves all 7 delivery workflows with stages and `handled_contracts`.
+- `GET /api/observability/contract-detail?path={path}`: Safely retrieves and returns contract schema contents from `.nb/context/contracts/`.

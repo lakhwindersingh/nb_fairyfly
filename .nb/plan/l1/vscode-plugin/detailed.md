@@ -327,3 +327,14 @@ The VSCode packager (`package_extension.py`) generates dedicated tier-aware VSIX
 - `percipience-vscode-extension-business-1.0.0.vsix`: Business edition with sealed `.nbpack` compiler and gateway provisioner.
 - `percipience-vscode-extension-enterprise-1.0.0.vsix`: Enterprise edition with full private VPC and swarm orchestrator.
 - `percipience-vscode-extension-1.0.0.vsix`: Universal distribution defaulting to workspace license.
+
+## 7. Visual Delivery Pipelines & Stage Handled Contracts Governance
+
+### 7.1. Hierarchical Pipeline Tree View (`WorkflowTreeProvider.ts`)
+- Implements a 3-level hierarchical TreeDataProvider registered in the Percipience Activity Bar:
+  - **Level 1 (Pipelines)**: All 7 delivery flows (`basic_autonomous_cicd`, `commercial_packaging_provisioning_flow`, `enterprise_sdlc`, `intellij_pycharm_plugin_delivery_flow`, `iot_mobile_delivery_flow`, `saas_portal_delivery_flow`, `vscode_plugin_delivery_flow`).
+  - **Level 2 (Stages)**: Detailed breakdown of each stage, executor, dependencies, and handled contract count.
+  - **Level 3 (Handled Contracts)**: Concrete wire contract items (`.nb/context/contracts/*`), displaying schema type, gate action, description, and click-to-open schema navigation.
+
+### 7.2. Webview Control Plane Pipeline DAG Cards (`DashboardPanel.ts`)
+- Features interactive visual DAG workflow cards in the Control Plane webview with stage-to-stage arrow progression (`[Stage 1] ➔ [Stage 2] ➔ ...`), executor badges, and clickable contract chips with theme-synchronized styling.

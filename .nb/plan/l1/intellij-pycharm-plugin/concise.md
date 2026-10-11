@@ -93,3 +93,10 @@ python workplace/modules/mod_intellij_plugin/package_plugin.py --tier all
 # Apply layer bundle
 ./.nb/bin/percipience layer apply --pack .nb/bundles/intellij_pycharm_plugin_domain.nbpack --in-memory-only
 ```
+
+## 4. Visual Delivery Pipelines & Stage Handled Contracts Governance
+
+The IntelliJ / PyCharm ToolWindow features an interactive multi-stage visual DAG pipeline and contract inspector in the **Agents & Flows** panel:
+- **7 Automated Delivery Flows**: Visual inspection of `basic_autonomous_cicd.yaml`, `commercial_packaging_provisioning_flow.yaml`, `enterprise_sdlc.yaml`, `intellij_pycharm_plugin_delivery_flow.yaml`, `iot_mobile_delivery_flow.yaml`, `saas_portal_delivery_flow.yaml`, and `vscode_plugin_delivery_flow.yaml`.
+- **Stage Progression DAG**: Displays stage order, dependencies, executors, and status.
+- **Handled Contracts Table**: Direct mapping of every stage to its wire contracts (`.nb/context/contracts/*`), schema types (`yaml_schema`, `json_schema`, `openapi_spec`), verification actions, and cryptographic Merkle seal gates.

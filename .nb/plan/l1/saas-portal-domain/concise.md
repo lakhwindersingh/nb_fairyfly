@@ -81,3 +81,8 @@ graph TD
 ./.nb/bin/percipience commercial package --tier enterprise --tenant tenant_acme_fintech
 ./.nb/bin/percipience commercial provision --tenant tenant_acme_fintech --tier enterprise --target all
 ```
+
+## 4. Visual Delivery Pipelines & Stage Handled Contracts Governance
+
+- **Portal Visualizer**: `resources.html` provides a dedicated subtab for inspecting the 7 delivery flows with interactive DAG progression, executor chips, and stage-handled contract schemas.
+- **Endpoints**: `/api/observability/workflows` and `/api/observability/contract-detail` serve workflow metadata, stage DAGs, and raw contract contents.
