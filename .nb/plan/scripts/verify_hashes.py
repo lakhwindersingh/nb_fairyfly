@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Automated Content Hash Verification Tool.
-Verifies SHA-256 cryptographic hashes of all tracked files in MANIFEST.yaml across all plans.
+Verifies SHA-256 cryptographic hashes of all tracked files in MANIFEST.yaml across all active plans.
 """
 
 import hashlib
@@ -20,7 +20,7 @@ def compute_sha256(path: Path) -> str:
 
 
 def verify_all_hashes() -> bool:
-    print(f"🔒 Verifying Content Hashes across all plans in: {PLAN_ROOT}")
+    print(f"🔒 Verifying Content Hashes across all active plans in: {PLAN_ROOT}")
     manifest_files = sorted(PLAN_ROOT.glob("**/MANIFEST.yaml"))
     
     total_files = 0
@@ -28,7 +28,7 @@ def verify_all_hashes() -> bool:
     missing = 0
 
     for mf in manifest_files:
-        if "templates" in mf.parts:
+        if "templates" in mf.parts or "archive" in mf.parts:
             continue
         try:
             with open(mf, "r", encoding="utf-8") as f:

@@ -1,31 +1,37 @@
 # 🧭 Percipience Context Engineering Plans (`.nb/plan/`)
 
-Welcome to the **Percipience Plan Space**. This directory contains the authoritative architectural blueprints, domain layer specifications, and self-evolution guidelines governing the entire Percipience autonomous context engineering platform.
+Welcome to the **Percipience Plan Space**. This directory contains the authoritative architectural blueprints, domain layer specifications, and verification guidelines governing the entire Percipience autonomous context engineering platform.
 
 ---
 
 ## 1. Architectural Hierarchy
 
-The plan space is organized into a clean **3-Tier Multi-Layer Hierarchy** supported by reusable templates, synchronization tooling, and migration archives:
+The plan space is organized into a clean **2-Layer Foundation Hierarchy** plus Master Test Governance, supported by reusable templates, synchronization tooling, and migration archives:
 
 ```mermaid
 graph TD
     Root[".nb/plan/"] --> Master["master/ (Tier 0: Orchestration)"]
     Root --> L1["l1/ (Tier 1: Foundation Domains)"]
-    Root --> L2["l2/ (Tier 2: Commercial & OS)"]
+    Root --> Test["test/ (Test Governance)"]
     Root --> Templates["templates/ (Domain Scaffolding)"]
     Root --> Scripts["scripts/ (Version Sync Tooling)"]
     Root --> Archive["archive/ (Historical Architecture)"]
 
     Master --> PMP["parent-master-plan (Enterprise Master)"]
     Master --> PMF["parent-master-free-plan (Free Community)"]
+    Master --> CAI["cloud-agnostic-infrastructure-substrate"]
+    Master --> UIDS["enterprise-ui-design-system"]
+    Master --> SEC["security-mesh"]
+    Master --> PA["plan-assessment"]
+    Master --> SPO["sequential-plan-orchestrator"]
 
     L1 --> IJ["intellij-pycharm-plugin (JetBrains SDK & PSI)"]
     L1 --> VS["vscode-plugin (VSCode & LSP 3.17)"]
     L1 --> SP["saas-portal-domain (Next.js & Multi-Tenant)"]
+    L1 --> NPX["npx-installer (Zero-Install CI & Scaffolding)"]
+    L1 --> TWP["tiered-wheel-packaging (Multi-Tier Wheel Distribution)"]
 
-    L2 --> EOS["enterprise-context-engineering-os (Play 3 OS)"]
-    L2 --> CSP["corp-site-saas-portal (Play 3 Cloud Portal)"]
+    Test --> TP["test (18-Subsystem Test Plan)"]
 ```
 
 ---
@@ -51,34 +57,37 @@ Every active plan directory adheres strictly to the **Percipience 4-File Convent
 ### 🏛️ Tier 0: Master Orchestration Plans (`master/`)
 - **[Parent Master Framework (`parent-master-plan/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md)**: Universal blueprint defining core capabilities (`CAP-01` through `CAP-35`), Quad-Space clean partitioning, Merkle DAG ledger engine, and multi-tier commercial models.
 - **[Parent Master Free Community Edition (`parent-master-free-plan/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-free-plan/detailed.md)**: Community edition tailored for single-seat local development with zero external dependencies and embedded IDE bootstrapping.
+- **[Cloud-Agnostic Infrastructure Substrate (`cloud-agnostic-infrastructure-substrate/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/cloud-agnostic-infrastructure-substrate/detailed.md)**: Universal deployment substrate supporting OpenShift, Kubernetes, AWS EKS/Fargate, GCP Cloud Run/GKE, and Azure Container Apps.
+- **[Enterprise UI Design System (`enterprise-ui-design-system/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/enterprise-ui-design-system/detailed.md)**: Corporate Light and Enterprise Dark design tokens, responsive typography, and navigation standards.
+- **[Security Mesh (`security-mesh/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/security-mesh/detailed.md)**: Multi-tenant RBAC, JWT validation, PostgreSQL Row-Level Security (RLS), and zero-trust perimeter defense.
+- **[Plan Assessment Framework (`plan-assessment/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/plan-assessment/detailed.md)**: Autonomous plan health evaluation, 6-vector semantic parity validation, and multi-agent workflow gatekeeping.
+- **[Sequential Plan Orchestrator (`sequential-plan-orchestrator/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/sequential-plan-orchestrator/detailed.md)**: Zero-drift sequential execution engine enforcing strict layer-by-layer dependency progression.
 
 ### 🔌 Tier 1: Foundation Domain Layers (`l1/`)
-- **[IntelliJ IDEA & PyCharm Plugin Space (`intellij-pycharm-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/intellij-pycharm-plugin/detailed.md)**: JetBrains Platform SDK plugin, PSI multi-language AST token reduction, dockable ToolWindow control plane, and out-of-the-box Claude MCP auto-provisioning.
-- **[VSCode Extension Space (`vscode-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/vscode-plugin/detailed.md)**: VSCode Extension API, Language Server Protocol (LSP 3.17), in-editor CodeLens triggers, and nonce CSP Webview panel.
-- **[SaaS Portal & Observability Domain (`saas-portal-domain/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/saas-portal-domain/detailed.md)**: Next.js 14 App Router, multi-tenant RBAC, PostgreSQL RLS, Stripe billing, and 5-tab Observability Hub dashboard.
-
-### 🧠 Tier 2: Commercial OS & Self-Evolution (`l2/`)
-- **[Enterprise Context Engineering OS (`enterprise-context-engineering-os/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l2/enterprise-context-engineering-os/detailed.md)**: Commercial CEPaaS operating system, BYOR multi-VCS adapter, `.nbpack` obfuscation, and enterprise pricing/deployment model (Play 3).
-- **[Cloud SaaS Portal & Brand Site (`corp-site-saas-portal/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l2/corp-site-saas-portal/detailed.md)**: Play 3 Cloud SaaS Portal, corporate public landing page, interactive pricing calculator, and enterprise self-serve onboarding.
+- **[IntelliJ IDEA & PyCharm Plugin Space (`intellij-pycharm-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/intellij-pycharm-plugin/detailed.md)**: JetBrains Platform SDK plugin, PSI multi-language AST token reduction, dockable ToolWindow control plane, and pipeline DAG visualizer.
+- **[VSCode Extension Space (`vscode-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/vscode-plugin/detailed.md)**: VSCode Extension API, Language Server Protocol (LSP 3.17), hierarchical pipeline stage/contract tree provider, and Webview DAG cards.
+- **[SaaS Portal & Observability Domain (`saas-portal-domain/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/saas-portal-domain/detailed.md)**: Next.js 14 / FastAPI modular web portal, RBAC, PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
+- **[NPX Instant Execution Space (`npx-installer/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/npx-installer/detailed.md)**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding, and platform binary resolution.
+- **[Multi-Tier Python Wheel Packaging (`tiered-wheel-packaging/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/tiered-wheel-packaging/detailed.md)**: Automated PEP 427 Python wheel compilation across all 4 commercial tiers (Free, Team, Business, Enterprise) with strict build-time engine exclusion boundaries.
 
 ### 🧪 test/ (Test Governance & Verification)
-- **[Percipience Master Test Governance & Verification Framework (`test/detailed.md`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/detailed.md)**: 18-subsystem automated test governance, Pytest 8.4+ Allure test execution, DeepEval AI quantitative evaluations, Playwright E2E, and AI-assisted self-healing test orchestrator (`.nb/plan/test/test_runner.py`).
+- **[Percipience Master Test Governance Framework (`test/detailed.md`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/detailed.md)**: 18-subsystem automated test governance, Pytest test execution, DeepEval AI quantitative evaluations, Playwright E2E, and AI-assisted self-healing test orchestrator (`.nb/plan/test/test_runner.py`).
 
 ### 📐 Scaffolding Templates (`templates/`)
-- **[Custom Domain Layer Template](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md)**: Standardized template for scaffolding custom enterprise domain layers (FinTech, Healthcare, Web3, etc.).
+- **[Custom Domain Layer Template](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md)**: Standardized template for scaffolding custom enterprise domain layers.
 
 ---
 
 ## 4. Automation & Tooling
 
-To maintain cryptographic synchronization across all plan manifests, use the automated sync tool:
+To maintain cryptographic synchronization and DAG validation across all plan manifests, use the automated verification suite:
 
 ```bash
-# Verify synchronization of all plan manifests (Read-Only)
-python3 .nb/plan/scripts/sync_plan_versions.py --check-only
+# Verify synchronization of all plan manifests
+python3 .nb/plan/sync_plan_versions.py
 
-# Automatically update all MANIFEST.yaml hashes and line counts
-python3 .nb/plan/scripts/sync_plan_versions.py
+# Run automated validation suite (DAG, Schema v3.0, Content Hashes, Capability Matrix)
+bash .nb/plan/scripts/validate.sh
 ```
 
 ---
@@ -86,5 +95,4 @@ python3 .nb/plan/scripts/sync_plan_versions.py
 ## 5. Backward Compatibility & Integrity Invariants
 
 - **Zero Symlinks Rule**: All files within `.nb/plan/` are physical files. No symbolic links or hard links are utilized, ensuring compatibility with all VCS, cloud build pipelines, and containerized enclaves.
-- **Root Aliases**: Root-level aliases (`claude-context-engineering-parent-master-*.md`) are maintained as physical synchronized copies of their respective `detailed.md` source files to guarantee complete backward compatibility for IDE bootstrapper plugins and legacy build scripts.
-- **Archival Integrity**: Prior monolithic drafts and migration artifacts are preserved under `archive/legacy_plans/` and `archive/migration/`.
+- **Archival Integrity**: Prior monolithic drafts, legacy aliases, and retired L2 commercial OS plans are preserved under `archive/root_aliases/`, `archive/l2/`, `archive/legacy_plans/`, and `archive/migration/`.

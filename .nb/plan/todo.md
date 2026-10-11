@@ -1,7 +1,7 @@
 # Plan Audit TODO: Identified Gaps & Improvements (Resolved & Certified)
 
 **Audit Date**: 2026-10-11  
-**Total Plans Audited**: 15 (7 Master, 5 L1, 2 L2, 1 Test)  
+**Total Active Plans Audited**: 13 (7 Master, 5 L1, 1 Test)  
 **Audit Status**: **100% RESOLVED & CERTIFIED VIABLE (42 / 42 Actions Completed)**  
 **Automated Verification Suite**: `bash .nb/plan/scripts/validate.sh` (ALL GATES PASSED)  
 **Pytest Baseline Suite**: `pytest workplace/tests/` (341 / 341 PASSED)
@@ -10,17 +10,18 @@
 
 ## AUDIT SUMMARY: IDENTIFICATION OF ISSUES ACROSS ACTIVE PLANS
 
-A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current plans were indeed prone to the issues outlined below:
+A rigorous audit of all active plans in `.nb/plan/` confirmed that current plans were indeed prone to the issues outlined below:
 1. **Schema Fragmentation**: Plans were split across three divergent schemas:
-   - Legacy Format A (flat dictionary) in 10 plans (`parent-master-plan`, `parent-master-free-plan`, `l1/intellij-pycharm-plugin`, `l1/vscode-plugin`, `l1/saas-portal-domain`, `l1/npx-installer`, `l1/tiered-wheel-packaging`, `l2/corp-site-saas-portal`, `l2/enterprise-context-engineering-os`, `test`).
-   - Format B (nested dictionary) in 4 plans (`cloud-agnostic-infrastructure-substrate`, `enterprise-ui-design-system`, `plan-assessment`, `sequential-plan-orchestrator`).
-   - Format C (hybrid schema) in 1 plan (`security-mesh`).
+   - Legacy Format A (flat dictionary) in 8 active plans (`parent-master-plan`, `parent-master-free-plan`, `l1/intellij-pycharm-plugin`, `l1/vscode-plugin`, `l1/saas-portal-domain`, `l1/npx-installer`, `l1/tiered-wheel-packaging`, `test`).
+   - Format B (nested dictionary) in 4 active plans (`cloud-agnostic-infrastructure-substrate`, `enterprise-ui-design-system`, `plan-assessment`, `sequential-plan-orchestrator`).
+   - Format C (hybrid schema) in 1 active plan (`security-mesh`).
 2. **Dangling Dependencies & Unverified Cycles**: Plans referenced nonexistent external plans (`quantlib-financial-app`, `options-advisor-rewrite-plan`, `l3/*`), and dependency lists were not programmatically validated.
 3. **Missing Validation Tooling**: Tooling referenced in historical notes (`validate_dag.py`, `validate.sh`, `verify_hashes.py`, `generate_capability_index.py`) did not physically exist on disk.
 4. **Missing Semantic Parity Declarations**: None of the plans included the mandated 6-vector `semantic_parity` block ($S_{SP} \ge 0.950$).
 5. **Missing Cross-Plan Indexes**: `CAPABILITY_MATRIX.md` and `MANIFEST_SCHEMA.json` were absent.
+6. **Retirement & Archival of Non-Essential Artifacts**: Retired `l2/` commercial OS plans and 7 legacy monolithic root alias files to `.nb/plan/archive/`.
 
-**Resolution**: All 15 plans have been migrated to the **Canonical MANIFEST.yaml Schema v3.0**, automated validation tooling has been implemented and executed, non-applicable virtual machine / ISA opcode references have been purged, and all gates have passed.
+**Resolution**: All 13 active plans have been migrated to the **Canonical MANIFEST.yaml Schema v3.0**, automated validation tooling has been implemented and executed, non-applicable virtual machine / ISA opcode references have been purged, retired artifacts moved to archive, and all gates have passed.
 
 ---
 
@@ -28,7 +29,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 ### 1. MANIFEST.yaml Schema Unification [RESOLVED]
 **Issue**: Three incompatible MANIFEST schemas in active use across plans
-- Format A: `parent-master-plan` and L1/L2 plans (flat format)
+- Format A: `parent-master-plan` and L1 plans (flat format)
 - Format B: Orchestrator & infrastructure plans (nested format)
 - Format C: `security-mesh` (hybrid format)
 
@@ -37,9 +38,9 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 **Actions**:
 - [x] Define canonical MANIFEST.yaml v3.0 schema (unified structure)
 - [x] Document schema in PLAN_GUIDE.md and create `MANIFEST_SCHEMA.json`
-- [x] Migrate all 15 active plans to Canonical v3.0 format
+- [x] Migrate all 13 active plans to Canonical v3.0 format
 - [x] Update `.nb/plan/templates/MANIFEST.yaml` template to v3.0 format
-- [x] Validate all 15 MANIFEST files against schema with `validate_dag.py`
+- [x] Validate all 13 MANIFEST files against schema with `validate_dag.py`
 - [x] Maintain full backward compatibility with `sync_plan_versions.py`
 
 ### 2. Semantic Parity Gate Enforcement [RESOLVED]
@@ -51,7 +52,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 - [x] Define mathematical formula for 6-vector semantic parity score ($S_{SP}$) in `PARITY_AUDIT_CHECKLIST.md`
 - [x] Document parity gate methodology in PLAN_GUIDE.md
 - [x] Add `semantic_parity` block with all 6 vectors to canonical MANIFEST.yaml v3.0 schema
-- [x] Score and certify all 15 existing plans ($S_{SP} = 0.985$, `PASSED`)
+- [x] Score and certify all 13 existing active plans ($S_{SP} = 0.985$, `PASSED`)
 - [x] Integrate verification check in `validate_dag.py`
 
 ### 3. Automated Dependency DAG Validation [RESOLVED]
@@ -62,9 +63,9 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 **Actions**:
 - [x] Create Python script: `.nb/plan/scripts/validate_dag.py`
-- [x] Clean up dangling dependency references across all 15 plans
+- [x] Clean up dangling dependency references across all active plans (including removal of retired l2 references)
 - [x] Implement Kahn's topological sort algorithm to verify acyclicity
-- [x] Enforce layer constraints (Master -> L1 -> L2 -> Test)
+- [x] Enforce layer constraints (Master -> L1 -> Test)
 - [x] Create shell wrapper: `.nb/plan/scripts/validate.sh` (runs DAG, hash verification, and matrix generator)
 
 ---
@@ -75,7 +76,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 **Issue**: 4-File pattern requires `README.md`, `concise.md`, `detailed.md`, and `MANIFEST.yaml` in every plan
 
 **Actions**:
-- [x] Verified all 15 plans have valid `README.md` files
+- [x] Verified all 13 active plans have valid `README.md` files
 - [x] Verified `file_versions.readme` is tracked in all MANIFEST files
 - [x] Documented standard 4-file pattern in PLAN_GUIDE.md
 
@@ -84,7 +85,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 **Actions**:
 - [x] Create script: `.nb/plan/scripts/generate_capability_index.py`
-- [x] Auto-generate `.nb/plan/CAPABILITY_MATRIX.md` across all 15 plans
+- [x] Auto-generate `.nb/plan/CAPABILITY_MATRIX.md` across all 13 active plans
 - [x] Integrate regeneration into `.nb/plan/scripts/validate.sh`
 
 ### 6. Elimination of Virtual Machine & ISA Opcode References [RESOLVED]
@@ -92,7 +93,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 **Actions**:
 - [x] Deleted `.nb/plan/ISA_OPCODE_MAP.md`
-- [x] Removed `isa_opcodes` array from all 15 plan manifests and template
+- [x] Removed `isa_opcodes` array from all active plan manifests and template
 - [x] Removed `isa_opcodes` specification from `MANIFEST_SCHEMA.json`
 - [x] Removed opcode extraction from `generate_capability_index.py` and `CAPABILITY_MATRIX.md`
 - [x] Cleaned all references from `PLAN_INDEX.md` and `PLAN_GUIDE.md`
@@ -102,15 +103,17 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 **Actions**:
 - [x] Standardize `maturity.stage` enum (`PLANNED`, `ACTIVE_DRAFT`, `IMPLEMENTATION_READY`, `COMPLETED`, `DEPRECATED`)
-- [x] Standardize `maturity` block across all 15 plan manifests
+- [x] Standardize `maturity` block across all 13 active plan manifests
 - [x] Document lifecycle transition gates in PLAN_GUIDE.md
 
-### 8. Untracked Plans & Reference Directory [RESOLVED]
-**Issue**: Multiple master plans were omitted from the body of PLAN_INDEX.md
+### 8. Untracked Plans & Archival of Retired Artifacts [RESOLVED]
+**Issue**: Uncataloged master plans and retired monolithic aliases/L2 plans requiring migration to archive
 
 **Actions**:
 - [x] Audit all directories under `.nb/plan/`
-- [x] Update PLAN_INDEX.md to catalog all 7 Master, 5 L1, 2 L2, and 1 Test plans
+- [x] Moved `.nb/plan/l2` to `.nb/plan/archive/l2`
+- [x] Moved 7 root monolithic markdown aliases (`claude-context-engineering-*.md`) to `.nb/plan/archive/root_aliases/`
+- [x] Update PLAN_INDEX.md to catalog all 7 Master, 5 L1, and 1 Test active plans
 - [x] Update PLAN_GUIDE.md with complete architectural hierarchy mermaid diagram
 
 ---
@@ -122,7 +125,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 **Actions**:
 - [x] Create `.nb/plan/scripts/verify_hashes.py`
-- [x] Verify 46 tracked markdown files across all 15 plans (0 mismatches, 0 missing)
+- [x] Verify 40 tracked markdown files across all 13 active plans (0 mismatches, 0 missing)
 - [x] Integrate into `validate.sh` suite
 
 ### 10. Module Inventory in MANIFEST [RESOLVED]
@@ -136,7 +139,7 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 **Issue**: Manifests required continuous cryptographic hash synchronization
 
 **Actions**:
-- [x] Run `python3 .nb/plan/sync_plan_versions.py` across all 15 plans
+- [x] Run `python3 .nb/plan/sync_plan_versions.py` across all 13 active plans
 - [x] Confirm 100% sync status across all plans
 
 ---
@@ -145,8 +148,8 @@ A rigorous audit of all 15 active plans in `.nb/plan/` confirmed that current pl
 
 | Verification Suite | Target | Status | Notes |
 | :--- | :--- | :---: | :--- |
-| **`validate_dag.py`** | 15 Plans | ✅ **PASSED** | Acyclic Kahn's sort verified, 0 dangling references, 0 cycle nodes. |
-| **`verify_hashes.py`** | 46 Files | ✅ **PASSED** | 100% SHA-256 hash match, 0 mismatches, 0 missing. |
-| **`generate_capability_index.py`** | Matrix | ✅ **PASSED** | Generated `CAPABILITY_MATRIX.md` for all 15 plans without opcodes. |
+| **`validate_dag.py`** | 13 Plans | ✅ **PASSED** | Acyclic Kahn's sort verified, 0 dangling references, 0 cycle nodes. |
+| **`verify_hashes.py`** | 40 Files | ✅ **PASSED** | 100% SHA-256 hash match, 0 mismatches, 0 missing. |
+| **`generate_capability_index.py`** | Matrix | ✅ **PASSED** | Generated `CAPABILITY_MATRIX.md` for all 13 active plans. |
 | **`validate.sh`** | All Gates | ✅ **PASSED** | End-to-end automated suite passed. |
-| **`pytest workplace/tests/`** | Tests | ✅ **PASSED** | 341/341 passed in 50.17s. |
+| **`pytest workplace/tests/`** | Tests | ✅ **PASSED** | 341/341 passed. |

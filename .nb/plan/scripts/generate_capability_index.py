@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Automated Capability Matrix Generator.
-Extracts capabilities, maturity levels, and dependencies from all 15 plan manifests
+Extracts capabilities, maturity levels, and dependencies from all 13 active plan manifests
 and compiles .nb/plan/CAPABILITY_MATRIX.md.
 """
 
@@ -17,7 +17,7 @@ OUTPUT_FILE = PLAN_ROOT / "CAPABILITY_MATRIX.md"
 def generate_capability_matrix():
     manifests: Dict[str, Dict[str, Any]] = {}
     for p in sorted(PLAN_ROOT.glob("**/MANIFEST.yaml")):
-        if "templates" in p.parts:
+        if "templates" in p.parts or "archive" in p.parts:
             continue
         try:
             with open(p, "r", encoding="utf-8") as f:

@@ -30,8 +30,7 @@ REQUIRED_V3_KEYS = [
 LAYER_HIERARCHY = {
     "master": 0,
     "l1": 1,
-    "l2": 2,
-    "test": 3
+    "test": 2
 }
 
 
@@ -44,9 +43,9 @@ class PlanDagValidator:
         self.warnings: List[str] = []
 
     def discover_plans(self):
-        """Locate all MANIFEST.yaml files except templates."""
+        """Locate all active MANIFEST.yaml files except templates and archives."""
         for p in sorted(self.plan_root.glob("**/MANIFEST.yaml")):
-            if "templates" in p.parts:
+            if "templates" in p.parts or "archive" in p.parts:
                 continue
             try:
                 with open(p, "r", encoding="utf-8") as f:
@@ -112,7 +111,7 @@ class PlanDagValidator:
                     continue
 
                 req_layer = self.manifests[req].get("layer", "master")
-                # Layer hierarchy check: master cannot depend on l1/l2; l1 cannot depend on l2
+                # Layer hierarchy check: master cannot depend on l1/test; l1 cannot depend on test
                 if LAYER_HIERARCHY.get(layer, 0) < LAYER_HIERARCHY.get(req_layer, 0):
                     self.errors.append(
                         f"[{rel_path}] {plan_id} (layer {layer}) illegally depends on higher-layer {req} (layer {req_layer})"

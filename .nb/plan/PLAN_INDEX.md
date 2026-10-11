@@ -1,8 +1,8 @@
 ---
 index_type: "master_navigation"
-purpose: "Unified entry point for agentic and human navigation of all plans"
+purpose: "Unified entry point for agentic and human navigation of all active plans"
 last_updated: "2026-10-11"
-total_plans: 15
+total_plans: 13
 organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 ---
 
@@ -31,9 +31,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 │   ├── saas-portal-domain/          ← SaaS Customer Portal & Observability Web
 │   ├── npx-installer/               ← NPX Instant Execution & Bootstrapping
 │   └── tiered-wheel-packaging/      ← Multi-Tier Python Wheel Packaging
-├── 🧠 l2/                           ← Self-Evolution & Commercial OS (2 Plans)
-│   ├── enterprise-context-engineering-os/ ← Play 3 Enterprise OS & Gatekeeper
-│   └── corp-site-saas-portal/       ← Play 3 Cloud SaaS Portal & Brand Site
 ├── 🧪 test/                         ← Master Test Plan & Verification (1 Plan)
 │   ├── README.md                    ← Test Governance Overview & Pyramid
 │   ├── MANIFEST.yaml                ← Cryptographic Test Manifest
@@ -49,6 +46,10 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 │   ├── generate_capability_index.py ← Dynamic Capability Matrix Compiler
 │   └── sync_plan_versions.py        ← Automated SHA-256 Manifest Sync Tool
 └── 🗄️ archive/                      ← Historical & Migration Archives
+    ├── l2/                          ← Archived L2 Commercial OS & Site Plans
+    ├── root_aliases/                ← Archived Monolithic Root Markdown Aliases
+    ├── legacy_plans/                ← Pre-Split Historical Monoliths
+    └── migration/                   ← Reorganization Maps & Reports
 ```
 
 ---
@@ -61,7 +62,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [master/parent-master-plan/concise.md](./master/parent-master-plan/concise.md)
 - **Detailed Guide**: [master/parent-master-plan/detailed.md](./master/parent-master-plan/detailed.md)
 - **Manifest**: [master/parent-master-plan/MANIFEST.yaml](./master/parent-master-plan/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-parent-master-plan.md](./claude-context-engineering-parent-master-plan.md)
 - **Purpose**: Master blueprint governing universal poly-module lifecycle orchestration, cryptographic Merkle state verification, AST token compression, and autonomous CI/CD (CAP-01 through CAP-35).
 
 ### Parent Master Context Engineering Plan (Free Community Edition)
@@ -70,7 +70,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [master/parent-master-free-plan/concise.md](./master/parent-master-free-plan/concise.md)
 - **Detailed Guide**: [master/parent-master-free-plan/detailed.md](./master/parent-master-free-plan/detailed.md)
 - **Manifest**: [master/parent-master-free-plan/MANIFEST.yaml](./master/parent-master-free-plan/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-parent-master-free_plan.md](./claude-context-engineering-parent-master-free_plan.md)
 - **Purpose**: Community edition of the parent framework tailored for single-seat local development with embedded IDE plugin bootstrapping.
 
 ### Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment Mesh
@@ -111,7 +110,7 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [master/sequential-plan-orchestrator/concise.md](./master/sequential-plan-orchestrator/concise.md)
 - **Detailed Guide**: [master/sequential-plan-orchestrator/detailed.md](./master/sequential-plan-orchestrator/detailed.md)
 - **Manifest**: [master/sequential-plan-orchestrator/MANIFEST.yaml](./master/sequential-plan-orchestrator/MANIFEST.yaml)
-- **Purpose**: Zero-drift sequential execution engine enforcing strict layer-by-layer dependency progression from Master through L1 and L2.
+- **Purpose**: Zero-drift sequential execution engine enforcing strict layer-by-layer dependency progression from Master through L1.
 
 ---
 
@@ -123,7 +122,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/intellij-pycharm-plugin/concise.md](./l1/intellij-pycharm-plugin/concise.md)
 - **Detailed Guide**: [l1/intellij-pycharm-plugin/detailed.md](./l1/intellij-pycharm-plugin/detailed.md)
 - **Manifest**: [l1/intellij-pycharm-plugin/MANIFEST.yaml](./l1/intellij-pycharm-plugin/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-intellij-pycharm-plugin-space.md](./claude-context-engineering-intellij-pycharm-plugin-space.md)
 - **Purpose**: JetBrains Platform SDK plugin, PSI multi-language AST pruning, in-editor annotators, and visual pipeline DAG and contract inspector.
 
 ### Visual Studio Code Extension Space
@@ -132,7 +130,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/vscode-plugin/concise.md](./l1/vscode-plugin/concise.md)
 - **Detailed Guide**: [l1/vscode-plugin/detailed.md](./l1/vscode-plugin/detailed.md)
 - **Manifest**: [l1/vscode-plugin/MANIFEST.yaml](./l1/vscode-plugin/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-vscode-plugin-space.md](./claude-context-engineering-vscode-plugin-space.md)
 - **Purpose**: VSCode Extension API, Language Server Protocol (LSP 3.17), hierarchical pipeline stage/contract tree provider, and Webview DAG cards.
 
 ### Enterprise SaaS & Corporate Portal Space
@@ -141,7 +138,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/saas-portal-domain/concise.md](./l1/saas-portal-domain/concise.md)
 - **Detailed Guide**: [l1/saas-portal-domain/detailed.md](./l1/saas-portal-domain/detailed.md)
 - **Manifest**: [l1/saas-portal-domain/MANIFEST.yaml](./l1/saas-portal-domain/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-saas-portal-domain-plan.md](./claude-context-engineering-saas-portal-domain-plan.md)
 - **Purpose**: Next.js 14 / FastAPI modular web portal, RBAC & PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
 
 ### NPX Instant Execution & Bootstrapping Space
@@ -150,7 +146,6 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/npx-installer/concise.md](./l1/npx-installer/concise.md)
 - **Detailed Guide**: [l1/npx-installer/detailed.md](./l1/npx-installer/detailed.md)
 - **Manifest**: [l1/npx-installer/MANIFEST.yaml](./l1/npx-installer/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-npx-installer-distribution.md](./claude-context-engineering-npx-installer-distribution.md)
 - **Purpose**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding (`npx percipience init`), automated `.claude/mcp.json` provisioning, and platform binary resolution.
 
 ### Multi-Tier Python Wheel Packaging & Distribution Space
@@ -159,32 +154,11 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/tiered-wheel-packaging/concise.md](./l1/tiered-wheel-packaging/concise.md)
 - **Detailed Guide**: [l1/tiered-wheel-packaging/detailed.md](./l1/tiered-wheel-packaging/detailed.md)
 - **Manifest**: [l1/tiered-wheel-packaging/MANIFEST.yaml](./l1/tiered-wheel-packaging/MANIFEST.yaml)
-- **Root Alias**: [claude-context-engineering-tiered-wheel-packaging.md](./claude-context-engineering-tiered-wheel-packaging.md)
 - **Purpose**: Automated PEP 427 Python wheel compilation across all 4 commercial tiers (Free, Team, Business, Enterprise), strict build-time engine exclusion boundaries, SHA-256 Merkle block sealing, and index distribution (PyPI, AWS CodeArtifact, Artifactory).
 
 ---
 
-## 3. L2 Self-Evolution & Commercial OS Layer (2 Plans)
-
-### Enterprise Context Engineering OS & CI/CD Gatekeeper (Play 3)
-- **ID**: `play_3_enterprise_os`
-- **Location**: [l2/enterprise-context-engineering-os/](./l2/enterprise-context-engineering-os/)
-- **Concise Spec**: [l2/enterprise-context-engineering-os/concise.md](./l2/enterprise-context-engineering-os/concise.md)
-- **Detailed Guide**: [l2/enterprise-context-engineering-os/detailed.md](./l2/enterprise-context-engineering-os/detailed.md)
-- **Manifest**: [l2/enterprise-context-engineering-os/MANIFEST.yaml](./l2/enterprise-context-engineering-os/MANIFEST.yaml)
-- **Purpose**: Commercial CEPaaS operating system, BYOR multi-VCS adapter, `.nbpack` obfuscation, and enterprise pricing/deployment model.
-
-### Percipience Cloud SaaS Portal & Enterprise Corporate Site (Play 3)
-- **ID**: `play_3_corp_site_saas`
-- **Location**: [l2/corp-site-saas-portal/](./l2/corp-site-saas-portal/)
-- **Concise Spec**: [l2/corp-site-saas-portal/concise.md](./l2/corp-site-saas-portal/concise.md)
-- **Detailed Guide**: [l2/corp-site-saas-portal/detailed.md](./l2/corp-site-saas-portal/detailed.md)
-- **Manifest**: [l2/corp-site-saas-portal/MANIFEST.yaml](./l2/corp-site-saas-portal/MANIFEST.yaml)
-- **Purpose**: Customer-facing commercial web interface, MDX documentation, onboarding wizards, and usage billing metering.
-
----
-
-## 4. Test Governance & Verification Space (1 Plan)
+## 3. Test Governance & Verification Space (1 Plan)
 
 ### Percipience Master Test Governance & AI-Assisted Verification Framework
 - **ID**: `percipience_master_test_plan`

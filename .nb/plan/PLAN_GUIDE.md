@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This guide provides a human-friendly and agentic overview of all context engineering plans in the Percipience framework.
+This guide provides a human-friendly and agentic overview of all active context engineering plans in the Percipience framework.
 
 ---
 
@@ -21,7 +21,7 @@ Every plan folder contains exactly 4 standard files:
 4. `detailed.md`: Extended technical implementation guide.
 
 ### 3. Canonical Manifest Schema v3.0
-All 15 active plans conform to Canonical Schema v3.0 (`.nb/plan/MANIFEST_SCHEMA.json`), featuring:
+All 13 active plans conform to Canonical Schema v3.0 (`.nb/plan/MANIFEST_SCHEMA.json`), featuring:
 - **Unified Root**: `schema_version: "3.0.0"`, `plan_id`, `plan_name`, `version`, `layer`, `status`.
 - **Maturity Lifecycle**: `stage` (`PLANNED`, `ACTIVE_DRAFT`, `IMPLEMENTATION_READY`, `COMPLETED`, `DEPRECATED`), `implementation_status`, `test_coverage`, `production_ready`.
 - **Semantic Parity Gate**: 6-vector composite score ($S_{SP} \ge 0.950$) covering AST, contract, behavior, handover, doc, and supply-chain parity.
@@ -36,14 +36,11 @@ All 15 active plans conform to Canonical Schema v3.0 (`.nb/plan/MANIFEST_SCHEMA.
 graph TD
   Master["master/ (7 Plans: Orchestration, Infrastructure, UI, Security, Assessment)"]
   L1["l1/ (5 Plans: IntelliJ, VSCode, SaaS Portal, NPX Installer, Tiered Wheels)"]
-  L2["l2/ (2 Plans: Commercial OS, Enterprise Site)"]
   Test["test/ (1 Plan: Test Governance & AI Verification)"]
 
   Master --> L1
-  Master --> L2
-  L1 --> L2
   Master --> Test
-  L2 --> Test
+  L1 --> Test
 ```
 
 ### Master Plans (`master/`)
@@ -63,11 +60,6 @@ Implements concrete runtime spaces:
 - **`saas-portal-domain`**: Modular portal, RBAC, PostgreSQL RLS, and pipeline visualizer drawer.
 - **`npx-installer`**: Zero-Install Instant Onboarding & Ephemeral CI/CD Gatekeeper.
 - **`tiered-wheel-packaging`**: Multi-Tier Python Wheel Packaging across Free, Team, Business & Enterprise Tiers.
-
-### L2 Self-Evolution & Commercial OS (`l2/`)
-Defines the enterprise commercial operating system:
-- **`enterprise-context-engineering-os`**: Commercial CEPaaS architecture and BYOR multi-VCS adapters.
-- **`corp-site-saas-portal`**: Multi-module web portal and Stripe revenue-share financial engine.
 
 ### Test Governance (`test/`)
 - **`test`**: Authoritative 18-subsystem automated test governance, Pytest test runner, and GenAI evaluation metrics.

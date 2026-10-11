@@ -1,7 +1,7 @@
 # 📊 Percipience Master Capability Cross-Reference Matrix
 
 > **Generated Automatically**: Certified via `.nb/plan/scripts/generate_capability_index.py`  
-> **Total Plans Tracked**: 15  
+> **Total Plans Tracked**: 13  
 
 ---
 
@@ -14,8 +14,6 @@
 | [`domain_saas_portal`](./l1/saas-portal-domain) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
 | [`domain_tiered_wheel_packaging`](./l1/tiered-wheel-packaging) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_vscode_plugin`](./l1/vscode-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
-| [`play_3_corp_site_saas`](./l2/corp-site-saas-portal) | `l2` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
-| [`play_3_enterprise_os`](./l2/enterprise-context-engineering-os) | `l2` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
 | [`master_cloud_agnostic_infrastructure_substrate`](./master/cloud-agnostic-infrastructure-substrate) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 10 |
 | [`master_enterprise_ui_design_system`](./master/enterprise-ui-design-system) | `master` | `active_draft` | `0.985` | ✅ Ready | 12 |
 | [`master_parent_free_community`](./master/parent-master-free-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
@@ -86,30 +84,6 @@
   - Secure Webview Panel & Interactive Visualizer
   - In-Editor CodeLens Triggers on Contracts & Workflows
   - Activity Bar Navigation & Status Bar FinOps Meters
-
-### `play_3_corp_site_saas`: Percipience Cloud SaaS Portal & Enterprise Corporate Site
-- **Location**: [l2/corp-site-saas-portal](./l2/corp-site-saas-portal)
-- **Layer**: `l2`
-- **Requires**: `master_parent_framework`, `play_3_enterprise_os`, `domain_saas_portal`
-- **Key Capabilities**:
-  - Unified Enterprise Portal & Corporate Brand (Next.js 14)
-  - Autonomous Multi-Tenant Onboarding (SSO / WorkOS / Clerk)
-  - Commercial Packaging, Multi-Target Provisioning & Ed25519 License Minting
-  - Usage-Based Metering & 15% Token Rev-Share Financial Engine
-  - Mission-Control Context Observability Dashboard
-  - Shared-to-Decoupled Cloud Infrastructure Architecture
-
-### `play_3_enterprise_os`: Enterprise Context Engineering OS & CI/CD Gatekeeper (Play 3)
-- **Location**: [l2/enterprise-context-engineering-os](./l2/enterprise-context-engineering-os)
-- **Layer**: `l2`
-- **Requires**: `master_parent_framework`, `generic_multitenant_security_mesh`, `domain_tiered_wheel_packaging`
-- **Key Capabilities**:
-  - Zero-Drift Git Worktree Isolation
-  - Automated 40-70% AST Token Compression
-  - Surgical Module Rollback to Recovery Points
-  - Cryptographic Merkle State Ledger
-  - Sealed Enclave .nbpack Packaging
-  - Bring Your Own Repository (BYOR) Multi-VCS Adapter
 
 ### `master_cloud_agnostic_infrastructure_substrate`: Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment Mesh (OpenShift, GCP, AWS, Azure)
 - **Location**: [master/cloud-agnostic-infrastructure-substrate](./master/cloud-agnostic-infrastructure-substrate)
@@ -213,7 +187,7 @@
 ### `percipience_master_test_plan`: Percipience Master Test Governance & AI-Assisted Verification Framework
 - **Location**: [test](./test)
 - **Layer**: `test`
-- **Requires**: `master_parent_framework`, `play_3_enterprise_os`
+- **Requires**: `master_parent_framework`
 - **Key Capabilities**:
   - 18-Subsystem Test Pyramid
   - Pytest 8.4+ Allure Test Reporting
