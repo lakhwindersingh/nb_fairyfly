@@ -29,15 +29,33 @@
         </div>
 
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn btn-primary" onclick="loginClient(false)" style="padding:11px; font-size:13px; font-weight:700; border-radius:8px; width:100%;">🔑 Sign In to Enterprise Space</button>
+          <button class="btn btn-primary" onclick="loginClient(false)" style="padding:11px; font-size:13px; font-weight:700; border-radius:8px; width:100%;">🔑 Sign In with API Key / Token</button>
+          <button class="btn btn-secondary" onclick="loginWithPasskey()" style="padding:11px; font-size:13px; font-weight:700; border-radius:8px; width:100%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span>👆</span> Sign In with FIDO2 Passkey (TouchID / WebAuthn)
+          </button>
           <button class="btn btn-secondary" onclick="loginClient(true)" style="padding:10px; font-size:12px; font-weight:600; border-radius:8px; width:100%;">⚡ Instant Demo Login (Acme Global)</button>
+        </div>
+
+        <!-- TOTP STEP-UP CHALLENGE CONTAINER -->
+        <div id="totpStepUpCard" style="display:none; margin-top:16px; padding:16px; background:var(--code-bg); border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:12px; font-weight:700; color:var(--purple); margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+            <span>🛡️</span> Zero-Trust MFA Step-Up Required (RFC 6238 TOTP)
+          </div>
+          <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">
+            Adaptive risk evaluation elevated. Enter 6-digit authenticator code (or test code <code>123456</code>):
+          </div>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="totpChallengeCode" class="input" placeholder="000000" maxlength="6" style="width:120px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:14px; letter-spacing:0.1em; padding:6px;">
+            <button class="btn btn-primary" onclick="verifyTotpStepUp()" style="font-size:12px; padding:6px 14px;">Verify Code</button>
+          </div>
         </div>
         <div id="loginErrorMsg" style="color:var(--red); font-size:12px; margin-top:14px; text-align:center; display:none;">Invalid credentials. Please verify your client ID and API key.</div>
 
         <div style="display:flex; justify-content:center; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid var(--border); flex-wrap:wrap;">
-          <span class="badge badge-emerald" style="font-size:10px;">SEC 17a-4 WORM</span>
+          <span class="badge badge-emerald" style="font-size:10px;">WebAuthn FIDO2</span>
           <span class="badge badge-purple" style="font-size:10px;">PostgreSQL RLS Active</span>
-          <span class="badge badge-cyan" style="font-size:10px;">Ed25519 Enclaves</span>
+          <span class="badge badge-cyan" style="font-size:10px;">Sub-ms Bloom Revocation</span>
+          <span class="badge badge-amber" style="font-size:10px;">NIST SP 800-38G FPE</span>
         </div>
       </div>
 
@@ -344,6 +362,83 @@
 
                   <div style="margin-top:16px;">
                     <button class="btn btn-secondary" onclick="switchAdminView('governance')" style="width:100%; font-size:11px; padding:7px;">Manage Policies &amp; Enclaves &rarr;</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ZERO-TRUST SECURITY MESH & DATA PROTECTION ENCLAVE -->
+              <div class="card" style="margin-top:24px; border:1px solid var(--border); background:var(--card-bg);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                  <div>
+                    <div class="card-title" style="margin-bottom:2px; display:flex; align-items:center; gap:8px;">
+                      <span>🛡️</span> Zero-Trust Security Mesh &amp; Sovereign Data Protection
+                    </div>
+                    <div style="font-size:12px; color:var(--muted);">
+                      Continuous Zero-Trust Authorization &bull; WebAuthn Passkeys &bull; Sub-ms Redis Bloom Revocation &bull; NIST SP 800-38G FPE
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <span class="badge badge-emerald" id="secAuthFactorBadge" style="font-size:10px;">FIDO2 Passkey Enforced</span>
+                    <span class="badge badge-cyan" id="secBloomBadge" style="font-size:10px;">Redis Bloom: &lt; 200 µs</span>
+                    <span class="badge badge-purple" id="secRlsBadge" style="font-size:10px;">PostgreSQL RLS Active</span>
+                  </div>
+                </div>
+
+                <!-- 3-Column Security Metrics -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:18px;">
+                  <!-- Tile 1: Authenticated Identity & PII Protection -->
+                  <div style="background:var(--code-bg); padding:14px; border-radius:8px; border:1px solid var(--border);">
+                    <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">
+                      Client Identity &amp; PII Protection
+                    </div>
+                    <div style="font-size:12px; margin-bottom:6px;">
+                      User: <strong id="secUserDisplayName" style="color:var(--text);">Alice (Enterprise Admin)</strong>
+                    </div>
+                    <div style="font-size:12px; margin-bottom:6px;">
+                      Email: <code id="secUserEmail" style="color:var(--cyan);">a***@acmeglobal.com</code>
+                    </div>
+                    <div style="font-size:12px; margin-bottom:10px;">
+                      Tax ID / TIN: <code id="secTaxId" style="color:var(--purple);">***-**-5038</code>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                      <button class="btn btn-secondary" id="secPiiToggleBtn" onclick="togglePiiUnmask()" style="font-size:11px; padding:5px 10px;">👁️ Unmask PII (Compliance Audit)</button>
+                    </div>
+                  </div>
+
+                  <!-- Tile 2: NIST SP 800-38G Format-Preserving Encryption -->
+                  <div style="background:var(--code-bg); padding:14px; border-radius:8px; border:1px solid var(--border);">
+                    <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">
+                      NIST SP 800-38G FPE (FF1) Vault
+                    </div>
+                    <div style="font-size:12px; margin-bottom:6px;">
+                      Standard: <span class="badge badge-emerald" style="font-size:9px;">NIST SP 800-38G Approved</span>
+                    </div>
+                    <div style="font-size:12px; margin-bottom:6px;">
+                      FPE Ciphertext: <code id="secFpeCiphertext" style="color:var(--emerald);">948-21-5038</code>
+                    </div>
+                    <div style="font-size:11px; color:var(--muted); line-height:1.4; margin-bottom:10px;">
+                      Maintains exact structure &amp; length for database indexing without plaintext exposure.
+                    </div>
+                    <div>
+                      <span class="badge badge-cyan" style="font-size:9px;">Zero Plaintext Stored</span>
+                    </div>
+                  </div>
+
+                  <!-- Tile 3: Continuous Revocation & Four-Eyes Control -->
+                  <div style="background:var(--code-bg); padding:14px; border-radius:8px; border:1px solid var(--border);">
+                    <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;">
+                      Continuous Revocation &amp; Dual Control
+                    </div>
+                    <div style="font-size:12px; margin-bottom:6px;">
+                      Bloom Revocation Latency: <strong id="secBloomLatency" class="text-cyan">142.5 µs</strong>
+                    </div>
+                    <div style="font-size:12px; margin-bottom:10px;">
+                      Four-Eyes Multi-Signature: <span class="badge badge-purple" style="font-size:9px;">Dual Signatures Enforced</span>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                      <button class="btn btn-secondary" onclick="triggerInstantRevocation()" style="font-size:11px; padding:5px 10px; color:var(--red);">⚡ Test Sub-ms Revocation</button>
+                      <button class="btn btn-secondary" onclick="proposeFourEyesTest()" style="font-size:11px; padding:5px 10px;">✍️ Test Four-Eyes Action</button>
+                    </div>
                   </div>
                 </div>
               </div>

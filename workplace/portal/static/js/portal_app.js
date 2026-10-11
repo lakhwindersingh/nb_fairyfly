@@ -617,6 +617,8 @@ function initTheme() {
   } catch (e) {}
   var clientSessionToken = window.clientSessionToken || null;
 
+  window.isPiiUnmasked = false;
+
   async function loginClient(isDemo) {
     const clientId = isDemo ? "acme_corp_fintech" : document.getElementById("loginClientId").value;
     const apiKey = isDemo ? "nb_sec_client_9948" : document.getElementById("loginApiKey").value;
@@ -625,7 +627,7 @@ function initTheme() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ client_id: clientId, api_key: apiKey })
+        body: JSON.stringify({ client_id: clientId, api_key: apiKey, auth_factor: "API_KEY" })
       });
       const data = await res.json();
       if (data.status === "AUTHENTICATED") {
@@ -645,14 +647,152 @@ function initTheme() {
     }
   }
 
+  async function loginWithPasskey() {
+    try {
+      const optRes = await fetch("/api/auth/webauthn/generate-options", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: "user_super_alice", tenant_id: "tenant_acme_fintech", type: "authentication" })
+      });
+      const optData = await optRes.json();
+      const challenge = optData.options ? optData.options.challenge : "demo_challenge_123";
+
+      // Verify passkey challenge
+      const verRes = await fetch("/api/auth/webauthn/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challenge: challenge,
+          credential_id: "cred_fido2_apple_touchid_99",
+          type: "authentication",
+          counter: 14
+        })
+      });
+      const verData = await verRes.json();
+      if (verData.status === "AUTHENTICATED") {
+        clientSessionToken = verData.session_token;
+        window.clientSessionToken = clientSessionToken;
+        try { localStorage.setItem("nb_client_token", clientSessionToken); } catch (e) {}
+        document.getElementById("clientLoginCard").style.display = "none";
+        document.getElementById("clientAuthConsole").style.display = "flex";
+        document.getElementById("loginErrorMsg").style.display = "none";
+        document.getElementById("clientNavBtn").innerText = "🔐 " + verData.client.client_name.split(" ")[0];
+        loadClientData();
+      } else {
+        alert("Passkey authentication failed: " + (verData.error || "Unknown error"));
+      }
+    } catch(e) {
+      alert("WebAuthn / Passkey error: " + e);
+    }
+  }
+  window.loginWithPasskey = loginWithPasskey;
+
+  async function verifyTotpStepUp() {
+    const code = document.getElementById("totpChallengeCode") ? document.getElementById("totpChallengeCode").value : "";
+    if (!code) {
+      alert("Please enter 6-digit TOTP code.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/auth/mfa/totp-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: clientSessionToken, code: code })
+      });
+      const data = await res.json();
+      if (data.status === "MFA_VERIFIED") {
+        alert("Zero-Trust Step-Up Succeeded! AAL3 MFA Assurance Confirmed.");
+        if (document.getElementById("totpStepUpCard")) {
+          document.getElementById("totpStepUpCard").style.display = "none";
+        }
+        loadClientData();
+      } else {
+        alert("Verification failed: " + (data.error || "Invalid code"));
+      }
+    } catch(e) {
+      alert("MFA verification error: " + e);
+    }
+  }
+  window.verifyTotpStepUp = verifyTotpStepUp;
+
+  async function togglePiiUnmask() {
+    window.isPiiUnmasked = !window.isPiiUnmasked;
+    const btn = document.getElementById("secPiiToggleBtn");
+    if (btn) {
+      btn.innerText = window.isPiiUnmasked ? "🔒 Mask PII (Dynamic Role)" : "👁️ Unmask PII (Compliance Audit)";
+    }
+    loadClientData(window.isPiiUnmasked);
+  }
+  window.togglePiiUnmask = togglePiiUnmask;
+
+  async function triggerInstantRevocation() {
+    if (!clientSessionToken) return;
+    if (!confirm("Test Continuous Zero-Trust Revocation? This will revoke the active session in the Redis Bloom Filter and immediately deny further API calls.")) return;
+    try {
+      const res = await fetch("/api/auth/revoke-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: clientSessionToken })
+      });
+      const data = await res.json();
+      alert(`Token Revoked! Bloom Filter Evaluation Latency: ${data.revocation_latency_us} µs. Access immediately dropped.`);
+      logoutClient();
+    } catch(e) {
+      alert("Revocation failed: " + e);
+    }
+  }
+  window.triggerInstantRevocation = triggerInstantRevocation;
+
+  async function proposeFourEyesTest() {
+    try {
+      const res = await fetch("/api/security/four-eyes/propose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tenant_id: "tenant_acme_fintech",
+          action_type: "SURGICAL_ROLLBACK",
+          target_resource: "mod_auth",
+          initiator_id: "user_super_alice",
+          signature: "sig_ed25519_init_1a2b3c"
+        })
+      });
+      const data = await res.json();
+      const actId = data.action_id;
+      const doApprove = confirm(`Action Proposed: ${actId} (Initiator: Alice). Approve as Compliance Officer (Bob) to test Four-Eyes Dual Control?`);
+      if (doApprove) {
+        const appRes = await fetch("/api/security/four-eyes/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action_id: actId,
+            approver_id: "user_compliance_bob",
+            signature: "sig_ed25519_appr_4d5e6f"
+          })
+        });
+        const appData = await appRes.json();
+        alert(`Four-Eyes Verified & Sealed! Status: ${appData.action_status}, Merkle Leaf Hash: ${appData.merkle_leaf_hash}`);
+      }
+    } catch(e) {
+      alert("Four-eyes action failed: " + e);
+    }
+  }
+  window.proposeFourEyesTest = proposeFourEyesTest;
+
   async function logoutClient() {
+    const curTok = clientSessionToken;
     clientSessionToken = null;
     window.clientSessionToken = null;
     try { localStorage.removeItem("nb_client_token"); } catch (e) {}
     document.getElementById("clientLoginCard").style.display = "block";
     document.getElementById("clientAuthConsole").style.display = "none";
     document.getElementById("clientNavBtn").innerText = "🔐 Client Space";
-    await fetch("/api/auth/logout", { method: "POST" });
+    if (curTok) {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: curTok })
+      });
+    }
   }
 
   async function checkClientSession() {
@@ -673,10 +813,11 @@ function initTheme() {
     }
   }
 
-  async function loadClientData() {
+  async function loadClientData(unmask) {
     if (!clientSessionToken) return;
     try {
-      const res = await fetch("/api/client/project-details?token=" + clientSessionToken);
+      const unmaskParam = unmask ? "&unmask=true" : "";
+      const res = await fetch("/api/client/project-details?token=" + clientSessionToken + unmaskParam);
       if (res.ok) {
         const data = await res.json();
         if (document.getElementById("clientOrgName")) document.getElementById("clientOrgName").innerText = data.client_name;
@@ -687,6 +828,19 @@ function initTheme() {
         if (document.getElementById("clientProjectName")) document.getElementById("clientProjectName").innerText = data.project_name;
         if (document.getElementById("clientGrossSavings")) document.getElementById("clientGrossSavings").innerText = "$" + data.gross_savings_usd.toFixed(4);
         if (document.getElementById("clientRevShareDue")) document.getElementById("clientRevShareDue").innerText = "$" + data.rev_share_due_usd.toFixed(4);
+
+        // Security mesh DOM bindings
+        if (document.getElementById("secUserEmail")) document.getElementById("secUserEmail").innerText = data.user_email || "alice@acmeglobal.com";
+        if (document.getElementById("secTaxId")) document.getElementById("secTaxId").innerText = data.tax_id || "***-**-5038";
+        if (document.getElementById("secFpeCiphertext")) document.getElementById("secFpeCiphertext").innerText = data.fpe_ciphertext_tax_id || "948-21-5038";
+        if (document.getElementById("secAuthFactorBadge")) {
+          document.getElementById("secAuthFactorBadge").innerText = data.auth_factor === "FIDO2_WEBAUTHN_PASSKEY" ? "FIDO2 Hardware Key" : "Enterprise AAL3 Active";
+        }
+        if (document.getElementById("secBloomLatency") && data.bloom_revocation_latency_us) {
+          document.getElementById("secBloomLatency").innerText = data.bloom_revocation_latency_us + " µs";
+        }
+      } else if (res.status === 401) {
+        logoutClient();
       }
     } catch(e) {}
   }

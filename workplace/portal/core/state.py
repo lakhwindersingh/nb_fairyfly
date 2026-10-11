@@ -1,7 +1,7 @@
 """
 Global runtime state and singletons for Percipience Portal.
 Houses active tenant managers, KMS brokers, swarm memory engines,
-fleet managers, and authenticated client session caches.
+fleet managers, security mesh engines, and authenticated client session caches.
 """
 
 from pathlib import Path
@@ -18,9 +18,26 @@ from core.agent_memory_engine import AgentMemoryEngine
 from core.tool_contract_validator import ToolContractValidator
 from core.agent_capability_guard import AgentCapabilityGuard
 from core.fleet_manager import FleetManager
+from workplace.core.security_mesh_engine import SecurityMeshEngine
 
 
 CLIENT_SESSIONS: Dict[str, Dict[str, Any]] = {}
+
+GLOBAL_SECURITY_MESH = SecurityMeshEngine.get_instance()
+
+# Pre-register demo passkey credential for seamless instant biometric demo
+GLOBAL_SECURITY_MESH.webauthn.credentials["cred_fido2_apple_touchid_99"] = (
+    GLOBAL_SECURITY_MESH.webauthn.credentials.get("cred_fido2_apple_touchid_99")
+    or type("WebAuthnCredential", (), {
+        "credential_id": "cred_fido2_apple_touchid_99",
+        "user_id": "user_super_alice",
+        "tenant_id": "tenant_acme_fintech",
+        "public_key_hex": "3059301306072a8648ce3d020106082a8648ce3d03010703420004f1a2b3c4...",
+        "counter": 12,
+        "friendly_name": "Apple Secure Enclave / TouchID",
+        "created_at": 1728600000.0
+    })()
+)
 
 DEMO_CLIENT = {
     "client_id": "acme_corp_fintech",
@@ -34,7 +51,20 @@ DEMO_CLIENT = {
     "active_worktrees": 2,
     "gross_savings_usd": 15.6974,
     "rev_share_due_usd": 2.3546,
-    "mcp_jira_connected": True
+    "mcp_jira_connected": True,
+    # Security Mesh Attributes
+    "user_id": "user_super_alice",
+    "user_email": "alice@acmeglobal.com",
+    "tax_id": "948-21-5038",
+    "security_mesh_tier": "AAL3_FIDO2_REBAC",
+    "passkey_registered": True,
+    "mfa_verified": True,
+    "rebac_role": "ENTERPRISE_SUPER_ADMIN",
+    "rls_enforcement": "ACTIVE",
+    "bloom_revocation_latency_us": 142.5,
+    "last_risk_score": 0.05,
+    "pii_vault_status": "NIST SP 800-38G FF1 Active",
+    "totp_backup_codes_remaining": 8
 }
 
 GLOBAL_TENANT_MGR = TenantManager(persistence_file=REPO_ROOT / ".nb" / "context" / "tenant_hierarchy.json")

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security_Tenant_Profile_Contract",
+  "description": "Multi-tenant boundary and RLS isolation contract as defined in master/security-mesh module 01",
+  "type": "object",
+  "required": ["tenant_id", "name", "tier", "isolation_mode", "status", "data_residency_region"],
+  "properties": {
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]{3,64}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 128
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["COMMUNITY", "TEAM", "BUSINESS", "ENTERPRISE"]
+    },
+    "isolation_mode": {
+      "type": "string",
+      "enum": ["ROW_LEVEL", "SCHEMA_PER_TENANT", "DATABASE_PER_TENANT"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "SUSPENDED", "DECOMMISSIONED"]
+    },
+    "data_residency_region": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]{3,32}$"
+    },
+    "rls_enforced": {
+      "type": "boolean",
+      "default": true
+    },
+    "max_concurrent_nodes": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

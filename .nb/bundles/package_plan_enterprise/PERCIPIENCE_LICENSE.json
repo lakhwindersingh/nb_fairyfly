@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_f9ff542097ac",
+  "license_id": "lic_plan_enterprise_f05076102d81",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,8 +18,8 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-11T03:24:42.906840+00:00",
-  "total_files": 145,
+  "issued_at": "2026-10-11T04:19:10.369295+00:00",
+  "total_files": 156,
   "file_manifest": {
     "bin/percipience": "bfffe7c0b1bf2c20a4e1a7c004afc412d4f5b89704948016dffa4e4f665d8840",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -114,6 +114,11 @@
     "context/contracts/psi_ast_bridge_contract.yaml": "1a1b5ea1595188df00682adbf1d779408cd1bc51e00f641e0c7a12c11c48f950",
     "context/contracts/rbac_permission_matrix.json": "5656a8772c77889ac9da2ec158c1d0774eb0e6d58b63cffc09efd65424f01900",
     "context/contracts/sandbox_permission_contract.json": "d0ab4a8286a7a95eb387ece7d354520a11566def4a7dad40ffbba348a47df8fc",
+    "context/contracts/security_four_eyes_contract.json": "07dbdb49263b207605fd56e1d59f4c0ee4b7b9fae9bb7b77483897064d336066",
+    "context/contracts/security_mfa_challenge_contract.json": "aa2b02e2666384ed6a567c2aa53520ba91c813eb8ebfe32fa933ea11af8db8e5",
+    "context/contracts/security_pii_vault_contract.json": "4dc146e654fca08cf8c0933a621739593898d8da22185a80bd9fb4d185ed7f1b",
+    "context/contracts/security_rebac_policy_contract.json": "2626d474906fda63e3523c83bb36b457d442cc7d95103a4ce6e840a5e15e99b8",
+    "context/contracts/security_tenant_profile_contract.json": "1c1ec90ec5af8343198496da6545a49d3784f23e667d87b293f04a251da2b0ac",
     "context/contracts/terminal_agent_ast_contract.yaml": "2ae76861b403f92d0252ff876f1394a35ce7c2511ab9d64e0872a88d375a0f23",
     "context/contracts/ui_theme_token_contract.json": "784cb85316f912390cc44221da126e1e3646459586bf2de350f0802c9c1c4161",
     "context/contracts/webview_message_rpc_contract.json": "e2762971aa75d34f8176e01f1c59987224a558dc4d7d96870df25224b78e782c",
@@ -122,14 +127,19 @@
     "context/rules/commercial_tier_permissioning_rules.md": "3bf47cde6346cc0667930f0ee96756a23c3c1dbb5964d25287d5972499aa38a5",
     "context/rules/jcef_security_invariants.md": "4cca42aa6c21e340f4d4da5fbf00e3ad324fbce181967f8867f6cfeba8669cbb",
     "context/rules/jetbrains_platform_threading_rules.md": "4acea251350cd74686725302d10dceb1037197f49564411c9779e5f271f85f55",
+    "context/rules/multitenant_isolation_rules.md": "7a62eae94c2ee931f96eb4204101cd9d4feecc13c080787c0a2c888c8e85a162",
+    "context/rules/pii_protection_rules.md": "2beaae4cdb75edda24b7b8b614a5681b3cdfa2e49d89b3938ccbafe962c8ebc7",
     "context/rules/psi_read_lock_invariants.md": "4e2e3616c788ca9ee26f1128893131459fa40001049764c23253981b988b067b",
+    "context/rules/rbac_governance_rules.md": "7bc69b6a7f7521638202d3490d5f24799bd03f04b6043227dc0131be1cbe7fa3",
     "context/rules/realtime_rendering_rules.md": "f2beb5ff4d5716a475360ecf11862e1198084c2f79e061f9492f2462e6cd9d46",
     "context/rules/secret_storage_rules.md": "884941ce55f75d1fc635149f70d4fe7845297fd08a6b289cdf234adc942f7657",
     "context/rules/ui_token_consistency_rules.md": "1db0d38b782c89bd48c61a4f14a92acf589c92cd51e456502ece01581beaba5d",
     "context/rules/vscode_activation_invariants.md": "727790eea7823214c116707943aa3bfcbf00ad9ccfafd11a7171f4f9efe2e278",
     "context/rules/webview_security_invariants.md": "c7ad094061fae77cc9b71ec942db51eee3d4d45217383279e46edb8143bb2d03",
+    "context/rules/zero_trust_rules.md": "9806ce9c49bb3fb1d1a66123ac2e36efbaacf42bf9d9dc0aa14fd33a65f0fdf2",
     "agentic/custom/agents/agent_adversarial_fuzzer.yaml": "a67fa7ee011200fd3669b30f1c4ec677f8e3c91ad2583ee45c6c862680418632",
     "agentic/custom/agents/agent_ambiguity_resolver.yaml": "9490f487779771558fdf0674fe45bfffeafd5a8bcfdb69ff282b8249c4a26a0b",
+    "agentic/custom/agents/agent_cloud_security_officer.yaml": "b240d49a9a297f7879a40dd35e692eba5e775aca480635e8e422b1bb92f2aca1",
     "agentic/custom/agents/agent_commercial_packager_provisioner.yaml": "00657bd6305a00d1c4e6222e10921ae62aced88259a05b1378900f7673cdcdd5",
     "agentic/custom/agents/agent_consolidation_synthesizer.yaml": "37dbb1fb1fed40c873cecbde072430d7b592aba3161b7a22d69d71ec2328bb1d",
     "agentic/custom/agents/agent_enterprise_saas_portal_architect.yaml": "05256fd5972f0834e1a5af287af6ed18507873c3b6e1c03b3fa36aca26ab4dff",
@@ -138,6 +148,7 @@
     "agentic/custom/agents/agent_jetbrains_plugin_architect.yaml": "33aaa081f8b513c1fc5cd19b6bdf8e2ee0df4362ced1ecee418bc8a41da513aa",
     "agentic/custom/agents/agent_living_doc_architect.yaml": "a462d05ab3fc462ae188a2b39143743fad51e7c3fc0416c62be58d820dd511d1",
     "agentic/custom/agents/agent_lsp_language_features_specialist.yaml": "6ff63172bd7ad604724bba17e35b734558c21ad8be64cb434969523a6350d238",
+    "agentic/custom/agents/agent_privacy_compliance_auditor.yaml": "73100d576c771e032aabefabf73797fb96c589347d570be1e1a2b19eb805880a",
     "agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml": "b23827be17a73ab744872db5859e4d4a8c0a2b310d5674f35e3b65f0702ede55",
     "agentic/custom/agents/agent_request_formalizer.yaml": "3406747ed54c06356402ac9d4de3cb28d539c69d66b95ac296eec9aa978035fa",
     "agentic/custom/agents/agent_terminal_mode_specialist.yaml": "fb4e5d92fad95f170ee9db58a7388144960c6b894a6aec2a61b8cc2dfb385e48",
@@ -167,5 +178,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "036a59cbf97c966e16a6913f86582766e5d54655ee4762c6c01694931f6e640c",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "c8a7a106bc6af7e28e5ebfcff379931f1e974906855e38cb6d7e8c494e587d42"
+  "signature_sha256": "a91a231c514b9c6be10b81eacad1a207069c3af4ebe67442865bb00b71609c44"
 }
