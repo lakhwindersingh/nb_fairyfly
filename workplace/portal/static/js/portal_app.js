@@ -2245,239 +2245,13 @@ function initTheme() {
 
 
 /* ==========================================================================
-   ENTERPRISE UI DESIGN SYSTEM - SPECIALIZED SURFACES & INTERACTIVE ENGINES
+
+/* ==========================================================================
+   ENTERPRISE UI DESIGN SYSTEM - UNIVERSAL SURFACES & COMPONENT ENGINES
    Plan: .nb/plan/master/enterprise-ui-design-system
    ========================================================================== */
 
-// 1. 60 FPS REAL-TIME RAF TICK SIMULATION ENGINE
-(function() {
-  let lastTickTime = 0;
-  const TICK_INTERVAL_MS = 600;
-
-  const marketState = {
-    spx: { price: 5824.50, change: 37.80, pct: 0.65, base: 5786.70, elId: 'tick-spx', pnl: 480.00 },
-    ndx: { price: 20412.10, change: 226.40, pct: 1.12, base: 20185.70, elId: 'tick-ndx', pnl: -320.00 },
-    vix: { price: 15.42, change: -0.38, pct: -2.41, base: 15.80, elId: 'tick-vix' },
-    nvda: { price: 134.80, change: 3.22, pct: 2.45, base: 131.58, elId: 'tick-nvda', pnl: 1240.00 }
-  };
-
-  function flashCell(el, isUp) {
-    if (!el) return;
-    el.classList.remove('tick-flash-up', 'tick-flash-down');
-    void el.offsetWidth;
-    el.classList.add(isUp ? 'tick-flash-up' : 'tick-flash-down');
-    setTimeout(() => {
-      el.classList.remove('tick-flash-up', 'tick-flash-down');
-    }, 450);
-  }
-
-  function runSimulationTick(timestamp) {
-    if (window.isSimulating && (timestamp - lastTickTime >= TICK_INTERVAL_MS)) {
-      lastTickTime = timestamp;
-
-      const keys = ['spx', 'ndx', 'vix', 'nvda'];
-      const key = keys[Math.floor(Math.random() * keys.length)];
-      const item = marketState[key];
-
-      const deltaPct = (Math.random() - 0.48) * 0.003;
-      const oldPrice = item.price;
-      item.price = +(item.price * (1 + deltaPct)).toFixed(2);
-      const isUp = item.price >= oldPrice;
-
-      item.change = +(item.price - item.base).toFixed(2);
-      item.pct = +((item.change / item.base) * 100).toFixed(2);
-
-      const tickEl = document.getElementById(item.elId);
-      if (tickEl) {
-        tickEl.innerText = item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        flashCell(tickEl, isUp);
-      }
-
-      if (key === 'spx') {
-        const lastEl = document.getElementById('tvChartLastPrice');
-        const chgEl = document.getElementById('tvChartDayChange');
-        if (lastEl) {
-          lastEl.innerText = item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          lastEl.style.color = item.change >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-          flashCell(lastEl, isUp);
-        }
-        if (chgEl) {
-          const sign = item.change >= 0 ? '+' : '';
-          chgEl.innerText = `${sign}${item.change.toFixed(2)} (${sign}${item.pct.toFixed(2)}%)`;
-          chgEl.className = item.change >= 0 ? 'badge badge-gain' : 'badge badge-loss';
-        }
-      }
-
-      const rowPrice = document.getElementById(`row-${key}-price`);
-      const rowChg = document.getElementById(`row-${key}-change`);
-      const rowPnl = document.getElementById(`row-${key}-pnl`);
-      if (rowPrice) {
-        rowPrice.innerText = `$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        flashCell(rowPrice, isUp);
-      }
-      if (rowChg) {
-        const sign = item.pct >= 0 ? '+' : '';
-        rowChg.innerText = `${sign}${item.pct.toFixed(2)}%`;
-        rowChg.style.color = item.pct >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-      }
-      if (rowPnl && item.pnl !== undefined) {
-        item.pnl = +(item.pnl + (item.price - oldPrice) * 10).toFixed(2);
-        const sign = item.pnl >= 0 ? '+' : '';
-        rowPnl.innerText = `${sign}$${Math.abs(item.pnl).toFixed(2)}`;
-        rowPnl.style.color = item.pnl >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-        flashCell(rowPnl, item.pnl >= 0);
-      }
-    }
-
-    requestAnimationFrame(runSimulationTick);
-  }
-
-  requestAnimationFrame(runSimulationTick);
-})();
-
-// 2. MULTI-LEG OPTIONS STRATEGY BUILDER
-window.strategyLegCount = 4;
-window.addStrategyLeg = function() {
-  window.strategyLegCount++;
-  const tbody = document.getElementById('strategyLegsBody');
-  if (!tbody) return;
-
-  const id = `leg_${window.strategyLegCount}`;
-  const tr = document.createElement('tr');
-  tr.id = id;
-  tr.innerHTML = `
-    <td>
-      <select class="input input-xs" onchange="recalcStrategyMetrics()">
-        <option value="BUY">BUY</option>
-        <option value="SELL" selected>SELL</option>
-      </select>
-    </td>
-    <td><input type="number" class="input input-xs numeric-tabular" value="1" min="1" max="100" style="width: 50px;" oninput="recalcStrategyMetrics()"></td>
-    <td>
-      <select class="input input-xs" onchange="recalcStrategyMetrics()">
-        <option value="CALL">CALL</option>
-        <option value="PUT">PUT</option>
-      </select>
-    </td>
-    <td><input type="number" class="input input-xs numeric-tabular" value="5800" step="5" style="width: 80px;" oninput="recalcStrategyMetrics()"></td>
-    <td><input type="date" class="input input-xs" value="2026-11-20" onchange="recalcStrategyMetrics()"></td>
-    <td class="numeric-tabular">$9.40</td>
-    <td class="numeric-tabular">$9.65</td>
-    <td class="numeric-tabular">0.20</td>
-    <td><button class="btn btn-xs btn-secondary" onclick="removeStrategyLeg('${id}')">✕</button></td>
-  `;
-  tbody.appendChild(tr);
-  recalcStrategyMetrics();
-};
-
-window.removeStrategyLeg = function(id) {
-  const row = document.getElementById(id);
-  if (row) {
-    row.remove();
-    recalcStrategyMetrics();
-  }
-};
-
-window.recalcStrategyMetrics = function() {
-  const tbody = document.getElementById('strategyLegsBody');
-  if (!tbody) return;
-
-  let netPrice = 0;
-  let totalDelta = 0;
-  const rows = tbody.querySelectorAll('tr');
-
-  rows.forEach((tr, idx) => {
-    const action = tr.querySelector('select')?.value || 'BUY';
-    const ratio = parseFloat(tr.querySelectorAll('input')[0]?.value || 1);
-    const strike = parseFloat(tr.querySelectorAll('input')[1]?.value || 5800);
-    const baseLegPrice = Math.max(1, 10 - Math.abs(strike - 5824.5) * 0.08);
-    if (action === 'BUY') {
-      netPrice -= baseLegPrice * ratio;
-      totalDelta += 0.2 * ratio;
-    } else {
-      netPrice += baseLegPrice * ratio;
-      totalDelta -= 0.2 * ratio;
-    }
-  });
-
-  const priceEl = document.getElementById('netSpreadPrice');
-  const maxProfEl = document.getElementById('netMaxProfit');
-  const maxLossEl = document.getElementById('netMaxLoss');
-  const popEl = document.getElementById('netPop');
-
-  if (priceEl) {
-    if (netPrice >= 0) {
-      priceEl.innerText = `$${netPrice.toFixed(2)} Credit`;
-      priceEl.style.color = 'var(--color-finance-gain)';
-    } else {
-      priceEl.innerText = `$${Math.abs(netPrice).toFixed(2)} Debit`;
-      priceEl.style.color = 'var(--color-finance-loss)';
-    }
-  }
-
-  if (maxProfEl) {
-    const prof = netPrice >= 0 ? netPrice * 100 : Math.max(50, 400 - Math.abs(netPrice) * 100);
-    maxProfEl.innerText = `$${Math.abs(prof).toFixed(2)}`;
-  }
-
-  if (maxLossEl) {
-    const loss = netPrice >= 0 ? Math.max(100, 1000 - netPrice * 100) : Math.abs(netPrice) * 100;
-    maxLossEl.innerText = `$${Math.abs(loss).toFixed(2)}`;
-  }
-
-  if (popEl) {
-    const pop = Math.min(95, Math.max(35, 75 - totalDelta * 20));
-    popEl.innerText = `${pop.toFixed(1)}%`;
-  }
-};
-
-// 3. YIELD CURVE & VOLATILITY STRESS TUNER
-window.onTuningSliderChange = function() {
-  const shift = parseFloat(document.getElementById('shiftSlider')?.value || 0);
-  const twist = parseFloat(document.getElementById('twistSlider')?.value || 0);
-  const vol = parseFloat(document.getElementById('volSlider')?.value || 0);
-
-  const shiftValEl = document.getElementById('shiftVal');
-  const twistValEl = document.getElementById('twistVal');
-  const volValEl = document.getElementById('volShockVal');
-
-  if (shiftValEl) shiftValEl.innerText = `${shift >= 0 ? '+' : ''}${shift} bps`;
-  if (twistValEl) twistValEl.innerText = `${twist >= 0 ? '+' : ''}${twist} bps`;
-  if (volValEl) volValEl.innerText = `${vol >= 0 ? '+' : ''}${vol.toFixed(1)}%`;
-
-  const dv01 = Math.round((shift * -98) + (twist * -25));
-  const vega = Math.round(vol * 520);
-  const netImpact = dv01 + vega;
-
-  const dv01El = document.getElementById('dv01Impact');
-  const vegaEl = document.getElementById('vegaImpact');
-  const netEl = document.getElementById('netStressImpact');
-
-  if (dv01El) {
-    dv01El.innerText = `${dv01 >= 0 ? '+' : '-'}$${Math.abs(dv01).toLocaleString()}`;
-    dv01El.style.color = dv01 >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-  }
-  if (vegaEl) {
-    vegaEl.innerText = `${vega >= 0 ? '+' : '-'}$${Math.abs(vega).toLocaleString()}`;
-    vegaEl.style.color = vega >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-  }
-  if (netEl) {
-    netEl.innerText = `${netImpact >= 0 ? '+' : '-'}$${Math.abs(netImpact).toLocaleString()}`;
-    netEl.style.color = netImpact >= 0 ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-  }
-};
-
-window.resetTuningSliders = function() {
-  const s = document.getElementById('shiftSlider');
-  const t = document.getElementById('twistSlider');
-  const v = document.getElementById('volSlider');
-  if (s) s.value = 0;
-  if (t) t.value = 0;
-  if (v) v.value = 0;
-  window.onTuningSliderChange();
-};
-
-// 4. FOUR-EYES DUAL CONTROL SIGNER WIDGET
+// 1. FOUR-EYES DUAL CONTROL SIGNER WIDGET
 window.signDualControlProposal = function() {
   const btn = document.getElementById('passkeySignBtn');
   const badge = document.querySelector('#fourEyesWidget .dual-control-badge');
@@ -2494,7 +2268,7 @@ window.signDualControlProposal = function() {
       badge.innerHTML = '✓ Dual Approval Signed &amp; Cryptographically Sealed';
     }
     if (statusNote) {
-      statusNote.innerHTML = '<span style="color: var(--color-finance-gain); font-weight: 700;">✓ Passkey signature verified via FIDO2 / WebAuthn. Dual-Control requirement satisfied.</span>';
+      statusNote.innerHTML = '<span style="color: var(--green); font-weight: 700;">✓ Passkey signature verified via FIDO2 / WebAuthn. Dual-Control requirement satisfied.</span>';
     }
     if (btn) {
       btn.innerHTML = '✓ Signed with Passkey';
@@ -2512,26 +2286,7 @@ window.revertDualControlProposal = function() {
   alert('Proposal revision requested. Notification dispatched to Author.');
 };
 
-// 5. CHART RENDERERS (TRADINGVIEW & HIGH-FIDELITY CANVASES)
-let currentSeriesType = 'candles';
-let currentTimeframe = '1D';
-
-window.setChartSeriesType = function(type, el) {
-  currentSeriesType = type;
-  document.querySelectorAll('#surface-trading .chart-header .btn').forEach(b => {
-    if (b.id && b.id.startsWith('btnSeries')) b.classList.remove('active');
-  });
-  if (el) el.classList.add('active');
-  renderTradingViewChart();
-};
-
-window.setChartTimeframe = function(tf, el) {
-  currentTimeframe = tf;
-  document.querySelectorAll('#surface-trading .chart-header .chart-timeframe-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-  renderTradingViewChart();
-};
-
+// 2. UNIVERSAL CHART RENDERERS (HIGH-PERFORMANCE SVG CANVAS)
 function renderCorporatePerformanceChart() {
   const container = document.getElementById('corporatePerformanceChart');
   if (!container) return;
@@ -2546,7 +2301,7 @@ function renderCorporatePerformanceChart() {
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
   const percipienceVals = [100, 108, 115, 122, 118, 130, 142, 155, 168, 180, 195, 210, 205, 215, 225, 230, 222, 235, 240, 245, 248, 252, 255, 260];
-  const sp500Vals = [100, 102, 105, 103, 101, 106, 110, 112, 115, 114, 118, 120, 119, 122, 124, 125, 122, 126, 128, 130, 131, 134, 136, 138];
+  const baselineVals = [100, 102, 105, 103, 101, 106, 110, 112, 115, 114, 118, 120, 119, 122, 124, 125, 122, 126, 128, 130, 131, 134, 136, 138];
 
   const minVal = 90;
   const maxVal = 270;
@@ -2563,9 +2318,9 @@ function renderCorporatePerformanceChart() {
     pD += ` L ${toX(i)} ${toY(percipienceVals[i])}`;
   }
 
-  let spD = `M ${toX(0)} ${toY(sp500Vals[0])}`;
-  for (let i = 1; i < sp500Vals.length; i++) {
-    spD += ` L ${toX(i)} ${toY(sp500Vals[i])}`;
+  let baseD = `M ${toX(0)} ${toY(baselineVals[0])}`;
+  for (let i = 1; i < baselineVals.length; i++) {
+    baseD += ` L ${toX(i)} ${toY(baselineVals[i])}`;
   }
 
   const areaD = `${pD} L ${toX(percipienceVals.length - 1)} ${height - padY} L ${toX(0)} ${height - padY} Z`;
@@ -2582,10 +2337,10 @@ function renderCorporatePerformanceChart() {
     <line x1="${padX}" y1="${toY(200)}" x2="${width - 20}" y2="${toY(200)}" stroke="var(--border)" stroke-dasharray="3,3" />
     <line x1="${padX}" y1="${toY(250)}" x2="${width - 20}" y2="${toY(250)}" stroke="var(--border)" stroke-dasharray="3,3" />
     <path d="${areaD}" fill="url(#corpGrad)" />
-    <path d="${spD}" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4,4" />
+    <path d="${baseD}" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4,4" />
     <path d="${pD}" fill="none" stroke="var(--cyan)" stroke-width="3" />
     <circle cx="${toX(percipienceVals.length - 1)}" cy="${toY(percipienceVals[percipienceVals.length - 1])}" r="5" fill="var(--cyan)" />
-    <circle cx="${toX(sp500Vals.length - 1)}" cy="${toY(sp500Vals[sp500Vals.length - 1])}" r="4" fill="var(--text-muted)" />
+    <circle cx="${toX(baselineVals.length - 1)}" cy="${toY(baselineVals[baselineVals.length - 1])}" r="4" fill="var(--text-muted)" />
   `;
 
   container.appendChild(svg);
@@ -2634,104 +2389,11 @@ function renderAdminWorkloadChart() {
   container.appendChild(svg);
 }
 
-function renderTradingViewChart() {
-  const container = document.getElementById('tradingviewChartContainer');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const width = container.clientWidth || 750;
-  const height = container.clientHeight || 380;
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '100%');
-  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-  const candles = [];
-  let cur = 5750;
-  for (let i = 0; i < 28; i++) {
-    const change = (Math.random() - 0.45) * 14;
-    const open = cur;
-    const close = +(open + change).toFixed(2);
-    const high = +(Math.max(open, close) + Math.random() * 8).toFixed(2);
-    const low = +(Math.min(open, close) - Math.random() * 8).toFixed(2);
-    const volume = Math.floor(20000 + Math.random() * 80000);
-    candles.push({ open, close, high, low, volume });
-    cur = close;
-  }
-
-  const minPrice = 5720;
-  const maxPrice = 5850;
-  const padX = 20;
-  const padY = 20;
-  const volH = 60;
-  const priceH = height - padY * 2 - volH;
-  const candleW = Math.max(6, (width - padX * 2) / candles.length - 6);
-
-  function toY(p) { return padY + priceH - ((p - minPrice) / (maxPrice - minPrice)) * priceH; }
-
-  let elements = '';
-
-  candles.forEach((c, i) => {
-    const x = padX + i * ((width - padX * 2) / candles.length);
-    const vH = (c.volume / 100000) * volH;
-    const vY = height - padY - vH;
-    const isUp = c.close >= c.open;
-    const col = isUp ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-
-    elements += `<rect x="${x}" y="${vY}" width="${candleW}" height="${vH}" fill="${col}" opacity="0.3" rx="1" />`;
-  });
-
-  if (currentSeriesType === 'candles') {
-    candles.forEach((c, i) => {
-      const x = padX + i * ((width - padX * 2) / candles.length);
-      const isUp = c.close >= c.open;
-      const col = isUp ? 'var(--color-finance-gain)' : 'var(--color-finance-loss)';
-      const bodyTop = toY(Math.max(c.open, c.close));
-      const bodyH = Math.max(2, Math.abs(toY(c.open) - toY(c.close)));
-      const wickX = x + candleW / 2;
-
-      elements += `<line x1="${wickX}" y1="${toY(c.high)}" x2="${wickX}" y2="${toY(c.low)}" stroke="${col}" stroke-width="1.5" />`;
-      elements += `<rect x="${x}" y="${bodyTop}" width="${candleW}" height="${bodyH}" fill="${col}" rx="1" />`;
-    });
-  } else {
-    let lineD = `M ${padX + candleW / 2} ${toY(candles[0].close)}`;
-    candles.forEach((c, i) => {
-      const x = padX + i * ((width - padX * 2) / candles.length) + candleW / 2;
-      lineD += ` L ${x} ${toY(c.close)}`;
-    });
-
-    if (currentSeriesType === 'area') {
-      const lastX = padX + (candles.length - 1) * ((width - padX * 2) / candles.length) + candleW / 2;
-      const areaD = `${lineD} L ${lastX} ${padY + priceH} L ${padX + candleW / 2} ${padY + priceH} Z`;
-      elements += `
-        <defs>
-          <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--cyan)" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="var(--cyan)" stop-opacity="0.0"/>
-          </linearGradient>
-        </defs>
-        <path d="${areaD}" fill="url(#chartAreaGrad)" />
-      `;
-    }
-    elements += `<path d="${lineD}" fill="none" stroke="var(--cyan)" stroke-width="2.5" />`;
-  }
-
-  svg.innerHTML = `
-    <line x1="${padX}" y1="${toY(5750)}" x2="${width - padX}" y2="${toY(5750)}" stroke="var(--border)" stroke-dasharray="3,3" />
-    <line x1="${padX}" y1="${toY(5800)}" x2="${width - padX}" y2="${toY(5800)}" stroke="var(--border)" stroke-dasharray="3,3" />
-    <line x1="${padX}" y1="${height - padY - volH}" x2="${width - padX}" y2="${height - padY - volH}" stroke="var(--border)" />
-    ${elements}
-  `;
-
-  container.appendChild(svg);
-}
-
+// 3. EVENT LISTENERS FOR SURFACE LIFECYCLE
 window.addEventListener('DOMContentLoaded', function() {
   setTimeout(() => {
     renderCorporatePerformanceChart();
     renderAdminWorkloadChart();
-    renderTradingViewChart();
   }, 100);
 });
 
@@ -2742,8 +2404,6 @@ window.addEventListener('surfaceChanged', function(e) {
       renderCorporatePerformanceChart();
     } else if (surface === 'admin-portal') {
       renderAdminWorkloadChart();
-    } else if (surface === 'trading') {
-      renderTradingViewChart();
     }
   }, 50);
 });
@@ -2751,11 +2411,9 @@ window.addEventListener('surfaceChanged', function(e) {
 window.addEventListener('resize', function() {
   renderCorporatePerformanceChart();
   renderAdminWorkloadChart();
-  renderTradingViewChart();
 });
 
 window.addEventListener('themeChanged', function() {
   renderCorporatePerformanceChart();
   renderAdminWorkloadChart();
-  renderTradingViewChart();
 });

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-10-11T02:52:47.478049+00:00",
+  "updated_at": "2026-10-11T03:24:25.273362+00:00",
   "machines": {
     "node_mac_lakhwinder": {
       "machine_id": "node_mac_lakhwinder",
@@ -35,7 +35,7 @@
       "last_rollback": {
         "module_id": "workplace",
         "recovery_point": "RP_HTTP_TEST_01",
-        "at": "2026-10-11T02:52:47.476491+00:00"
+        "at": "2026-10-11T03:24:25.271823+00:00"
       },
       "ast_cache_flushed_at": "2026-10-10T03:24:08.256658+00:00"
     },
@@ -102,6 +102,138 @@
   },
   "telemetry_history": {},
   "interventions_history": [
+    {
+      "intervention_id": "INT_1DBD199D",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "surgical_rollback",
+      "params": {
+        "module_id": "workplace",
+        "recovery_point": "RP_HTTP_TEST_01"
+      },
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:24:25.271823+00:00",
+      "status": "COMPLETED",
+      "details": "Surgical rollback triggered: rewound module 'workplace' to recovery point 'RP_HTTP_TEST_01'."
+    },
+    {
+      "intervention_id": "INT_09D78C95",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "resume",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:24:25.270765+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause lifted: subagent execution resumed active by admin."
+    },
+    {
+      "intervention_id": "INT_EF101D96",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "pause",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:24:25.267774+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause activated: rogue subagent execution frozen by admin."
+    },
+    {
+      "intervention_id": "INT_2973F1DD",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "surgical_rollback",
+      "params": {
+        "module_id": "workplace",
+        "recovery_point": "RP_HTTP_TEST_01"
+      },
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:22:53.161886+00:00",
+      "status": "COMPLETED",
+      "details": "Surgical rollback triggered: rewound module 'workplace' to recovery point 'RP_HTTP_TEST_01'."
+    },
+    {
+      "intervention_id": "INT_E1CF7C9A",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "resume",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:22:53.161122+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause lifted: subagent execution resumed active by admin."
+    },
+    {
+      "intervention_id": "INT_2658C398",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "pause",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:22:53.159956+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause activated: rogue subagent execution frozen by admin."
+    },
+    {
+      "intervention_id": "INT_70906F85",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "surgical_rollback",
+      "params": {
+        "module_id": "workplace",
+        "recovery_point": "RP_HTTP_TEST_01"
+      },
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:08:23.435247+00:00",
+      "status": "COMPLETED",
+      "details": "Surgical rollback triggered: rewound module 'workplace' to recovery point 'RP_HTTP_TEST_01'."
+    },
+    {
+      "intervention_id": "INT_6357EAB0",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "resume",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:08:23.434490+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause lifted: subagent execution resumed active by admin."
+    },
+    {
+      "intervention_id": "INT_B83893CF",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "pause",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:08:23.432716+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause activated: rogue subagent execution frozen by admin."
+    },
+    {
+      "intervention_id": "INT_C4B3CCBA",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "surgical_rollback",
+      "params": {
+        "module_id": "workplace",
+        "recovery_point": "RP_HTTP_TEST_01"
+      },
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:02:36.752805+00:00",
+      "status": "COMPLETED",
+      "details": "Surgical rollback triggered: rewound module 'workplace' to recovery point 'RP_HTTP_TEST_01'."
+    },
+    {
+      "intervention_id": "INT_86103EF6",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "resume",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:02:36.751999+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause lifted: subagent execution resumed active by admin."
+    },
+    {
+      "intervention_id": "INT_B5930837",
+      "machine_id": "node_mac_lakhwinder",
+      "action": "pause",
+      "params": {},
+      "actor": "admin@enterprise.internal",
+      "timestamp_utc": "2026-10-11T03:02:36.750020+00:00",
+      "status": "COMPLETED",
+      "details": "Emergency pause activated: rogue subagent execution frozen by admin."
+    },
     {
       "intervention_id": "INT_515C8F1E",
       "machine_id": "node_mac_lakhwinder",

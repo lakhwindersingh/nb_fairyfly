@@ -19,7 +19,6 @@ class TemplateRenderer:
         "overview",
         "corporate",
         "admin_portal",
-        "trading",
         "platform",
         "comparatives",
         "economics",

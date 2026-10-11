@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_659b1c04b204",
+  "license_id": "lic_plan_enterprise_f9ff542097ac",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,8 +18,8 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-11T02:52:49.576796+00:00",
-  "total_files": 138,
+  "issued_at": "2026-10-11T03:24:42.906840+00:00",
+  "total_files": 145,
   "file_manifest": {
     "bin/percipience": "bfffe7c0b1bf2c20a4e1a7c004afc412d4f5b89704948016dffa4e4f665d8840",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -101,6 +101,8 @@
     "context/contracts/ble_gatt_spec.yaml": "2e338f08a72eb1713ebd7b216e9b64c91b99bda6264c45d679e148a425b74e59",
     "context/contracts/commercial_provisioning_contract.yaml": "e7a8decc05230d584697f20c782b913fd911b808908cd56e006ab1ea772873f9",
     "context/contracts/daemon_rpc_contract.json": "7ae7165ff3a3fde83872f5668d4d9d1f46ea029c411f2d389cb06909f345d187",
+    "context/contracts/data_grid_contract.json": "530a3ee39b46b05169fb9d94fc78f416ee4bd7edeadaff334fb683a40a3237b6",
+    "context/contracts/hierarchical_rule_contract.json": "2c7ace02a74fa0b8828e21f387bba8d67a9ad16c06d552245cdaac9c81527788",
     "context/contracts/intellij_plugin_manifest_contract.json": "b1c2b77ec6a8d65e1e4d91587935a2434c530d6c98541aee17eb1d3c96c93338",
     "context/contracts/lsp_protocol_contract.yaml": "0f3acd274d3f1ed96069f7992e98cb3d41e4f4bea81029467b346d3bfe1e00f8",
     "context/contracts/mtls_provisioning_contract.json": "1d770b4eb77d1ae34dcbabcf5550cf69106f50384948b810cc32055082d36660",
@@ -113,6 +115,7 @@
     "context/contracts/rbac_permission_matrix.json": "5656a8772c77889ac9da2ec158c1d0774eb0e6d58b63cffc09efd65424f01900",
     "context/contracts/sandbox_permission_contract.json": "d0ab4a8286a7a95eb387ece7d354520a11566def4a7dad40ffbba348a47df8fc",
     "context/contracts/terminal_agent_ast_contract.yaml": "2ae76861b403f92d0252ff876f1394a35ce7c2511ab9d64e0872a88d375a0f23",
+    "context/contracts/ui_theme_token_contract.json": "784cb85316f912390cc44221da126e1e3646459586bf2de350f0802c9c1c4161",
     "context/contracts/webview_message_rpc_contract.json": "e2762971aa75d34f8176e01f1c59987224a558dc4d7d96870df25224b78e782c",
     "context/rules/banking_security.md": "2691cff65f14b1fb1ae70e84c49c8a3d11dc252d5e87a3d654655e0a5a19316b",
     "context/rules/capability_tokens.yaml": "4aeeba4c7c2c1e937791a1eb1058ae810a56c4174c1776dd738c38b083ce5e21",
@@ -120,7 +123,9 @@
     "context/rules/jcef_security_invariants.md": "4cca42aa6c21e340f4d4da5fbf00e3ad324fbce181967f8867f6cfeba8669cbb",
     "context/rules/jetbrains_platform_threading_rules.md": "4acea251350cd74686725302d10dceb1037197f49564411c9779e5f271f85f55",
     "context/rules/psi_read_lock_invariants.md": "4e2e3616c788ca9ee26f1128893131459fa40001049764c23253981b988b067b",
+    "context/rules/realtime_rendering_rules.md": "f2beb5ff4d5716a475360ecf11862e1198084c2f79e061f9492f2462e6cd9d46",
     "context/rules/secret_storage_rules.md": "884941ce55f75d1fc635149f70d4fe7845297fd08a6b289cdf234adc942f7657",
+    "context/rules/ui_token_consistency_rules.md": "1db0d38b782c89bd48c61a4f14a92acf589c92cd51e456502ece01581beaba5d",
     "context/rules/vscode_activation_invariants.md": "727790eea7823214c116707943aa3bfcbf00ad9ccfafd11a7171f4f9efe2e278",
     "context/rules/webview_security_invariants.md": "c7ad094061fae77cc9b71ec942db51eee3d4d45217383279e46edb8143bb2d03",
     "agentic/custom/agents/agent_adversarial_fuzzer.yaml": "a67fa7ee011200fd3669b30f1c4ec677f8e3c91ad2583ee45c6c862680418632",
@@ -136,6 +141,8 @@
     "agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml": "b23827be17a73ab744872db5859e4d4a8c0a2b310d5674f35e3b65f0702ede55",
     "agentic/custom/agents/agent_request_formalizer.yaml": "3406747ed54c06356402ac9d4de3cb28d539c69d66b95ac296eec9aa978035fa",
     "agentic/custom/agents/agent_terminal_mode_specialist.yaml": "fb4e5d92fad95f170ee9db58a7388144960c6b894a6aec2a61b8cc2dfb385e48",
+    "agentic/custom/agents/agent_ui_component_engineer.yaml": "4ad38a3b12a0bce3a156651e5a4c3a5b73359d684bf3d92fd2ac57dc177fcebf",
+    "agentic/custom/agents/agent_ui_design_system_architect.yaml": "16b9dc23ff69e8dde7aab6e63d4ebae8f2af47120626e450855aac9375378f97",
     "agentic/custom/agents/agent_vscode_extension_architect.yaml": "b100678135fa14d08ebed2a2dc05c7b260486cf30b574caac19a7b6b0e693920",
     "agentic/custom/agents/agent_vscode_webview_ux_engineer.yaml": "3191a4bf5dcc8356d525cd07078eee918ca0018cb23251d67052210bab9b5433",
     "agentic/custom/agents/contract_compatibility_checker.yaml": "5cd9fc55190583c9500d60fca088501443e60f2023c257f7715777e1625c2007",
@@ -160,5 +167,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "036a59cbf97c966e16a6913f86582766e5d54655ee4762c6c01694931f6e640c",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "b940308348378a3086d95a1bfe4a2a1cf821a5a22644981f17ef6857d1b71ee3"
+  "signature_sha256": "c8a7a106bc6af7e28e5ebfcff379931f1e974906855e38cb6d7e8c494e587d42"
 }

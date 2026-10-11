@@ -233,7 +233,7 @@ body[data-theme="enterprise-dark"] {
 }
 
 /* ==========================================================================
-   3. PRO TRADING OLED TRUE BLACK THEME
+   3. HIGH-CONTRAST OLED TRUE BLACK THEME
    ========================================================================== */
 [data-theme="pro-oled"],
 html[data-theme="pro-oled"],
@@ -371,17 +371,17 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--border-strong);
 }
 
-.btn-buy {
+.btn-success {
   background-color: var(--color-finance-gain);
   color: #ffffff;
 }
-.btn-buy:hover { opacity: 0.9; }
+.btn-success:hover { opacity: 0.9; }
 
-.btn-sell {
+.btn-danger {
   background-color: var(--color-finance-loss);
   color: #ffffff;
 }
-.btn-sell:hover { opacity: 0.9; }
+.btn-danger:hover { opacity: 0.9; }
 
 /* Form Inputs */
 .input {
@@ -1118,44 +1118,7 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   18. INTERACTIVE DEVICE SIMULATOR (DESKTOP PREVIEW OF MOBILE)
-   ========================================================================== */
-.simulator-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: var(--space-4) 0;
-  width: 100%;
-}
-
-.device-frame-mobile {
-  width: 390px;
-  min-height: 844px;
-  background-color: var(--bg-app);
-  border: 12px solid #1e293b;
-  border-radius: 44px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.device-notch {
-  width: 120px;
-  height: 24px;
-  background-color: #1e293b;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
-  z-index: 100;
-}
-
-/* ==========================================================================
-   19. CHARTING & TRADINGVIEW COMPATIBILITY TOKENS
+   19. DATA VISUALIZATION & CHARTING TOKENS
    ========================================================================== */
 .chart-card {
   background-color: var(--surface-card);

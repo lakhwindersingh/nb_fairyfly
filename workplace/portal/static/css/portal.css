@@ -290,7 +290,7 @@ body[data-theme="dark"] {
 }
 
 /* ==========================================================================
-   3. PRO TRADING OLED TRUE BLACK THEME
+   3. HIGH-CONTRAST OLED TRUE BLACK THEME
    ========================================================================== */
 [data-theme="pro-oled"],
 html[data-theme="pro-oled"],
@@ -1200,44 +1200,7 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   18. INTERACTIVE DEVICE SIMULATOR (DESKTOP PREVIEW OF MOBILE)
-   ========================================================================== */
-.simulator-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: var(--space-4) 0;
-  width: 100%;
-}
-
-.device-frame-mobile {
-  width: 390px;
-  min-height: 844px;
-  background-color: var(--bg-app);
-  border: 12px solid #1e293b;
-  border-radius: 44px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.device-notch {
-  width: 120px;
-  height: 24px;
-  background-color: #1e293b;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
-  z-index: 100;
-}
-
-/* ==========================================================================
-   19. CHARTING & TRADINGVIEW COMPATIBILITY TOKENS
+   19. DATA VISUALIZATION & CHARTING TOKENS
    ========================================================================== */
 .chart-card {
   background-color: var(--surface-card);
@@ -1393,25 +1356,8 @@ button:focus-visible {
   font-weight: 700;
   text-transform: uppercase;
 }
-.phone-mockup {
-  width: 390px;
-  min-height: 844px;
-  background-color: #000;
-  border: 12px solid #1e293b;
-  border-radius: 44px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.phone-screen {
-  flex: 1;
-  background: var(--bg);
-  overflow-y: auto;
-  position: relative;
-  padding-bottom: 70px;
-}
+
+
 
 
 
@@ -2235,4 +2181,32 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 }
 [data-theme="light"] .cap-card:hover {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+.btn-success {
+  background-color: var(--green);
+  color: #ffffff;
+  border: 1px solid var(--green);
+}
+.btn-success:hover {
+  opacity: 0.9;
+}
+.btn-danger {
+  background-color: var(--red);
+  color: #ffffff;
+  border: 1px solid var(--red);
+}
+.btn-danger:hover {
+  opacity: 0.9;
+}
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--green);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+.badge-danger {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }

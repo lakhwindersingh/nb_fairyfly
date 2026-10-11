@@ -37,6 +37,10 @@ function syncThemeControls(theme) {
   if (sel && sel.value !== theme) {
     sel.value = theme;
   }
+  const mobileSel = document.getElementById('mobileThemeSelector');
+  if (mobileSel && mobileSel.value !== theme) {
+    mobileSel.value = theme;
+  }
   const btn = document.getElementById('portalThemeBtn');
   if (btn) {
     btn.innerText = (theme === 'corporate-light') ? '☀️ Light' : (theme === 'pro-oled' ? '⬛ OLED' : '🌙 Dark');
@@ -52,10 +56,9 @@ try {
 } catch (e) {}
 window.clientSessionToken = clientSessionToken;
 
-// Surface Switcher (Corporate Portal, Admin Portal, Pro Trading Workspace)
+// Surface Switcher (Corporate Portal & Admin Portal)
 function switchSurface(surfaceId) {
   const normalized = (surfaceId === 'admin' || surfaceId === 'admin_portal') ? 'admin-portal' : surfaceId;
-  const surfaceTabs = ['corporate', 'admin-portal', 'trading'];
 
   // Deactivate core portal tabs
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -67,8 +70,6 @@ function switchSurface(surfaceId) {
     document.getElementById('surfaceTabCorporate')?.classList.add('active');
   } else if (normalized === 'admin-portal') {
     document.getElementById('surfaceTabAdmin')?.classList.add('active');
-  } else if (normalized === 'trading') {
-    document.getElementById('surfaceTabTrading')?.classList.add('active');
   }
 
   // Activate target surface section
@@ -92,44 +93,6 @@ function switchSurface(surfaceId) {
 }
 window.switchSurface = switchSurface;
 
-// View Mode: Desktop Full-Width vs Phone Simulator
-function setViewMode(mode) {
-  const desktopWrap = document.getElementById('desktop-wrapper');
-  const simWrap = document.getElementById('simulator-wrapper');
-  const btnDesktop = document.getElementById('viewModeDesktop');
-  const btnMobile = document.getElementById('viewModeMobile');
-  const phoneScreen = document.getElementById('phoneScreen');
-
-  if (mode === 'mobile') {
-    if (desktopWrap) desktopWrap.style.display = 'none';
-    if (simWrap) simWrap.style.display = 'flex';
-    btnDesktop?.classList.remove('active');
-    btnMobile?.classList.add('active');
-
-    // Populate phone screen with current active tab contents if not already rendered
-    if (phoneScreen && desktopWrap) {
-      const activeTab = desktopWrap.querySelector('.tab-content.active');
-      if (activeTab) {
-        phoneScreen.innerHTML = `
-          <div style="padding: 16px; background: var(--header-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
-            <div style="font-weight: 800; font-size: 14px; color: var(--text);">⚡ Percipience Mobile</div>
-            <span class="badge badge-neutral" style="font-size: 10px;">SIMULATOR</span>
-          </div>
-          <div style="padding: 16px;">
-            ${activeTab.innerHTML}
-          </div>
-        `;
-      }
-    }
-  } else {
-    if (desktopWrap) desktopWrap.style.display = 'block';
-    if (simWrap) simWrap.style.display = 'none';
-    btnDesktop?.classList.add('active');
-    btnMobile?.classList.remove('active');
-  }
-}
-window.setViewMode = setViewMode;
-
 // Mobile Drawer Toggle
 function toggleMobileDrawer(forceState) {
   const drawer = document.getElementById('mobileDrawer');
@@ -147,14 +110,14 @@ function toggleMobileDrawer(forceState) {
 }
 window.toggleMobileDrawer = toggleMobileDrawer;
 
-// 60 FPS Real-Time Simulation Engine Toggle
+// 60 FPS Real-Time Telemetry Simulation Engine Toggle
 window.isSimulating = true;
 function toggleTickSimulation() {
   window.isSimulating = !window.isSimulating;
   const ind = document.getElementById('simIndicator');
   const btn = document.getElementById('tickSimBtn');
   if (ind) {
-    ind.style.background = window.isSimulating ? 'var(--color-finance-gain)' : 'var(--text-muted)';
+    ind.style.background = window.isSimulating ? 'var(--green)' : 'var(--text-muted)';
   }
   if (btn) {
     btn.style.opacity = window.isSimulating ? '1' : '0.6';
@@ -261,7 +224,7 @@ function showTab(id) {
   if (!id) return;
 
   // 0. Specialized Surfaces
-  if (id === 'corporate' || id === 'trading' || id === 'admin-portal' || id === 'admin') {
+  if (id === 'corporate' || id === 'admin-portal' || id === 'admin') {
     switchSurface(id);
     return;
   }

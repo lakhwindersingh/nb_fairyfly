@@ -27,9 +27,9 @@ DEMO_CLIENT = {
     "client_name": "Acme Global Financial Technologies",
     "tier": "Enterprise Tier A",
     "project_id": "proj_fairyfly_core_9921",
-    "project_name": "NB Fairyfly Enterprise Trading Engine",
+    "project_name": "NB Fairyfly Enterprise Platform Core",
     "workspace_mode": "multi_module",
-    "active_modules": ["mod_auth", "mod_billing", "mod_portal_marketing", "mod_trading"],
+    "active_modules": ["mod_auth", "mod_billing", "mod_portal_marketing", "mod_telemetry"],
     "worm_vault_status": "LOCKED (S3 WORM)",
     "active_worktrees": 2,
     "gross_savings_usd": 15.6974,
@@ -53,7 +53,7 @@ if not GLOBAL_TENANT_MGR.get_tenant("tenant_acme_fintech"):
     GLOBAL_TENANT_MGR.create_project(
         tenant_id="tenant_acme_fintech",
         project_id="proj_fairyfly_core_9921",
-        name="NB Fairyfly Enterprise Trading Engine",
+        name="NB Fairyfly Enterprise Platform Core",
         mode="multi_module",
         billing_tier="plan_enterprise"
     )

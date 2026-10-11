@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Enterprise Unified Design System - Full-Width Responsive Showcase with TradingView</title>
+  <title>Enterprise Unified Design System - Look-and-Feel Component Showcase</title>
   <link rel="stylesheet" href="enterprise-design-tokens.css">
-  <!-- Official TradingView Lightweight Charts Library -->
-  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  
   <style>
     /* Full-Width & Fluid Layout Rules */
     html, body {
@@ -288,7 +287,7 @@
       <div class="brand-title">
         <div class="brand-icon">⚡</div>
         <span>Cicada Enterprise</span>
-        <span class="badge badge-gain" style="font-size: 10px;">TradingView Integrated</span>
+        <span class="badge badge-gain" style="font-size: 10px;">Enterprise UI Standards</span>
       </div>
     </div>
 
@@ -297,7 +296,7 @@
       <div class="desktop-surface-tabs" style="display: flex; background-color: var(--surface-subtle); padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <button class="btn btn-xs btn-secondary surface-tab active" onclick="switchSurface('corporate')">🌐 Corporate</button>
         <button class="btn btn-xs btn-secondary surface-tab" onclick="switchSurface('admin')">🛡️ Admin Portal</button>
-        <button class="btn btn-xs btn-secondary surface-tab" onclick="switchSurface('trading')">📈 Pro Trading</button>
+        
       </div>
 
       <!-- View Mode: Desktop vs Mobile Frame Simulator -->
@@ -338,7 +337,7 @@
       <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
         <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('corporate'); toggleMobileDrawer();">🌐 Corporate Portal</button>
         <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('admin'); toggleMobileDrawer();">🛡️ Admin &amp; Governance</button>
-        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('trading'); toggleMobileDrawer();">📈 Pro Trading Terminal</button>
+        
       </div>
 
       <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Theme Preset</div>
@@ -374,7 +373,7 @@
           Unified multi-leg options modeling, autonomous risk management, and banking-grade security architecture designed for hedge funds, quants, and modern enterprises.
         </p>
         <div style="display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap;">
-          <button class="btn btn-lg btn-primary btn-touch" onclick="switchSurface('trading')">Launch Trading Terminal →</button>
+          <button class="btn btn-lg btn-primary btn-touch" onclick="switchSurface('admin')">Open Governance Console →</button>
           <button class="btn btn-lg btn-secondary btn-touch" onclick="switchSurface('admin')">Open Governance Portal</button>
         </div>
       </section>
@@ -531,236 +530,7 @@
       </div>
     </main>
 
-    <!-- SURFACE 3: PRO TRADING WORKSPACE (FULL-WIDTH) -->
-    <main id="surface-trading" class="surface-view">
-      <!-- Full-Width Market Ticker Strip -->
-      <div class="ticker-ribbon">
-        <div class="ticker-item">
-          <strong>SPX</strong> <span id="tick-spx" class="numeric-tabular">5,824.50</span>
-          <span class="badge badge-gain" style="font-size: 10px;">+0.65%</span>
-        </div>
-        <div class="ticker-item">
-          <strong>NDX</strong> <span id="tick-ndx" class="numeric-tabular">20,412.10</span>
-          <span class="badge badge-gain" style="font-size: 10px;">+1.12%</span>
-        </div>
-        <div class="ticker-item">
-          <strong>VIX</strong> <span id="tick-vix" class="numeric-tabular">15.42</span>
-          <span class="badge badge-loss" style="font-size: 10px;">-4.80%</span>
-        </div>
-        <div class="ticker-item">
-          <strong>NVDA</strong> <span id="tick-nvda" class="numeric-tabular">134.80</span>
-          <span class="badge badge-gain" style="font-size: 10px;">+2.45%</span>
-        </div>
-        <div class="ticker-item">
-          <strong>10Y UST</strong> <span class="numeric-tabular">4.08%</span>
-          <span class="badge badge-warning" style="font-size: 10px;">Unchanged</span>
-        </div>
-      </div>
-
-      <!-- OFFICIAL TRADINGVIEW FINANCIAL CANDLESTICK & VOLUME CHART -->
-      <div class="chart-card" style="margin-bottom: var(--space-3);">
-        <div class="chart-header">
-          <div style="display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 18px; font-weight: 800;">S&amp;P 500 Index (SPX)</span>
-              <span id="tvChartLastPrice" class="numeric-tabular" style="font-size: 18px; font-weight: 700; color: var(--color-finance-gain);">5,824.50</span>
-              <span class="badge badge-gain">+37.80 (+0.65%)</span>
-            </div>
-            <span style="font-size: 12px; color: var(--text-muted);">O: 5,798.20 H: 5,832.10 L: 5,791.50</span>
-          </div>
-
-          <div class="chart-controls">
-            <!-- Timeframe selector -->
-            <div class="chart-btn-group">
-              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1m')">1m</button>
-              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('5m')">5m</button>
-              <button class="btn btn-xs btn-secondary active" onclick="setChartTimeframe('15m')">15m</button>
-              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1h')">1h</button>
-              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1D')">1D</button>
-            </div>
-            <!-- Series Type Switcher -->
-            <div class="chart-btn-group" style="margin-left: var(--space-1);">
-              <button id="btnSeriesCandles" class="btn btn-xs btn-secondary active" onclick="setChartSeriesType('candles')">🕯️ Candles</button>
-              <button id="btnSeriesLine" class="btn btn-xs btn-secondary" onclick="setChartSeriesType('line')">📈 Line</button>
-              <button id="btnSeriesArea" class="btn btn-xs btn-secondary" onclick="setChartSeriesType('area')">🏔️ Area</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- TradingView Chart Canvas Container -->
-        <div id="tradingviewChartContainer" class="chart-container" style="height: 420px;"></div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom: var(--space-3);">
-        <!-- Multi-Leg Instrument Strategy Builder Widget -->
-        <div class="card">
-          <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
-            <span class="dock-title">Multi-Leg Strategy Builder (SPX Options)</span>
-            <div style="display: flex; gap: var(--space-1); flex-wrap: wrap;">
-              <button class="btn btn-xs btn-secondary" onclick="setPreset('iron_condor')">Iron Condor</button>
-              <button class="btn btn-xs btn-secondary" onclick="setPreset('strangle')">Strangle</button>
-              <button class="btn btn-xs btn-secondary" onclick="addLeg()">+ Add Leg</button>
-            </div>
-          </div>
-
-          <!-- Strategy Legs Responsive Table -->
-          <div class="table-responsive" style="margin-bottom: var(--space-3); border: none;">
-            <table class="blotter-table">
-              <thead>
-                <tr>
-                  <th>Side</th>
-                  <th>Ratio</th>
-                  <th>Type</th>
-                  <th>Strike</th>
-                  <th>DTE</th>
-                  <th>Bid/Ask</th>
-                  <th>Delta</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="strategyLegsBody">
-                <!-- Dynamic Leg Rows inserted by JS -->
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Pricing Summary Bar -->
-          <div class="pricing-bar-grid" style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-2); background: var(--surface-subtle); border-radius: var(--radius-md); flex-wrap: wrap; gap: var(--space-2);">
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted);">Spread Net Price</div>
-              <strong id="netSpreadPrice" class="numeric-tabular" style="font-size: 18px; color: var(--color-finance-gain);">$3.85 Credit</strong>
-            </div>
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted);">Max Profit</div>
-              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-finance-gain);">$385.00</strong>
-            </div>
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted);">Max Risk</div>
-              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-finance-loss);">$615.00</strong>
-            </div>
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted);">PoP</div>
-              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-primary);">78.4%</strong>
-            </div>
-            <button class="btn btn-md btn-buy btn-touch" onclick="alert('Multi-Leg Order Submitted to Exchange')">Execute Order</button>
-          </div>
-        </div>
-
-        <!-- Volatility & Yield Curve Tuner Widget -->
-        <div class="card">
-          <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
-            <span class="dock-title">Yield Curve &amp; Volatility Stress Tuner</span>
-            <span class="badge badge-gain">Real-Time WASM Spline</span>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-2);">
-            <div>
-              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                <span>Curve Parallel Shift (BPS)</span>
-                <strong id="shiftVal" class="numeric-tabular">+25 bps</strong>
-              </div>
-              <input type="range" min="-100" max="100" value="25" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('shift', this.value)">
-            </div>
-
-            <div>
-              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                <span>Curve Twist / Steepener (2Y vs 10Y)</span>
-                <strong id="twistVal" class="numeric-tabular">+10 bps</strong>
-              </div>
-              <input type="range" min="-50" max="50" value="10" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('twist', this.value)">
-            </div>
-
-            <div>
-              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                <span>Volatility Surface Shock (&Delta;&sigma;)</span>
-                <strong id="volShockVal" class="numeric-tabular">+3.5%</strong>
-              </div>
-              <input type="range" min="-10" max="15" value="3.5" step="0.5" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('vol', this.value)">
-            </div>
-
-            <!-- Impact Metrics Grid -->
-            <div class="grid-3" style="margin-top: var(--space-2); padding: var(--space-2); background: var(--surface-subtle); border-radius: var(--radius-md);">
-              <div>
-                <div style="font-size: 11px; color: var(--text-muted);">DV01 Dollar Impact</div>
-                <strong id="dv01Impact" class="numeric-tabular" style="color: var(--color-finance-loss);">-$2,450</strong>
-              </div>
-              <div>
-                <div style="font-size: 11px; color: var(--text-muted);">Vega Stress PnL</div>
-                <strong id="vegaImpact" class="numeric-tabular" style="color: var(--color-finance-gain);">+$1,820</strong>
-              </div>
-              <div>
-                <div style="font-size: 11px; color: var(--text-muted);">Net Stress Drift</div>
-                <strong id="netStressImpact" class="numeric-tabular" style="color: var(--color-finance-loss);">-$630</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Virtualized High-Frequency Blotter Table -->
-      <div class="card">
-        <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
-          <span class="dock-title">Active Portfolio Blotter (Live Tick Streaming)</span>
-          <div style="display: flex; gap: var(--space-1-5);">
-            <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Positions: <strong>4 Active</strong></span>
-            <button class="btn btn-xs btn-secondary" onclick="alert('Exported Blotter to CSV')">Export CSV</button>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="blotter-table">
-            <thead>
-              <tr>
-                <th class="sticky-col">Symbol</th>
-                <th>Strategy</th>
-                <th>Net &Delta;</th>
-                <th>Net &Gamma;</th>
-                <th>Net &Theta;</th>
-                <th>Last Price</th>
-                <th>Day Change</th>
-                <th>Unrealized PnL</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="sticky-col"><strong>SPX</strong></td>
-                <td>Iron Condor (5800/5850)</td>
-                <td class="numeric-tabular">+0.04</td>
-                <td class="numeric-tabular">-0.002</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$18.40</td>
-                <td id="row-spx-price" class="numeric-tabular">$5,824.50</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+0.65%</td>
-                <td id="row-spx-pnl" class="numeric-tabular" style="color: var(--color-finance-gain); font-weight: 700;">+$480.00</td>
-                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Rolling position SPX...')">Roll Leg</button></td>
-              </tr>
-              <tr>
-                <td class="sticky-col"><strong>NDX</strong></td>
-                <td>Bear Call Spread</td>
-                <td class="numeric-tabular">-0.18</td>
-                <td class="numeric-tabular">-0.005</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$32.10</td>
-                <td id="row-ndx-price" class="numeric-tabular">$20,412.10</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+1.12%</td>
-                <td id="row-ndx-pnl" class="numeric-tabular" style="color: var(--color-finance-loss); font-weight: 700;">-$320.00</td>
-                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Closing position NDX...')">Close</button></td>
-              </tr>
-              <tr>
-                <td class="sticky-col"><strong>NVDA</strong></td>
-                <td>Covered Call (135 C)</td>
-                <td class="numeric-tabular">+0.52</td>
-                <td class="numeric-tabular">+0.012</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$8.50</td>
-                <td id="row-nvda-price" class="numeric-tabular">$134.80</td>
-                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+2.45%</td>
-                <td id="row-nvda-pnl" class="numeric-tabular" style="color: var(--color-finance-gain); font-weight: 700;">+$1,240.00</td>
-                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Managing NVDA...')">Adjust</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>
+    
 
   </div> <!-- End desktop-wrapper -->
 
@@ -790,10 +560,7 @@
       <span class="mobile-nav-icon">🛡️</span>
       <span>Admin</span>
     </button>
-    <button class="mobile-nav-item" onclick="switchSurface('trading')">
-      <span class="mobile-nav-icon">📈</span>
-      <span>Trading</span>
-    </button>
+    
     <button class="mobile-nav-item" onclick="toggleMobileDrawer()">
       <span class="mobile-nav-icon">⚙️</span>
       <span>Settings</span>
@@ -802,7 +569,7 @@
 
 
   <!-- ========================================================================
-       CLIENT-SIDE INTERACTIVE JAVASCRIPT & TRADINGVIEW CHART ENGINE
+       CLIENT-SIDE INTERACTIVE JAVASCRIPT ENGINE
        ======================================================================== -->
   <script>
     let currentSurface = 'corporate';
@@ -1414,7 +1181,7 @@
     // Initialize all subsystems
     window.addEventListener('DOMContentLoaded', () => {
       renderLegs();
-      initTradingViewChart();
+      
       initCorporateChart();
       initAdminBarChart();
       startTickSim();

@@ -5,7 +5,7 @@
       <div class="logo-badge">⚡</div>
       <div>
         <div class="brand-title">Neutron Binary Percipience</div>
-        <div class="brand-sub">Unified Enterprise Architecture &amp; Pro Trading Terminal</div>
+        <div class="brand-sub">Unified Enterprise Architecture &amp; Operations Portal</div>
       </div>
     </div>
   </div>
@@ -15,7 +15,6 @@
     <div class="desktop-surface-tabs" style="display: flex; background-color: var(--surface-subtle); padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); gap: 2px;">
       <button class="btn btn-xs btn-secondary surface-tab active" id="surfaceTabCorporate" onclick="switchSurface('corporate')">🌐 Corporate</button>
       <button class="btn btn-xs btn-secondary surface-tab" id="surfaceTabAdmin" onclick="switchSurface('admin')">🛡️ Admin Portal</button>
-      <button class="btn btn-xs btn-secondary surface-tab" id="surfaceTabTrading" onclick="switchSurface('trading')">📈 Pro Trading</button>
     </div>
 
     <!-- Core Portal Tabs -->
@@ -29,12 +28,6 @@
       <button class="nav-btn" onclick="showTab('client')" id="clientNavBtn" style="border: 1px solid var(--cyan); color: var(--cyan); font-weight: 700;">🔑 Client Space</button>
     </nav>
 
-    <!-- View Mode: Desktop Full-Width vs Phone Simulator -->
-    <div style="display: flex; background-color: var(--surface-subtle); padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); gap: 2px;">
-      <button id="viewModeDesktop" class="btn btn-xs btn-secondary active" onclick="setViewMode('desktop')">🖥️ Desktop</button>
-      <button id="viewModeMobile" class="btn btn-xs btn-secondary" onclick="setViewMode('mobile')">📱 Mobile</button>
-    </div>
-
     <!-- Theme Selector (3 Presets) -->
     <select id="themeSelector" class="input input-sm" style="width: 140px;" onchange="switchTheme(this.value)">
       <option value="corporate-light">Corporate Light</option>
@@ -42,10 +35,10 @@
       <option value="pro-oled">Pro OLED</option>
     </select>
 
-    <!-- 60 FPS Sim Toggle -->
-    <button id="tickSimBtn" class="btn btn-sm btn-secondary" onclick="toggleTickSimulation()" title="Toggle Real-Time 60 FPS RAF Simulation">
-      <span id="simIndicator" style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-finance-gain); display: inline-block;"></span>
-      <span style="font-size: 11px; font-weight: 700;">60 FPS Sim</span>
+    <!-- 60 FPS Telemetry Toggle -->
+    <button id="tickSimBtn" class="btn btn-sm btn-secondary" onclick="toggleTickSimulation()" title="Toggle Real-Time 60 FPS Telemetry Simulation">
+      <span id="simIndicator" style="width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block;"></span>
+      <span style="font-size: 11px; font-weight: 700;">60 FPS Telemetry</span>
     </button>
   </div>
 </header>
