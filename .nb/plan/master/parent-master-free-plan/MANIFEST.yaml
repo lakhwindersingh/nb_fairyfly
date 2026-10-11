@@ -30,11 +30,6 @@ key_capabilities:
 - Tree-Sitter AST Token Reduction (60-80%)
 - SHA-256 Merkle Ledger State Chaining
 - Basic Autonomous CI/CD Self-Repair Loop
-isa_opcodes:
-- OP_AST_PARSE
-- OP_AST_PRUNE
-- OP_AST_DIFF
-- OP_MERKLE_INIT
 file_versions:
   concise:
     path: concise.md

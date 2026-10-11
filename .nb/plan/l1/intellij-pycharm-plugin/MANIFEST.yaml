@@ -33,9 +33,6 @@ key_capabilities:
 - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
 - JCEF Chromium Embedded Living Visualizer
 - Coroutine-based Background CLI Execution Service
-isa_opcodes:
-- OP_AST_PARSE
-- OP_AST_PRUNE
 file_versions:
   concise:
     path: concise.md

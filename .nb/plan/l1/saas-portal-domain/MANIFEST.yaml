@@ -34,12 +34,6 @@ key_capabilities:
 - Decoupled API Gateways & Stripe Usage Billing Handlers
 - Observability Hub Dashboard & Real-Time Telemetry Feeds
 - WCAG 2.1 AA & Core Web Vitals Quality Harnesses
-isa_opcodes:
-- OP_GUARD_RBAC
-- OP_GUARD_RLS
-- OP_FINOPS_METER
-- OP_FINOPS_LIMIT
-- OP_UI_RENDER
 file_versions:
   concise:
     path: concise.md

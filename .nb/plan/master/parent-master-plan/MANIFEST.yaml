@@ -46,15 +46,6 @@ key_capabilities:
 - Cryptographic Merkle State Ledger (CAP-08)
 - Autonomous Closed-Loop CI/CD Triad (CAP-16)
 - 3-Tier Layered Context Precedence Hierarchy (CAP-20)
-isa_opcodes:
-- OP_AST_PARSE
-- OP_AST_PRUNE
-- OP_AST_DIFF
-- OP_MERKLE_INIT
-- OP_MERKLE_SEAL
-- OP_MERKLE_VERIFY
-- OP_FINOPS_METER
-- OP_SWARM_ELECT
 file_versions:
   concise:
     path: concise.md

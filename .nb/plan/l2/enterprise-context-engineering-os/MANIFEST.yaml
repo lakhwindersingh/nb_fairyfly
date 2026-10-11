@@ -34,11 +34,6 @@ key_capabilities:
 - Cryptographic Merkle State Ledger
 - Sealed Enclave .nbpack Packaging
 - Bring Your Own Repository (BYOR) Multi-VCS Adapter
-isa_opcodes:
-- OP_DAG_EXEC
-- OP_SWARM_ELECT
-- OP_SWARM_HEARTBEAT
-- OP_PKG_OBFUSCATE
 file_versions:
   concise:
     path: concise.md

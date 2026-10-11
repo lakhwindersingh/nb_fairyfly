@@ -33,10 +33,6 @@ key_capabilities:
 - Usage-Based Metering & 15% Token Rev-Share Financial Engine
 - Mission-Control Context Observability Dashboard
 - Shared-to-Decoupled Cloud Infrastructure Architecture
-isa_opcodes:
-- OP_GUARD_RLS
-- OP_FINOPS_METER
-- OP_UI_RENDER
 file_versions:
   concise:
     path: concise.md

@@ -40,8 +40,6 @@ key_capabilities:
 - 'full_width_fluid_responsive_design: True'
 - 'tabbed_workspaces_and_decluttering: True'
 - 'collapsible_chrome_and_sidebar: True'
-isa_opcodes:
-- OP_UI_RENDER
 file_versions:
   concise:
     path: concise.md

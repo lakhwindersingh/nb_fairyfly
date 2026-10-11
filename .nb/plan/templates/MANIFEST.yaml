@@ -1,20 +1,18 @@
-schema_version: "3.0.0"
-plan_id: "domain_{{DOMAIN_SLUG}}"
-plan_name: "{{DOMAIN_NAME}}"
-version: "1.0.0"
-layer: "{{LAYER:-l1}}" # master, l1, l2, test
-capability_rating: "{{CAPABILITY_RATING:-TIER_L1}}"
-status: "active"
-
+schema_version: 3.0.0
+plan_id: domain_{{DOMAIN_SLUG}}
+plan_name: '{{DOMAIN_NAME}}'
+version: 1.0.0
+layer: '{{LAYER:-l1}}'
+capability_rating: '{{CAPABILITY_RATING:-TIER_L1}}'
+status: active
 maturity:
-  stage: "IMPLEMENTATION_READY" # PLANNED, ACTIVE_DRAFT, IMPLEMENTATION_READY, COMPLETED, DEPRECATED
-  implementation_status: "structured_specification"
+  stage: IMPLEMENTATION_READY
+  implementation_status: structured_specification
   test_coverage: 100
   production_ready: true
-
 semantic_parity:
   composite_score: 0.985
-  gate_status: "PASSED"
+  gate_status: PASSED
   vectors:
     ast_parity: 0.99
     contract_parity: 0.98
@@ -22,47 +20,40 @@ semantic_parity:
     handover_parity: 0.98
     doc_parity: 0.98
     supply_chain_parity: 0.99
-
 dependencies:
   requires:
-    - "master_parent_framework"
+  - master_parent_framework
   enables: []
-
 key_capabilities:
-  - "{{DOMAIN_CAPABILITY_1}}"
-  - "{{DOMAIN_CAPABILITY_2}}"
-  - "{{DOMAIN_CAPABILITY_3}}"
-  - "{{DOMAIN_CAPABILITY_4}}"
-
-isa_opcodes:
-  - "OP_AST_PARSE"
-  - "OP_MERKLE_SEAL"
-
+- '{{DOMAIN_CAPABILITY_1}}'
+- '{{DOMAIN_CAPABILITY_2}}'
+- '{{DOMAIN_CAPABILITY_3}}'
+- '{{DOMAIN_CAPABILITY_4}}'
 file_versions:
   concise:
-    path: "concise.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
+    path: concise.md
+    version: 1.0.0
+    last_modified: '{{CURRENT_DATE}}'
+    content_hash: '{{SHA256_HASH}}'
     line_count: 0
-    primary_purpose: "Compact domain specification for token-optimized agentic context"
+    primary_purpose: Compact domain specification for token-optimized agentic context
   detailed:
-    path: "detailed.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '{{CURRENT_DATE}}'
+    content_hash: '{{SHA256_HASH}}'
     line_count: 0
-    primary_purpose: "Comprehensive implementation blueprint, API wire contracts, and test harness"
+    primary_purpose: Comprehensive implementation blueprint, API wire contracts, and
+      test harness
   readme:
-    path: "README.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
+    path: README.md
+    version: 1.0.0
+    last_modified: '{{CURRENT_DATE}}'
+    content_hash: '{{SHA256_HASH}}'
     line_count: 0
-    primary_purpose: "Quick reference, domain overview, and developer navigation"
-
+    primary_purpose: Quick reference, domain overview, and developer navigation
 implementation_phases:
-  phase_1: "Wire Contracts & Boundary Invariants"
-  phase_2: "Domain Implementation & Subsystem Architecture"
-  phase_3: "Specialist Subagents & Verification Workflows"
-  phase_4: "Packaging, Distribution & Gateway Provisioning"
+  phase_1: Wire Contracts & Boundary Invariants
+  phase_2: Domain Implementation & Subsystem Architecture
+  phase_3: Specialist Subagents & Verification Workflows
+  phase_4: Packaging, Distribution & Gateway Provisioning

@@ -39,9 +39,6 @@ key_capabilities:
 - 'relational_persistence: postgresql_mysql_liquibase_expand_contract'
 - 'observability: opentelemetry_collector_prometheus_grafana'
 - 'finops_optimization: arm64_graviton_spot_preemptible_keda_autoscaling'
-isa_opcodes:
-- OP_MERKLE_INIT
-- OP_DAG_EXEC
 file_versions:
   concise:
     path: concise.md

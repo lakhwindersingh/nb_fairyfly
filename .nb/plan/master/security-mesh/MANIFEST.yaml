@@ -31,10 +31,6 @@ dependencies:
 key_capabilities:
 - Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA
   & PII Protection Mesh Core Engine & Runtime Governance
-isa_opcodes:
-- OP_GUARD_RBAC
-- OP_GUARD_RLS
-- OP_DAG_BARRIER
 file_versions:
   concise:
     path: concise.md

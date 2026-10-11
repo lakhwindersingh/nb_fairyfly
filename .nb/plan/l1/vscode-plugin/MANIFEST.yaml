@@ -31,9 +31,6 @@ key_capabilities:
 - Secure Webview Panel & Interactive Visualizer
 - In-Editor CodeLens Triggers on Contracts & Workflows
 - Activity Bar Navigation & Status Bar FinOps Meters
-isa_opcodes:
-- OP_AST_PARSE
-- OP_AST_PRUNE
 file_versions:
   concise:
     path: concise.md

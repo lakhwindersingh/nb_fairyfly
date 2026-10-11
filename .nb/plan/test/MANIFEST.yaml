@@ -32,9 +32,6 @@ key_capabilities:
 - Playwright 1.48+ Web Quality & WCAG 2.1 AA CI
 - Terraform Multi-Cloud IaC Assertion
 - Automated AI Failure Diagnosis & Surgical Patching
-isa_opcodes:
-- OP_MERKLE_VERIFY
-- OP_GATE_EVAL
 file_versions:
   concise:
     path: concise.md

@@ -32,9 +32,6 @@ key_capabilities:
 - 'percipience_workflow_audit: True'
 - 'security_mesh_compliance: True'
 - 'token_economics_profiling: True'
-isa_opcodes:
-- OP_GATE_EVAL
-- OP_MERKLE_VERIFY
 file_versions:
   concise:
     path: concise.md

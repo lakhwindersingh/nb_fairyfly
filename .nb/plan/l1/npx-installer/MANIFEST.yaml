@@ -30,9 +30,6 @@ key_capabilities:
 - Automated Claude / MCP Protocol Server Provisioning
 - Multi-Platform Binary & Python Bridge Fallback Resolution
 - Enterprise Air-Gapped & Proxy (.npmrc) Support
-isa_opcodes:
-- OP_MERKLE_SEAL
-- OP_GATE_EVAL
 file_versions:
   concise:
     path: concise.md

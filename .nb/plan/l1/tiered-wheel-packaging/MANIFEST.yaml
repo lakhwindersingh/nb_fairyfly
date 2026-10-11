@@ -31,9 +31,6 @@ key_capabilities:
 - PEP 427, PEP 517, PEP 621 Standard Package Formatting
 - SHA-256 Merkle Block Sealing for Built Wheel Artifacts
 - Public PyPI & Enterprise Private Index Authentication (AWS CodeArtifact, Artifactory)
-isa_opcodes:
-- OP_MERKLE_SEAL
-- OP_PKG_OBFUSCATE
 file_versions:
   concise:
     path: concise.md

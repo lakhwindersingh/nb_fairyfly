@@ -42,10 +42,6 @@ key_capabilities:
 - 'autonomous_living_docs_synthesis: True'
 - 'differential_skippability_engine: True'
 - 'target_plan_boundary_resolver: True'
-isa_opcodes:
-- OP_DAG_ORDER
-- OP_DAG_EXEC
-- OP_DAG_BARRIER
 file_versions:
   concise:
     path: concise.md
