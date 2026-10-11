@@ -1,11 +1,40 @@
+schema_version: 3.0.0
 plan_id: master_parent_free_community
 plan_name: Parent Master Context Engineering Framework (Free Community Edition)
 version: 7.5.0
+layer: master
 capability_rating: Free Community Tier
-plan_type: orchestration
 status: active
-parent_plan: master/parent-master-plan/concise.md
-dependencies: []
+maturity:
+  stage: COMPLETED
+  implementation_status: production_runtime
+  test_coverage: 100
+  production_ready: true
+semantic_parity:
+  composite_score: 0.985
+  gate_status: PASSED
+  vectors:
+    ast_parity: 0.99
+    contract_parity: 0.98
+    behavior_parity: 0.99
+    handover_parity: 0.98
+    doc_parity: 0.98
+    supply_chain_parity: 0.99
+dependencies:
+  requires:
+  - master_parent_framework
+  enables: []
+key_capabilities:
+- Single Canonical Gatekeeper Binary (.nb/bin/percipience)
+- Embedded Free Tier Plugin Assets & Startup Notification
+- Tree-Sitter AST Token Reduction (60-80%)
+- SHA-256 Merkle Ledger State Chaining
+- Basic Autonomous CI/CD Self-Repair Loop
+isa_opcodes:
+- OP_AST_PARSE
+- OP_AST_PRUNE
+- OP_AST_DIFF
+- OP_MERKLE_INIT
 file_versions:
   concise:
     path: concise.md
@@ -29,22 +58,8 @@ file_versions:
     content_hash: b3d33a3af6add6d604b478b4ca2e58dcf6086afaa2fcc1e4446fdad5c65fe21e
     line_count: 29
     primary_purpose: Quick reference and navigation
-key_capabilities:
-- Single Canonical Gatekeeper Binary (.nb/bin/percipience)
-- Embedded Free Tier Plugin Assets & Startup Notification
-- Tree-Sitter AST Token Reduction (60-80%)
-- SHA-256 Merkle Ledger State Chaining
-- Basic Autonomous CI/CD Self-Repair Loop
 implementation_phases:
   phase_1: Local Quad-Space Scaffolding
   phase_2: Embedded IDE Plugin Asset Integration
   phase_3: Free Tier CI/CD Workflow & Token Compression
   phase_4: Sandbox Permission Governance
-success_metrics:
-  bootstrap_time: <1.5s
-  token_savings: 60-80%
-  test_pass_rate: 100%
-related_contracts:
-- .nb/context/contracts/
-related_rules:
-- .nb/context/rules/

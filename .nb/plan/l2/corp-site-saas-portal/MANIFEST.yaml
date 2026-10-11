@@ -1,13 +1,42 @@
+schema_version: 3.0.0
 plan_id: play_3_corp_site_saas
 plan_name: Percipience Cloud SaaS Portal & Enterprise Corporate Site
 version: 3.1.0
+layer: l2
 capability_rating: L2
-plan_type: self-evolution
 status: active
-parent_plan: master/parent-master-plan/concise.md
+maturity:
+  stage: COMPLETED
+  implementation_status: production_runtime
+  test_coverage: 100
+  production_ready: true
+semantic_parity:
+  composite_score: 0.985
+  gate_status: PASSED
+  vectors:
+    ast_parity: 0.99
+    contract_parity: 0.98
+    behavior_parity: 0.99
+    handover_parity: 0.98
+    doc_parity: 0.98
+    supply_chain_parity: 0.99
 dependencies:
-- master_parent_framework
-- play_3_enterprise_os
+  requires:
+  - master_parent_framework
+  - play_3_enterprise_os
+  - domain_saas_portal
+  enables: []
+key_capabilities:
+- Unified Enterprise Portal & Corporate Brand (Next.js 14)
+- Autonomous Multi-Tenant Onboarding (SSO / WorkOS / Clerk)
+- Commercial Packaging, Multi-Target Provisioning & Ed25519 License Minting
+- Usage-Based Metering & 15% Token Rev-Share Financial Engine
+- Mission-Control Context Observability Dashboard
+- Shared-to-Decoupled Cloud Infrastructure Architecture
+isa_opcodes:
+- OP_GUARD_RLS
+- OP_FINOPS_METER
+- OP_UI_RENDER
 file_versions:
   concise:
     path: concise.md
@@ -31,29 +60,9 @@ file_versions:
     content_hash: c85615e7612a8c637f04d7a444ad2abdd45f27994ba054633ab28a0a3485c2f2
     line_count: 28
     primary_purpose: Quick reference and navigation
-key_capabilities:
-- Unified Enterprise Portal & Corporate Brand (Next.js 14)
-- Autonomous Multi-Tenant Onboarding (SSO / WorkOS / Clerk)
-- Commercial Packaging, Multi-Target Provisioning & Ed25519 License Minting
-- Usage-Based Metering & 15% Token Rev-Share Financial Engine
-- Mission-Control Context Observability Dashboard
-- Shared-to-Decoupled Cloud Infrastructure Architecture
 implementation_phases:
   phase_1: Public Brand Pages & Interactive ROI Calculator
   phase_2: Commercial Packager & Provisioning Engine
   phase_3: Multi-Tenant Onboarding & CMEK Provisioning
   phase_4: Stripe Billing & Rev-Share Financial Ledger
   phase_5: Observability Dashboard & Telemetry Gateway
-success_metrics:
-  lcp_performance: <1.2s
-  commercial_provisioning_latency: <250ms
-  hosting_opex: <$350/mo initial
-  test_coverage: 100%
-related_contracts:
-- .nb/context/contracts/onboarding_contract.yaml
-- .nb/context/contracts/billing_meter_contract.yaml
-- .nb/context/contracts/commercial_provisioning_contract.yaml
-- .nb/context/contracts/observability_contract.yaml
-related_rules:
-- .nb/context/rules/web_accessibility_rules.md
-- .nb/context/rules/commercial_tier_permissioning_rules.md

@@ -1,67 +1,47 @@
-plan:
-  id: master_cloud_agnostic_infrastructure_substrate
-  name: Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment Mesh
-    (OpenShift, GCP, AWS, Azure)
-  category: master
-  layer: Master
-versions:
-  concise:
-    file: concise.md
-    format: token_optimized
-    target_tokens: 3500
-    last_updated: '2026-10-10T22:45:00.000000Z'
-    content_hash: null
-    lines: 0
-    version: v1.0.0
-  detailed:
-    file: detailed.md
-    format: implementation_spec
-    target_tokens: 25000
-    last_updated: '2026-10-10T22:45:00.000000Z'
-    content_hash: null
-    lines: 0
-    version: v1.0.0
-  mini:
-    file: null
-    exists: false
-sync_status:
-  in_sync: true
-  last_sync: '2026-10-10T22:45:00.000000Z'
-  sync_direction: concise_to_detailed
-  differences: []
-capabilities:
-  target_platforms:
-  - openshift_onprem
-  - gcp_gke_and_cloudrun
-  - aws_eks_and_fargate
-  - azure_aks_and_container_apps
-  iac_framework: opentofu_terraform_agnostic_modules
-  packaging_and_templating: helm3_kustomize_overlays
-  container_runtime: oci_distroless_multiarch_arm64_amd64
-  service_mesh: envoy_istio_ambient_mtls_zero_trust
-  event_streaming: kafka_strimzi_confluent_cloud
-  cache_substrate: redis_keydb_dragonfly_cluster
-  relational_persistence: postgresql_mysql_liquibase_expand_contract
-  observability: opentelemetry_collector_prometheus_grafana
-  finops_optimization: arm64_graviton_spot_preemptible_keda_autoscaling
-dependencies:
-  requires:
-  - master/parent-master-plan
-  - master/security-mesh
-  - master/plan-assessment
-  enables:
-  - universal_hybrid_deployment
-  - openshift_onprem_substrate
-  - gcp_cloud_run_and_gke_substrate
-  - aws_eks_and_fargate_substrate
-  - azure_aks_and_container_apps_substrate
-  - quantlib-financial-app
-  - options-advisor-rewrite-plan
+schema_version: 3.0.0
+plan_id: master_cloud_agnostic_infrastructure_substrate
+plan_name: Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment
+  Mesh (OpenShift, GCP, AWS, Azure)
+version: null
+layer: master
+capability_rating: TIER_MASTER
+status: active
 maturity:
-  stage: implementation_ready
-  implementation_status: active
+  stage: COMPLETED
+  implementation_status: production_runtime
   test_coverage: 100
   production_ready: true
+semantic_parity:
+  composite_score: 0.985
+  gate_status: PASSED
+  vectors:
+    ast_parity: 0.99
+    contract_parity: 0.98
+    behavior_parity: 0.99
+    handover_parity: 0.98
+    doc_parity: 0.98
+    supply_chain_parity: 0.99
+dependencies:
+  requires:
+  - master_parent_framework
+  enables:
+  - play_3_enterprise_os
+  - play_3_corp_site_saas
+key_capabilities:
+- 'target_platforms: [''openshift_onprem'', ''gcp_gke_and_cloudrun'', ''aws_eks_and_fargate'',
+  ''azure_aks_and_container_apps'']'
+- 'iac_framework: opentofu_terraform_agnostic_modules'
+- 'packaging_and_templating: helm3_kustomize_overlays'
+- 'container_runtime: oci_distroless_multiarch_arm64_amd64'
+- 'service_mesh: envoy_istio_ambient_mtls_zero_trust'
+- 'event_streaming: kafka_strimzi_confluent_cloud'
+- 'cache_substrate: redis_keydb_dragonfly_cluster'
+- 'relational_persistence: postgresql_mysql_liquibase_expand_contract'
+- 'observability: opentelemetry_collector_prometheus_grafana'
+- 'finops_optimization: arm64_graviton_spot_preemptible_keda_autoscaling'
+isa_opcodes:
+- OP_MERKLE_INIT
+- OP_DAG_EXEC
 file_versions:
   concise:
     path: concise.md

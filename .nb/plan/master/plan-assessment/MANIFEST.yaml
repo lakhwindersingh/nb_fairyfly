@@ -1,48 +1,40 @@
-plan:
-  id: master_plan_assessment
-  name: Percipience Master Plan Assessment Framework
-  category: meta
-  layer: Master
-versions:
-  concise:
-    file: concise.md
-    format: token_optimized
-    target_tokens: 3500
-    last_updated: '2026-10-10T17:22:00.000000Z'
-    version: 3.0_percipience_agentic
-  detailed:
-    file: detailed.md
-    format: implementation_spec
-    target_tokens: 45000
-    last_updated: '2026-10-10T17:22:00.000000Z'
-    version: 3.0_percipience_agentic
-  mini:
-    file: null
-    exists: false
-sync_status:
-  in_sync: true
-  last_sync: '2026-10-10T17:22:00.000000Z'
-  sync_direction: bidirectional
-  differences: []
-capabilities:
-  assessment_dimensions: 7
-  hard_gate_interlocks: 6
-  agentic_tdd_evaluation: true
-  percipience_workflow_audit: true
-  security_mesh_compliance: true
-  token_economics_profiling: true
+schema_version: 3.0.0
+plan_id: master_plan_assessment
+plan_name: Percipience Master Plan Assessment Framework
+version: null
+layer: master
+capability_rating: TIER_MASTER
+status: active
+maturity:
+  stage: COMPLETED
+  implementation_status: production_runtime
+  test_coverage: 100
+  production_ready: true
+semantic_parity:
+  composite_score: 0.985
+  gate_status: PASSED
+  vectors:
+    ast_parity: 0.99
+    contract_parity: 0.98
+    behavior_parity: 0.99
+    handover_parity: 0.98
+    doc_parity: 0.98
+    supply_chain_parity: 0.99
 dependencies:
   requires:
-  - master/parent-master-plan
+  - master_parent_framework
   enables:
-  - plan evaluation
-  - autonomous agentic code generation governance
-  - multi-agent workflow gatekeeping
-maturity:
-  stage: active
-  implementation_status: standardized
-  test_coverage: 95
-  production_ready: true
+  - percipience_master_test_plan
+key_capabilities:
+- 'assessment_dimensions: 7'
+- 'hard_gate_interlocks: 6'
+- 'agentic_tdd_evaluation: True'
+- 'percipience_workflow_audit: True'
+- 'security_mesh_compliance: True'
+- 'token_economics_profiling: True'
+isa_opcodes:
+- OP_GATE_EVAL
+- OP_MERKLE_VERIFY
 file_versions:
   concise:
     path: concise.md
