@@ -1,7 +1,6 @@
 plan:
   id: enterprise_ui_design_system
-  name: Enterprise Unified Design System, Complex Trading Widgets & Multi-Surface
-    Portal Architecture
+  name: Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture
   category: presentation
   layer: Domain
 versions:
@@ -9,29 +8,30 @@ versions:
     file: concise.md
     format: token_optimized
     target_tokens: 4500
-    last_updated: '2026-10-10T18:16:00.000000Z'
-    version: 1.3.0_full_width_mobile_compliant
+    last_updated: '2026-10-10T23:15:00.000000Z'
+    version: 2.0.0_look_and_feel_agnostic
   detailed:
     file: detailed.md
     format: implementation_spec
-    target_tokens: 35000
-    last_updated: '2026-10-10T18:16:00.000000Z'
-    version: 1.3.0_full_width_mobile_compliant
+    target_tokens: 32000
+    last_updated: '2026-10-10T23:15:00.000000Z'
+    version: 2.0.0_look_and_feel_agnostic
 sync_status:
   in_sync: true
-  last_sync: '2026-10-10T18:16:00.000000Z'
+  last_sync: '2026-10-10T23:15:00.000000Z'
   sync_direction: bidirectional
   differences: []
 capabilities:
   unified_design_tokens: true
-  complex_trading_instrument_widgets: true
+  universal_look_and_feel_system: true
+  terminology_agnostic_design_language: true
   multi_surface_layouts: true
-  high_frequency_virtualized_data_grid: true
-  corporate_portal_and_admin_portal_unification: true
+  high_performance_virtualized_data_grid: true
+  public_product_and_admin_portal_unification: true
   percipience_subagent_colocation: true
   docker_agents_runtime_compatible: true
   interactive_html_showcase_preview: true
-  full_width_and_mobile_compliant: true
+  full_width_fluid_responsive_design: true
   tabbed_workspaces_and_decluttering: true
   collapsible_chrome_and_sidebar: true
 dependencies:
@@ -39,9 +39,9 @@ dependencies:
   - master/parent-master-plan
   - master/plan-assessment
   enables:
-  - options-advisor-rewrite-plan/mod_web_portal_ui
-  - quantlib-financial-app/05_frontend_web_application
-  - security-mesh/admin_portal_and_auth_widgets
+  - web_portal_ui
+  - frontend_web_applications
+  - admin_portal_and_auth_widgets
 templates:
   css_template: templates/enterprise-design-tokens.css
   preview_showcase: templates/preview-showcase.html
@@ -52,18 +52,18 @@ modules:
 - id: mod_core_component_library
   file: modules/02_core_component_library.md
   title: Accessible Headless Primitives & Core Form/Display Widgets
-- id: mod_complex_trading_widgets
-  file: modules/03_complex_trading_and_settings_widgets.md
-  title: Complex Trading Settings, Multi-Leg Builders & High-Density Grids
+- id: mod_complex_data_and_governance_widgets
+  file: modules/03_complex_data_and_governance_widgets.md
+  title: High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls
 - id: mod_surface_specialization
   file: modules/04_surface_specialization_and_layouts.md
-  title: Corporate Portal, Admin Portal & Pro Trading Dockable Layouts
+  title: Public Product Surface, Admin Governance Console & Operations Workspace Layouts
 - id: mod_realtime_data_and_state
   file: modules/05_state_management_and_realtime_data.md
-  title: High-Frequency WebSocket Streaming, 60 FPS Virtualization & State
+  title: High-Performance Data Streaming, 60 FPS Virtualization & State Management
 - id: mod_governance_and_showcase
   file: modules/06_governance_testing_and_component_showcase.md
-  title: Storybook Showcase, Visual Regression CI/CD & Percipience Swarms
+  title: Component Showcase, Visual Regression CI/CD & Percipience Swarms
 maturity:
   stage: active_draft
   implementation_status: structured_specification_with_interactive_templates

@@ -7,7 +7,7 @@
 ---
 
 ## 1. Architectural Mission
-This module establishes the foundational design token dictionary, mathematical typography scale, 8px spatial grid system, and runtime dynamic CSS variable theming engine. It guarantees that any UI element rendered across the organization—from marketing landing pages to high-frequency trading blotters—inherits a unified visual DNA while supporting surface-specific density profiles.
+This module establishes the foundational design token dictionary, mathematical typography scale, 8px spatial grid system, and runtime dynamic CSS variable theming engine. It guarantees that any UI element rendered across the organization—from marketing landing pages to high-frequency data grids—inherits a unified visual DNA while supporting surface-specific density profiles.
 
 ---
 
@@ -25,7 +25,7 @@ graph LR
   subgraph SemanticTokens["2. Semantic Theme Mappings"]
     ThemeLight["Corporate Light<br/>(High Contrast, Clean White/Slate, Brand Indigo)"]
     ThemeDark["Enterprise Dark<br/>(Dark Navy/Slate, Low Eye Strain)"]
-    ThemeOled["Pro Trading OLED<br/>(True Black #000000, Neon Candlestick Accents)"]
+    ThemeOled["High-Contrast OLED<br/>(True Black #000000, High-Contrast Semantic Accents)"]
     ThemeHighContrast["Accessibility AAA<br/>(7.0:1 Contrast Ratio, Enhanced Outlines)"]
   end
 
@@ -47,7 +47,7 @@ To eliminate arbitrary layout offsets and ensure perfect alignment between data 
 | Sizing Tier | Height / Dimension | Padding (X / Y) | Typical Use Cases |
 | :--- | :---: | :---: | :--- |
 | **Micro (`Control-XS`)** | `24px` | `6px / 2px` | High-density blotter badges, inline table action icons, compact ticker tags. |
-| **Compact (`Control-SM`)** | `32px` | `10px / 4px` | Pro trading order book controls, blotter filter inputs, secondary action buttons. |
+| **Compact (`Control-SM`)** | `32px` | `10px / 4px` | High-density data controls, table filter inputs, secondary action buttons. |
 | **Default (`Control-MD`)** | `40px` | `16px / 8px` | Enterprise Admin portal form inputs, primary navigation dropdowns, modal controls. |
 | **Hero (`Control-LG`)** | `48px` | `24px / 12px` | Corporate portal primary CTAs, main search bars, authentication form submit buttons. |
 | **Jumbo (`Control-XL`)** | `56px` | `32px / 16px` | Marketing hero callouts, enterprise pricing tier action triggers. |
@@ -82,7 +82,7 @@ Financial systems require unambiguous color semantics that remain accessible und
 }
 
 [data-theme="pro-oled"] {
-  /* Surface Theming (Pro Trading True OLED Black) */
+  /* Surface Theming (High-Contrast True OLED Black) */
   --surface-base: #000000;
   --surface-subtle: #0a0e17;
   --surface-card: #111827;

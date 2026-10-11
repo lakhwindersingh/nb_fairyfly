@@ -1,7 +1,7 @@
 """
 Enterprise UI Design System Token & Contract Validator Engine
 Validates W3C Design Tokens, Theme Palettes, 8px Spatial Rhythm,
-and Complex Trading Widget Contracts against JSON Schemas.
+and Universal Data Grid Contracts against JSON Schemas.
 """
 
 import json
@@ -11,7 +11,7 @@ from typing import Dict, Any, List, Tuple, Optional
 
 
 class UITokenValidator:
-    """Validator for Enterprise UI design tokens, spatial invariants, and widget contracts."""
+    """Validator for Enterprise UI design tokens, spatial invariants, and UI component contracts."""
 
     REPO_ROOT = Path(__file__).resolve().parents[2]
     CONTRACTS_DIR = REPO_ROOT / ".nb" / "context" / "contracts"
@@ -82,9 +82,16 @@ class UITokenValidator:
             found_theme_ids.add(tid)
             if tid not in cls.CERTIFIED_THEMES:
                 errors.append(f"Unrecognized theme id: {tid}")
-            for req in ["name", "bg_app", "surface_card", "text_primary", "color_finance_gain", "color_finance_loss"]:
+            for req in ["name", "bg_app", "surface_card", "text_primary"]:
                 if not t.get(req):
                     errors.append(f"Theme {tid} missing required color token: {req}")
+            # Check status colors (support both semantic and legacy token names)
+            has_success = t.get("color_status_success") or t.get("color_finance_gain")
+            has_error = t.get("color_status_error") or t.get("color_finance_loss")
+            if not has_success:
+                errors.append(f"Theme {tid} missing success color token")
+            if not has_error:
+                errors.append(f"Theme {tid} missing error color token")
 
         for expected in cls.CERTIFIED_THEMES:
             if expected not in found_theme_ids:
@@ -112,57 +119,29 @@ class UITokenValidator:
         return (len(errors) == 0, errors)
 
     @classmethod
-    def validate_multileg_strategy(cls, payload: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """Validates a Multi-Leg Strategy payload."""
-        errors: List[str] = []
-        for req in ["symbol", "underlying_price", "legs", "net_price", "pricing_type"]:
-            if req not in payload:
-                errors.append(f"Missing required parameter: {req}")
-
-        pricing_type = payload.get("pricing_type")
-        if pricing_type not in ["NET_DEBIT", "NET_CREDIT", "EVEN"]:
-            errors.append(f"Invalid pricing_type: {pricing_type}")
-
-        legs = payload.get("legs", [])
-        if not isinstance(legs, list) or len(legs) < 1 or len(legs) > 8:
-            errors.append("legs must contain between 1 and 8 items")
-
-        for idx, leg in enumerate(legs):
-            for lreq in ["leg_id", "action", "ratio", "instrument_type", "strike", "expiration"]:
-                if lreq not in leg:
-                    errors.append(f"Leg #{idx} missing required field: {lreq}")
-            if leg.get("action") not in ["BUY", "SELL"]:
-                errors.append(f"Leg #{idx} invalid action: {leg.get('action')}")
-            if leg.get("instrument_type") not in ["CALL", "PUT", "STOCK", "FUTURE"]:
-                errors.append(f"Leg #{idx} invalid instrument_type: {leg.get('instrument_type')}")
-            ratio = leg.get("ratio", 0)
-            if not isinstance(ratio, int) or ratio < 1 or ratio > 10:
-                errors.append(f"Leg #{idx} ratio must be an integer between 1 and 10")
-
-        return (len(errors) == 0, errors)
-
-    @classmethod
-    def validate_blotter_row(cls, row: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """Validates a virtualized blotter row data payload."""
+    def validate_data_grid_row(cls, row: Dict[str, Any]) -> Tuple[bool, List[str]]:
+        """Validates a virtualized data grid row payload."""
         errors: List[str] = []
         required_fields = [
-            "position_id",
-            "symbol",
-            "strategy_name",
-            "net_delta",
-            "net_gamma",
-            "net_theta",
-            "unrealized_pnl",
-            "last_price",
+            "row_id",
+            "name",
+            "category",
             "status",
+            "primary_metric",
+            "secondary_metric",
+            "timestamp",
         ]
         for f in required_fields:
             if f not in row:
-                errors.append(f"Blotter row missing required field: {f}")
+                errors.append(f"Data grid row missing required field: {f}")
 
         status = row.get("status")
-        if status not in ["OPEN", "ADJUSTED", "ROLLED", "CLOSED"]:
-            errors.append(f"Invalid position status: {status}")
+        valid_statuses = ["ACTIVE", "PENDING", "WARNING", "ERROR", "ARCHIVED", "OPEN", "COMPLETED"]
+        if status not in valid_statuses:
+            errors.append(f"Invalid row status: {status}")
+
+        if "primary_metric" in row and not isinstance(row["primary_metric"], (int, float)):
+            errors.append("primary_metric must be a numeric value")
 
         return (len(errors) == 0, errors)
 

@@ -41,7 +41,7 @@ graph TD
 
   subgraph AgentGovernance["4. Percipience Subagent Swarms"]
     AgentArchitect["agent_ui_design_system_architect.yaml<br/>(Token governance & API review)"]
-    AgentEngineer["agent_complex_widget_engineer.yaml<br/>(Component implementation & perf tuning)"]
+    AgentEngineer["agent_ui_component_engineer.yaml<br/>(Component implementation & perf tuning)"]
     TestingTriad --> AgentArchitect
     TestingTriad --> AgentEngineer
   end
@@ -54,7 +54,7 @@ graph TD
 ### 3.1 Playwright Visual Regression Testing
 Every pull request automatically captures baseline snapshots across 3 viewports and 4 theme variants:
 - **Viewports**: Mobile (`390x844`), Desktop Default (`1440x900`), Pro Multi-Monitor Ultra-Wide (`2560x1440`).
-- **Themes**: Corporate Light, Enterprise Dark, Pro Trading OLED.
+- **Themes**: Corporate Light, Enterprise Dark, High-Contrast OLED.
 - **Max Pixel Drift Threshold**: Strict tolerance $\Delta E < 0.2\%$. Any unexpected visual shift blocks PR merge via `wf_pr_gatekeeper.yaml`.
 
 ### 3.2 Automated WCAG 2.2 AAA Accessibility Gate
@@ -69,10 +69,10 @@ Every component story is audited via `@axe-core/playwright`:
 
 ### 4.1 UI Design System Architect (`agent_ui_design_system_architect.yaml`)
 - **Role**: Tier A Cognitive Specialist
-- **System Prompt Mandate**: Enforces semantic design token hygiene, evaluates component API ergonomics, verifies headless accessibility primitives, and prevents styling drift across corporate and trading surfaces.
+- **System Prompt Mandate**: Enforces semantic design token hygiene, evaluates component API ergonomics, verifies headless accessibility primitives, and prevents styling drift across corporate and application surfaces.
 - **Tool Access**: Read-only workspace inspection, AST token linter, design system validator.
 
-### 4.2 Complex Trading Widget Engineer (`agent_complex_widget_engineer.yaml`)
+### 4.2 Complex UI Component Engineer (`agent_ui_component_engineer.yaml`)
 - **Role**: Tier B Rapid Implementation Specialist
 - **System Prompt Mandate**: Synthesizes and optimizes compound widgets (`MultiLegStrategyBuilder`, `VirtualizedBlotterGrid`, `VolSurfaceTuner`), profiles 60 FPS RAF rendering pipelines, and implements WebWorker math offloading.
 - **Tool Access**: Sandboxed Git worktree write tools, Vitest / Playwright test runners.
@@ -83,7 +83,7 @@ Every component story is audited via `@axe-core/playwright`:
 
 All design token releases and component library versions are sealed into the **Percipience Merkle State Ledger** (`.nb/context/ledger/context_ledger.yaml`) under recovery point **`RP_DESIGN_SYSTEM_GENESIS`**:
 - Cryptographically signs token hash values and component story snapshots.
-- Supports instant rollback if a theme regression impacts downstream trading blotters or corporate portals.
+- Supports instant rollback if a theme regression impacts downstream data grids or corporate portals.
 
 ---
 
@@ -92,4 +92,4 @@ All design token releases and component library versions are sealed into the **P
 - `tests/visual/playwright.config.ts`: Visual regression configuration across viewports.
 - `tests/a11y/axe.spec.ts`: Automated accessibility test suite.
 - `.nb/agentic/custom/agents/agent_ui_design_system_architect.yaml`: Architect agent definition.
-- `.nb/agentic/custom/agents/agent_complex_widget_engineer.yaml`: Widget engineer agent definition.
+- `.nb/agentic/custom/agents/agent_ui_component_engineer.yaml`: Widget engineer agent definition.

@@ -40,7 +40,7 @@ graph LR
 
   subgraph UIComponents["4. Virtualized Views"]
     BlotterView["Virtualized Blotter Rows"]
-    ChartCanvas["TradingView Canvas"]
+    ChartCanvas["Telemetry Chart Canvas"]
     ZustandStore --> BlotterView
     ZustandStore --> ChartCanvas
   end

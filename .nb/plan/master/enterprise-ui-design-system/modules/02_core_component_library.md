@@ -16,7 +16,7 @@ This module specifies the core library of reusable UI widgets built upon accessi
 ```mermaid
 graph TD
   subgraph Actions["Action Primitives"]
-    Button["Button<br/>(Primary, Secondary, Ghost, Danger, Link, Trading Buy/Sell)"]
+    Button["Button<br/>(Primary, Secondary, Ghost, Danger, Link, Success/Danger Semantic Actions)"]
     ButtonGroup["ButtonGroup & SegmentedControl<br/>(DTE Selector, Timeframe 1m/5m/1h/1D)"]
     DropdownMenu["DropdownMenu & ContextMenu<br/>(Right-click trade actions, bulk operations)"]
   end
@@ -69,8 +69,8 @@ export interface NumericTickInputProps {
 }
 ```
 
-### 3.2 Trading Calendar & Expiration Date Picker (`<OptionsExpirationPicker />`)
-Standard web date pickers fail in trading applications because they do not reflect exchange trading holidays and Friday/monthly option expirations:
+### 3.2 Trading Calendar & Expiration Date Picker (`<BusinessDatePicker />`)
+Standard web date pickers fail in trading applications because they do not reflect exchange business holidays and Friday/monthly option expirations:
 - Highlights active Monthly Options Expirations (3rd Friday of month in amber badge)
 - Highlights Weekly Expirations (Mon/Wed/Fri in blue pill)
 - Disables market holidays (NYSE, CME, Eurex calendars)
@@ -121,6 +121,6 @@ All interactive widgets must satisfy the **WCAG 2.2 AAA Keyboard Navigation Cont
 ## 5. Implementation Deliverables
 - `src/components/actions/Button.tsx`: Poly-surface button with loading spinners and buy/sell variants.
 - `src/components/inputs/NumericTickInput.tsx`: Financial numeric stepper with tick-size snapping.
-- `src/components/inputs/OptionsExpirationPicker.tsx`: Trading calendar with DTE badges.
+- `src/components/inputs/BusinessDatePicker.tsx`: Business calendar with date range badges.
 - `src/components/overlays/ModalDialog.tsx`: Radix UI Dialog wrapper with accessible focus trap.
 - `src/components/feedback/ToastProvider.tsx`: High-performance toast manager for trade fill broadcasts.

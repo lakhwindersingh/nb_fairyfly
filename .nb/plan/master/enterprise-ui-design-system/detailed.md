@@ -1,7 +1,7 @@
 ---
 plan_type: "layerable_domain_plan"
 plan_id: "enterprise_ui_design_system"
-name: "Enterprise Unified Design System, Complex Trading Widgets & Multi-Surface Portal Architecture"
+name: "Enterprise Unified Design System & Universal Look-and-Feel Architecture"
 parent_master_plan: ".nb/plan/master/parent-master-plan/detailed.md"
 version: "1.0.0_detailed"
 tier_mapping:
@@ -21,7 +21,7 @@ environment_toolchain:
   primitives: "Radix UI Primitives / React Aria"
   virtualization: "TanStack Virtual v3 / AG Grid Community"
   docking: "Dockview / GoldenLayout"
-  charts: "TradingView Lightweight Charts v4 + Plotly.js / Three.js"
+  charts: "High-Performance SVG / Canvas Rendering Engines"
   code_editor: "Monaco Editor (@monaco-editor/react)"
   dependency_specs: ["package.json", "pnpm-workspace.yaml"]
 shared_infrastructure:
@@ -39,13 +39,13 @@ shared_infrastructure:
 <!-- Plan Co-Location Notice -->
 > **Co-Located Agent Specifications**: Agent definitions for this plan are stored along with the plan in [`.nb/agentic/custom/agents/`](file:///Users/lakhwinder/RustroverProjects/nb_cicada/.nb/agentic/custom/agents/) and embedded directly in Section 8. When layered onto any workspace, `./bin/percipience layer apply --plan .nb/plan/master/enterprise-ui-design-system/detailed.md` automatically extracts and hydra-instantiates these files into `.nb/agentic/custom/agents/`.
 
-Modern financial and technology enterprises suffer from severe user interface fragmentation. Public-facing corporate websites are frequently developed in disparate CMSs or bespoke marketing stacks; administrative and compliance portals are built with unstyled internal component frameworks; and mission-critical trading applications rely on dense, proprietary desktop shells. This fragmentation introduces massive development duplication, visual inconsistency, severe accessibility bugs, and steep user training curves.
+Modern enterprise software ecosystems suffer from severe user interface fragmentation. Public-facing corporate websites are frequently developed in disparate CMSs or bespoke marketing stacks; administrative and compliance portals are built with unstyled internal component frameworks; and mission-critical operational applications rely on fragmented, ad-hoc layouts. This fragmentation introduces massive development duplication, visual inconsistency, severe accessibility bugs, and steep user training curves.
 
 This specification establishes a **Universal Enterprise Design System and Multi-Surface UI Architecture** (`enterprise_ui_design_system`). Built on modern web standards (React 19, Next.js 16, Tailwind CSS v4, and Radix UI headless primitives), it establishes a single, shared component and widget foundation capable of servicing three distinct enterprise surfaces:
 
 1. **The Internet-Facing Corporate Portal**: High visual polish, accessible marketing storytelling, developer documentation, pricing tier showcases, fast Core Web Vitals (LCP < 1.2s), and SEO optimization.
 2. **The Enterprise Admin & Governance Portal**: High data density, multi-tenant hierarchy management, Zanzibar ReBAC role management, security audit logs, WORM storage oversight, and system diagnostics.
-3. **The Professional Trading & Complex Analytics Applications**: High-frequency streaming market feeds, virtualized blotters, multi-leg options strategy builders, yield curve / vol surface tuners, risk thermometers, and dockable multi-window layouts.
+3. **The Analytics & Operations Workspace Applications**: High-throughput telemetry streaming, virtualized data grids, hierarchical rule builders, configuration diff viewers, and multi-pane workspace layouts.
 
 ```mermaid
 graph TD
@@ -62,7 +62,7 @@ graph TD
     Headless --> BaseWidgets
   end
 
-  subgraph ComplexWidgets["3. Complex Trading & Settings Engine"]
+  subgraph ComplexWidgets["3. Complex Data & Governance Suite"]
     MultiLeg["Multi-Leg Strategy Builder<br/>(Ratio, Strike, Expiry, Action, Limit)"]
     CurveTuner["Yield Curve & Vol Surface Tuner<br/>(Spline Slices, Stress Sliders)"]
     DataGrid["Virtualized Hi-Freq Data Grid<br/>(Tick Flashing, Sort/Filter/Pin, 60 FPS)"]
@@ -80,10 +80,10 @@ graph TD
   subgraph Surfaces["4. Multi-Surface Shells"]
     CorpPortal["🌐 Corporate Portal<br/>(Next.js App Router, SSR, Tailwind 4, SEO)"]
     AdminPortal["🛡️ Admin & Governance Portal<br/>(Tenant Management, RBAC, WORM Logs)"]
-    ProTrading["📈 Pro Trading Desktop / Web Shell<br/>(Dockview Panes, WebSockets, Plotly 3D)"]
+    OpsWorkspace["📊 Analytics & Operations Workspace<br/>(Multi-Pane Grid, High-Density Data Grids)"]
     ComplexWidgets --> CorpPortal
     ComplexWidgets --> AdminPortal
-    ComplexWidgets --> ProTrading
+    ComplexWidgets --> OpsWorkspace
   end
 ```
 
@@ -111,7 +111,7 @@ $$	ext{Spacing}(n) = 8n 	ext{ px}, \quad n \in \{0.5, 1, 1.5, 2, 3, 4, 6, 8, 12\
 
   /* Standardized Control Sizing Scale */
   --control-height-xs: 24px; /* Micro badges, table row actions */
-  --control-height-sm: 32px; /* Pro trading controls, compact filters */
+  --control-height-sm: 32px; /* High-density data grid controls, compact filters */
   --control-height-md: 40px; /* Default admin form inputs, buttons */
   --control-height-lg: 48px; /* Primary hero CTAs, search bars */
   --control-height-xl: 56px; /* Marketing callouts */
@@ -165,7 +165,7 @@ Financial applications demand unambiguous colors that convey state instantly whi
 }
 
 [data-theme="pro-oled"] {
-  /* True OLED Black for Pro Trading Desks */
+  /* High-Contrast True OLED Black */
   --surface-base: #000000;
   --surface-subtle: #080c14;
   --surface-card: #0f172a;
@@ -195,7 +195,7 @@ All monetary values, Greek derivatives, percentages, and timestamps must render 
 
 ---
 
-## Part III: Complex Trading & Settings Widget Suite
+## Part III: Complex Data & Governance Widget Suite
 
 ### 3.1 Multi-Leg Instrument Builder (`<MultiLegStrategyBuilder />`)
 
@@ -294,7 +294,7 @@ graph TD
     AdminMetrics["KPI Metric Cards & System Status Banners"]
   end
 
-  subgraph TradingLayout["Surface C: Pro Trading Shell"]
+  subgraph OperationsLayout["Surface C: Operations Workspace"]
     DockPanes["Dockview / GoldenLayout Multi-Window Grid"]
     TickerStrip["Top Real-Time Ticker & Market Pulse Bar"]
     Detachable["Detachable Floating Multi-Monitor Panels"]
@@ -303,10 +303,10 @@ graph TD
 
   SharedCore --> CorporateLayout
   SharedCore --> AdminLayout
-  SharedCore --> TradingLayout
+  SharedCore --> OperationsLayout
 ```
 
-### 4.1 Pro Trading Multi-Pane Docking Engine (`<DockableTradingWorkspace />`)
+### 4.1 Operations Multi-Pane Workspace Engine (`<OperationsWorkspace />`)
 
 Professional traders customize their screen configurations extensively. This layout engine integrates **Dockview**:
 - **Draggable & Dockable Panes**: Users can drag panel tabs to dock them top, bottom, left, right, or as tabbed stacks.
@@ -317,10 +317,10 @@ Professional traders customize their screen configurations extensively. This lay
 
 ### 4.2 Decluttering Architecture: Contextual Co-Location vs. Tabbed Disassociation ("The Rule of 3")
 
-Traditional enterprise trading dashboards often clutter dozens of disconnected cards, charts, risk panes, order tickets, and blotters simultaneously on a single overloaded viewport. This creates cognitive overload, slow WebGL rendering, and cramped touch ergonomics.
+Traditional enterprise dashboards often clutter dozens of disconnected cards, charts, monitors, and tables simultaneously on a single overloaded viewport. This creates cognitive overload, slow WebGL rendering, and cramped touch ergonomics.
 
 The **Percipience UI Layout Standard** enforces the **Rule of 3**:
-1. **Contextual Co-Location (Primary Viewport)**: A single view displays at most **2 to 3 tightly correlated, functionally interdependent panes** simultaneously (e.g. *TradingView Chart + Active Order Ticket + Immediate Payoff Curve*).
+1. **Contextual Co-Location (Primary Viewport)**: A single view displays at most **2 to 3 tightly correlated, functionally interdependent panes** simultaneously (e.g. *TradingView Chart + Immediate Action Panel + Secondary Telemetry Curve*).
 2. **Tabbed Disassociation (Secondary Tools)**: All disassociated, secondary, or situational tools (Options Chains, Volatility Surfaces, Historical Backtests, Margin Summaries, Zen Guard Rule Editors, Audit Logs) **MUST NOT** be stacked as continuous cards on the same page. Instead, they are organized into semantic **Contextual Tabs** (`<ContextTabbedWorkspace />`).
 3. **State Preservation Invariant**: Inactive tab panels maintain their DOM, WebAssembly, and WebGL states using HTML `hidden` attributes (`display: none`) rather than unmounting components. This ensures instant tab switching with **zero recalculation lag**, preserving canvas textures, zoom levels, and draft order inputs.
 
@@ -329,8 +329,8 @@ graph TD
   subgraph Viewport["Clean Non-Cluttered Viewport (The Rule of 3)"]
     direction TB
     subgraph PrimaryCluster["Primary Correlated Cluster (Always Visible)"]
-      Pane1["TradingView Candlestick Chart"]
-      Pane2["Multi-Leg Strategy Builder & 2D Curve"]
+      Pane1["Primary Telemetry Chart"]
+      Pane2["High-Density Data Grid & Metrics"]
     end
     subgraph TabbedCluster["Secondary Disassociated Tools (ContextTabbedWorkspace)"]
       TabNav["Semantic Tab Bar: [Options Chain] | [3D Vol Surface] | [Blotter Grid] | [Backtest Lab]"]
@@ -351,7 +351,7 @@ graph TD
 
 ### 4.3 Collapsible Chrome Shell Architecture (`<CollapsibleChromeShell />`)
 
-To maximize visible canvas area on demanding quantitative trading desks, all chrome elements support dynamic show/hide, minimization, and fullscreen modes:
+To maximize visible canvas area on high-density operational environments, all chrome elements support dynamic show/hide, minimization, and fullscreen modes:
 
 1. **3-State Collapsible Navigation Sidebar (`<CollapsibleSidebar />`)**:
    - **Expanded Mode (`240px`)**: Full hierarchy tree with labels, section badges, and nested items.
@@ -418,7 +418,7 @@ class MarketDataTickThrottler {
 
 ### 6.1 Playwright Visual Regression Testing
 - **Viewports**: Mobile (`390x844`), Desktop Default (`1440x900`), Pro Multi-Monitor Ultra-Wide (`2560x1440`).
-- **Themes**: Corporate Light, Enterprise Dark, Pro Trading OLED.
+- **Themes**: Corporate Light, Enterprise Dark, High-Contrast OLED.
 - **Tolerance**: Pixel drift threshold $\Delta E < 0.2\%$.
 
 ### 6.2 Automated WCAG 2.2 AAA Accessibility Gate
@@ -433,7 +433,7 @@ Every component story is audited via `@axe-core/playwright`:
 
 - **Initial Development Investment**: 3 Sprints (6 Weeks) $\to$ \$45,000 CapEx.
 - **Cross-Project Cost Avoidance**: Eliminates duplicate frontend engineering across 4 project teams $\to$ Saves \$280,000/year.
-- **Third-Party Component Licensing Avoidance**: Replaces commercial enterprise UI/blotter suites (\$12,000/seat/year) $\to$ Saves \$120,000/year for 10-seat trading desk.
+- **Third-Party Component Licensing Avoidance**: Replaces commercial enterprise UI/blotter suites (\$12,000/seat/year) $\to$ Saves \$120,000/year for 10-seat operations team.
 - **3-Year Net Present Value (NPV)**: **+\$892,400** ($r=10\%$).
 - **Payback Period**: **$1.9\text{ months}$**.
 - **Internal Rate of Return (IRR)**: **$340\%$**.
@@ -445,7 +445,7 @@ Every component story is audited via `@axe-core/playwright`:
 ```mermaid
 flowchart LR
   S1["Sprint 1: Token Core & Primitives<br/>(Tokens, Themes, Inputs, Modals)"]
-  S2["Sprint 2: Complex Trading Widgets<br/>(Multi-Leg Builder, Blotter Grid)"]
+  S2["Sprint 2: Complex Data & Governance Widgets<br/>(Data Grid, Rule Builder, Diff Viewer)"]
   S3["Sprint 3: Layouts & Real-Time Engine<br/>(Dockview, RAF Throttler, WebWorker)"]
   S4["Sprint 4: Storybook & CI/CD Gates<br/>(Playwright Visual, Axe-core AAA)"]
 
@@ -454,5 +454,5 @@ flowchart LR
 
 1. **Sprint 1 (Weeks 1–2)**: Design tokens, Tailwind CSS v4 `@theme`, 8px spatial grid, base accessible input widgets.
 2. **Sprint 2 (Weeks 3–4)**: Multi-leg strategy builder, virtualized blotter data grid, yield curve / vol surface tuners.
-3. **Sprint 3 (Weeks 5–6)**: Corporate, Admin, and Pro Trading Dockview layouts, RAF 60 FPS tick throttler, Web Worker math pipeline.
+3. **Sprint 3 (Weeks 5–6)**: Public, Admin, and Operations Workspace layouts, RAF 60 FPS tick throttler, Web Worker math pipeline.
 4. **Sprint 4 (Weeks 7–8)**: Storybook 8 catalog, Playwright visual regression suite, axe-core accessibility auditing, and Percipience gatekeeper integration.

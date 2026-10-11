@@ -1,26 +1,17 @@
 """
-Unit and Integration Test Suite for Enterprise Unified Design System
-Plan: .nb/plan/master/enterprise-ui-design-system
-Validates:
-- Design Token Schemas & Themes (Corporate Light, Enterprise Dark, Pro OLED)
-- 8px Spatial Rhythm & Standardized Control Heights
-- Multi-Leg Strategy Builder Wire Contract
-- High-Frequency Blotter Grid Wire Contract
-- Hierarchical Boolean Rule Tree Contract
-- WCAG 2.2 AAA Contrast Ratios & Tabular Numerics Invariants
+Unit Tests for Enterprise UI Design System Tokens & Component Contracts
+Verifies 8px spatial grid, control heights, multi-theme contracts,
+and universal data grid row specifications.
 """
 
-import json
 import unittest
-from pathlib import Path
-
 from workplace.core.ui_token_validator import UITokenValidator
 
 
-class TestEnterpriseUIDesignSystem(unittest.TestCase):
-    """Test suite for Enterprise UI design system tokens, themes, and compound widgets."""
+class TestUIDesignSystem(unittest.TestCase):
+    """Test suite for Enterprise Unified Design System invariants and contracts."""
 
-    def test_spatial_grid_rhythm_invariants(self):
+    def test_spatial_grid_8px_increments(self):
         """Verifies 8px spatial grid and 4px micro-increment invariants."""
         valid_spacings = ["0px", "4px", "8px", "12px", "16px", "24px", "32px", "48px", "64px", "96px"]
         for sp in valid_spacings:
@@ -46,7 +37,7 @@ class TestEnterpriseUIDesignSystem(unittest.TestCase):
     def test_theme_token_dictionary_validation(self):
         """Tests complete design token dictionary validation against contract."""
         theme_sample = {
-            "version": "1.0.0",
+            "version": "2.0.0",
             "spatial_grid": {
                 "base_unit_px": 8,
                 "scale": {
@@ -80,8 +71,8 @@ class TestEnterpriseUIDesignSystem(unittest.TestCase):
                     "bg_app": "#f8fafc",
                     "surface_card": "#ffffff",
                     "text_primary": "#0f172a",
-                    "color_finance_gain": "#10b981",
-                    "color_finance_loss": "#f43f5e",
+                    "color_status_success": "#10b981",
+                    "color_status_error": "#f43f5e",
                 },
                 {
                     "id": "enterprise-dark",
@@ -89,8 +80,8 @@ class TestEnterpriseUIDesignSystem(unittest.TestCase):
                     "bg_app": "#0b0f19",
                     "surface_card": "#151d2e",
                     "text_primary": "#f8fafc",
-                    "color_finance_gain": "#10b981",
-                    "color_finance_loss": "#f43f5e",
+                    "color_status_success": "#10b981",
+                    "color_status_error": "#f43f5e",
                 },
                 {
                     "id": "pro-oled",
@@ -98,8 +89,8 @@ class TestEnterpriseUIDesignSystem(unittest.TestCase):
                     "bg_app": "#000000",
                     "surface_card": "#0a0e17",
                     "text_primary": "#ffffff",
-                    "color_finance_gain": "#00e676",
-                    "color_finance_loss": "#ff1744",
+                    "color_status_success": "#00e676",
+                    "color_status_error": "#ff1744",
                 },
             ],
         }
@@ -108,104 +99,27 @@ class TestEnterpriseUIDesignSystem(unittest.TestCase):
         self.assertTrue(is_valid, f"Theme dictionary should be valid: {errors}")
         self.assertEqual(len(errors), 0)
 
-    def test_multileg_strategy_builder_contract_validation(self):
-        """Tests MultiLegStrategyBuilderContract validation with valid and invalid options payloads."""
-        valid_iron_condor = {
-            "symbol": "SPX",
-            "underlying_price": 5824.50,
-            "pricing_type": "NET_CREDIT",
-            "net_price": 3.85,
-            "max_profit": 385.00,
-            "max_loss": 615.00,
-            "pop_percent": 78.4,
-            "legs": [
-                {
-                    "leg_id": "leg_1",
-                    "action": "BUY",
-                    "ratio": 1,
-                    "instrument_type": "PUT",
-                    "strike": 5750.0,
-                    "expiration": "2026-11-20",
-                    "bid": 8.10,
-                    "ask": 8.30,
-                    "delta": -0.15,
-                },
-                {
-                    "leg_id": "leg_2",
-                    "action": "SELL",
-                    "ratio": 1,
-                    "instrument_type": "PUT",
-                    "strike": 5780.0,
-                    "expiration": "2026-11-20",
-                    "bid": 11.20,
-                    "ask": 11.45,
-                    "delta": -0.25,
-                },
-                {
-                    "leg_id": "leg_3",
-                    "action": "SELL",
-                    "ratio": 1,
-                    "instrument_type": "CALL",
-                    "strike": 5860.0,
-                    "expiration": "2026-11-20",
-                    "bid": 10.40,
-                    "ask": 10.65,
-                    "delta": 0.24,
-                },
-                {
-                    "leg_id": "leg_4",
-                    "action": "BUY",
-                    "ratio": 1,
-                    "instrument_type": "CALL",
-                    "strike": 5890.0,
-                    "expiration": "2026-11-20",
-                    "bid": 6.80,
-                    "ask": 7.00,
-                    "delta": 0.14,
-                },
-            ],
-        }
-
-        is_valid, errors = UITokenValidator.validate_multileg_strategy(valid_iron_condor)
-        self.assertTrue(is_valid, f"Iron Condor should pass: {errors}")
-
-        # Test invalid payload: missing symbol and invalid action
-        invalid_strategy = {
-            "underlying_price": 100.0,
-            "pricing_type": "UNKNOWN_TYPE",
-            "net_price": 1.0,
-            "legs": [{"leg_id": "bad", "action": "HOLD", "ratio": 0, "instrument_type": "OPTION", "strike": 100, "expiration": "2026-01-01"}],
-        }
-        is_valid, errors = UITokenValidator.validate_multileg_strategy(invalid_strategy)
-        self.assertFalse(is_valid)
-        self.assertGreaterEqual(len(errors), 3)
-
-    def test_blotter_grid_contract_validation(self):
-        """Tests virtualized blotter row contract validation."""
+    def test_data_grid_contract_validation(self):
+        """Tests virtualized data grid row contract validation."""
         valid_row = {
-            "position_id": "pos_spx_001",
-            "symbol": "SPX",
-            "strategy_name": "Iron Condor (5800/5850)",
-            "net_delta": 0.04,
-            "net_gamma": -0.002,
-            "net_theta": 18.40,
-            "net_vega": -45.20,
-            "unrealized_pnl": 480.00,
-            "realized_pnl": 0.0,
-            "margin_req": 5000.0,
-            "last_price": 5824.50,
-            "day_change_pct": 0.65,
-            "last_tick_timestamp": 1791682800,
-            "status": "OPEN",
+            "row_id": "service_gateway_01",
+            "name": "API Context Gateway",
+            "category": "Networking",
+            "status": "ACTIVE",
+            "primary_metric": 14280.0,
+            "secondary_metric": 18.4,
+            "change_pct": 2.5,
+            "timestamp": 1791682800,
         }
 
-        is_valid, errors = UITokenValidator.validate_blotter_row(valid_row)
-        self.assertTrue(is_valid, f"Blotter row should be valid: {errors}")
+        is_valid, errors = UITokenValidator.validate_data_grid_row(valid_row)
+        self.assertTrue(is_valid, f"Data grid row should be valid: {errors}")
 
-        # Invalid row
-        invalid_row = {"symbol": "AAPL", "status": "UNKNOWN_STATUS"}
-        is_valid, errors = UITokenValidator.validate_blotter_row(invalid_row)
+        # Invalid row: missing required fields and invalid status
+        invalid_row = {"row_id": "service_02", "status": "UNKNOWN_STATUS"}
+        is_valid, errors = UITokenValidator.validate_data_grid_row(invalid_row)
         self.assertFalse(is_valid)
+        self.assertGreaterEqual(len(errors), 2)
 
     def test_contrast_ratio_formula(self):
         """Tests relative luminance contrast ratio calculation."""
