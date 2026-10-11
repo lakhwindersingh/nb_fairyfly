@@ -17,12 +17,15 @@ class TemplateRenderer:
     _STATIC_DIR = _PORTAL_DIR / "static"
     _PAGES_ORDER = [
         "overview",
+        "corporate",
+        "admin_portal",
+        "trading",
         "platform",
         "comparatives",
         "economics",
         "lab",
         "resources",
-        "client_space"
+        "client_space",
     ]
 
     _cached_html: Optional[str] = None
@@ -68,7 +71,7 @@ class TemplateRenderer:
         """Returns the isolated HTML fragment for a given page/tab."""
         page_file = cls._TEMPLATES_DIR / "pages" / f"{page_name}.html"
         if not page_file.exists():
-            return f"<section id=\"{page_name}\">Page not found</section>"
+            return f'<section id="{page_name}">Page not found</section>'
         return page_file.read_text(encoding="utf-8")
 
     @classmethod

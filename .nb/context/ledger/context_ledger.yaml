@@ -193,6 +193,13 @@ recovery_points:
   status: VERIFIED
   description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
     secops@enterprise.corp'
+- id: RP_RESOLVE_CVE_BLOCK_crypto
+  module_scope: global_system
+  git_commit: HEAD
+  timestamp: '2026-10-11T02:52:47.495043+00:00'
+  status: VERIFIED
+  description: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by
+    secops@enterprise.corp'
 ledger_chain:
 - block_id: 3879
   block_type: STATE_UPDATE
@@ -394,6 +401,22 @@ ledger_chain:
   current_block_hash: f414fe6a64bc7f7548b4745304354a647a80cc77da4b4a98c6e44ef90e16ab28
   action: PR_GATE_VERIFICATION_PASSED
   block_hash: f414fe6a64bc7f7548b4745304354a647a80cc77da4b4a98c6e44ef90e16ab28
+- block_id: 3904
+  block_type: STATE_UPDATE
+  prev_block_hash: f414fe6a64bc7f7548b4745304354a647a80cc77da4b4a98c6e44ef90e16ab28
+  timestamp: '2026-10-11T02:48:29.057456+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 16c25007ea50b4055620b37b564ba029c8c1803eea7bc9344e4e7d5d2ce44dbb
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 16c25007ea50b4055620b37b564ba029c8c1803eea7bc9344e4e7d5d2ce44dbb
+- block_id: 3905
+  block_type: STATE_UPDATE
+  prev_block_hash: 16c25007ea50b4055620b37b564ba029c8c1803eea7bc9344e4e7d5d2ce44dbb
+  timestamp: '2026-10-11T02:52:47.495043+00:00'
+  merkle_root: 62824dcb70a185c792a9978d3e9114909144851a6a11eec9cd6cf3a4a5b585be
+  current_block_hash: 7fce79e3bd42425c48e7b8e44186d8d2cd189323ff460f3ebd5ecff0a89cd251
+  action: 'QUARANTINE_RESOLVE: CVE_BLOCK_cryptominer-lib_1.0.0 [DISMISSED] by secops@enterprise.corp'
+  block_hash: 7fce79e3bd42425c48e7b8e44186d8d2cd189323ff460f3ebd5ecff0a89cd251
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:

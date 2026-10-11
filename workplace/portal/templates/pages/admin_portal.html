@@ -1,0 +1,102 @@
+<section id="admin-portal" class="tab-content">
+  <!-- SURFACE 2: ENTERPRISE ADMIN PORTAL (FULL-WIDTH) -->
+  <div class="surface-view" id="surface-admin" style="display:block;">
+    <!-- Breadcrumbs & Quick Search -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); flex-wrap: wrap; gap: var(--space-2);">
+      <div style="font-size: 13px; color: var(--text-muted);">
+        <span>Cicada Org</span> / <span>Tenants</span> / <strong style="color: var(--text-primary);">Production-Alpha</strong> / <span>Governance</span>
+      </div>
+      <div style="display: flex; gap: var(--space-1-5); flex-wrap: wrap;">
+        <input type="text" class="input input-sm" placeholder="Press Cmd+K to search..." style="width: 240px;" readonly onclick="triggerCommandPalette()">
+        <button class="btn btn-sm btn-primary" onclick="alert('Provision New Tenant Modal Activated')">+ New Tenant</button>
+      </div>
+    </div>
+
+    <div class="grid-sidebar">
+      <!-- Admin Sidebar Navigation -->
+      <aside class="card" style="padding: var(--space-2);">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-1); padding-left: var(--space-1);">Governance Modules</div>
+        <nav class="admin-sidebar-menu">
+          <a class="sidebar-item active" onclick="setAdminModule(this, 'tenant')">🏢 Tenant Hierarchy</a>
+          <a class="sidebar-item" onclick="setAdminModule(this, 'rebac')">🛡️ ReBAC Permissions</a>
+          <a class="sidebar-item" onclick="setAdminModule(this, 'fido2')">🔑 FIDO2 &amp; MFA Policies</a>
+          <a class="sidebar-item" onclick="setAdminModule(this, 'pii')">🔒 PII Masking Vault</a>
+          <a class="sidebar-item" onclick="setAdminModule(this, 'agents')">🤖 Docker-Agents Swarm</a>
+          <a class="sidebar-item" onclick="setAdminModule(this, 'worm')">📜 SEC 17a-4 WORM Audit</a>
+        </nav>
+      </aside>
+
+      <!-- Admin Main Panel -->
+      <section style="display: flex; flex-direction: column; gap: var(--space-3); width: 100%;">
+        <!-- Metric Cards -->
+        <div class="grid-3">
+          <div class="card">
+            <div style="font-size: 12px; color: var(--text-muted);">Active Tenant Workspaces</div>
+            <div class="numeric-tabular" style="font-size: 26px; font-weight: 700;">142</div>
+            <span class="badge badge-gain" style="margin-top: 4px;">+12% MoM</span>
+          </div>
+          <div class="card">
+            <div style="font-size: 12px; color: var(--text-muted);">Pending Four-Eyes Approvals</div>
+            <div class="numeric-tabular" style="font-size: 26px; font-weight: 700; color: var(--color-warning);">3</div>
+            <span class="badge badge-warning" style="margin-top: 4px;">Action Required</span>
+          </div>
+          <div class="card">
+            <div style="font-size: 12px; color: var(--text-muted);">Docker-Agent Swarms Active</div>
+            <div class="numeric-tabular" style="font-size: 26px; font-weight: 700; color: var(--color-primary);">8</div>
+            <span class="badge badge-gain" style="margin-top: 4px;">100% Health</span>
+          </div>
+        </div>
+
+        <!-- TradingView-Aligned Bar Chart: Hourly API Workload & Risk Interventions -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <span class="badge badge-gain" style="margin-bottom: 4px;">Real-Time Operations</span>
+              <h3 style="font-size: 18px; margin-top: 2px;">Hourly API Throughput &amp; Security Interventions</h3>
+            </div>
+            <div class="chart-controls">
+              <div class="chart-legend">
+                <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--color-primary);"></span> Normal Traffic</span>
+                <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--color-finance-loss);"></span> Throttled / Blocked</span>
+              </div>
+              <div class="chart-btn-group" style="margin-left: var(--space-2);">
+                <button class="btn btn-xs btn-secondary active" onclick="setAdminChartWindow('24H', this)">24H</button>
+                <button class="btn btn-xs btn-secondary" onclick="setAdminChartWindow('7D', this)">7D</button>
+              </div>
+            </div>
+          </div>
+          <div id="adminWorkloadBarChart" class="chart-container" style="height: 260px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Embedded Four-Eyes Dual Control Signer Widget -->
+        <div class="card" id="fourEyesWidget">
+          <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
+            <span class="dock-title">Pending Governance Approval: Request #AP-9041</span>
+            <span class="badge badge-warning">High Risk Mutation</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--space-2);">
+            Trader <code>quant_desk_01</code> requested a Net Margin Override from $500,000 to $1,500,000 for SPX Iron Condor portfolio roll.
+          </p>
+
+          <!-- Parameter Diff Viewer -->
+          <div class="diff-box" style="margin-bottom: var(--space-3);">
+            <div>&nbsp; "tenant_id": "tenant_hedge_fund_alpha",</div>
+            <div class="diff-del">- "max_margin_leverage_usd": 500000.00,</div>
+            <div class="diff-add">+ "max_margin_leverage_usd": 1500000.00,</div>
+            <div>&nbsp; "approval_protocol": "NIST_800_63B_AAL3_FOUR_EYES"</div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+            <span style="font-size: 12px; color: var(--text-muted);">TTL Expiration: <strong id="ttlCountdown" class="numeric-tabular" style="color: var(--color-warning);">03:42 remaining</strong></span>
+            <div style="display: flex; gap: var(--space-1-5);">
+              <button class="btn btn-sm btn-secondary btn-touch" onclick="resolveApproval('REJECT')">Reject</button>
+              <button class="btn btn-sm btn-primary btn-touch" onclick="resolveApproval('APPROVE')">🔑 Sign &amp; Approve (Passkey)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

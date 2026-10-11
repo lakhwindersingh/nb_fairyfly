@@ -1,26 +1,48 @@
 // Immediate Theme Initialization (prevents FOUC & localStorage exceptions)
 function initTheme() {
   try {
-    const saved = localStorage.getItem('nb_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    let saved = localStorage.getItem('nb_theme') || 'corporate-light';
+    if (saved === 'light') saved = 'corporate-light';
+    if (saved === 'dark') saved = 'enterprise-dark';
     document.documentElement.setAttribute('data-theme', saved);
-    updateThemeIcon(saved);
+    syncThemeControls(saved);
   } catch (e) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.setAttribute('data-theme', 'corporate-light');
   }
 }
-function toggleTheme() {
+
+function switchTheme(theme) {
   try {
-    const current = document.documentElement.getAttribute('data-theme') || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('nb_theme', next);
-    updateThemeIcon(next);
+    let effective = theme;
+    if (theme === 'light') effective = 'corporate-light';
+    if (theme === 'dark') effective = 'enterprise-dark';
+    document.documentElement.setAttribute('data-theme', effective);
+    localStorage.setItem('nb_theme', effective);
+    syncThemeControls(effective);
+    // Dispatch theme event for charts re-coloring
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: effective } }));
   } catch (e) {}
 }
-function updateThemeIcon(theme) {
-  const btn = document.getElementById('portalThemeBtn');
-  if (btn) btn.innerText = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+
+function toggleTheme() {
+  try {
+    const current = document.documentElement.getAttribute('data-theme') || 'corporate-light';
+    const next = current === 'corporate-light' ? 'enterprise-dark' : 'corporate-light';
+    switchTheme(next);
+  } catch (e) {}
 }
+
+function syncThemeControls(theme) {
+  const sel = document.getElementById('themeSelector');
+  if (sel && sel.value !== theme) {
+    sel.value = theme;
+  }
+  const btn = document.getElementById('portalThemeBtn');
+  if (btn) {
+    btn.innerText = (theme === 'corporate-light') ? '☀️ Light' : (theme === 'pro-oled' ? '⬛ OLED' : '🌙 Dark');
+  }
+}
+
 initTheme();
 
 // Global session state initialized safely before DOM rendering
@@ -29,6 +51,116 @@ try {
   clientSessionToken = localStorage.getItem('nb_client_token') || null;
 } catch (e) {}
 window.clientSessionToken = clientSessionToken;
+
+// Surface Switcher (Corporate Portal, Admin Portal, Pro Trading Workspace)
+function switchSurface(surfaceId) {
+  const normalized = (surfaceId === 'admin' || surfaceId === 'admin_portal') ? 'admin-portal' : surfaceId;
+  const surfaceTabs = ['corporate', 'admin-portal', 'trading'];
+
+  // Deactivate core portal tabs
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+  // Update Surface switcher buttons
+  document.querySelectorAll('.surface-tab').forEach(tab => tab.classList.remove('active'));
+  if (normalized === 'corporate') {
+    document.getElementById('surfaceTabCorporate')?.classList.add('active');
+  } else if (normalized === 'admin-portal') {
+    document.getElementById('surfaceTabAdmin')?.classList.add('active');
+  } else if (normalized === 'trading') {
+    document.getElementById('surfaceTabTrading')?.classList.add('active');
+  }
+
+  // Activate target surface section
+  const target = document.getElementById(normalized);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  // Close mobile drawer if opened
+  toggleMobileDrawer(false);
+
+  // Update hash
+  if (window.location.hash !== '#' + normalized) {
+    try {
+      history.replaceState ? history.replaceState(null, null, '#' + normalized) : location.hash = '#' + normalized;
+    } catch (e) {}
+  }
+
+  // Notify listeners to initialize or resize charts
+  window.dispatchEvent(new CustomEvent('surfaceChanged', { detail: { surface: normalized } }));
+}
+window.switchSurface = switchSurface;
+
+// View Mode: Desktop Full-Width vs Phone Simulator
+function setViewMode(mode) {
+  const desktopWrap = document.getElementById('desktop-wrapper');
+  const simWrap = document.getElementById('simulator-wrapper');
+  const btnDesktop = document.getElementById('viewModeDesktop');
+  const btnMobile = document.getElementById('viewModeMobile');
+  const phoneScreen = document.getElementById('phoneScreen');
+
+  if (mode === 'mobile') {
+    if (desktopWrap) desktopWrap.style.display = 'none';
+    if (simWrap) simWrap.style.display = 'flex';
+    btnDesktop?.classList.remove('active');
+    btnMobile?.classList.add('active');
+
+    // Populate phone screen with current active tab contents if not already rendered
+    if (phoneScreen && desktopWrap) {
+      const activeTab = desktopWrap.querySelector('.tab-content.active');
+      if (activeTab) {
+        phoneScreen.innerHTML = `
+          <div style="padding: 16px; background: var(--header-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-weight: 800; font-size: 14px; color: var(--text);">⚡ Percipience Mobile</div>
+            <span class="badge badge-neutral" style="font-size: 10px;">SIMULATOR</span>
+          </div>
+          <div style="padding: 16px;">
+            ${activeTab.innerHTML}
+          </div>
+        `;
+      }
+    }
+  } else {
+    if (desktopWrap) desktopWrap.style.display = 'block';
+    if (simWrap) simWrap.style.display = 'none';
+    btnDesktop?.classList.add('active');
+    btnMobile?.classList.remove('active');
+  }
+}
+window.setViewMode = setViewMode;
+
+// Mobile Drawer Toggle
+function toggleMobileDrawer(forceState) {
+  const drawer = document.getElementById('mobileDrawer');
+  const overlay = document.getElementById('mobileDrawerOverlay');
+  if (!drawer || !overlay) return;
+
+  const shouldOpen = (typeof forceState === 'boolean') ? forceState : !drawer.classList.contains('active');
+  if (shouldOpen) {
+    drawer.classList.add('active');
+    overlay.classList.add('active');
+  } else {
+    drawer.classList.remove('active');
+    overlay.classList.remove('active');
+  }
+}
+window.toggleMobileDrawer = toggleMobileDrawer;
+
+// 60 FPS Real-Time Simulation Engine Toggle
+window.isSimulating = true;
+function toggleTickSimulation() {
+  window.isSimulating = !window.isSimulating;
+  const ind = document.getElementById('simIndicator');
+  const btn = document.getElementById('tickSimBtn');
+  if (ind) {
+    ind.style.background = window.isSimulating ? 'var(--color-finance-gain)' : 'var(--text-muted)';
+  }
+  if (btn) {
+    btn.style.opacity = window.isSimulating ? '1' : '0.6';
+  }
+}
+window.toggleTickSimulation = toggleTickSimulation;
 
 // View switcher for Enterprise Client Space Admin Views
 function switchAdminView(viewId) {
@@ -124,9 +256,18 @@ window.showResourceSubtab = function(subtabId) {
   if (subtabId === 'res-swarm' && typeof loadSwarmFleetTelemetry === 'function') loadSwarmFleetTelemetry();
 };
 
-// Main Tab Routing - hoisted and attached to window so header buttons never fail with ReferenceError
+// Main Tab Routing - hoisted and attached to window
 function showTab(id) {
   if (!id) return;
+
+  // 0. Specialized Surfaces
+  if (id === 'corporate' || id === 'trading' || id === 'admin-portal' || id === 'admin') {
+    switchSurface(id);
+    return;
+  }
+
+  // Deactivate specialized surface buttons when showing core tabs
+  document.querySelectorAll('.surface-tab').forEach(tab => tab.classList.remove('active'));
 
   // 1. Enterprise Client Space subviews
   const adminTabs = ['governance', 'commercial-provisioner', 'swarm-governance', 'fleet-monitor', 'client-overview'];
@@ -194,14 +335,14 @@ function showTab(id) {
     }
   });
 
-  // Update URL hash for deep linking and back/forward browser navigation
+  // Update URL hash
   if (window.location.hash !== '#' + id) {
     try {
       history.replaceState ? history.replaceState(null, null, '#' + id) : location.hash = '#' + id;
     } catch (e) {}
   }
 
-  // Smooth scroll to top on tab switch
+  // Smooth scroll to top
   try {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {}
@@ -222,6 +363,9 @@ if (typeof window !== 'undefined') {
     const hash = (window.location.hash || '').replace('#', '');
     if (hash) {
       showTab(hash);
+    } else {
+      // Default to corporate surface
+      switchSurface('corporate');
     }
   });
 }

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="corporate-light">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>{{ page_title }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Official TradingView Lightweight Charts Library -->
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <style>
 {{ portal_css }}
   </style>
@@ -17,9 +19,91 @@
 <body>
   {{ header_component }}
 
-  <main>
-    {{ pages_content }}
-  </main>
+  <!-- MOBILE SLIDE-OVER DRAWER MENU -->
+  <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
+  <aside id="mobileDrawer" class="mobile-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-title">
+        <div class="logo-badge">⚡</div>
+        <span>Navigation</span>
+      </div>
+      <button class="btn btn-xs btn-secondary" onclick="toggleMobileDrawer()">✕</button>
+    </div>
+    <div class="mobile-drawer-body">
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Switch Surface</div>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('corporate'); toggleMobileDrawer();">🌐 Corporate Portal</button>
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('admin'); toggleMobileDrawer();">🛡️ Admin &amp; Governance</button>
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('trading'); toggleMobileDrawer();">📈 Pro Trading Terminal</button>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Explore Sections</div>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('overview'); toggleMobileDrawer();">Overview</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('platform'); toggleMobileDrawer();">52 Capabilities</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('economics'); toggleMobileDrawer();">Economics &amp; FinOps</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('comparatives'); toggleMobileDrawer();">Comparatives</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('lab'); toggleMobileDrawer();">Interactive Lab</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('resources'); toggleMobileDrawer();">Resources</button>
+        <button class="btn btn-sm btn-secondary" style="justify-content: flex-start;" onclick="showTab('client'); toggleMobileDrawer();">🔑 Client Space</button>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Theme Preset</div>
+      <select id="mobileThemeSelector" class="input input-md" style="margin-bottom: 16px;" onchange="switchTheme(this.value); toggleMobileDrawer();">
+        <option value="corporate-light">Corporate Light</option>
+        <option value="enterprise-dark">Enterprise Dark</option>
+        <option value="pro-oled">Pro OLED (Black)</option>
+      </select>
+
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Quick Shortcuts</div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); triggerCommandPalette();">🔍 Command Palette (Cmd+K)</a>
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); toggleZenMode();">🎯 Zen Focus Mode (Cmd+Shift+F)</a>
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); toggleTickSimulation();">⚡ Toggle 60 FPS Sim</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- DESKTOP FULL-WIDTH WRAPPER -->
+  <div id="desktop-wrapper" class="w-full">
+    <main>
+      {{ pages_content }}
+    </main>
+  </div>
+
+  <!-- MOBILE VIEWPORT SIMULATOR -->
+  <div id="simulator-wrapper">
+    <div class="phone-mockup">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phoneMockupScreen">
+        <!-- Rendered in simulator mode -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAVIGATION (WCAG 2.5.5 touch target >= 44px) -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-item active" onclick="switchSurface('corporate')">
+      <span class="mobile-nav-icon">🌐</span>
+      <span>Corporate</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchSurface('admin')">
+      <span class="mobile-nav-icon">🛡️</span>
+      <span>Admin</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchSurface('trading')">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Trading</span>
+    </button>
+    <button class="mobile-nav-item" onclick="showTab('platform')">
+      <span class="mobile-nav-icon">⚡</span>
+      <span>CAP 52</span>
+    </button>
+    <button class="mobile-nav-item" onclick="showTab('client')">
+      <span class="mobile-nav-icon">🔑</span>
+      <span>Client</span>
+    </button>
+  </nav>
 
   <script>
 {{ portal_app_js }}
