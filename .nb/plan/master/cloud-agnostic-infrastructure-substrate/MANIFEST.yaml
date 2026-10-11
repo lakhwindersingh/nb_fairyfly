@@ -24,9 +24,7 @@ semantic_parity:
 dependencies:
   requires:
   - master_parent_framework
-  enables:
-  - play_3_enterprise_os
-  - play_3_corp_site_saas
+  enables: []
 key_capabilities:
 - 'target_platforms: [''openshift_onprem'', ''gcp_gke_and_cloudrun'', ''aws_eks_and_fargate'',
   ''azure_aks_and_container_apps'']'

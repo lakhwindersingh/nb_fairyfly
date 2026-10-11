@@ -23,7 +23,6 @@ semantic_parity:
 dependencies:
   requires:
   - master_parent_framework
-  - play_3_enterprise_os
   enables: []
 key_capabilities:
 - 18-Subsystem Test Pyramid

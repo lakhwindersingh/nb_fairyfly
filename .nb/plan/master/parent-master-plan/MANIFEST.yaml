@@ -34,8 +34,6 @@ dependencies:
   - domain_saas_portal
   - domain_npx_installer
   - domain_tiered_wheel_packaging
-  - play_3_enterprise_os
-  - play_3_corp_site_saas
   - percipience_master_test_plan
 key_capabilities:
 - Autonomous Operations on MVS Inputs (CAP-01)

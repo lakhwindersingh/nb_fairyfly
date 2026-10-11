@@ -26,7 +26,6 @@ dependencies:
   - master_parent_framework
   enables:
   - domain_saas_portal
-  - play_3_corp_site_saas
 key_capabilities:
 - 'unified_design_tokens: True'
 - 'universal_look_and_feel_system: True'

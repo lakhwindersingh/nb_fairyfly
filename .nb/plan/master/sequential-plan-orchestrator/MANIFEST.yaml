@@ -24,8 +24,7 @@ dependencies:
   requires:
   - master_parent_framework
   - master_plan_assessment
-  enables:
-  - play_3_enterprise_os
+  enables: []
 key_capabilities:
 - 'sequential_topological_execution: True'
 - 'token_budget_phased_gating: True'

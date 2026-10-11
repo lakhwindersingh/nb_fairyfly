@@ -25,8 +25,7 @@ dependencies:
   - master_parent_framework
   - master_enterprise_ui_design_system
   - generic_multitenant_security_mesh
-  enables:
-  - play_3_corp_site_saas
+  enables: []
 key_capabilities:
 - Modern Frontend & Corporate Web Systems (Next.js 14 App Router)
 - Multi-Tenant SaaS Portals & PostgreSQL Row-Level Security

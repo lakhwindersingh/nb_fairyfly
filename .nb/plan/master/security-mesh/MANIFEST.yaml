@@ -26,8 +26,6 @@ dependencies:
   - master_parent_framework
   enables:
   - domain_saas_portal
-  - play_3_enterprise_os
-  - play_3_corp_site_saas
 key_capabilities:
 - Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA
   & PII Protection Mesh Core Engine & Runtime Governance

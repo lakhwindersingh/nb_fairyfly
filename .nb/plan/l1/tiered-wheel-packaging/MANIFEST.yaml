@@ -23,8 +23,7 @@ semantic_parity:
 dependencies:
   requires:
   - master_parent_framework
-  enables:
-  - play_3_enterprise_os
+  enables: []
 key_capabilities:
 - Automated Multi-Tier Wheel Compilation (Free, Team, Business, Enterprise)
 - Build-Time Proprietary Engine Exclusion Boundaries
