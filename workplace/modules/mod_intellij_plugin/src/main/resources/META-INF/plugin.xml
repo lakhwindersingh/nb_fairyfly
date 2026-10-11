@@ -92,7 +92,7 @@
             <action id="com.neutronbinary.percipience.ExportClaudeContext"
                     class="com.neutronbinary.percipience.actions.ExportTerminalContextAction"
                     text="Export AST Context for Terminal Agents (.nb/bin/percipience context export)"
-                    description="Exports AST-pruned structural context to .percipience_claude_context.md"/>
+                    description="Exports AST-pruned structural context to .nb/context/percipience_claude_context.md"/>
             <separator/>
             <action id="com.neutronbinary.percipience.ManageSandboxPermissions" 
                     class="com.neutronbinary.percipience.actions.ManageSandboxPermissionsAction"
@@ -104,6 +104,27 @@
                     description="Visualizes raw vs. pruned AST tokens for active file">
                 <keyboard-shortcut keymap="$default" first-keystroke="shift alt P"/>
             </action>
+            <separator text="Swarm &amp; Fleet Governance"/>
+            <action id="com.neutronbinary.percipience.RunSwarmDag"
+                    class="com.neutronbinary.percipience.actions.RunSwarmDagAction"
+                    text="Run Swarm DAG Wave (.nb/bin/percipience swarm dag --action exec)"
+                    description="Executes topological wave progression with dynamic subgoal expansion"/>
+            <action id="com.neutronbinary.percipience.RunReflexionCritic"
+                    class="com.neutronbinary.percipience.actions.RunReflexionCriticAction"
+                    text="Run Self-Reflection Critic (.nb/bin/percipience swarm reflexion)"
+                    description="Evaluates codebase against multi-pillar invariants with zero-disk-write critique"/>
+            <action id="com.neutronbinary.percipience.RunConsensusQuorum"
+                    class="com.neutronbinary.percipience.actions.RunConsensusQuorumAction"
+                    text="Verify Multi-Model Consensus (.nb/bin/percipience swarm consensus)"
+                    description="Runs 2-of-3 Byzantine quorum attestation across Claude, GPT-4, and Gemini"/>
+            <action id="com.neutronbinary.percipience.MintCbacToken"
+                    class="com.neutronbinary.percipience.actions.MintCbacTokenAction"
+                    text="Mint Agent CBAC Token (.nb/bin/percipience swarm cbac)"
+                    description="Issues cryptographically signed HMAC-SHA256 capability tokens for agents"/>
+            <action id="com.neutronbinary.percipience.InspectFleet"
+                    class="com.neutronbinary.percipience.actions.InspectFleetAction"
+                    text="Inspect Workstation &amp; Fleet Status (.nb/bin/percipience swarm fleet)"
+                    description="Monitors workstation nodes, heartbeats, and FinOps rev-share distribution"/>
         </group>
         <action id="com.neutronbinary.percipience.EditorInspectAstPruning"
                 class="com.neutronbinary.percipience.actions.InspectAstPruningAction"

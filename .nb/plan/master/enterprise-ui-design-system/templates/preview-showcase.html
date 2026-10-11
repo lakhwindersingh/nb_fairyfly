@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="corporate-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Enterprise Unified Design System - Full-Width Responsive Showcase with TradingView</title>
+  <link rel="stylesheet" href="enterprise-design-tokens.css">
+  <!-- Official TradingView Lightweight Charts Library -->
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    /* Full-Width & Fluid Layout Rules */
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .showcase-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-1-5) var(--space-4);
+      background-color: var(--surface-base);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1-5);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--color-primary), #06b6d4);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    /* Full-Width Surface Containers */
+    .surface-view {
+      display: none;
+      padding: var(--space-3) var(--space-4);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .surface-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Fluid Responsive Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); width: 100%; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); width: 100%; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); width: 100%; }
+    .grid-sidebar { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--space-3); width: 100%; }
+
+    /* Corporate Hero - Full Width */
+    .hero-section {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      background: radial-gradient(circle at center, var(--color-primary-subtle), transparent 70%);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-4);
+      width: 100%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-primary);
+      background-color: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-2);
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-0-5);
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1-5);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .sidebar-item:hover, .sidebar-item.active {
+      background-color: var(--surface-hover);
+      color: var(--color-primary);
+    }
+
+    /* Ticker Ribbon - Horizontal Touch Scroll */
+    .ticker-ribbon {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-1) var(--space-3);
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 12px;
+    }
+
+    /* Diff Viewer */
+    .diff-box {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      overflow-x: auto;
+    }
+    .diff-add { color: var(--color-finance-gain); background-color: var(--color-finance-gain-subtle); }
+    .diff-del { color: var(--color-finance-loss); background-color: var(--color-finance-loss-subtle); text-decoration: line-through; }
+
+    /* Sticky First Column for Blotter on Small Screens */
+    .sticky-col {
+      position: sticky;
+      left: 0;
+      background-color: var(--surface-card);
+      z-index: 2;
+      box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+    }
+
+    /* Hamburger Menu Button */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    /* Mobile Mode Simulator Wrapper */
+    #simulator-wrapper {
+      display: none;
+      width: 100%;
+      padding: var(--space-4) 0;
+      justify-content: center;
+    }
+
+    #simulator-wrapper.active {
+      display: flex;
+    }
+
+    .phone-mockup {
+      width: 390px;
+      max-width: 100%;
+      min-height: 844px;
+      background: var(--bg-app);
+      border: 12px solid #1e293b;
+      border-radius: 46px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-notch {
+      width: 125px;
+      height: 24px;
+      background: #1e293b;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 100;
+    }
+
+    .phone-screen {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-2);
+      padding-top: 36px;
+      padding-bottom: 70px;
+    }
+
+    /* Chart specific utilities */
+    .chart-btn-group {
+      display: flex;
+      background-color: var(--surface-subtle);
+      padding: 2px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 900px) {
+      .hamburger-btn { display: inline-flex; align-items: center; justify-content: center; }
+      .desktop-surface-tabs { display: none !important; }
+      .showcase-header { padding: var(--space-1-5) var(--space-2); }
+      .brand-title span:last-child { display: none; }
+    }
+
+    @media (max-width: 1024px) {
+      .grid-sidebar { grid-template-columns: 1fr !important; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    @media (max-width: 768px) {
+      .grid-3 { grid-template-columns: 1fr !important; }
+      .grid-2 { grid-template-columns: 1fr !important; }
+      .grid-4 { grid-template-columns: 1fr !important; }
+      .hero-section { padding: var(--space-4) var(--space-2); }
+      .hero-section h1 { font-size: 28px !important; }
+      .hero-section p { font-size: 15px !important; }
+      .surface-view { padding: var(--space-2); }
+      .mobile-bottom-nav { display: flex !important; }
+      body { padding-bottom: 70px; }
+      .pricing-bar-grid {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: var(--space-2) !important;
+      }
+      .pricing-bar-grid > button {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP GLOBAL CONTROL BAR (FULL WIDTH)
+       ======================================================================== -->
+  <header class="showcase-header">
+    <div style="display: flex; align-items: center; gap: var(--space-2);">
+      <button class="hamburger-btn" onclick="toggleMobileDrawer()" title="Open Navigation Menu">☰</button>
+      <div class="brand-title">
+        <div class="brand-icon">⚡</div>
+        <span>Cicada Enterprise</span>
+        <span class="badge badge-gain" style="font-size: 10px;">TradingView Integrated</span>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <!-- Desktop Surface Switcher Tabs -->
+      <div class="desktop-surface-tabs" style="display: flex; background-color: var(--surface-subtle); padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <button class="btn btn-xs btn-secondary surface-tab active" onclick="switchSurface('corporate')">🌐 Corporate</button>
+        <button class="btn btn-xs btn-secondary surface-tab" onclick="switchSurface('admin')">🛡️ Admin Portal</button>
+        <button class="btn btn-xs btn-secondary surface-tab" onclick="switchSurface('trading')">📈 Pro Trading</button>
+      </div>
+
+      <!-- View Mode: Desktop vs Mobile Frame Simulator -->
+      <div style="display: flex; background-color: var(--surface-subtle); padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <button id="viewModeDesktop" class="btn btn-xs btn-secondary active" onclick="setViewMode('desktop')">🖥️ Full-Width</button>
+        <button id="viewModeMobile" class="btn btn-xs btn-secondary" onclick="setViewMode('mobile')">📱 Mobile View</button>
+      </div>
+
+      <!-- Theme Selector -->
+      <select id="themeSelector" class="input input-sm" style="width: 150px;" onchange="switchTheme(this.value)">
+        <option value="corporate-light">Corporate Light</option>
+        <option value="enterprise-dark">Enterprise Dark</option>
+        <option value="pro-oled">Pro OLED (Black)</option>
+      </select>
+
+      <!-- Tick Sim Toggle -->
+      <button id="tickSimBtn" class="btn btn-sm btn-secondary" onclick="toggleTickSimulation()">
+        <span id="simIndicator" style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-finance-gain); display: inline-block;"></span>
+        <span style="font-size: 12px;">60 FPS Sim</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MOBILE SLIDE-OVER DRAWER MENU
+       ======================================================================== -->
+  <div id="mobileDrawerOverlay" class="mobile-drawer-overlay" onclick="toggleMobileDrawer()"></div>
+  <aside id="mobileDrawer" class="mobile-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-title">
+        <div class="brand-icon">⚡</div>
+        <span>Navigation</span>
+      </div>
+      <button class="btn btn-xs btn-secondary" onclick="toggleMobileDrawer()">✕</button>
+    </div>
+    <div class="mobile-drawer-body">
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Switch Workspace Surface</div>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px;">
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('corporate'); toggleMobileDrawer();">🌐 Corporate Portal</button>
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('admin'); toggleMobileDrawer();">🛡️ Admin &amp; Governance</button>
+        <button class="btn btn-md btn-secondary" style="justify-content: flex-start;" onclick="switchSurface('trading'); toggleMobileDrawer();">📈 Pro Trading Terminal</button>
+      </div>
+
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Theme Preset</div>
+      <select id="mobileThemeSelector" class="input input-md" style="margin-bottom: 16px;" onchange="switchTheme(this.value); toggleMobileDrawer();">
+        <option value="corporate-light">Corporate Light</option>
+        <option value="enterprise-dark">Enterprise Dark</option>
+        <option value="pro-oled">Pro OLED (Black)</option>
+      </select>
+
+      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Quick Shortcuts</div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); alert('Cmd+K Command Palette Triggered');">🔍 Command Palette (Cmd+K)</a>
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); alert('TradingView Chart State: Healthy');">📊 TradingView Feeds</a>
+        <a class="sidebar-item" onclick="toggleMobileDrawer(); alert('Docker-Agents Swarm Status: All 8 Healthy');">🤖 Agent Swarm Health</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       DESKTOP FULL-WIDTH PORTAL WRAPPER
+       ======================================================================== -->
+  <div id="desktop-wrapper" class="w-full">
+
+    <!-- SURFACE 1: CORPORATE PORTAL (FULL-WIDTH) -->
+    <main id="surface-corporate" class="surface-view active">
+      <section class="hero-section">
+        <div class="hero-badge">Next-Gen Quantitative Financial Infrastructure</div>
+        <h1 style="font-size: 44px; margin-bottom: var(--space-2); line-height: 1.15;">
+          Institutional Precision.<br/>
+          <span style="color: var(--color-primary);">Zero-Latency Analytics.</span>
+        </h1>
+        <p style="font-size: 18px; color: var(--text-secondary); max-width: 750px; margin: 0 auto var(--space-4);">
+          Unified multi-leg options modeling, autonomous risk management, and banking-grade security architecture designed for hedge funds, quants, and modern enterprises.
+        </p>
+        <div style="display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-lg btn-primary btn-touch" onclick="switchSurface('trading')">Launch Trading Terminal →</button>
+          <button class="btn btn-lg btn-secondary btn-touch" onclick="switchSurface('admin')">Open Governance Portal</button>
+        </div>
+      </section>
+
+      <!-- TradingView-Aligned Cumulative Return Line/Area Chart -->
+      <div class="chart-card" style="margin-bottom: var(--space-4);">
+        <div class="chart-header">
+          <div>
+            <span class="badge badge-gain" style="margin-bottom: 4px;">Institutional Track Record</span>
+            <h3 style="font-size: 18px; margin-top: 2px;">Cumulative Alpha &amp; Strategy Returns vs. Benchmark</h3>
+          </div>
+          <div class="chart-controls">
+            <div class="chart-legend">
+              <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--color-primary);"></span> Cicada Alpha (+48.6%)</span>
+              <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--text-muted);"></span> S&amp;P 500 (+22.1%)</span>
+            </div>
+            <div class="chart-btn-group" style="margin-left: var(--space-2);">
+              <button class="btn btn-xs btn-secondary active">1Y</button>
+              <button class="btn btn-xs btn-secondary">3Y</button>
+              <button class="btn btn-xs btn-secondary">ALL</button>
+            </div>
+          </div>
+        </div>
+        <div id="corporatePerformanceChart" class="chart-container" style="height: 320px;"></div>
+      </div>
+
+      <!-- Marketing Product Showcase Cards (Fluid Responsive Grid) -->
+      <div class="grid-3" style="margin-bottom: var(--space-6);">
+        <div class="card">
+          <div class="badge badge-gain" style="margin-bottom: var(--space-1-5);">Analytical Math Core</div>
+          <h3 style="font-size: 20px; margin-bottom: var(--space-1);">Vectorized Black-Scholes</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-2);">
+            Hybrid Newton-Raphson and Brent root-finding solver guaranteeing implied volatility convergence with bounded residual error &lt; 10⁻⁶.
+          </p>
+          <span class="numeric-tabular" style="font-weight: 700; color: var(--color-finance-gain);">Latency &le; 35&mu;s / option</span>
+        </div>
+
+        <div class="card">
+          <div class="badge badge-warning" style="margin-bottom: var(--space-1-5);">Active Defense</div>
+          <h3 style="font-size: 20px; margin-bottom: var(--space-1);">Zen Guard Risk Containment</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-2);">
+            Automated -25% net portfolio drawdown alerts, theta decay inflection monitoring, and dynamic 4-branch multi-leg rolling heuristics.
+          </p>
+          <span class="numeric-tabular" style="font-weight: 700; color: var(--color-warning);">Dynamic 4-Way Rolls</span>
+        </div>
+
+        <div class="card">
+          <div class="badge badge-gain" style="margin-bottom: var(--space-1-5);">DoD / Zero-Trust</div>
+          <h3 style="font-size: 20px; margin-bottom: var(--space-1);">Security Mesh &amp; PII Vault</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-2);">
+            FIDO2 WebAuthn Passkeys, Zanzibar ReBAC relationships, and NIST SP 800-38G Format-Preserving Encryption with prompt sanitization.
+          </p>
+          <span class="numeric-tabular" style="font-weight: 700; color: var(--color-primary);">&lt; 200&mu;s Bloom Revocation</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- SURFACE 2: ENTERPRISE ADMIN PORTAL (FULL-WIDTH) -->
+    <main id="surface-admin" class="surface-view">
+      <!-- Breadcrumbs & Quick Search -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); flex-wrap: wrap; gap: var(--space-2);">
+        <div style="font-size: 13px; color: var(--text-muted);">
+          <span>Cicada Org</span> / <span>Tenants</span> / <strong style="color: var(--text-primary);">Production-Alpha</strong> / <span>Governance</span>
+        </div>
+        <div style="display: flex; gap: var(--space-1-5); flex-wrap: wrap;">
+          <input type="text" class="input input-sm" placeholder="Press Cmd+K to search..." style="width: 240px;" readonly onclick="alert('Command Palette: [Cmd+K] Activated')">
+          <button class="btn btn-sm btn-primary">+ New Tenant</button>
+        </div>
+      </div>
+
+      <div class="grid-sidebar">
+        <!-- Admin Sidebar Navigation -->
+        <aside class="card" style="padding: var(--space-2);">
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-1); padding-left: var(--space-1);">Governance Modules</div>
+          <nav class="admin-sidebar-menu">
+            <a class="sidebar-item active">🏢 Tenant Hierarchy</a>
+            <a class="sidebar-item">🛡️ ReBAC Permissions</a>
+            <a class="sidebar-item">🔐 FIDO2 &amp; MFA Policies</a>
+            <a class="sidebar-item">🔒 PII Masking Vault</a>
+            <a class="sidebar-item">🤖 Docker-Agents Swarm</a>
+            <a class="sidebar-item">📜 SEC 17a-4 WORM Audit</a>
+          </nav>
+        </aside>
+
+        <!-- Admin Main Panel -->
+        <section style="display: flex; flex-direction: column; gap: var(--space-3); width: 100%;">
+          <!-- Metric Cards -->
+          <div class="grid-3">
+            <div class="card">
+              <div style="font-size: 12px; color: var(--text-muted);">Active Tenant Workspaces</div>
+              <div class="numeric-tabular" style="font-size: 26px; font-weight: 700;">142</div>
+              <span class="badge badge-gain" style="margin-top: 4px;">+12% MoM</span>
+            </div>
+            <div class="card">
+              <div style="font-size: 12px; color: var(--text-muted);">Pending Four-Eyes Approvals</div>
+              <div class="numeric-tabular" style="font-size: 26px; font-weight: 700; color: var(--color-warning);">3</div>
+              <span class="badge badge-warning" style="margin-top: 4px;">Action Required</span>
+            </div>
+            <div class="card">
+              <div style="font-size: 12px; color: var(--text-muted);">Docker-Agent Swarms Active</div>
+              <div class="numeric-tabular" style="font-size: 26px; font-weight: 700; color: var(--color-primary);">8</div>
+              <span class="badge badge-gain" style="margin-top: 4px;">100% Health</span>
+            </div>
+          </div>
+
+          <!-- TradingView-Aligned Bar Chart: Hourly API Workload & Risk Interventions -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <span class="badge badge-gain" style="margin-bottom: 4px;">Real-Time Operations</span>
+                <h3 style="font-size: 18px; margin-top: 2px;">Hourly API Throughput &amp; Security Interventions</h3>
+              </div>
+              <div class="chart-controls">
+                <div class="chart-legend">
+                  <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--color-primary);"></span> Normal Traffic</span>
+                  <span class="chart-legend-item"><span class="chart-legend-color" style="background: var(--color-finance-loss);"></span> Throttled / Blocked</span>
+                </div>
+                <div class="chart-btn-group" style="margin-left: var(--space-2);">
+                  <button class="btn btn-xs btn-secondary active">24H</button>
+                  <button class="btn btn-xs btn-secondary">7D</button>
+                </div>
+              </div>
+            </div>
+            <div id="adminWorkloadBarChart" class="chart-container" style="height: 260px;"></div>
+          </div>
+
+          <!-- Embedded Four-Eyes Dual Control Signer Widget -->
+          <div class="card">
+            <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
+              <span class="dock-title">Pending Governance Approval: Request #AP-9041</span>
+              <span class="badge badge-warning">High Risk Mutation</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--space-2);">
+              Trader <code>quant_desk_01</code> requested a Net Margin Override from $500,000 to $1,500,000 for SPX Iron Condor portfolio roll.
+            </p>
+
+            <!-- Parameter Diff Viewer -->
+            <div class="diff-box" style="margin-bottom: var(--space-3);">
+              <div>&nbsp; "tenant_id": "tenant_hedge_fund_alpha",</div>
+              <div class="diff-del">- "max_margin_leverage_usd": 500000.00,</div>
+              <div class="diff-add">+ "max_margin_leverage_usd": 1500000.00,</div>
+              <div>&nbsp; "approval_protocol": "NIST_800_63B_AAL3_FOUR_EYES"</div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+              <span style="font-size: 12px; color: var(--text-muted);">TTL Expiration: <strong class="numeric-tabular" style="color: var(--color-warning);">03:42 remaining</strong></span>
+              <div style="display: flex; gap: var(--space-1-5);">
+                <button class="btn btn-sm btn-secondary btn-touch" onclick="alert('Rejected Request AP-9041')">Reject</button>
+                <button class="btn btn-sm btn-primary btn-touch" onclick="alert('Approved via WebAuthn Cryptographic Signature')">🔑 Sign &amp; Approve (Passkey)</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- SURFACE 3: PRO TRADING WORKSPACE (FULL-WIDTH) -->
+    <main id="surface-trading" class="surface-view">
+      <!-- Full-Width Market Ticker Strip -->
+      <div class="ticker-ribbon">
+        <div class="ticker-item">
+          <strong>SPX</strong> <span id="tick-spx" class="numeric-tabular">5,824.50</span>
+          <span class="badge badge-gain" style="font-size: 10px;">+0.65%</span>
+        </div>
+        <div class="ticker-item">
+          <strong>NDX</strong> <span id="tick-ndx" class="numeric-tabular">20,412.10</span>
+          <span class="badge badge-gain" style="font-size: 10px;">+1.12%</span>
+        </div>
+        <div class="ticker-item">
+          <strong>VIX</strong> <span id="tick-vix" class="numeric-tabular">15.42</span>
+          <span class="badge badge-loss" style="font-size: 10px;">-4.80%</span>
+        </div>
+        <div class="ticker-item">
+          <strong>NVDA</strong> <span id="tick-nvda" class="numeric-tabular">134.80</span>
+          <span class="badge badge-gain" style="font-size: 10px;">+2.45%</span>
+        </div>
+        <div class="ticker-item">
+          <strong>10Y UST</strong> <span class="numeric-tabular">4.08%</span>
+          <span class="badge badge-warning" style="font-size: 10px;">Unchanged</span>
+        </div>
+      </div>
+
+      <!-- OFFICIAL TRADINGVIEW FINANCIAL CANDLESTICK & VOLUME CHART -->
+      <div class="chart-card" style="margin-bottom: var(--space-3);">
+        <div class="chart-header">
+          <div style="display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 18px; font-weight: 800;">S&amp;P 500 Index (SPX)</span>
+              <span id="tvChartLastPrice" class="numeric-tabular" style="font-size: 18px; font-weight: 700; color: var(--color-finance-gain);">5,824.50</span>
+              <span class="badge badge-gain">+37.80 (+0.65%)</span>
+            </div>
+            <span style="font-size: 12px; color: var(--text-muted);">O: 5,798.20 H: 5,832.10 L: 5,791.50</span>
+          </div>
+
+          <div class="chart-controls">
+            <!-- Timeframe selector -->
+            <div class="chart-btn-group">
+              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1m')">1m</button>
+              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('5m')">5m</button>
+              <button class="btn btn-xs btn-secondary active" onclick="setChartTimeframe('15m')">15m</button>
+              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1h')">1h</button>
+              <button class="btn btn-xs btn-secondary" onclick="setChartTimeframe('1D')">1D</button>
+            </div>
+            <!-- Series Type Switcher -->
+            <div class="chart-btn-group" style="margin-left: var(--space-1);">
+              <button id="btnSeriesCandles" class="btn btn-xs btn-secondary active" onclick="setChartSeriesType('candles')">🕯️ Candles</button>
+              <button id="btnSeriesLine" class="btn btn-xs btn-secondary" onclick="setChartSeriesType('line')">📈 Line</button>
+              <button id="btnSeriesArea" class="btn btn-xs btn-secondary" onclick="setChartSeriesType('area')">🏔️ Area</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TradingView Chart Canvas Container -->
+        <div id="tradingviewChartContainer" class="chart-container" style="height: 420px;"></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: var(--space-3);">
+        <!-- Multi-Leg Instrument Strategy Builder Widget -->
+        <div class="card">
+          <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
+            <span class="dock-title">Multi-Leg Strategy Builder (SPX Options)</span>
+            <div style="display: flex; gap: var(--space-1); flex-wrap: wrap;">
+              <button class="btn btn-xs btn-secondary" onclick="setPreset('iron_condor')">Iron Condor</button>
+              <button class="btn btn-xs btn-secondary" onclick="setPreset('strangle')">Strangle</button>
+              <button class="btn btn-xs btn-secondary" onclick="addLeg()">+ Add Leg</button>
+            </div>
+          </div>
+
+          <!-- Strategy Legs Responsive Table -->
+          <div class="table-responsive" style="margin-bottom: var(--space-3); border: none;">
+            <table class="blotter-table">
+              <thead>
+                <tr>
+                  <th>Side</th>
+                  <th>Ratio</th>
+                  <th>Type</th>
+                  <th>Strike</th>
+                  <th>DTE</th>
+                  <th>Bid/Ask</th>
+                  <th>Delta</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="strategyLegsBody">
+                <!-- Dynamic Leg Rows inserted by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pricing Summary Bar -->
+          <div class="pricing-bar-grid" style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-2); background: var(--surface-subtle); border-radius: var(--radius-md); flex-wrap: wrap; gap: var(--space-2);">
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted);">Spread Net Price</div>
+              <strong id="netSpreadPrice" class="numeric-tabular" style="font-size: 18px; color: var(--color-finance-gain);">$3.85 Credit</strong>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted);">Max Profit</div>
+              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-finance-gain);">$385.00</strong>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted);">Max Risk</div>
+              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-finance-loss);">$615.00</strong>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted);">PoP</div>
+              <strong class="numeric-tabular" style="font-size: 14px; color: var(--color-primary);">78.4%</strong>
+            </div>
+            <button class="btn btn-md btn-buy btn-touch" onclick="alert('Multi-Leg Order Submitted to Exchange')">Execute Order</button>
+          </div>
+        </div>
+
+        <!-- Volatility & Yield Curve Tuner Widget -->
+        <div class="card">
+          <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
+            <span class="dock-title">Yield Curve &amp; Volatility Stress Tuner</span>
+            <span class="badge badge-gain">Real-Time WASM Spline</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-2);">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>Curve Parallel Shift (BPS)</span>
+                <strong id="shiftVal" class="numeric-tabular">+25 bps</strong>
+              </div>
+              <input type="range" min="-100" max="100" value="25" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('shift', this.value)">
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>Curve Twist / Steepener (2Y vs 10Y)</span>
+                <strong id="twistVal" class="numeric-tabular">+10 bps</strong>
+              </div>
+              <input type="range" min="-50" max="50" value="10" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('twist', this.value)">
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>Volatility Surface Shock (&Delta;&sigma;)</span>
+                <strong id="volShockVal" class="numeric-tabular">+3.5%</strong>
+              </div>
+              <input type="range" min="-10" max="15" value="3.5" step="0.5" style="width: 100%; cursor: pointer; height: 32px;" oninput="updateStress('vol', this.value)">
+            </div>
+
+            <!-- Impact Metrics Grid -->
+            <div class="grid-3" style="margin-top: var(--space-2); padding: var(--space-2); background: var(--surface-subtle); border-radius: var(--radius-md);">
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted);">DV01 Dollar Impact</div>
+                <strong id="dv01Impact" class="numeric-tabular" style="color: var(--color-finance-loss);">-$2,450</strong>
+              </div>
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted);">Vega Stress PnL</div>
+                <strong id="vegaImpact" class="numeric-tabular" style="color: var(--color-finance-gain);">+$1,820</strong>
+              </div>
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted);">Net Stress Drift</div>
+                <strong id="netStressImpact" class="numeric-tabular" style="color: var(--color-finance-loss);">-$630</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Virtualized High-Frequency Blotter Table -->
+      <div class="card">
+        <div class="dock-header" style="margin: calc(-1 * var(--space-3)); margin-bottom: var(--space-3);">
+          <span class="dock-title">Active Portfolio Blotter (Live Tick Streaming)</span>
+          <div style="display: flex; gap: var(--space-1-5);">
+            <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Positions: <strong>4 Active</strong></span>
+            <button class="btn btn-xs btn-secondary" onclick="alert('Exported Blotter to CSV')">Export CSV</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="blotter-table">
+            <thead>
+              <tr>
+                <th class="sticky-col">Symbol</th>
+                <th>Strategy</th>
+                <th>Net &Delta;</th>
+                <th>Net &Gamma;</th>
+                <th>Net &Theta;</th>
+                <th>Last Price</th>
+                <th>Day Change</th>
+                <th>Unrealized PnL</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="sticky-col"><strong>SPX</strong></td>
+                <td>Iron Condor (5800/5850)</td>
+                <td class="numeric-tabular">+0.04</td>
+                <td class="numeric-tabular">-0.002</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$18.40</td>
+                <td id="row-spx-price" class="numeric-tabular">$5,824.50</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+0.65%</td>
+                <td id="row-spx-pnl" class="numeric-tabular" style="color: var(--color-finance-gain); font-weight: 700;">+$480.00</td>
+                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Rolling position SPX...')">Roll Leg</button></td>
+              </tr>
+              <tr>
+                <td class="sticky-col"><strong>NDX</strong></td>
+                <td>Bear Call Spread</td>
+                <td class="numeric-tabular">-0.18</td>
+                <td class="numeric-tabular">-0.005</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$32.10</td>
+                <td id="row-ndx-price" class="numeric-tabular">$20,412.10</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+1.12%</td>
+                <td id="row-ndx-pnl" class="numeric-tabular" style="color: var(--color-finance-loss); font-weight: 700;">-$320.00</td>
+                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Closing position NDX...')">Close</button></td>
+              </tr>
+              <tr>
+                <td class="sticky-col"><strong>NVDA</strong></td>
+                <td>Covered Call (135 C)</td>
+                <td class="numeric-tabular">+0.52</td>
+                <td class="numeric-tabular">+0.012</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+$8.50</td>
+                <td id="row-nvda-price" class="numeric-tabular">$134.80</td>
+                <td class="numeric-tabular" style="color: var(--color-finance-gain);">+2.45%</td>
+                <td id="row-nvda-pnl" class="numeric-tabular" style="color: var(--color-finance-gain); font-weight: 700;">+$1,240.00</td>
+                <td><button class="btn btn-xs btn-secondary btn-touch" onclick="alert('Managing NVDA...')">Adjust</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div> <!-- End desktop-wrapper -->
+
+
+  <!-- ========================================================================
+       MOBILE VIEWPORT SIMULATOR (FOR INTERACTIVE DESKTOP TESTING)
+       ======================================================================== -->
+  <div id="simulator-wrapper">
+    <div class="phone-mockup">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phone-screen-content">
+        <!-- Content mirrored dynamically via JS for mobile testing -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================
+       MOBILE BOTTOM NAVIGATION BAR (FIXED ON SMARTPHONES)
+       ======================================================================== -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-item active" onclick="switchSurface('corporate')">
+      <span class="mobile-nav-icon">🌐</span>
+      <span>Corporate</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchSurface('admin')">
+      <span class="mobile-nav-icon">🛡️</span>
+      <span>Admin</span>
+    </button>
+    <button class="mobile-nav-item" onclick="switchSurface('trading')">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Trading</span>
+    </button>
+    <button class="mobile-nav-item" onclick="toggleMobileDrawer()">
+      <span class="mobile-nav-icon">⚙️</span>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+
+  <!-- ========================================================================
+       CLIENT-SIDE INTERACTIVE JAVASCRIPT & TRADINGVIEW CHART ENGINE
+       ======================================================================== -->
+  <script>
+    let currentSurface = 'corporate';
+    let currentViewMode = 'desktop';
+    let currentTheme = 'corporate-light';
+
+    // Chart References
+    let tvChart = null;
+    let tvCandleSeries = null;
+    let tvVolumeSeries = null;
+    let tvLineSeries = null;
+    let tvAreaSeries = null;
+    let activeSeriesType = 'candles';
+
+    let corpChart = null;
+    let corpAlphaArea = null;
+    let corpSpxLine = null;
+    let adminChart = null;
+    let adminThroughputBar = null;
+
+    // 1. Surface Switching
+    function switchSurface(surfaceId) {
+      currentSurface = surfaceId;
+      document.querySelectorAll('.surface-view').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.surface-tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+
+      const targetSurface = document.getElementById('surface-' + surfaceId);
+      if (targetSurface) {
+        targetSurface.classList.add('active');
+      }
+
+      document.querySelectorAll('.surface-tab').forEach(btn => {
+        if (btn.innerText.toLowerCase().includes(surfaceId.toLowerCase())) {
+          btn.classList.add('active');
+        }
+      });
+
+      const navIndices = { 'corporate': 0, 'admin': 1, 'trading': 2 };
+      const navButtons = document.querySelectorAll('.mobile-bottom-nav .mobile-nav-item');
+      if (navButtons[navIndices[surfaceId]]) {
+        navButtons[navIndices[surfaceId]].classList.add('active');
+      }
+
+      // Resize active chart to adapt to unhidden layout
+      setTimeout(() => {
+        if (surfaceId === 'trading' && tvChart) {
+          const container = document.getElementById('tradingviewChartContainer');
+          if (container) tvChart.resize(container.clientWidth, 420);
+        } else if (surfaceId === 'corporate' && corpChart) {
+          const container = document.getElementById('corporatePerformanceChart');
+          if (container) corpChart.resize(container.clientWidth, 320);
+        } else if (surfaceId === 'admin' && adminChart) {
+          const container = document.getElementById('adminWorkloadBarChart');
+          if (container) adminChart.resize(container.clientWidth, 260);
+        }
+      }, 50);
+
+      if (currentViewMode === 'mobile') {
+        mirrorContentToPhone();
+      }
+    }
+
+    // 2. View Mode (Desktop vs Mobile Simulator)
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      const desktopWrapper = document.getElementById('desktop-wrapper');
+      const simulatorWrapper = document.getElementById('simulator-wrapper');
+      const btnDesktop = document.getElementById('viewModeDesktop');
+      const btnMobile = document.getElementById('viewModeMobile');
+
+      if (mode === 'mobile') {
+        desktopWrapper.style.display = 'none';
+        simulatorWrapper.classList.add('active');
+        btnMobile.classList.add('active');
+        btnDesktop.classList.remove('active');
+        mirrorContentToPhone();
+      } else {
+        simulatorWrapper.classList.remove('active');
+        desktopWrapper.style.display = 'block';
+        btnDesktop.classList.add('active');
+        btnMobile.classList.remove('active');
+      }
+    }
+
+    function mirrorContentToPhone() {
+      const activeContent = document.getElementById('surface-' + currentSurface);
+      const phoneScreen = document.getElementById('phone-screen-content');
+      if (activeContent && phoneScreen) {
+        phoneScreen.innerHTML = activeContent.innerHTML;
+      }
+    }
+
+    // 3. Theme Switching & Chart Theme Sync
+    function switchTheme(themeName) {
+      currentTheme = themeName;
+      document.documentElement.setAttribute('data-theme', themeName);
+      document.body.setAttribute('data-theme', themeName);
+      const sel = document.getElementById('themeSelector');
+      if (sel) sel.value = themeName;
+      const mobSel = document.getElementById('mobileThemeSelector');
+      if (mobSel) mobSel.value = themeName;
+      updateChartThemes();
+    }
+
+    function getThemeChartColors() {
+      if (currentTheme === 'pro-oled') {
+        return {
+          bg: '#05070c',
+          text: '#a0aec0',
+          grid: '#182234',
+          crosshair: '#00e5ff',
+          up: '#00e676',
+          down: '#ff1744',
+          primary: '#00e5ff',
+          volUp: 'rgba(0, 230, 118, 0.3)',
+          volDown: 'rgba(255, 23, 68, 0.3)'
+        };
+      } else if (currentTheme === 'enterprise-dark') {
+        return {
+          bg: '#111827',
+          text: '#94a3b8',
+          grid: '#1e293b',
+          crosshair: '#818cf8',
+          up: '#10b981',
+          down: '#f43f5e',
+          primary: '#6366f1',
+          volUp: 'rgba(16, 185, 129, 0.3)',
+          volDown: 'rgba(244, 63, 94, 0.3)'
+        };
+      } else {
+        return {
+          bg: '#ffffff',
+          text: '#475569',
+          grid: '#f1f5f9',
+          crosshair: '#6366f1',
+          up: '#10b981',
+          down: '#f43f5e',
+          primary: '#4f46e5',
+          volUp: 'rgba(16, 185, 129, 0.25)',
+          volDown: 'rgba(244, 63, 94, 0.25)'
+        };
+      }
+    }
+
+    function updateChartThemes() {
+      const colors = getThemeChartColors();
+
+      const baseOptions = {
+        layout: {
+          background: { type: 'solid', color: colors.bg },
+          textColor: colors.text,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11
+        },
+        grid: {
+          vertLines: { color: colors.grid },
+          horzLines: { color: colors.grid }
+        },
+        crosshair: {
+          vertLine: { color: colors.crosshair, width: 1, style: 2 },
+          horzLine: { color: colors.crosshair, width: 1, style: 2 }
+        }
+      };
+
+      if (tvChart) {
+        tvChart.applyOptions(baseOptions);
+        if (tvCandleSeries) {
+          tvCandleSeries.applyOptions({
+            upColor: colors.up,
+            downColor: colors.down,
+            borderUpColor: colors.up,
+            borderDownColor: colors.down,
+            wickUpColor: colors.up,
+            wickDownColor: colors.down
+          });
+        }
+        if (tvVolumeSeries) {
+          // Re-color volume bars
+          tvVolumeSeries.applyOptions({
+            priceFormat: { type: 'volume' }
+          });
+        }
+      }
+
+      if (corpChart) {
+        corpChart.applyOptions(baseOptions);
+        if (corpAlphaArea) corpAlphaArea.applyOptions({ lineColor: colors.primary });
+        if (corpSpxLine) corpSpxLine.applyOptions({ color: colors.text });
+      }
+      if (adminChart) {
+        adminChart.applyOptions(baseOptions);
+        if (adminThroughputBar) adminThroughputBar.applyOptions({ color: colors.primary });
+      }
+    }
+
+    // 4. Initialize TradingView Lightweight Charts
+    let lastCandle = null;
+
+    function initTradingViewChart() {
+      const container = document.getElementById('tradingviewChartContainer');
+      if (!container || typeof LightweightCharts === 'undefined') return;
+
+      const colors = getThemeChartColors();
+
+      tvChart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 420,
+        layout: {
+          background: { type: 'solid', color: colors.bg },
+          textColor: colors.text,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11
+        },
+        grid: {
+          vertLines: { color: colors.grid },
+          horzLines: { color: colors.grid }
+        },
+        crosshair: {
+          mode: LightweightCharts.CrosshairMode.Normal,
+          vertLine: { color: colors.crosshair, width: 1, style: 2 },
+          horzLine: { color: colors.crosshair, width: 1, style: 2 }
+        },
+        rightPriceScale: {
+          borderColor: colors.grid,
+          scaleMargins: { top: 0.1, bottom: 0.25 }
+        },
+        timeScale: {
+          borderColor: colors.grid,
+          timeVisible: true,
+          secondsVisible: false
+        }
+      });
+
+      // Candlestick Series
+      tvCandleSeries = tvChart.addCandlestickSeries({
+        upColor: colors.up,
+        downColor: colors.down,
+        borderUpColor: colors.up,
+        borderDownColor: colors.down,
+        wickUpColor: colors.up,
+        wickDownColor: colors.down
+      });
+
+      // Volume Series (Separate scale pinned to bottom)
+      tvVolumeSeries = tvChart.addHistogramSeries({
+        color: colors.volUp,
+        priceFormat: { type: 'volume' },
+        priceScaleId: '', // Overlay over primary chart
+        scaleMargins: { top: 0.8, bottom: 0 }
+      });
+
+      // Historical Candlestick Sample Data (SPX Index)
+      const initialData = [
+        { time: 1728561600, open: 5780.2, high: 5792.5, low: 5775.1, close: 5788.4, volume: 14200 },
+        { time: 1728562500, open: 5788.4, high: 5799.0, low: 5784.0, close: 5796.2, volume: 18400 },
+        { time: 1728563400, open: 5796.2, high: 5805.4, low: 5792.1, close: 5801.0, volume: 16100 },
+        { time: 1728564300, open: 5801.0, high: 5808.0, low: 5795.5, close: 5797.8, volume: 12500 },
+        { time: 1728565200, open: 5797.8, high: 5812.6, low: 5796.0, close: 5810.5, volume: 21000 },
+        { time: 1728566100, open: 5810.5, high: 5818.2, low: 5806.4, close: 5814.0, volume: 19800 },
+        { time: 1728567000, open: 5814.0, high: 5822.0, low: 5811.2, close: 5819.5, volume: 24500 },
+        { time: 1728567900, open: 5819.5, high: 5826.8, low: 5815.0, close: 5821.2, volume: 22100 },
+        { time: 1728568800, open: 5821.2, high: 5828.5, low: 5818.0, close: 5824.5, volume: 27800 }
+      ];
+
+      tvCandleSeries.setData(initialData);
+
+      // Volume Data
+      const volData = initialData.map(d => ({
+        time: d.time,
+        value: d.volume,
+        color: d.close >= d.open ? colors.volUp : colors.volDown
+      }));
+      tvVolumeSeries.setData(volData);
+
+      lastCandle = { ...initialData[initialData.length - 1] };
+
+      // Responsive window resize listener
+      window.addEventListener('resize', () => {
+        if (tvChart && container) {
+          tvChart.resize(container.clientWidth, 420);
+        }
+      });
+    }
+
+    function setChartSeriesType(type) {
+      activeSeriesType = type;
+      document.querySelectorAll('#btnSeriesCandles, #btnSeriesLine, #btnSeriesArea').forEach(b => b.classList.remove('active'));
+
+      if (type === 'candles') {
+        document.getElementById('btnSeriesCandles').classList.add('active');
+        if (tvLineSeries) tvChart.removeSeries(tvLineSeries);
+        if (tvAreaSeries) tvChart.removeSeries(tvAreaSeries);
+        tvCandleSeries.applyOptions({ visible: true });
+      } else if (type === 'line') {
+        document.getElementById('btnSeriesLine').classList.add('active');
+        tvCandleSeries.applyOptions({ visible: false });
+        if (!tvLineSeries) {
+          tvLineSeries = tvChart.addLineSeries({ color: getThemeChartColors().primary, lineWidth: 2 });
+        }
+        // Extract closes
+        const lineData = [
+          { time: 1728561600, value: 5788.4 }, { time: 1728562500, value: 5796.2 },
+          { time: 1728563400, value: 5801.0 }, { time: 1728564300, value: 5797.8 },
+          { time: 1728565200, value: 5810.5 }, { time: 1728566100, value: 5814.0 },
+          { time: 1728567000, value: 5819.5 }, { time: 1728567900, value: 5821.2 },
+          { time: 1728568800, value: 5824.5 }
+        ];
+        tvLineSeries.setData(lineData);
+      } else if (type === 'area') {
+        document.getElementById('btnSeriesArea').classList.add('active');
+        tvCandleSeries.applyOptions({ visible: false });
+        if (!tvAreaSeries) {
+          tvAreaSeries = tvChart.addAreaSeries({
+            topColor: 'rgba(79, 70, 229, 0.4)',
+            bottomColor: 'rgba(79, 70, 229, 0.0)',
+            lineColor: getThemeChartColors().primary,
+            lineWidth: 2
+          });
+        }
+        const areaData = [
+          { time: 1728561600, value: 5788.4 }, { time: 1728562500, value: 5796.2 },
+          { time: 1728563400, value: 5801.0 }, { time: 1728564300, value: 5797.8 },
+          { time: 1728565200, value: 5810.5 }, { time: 1728566100, value: 5814.0 },
+          { time: 1728567000, value: 5819.5 }, { time: 1728567900, value: 5821.2 },
+          { time: 1728568800, value: 5824.5 }
+        ];
+        tvAreaSeries.setData(areaData);
+      }
+    }
+
+    function setChartTimeframe(tf) {
+      alert(`Switched SPX chart timeframe to [${tf}]`);
+    }
+
+    // 5. Initialize Corporate Performance Area Chart
+    function initCorporateChart() {
+      const container = document.getElementById('corporatePerformanceChart');
+      if (!container || typeof LightweightCharts === 'undefined') return;
+
+      const colors = getThemeChartColors();
+
+      corpChart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 320,
+        layout: {
+          background: { type: 'solid', color: colors.bg },
+          textColor: colors.text,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11
+        },
+        grid: {
+          vertLines: { color: colors.grid },
+          horzLines: { color: colors.grid }
+        },
+        timeScale: { borderColor: colors.grid },
+        rightPriceScale: { borderColor: colors.grid }
+      });
+
+      corpAlphaArea = corpChart.addAreaSeries({
+        topColor: 'rgba(99, 102, 241, 0.35)',
+        bottomColor: 'rgba(99, 102, 241, 0.0)',
+        lineColor: colors.primary,
+        lineWidth: 2
+      });
+
+      corpSpxLine = corpChart.addLineSeries({
+        color: colors.text,
+        lineWidth: 1,
+        lineStyle: 2
+      });
+
+      corpAlphaArea.setData([
+        { time: '2025-10-01', value: 100.0 }, { time: '2025-11-01', value: 106.4 },
+        { time: '2025-12-01', value: 112.8 }, { time: '2026-01-01', value: 119.5 },
+        { time: '2026-02-01', value: 124.0 }, { time: '2026-03-01', value: 128.2 },
+        { time: '2026-04-01', value: 133.5 }, { time: '2026-05-01', value: 138.9 },
+        { time: '2026-06-01', value: 142.1 }, { time: '2026-07-01', value: 145.4 },
+        { time: '2026-08-01', value: 147.2 }, { time: '2026-09-01', value: 148.6 }
+      ]);
+
+      corpSpxLine.setData([
+        { time: '2025-10-01', value: 100.0 }, { time: '2025-11-01', value: 102.5 },
+        { time: '2025-12-01', value: 105.1 }, { time: '2026-01-01', value: 107.8 },
+        { time: '2026-02-01', value: 106.4 }, { time: '2026-03-01', value: 110.2 },
+        { time: '2026-04-01', value: 112.5 }, { time: '2026-05-01', value: 115.0 },
+        { time: '2026-06-01', value: 116.8 }, { time: '2026-07-01', value: 118.4 },
+        { time: '2026-08-01', value: 120.1 }, { time: '2026-09-01', value: 122.1 }
+      ]);
+
+      window.addEventListener('resize', () => {
+        if (corpChart && container) {
+          corpChart.resize(container.clientWidth, 320);
+        }
+      });
+    }
+
+    // 6. Initialize Admin Hourly Workload Bar Chart
+    function initAdminBarChart() {
+      const container = document.getElementById('adminWorkloadBarChart');
+      if (!container || typeof LightweightCharts === 'undefined') return;
+
+      const colors = getThemeChartColors();
+
+      adminChart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 260,
+        layout: {
+          background: { type: 'solid', color: colors.bg },
+          textColor: colors.text,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11
+        },
+        grid: {
+          vertLines: { color: colors.grid },
+          horzLines: { color: colors.grid }
+        },
+        timeScale: { borderColor: colors.grid },
+        rightPriceScale: { borderColor: colors.grid }
+      });
+
+      adminThroughputBar = adminChart.addHistogramSeries({
+        color: colors.primary,
+        priceFormat: { type: 'volume' }
+      });
+
+      const hoursData = [
+        { time: 1728518400, value: 45000, color: colors.primary },
+        { time: 1728522000, value: 52000, color: colors.primary },
+        { time: 1728525600, value: 48000, color: colors.primary },
+        { time: 1728529200, value: 61000, color: colors.primary },
+        { time: 1728532800, value: 78000, color: colors.primary },
+        { time: 1728536400, value: 92000, color: colors.primary },
+        { time: 1728540000, value: 124000, color: colors.primary },
+        { time: 1728543600, value: 145000, color: colors.primary },
+        { time: 1728547200, value: 168000, color: colors.primary },
+        { time: 1728550800, value: 182000, color: colors.primary },
+        { time: 1728554400, value: 195000, color: colors.primary },
+        { time: 1728558000, value: 210000, color: colors.primary },
+        { time: 1728561600, value: 240000, color: colors.primary },
+        { time: 1728565200, value: 198000, color: colors.primary },
+        { time: 1728568800, value: 165000, color: colors.down } // Spike in blocked attacks
+      ];
+
+      throughputBar.setData(hoursData);
+
+      window.addEventListener('resize', () => {
+        if (adminChart && container) {
+          adminChart.resize(container.clientWidth, 260);
+        }
+      });
+    }
+
+    // 7. Mobile Drawer Toggle
+    function toggleMobileDrawer() {
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('mobileDrawerOverlay');
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    // 8. Multi-Leg Strategy Builder State
+    let legs = [
+      { side: 'SELL', ratio: 1, type: 'CALL', strike: 5850, dte: 21, bidAsk: '12.50 / 12.80', delta: '+0.25' },
+      { side: 'BUY',  ratio: 1, type: 'CALL', strike: 5875, dte: 21, bidAsk: '6.20 / 6.50',   delta: '+0.12' },
+      { side: 'SELL', ratio: 1, type: 'PUT',  strike: 5800, dte: 21, bidAsk: '14.10 / 14.40', delta: '-0.24' },
+      { side: 'BUY',  ratio: 1, type: 'PUT',  strike: 5775, dte: 21, bidAsk: '7.80 / 8.10',   delta: '-0.11' }
+    ];
+
+    function renderLegs() {
+      const tbody = document.getElementById('strategyLegsBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      legs.forEach((leg, idx) => {
+        const tr = document.createElement('tr');
+        const sideClass = leg.side === 'BUY' ? 'btn-buy' : 'btn-sell';
+        tr.innerHTML = `
+          <td><button class="btn btn-xs ${sideClass}" onclick="toggleSide(${idx})">${leg.side}</button></td>
+          <td class="numeric-tabular">${leg.ratio}x</td>
+          <td><span class="badge ${leg.type === 'CALL' ? 'badge-gain' : 'badge-loss'}">${leg.type}</span></td>
+          <td><input type="number" class="input input-sm numeric-tabular" value="${leg.strike}" style="width: 80px;" onchange="updateStrike(${idx}, this.value)"></td>
+          <td class="numeric-tabular">${leg.dte}d</td>
+          <td class="numeric-tabular">${leg.bidAsk}</td>
+          <td class="numeric-tabular">${leg.delta}</td>
+          <td><button class="btn btn-xs btn-secondary" onclick="removeLeg(${idx})">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleSide(idx) {
+      legs[idx].side = legs[idx].side === 'BUY' ? 'SELL' : 'BUY';
+      renderLegs();
+    }
+    function updateStrike(idx, val) {
+      legs[idx].strike = parseFloat(val);
+    }
+    function removeLeg(idx) {
+      legs.splice(idx, 1);
+      renderLegs();
+    }
+    function addLeg() {
+      legs.push({ side: 'BUY', ratio: 1, type: 'CALL', strike: 5900, dte: 21, bidAsk: '3.40 / 3.70', delta: '+0.06' });
+      renderLegs();
+    }
+    function setPreset(preset) {
+      if (preset === 'strangle') {
+        legs = [
+          { side: 'BUY', ratio: 1, type: 'CALL', strike: 5850, dte: 21, bidAsk: '12.50 / 12.80', delta: '+0.25' },
+          { side: 'BUY', ratio: 1, type: 'PUT',  strike: 5800, dte: 21, bidAsk: '14.10 / 14.40', delta: '-0.24' }
+        ];
+        document.getElementById('netSpreadPrice').innerText = '$26.90 Debit';
+        document.getElementById('netSpreadPrice').style.color = 'var(--color-finance-loss)';
+      } else {
+        legs = [
+          { side: 'SELL', ratio: 1, type: 'CALL', strike: 5850, dte: 21, bidAsk: '12.50 / 12.80', delta: '+0.25' },
+          { side: 'BUY',  ratio: 1, type: 'CALL', strike: 5875, dte: 21, bidAsk: '6.20 / 6.50',   delta: '+0.12' },
+          { side: 'SELL', ratio: 1, type: 'PUT',  strike: 5800, dte: 21, bidAsk: '14.10 / 14.40', delta: '-0.24' },
+          { side: 'BUY',  ratio: 1, type: 'PUT',  strike: 5775, dte: 21, bidAsk: '7.80 / 8.10',   delta: '-0.11' }
+        ];
+        document.getElementById('netSpreadPrice').innerText = '$3.85 Credit';
+        document.getElementById('netSpreadPrice').style.color = 'var(--color-finance-gain)';
+      }
+      renderLegs();
+    }
+
+    // 9. Yield Curve & Vol Stress Tuner
+    function updateStress(type, val) {
+      if (type === 'shift') {
+        document.getElementById('shiftVal').innerText = (val >= 0 ? '+' : '') + val + ' bps';
+        const impact = -Math.round(val * 98);
+        document.getElementById('dv01Impact').innerText = (impact >= 0 ? '+$' : '-$') + Math.abs(impact);
+      } else if (type === 'twist') {
+        document.getElementById('twistVal').innerText = (val >= 0 ? '+' : '') + val + ' bps';
+      } else if (type === 'vol') {
+        document.getElementById('volShockVal').innerText = (val >= 0 ? '+' : '') + val + '%';
+        const vega = Math.round(val * 520);
+        document.getElementById('vegaImpact').innerText = (vega >= 0 ? '+$' : '-$') + Math.abs(vega);
+      }
+    }
+
+    // 10. Real-Time Tick Simulation (Updates TradingView Candle in Real-Time!)
+    let isSimulating = true;
+    let simInterval = null;
+
+    function startTickSim() {
+      simInterval = setInterval(() => {
+        if (!isSimulating) return;
+
+        // Simulate SPX price tick
+        const spxDelta = (Math.random() - 0.48) * 1.5;
+        const spxElem = document.getElementById('tick-spx');
+        const rowSpxPrice = document.getElementById('row-spx-price');
+        const tvChartLastPrice = document.getElementById('tvChartLastPrice');
+
+        if (spxElem && rowSpxPrice) {
+          let currentSpx = parseFloat(spxElem.innerText.replace(',', '')) + spxDelta;
+          spxElem.innerText = currentSpx.toFixed(2);
+          rowSpxPrice.innerText = '$' + currentSpx.toFixed(2);
+          if (tvChartLastPrice) tvChartLastPrice.innerText = currentSpx.toFixed(2);
+
+          // Update TradingView candle series dynamically
+          if (tvCandleSeries && lastCandle) {
+            lastCandle.close = currentSpx;
+            if (currentSpx > lastCandle.high) lastCandle.high = currentSpx;
+            if (currentSpx < lastCandle.low) lastCandle.low = currentSpx;
+            lastCandle.volume += Math.round(Math.abs(spxDelta) * 120);
+
+            tvCandleSeries.update(lastCandle);
+            if (tvVolumeSeries) {
+              const colors = getThemeChartColors();
+              tvVolumeSeries.update({
+                time: lastCandle.time,
+                value: lastCandle.volume,
+                color: lastCandle.close >= lastCandle.open ? colors.volUp : colors.volDown
+              });
+            }
+          }
+
+          // Trigger GPU flash class
+          const flashClass = spxDelta >= 0 ? 'tick-flash-up' : 'tick-flash-down';
+          rowSpxPrice.classList.remove('tick-flash-up', 'tick-flash-down');
+          void rowSpxPrice.offsetWidth;
+          rowSpxPrice.classList.add(flashClass);
+        }
+
+        // Simulate NVDA tick
+        const nvdaDelta = (Math.random() - 0.49) * 0.4;
+        const nvdaElem = document.getElementById('tick-nvda');
+        const rowNvdaPrice = document.getElementById('row-nvda-price');
+        if (nvdaElem && rowNvdaPrice) {
+          let currentNvda = parseFloat(nvdaElem.innerText) + nvdaDelta;
+          nvdaElem.innerText = currentNvda.toFixed(2);
+          rowNvdaPrice.innerText = '$' + currentNvda.toFixed(2);
+
+          const nvdaFlash = nvdaDelta >= 0 ? 'tick-flash-up' : 'tick-flash-down';
+          rowNvdaPrice.classList.remove('tick-flash-up', 'tick-flash-down');
+          void rowNvdaPrice.offsetWidth;
+          rowNvdaPrice.classList.add(nvdaFlash);
+        }
+      }, 1200);
+    }
+
+    function toggleTickSimulation() {
+      isSimulating = !isSimulating;
+      document.getElementById('simIndicator').style.background = isSimulating ? 'var(--color-finance-gain)' : 'var(--text-muted)';
+    }
+
+    // Initialize all subsystems
+    window.addEventListener('DOMContentLoaded', () => {
+      renderLegs();
+      initTradingViewChart();
+      initCorporateChart();
+      initAdminBarChart();
+      startTickSim();
+    });
+  </script>
+</body>
+</html>

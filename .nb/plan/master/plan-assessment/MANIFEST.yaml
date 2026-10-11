@@ -1,0 +1,45 @@
+plan:
+  id: master_plan_assessment
+  name: Percipience Master Plan Assessment Framework
+  category: meta
+  layer: Master
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    last_updated: '2026-10-10T17:22:00.000000Z'
+    version: 3.0_percipience_agentic
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 45000
+    last_updated: '2026-10-10T17:22:00.000000Z'
+    version: 3.0_percipience_agentic
+  mini:
+    file: null
+    exists: false
+sync_status:
+  in_sync: true
+  last_sync: '2026-10-10T17:22:00.000000Z'
+  sync_direction: bidirectional
+  differences: []
+capabilities:
+  assessment_dimensions: 7
+  hard_gate_interlocks: 6
+  agentic_tdd_evaluation: true
+  percipience_workflow_audit: true
+  security_mesh_compliance: true
+  token_economics_profiling: true
+dependencies:
+  requires:
+  - master/parent-master-plan
+  enables:
+  - plan evaluation
+  - autonomous agentic code generation governance
+  - multi-agent workflow gatekeeping
+maturity:
+  stage: active
+  implementation_status: standardized
+  test_coverage: 95
+  production_ready: true
