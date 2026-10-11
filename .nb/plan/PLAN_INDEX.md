@@ -2,7 +2,7 @@
 index_type: "master_navigation"
 purpose: "Unified entry point for agentic and human navigation of all plans"
 last_updated: "2026-10-05"
-total_plans: 8
+total_plans: 15
 organization_schema: "hierarchical_with_dual_format"
 ---
 
@@ -21,7 +21,9 @@ organization_schema: "hierarchical_with_dual_format"
 ├── 🏗️ l1/                           ← Foundation Layer
 │   ├── intellij-pycharm-plugin/     ← JetBrains IDE Plugin & PSI AST Analysis
 │   ├── vscode-plugin/               ← VSCode Extension & LSP 3.17 Space
-│   └── saas-portal-domain/          ← SaaS Customer Portal & Observability Web
+│   ├── saas-portal-domain/          ← SaaS Customer Portal & Observability Web
+│   ├── npx-installer/               ← NPX Instant Execution & Bootstrapping
+│   └── tiered-wheel-packaging/      ← Multi-Tier Python Wheel Packaging
 ├── 🧠 l2/                           ← Self-Evolution & Commercial OS
 │   ├── enterprise-context-engineering-os/ ← Play 3 Enterprise OS & Gatekeeper
 │   └── corp-site-saas-portal/       ← Play 3 Cloud SaaS Portal & Brand Site
@@ -93,6 +95,24 @@ organization_schema: "hierarchical_with_dual_format"
 - **Version Manifest**: [l1/saas-portal-domain/MANIFEST.yaml](./l1/saas-portal-domain/MANIFEST.yaml)
 - **Root Alias**: [claude-context-engineering-saas-portal-domain-plan.md](./claude-context-engineering-saas-portal-domain-plan.md)
 - **Purpose**: Next.js 14 App Router, multi-tenant RBAC, PostgreSQL RLS, Stripe billing, and 5-tab Observability Hub dashboard.
+
+### NPX Instant Execution & Bootstrapping Space
+- **ID**: `domain_npx_installer`
+- **Concise Spec**: [l1/npx-installer/concise.md](./l1/npx-installer/concise.md)
+- **Detailed Guide**: [l1/npx-installer/detailed.md](./l1/npx-installer/detailed.md)
+- **Overview**: [l1/npx-installer/README.md](./l1/npx-installer/README.md)
+- **Version Manifest**: [l1/npx-installer/MANIFEST.yaml](./l1/npx-installer/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-npx-installer-distribution.md](./claude-context-engineering-npx-installer-distribution.md)
+- **Purpose**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding (`npx percipience init`), automated `.claude/mcp.json` provisioning, and platform binary resolution.
+
+### Multi-Tier Python Wheel Packaging & Distribution Space
+- **ID**: `domain_tiered_wheel_packaging`
+- **Concise Spec**: [l1/tiered-wheel-packaging/concise.md](./l1/tiered-wheel-packaging/concise.md)
+- **Detailed Guide**: [l1/tiered-wheel-packaging/detailed.md](./l1/tiered-wheel-packaging/detailed.md)
+- **Overview**: [l1/tiered-wheel-packaging/README.md](./l1/tiered-wheel-packaging/README.md)
+- **Version Manifest**: [l1/tiered-wheel-packaging/MANIFEST.yaml](./l1/tiered-wheel-packaging/MANIFEST.yaml)
+- **Root Alias**: [claude-context-engineering-tiered-wheel-packaging.md](./claude-context-engineering-tiered-wheel-packaging.md)
+- **Purpose**: Automated PEP 427 Python wheel compilation across all 4 commercial tiers (Free, Team, Business, Enterprise), strict build-time engine exclusion boundaries, SHA-256 Merkle block sealing, and index distribution (PyPI, AWS CodeArtifact, Artifactory).
 
 ---
 

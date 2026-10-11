@@ -1,0 +1,54 @@
+plan_id: domain_tiered_wheel_packaging
+plan_name: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
+version: 1.0.0
+capability_rating: L1
+plan_type: foundation
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: a4c8a994127e9e3748a85845568f177a2d5fe7a7981469557e64f96f285fab6d
+    line_count: 106
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: fda1a445c4beca1f7f1795fe06819eb3b6b7b5ba16129501d56e0d9801d02409
+    line_count: 269
+    primary_purpose: Extended implementation guide for multi-tier wheel packaging
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: db56f3e4f5dfbcd49b3c1df41a7095d158cb9ef3fcd5f2bf226c1b3303bc46b6
+    line_count: 32
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- Automated Multi-Tier Wheel Compilation (Free, Team, Business, Enterprise)
+- Build-Time Proprietary Engine Exclusion Boundaries
+- PEP 427, PEP 517, PEP 621 Standard Package Formatting
+- SHA-256 Merkle Block Sealing for Built Wheel Artifacts
+- Public PyPI & Enterprise Private Index Authentication (AWS CodeArtifact, Artifactory)
+implementation_phases:
+  phase_1: Core Engine Classification & Tier Rules Definition
+  phase_2: Wheel Build Automation Script (build_tier_wheels.py)
+  phase_3: In-Package Tier Broker & Console Script Entry Points
+  phase_4: Merkle State Sealing & Clean Virtualenv Smoke Testing
+  phase_5: Index Distribution & Air-Gapped Packaging Workflows
+success_metrics:
+  zero_enterprise_leakage_in_free_wheel: 100%
+  wheel_install_time_seconds: <2.0s
+  merkle_seal_verification_score: 1.0
+related_contracts:
+- .nb/context/contracts/commercial_provisioning_contract.yaml
+- .nb/context/contracts/billing_meter_contract.yaml
+- .nb/context/contracts/security_four_eyes_contract.json
+related_rules:
+- .nb/context/rules/commercial_tier_permissioning_rules.md
+- .nb/context/rules/hierarchical_space_isolation_rules.md

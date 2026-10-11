@@ -46,6 +46,8 @@ Implements concrete runtime spaces:
 - **`intellij-pycharm-plugin`**: JetBrains Platform SDK & PSI AST Analysis.
 - **`vscode-plugin`**: VSCode Extension API & LSP 3.17.
 - **`saas-portal-domain`**: Next.js App Router, RBAC & PostgreSQL RLS.
+- **`npx-installer`**: Zero-Install Instant Onboarding & Ephemeral CI/CD Gatekeeper.
+- **`tiered-wheel-packaging`**: Multi-Tier Python Wheel Packaging across Free, Team, Business & Enterprise Tiers.
 
 ### L2 Self-Evolution & Commercial OS (`l2/`)
 Defines the enterprise commercial operating system:

@@ -1,0 +1,54 @@
+plan_id: domain_npx_installer
+plan_name: NPX Instant Execution & Bootstrapping Architecture Plan
+version: 1.0.0
+capability_rating: L1
+plan_type: foundation
+status: active
+parent_plan: master/parent-master-plan/concise.md
+dependencies:
+- master_parent_framework
+file_versions:
+  concise:
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: 905c6c43de5803b607a0615165e2f2c4932141dcf9a1e5c85d371a7676eec11c
+    line_count: 133
+    primary_purpose: Complete specification for agentic context
+  detailed:
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: 87c34a62453cf506cd85b543b62bbf12ff1d7e3f87fed85732dee4064514ded2
+    line_count: 354
+    primary_purpose: Extended implementation guide for npx distribution
+  readme:
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-10-11'
+    content_hash: d38cb84d417f0d1684156a32f25c845393dde09d9e4466489b243417a9f6ee79
+    line_count: 28
+    primary_purpose: Quick reference and navigation
+key_capabilities:
+- Zero-Install Ephemeral PR Gatekeeper Execution
+- Single-Command Quad-Space Initialization (<3s)
+- Automated Claude / MCP Protocol Server Provisioning
+- Multi-Platform Binary & Python Bridge Fallback Resolution
+- Enterprise Air-Gapped & Proxy (.npmrc) Support
+implementation_phases:
+  phase_1: Package Manifest & Binary Resolver Spec
+  phase_2: Node.js CLI Runner & Stdio Forwarding
+  phase_3: Quad-Space & MCP Provisioning Templates
+  phase_4: Ephemeral CI Mode & POSIX Exit Codes
+  phase_5: npm Registry Publication & Air-Gapped Verification
+success_metrics:
+  init_duration_seconds: <3.0s
+  posix_exit_code_accuracy: 100%
+  mcp_json_generation_fidelity: 100%
+related_contracts:
+- .nb/context/contracts/package_json_manifest_contract.json
+- .nb/context/contracts/observability_contract.yaml
+- .nb/context/contracts/security_four_eyes_contract.json
+related_rules:
+- .nb/context/rules/hierarchical_space_isolation_rules.md
+- .nb/context/rules/quad_space_boundary_invariants.md
