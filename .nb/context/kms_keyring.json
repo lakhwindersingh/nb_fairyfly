@@ -11,8 +11,8 @@
         "ed25519_private_b64": "QBMgXukembe1vLdfr5nBnWuktpfYzL95hqLn5RHBq2U=",
         "ed25519_public_b64": "u7B0mjZGVBo3wg4VjhWiSOauD3Gze59OJ6iMl/8tTxQ=",
         "aes_key_b64": "6Tv/mO5c3aD+N8K8qqezam1Uvvo0dQqvdnQaAcTjv5Y=",
-        "usage_count": 411,
-        "last_used_at": "2026-10-11T22:26:45.790520+00:00"
+        "usage_count": 414,
+        "last_used_at": "2026-10-11T22:32:36.885490+00:00"
       }
     ],
     "proj_crypto_arbitrage_01": [
@@ -1318,6 +1318,15 @@
       "key_id": "kms_key_tenant_acme_fintech_proj_fairyfly_core_9921_v1",
       "version": 1,
       "event_hash": "0df402ec7e2168951c96657a0ac091af6d692be63e22bf9e5d63931741a20074"
+    },
+    {
+      "timestamp": "2026-10-11T22:32:36.884596+00:00",
+      "action": "ENVELOPE_SEALED",
+      "tenant_id": "tenant_acme_fintech",
+      "project_id": "proj_fairyfly_core_9921",
+      "key_id": "kms_key_tenant_acme_fintech_proj_fairyfly_core_9921_v1",
+      "version": 1,
+      "event_hash": "15b49e155f9ef288bf9cd3d10b31a95b679ce9fc9754709c84481e661a3e3828"
     }
   ]
 }
