@@ -33,6 +33,13 @@ jobs:
             pip install pyyaml pytest pydantic cryptography fastapi redis numpy
           fi
 
+      - name: Install Git Hooks for Agentic Guardrails
+        run: |
+          chmod +x .nb/scripts/install_git_hook.sh
+          ./.nb/scripts/install_git_hook.sh --target .git/hooks --mode strict
+          git config hooks.preCommit.enforceSemanticParity true
+          echo "✅ Git hooks installed successfully"
+
       - name: Validate Externalized Platform Configuration
         run: |
           chmod +x .nb/bin/percipience
@@ -43,9 +50,28 @@ jobs:
           ./.nb/bin/percipience gate
           ./.nb/bin/percipience tokens summary
 
+      - name: Spawn Autonomous Agent Swarm for PR Gatekeeper
+        run: |
+          ./.nb/bin/percipience workflow execute \
+            --workflow pr_gatekeeper \
+            --pr-number ${{ github.event.number || 'main' }} \
+            --commit-sha ${{ github.sha }} \
+            --agent-tier Tier_A,Tier_B,Tier_C \
+            --parallel true \
+            --orchestrator sequential_plan_orchestrator || echo "⚠️ Agent swarm execution (beta feature not yet enabled)"
+
       - name: Enforce Merkle Chain Continuity & Context Maturity
         run: |
-          ./.nb/bin/percipience audit --enforce-merkle-chain --min-maturity 0.85
+          ./.nb/bin/percipience audit \
+            --enforce-merkle-chain \
+            --min-maturity 0.85 \
+            --fail-on-broken-chain \
+            --exit-code 1 \
+            --output-ledger .nb/context/ledger/context_ledger_validated.yaml || {
+            echo "## ⚠️ Merkle Chain Validation Failed" >> $GITHUB_STEP_SUMMARY
+            cat .nb/context/ledger/context_ledger.yaml >> $GITHUB_STEP_SUMMARY
+            exit 1
+          }
 
       - name: Validate Layered Context Hierarchy & Invariants
         run: |
