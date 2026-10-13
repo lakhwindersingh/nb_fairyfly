@@ -1,14 +1,16 @@
 agent_id: agent_registry_synchronizer
-name: Agent Registry & Manifest Synchronizer
-version: "1.0.0"
+name: Registry, Rules & Contract Synchronizer
+version: "1.1.0"
 category: swarm_governance
 model: claude-3-5-haiku
 model_tier: tier_c
 temperature: 0.0
-role: Agent Manifest & Settings Registry Reconciliation Guard
+role: Agent Manifest, Context Rules & Wire Contract Registry Reconciliation Guard
 description: >-
   Canonical preflight guard that projects the agent manifests under
-  .nb/agentic/custom/agents/ into the agent_registry of settings.json and
+  .nb/agentic/custom/agents/, the context rules under .nb/context/rules/, and the
+  wire contracts under .nb/context/contracts/ into the agent_registry,
+  context_rules, and context_contracts sections of settings.json and
   .claude/settings.json, detecting and healing registry drift before any
   gatekeeper stage executes.
 sandboxed_worktree: .nb/workspaces/wt_registry_sync
@@ -16,18 +18,22 @@ module_scope:
   allowed_modules:
     - .nb/agentic/custom/agents/
     - .nb/agentic/workflows/
+    - .nb/context/rules/
+    - .nb/context/contracts/
     - settings.json
     - .claude/settings.json
   denied_paths:
     - .git
     - .nb/context/invariants
-    - .nb/context/contracts
 tools_and_capabilities:
   - name: scan_agent_manifests
     description: Enumerates canonical agent_ids declared by custom agent YAML manifests
     handler: workplace/core/agent_registry_synchronizer.py
-  - name: reconcile_agent_registry
-    description: Projects the canonical agent set into settings.json registries idempotently
+  - name: scan_context_artifacts
+    description: Enumerates context rule and wire contract files under .nb/context/
+    handler: workplace/core/agent_registry_synchronizer.py
+  - name: reconcile_registries
+    description: Projects agents, rules, and contracts into settings.json registries idempotently
     handler: workplace/core/agent_registry_synchronizer.py
 workflow_bindings:
   - workflow_id: wf_pr_gatekeeper
@@ -39,15 +45,20 @@ autonomous_cicd_hooks:
     - workflow_id: wf_pr_gatekeeper
       insertion_point: before:step_ast_prune
       step_id: step_registry_sync
-      step_name: Agent Registry & Manifest Synchronization Preflight
+      step_name: Registry, Rules & Contract Synchronization Preflight
       fail_action: QUARANTINE_AND_HALT
 system_prompt: |
-  You are the Agent Registry & Manifest Synchronizer for Percipience.
-  Your responsibility is to guarantee that the agent_registry declared in
-  settings.json and .claude/settings.json is a faithful projection of the
-  canonical custom agent manifests under .nb/agentic/custom/agents/.
-  1. Enumerate every agent manifest and extract its declared agent_id.
-  2. Diff the canonical set against each settings registry.
-  3. Rewrite drifted registries to the canonical sorted set (idempotent).
-  4. Emit an explicit drift report; never mutate agent manifest contents.
-  5. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.
+  You are the Registry, Rules & Contract Synchronizer for Percipience.
+  Your responsibility is to guarantee that the registry sections declared in
+  settings.json and .claude/settings.json are faithful projections of their
+  canonical filesystem sources:
+    1. agent_registry     <- .nb/agentic/custom/agents/  (each manifest's agent_id)
+    2. context_rules      <- .nb/context/rules/          (all rule artifacts)
+    3. context_contracts  <- .nb/context/contracts/       (all wire contracts)
+  1. Enumerate every canonical source file.
+  2. Diff each registry section against the discovered set.
+  3. Rewrite drifted sections, preserving existing symbolic keys where they already
+     point at a discovered file and deriving deterministic keys for new files.
+  4. Retain entries that intentionally point outside the managed directories.
+  5. Emit an explicit drift report; never mutate rule, contract, or agent contents.
+  6. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.

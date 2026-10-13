@@ -1,28 +1,37 @@
 #!/usr/bin/env python3
 """
-Neutron Binary Percipience - Agent Registry Synchronizer
+Neutron Binary Percipience - Registry & Context Synchronizer
 
-Reconciles the `agent_registry` manifest embedded in the Claude settings files
-with the canonical set of custom agent manifests declared under
-`.nb/agentic/custom/agents/`.
+Reconciles the curated registry sections embedded in the Claude settings files
+with the canonical filesystem sources of truth:
 
-Canonical Source of Truth:
-    .nb/agentic/custom/agents/*.yaml   (each declares an `agent_id`)
+    agent_registry     <- .nb/agentic/custom/agents/*.yaml      (list, agent_id)
+    context_rules      <- .nb/context/rules/**                  (map, key -> path)
+    context_contracts  <- .nb/context/contracts/**              (map, key -> path)
 
 Synchronization Targets:
     settings.json
     .claude/settings.json
 
-The synchronizer is intentionally deterministic and idempotent so it can be wired
-as a mandatory preflight step of the CI/CD gatekeeper workflow. It never mutates
-agent manifests; it only projects the canonical agent-id set into the settings
-registries.
+Semantics
+---------
+* agent_registry is projected as a sorted, de-duplicated list of declared agent_ids.
+* context_rules / context_contracts are reconciled as maps. Existing symbolic keys
+  are preserved when they already point at a discovered file (so friendly aliases
+  survive). Newly discovered files receive a deterministic key derived from their
+  filename. Entries that point outside the managed directory (e.g. the ledger) are
+  retained untouched.
+
+The synchronizer is deterministic and idempotent so it can be wired as a mandatory
+preflight step of the CI/CD gatekeeper workflow. It never mutates the underlying
+rule, contract, or agent artifacts.
 """
 
 import json
+import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import yaml
@@ -37,11 +46,19 @@ except ImportError:
 
 
 class AgentRegistrySynchronizer:
-    """Projects canonical custom-agent manifests into settings.json registries."""
+    """Projects canonical agents, rules, and contracts into settings.json registries."""
 
     AGENTS_DIR = ".nb/agentic/custom/agents"
+    RULES_DIR = ".nb/context/rules"
+    CONTRACTS_DIR = ".nb/context/contracts"
     SETTINGS_FILES = ("settings.json", ".claude/settings.json")
-    REGISTRY_KEY = "agent_registry"
+
+    # (settings_key, kind, source_spec)
+    SPECS: Tuple[Tuple[str, str, str], ...] = (
+        ("agent_registry", "list", AGENTS_DIR),
+        ("context_rules", "map", RULES_DIR),
+        ("context_contracts", "map", CONTRACTS_DIR),
+    )
 
     def __init__(self, workspace_root: Optional[Path] = None):
         if workspace_root:
@@ -54,22 +71,19 @@ class AgentRegistrySynchronizer:
                 self.workspace_root = cur.parents[1]
 
     # ------------------------------------------------------------------
-    # Canonical source
+    # Canonical sources
     # ------------------------------------------------------------------
-    @property
-    def agents_dir(self) -> Path:
-        return self.workspace_root / self.AGENTS_DIR
-
     def scan_agent_ids(self) -> List[str]:
         """
         Returns the sorted, de-duplicated set of agent_ids declared by every
         YAML manifest under the canonical custom agents directory.
         """
         agent_ids: List[str] = []
-        if not self.agents_dir.exists():
+        agents_dir = self.workspace_root / self.AGENTS_DIR
+        if not agents_dir.exists():
             return agent_ids
 
-        for manifest in sorted(self.agents_dir.glob("*.yaml")) + sorted(self.agents_dir.glob("*.yml")):
+        for manifest in sorted(agents_dir.glob("*.yaml")) + sorted(agents_dir.glob("*.yml")):
             agent_id = self._read_agent_id(manifest)
             if agent_id:
                 agent_ids.append(agent_id)
@@ -95,6 +109,18 @@ class AgentRegistrySynchronizer:
         meta = data.get("metadata", {}) if isinstance(data.get("metadata"), dict) else {}
         return meta.get("agent_id") or data.get("agent_id") or fallback
 
+    def scan_files(self, rel_dir: str) -> List[str]:
+        """Returns sorted, repo-relative POSIX paths for every file under rel_dir."""
+        base = self.workspace_root / rel_dir
+        if not base.exists():
+            return []
+        files = [
+            p.relative_to(self.workspace_root).as_posix()
+            for p in base.rglob("*")
+            if p.is_file() and not p.name.startswith(".")
+        ]
+        return sorted(files)
+
     # ------------------------------------------------------------------
     # Targets
     # ------------------------------------------------------------------
@@ -110,72 +136,118 @@ class AgentRegistrySynchronizer:
             json.dump(data, f, indent=2)
             f.write("\n")
 
-    def _current_registry(self, data: Dict[str, Any]) -> List[str]:
-        reg = data.get(self.REGISTRY_KEY)
-        return list(reg) if isinstance(reg, list) else []
+    # ------------------------------------------------------------------
+    # Reconciliation primitives
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _derive_key(rel_path: str, used: set) -> str:
+        stem = Path(rel_path).stem
+        key = re.sub(r"[^a-z0-9]+", "_", stem.lower()).strip("_") or "item"
+        if key not in used:
+            return key
+        ext = Path(rel_path).suffix.lstrip(".")
+        base = f"{key}_{ext}" if ext else key
+        candidate, i = base, 2
+        while candidate in used:
+            candidate = f"{base}_{i}"
+            i += 1
+        return candidate
 
-    # ------------------------------------------------------------------
-    # Drift detection & reconciliation
-    # ------------------------------------------------------------------
-    def check(self) -> Dict[str, Any]:
-        """
-        Non-mutating drift report comparing the canonical agent set against each
-        settings registry. Returns per-file missing/extra entries and a summary.
-        """
-        canonical = self.scan_agent_ids()
-        report: Dict[str, Any] = {
-            "canonical_count": len(canonical),
-            "canonical": canonical,
-            "files": {},
-            "drift": False,
+    def _build_map(self, current: Any, rel_dir: str) -> Dict[str, str]:
+        """Projects discovered files into a symbolic-key -> path map."""
+        current = current if isinstance(current, dict) else {}
+        prefix = rel_dir.rstrip("/") + "/"
+
+        existing_key_by_path: Dict[str, str] = {}
+        retained: Dict[str, str] = {}
+        for key, value in current.items():
+            if isinstance(value, str) and value.startswith(prefix):
+                existing_key_by_path[value] = key
+            else:
+                retained[key] = value
+
+        result: Dict[str, str] = dict(retained)
+        used = set(result.keys())
+        for rel in self.scan_files(rel_dir):
+            key = existing_key_by_path.get(rel)
+            if not key or key in used:
+                key = self._derive_key(rel, used)
+            result[key] = rel
+            used.add(key)
+        return result
+
+    def _project(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Returns the fully synchronized settings document (non-mutating)."""
+        projected = json.loads(json.dumps(data))  # deep copy, preserves order
+        for settings_key, kind, source in self.SPECS:
+            if kind == "list":
+                projected[settings_key] = self.scan_agent_ids()
+            else:
+                projected[settings_key] = self._build_map(data.get(settings_key), source)
+        return projected
+
+    def _section_drift(self, current: Any, desired: Any, source: str, kind: str) -> Dict[str, Any]:
+        if kind == "list":
+            current_list = [x for x in current if isinstance(x, str)] if isinstance(current, list) else []
+            desired_list = list(desired)
+            return {
+                "in_sync": current_list == desired_list,
+                "count": len(desired_list),
+                "missing": sorted(set(desired_list) - set(current_list)),
+                "extra": sorted(set(current_list) - set(desired_list)),
+            }
+
+        current_map = current if isinstance(current, dict) else {}
+        desired_map = desired if isinstance(desired, dict) else {}
+        managed_current = {k: v for k, v in current_map.items() if isinstance(v, str) and v.startswith(source.rstrip("/") + "/")}
+        return {
+            "in_sync": current_map == desired_map,
+            "count": len(desired_map),
+            "missing": sorted(set(desired_map.values()) - set(managed_current.values())),
+            "extra": sorted(set(managed_current.values()) - set(desired_map.values())),
         }
 
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+    def check(self) -> Dict[str, Any]:
+        """Non-mutating drift report for every managed section of every settings file."""
+        report: Dict[str, Any] = {"files": {}, "drift": False}
         for path in self.settings_paths():
             if not path.exists():
                 continue
             data = self._read_settings(path)
-            current = self._current_registry(data)
-            missing = sorted(set(canonical) - set(current))
-            extra = sorted(set(current) - set(canonical))
-            in_sync = not missing and not extra and current == canonical
-            report["files"][str(path.relative_to(self.workspace_root))] = {
-                "in_sync": in_sync,
-                "registry_count": len(current),
-                "missing": missing,
-                "extra": extra,
-            }
-            if not in_sync:
-                report["drift"] = True
-
+            desired = self._project(data)
+            sections: Dict[str, Any] = {}
+            for settings_key, kind, source in self.SPECS:
+                drift = self._section_drift(data.get(settings_key), desired[settings_key], source, kind)
+                sections[settings_key] = drift
+                if not drift["in_sync"]:
+                    report["drift"] = True
+            report["files"][str(path.relative_to(self.workspace_root))] = sections
         return report
 
     def sync(self) -> Dict[str, Any]:
         """
-        Writes the canonical agent set into every settings registry. Idempotent:
-        unchanged files are left byte-identical.
+        Writes the fully synchronized registry sections into every settings file.
+        Idempotent: files already in sync are left byte-identical.
         """
-        canonical = self.scan_agent_ids()
-        result: Dict[str, Any] = {
-            "status": "IN_SYNC",
-            "canonical_count": len(canonical),
-            "updated": [],
-            "unchanged": [],
-        }
-
+        result: Dict[str, Any] = {"status": "IN_SYNC", "updated": [], "unchanged": [], "sections": {}}
         for path in self.settings_paths():
             if not path.exists():
                 continue
             data = self._read_settings(path)
-            current = self._current_registry(data)
+            desired = self._project(data)
             rel = str(path.relative_to(self.workspace_root))
 
-            if current == canonical:
+            changed_sections = [k for k, kind, src in self.SPECS if data.get(k) != desired[k]]
+            if not changed_sections:
                 result["unchanged"].append(rel)
                 continue
 
-            data[self.REGISTRY_KEY] = canonical
-            self._write_settings(path, data)
+            self._write_settings(path, desired)
             result["updated"].append(rel)
+            result["sections"][rel] = changed_sections
 
         if result["updated"]:
             result["status"] = "SYNCHRONIZED"

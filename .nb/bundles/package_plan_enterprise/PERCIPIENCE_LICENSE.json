@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_31fb7c2e71f1",
+  "license_id": "lic_plan_enterprise_e4c17f464676",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,8 +18,8 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-11T22:32:36.242735+00:00",
-  "total_files": 156,
+  "issued_at": "2026-10-13T17:05:54.670811+00:00",
+  "total_files": 157,
   "file_manifest": {
     "bin/percipience": "bfffe7c0b1bf2c20a4e1a7c004afc412d4f5b89704948016dffa4e4f665d8840",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -150,6 +150,7 @@
     "agentic/custom/agents/agent_lsp_language_features_specialist.yaml": "6ff63172bd7ad604724bba17e35b734558c21ad8be64cb434969523a6350d238",
     "agentic/custom/agents/agent_privacy_compliance_auditor.yaml": "73100d576c771e032aabefabf73797fb96c589347d570be1e1a2b19eb805880a",
     "agentic/custom/agents/agent_psi_ast_bridge_specialist.yaml": "b23827be17a73ab744872db5859e4d4a8c0a2b310d5674f35e3b65f0702ede55",
+    "agentic/custom/agents/agent_registry_synchronizer.yaml": "fd939edf4501cf8eae75d1cedf71a34a26a0e4b028468b5e5859ca76d7f8bddf",
     "agentic/custom/agents/agent_request_formalizer.yaml": "3406747ed54c06356402ac9d4de3cb28d539c69d66b95ac296eec9aa978035fa",
     "agentic/custom/agents/agent_terminal_mode_specialist.yaml": "fb4e5d92fad95f170ee9db58a7388144960c6b894a6aec2a61b8cc2dfb385e48",
     "agentic/custom/agents/agent_ui_component_engineer.yaml": "4ad38a3b12a0bce3a156651e5a4c3a5b73359d684bf3d92fd2ac57dc177fcebf",
@@ -178,5 +179,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "036a59cbf97c966e16a6913f86582766e5d54655ee4762c6c01694931f6e640c",
     "plan/claude-context-engineering-parent-master-free_plan.md": "3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380"
   },
-  "signature_sha256": "d0863d7af36a22f528b44eef366a9e63e151a9340ebebff4988f16328af3e30b"
+  "signature_sha256": "82362c75e0ebcf6dbcadd4e895f85e94e6624b5c5af8fd29b8a233fe7dc7e6ff"
 }
