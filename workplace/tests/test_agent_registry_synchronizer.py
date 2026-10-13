@@ -10,6 +10,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 from core.agent_registry_synchronizer import AgentRegistrySynchronizer
 
 
@@ -209,6 +211,62 @@ class TestAgentRegistrySynchronizer(unittest.TestCase):
         self.assertGreaterEqual(len(projected["workflow_hooks"]), 10)
         self.assertIn("pr_gatekeeper", projected["workflow_registry"])
         self.assertFalse(syncer.check()["drift"], "Workflow registry/hook drift detected")
+
+    def _make_provider_workspace(self, extra=None):
+        tmp = tempfile.TemporaryDirectory()
+        root = Path(tmp.name)
+        agents = root / ".nb" / "agentic" / "custom" / "agents"
+        agents.mkdir(parents=True, exist_ok=True)
+        (agents / "agent_a.yaml").write_text('agent_id: "agent_a"\n', encoding="utf-8")
+        for name, content in (extra or {}).items():
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        self.addCleanup(tmp.cleanup)
+        return root
+
+    def test_09_provider_settings_created_and_namespaced(self):
+        """Gemini/Aider/Cursor settings are created with a namespaced percipience block."""
+        native_cursor = json.dumps({"editor": {"fontSize": 14}})
+        root = self._make_provider_workspace(extra={".cursor/settings.json": native_cursor})
+        syncer = AgentRegistrySynchronizer(root)
+
+        result = syncer.sync()
+        self.assertIn(".gemini/settings.json", result["created"])
+        self.assertIn(".aider.conf.yml", result["created"])
+        self.assertIn(".cursor/settings.json", result["updated"])
+
+        gemini = json.loads((root / ".gemini/settings.json").read_text())
+        self.assertEqual(gemini["percipience"]["provider"], "gemini")
+        self.assertEqual(gemini["percipience"]["agent_registry"], ["agent_a"])
+        self.assertEqual(gemini["percipience"]["context_file"], ".nb/context/percipience_gemini_context.md")
+
+        cursor = json.loads((root / ".cursor/settings.json").read_text())
+        self.assertEqual(cursor["editor"]["fontSize"], 14)
+        self.assertEqual(cursor["percipience"]["provider"], "cursor")
+        self.assertEqual(cursor["percipience"]["agent_registry"], ["agent_a"])
+
+        aider = yaml.safe_load((root / ".aider.conf.yml").read_text())
+        self.assertIn(".nb/context/percipience_aider_context.md", aider["read"])
+        self.assertEqual(aider["percipience"]["provider"], "aider")
+        self.assertEqual(aider["percipience"]["agent_registry"], ["agent_a"])
+
+        second = syncer.sync()
+        self.assertEqual(second["status"], "IN_SYNC")
+        self.assertEqual(second["updated"], [])
+        self.assertEqual(second["created"], [])
+        self.assertFalse(syncer.check()["drift"])
+
+    def test_10_live_provider_settings_in_sync(self):
+        """Every supported LLM settings file exists and projects the full registry."""
+        syncer = AgentRegistrySynchronizer(self.workspace_root)
+        for rel in (".gemini/settings.json", ".aider.conf.yml", ".cursor/settings.json"):
+            self.assertTrue((self.workspace_root / rel).exists(), f"missing provider settings: {rel}")
+        gemini = json.loads((self.workspace_root / ".gemini/settings.json").read_text())
+        self.assertIn("percipience", gemini)
+        self.assertGreaterEqual(len(gemini["percipience"]["agent_registry"]), 30)
+        self.assertGreaterEqual(len(gemini["percipience"]["workflow_registry"]), 10)
+        self.assertFalse(syncer.check()["drift"], "Multi-LLM settings drift detected")
 
 
 if __name__ == "__main__":

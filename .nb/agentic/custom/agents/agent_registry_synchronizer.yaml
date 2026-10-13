@@ -1,6 +1,6 @@
 agent_id: agent_registry_synchronizer
 name: Registry, Rules, Contracts & Workflow Hook Synchronizer
-version: "1.2.0"
+version: "1.3.0"
 category: swarm_governance
 model: claude-3-5-haiku
 model_tier: tier_c
@@ -12,8 +12,9 @@ description: >-
   wire contracts under .nb/context/contracts/, and the workflows under
   .nb/agentic/workflows/ and .nb/agentic/custom/workflows/ into the
   agent_registry, context_rules, context_contracts, workflow_registry, and
-  workflow_hooks sections of settings.json and .claude/settings.json, detecting
-  and healing registry drift before any gatekeeper stage executes.
+  workflow_hooks sections of every supported LLM settings file (Claude Code,
+  Gemini CLI, Aider, Cursor CLI), detecting and healing registry drift before
+  any gatekeeper stage executes.
 sandboxed_worktree: .nb/workspaces/wt_registry_sync
 module_scope:
   allowed_modules:
@@ -24,6 +25,9 @@ module_scope:
     - .nb/context/contracts/
     - settings.json
     - .claude/settings.json
+    - .gemini/settings.json
+    - .aider.conf.yml
+    - .cursor/settings.json
   denied_paths:
     - .git
     - .nb/context/invariants
@@ -38,7 +42,7 @@ tools_and_capabilities:
     description: Enumerates workflows and their agent/trigger hook bindings across both workflow directories
     handler: workplace/core/agent_registry_synchronizer.py
   - name: reconcile_registries
-    description: Projects agents, rules, contracts, workflows, and hooks into settings.json registries idempotently
+    description: Projects agents, rules, contracts, workflows, and hooks into every supported LLM settings file idempotently
     handler: workplace/core/agent_registry_synchronizer.py
 workflow_bindings:
   - workflow_id: wf_pr_gatekeeper
@@ -71,5 +75,10 @@ system_prompt: |
      <workflow_key>__<event> for triggers), resolving the target workflow artifact
      across both workflow directories.
   5. Retain entries that intentionally point outside the managed directories.
-  6. Emit an explicit drift report; never mutate rule, contract, agent, or workflow contents.
-  7. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.
+  6. Materialize the same projection for every supported LLM settings target:
+     Claude Code (settings.json, .claude/settings.json), Gemini CLI
+     (.gemini/settings.json), Aider (.aider.conf.yml), and Cursor CLI
+     (.cursor/settings.json). For non-Claude providers, nest the platform block
+     under a "percipience" namespace so provider-native keys are preserved.
+  7. Emit an explicit drift report; never mutate rule, contract, agent, or workflow contents.
+  8. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.

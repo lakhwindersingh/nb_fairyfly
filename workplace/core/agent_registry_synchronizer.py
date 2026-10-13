@@ -2,7 +2,7 @@
 """
 Neutron Binary Percipience - Registry & Context Synchronizer
 
-Reconciles the curated registry sections embedded in the Claude settings files
+Reconciles the curated registry sections embedded in the AI agent settings files
 with the canonical filesystem sources of truth:
 
     agent_registry     <- .nb/agentic/custom/agents/*.yaml      (list, agent_id)
@@ -13,9 +13,20 @@ with the canonical filesystem sources of truth:
     workflow_hooks     <- agent autonomous_cicd_hooks /         (map, key -> path)
                           workflow_bindings + workflow triggers
 
-Synchronization Targets:
-    settings.json
-    .claude/settings.json
+Multi-LLM Targets
+-----------------
+The same registry projection is materialized for every supported coding agent
+(mirroring terminal_agent_ast_proxy.SUPPORTED_AGENTS):
+
+    claude   -> settings.json, .claude/settings.json   (top-level sections)
+    gemini   -> .gemini/settings.json                  (namespaced: percipience)
+    aider    -> .aider.conf.yml                        (namespaced: percipience)
+    cursor   -> .cursor/settings.json                  (namespaced: percipience)
+
+For the Claude targets the registry sections are projected at the document root
+(backward compatible). For the other providers the platform block is namespaced
+under ``percipience`` so provider-native keys are never clobbered, and a pointer
+to that provider's canonical AST context file is recorded.
 
 Semantics
 ---------
@@ -28,16 +39,14 @@ Semantics
 * workflow_hooks reconciles the workflow hook bindings declared by agent
   manifests (autonomous_cicd_hooks.target_workflows, workflow_bindings) and the
   event triggers declared inside workflow files across both workflow
-  directories. Each key is ``<agent_id>__<workflow_id>__<step_id>`` (or
-  ``<workflow_key>__<event>`` for event triggers) and its value is the workflow
-  artifact that implements the hook (falling back to the raw workflow_id when
-  the target workflow is not yet materialized).
+  directories.
 
 The synchronizer is deterministic and idempotent so it can be wired as a mandatory
 preflight step of the CI/CD gatekeeper workflow. It never mutates the underlying
 rule, contract, agent, or workflow artifacts.
 """
 
+import copy
 import json
 import re
 import sys
@@ -57,7 +66,7 @@ except ImportError:
 
 
 class AgentRegistrySynchronizer:
-    """Projects canonical agents, rules, contracts & workflows into settings registries."""
+    """Projects canonical agents, rules, contracts & workflows into AI agent settings."""
 
     AGENTS_DIR = ".nb/agentic/custom/agents"
     RULES_DIR = ".nb/context/rules"
@@ -65,6 +74,7 @@ class AgentRegistrySynchronizer:
     WORKFLOWS_DIR = ".nb/agentic/workflows"
     CUSTOM_WORKFLOWS_DIR = ".nb/agentic/custom/workflows"
     SETTINGS_FILES = ("settings.json", ".claude/settings.json")
+    PROVIDER_NAMESPACE = "percipience"
 
     # (settings_key, kind, source_dirs)
     SPECS: Tuple[Tuple[str, str, Tuple[str, ...]], ...] = (
@@ -73,6 +83,52 @@ class AgentRegistrySynchronizer:
         ("context_contracts", "map", (CONTRACTS_DIR,)),
         ("workflow_registry", "map", (WORKFLOWS_DIR, CUSTOM_WORKFLOWS_DIR)),
         ("workflow_hooks", "hooks", (WORKFLOWS_DIR, CUSTOM_WORKFLOWS_DIR)),
+    )
+
+    # Supported multi-LLM settings targets. ``namespace=None`` projects the
+    # registry sections at the document root (Claude layout); otherwise the
+    # platform block is nested under the ``percipience`` key.
+    LLM_TARGETS: Tuple[Dict[str, Any], ...] = (
+        {
+            "id": "claude",
+            "name": "Claude Code",
+            "format": "json",
+            "files": ("settings.json", ".claude/settings.json"),
+            "namespace": None,
+            "create": False,
+            "context_file": ".nb/context/percipience_claude_context.md",
+            "defaults": {},
+        },
+        {
+            "id": "gemini",
+            "name": "Gemini CLI",
+            "format": "json",
+            "files": (".gemini/settings.json",),
+            "namespace": PROVIDER_NAMESPACE,
+            "create": True,
+            "context_file": ".nb/context/percipience_gemini_context.md",
+            "defaults": {},
+        },
+        {
+            "id": "aider",
+            "name": "Aider",
+            "format": "yaml",
+            "files": (".aider.conf.yml",),
+            "namespace": PROVIDER_NAMESPACE,
+            "create": True,
+            "context_file": ".nb/context/percipience_aider_context.md",
+            "defaults": {"read": [".nb/context/percipience_aider_context.md"]},
+        },
+        {
+            "id": "cursor",
+            "name": "Cursor CLI",
+            "format": "json",
+            "files": (".cursor/settings.json",),
+            "namespace": PROVIDER_NAMESPACE,
+            "create": True,
+            "context_file": None,
+            "defaults": {},
+        },
     )
 
     def __init__(self, workspace_root: Optional[Path] = None):
@@ -254,13 +310,35 @@ class AgentRegistrySynchronizer:
     # Targets
     # ------------------------------------------------------------------
     def settings_paths(self) -> List[Path]:
+        """Returns the Claude settings file paths (backward-compatible helper)."""
         return [self.workspace_root / rel for rel in self.SETTINGS_FILES]
 
+    def _read_any(self, path: Path, fmt: str) -> Dict[str, Any]:
+        if not path.exists():
+            return {}
+        if fmt == "yaml":
+            data = self._load_yaml(path)
+        else:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        return data if isinstance(data, dict) else {}
+
     def _read_settings(self, path: Path) -> Dict[str, Any]:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        """Backward-compatible helper for the Claude JSON settings files."""
+        return self._read_any(path, "json")
 
     def _write_settings(self, path: Path, data: Dict[str, Any]) -> None:
+        """Backward-compatible helper for the Claude JSON settings files."""
+        self._write_any(path, data, "json")
+
+    def _write_any(self, path: Path, data: Dict[str, Any], fmt: str) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if fmt == "yaml":
+            if yaml is None:
+                raise RuntimeError("PyYAML is required to serialize YAML targets")
+            with open(path, "w", encoding="utf-8") as f:
+                yaml.safe_dump(data, f, sort_keys=False, default_flow_style=False, allow_unicode=True)
+            return
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
             f.write("\n")
@@ -326,17 +404,51 @@ class AgentRegistrySynchronizer:
         result.update(desired)
         return result
 
-    def _project(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Returns the fully synchronized settings document (non-mutating)."""
-        projected = json.loads(json.dumps(data))  # deep copy, preserves order
+    def _project_sections(self, current: Dict[str, Any]) -> Dict[str, Any]:
+        """Builds the reconciled registry sections from the canonical sources."""
+        sections: Dict[str, Any] = {}
         for settings_key, kind, sources in self.SPECS:
             if kind == "list":
-                projected[settings_key] = self.scan_agent_ids()
+                sections[settings_key] = self.scan_agent_ids()
             elif kind == "hooks":
-                projected[settings_key] = self._build_hooks(data.get(settings_key), sources)
+                sections[settings_key] = self._build_hooks(current.get(settings_key), sources)
             else:
-                projected[settings_key] = self._build_map(data.get(settings_key), sources)
+                sections[settings_key] = self._build_map(current.get(settings_key), sources)
+        return sections
+
+    def _project(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Returns the fully synchronized Claude-style settings document (root sections)."""
+        projected = copy.deepcopy(data)
+        projected.update(self._project_sections(data))
         return projected
+
+    def _project_target(self, target: Dict[str, Any], existing: Dict[str, Any]) -> Dict[str, Any]:
+        """Returns the synchronized settings document for one LLM target."""
+        namespace = target.get("namespace")
+        if namespace is None:
+            return self._project(existing)
+
+        projected = copy.deepcopy(existing)
+        for key, value in (target.get("defaults") or {}).items():
+            projected.setdefault(key, copy.deepcopy(value))
+
+        old_block = projected.get(namespace)
+        old_block = dict(old_block) if isinstance(old_block, dict) else {}
+
+        block: Dict[str, Any] = {
+            "provider": target["id"],
+            "display_name": target["name"],
+            "format": target["format"],
+        }
+        if target.get("context_file"):
+            block["context_file"] = target["context_file"]
+        block.update(self._project_sections(old_block))
+        projected[namespace] = block
+        return projected
+
+    @staticmethod
+    def _section_keys() -> Set[str]:
+        return {spec[0] for spec in AgentRegistrySynchronizer.SPECS}
 
     def _section_drift(self, current: Any, desired: Any, sources: Tuple[str, ...], kind: str) -> Dict[str, Any]:
         if kind == "list":
@@ -369,49 +481,115 @@ class AgentRegistrySynchronizer:
             "extra": sorted(set(managed_current.values()) - set(desired_map.values())),
         }
 
+    def _diff_target(self, target: Dict[str, Any], current: Dict[str, Any], desired: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+        namespace = target.get("namespace")
+        sections: Dict[str, Any] = {}
+        in_sync = True
+
+        if namespace is None:
+            for key, kind, sources in self.SPECS:
+                drift = self._section_drift(current.get(key), desired.get(key), sources, kind)
+                sections[key] = drift
+                in_sync = in_sync and drift["in_sync"]
+            return sections, in_sync
+
+        cur_block = current.get(namespace) if isinstance(current.get(namespace), dict) else {}
+        des_block = desired.get(namespace) if isinstance(desired.get(namespace), dict) else {}
+        for key, kind, sources in self.SPECS:
+            drift = self._section_drift(cur_block.get(key), des_block.get(key), sources, kind)
+            sections[key] = drift
+            in_sync = in_sync and drift["in_sync"]
+
+        keys = self._section_keys()
+        cur_meta = {k: v for k, v in cur_block.items() if k not in keys}
+        des_meta = {k: v for k, v in des_block.items() if k not in keys}
+        meta_sync = cur_meta == des_meta
+        sections["_metadata"] = {
+            "in_sync": meta_sync,
+            "count": len(des_meta),
+            "missing": sorted(set(des_meta) - set(cur_meta)),
+            "extra": sorted(set(cur_meta) - set(des_meta)),
+        }
+        return sections, (in_sync and meta_sync and cur_block == des_block)
+
+    def _changed_sections(self, target: Dict[str, Any], current: Dict[str, Any], desired: Dict[str, Any]) -> List[str]:
+        namespace = target.get("namespace")
+        if namespace is None:
+            return [key for key, _, _ in self.SPECS if current.get(key) != desired.get(key)]
+
+        keys = self._section_keys()
+        cur_block = current.get(namespace) if isinstance(current.get(namespace), dict) else {}
+        des_block = desired.get(namespace) if isinstance(desired.get(namespace), dict) else {}
+        changed = [key for key, _, _ in self.SPECS if cur_block.get(key) != des_block.get(key)]
+        cur_meta = {k: v for k, v in cur_block.items() if k not in keys}
+        des_meta = {k: v for k, v in des_block.items() if k not in keys}
+        if cur_meta != des_meta:
+            changed.append("_metadata")
+        return changed
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
     def check(self) -> Dict[str, Any]:
-        """Non-mutating drift report for every managed section of every settings file."""
-        report: Dict[str, Any] = {"files": {}, "drift": False}
-        for path in self.settings_paths():
-            if not path.exists():
-                continue
-            data = self._read_settings(path)
-            desired = self._project(data)
-            sections: Dict[str, Any] = {}
-            for settings_key, kind, sources in self.SPECS:
-                drift = self._section_drift(data.get(settings_key), desired[settings_key], sources, kind)
-                sections[settings_key] = drift
-                if not drift["in_sync"]:
+        """Non-mutating drift report for every managed section of every LLM settings file."""
+        report: Dict[str, Any] = {"files": {}, "missing": [], "drift": False}
+        for target in self.LLM_TARGETS:
+            fmt = target["format"]
+            for rel in target["files"]:
+                path = self.workspace_root / rel
+                if not path.exists():
+                    if target.get("create", False):
+                        report["missing"].append(rel)
+                        report["drift"] = True
+                    continue
+                current = self._read_any(path, fmt)
+                desired = self._project_target(target, current)
+                sections, in_sync = self._diff_target(target, current, desired)
+                report["files"][rel] = sections
+                if not in_sync:
                     report["drift"] = True
-            report["files"][str(path.relative_to(self.workspace_root))] = sections
         return report
 
     def sync(self) -> Dict[str, Any]:
         """
-        Writes the fully synchronized registry sections into every settings file.
+        Writes the synchronized registry sections into every LLM settings file.
         Idempotent: files already in sync are left byte-identical.
         """
-        result: Dict[str, Any] = {"status": "IN_SYNC", "updated": [], "unchanged": [], "sections": {}}
-        for path in self.settings_paths():
-            if not path.exists():
-                continue
-            data = self._read_settings(path)
-            desired = self._project(data)
-            rel = str(path.relative_to(self.workspace_root))
+        result: Dict[str, Any] = {
+            "status": "IN_SYNC",
+            "updated": [],
+            "created": [],
+            "unchanged": [],
+            "missing": [],
+            "sections": {},
+        }
+        for target in self.LLM_TARGETS:
+            fmt = target["format"]
+            for rel in target["files"]:
+                path = self.workspace_root / rel
+                exists = path.exists()
+                if not exists and not target.get("create", False):
+                    result["missing"].append(rel)
+                    continue
 
-            changed_sections = [k for k, kind, src in self.SPECS if data.get(k) != desired[k]]
-            if not changed_sections:
-                result["unchanged"].append(rel)
-                continue
+                current = self._read_any(path, fmt) if exists else {}
+                desired = self._project_target(target, current)
 
-            self._write_settings(path, desired)
-            result["updated"].append(rel)
-            result["sections"][rel] = changed_sections
+                if not exists:
+                    self._write_any(path, desired, fmt)
+                    result["created"].append(rel)
+                    result["sections"][rel] = ["*created*"]
+                    continue
 
-        if result["updated"]:
+                if current == desired:
+                    result["unchanged"].append(rel)
+                    continue
+
+                self._write_any(path, desired, fmt)
+                result["updated"].append(rel)
+                result["sections"][rel] = self._changed_sections(target, current, desired)
+
+        if result["updated"] or result["created"]:
             result["status"] = "SYNCHRONIZED"
         return result
 
