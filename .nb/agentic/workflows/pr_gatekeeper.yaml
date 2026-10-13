@@ -2,10 +2,18 @@ workflow_id: wf_pr_gatekeeper
 description: Automated verification gate workflow run on every incoming pull request
   with token savings metering, specialist agent plugins, and autonomous living documentation.
 steps:
+- id: step_registry_sync
+  name: Agent Registry & Manifest Synchronization (agent_registry_synchronizer)
+  executor: agent_registry_synchronizer
+  tier: Tier_C
+  mandatory: true
+  fail_action: QUARANTINE_AND_HALT
 - id: step_ast_prune
   name: AST Symbol Pruning & Caching
   executor: platform.ast_pruner
   max_duration_sec: 15
+  depends_on:
+  - step_registry_sync
 - id: step_cve_sentinel
   name: Supply-Chain & Dependency CVE Audit (agent_dependency_cve_sentinel)
   executor: agent_dependency_cve_sentinel

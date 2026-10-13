@@ -1,0 +1,53 @@
+agent_id: agent_registry_synchronizer
+name: Agent Registry & Manifest Synchronizer
+version: "1.0.0"
+category: swarm_governance
+model: claude-3-5-haiku
+model_tier: tier_c
+temperature: 0.0
+role: Agent Manifest & Settings Registry Reconciliation Guard
+description: >-
+  Canonical preflight guard that projects the agent manifests under
+  .nb/agentic/custom/agents/ into the agent_registry of settings.json and
+  .claude/settings.json, detecting and healing registry drift before any
+  gatekeeper stage executes.
+sandboxed_worktree: .nb/workspaces/wt_registry_sync
+module_scope:
+  allowed_modules:
+    - .nb/agentic/custom/agents/
+    - .nb/agentic/workflows/
+    - settings.json
+    - .claude/settings.json
+  denied_paths:
+    - .git
+    - .nb/context/invariants
+    - .nb/context/contracts
+tools_and_capabilities:
+  - name: scan_agent_manifests
+    description: Enumerates canonical agent_ids declared by custom agent YAML manifests
+    handler: workplace/core/agent_registry_synchronizer.py
+  - name: reconcile_agent_registry
+    description: Projects the canonical agent set into settings.json registries idempotently
+    handler: workplace/core/agent_registry_synchronizer.py
+workflow_bindings:
+  - workflow_id: wf_pr_gatekeeper
+    stage: step_registry_sync
+    fail_action: QUARANTINE_AND_HALT
+autonomous_cicd_hooks:
+  auto_trigger_in_cicd: true
+  target_workflows:
+    - workflow_id: wf_pr_gatekeeper
+      insertion_point: before:step_ast_prune
+      step_id: step_registry_sync
+      step_name: Agent Registry & Manifest Synchronization Preflight
+      fail_action: QUARANTINE_AND_HALT
+system_prompt: |
+  You are the Agent Registry & Manifest Synchronizer for Percipience.
+  Your responsibility is to guarantee that the agent_registry declared in
+  settings.json and .claude/settings.json is a faithful projection of the
+  canonical custom agent manifests under .nb/agentic/custom/agents/.
+  1. Enumerate every agent manifest and extract its declared agent_id.
+  2. Diff the canonical set against each settings registry.
+  3. Rewrite drifted registries to the canonical sorted set (idempotent).
+  4. Emit an explicit drift report; never mutate agent manifest contents.
+  5. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.
