@@ -127,6 +127,89 @@ class TestAgentRegistrySynchronizer(unittest.TestCase):
         self.assertGreaterEqual(len(syncer.scan_files(syncer.CONTRACTS_DIR)), 20)
         self.assertFalse(syncer.check()["drift"], "Registry drift detected in live settings files")
 
+    def _make_workflow_workspace(self, workflows, custom_workflows, hook_agents, settings):
+        tmp = tempfile.TemporaryDirectory()
+        root = Path(tmp.name)
+
+        for rel_dir, files in (
+            (AgentRegistrySynchronizer.WORKFLOWS_DIR, workflows),
+            (AgentRegistrySynchronizer.CUSTOM_WORKFLOWS_DIR, custom_workflows),
+        ):
+            target = root / rel_dir
+            target.mkdir(parents=True, exist_ok=True)
+            for name, content in files.items():
+                (target / name).write_text(content, encoding="utf-8")
+
+        agents = root / ".nb" / "agentic" / "custom" / "agents"
+        agents.mkdir(parents=True, exist_ok=True)
+        for name, content in hook_agents.items():
+            (agents / name).write_text(content, encoding="utf-8")
+
+        (root / "settings.json").write_text(json.dumps(settings, indent=2) + "\n", encoding="utf-8")
+        claude = root / ".claude"
+        claude.mkdir(parents=True, exist_ok=True)
+        (claude / "settings.json").write_text(json.dumps(settings, indent=2) + "\n", encoding="utf-8")
+        self.addCleanup(tmp.cleanup)
+        return root
+
+    def test_07_projects_workflow_registry_and_hooks(self):
+        """Workflows from both directories and agent/workflow hook bindings are projected."""
+        workflows = {
+            "pr_gatekeeper.yaml": "workflow_id: wf_pr_gatekeeper\nsteps:\n- id: step_ast\n  executor: platform.ast_pruner\n",
+        }
+        custom_workflows = {
+            "flow_a.yaml": (
+                "workflow_id: flow_a\n"
+                "trigger:\n  type: manual_or_billing_event\n"
+                "  events:\n  - tier_package_request\n  - billing_plan_updated\n"
+            ),
+        }
+        hook_agents = {
+            "agent_hook.yaml": (
+                "metadata:\n  agent_id: agent_hook\n"
+                "autonomous_cicd_hooks:\n  target_workflows:\n"
+                "  - workflow_id: wf_pr_gatekeeper\n    step_id: step_hook_insert\n"
+                "workflow_bindings:\n"
+                "  - workflow_id: flow_a\n    stage: stage_hook\n"
+                "  - workflow_id: wf_unmaterialized\n    stage: stage_future\n"
+            ),
+        }
+        settings = {
+            "agent_registry": [],
+            "context_rules": {},
+            "context_contracts": {},
+            "workflow_registry": {},
+            "workflow_hooks": {},
+        }
+        root = self._make_workflow_workspace(workflows, custom_workflows, hook_agents, settings)
+        syncer = AgentRegistrySynchronizer(root)
+
+        registry = syncer._project(settings)["workflow_registry"]
+        self.assertEqual(registry["pr_gatekeeper"], ".nb/agentic/workflows/pr_gatekeeper.yaml")
+        self.assertEqual(registry["flow_a"], ".nb/agentic/custom/workflows/flow_a.yaml")
+
+        hooks = syncer._project(settings)["workflow_hooks"]
+        self.assertEqual(hooks["agent_hook__wf_pr_gatekeeper__step_hook_insert"], ".nb/agentic/workflows/pr_gatekeeper.yaml")
+        self.assertEqual(hooks["agent_hook__flow_a__stage_hook"], ".nb/agentic/custom/workflows/flow_a.yaml")
+        self.assertEqual(hooks["agent_hook__wf_unmaterialized__stage_future"], "wf_unmaterialized")
+        self.assertEqual(hooks["flow_a__tier_package_request"], ".nb/agentic/custom/workflows/flow_a.yaml")
+        self.assertEqual(hooks["flow_a__billing_plan_updated"], ".nb/agentic/custom/workflows/flow_a.yaml")
+
+        self.assertEqual(syncer.sync()["status"], "SYNCHRONIZED")
+        second = syncer.sync()
+        self.assertEqual(second["status"], "IN_SYNC")
+        self.assertEqual(second["updated"], [])
+        self.assertFalse(syncer.check()["drift"])
+
+    def test_08_live_workflow_sections_populated_and_in_sync(self):
+        """The committed settings project both workflow directories and their hooks."""
+        syncer = AgentRegistrySynchronizer(self.workspace_root)
+        projected = syncer._project(syncer._read_settings(self.workspace_root / "settings.json"))
+        self.assertGreaterEqual(len(projected["workflow_registry"]), 10)
+        self.assertGreaterEqual(len(projected["workflow_hooks"]), 10)
+        self.assertIn("pr_gatekeeper", projected["workflow_registry"])
+        self.assertFalse(syncer.check()["drift"], "Workflow registry/hook drift detected")
+
 
 if __name__ == "__main__":
     unittest.main()

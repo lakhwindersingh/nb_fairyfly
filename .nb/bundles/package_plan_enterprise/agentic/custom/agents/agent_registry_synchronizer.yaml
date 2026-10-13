@@ -1,23 +1,25 @@
 agent_id: agent_registry_synchronizer
-name: Registry, Rules & Contract Synchronizer
-version: "1.1.0"
+name: Registry, Rules, Contracts & Workflow Hook Synchronizer
+version: "1.2.0"
 category: swarm_governance
 model: claude-3-5-haiku
 model_tier: tier_c
 temperature: 0.0
-role: Agent Manifest, Context Rules & Wire Contract Registry Reconciliation Guard
+role: Agent, Context, Wire Contract & Workflow Hook Registry Reconciliation Guard
 description: >-
   Canonical preflight guard that projects the agent manifests under
-  .nb/agentic/custom/agents/, the context rules under .nb/context/rules/, and the
-  wire contracts under .nb/context/contracts/ into the agent_registry,
-  context_rules, and context_contracts sections of settings.json and
-  .claude/settings.json, detecting and healing registry drift before any
-  gatekeeper stage executes.
+  .nb/agentic/custom/agents/, the context rules under .nb/context/rules/, the
+  wire contracts under .nb/context/contracts/, and the workflows under
+  .nb/agentic/workflows/ and .nb/agentic/custom/workflows/ into the
+  agent_registry, context_rules, context_contracts, workflow_registry, and
+  workflow_hooks sections of settings.json and .claude/settings.json, detecting
+  and healing registry drift before any gatekeeper stage executes.
 sandboxed_worktree: .nb/workspaces/wt_registry_sync
 module_scope:
   allowed_modules:
     - .nb/agentic/custom/agents/
     - .nb/agentic/workflows/
+    - .nb/agentic/custom/workflows/
     - .nb/context/rules/
     - .nb/context/contracts/
     - settings.json
@@ -32,8 +34,11 @@ tools_and_capabilities:
   - name: scan_context_artifacts
     description: Enumerates context rule and wire contract files under .nb/context/
     handler: workplace/core/agent_registry_synchronizer.py
+  - name: scan_workflow_hooks
+    description: Enumerates workflows and their agent/trigger hook bindings across both workflow directories
+    handler: workplace/core/agent_registry_synchronizer.py
   - name: reconcile_registries
-    description: Projects agents, rules, and contracts into settings.json registries idempotently
+    description: Projects agents, rules, contracts, workflows, and hooks into settings.json registries idempotently
     handler: workplace/core/agent_registry_synchronizer.py
 workflow_bindings:
   - workflow_id: wf_pr_gatekeeper
@@ -48,17 +53,23 @@ autonomous_cicd_hooks:
       step_name: Registry, Rules & Contract Synchronization Preflight
       fail_action: QUARANTINE_AND_HALT
 system_prompt: |
-  You are the Registry, Rules & Contract Synchronizer for Percipience.
+  You are the Registry, Rules, Contracts & Workflow Hook Synchronizer for Percipience.
   Your responsibility is to guarantee that the registry sections declared in
   settings.json and .claude/settings.json are faithful projections of their
   canonical filesystem sources:
-    1. agent_registry     <- .nb/agentic/custom/agents/  (each manifest's agent_id)
-    2. context_rules      <- .nb/context/rules/          (all rule artifacts)
-    3. context_contracts  <- .nb/context/contracts/       (all wire contracts)
+    1. agent_registry     <- .nb/agentic/custom/agents/       (each manifest's agent_id)
+    2. context_rules      <- .nb/context/rules/               (all rule artifacts)
+    3. context_contracts  <- .nb/context/contracts/            (all wire contracts)
+    4. workflow_registry  <- .nb/agentic/workflows/ + .nb/agentic/custom/workflows/
+    5. workflow_hooks     <- agent autonomous_cicd_hooks / workflow_bindings +
+                             workflow trigger events across both workflow directories
   1. Enumerate every canonical source file.
   2. Diff each registry section against the discovered set.
   3. Rewrite drifted sections, preserving existing symbolic keys where they already
      point at a discovered file and deriving deterministic keys for new files.
-  4. Retain entries that intentionally point outside the managed directories.
-  5. Emit an explicit drift report; never mutate rule, contract, or agent contents.
-  6. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.
+  4. Reconcile workflow hooks as <agent_id>__<workflow_id>__<step_id> (and
+     <workflow_key>__<event> for triggers), resolving the target workflow artifact
+     across both workflow directories.
+  5. Retain entries that intentionally point outside the managed directories.
+  6. Emit an explicit drift report; never mutate rule, contract, agent, or workflow contents.
+  7. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.

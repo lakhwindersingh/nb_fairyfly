@@ -132,5 +132,35 @@
     "agent_ui_design_system_architect",
     "agent_vscode_extension_architect",
     "agent_vscode_webview_ux_engineer"
-  ]
+  ],
+  "workflow_registry": {
+    "basic_autonomous_cicd": ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml",
+    "commercial_packaging_provisioning_flow": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
+    "enterprise_sdlc": ".nb/agentic/custom/workflows/enterprise_sdlc.yaml",
+    "intellij_pycharm_plugin_delivery_flow": ".nb/agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml",
+    "iot_mobile_delivery_flow": ".nb/agentic/custom/workflows/iot_mobile_delivery_flow.yaml",
+    "saas_portal_delivery_flow": ".nb/agentic/custom/workflows/saas_portal_delivery_flow.yaml",
+    "vscode_plugin_delivery_flow": ".nb/agentic/custom/workflows/vscode_plugin_delivery_flow.yaml",
+    "derivation_pipeline": ".nb/agentic/workflows/derivation_pipeline.yaml",
+    "pr_gatekeeper": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "wf_master_enterprise_ui_design_system_derivation": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml"
+  },
+  "workflow_hooks": {
+    "agent_adversarial_fuzzer__wf_pr_gatekeeper__step_adversarial_fuzz_audit": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "agent_ambiguity_resolver__wf_derivation_pipeline__step_evaluate_ambiguity_gate": ".nb/agentic/workflows/derivation_pipeline.yaml",
+    "agent_consolidation_synthesizer__wf_pr_gatekeeper__step_topological_consolidation": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "agent_master_enterprise_ui_design_system__wf_master_enterprise_ui_design_system_derivation__step_plan_root": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_complex_data_and_governance_widgets__wf_master_enterprise_ui_design_system_derivation__step_mod_complex_data_and_governance_widgets": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_core_component_library__wf_master_enterprise_ui_design_system_derivation__step_mod_core_component_library": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_design_tokens_and_theming__wf_master_enterprise_ui_design_system_derivation__step_mod_design_tokens_and_theming": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_governance_and_showcase__wf_master_enterprise_ui_design_system_derivation__step_mod_governance_and_showcase": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_realtime_data_and_state__wf_master_enterprise_ui_design_system_derivation__step_mod_realtime_data_and_state": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_mod_surface_specialization__wf_master_enterprise_ui_design_system_derivation__step_mod_surface_specialization": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
+    "agent_quality_guard__wf_pr_gatekeeper__step_quality_guard": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "agent_registry_synchronizer__wf_pr_gatekeeper__step_registry_sync": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "agent_test_finops_auditor__wf_pr_gatekeeper__step_test_finops_auditor": ".nb/agentic/workflows/pr_gatekeeper.yaml",
+    "commercial_packaging_provisioning_flow__billing_plan_updated": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
+    "commercial_packaging_provisioning_flow__tenant_provision_request": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
+    "commercial_packaging_provisioning_flow__tier_package_request": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml"
+  }
 }
