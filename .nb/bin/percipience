@@ -115,6 +115,7 @@ DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePro
     ["TokenOptimizationConfig", "UnifiedTokenOptimizer"]
 )
 HandoffValidator = _load_engine("handoff_validator", ["HandoffValidator"])
+PlanModuleOrchestrator = _load_engine("plan_module_orchestrator", ["PlanModuleOrchestrator"])
 SemanticParityEngine = _load_engine("semantic_parity_engine", ["SemanticParityEngine"])
 DualReconciliationEngine = _load_engine("reconciliation_engine", ["DualReconciliationEngine"])
 RequestFormalizerEngine = _load_engine("request_formalizer", ["RequestFormalizerEngine"])
@@ -555,6 +556,44 @@ def cmd_gate(args):
         print("   [WORM] Mirroring skipped (Requires Enterprise WORM Egress engine)")
 
     print(f"✅ All 7 Gatekeeper verification stages PASSED. Token report emitted to workplace/docs/reports/token_savings_report.md. Safe to merge.")
+
+def cmd_plan(args):
+    """Displays commercial plan status, or autonomously orchestrates plan submodules."""
+    action = getattr(args, "plan_action", None)
+    if not action:
+        # Preserve the historical `percipience plan` status behavior.
+        return cmd_status(args)
+    _require_engine(PlanModuleOrchestrator, "plan_module_orchestrator", "plan", "Business / Enterprise")
+    plan_dir = Path(getattr(args, "plan_dir", "") or ".")
+    if not plan_dir.is_absolute():
+        plan_dir = REPO_ROOT / plan_dir
+
+    orch = PlanModuleOrchestrator(REPO_ROOT)
+    if action == "orchestrate":
+        result = orch.synchronize(
+            plan_dir=plan_dir,
+            apply=not getattr(args, "check", False),
+            sync_registries=not getattr(args, "no_sync_registries", False),
+            bundle_tier=getattr(args, "bundle_tier", None),
+            bundle_target=getattr(args, "bundle_target", "intellij"),
+            provision=getattr(args, "provision", False),
+        )
+        print(json.dumps(result, indent=2))
+        if result.get("status") not in ("SYNCHRONIZED", "CHECKED"):
+            sys.exit(1)
+    elif action == "bundle":
+        result = orch.bundle(
+            tier=getattr(args, "tier", "plan_business"),
+            target=getattr(args, "target", "intellij"),
+            provision=getattr(args, "provision", False),
+        )
+        print(json.dumps(result, indent=2))
+        if result.get("status") not in ("PACKAGED", "PROVISIONED"):
+            sys.exit(1)
+    else:
+        print(f"⚠️  Unknown plan action '{action}'.")
+        sys.exit(1)
+
 
 def cmd_rollback(args):
     _require_engine(PoisoningSentinel, "poisoning_sentinel", "rollback", "Free / Team / Business / Enterprise")
@@ -2368,8 +2407,20 @@ def main():
     p_stat = subparsers.add_parser("status", help="Show active plan bundle tier, provisioned core engines, and feature availability")
     p_stat.set_defaults(func=cmd_status)
 
-    p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan information and engine status")
-    p_plan_cmd.set_defaults(func=cmd_status)
+    p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan info, or orchestrate plan submodules (plan orchestrate/bundle)")
+    p_plan_cmd_subs = p_plan_cmd.add_subparsers(dest="plan_action")
+    p_plan_orch = p_plan_cmd_subs.add_parser("orchestrate", help="Project a plan + its submodules into agents, rules & a derivation workflow")
+    p_plan_orch.add_argument("--plan-dir", required=True, help="Plan directory (e.g. .nb/plan/master/enterprise-ui-design-system)")
+    p_plan_orch.add_argument("--check", action="store_true", help="Report drift without writing")
+    p_plan_orch.add_argument("--no-sync-registries", action="store_true", help="Skip settings.json reconciliation")
+    p_plan_orch.add_argument("--bundle-tier", default=None, help="Tier to package after generation (e.g. plan_business)")
+    p_plan_orch.add_argument("--bundle-target", default="intellij", help="Provisioning target when --provision is set")
+    p_plan_orch.add_argument("--provision", action="store_true", help="Provision artifacts onto a concrete target")
+    p_plan_bundle = p_plan_cmd_subs.add_parser("bundle", help="Bundle generated artifacts into a commercial release package")
+    p_plan_bundle.add_argument("--tier", default="plan_business", help="Commercial tier to package")
+    p_plan_bundle.add_argument("--target", default="intellij", help="Provisioning target (intellij/vscode/portal)")
+    p_plan_bundle.add_argument("--provision", action="store_true", help="Provision onto the concrete target")
+    p_plan_cmd.set_defaults(func=cmd_plan)
 
     # test
     p_test = subparsers.add_parser("test", help="Execute automatable AI-assisted test suites across architectural tiers")
