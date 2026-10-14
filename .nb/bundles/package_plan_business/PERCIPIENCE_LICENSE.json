@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_business_459949a5dee4",
+  "license_id": "lic_plan_business_d4bf43be0126",
   "tenant_id": "tenant_business_test",
   "tier": "plan_business",
   "tier_name": "Business Tier",
@@ -17,8 +17,8 @@
     "basic_platform_tools_exposure": true,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-14T01:57:23.435911+00:00",
-  "total_files": 167,
+  "issued_at": "2026-10-14T18:33:00.772357+00:00",
+  "total_files": 168,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -39,7 +39,7 @@
     "core/attention_budgeter.py": "22b14dea8e9d1209a07a63d5a57cb24a2077ec6985f1418141c886ecfef9ade3",
     "core/autonomous_cicd.py": "39d0723b26adc05025735e3fa967a791a17a79224ce311dc9050c256f80e8e39",
     "core/cognitive_router.py": "b786862a44a95a9c4f9dcba0014bfd954226be9e7405a77cf695424e46d5b640",
-    "core/commercial_packager_provisioner.py": "8b9865752b5958aa9b81521dfa16c691c697666fbe50ffb1da2c25272cc44365",
+    "core/commercial_packager_provisioner.py": "18aebfa83329c12bd61c61d97c8395adec511848cedd65638cbdd0f23992d389",
     "core/consensus_quorum_engine.py": "53caaad2c6b2ad377bc6a768e9473a4f7b7088c53e3de37e2c6a7dfac79138ca",
     "core/consolidation_synthesizer.py": "e2be2b6b7525c207676c38bcd46e50c651fcd8eb19c017e776efbfc2c538b946",
     "core/container_plan_executor.py": "f8ab2a8a944767305c2338351a0c303ea27d934cdaa7d1816cf7160efd22a897",
@@ -67,6 +67,7 @@
     "core/output_guardrail_validator.py": "1ae8cefed78946bede8c6169b2b1ce283bf154d5b91e3151a27733095da6f2cd",
     "core/pii_sanitizer.py": "9c2535f096aab621831ba3c5fd7f0b439cdaeb463421f641ce9dd791ffb8417a",
     "core/plan_module_orchestrator.py": "7b94b3060b45c95243fd87094d15e2db7a25215fafefc6908d8e9cdd939fe4a1",
+    "core/plugin_update_resolver.py": "9625a1773f5c964679343a627214de5836e3eddeea7b3ab4e0feddd75b7d1246",
     "core/poisoning_sentinel.py": "b3e8f304ef5efb5a5747bdbf744a93d3746fee58e49ba4be154e79f72dd417d7",
     "core/prompt_benchmark_engine.py": "2df0c81df7d8e974a93e7a8e06d3691e0289930597a1ae4685c48bb1e7e7e0a6",
     "core/prompt_drift_sentinel.py": "d31802fc7478b60a16b265b119c19e69dd703ceb0a07f8d6565a652fb039fafa",
@@ -188,5 +189,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "b9ede60bbbf4f331360107a9f5daf4e66f7cd4ef76a0d9a6fb401230f211db1c"
+  "signature_sha256": "b5f95365baa77b4bdc1068cd975d0288c92d1ced53898477e6d1ab7eb2dbd8a2"
 }

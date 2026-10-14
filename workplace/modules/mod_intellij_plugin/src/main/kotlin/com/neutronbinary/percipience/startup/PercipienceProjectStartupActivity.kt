@@ -7,6 +7,7 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.neutronbinary.percipience.bootstrap.WorkspaceBootstrapper
+import com.neutronbinary.percipience.services.PluginUpdateService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -21,7 +22,11 @@ class PercipienceProjectStartupActivity : ProjectActivity {
 
         if (!isConfigured) {
             promptWorkspaceInitialization(project, basePath)
+            return
         }
+
+        // Offline auto-upgrade: scan the local file system for a newer plugin build
+        PluginUpdateService.getInstance(project).requestCheck()
     }
 
     companion object {

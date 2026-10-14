@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_6fd82b447e3f",
+  "license_id": "lic_plan_enterprise_841cf9cdbdd6",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,8 +18,8 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-14T01:58:01.148578+00:00",
-  "total_files": 182,
+  "issued_at": "2026-10-14T18:33:32.614043+00:00",
+  "total_files": 183,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -42,7 +42,7 @@
     "core/autonomous_cicd.py": "39d0723b26adc05025735e3fa967a791a17a79224ce311dc9050c256f80e8e39",
     "core/byor_adapter.py": "72881f08ae56503d86e736dfc5a4e978e6fa740f9c829c9cd8e43e38f5b600ac",
     "core/cognitive_router.py": "b786862a44a95a9c4f9dcba0014bfd954226be9e7405a77cf695424e46d5b640",
-    "core/commercial_packager_provisioner.py": "8b9865752b5958aa9b81521dfa16c691c697666fbe50ffb1da2c25272cc44365",
+    "core/commercial_packager_provisioner.py": "18aebfa83329c12bd61c61d97c8395adec511848cedd65638cbdd0f23992d389",
     "core/config_manager.py": "169c4b7ae31d43458f01c7b60ff4eb907bab536127a0c2c9580ba527ac47dce5",
     "core/consensus_quorum_engine.py": "53caaad2c6b2ad377bc6a768e9473a4f7b7088c53e3de37e2c6a7dfac79138ca",
     "core/consolidation_synthesizer.py": "e2be2b6b7525c207676c38bcd46e50c651fcd8eb19c017e776efbfc2c538b946",
@@ -76,6 +76,7 @@
     "core/output_guardrail_validator.py": "1ae8cefed78946bede8c6169b2b1ce283bf154d5b91e3151a27733095da6f2cd",
     "core/pii_sanitizer.py": "9c2535f096aab621831ba3c5fd7f0b439cdaeb463421f641ce9dd791ffb8417a",
     "core/plan_module_orchestrator.py": "7b94b3060b45c95243fd87094d15e2db7a25215fafefc6908d8e9cdd939fe4a1",
+    "core/plugin_update_resolver.py": "9625a1773f5c964679343a627214de5836e3eddeea7b3ab4e0feddd75b7d1246",
     "core/poisoning_sentinel.py": "b3e8f304ef5efb5a5747bdbf744a93d3746fee58e49ba4be154e79f72dd417d7",
     "core/project_policy_engine.py": "b4362948eaef45154ac2a1d5c8091792fd12a73b9e39b18b8a2501e438761969",
     "core/prompt_benchmark_engine.py": "2df0c81df7d8e974a93e7a8e06d3691e0289930597a1ae4685c48bb1e7e7e0a6",
@@ -204,5 +205,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "0184555061226c3b61ca5f01328da11ea2c78929c9d97e55cd131b24b8a2ddfa"
+  "signature_sha256": "1ba97ac1f2e9763fa7653150954d12b64d4db1d91eb995ef32ee6ff1fb8183fc"
 }

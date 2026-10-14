@@ -413,6 +413,15 @@ To test and verify dynamic permission enforcement across all tiers in staging an
 
 Each tier bundle is assembled by `CommercialPackagerProvisioner.package_tier()`, which mirrors the `CORE_TIER_RULES` engine gating with a per-tier `allowed_workflows` entitlement set: Free ships the baseline CI/CD + IntelliJ delivery flows, Team adds the VS Code delivery flow, Business adds the commercial packaging, SaaS portal, and IoT/mobile flows, and Enterprise ships every flow (including `enterprise_sdlc.yaml`). Git guardrail hooks (`percipience/hooks/pre-commit.sh`) and the installer (`percipience/scripts/install_git_hook.sh`) are bundled into every tier and hydrated into `.nb/git_hooks/` and `.nb/scripts/` by `WorkspaceBootstrapper.kt`.
 
+### 6.5. Offline Local-Filesystem Plugin Auto-Upgrade
+Every tier bundle embeds a canonical version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`, `released_at`), emitted by `CommercialPackagerProvisioner.package_tier()` / `provision_target()` via the canonical Python engine `plugin_update_resolver.py` (mirrored by the Kotlin `PluginUpdateChecker`). No network access is ever performed:
+
+1. **Discover** — `PluginUpdateChecker.discoverLocalCandidates()` scans the ordered local locations `PERCIPIENCE_UPDATE_DIR` → `<workspace>/.nb/bundles` → `<workspace>/.nb/updates` → `~/.percipience/updates` for staged update directories (containing `version.json`) and prebuilt `.jar`/`.zip` plugin archives, transparently unwrapping the JetBrains `<plugin>/lib/<plugin>.jar` distribution layout.
+2. **Select** — `selectUpgrade()` chooses the highest `plugin_version` that is strictly newer than the installed plugin and whose `manifest_schema` matches; same/older versions and incompatible schemas are rejected.
+3. **Apply** — `applyRuntimeUpgrade()` materializes the candidate payload into the workspace `.nb/` tree (`core`, `bin`, `config`, `workflows`, `hooks`, `scripts`, `plan`) with executable bits for `bin`/`hooks`/`scripts`, then records the applied version in `.nb/config/runtime_version.json`.
+
+`PercipienceProjectStartupActivity` triggers the check automatically for configured workspaces; the **Check for Percipience Updates** action (`CheckForUpdatesAction`) triggers it on demand. `PluginUpdateService` surfaces an interactive upgrade prompt, or auto-applies when `PERCIPIENCE_AUTO_UPGRADE=1`. End-to-end coverage lives in `test_21_offline_plugin_auto_upgrade`.
+
 ---
 
 ## 7. Model Context Protocol (MCP) & Agent Interoperability Across All Bundles

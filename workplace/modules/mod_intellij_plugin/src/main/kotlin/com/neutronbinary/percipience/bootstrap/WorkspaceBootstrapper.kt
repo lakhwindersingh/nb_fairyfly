@@ -157,6 +157,7 @@ if __name__ == "__main__":
             "otel_exporter.py",
             "output_guardrail_validator.py",
             "pii_sanitizer.py",
+            "plugin_update_resolver.py",
             "poisoning_sentinel.py",
             "prompt_benchmark_engine.py",
             "prompt_drift_sentinel.py",

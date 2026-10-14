@@ -30,6 +30,18 @@ def _get_merkle_engine():
             return None
 
 
+def _get_update_resolver():
+    try:
+        import plugin_update_resolver
+        return plugin_update_resolver
+    except ImportError:
+        try:
+            from core import plugin_update_resolver
+            return plugin_update_resolver
+        except ImportError:
+            return None
+
+
 class CommercialPackagerProvisioner:
     """
     Manages tier-based packaging, artifact filtering, license generation,
@@ -62,7 +74,7 @@ class CommercialPackagerProvisioner:
                 "reconciliation_engine.py", "request_formalizer.py", "semantic_prompt_cache.py",
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py", "nbpack_envelope.py",
                 "commercial_packager_provisioner.py", "handoff_validator.py", "pii_sanitizer.py",
-                "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py"
+                "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py", "plugin_update_resolver.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": False,
@@ -90,7 +102,7 @@ class CommercialPackagerProvisioner:
                 "trajectory_recorder.py", "tree_sitter_daemon.py", "workflow_orchestrator.py",
                 "worktree_engine.py", "prompt_drift_sentinel.py", "doc_drift_synchronizer.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
-                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py"
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py", "plugin_update_resolver.py"
             },
             "allow_nbpack_compilation": False,
             "allow_custom_agent_creation": True,
@@ -120,7 +132,7 @@ class CommercialPackagerProvisioner:
                 "nbpack_envelope.py", "agent_plugin_engine.py", "semantic_parity_engine.py",
                 "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
-                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py",
+                "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py", "plugin_update_resolver.py",
                 "otel_exporter.py", "context_gateway.py", "swarm_fleet_dispatcher.py", "consolidation_synthesizer.py",
                 "plan_module_orchestrator.py", "agent_registry_synchronizer.py"
             },
@@ -441,6 +453,20 @@ class CommercialPackagerProvisioner:
         license_file.write_text(json.dumps(manifest_payload, indent=2), encoding="utf-8")
         bundled_files.append("PERCIPIENCE_LICENSE.json")
 
+        # 8b. Emit the offline auto-upgrade version manifest (percipience/version.json)
+        resolver = _get_update_resolver()
+        if resolver is not None:
+            version_manifest = resolver.emit_version_manifest(
+                output_dir,
+                plugin_version=resolver.CURRENT_PLUGIN_VERSION,
+                platform_version=resolver.CURRENT_PLATFORM_VERSION,
+                tier=tier_id,
+                channel="stable",
+            )
+            rel_manifest = version_manifest.relative_to(output_dir).as_posix()
+            bundled_files.append(rel_manifest)
+            file_hashes[rel_manifest] = hashlib.sha256(version_manifest.read_bytes()).hexdigest()
+
         # 9. Seal Merkle Block
         merkle_block_id = None
         MerkleEngineClass = _get_merkle_engine()
@@ -549,6 +575,17 @@ class CommercialPackagerProvisioner:
                         shutil.rmtree(dst_item)
                     shutil.copytree(src_item, dst_item)
 
+            # Emit the embedded offline auto-upgrade version manifest (jar: percipience/version.json)
+            resolver = _get_update_resolver()
+            if resolver is not None:
+                resolver.emit_version_manifest(
+                    ij_resources,
+                    plugin_version=resolver.CURRENT_PLUGIN_VERSION,
+                    platform_version=resolver.CURRENT_PLATFORM_VERSION,
+                    tier=tier_id,
+                    channel="stable",
+                )
+
             # Ensure both canonical plan templates are present in IDE resources
             free_plan_src = workspace_root / ".nb" / "plan" / "master" / "parent-master-free-plan" / "detailed.md"
             if not free_plan_src.exists():
@@ -581,6 +618,15 @@ class CommercialPackagerProvisioner:
                         if dst_item.exists():
                             shutil.rmtree(dst_item)
                         shutil.copytree(src_item, dst_item)
+                resolver = _get_update_resolver()
+                if resolver is not None:
+                    resolver.emit_version_manifest(
+                        vscode_runtime,
+                        plugin_version=resolver.CURRENT_PLUGIN_VERSION,
+                        platform_version=resolver.CURRENT_PLATFORM_VERSION,
+                        tier=tier_id,
+                        channel="stable",
+                    )
                 shutil.copy2(src_pkg_dir / "PERCIPIENCE_LICENSE.json", vscode_dir / ".percipience_license.json")
                 provisioned_targets.append("mod_vscode_extension")
 

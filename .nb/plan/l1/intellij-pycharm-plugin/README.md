@@ -2,7 +2,7 @@
 
 **Plan ID**: `domain_intellij_pycharm_plugin`  
 **Capability Rating**: `L1 Foundation (IDE Space)`  
-**Version**: `1.2.0`  
+**Version**: `1.3.0`  
 
 ## Overview
 
@@ -22,6 +22,7 @@ This domain plan specifies the architecture and implementation for the JetBrains
 - **Tier-Gated Workflow & Hook Bundling**: Each tier bundle embeds the tier-appropriate autonomous delivery flows (`percipience/workflows/`) and git pre-commit guardrail hooks (`percipience/hooks/pre-commit.sh` + `percipience/scripts/install_git_hook.sh`) directly inside the plugin JAR/ZIP, mirroring the `CORE_TIER_RULES` engine gating.
 - **Model Context Protocol (MCP) Interoperability (All Bundles)**: Natively provisions `.claude/mcp.json` and `.claude/settings.json` across all plugin bundles (free or otherwise), enabling instant integration with Claude Desktop, Claude Code, Gemini CLI, Cursor, and terminal agents.
 - **PSI AST Token Pruning**: Deep PSI walking for Python, Kotlin, Java, and TypeScript ($60-85\%$ token reduction).
+- **Offline Local-Filesystem Auto-Upgrade**: Embeds a `percipience/version.json` manifest and scans local directories (`.nb/bundles`, `.nb/updates`, `~/.percipience/updates`, `PERCIPIENCE_UPDATE_DIR`) for newer builds, then upgrades the workspace runtime in place — fully air-gapped.
 - **JCEF ToolWindow**: Dockable embedded Chromium browser rendering real-time Merkle DAG chains and telemetry.
 - **Background Execution Coroutines**: Non-blocking process execution via `PercipienceExecutionService`.
 

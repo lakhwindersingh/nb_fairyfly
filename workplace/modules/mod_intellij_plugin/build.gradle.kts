@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.neutronbinary.percipience"
-version = "1.0.0"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -38,7 +38,7 @@ intellijPlatform {
     pluginConfiguration {
         id = "com.neutronbinary.percipience"
         name = "Percipience Context Engineering OS"
-        version = "1.0.0"
+        version = "1.3.0"
         vendor {
             name = "Neutron Binary"
             url = "https://percipience.dev"

@@ -25,6 +25,7 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 5. **Hermetic Threading & Read/Write Action Safety**: Strict EDT freedom ($<16\text{ms}$ latency) and background execution.
 6. **Model Context Protocol (MCP) & Agent Interoperability (All Bundles)**: Natively provisioned `.claude/mcp.json` and `.claude/settings.json` across all plugin bundles (`free`, `team`, `business`, `enterprise`, and `universal`), providing transparent prompt compression (60-85%) and FinOps metering for Claude Code, Gemini CLI, Cursor, and terminal agents.
 7. **Tier-Gated Workflow & Git Hook Bundling**: Each tier plugin JAR/ZIP embeds only the autonomous delivery workflows entitled to that tier (`percipience/workflows/`) plus the git pre-commit guardrail hook (`percipience/hooks/pre-commit.sh`) and its installer (`percipience/scripts/install_git_hook.sh`), mirroring the `CORE_TIER_RULES` engine gating so Free bundles the baseline CI/CD + IntelliJ delivery flows while Business/Enterprise additionally bundle packaging, SaaS, IoT, and enterprise SDLC flows.
+8. **Offline Local-Filesystem Auto-Upgrade**: The plugin embeds a version manifest (`percipience/version.json`) and, on startup and on demand, scans local directories (`PERCIPIENCE_UPDATE_DIR`, `.nb/bundles`, `.nb/updates`, `~/.percipience/updates`) for a strictly newer, schema-compatible build. When found it upgrades the workspace runtime in place and records the applied version in `.nb/config/runtime_version.json` — no network access required.
 
 ```mermaid
 graph TD
@@ -107,6 +108,18 @@ python workplace/modules/mod_intellij_plugin/package_plugin.py --tier all
 | **Enterprise Dedicated** (`plan_enterprise`) | ALL delivery flows (incl. `enterprise_sdlc.yaml`) | `pre-commit.sh` + `scripts/install_git_hook.sh` |
 
 These resources are provisioned into each plugin JAR/ZIP at `percipience/workflows/`, `percipience/hooks/`, and `percipience/scripts/`, and hydrated into the workspace by `WorkspaceBootstrapper.kt` (`.nb/agentic/custom/workflows/`, `.nb/git_hooks/pre-commit.sh`, `.nb/scripts/install_git_hook.sh`).
+
+### 3.2 Offline Local-Filesystem Auto-Upgrade
+
+The plugin embeds a version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`). The canonical Python engine `plugin_update_resolver.py` (mirrored in Kotlin by `PluginUpdateChecker` / `PluginUpdateService`) discovers, selects, and applies updates entirely from the local file system:
+
+| Step | Behaviour |
+| :--- | :--- |
+| **Discover** | Scans `PERCIPIENCE_UPDATE_DIR` → `.nb/bundles` → `.nb/updates` → `~/.percipience/updates` for staged dirs and `.jar`/`.zip` plugin archives (including the JetBrains `<plugin>/lib/<plugin>.jar` layout). |
+| **Select** | Picks the highest `plugin_version` strictly greater than the installed version with a matching `manifest_schema`; incompatible/same/older candidates are ignored. |
+| **Apply** | Materializes the candidate payload into `.nb/` (`core`, `bin`, `config`, `workflows`, `hooks`, `scripts`, `plan`) and writes the applied version to `.nb/config/runtime_version.json`. |
+
+Startup runs the check automatically; the **Check for Percipience Updates** Control Plane action triggers it on demand. Set `PERCIPIENCE_AUTO_UPGRADE=1` to apply discovered upgrades without prompting. The full test suite validates manifest embedding, local discovery, schema-aware selection, and payload materialization (`test_21_offline_plugin_auto_upgrade`).
 
 ---
 

@@ -19,6 +19,7 @@ from nbpack_envelope import NBPackEnvelope
 from commercial_packager_provisioner import CommercialPackagerProvisioner
 from virtual_psi_fixture import VirtualPsiFixture
 from virtual_lsp_fixture import VirtualLspFixture
+import plugin_update_resolver
 
 
 class TestIdePluginsSpace(unittest.TestCase):
@@ -607,6 +608,82 @@ class TestIdePluginsSpace(unittest.TestCase):
         self.assertNotIn("enterprise_sdlc.yaml", free_workflows)
         self.assertNotIn("commercial_packaging_provisioning_flow.yaml", free_workflows)
         self.assertNotIn("wf_master_enterprise_ui_design_system_derivation.yaml", free_basenames)
+
+
+    def test_21_offline_plugin_auto_upgrade(self):
+        """Validates local-file-system plugin auto-upgrade: manifest embedding, discovery, selection, and apply."""
+        # 1. Canonical resolver engine present and mirrored identically
+        resolver_nb = self.repo_root / ".nb" / "core" / "plugin_update_resolver.py"
+        resolver_wp = self.repo_root / "workplace" / "core" / "plugin_update_resolver.py"
+        self.assertTrue(resolver_nb.exists(), "plugin_update_resolver.py must exist in .nb/core")
+        self.assertTrue(resolver_wp.exists(), "plugin_update_resolver.py must be mirrored in workplace/core")
+        self.assertEqual(resolver_nb.read_bytes(), resolver_wp.read_bytes(), "resolver mirrors must be identical")
+
+        # 2. Embedded version manifest in plugin resources, version matches plugin.xml
+        plugin_xml = (self.plugins_dir / "mod_intellij_plugin" / "src" / "main" / "resources" / "META-INF" / "plugin.xml").read_text(encoding="utf-8")
+        res_manifest = self.plugins_dir / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "version.json"
+        self.assertTrue(res_manifest.exists(), "percipience/version.json must exist in plugin resources")
+        import json
+        manifest = json.loads(res_manifest.read_text(encoding="utf-8"))
+        self.assertEqual(manifest["manifest_schema"], plugin_update_resolver.MANIFEST_SCHEMA)
+        self.assertEqual(manifest["plugin_version"], "1.3.0")
+        self.assertIn("<version>1.3.0</version>", plugin_xml)
+
+        # 3. Manifest embedded inside built tier JARs
+        for tier in ["free", "enterprise"]:
+            zip_path = self.repo_root / ".nb" / "bundles" / f"percipience-intellij-plugin-{tier}-1.0.0.zip"
+            with zipfile.ZipFile(zip_path, "r") as zf:
+                jar_name = [n for n in zf.namelist() if n.endswith(".jar")][0]
+                with zipfile.ZipFile(io.BytesIO(zf.read(jar_name))) as jar:
+                    names = jar.namelist()
+                    self.assertIn("percipience/version.json", names, f"{tier} jar must embed version manifest")
+                    self.assertIn("percipience/core/plugin_update_resolver.py", names)
+                    embedded = json.loads(jar.read("percipience/version.json").decode("utf-8"))
+                    self.assertEqual(embedded["tier"], f"plan_{tier}")
+
+        # 4. Kotlin update subsystem registered
+        kotlin_root = self.plugins_dir / "mod_intellij_plugin" / "src" / "main" / "kotlin" / "com" / "neutronbinary" / "percipience"
+        for rel in ["update/PluginUpdateChecker.kt", "services/PluginUpdateService.kt", "actions/CheckForUpdatesAction.kt"]:
+            self.assertTrue((kotlin_root / rel).exists(), f"{rel} must exist")
+        self.assertIn("com.neutronbinary.percipience.CheckForUpdates", plugin_xml)
+        self.assertIn("services.PluginUpdateService", plugin_xml)
+        self.assertIn("PERCIPIENCE_UPDATE_DIR", (kotlin_root / "update" / "PluginUpdateChecker.kt").read_text(encoding="utf-8"))
+
+        # 5. Functional offline discovery + apply against a synthetic local update
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            ws = Path(tmp_dir)
+            (ws / ".nb" / "config").mkdir(parents=True, exist_ok=True)
+            update_dir = ws / "staged_updates"
+            update_dir.mkdir(parents=True, exist_ok=True)
+
+            candidate_jar = update_dir / "percipience-intellij-plugin-free-9.9.9.jar"
+            with zipfile.ZipFile(candidate_jar, "w") as z:
+                z.writestr("percipience/version.json", json.dumps({
+                    "manifest_schema": 1, "plugin_version": "9.9.9", "platform_version": "9.0.0",
+                    "tier": "plan_free", "channel": "stable"
+                }))
+                z.writestr("percipience/core/merkle_engine.py", "# upgraded merkle\n")
+                z.writestr("percipience/hooks/pre-commit.sh", "#!/bin/sh\nexit 0\n")
+                z.writestr("percipience/bin/percipience", "#!/usr/bin/env python3\n")
+
+            env = {"PERCIPIENCE_UPDATE_DIR": str(update_dir), "HOME": str(ws / "home")}
+            report = plugin_update_resolver.check_for_upgrade(ws, "1.3.0", env=env)
+            self.assertTrue(report["upgrade_available"], "local candidate must be detected")
+            self.assertEqual(report["selected"]["plugin_version"], "9.9.9")
+
+            # No upgrade when already current
+            self.assertIsNone(plugin_update_resolver.select_upgrade("9.9.9", report["candidates"]))
+            # Newer but incompatible schema is rejected
+            incompatible = [dict(report["candidates"][0], manifest_schema=999)]
+            self.assertIsNone(plugin_update_resolver.select_upgrade("1.3.0", incompatible))
+
+            result = plugin_update_resolver.apply_runtime_upgrade(ws, report["selected"])
+            self.assertEqual(result["status"], "UPGRADED")
+            self.assertEqual(result["plugin_version"], "9.9.9")
+            self.assertTrue((ws / ".nb" / "core" / "merkle_engine.py").exists())
+            self.assertTrue((ws / ".nb" / "git_hooks" / "pre-commit.sh").exists())
+            self.assertTrue(os.access(ws / ".nb" / "git_hooks" / "pre-commit.sh", os.X_OK))
+            self.assertEqual(plugin_update_resolver.applied_runtime_version(ws), "9.9.9")
 
 
 if __name__ == "__main__":
