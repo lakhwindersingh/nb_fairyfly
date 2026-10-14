@@ -3977,5 +3977,97 @@
     ],
     "error_message": null,
     "merkle_block_id": null
+  },
+  "job_dews_1791933627_805dcb": {
+    "job_id": "job_dews_1791933627_805dcb",
+    "status": "SUCCESS",
+    "plan_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/concise.md",
+    "target_module": "workplace/core",
+    "agent_id": "agent_unit_worker",
+    "created_at_utc": "2026-10-13T23:20:27.993607+00:00",
+    "updated_at_utc": "2026-10-13T23:20:29.250936+00:00",
+    "worker_slot_id": "worker_slot_01",
+    "bundle_sha256": null,
+    "result_bundle_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/bundles/bundle_857ff6e7adb4.bundle",
+    "result_bundle_sha256": "5cec24d7c39337698525bcc75875dc0fd670e2b2f93534c30954d3cf096d2f59",
+    "duration_ms": 663.0959510803223,
+    "exit_code": 0,
+    "logs": [
+      "[2026-10-13T23:20:27.993607+00:00] Job job_dews_1791933627_805dcb enqueued.",
+      "[2026-10-13T23:20:27.993620+00:00] Allocated to slot worker_slot_01 on runner-container-alpha-01.",
+      "[2026-10-13T23:20:27.993635+00:00] Acquired Redlock lease: worktree:workplace/core:agent_unit_worker (Token: redlock_worktree:workplace/core:agent_unit_worker_1791933627993).",
+      "[2026-10-13T23:20:29.250936+00:00] Execution completed with status: SUCCESS in 663.1ms."
+    ],
+    "error_message": null,
+    "merkle_block_id": null
+  },
+  "job_dews_1791933630_464416": {
+    "job_id": "job_dews_1791933630_464416",
+    "status": "SUCCESS",
+    "plan_path": ".nb/plan/test/concise.md",
+    "target_module": "workplace",
+    "agent_id": "agent_cli_test",
+    "created_at_utc": "2026-10-13T23:20:30.142857+00:00",
+    "updated_at_utc": "2026-10-13T23:20:31.461044+00:00",
+    "worker_slot_id": "worker_slot_01",
+    "bundle_sha256": null,
+    "result_bundle_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/bundles/bundle_8c5b7a69f20e.bundle",
+    "result_bundle_sha256": "03500a27b3a10877d4b7b68a9bbc8aa11fe50a09e83494642a42c334d8475433",
+    "duration_ms": 707.956075668335,
+    "exit_code": 0,
+    "logs": [
+      "[2026-10-13T23:20:30.142857+00:00] Job job_dews_1791933630_464416 enqueued.",
+      "[2026-10-13T23:20:30.142864+00:00] Allocated to slot worker_slot_01 on runner-container-alpha-01.",
+      "[2026-10-13T23:20:30.142870+00:00] Acquired Redlock lease: worktree:workplace:agent_cli_test (Token: redlock_worktree:workplace:agent_cli_test_1791933630142).",
+      "[2026-10-13T23:20:31.461044+00:00] Execution completed with status: SUCCESS in 708.0ms."
+    ],
+    "error_message": null,
+    "merkle_block_id": null
+  },
+  "job_dews_1791933631_968d86": {
+    "job_id": "job_dews_1791933631_968d86",
+    "status": "SUCCESS",
+    "plan_path": ".nb/plan/test/concise.md",
+    "target_module": "workplace",
+    "agent_id": "agent_sync_worker",
+    "created_at_utc": "2026-10-13T23:20:31.942156+00:00",
+    "updated_at_utc": "2026-10-13T23:20:33.691297+00:00",
+    "worker_slot_id": "worker_slot_01",
+    "bundle_sha256": null,
+    "result_bundle_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/bundles/bundle_34f1766d6aae.bundle",
+    "result_bundle_sha256": "bea5fcf5b60af82e9d63aa8e69ccc3fd5c494b08783e30fd4e4a19f7cf81ed13",
+    "duration_ms": 1142.8420543670654,
+    "exit_code": 0,
+    "logs": [
+      "[2026-10-13T23:20:31.942156+00:00] Job job_dews_1791933631_968d86 enqueued.",
+      "[2026-10-13T23:20:31.942169+00:00] Allocated to slot worker_slot_01 on runner-container-alpha-01.",
+      "[2026-10-13T23:20:31.942183+00:00] Acquired Redlock lease: worktree:workplace:agent_sync_worker (Token: redlock_worktree:workplace:agent_sync_worker_1791933631942).",
+      "[2026-10-13T23:20:33.691297+00:00] Execution completed with status: SUCCESS in 1142.8ms."
+    ],
+    "error_message": null,
+    "merkle_block_id": null
+  },
+  "job_dews_1791933634_5d0bae": {
+    "job_id": "job_dews_1791933634_5d0bae",
+    "status": "SUCCESS",
+    "plan_path": ".nb/plan/test/concise.md",
+    "target_module": "workplace",
+    "agent_id": "agent_api_runner",
+    "created_at_utc": "2026-10-13T23:20:34.891158+00:00",
+    "updated_at_utc": "2026-10-13T23:20:36.202144+00:00",
+    "worker_slot_id": "worker_slot_01",
+    "bundle_sha256": null,
+    "result_bundle_path": "/Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/bundles/bundle_390e7ed4ab10.bundle",
+    "result_bundle_sha256": "08739b60a8e1c99b718a8873515e63a29fa971ac2cddde0bae753110931aa5a8",
+    "duration_ms": 739.5298480987549,
+    "exit_code": 0,
+    "logs": [
+      "[2026-10-13T23:20:34.891158+00:00] Job job_dews_1791933634_5d0bae enqueued.",
+      "[2026-10-13T23:20:34.891169+00:00] Allocated to slot worker_slot_01 on runner-container-alpha-01.",
+      "[2026-10-13T23:20:34.891178+00:00] Acquired Redlock lease: worktree:workplace:agent_api_runner (Token: redlock_worktree:workplace:agent_api_runner_1791933634891).",
+      "[2026-10-13T23:20:36.202144+00:00] Execution completed with status: SUCCESS in 739.5ms."
+    ],
+    "error_message": null,
+    "merkle_block_id": null
   }
 }

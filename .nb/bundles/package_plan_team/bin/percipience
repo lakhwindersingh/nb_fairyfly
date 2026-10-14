@@ -49,6 +49,11 @@ else:
     REPO_ROOT = current_p.parents[1]
 
 # Dynamic, plan-aware core engine loader
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
 AVAILABLE_ENGINES = {}
 
 def _load_engine(module_name: str, class_names: list):
@@ -110,6 +115,7 @@ DiagnosticRePromptEngine = _load_engine("diagnostic_reprompt", ["DiagnosticRePro
     ["TokenOptimizationConfig", "UnifiedTokenOptimizer"]
 )
 HandoffValidator = _load_engine("handoff_validator", ["HandoffValidator"])
+PlanModuleOrchestrator = _load_engine("plan_module_orchestrator", ["PlanModuleOrchestrator"])
 SemanticParityEngine = _load_engine("semantic_parity_engine", ["SemanticParityEngine"])
 DualReconciliationEngine = _load_engine("reconciliation_engine", ["DualReconciliationEngine"])
 RequestFormalizerEngine = _load_engine("request_formalizer", ["RequestFormalizerEngine"])
@@ -132,6 +138,13 @@ PromptInjectionGuard = _load_engine("prompt_injection_guard", ["PromptInjectionG
 OutputGuardrailValidator = _load_engine("output_guardrail_validator", ["OutputGuardrailValidator"])
 SwarmFleetDispatcher = _load_engine("swarm_fleet_dispatcher", ["SwarmFleetDispatcher"])
 ConsolidationSynthesizer = _load_engine("consolidation_synthesizer", ["ConsolidationSynthesizer"])
+GitOpsPRBot = _load_engine("gitops_pr_bot", ["GitOpsPRBot"])
+HybridVectorRetrievalEngine = _load_engine("vector_retrieval_engine", ["HybridVectorRetrievalEngine"])
+ConventionalRepositoryMigrator = _load_engine("repository_migrator", ["ConventionalRepositoryMigrator"])
+InteractiveOnboardingWizard = _load_engine("onboarding_wizard", ["InteractiveOnboardingWizard"])
+MicroVMSandbox = _load_engine("microvm_sandbox", ["MicroVMSandbox"])
+OIDCAuthenticator = _load_engine("oidc_authenticator", ["OIDCAuthenticator"])
+DistributedTestRunner = _load_engine("distributed_test_runner", ["DistributedTestRunner"])
 
 def cmd_license(args):
     """Manages, mints, installs, and verifies commercial tier licenses."""
@@ -281,6 +294,22 @@ def cmd_permission(args):
         print(f"   Reason: {res['reason']}")
 
 def cmd_init(args):
+    if getattr(args, "interactive", False):
+        _require_engine(InteractiveOnboardingWizard, "onboarding_wizard", "Interactive Onboarding Wizard")
+        wizard = InteractiveOnboardingWizard(REPO_ROOT)
+        print("🪄 Launching Percipience Interactive Onboarding Wizard...")
+        res = wizard.run_interactive()
+        print(f"✅ Onboarding Complete! Status: {res.status}")
+        print(f"   Project: {res.config.project_name} ({res.config.project_type}) | Language: {res.config.primary_language} | Tier: {res.config.tier.upper()}")
+        print(f"   Provisioned {len(res.provisioned_files)} files including mcp.json, genesis ledger, and git hooks.")
+        for step in res.next_steps:
+            print(f"   👉 {step}")
+        return
+
+    if not getattr(args, "parent_plan", None):
+        print("❌ Error: --parent-plan is required when not running with --interactive.")
+        sys.exit(1)
+
     print(f"🚀 Initializing Percipience Quad-Space Workspace...")
     print(f"   Mode: {args.mode}")
     print(f"   Parent Plan: {args.parent_plan}")
@@ -297,6 +326,90 @@ def cmd_init(args):
         (REPO_ROOT / d).mkdir(parents=True, exist_ok=True)
 
     print("✅ Workspace successfully initialized into Quad-Space architecture.")
+
+def cmd_bot(args):
+    """Dispatches GitOps PR Bot workflows, Markdown cards, and slash commands."""
+    _require_engine(GitOpsPRBot, "gitops_pr_bot", "Interactive GitOps PR Bot")
+    bot = GitOpsPRBot(REPO_ROOT)
+    action = getattr(args, "bot_action", "deploy")
+
+    if action == "deploy":
+        res = bot.deploy_bot()
+        print("🤖 Percipience GitOps PR Bot Deployed Successfully!")
+        print(f"   Workflow File: {res['workflow_file']}")
+        print(f"   Preview Domain: {res['preview_domain']}")
+        print(f"   Active Commands: {', '.join(res['commands'])}")
+    elif action == "comment":
+        pr_id = str(getattr(args, "pr", "1"))
+        branch = str(getattr(args, "branch", "main"))
+        sha = str(getattr(args, "sha", "HEAD"))
+        card = bot.format_status_card(pr_id=pr_id, branch=branch, commit_sha=sha)
+        print(card)
+    elif action == "command":
+        cmd_str = getattr(args, "cmd", "/verify")
+        pr_id = str(getattr(args, "pr", "1"))
+        actor = getattr(args, "actor", "developer")
+        res = bot.handle_slash_command(command_str=cmd_str, pr_id=pr_id, actor=actor)
+        print(f"Status: {res.status}")
+        print(f"Action Executed: {res.action_executed}")
+        print(res.reply_markdown)
+
+def cmd_search(args):
+    """Executes hybrid sparse-dense vector code retrieval alongside AST pruning."""
+    _require_engine(HybridVectorRetrievalEngine, "vector_retrieval_engine", "Hybrid Vector Code Retrieval")
+    engine = HybridVectorRetrievalEngine(REPO_ROOT)
+    if getattr(args, "reindex", False):
+        print("🔄 Indexing codebase...")
+        idx_res = engine.index_codebase()
+        print(f"   Indexed {idx_res['indexed_files']} files ({idx_res['indexed_chunks']} chunks, {idx_res['vocabulary_size']} terms).")
+
+    query = args.query
+    top_k = getattr(args, "top_k", 5)
+    alpha = getattr(args, "alpha", 0.5)
+    multi_hop = not getattr(args, "no_multi_hop", False)
+
+    results = engine.search(query=query, top_k=top_k, alpha=alpha, multi_hop=multi_hop)
+    if getattr(args, "json", False):
+        out = [{"chunk_id": r.chunk.chunk_id, "score": r.combined_score, "dense": r.dense_score, "sparse": r.sparse_score, "hop": r.retrieval_hop} for r in results]
+        print(json.dumps(out, indent=2))
+    else:
+        ctx = engine.format_prompt_context(results)
+        print(ctx)
+
+def cmd_migrate(args):
+    """Analyzes and executes conventional codebase migration into Quad-Space architecture."""
+    _require_engine(ConventionalRepositoryMigrator, "repository_migrator", "Conventional Repository Migrator")
+    migrator = ConventionalRepositoryMigrator(REPO_ROOT)
+
+    if getattr(args, "rollback", False):
+        print("⏪ Rolling back Quad-Space migration from manifest...")
+        res = migrator.rollback_migration()
+        print(f"Status: {res['status']} | Files Reverted: {res.get('files_reverted', 0)}")
+        return
+
+    analyze_only = getattr(args, "analyze_only", False) or not getattr(args, "execute", False)
+    if analyze_only:
+        print("📊 Analyzing conventional repository layout for Quad-Space migration...")
+        rep = migrator.analyze_repository()
+        print(f"   Detected Project Type: {rep.detected_project_type}")
+        print(f"   Total Files Analyzed: {rep.total_files:,} ({rep.total_loc:,} LOC)")
+        print("   Planned Partition Breakdown:")
+        for part, count in rep.partition_counts.items():
+            print(f"     - {part}/: {count} files")
+        if rep.conflicts:
+            print(f"   ⚠️ Potential Conflicts ({len(rep.conflicts)}):")
+            for c in rep.conflicts[:5]:
+                print(f"     - {c}")
+        print("   Recommended Actions:")
+        for r in rep.recommendations:
+            print(f"     👉 {r}")
+        print("\n💡 Run percipience migrate --from-conventional --execute to apply migration.")
+    else:
+        print("🚀 Executing Quad-Space repository migration...")
+        res = migrator.execute_migration(dry_run=False)
+        print(f"✅ Migration Complete! Files Migrated: {res['files_migrated']}")
+        print(f"   Partition Counts: {res['partition_counts']}")
+        print(f"   Rollback Manifest Saved: {res['manifest_file']}")
 
 def check_basic_tools_permission() -> bool:
     """
@@ -444,6 +557,44 @@ def cmd_gate(args):
 
     print(f"✅ All 7 Gatekeeper verification stages PASSED. Token report emitted to workplace/docs/reports/token_savings_report.md. Safe to merge.")
 
+def cmd_plan(args):
+    """Displays commercial plan status, or autonomously orchestrates plan submodules."""
+    action = getattr(args, "plan_action", None)
+    if not action:
+        # Preserve the historical `percipience plan` status behavior.
+        return cmd_status(args)
+    _require_engine(PlanModuleOrchestrator, "plan_module_orchestrator", "plan", "Business / Enterprise")
+    plan_dir = Path(getattr(args, "plan_dir", "") or ".")
+    if not plan_dir.is_absolute():
+        plan_dir = REPO_ROOT / plan_dir
+
+    orch = PlanModuleOrchestrator(REPO_ROOT)
+    if action == "orchestrate":
+        result = orch.synchronize(
+            plan_dir=plan_dir,
+            apply=not getattr(args, "check", False),
+            sync_registries=not getattr(args, "no_sync_registries", False),
+            bundle_tier=getattr(args, "bundle_tier", None),
+            bundle_target=getattr(args, "bundle_target", "intellij"),
+            provision=getattr(args, "provision", False),
+        )
+        print(json.dumps(result, indent=2))
+        if result.get("status") not in ("SYNCHRONIZED", "CHECKED"):
+            sys.exit(1)
+    elif action == "bundle":
+        result = orch.bundle(
+            tier=getattr(args, "tier", "plan_business"),
+            target=getattr(args, "target", "intellij"),
+            provision=getattr(args, "provision", False),
+        )
+        print(json.dumps(result, indent=2))
+        if result.get("status") not in ("PACKAGED", "PROVISIONED"):
+            sys.exit(1)
+    else:
+        print(f"⚠️  Unknown plan action '{action}'.")
+        sys.exit(1)
+
+
 def cmd_rollback(args):
     _require_engine(PoisoningSentinel, "poisoning_sentinel", "rollback", "Free / Team / Business / Enterprise")
     print(f"⏪ Executing surgical rollback on module: {args.module}...")
@@ -542,6 +693,27 @@ def cmd_egress(args):
             vault = r.get("vault_id") or r.get("vault_uri", "N/A")
             target = r.get("cloud_target") or r.get("provider", "local")
             print(f"   • Block {b_id}: {obj} -> {vault} ({target})")
+
+def cmd_config(args):
+    """Inspect or retrieve externalized platform configuration values."""
+    action = args.config_action
+    if action == "show":
+        import yaml
+        print("\U0001f527 Percipience Platform Configuration (.nb/config/platform_config.yaml):\n")
+        if config and config._config_data:
+            print(yaml.dump(config._config_data, default_flow_style=False, sort_keys=False))
+        else:
+            print("{}\n(No configuration file loaded, using built-in defaults)")
+    elif action == "get":
+        val = config.get(args.key) if config else None
+        if val is None:
+            print(f"Key \x27{args.key}\x27 not found in configuration.")
+            sys.exit(1)
+        if isinstance(val, (dict, list)):
+            import yaml
+            print(yaml.dump(val, default_flow_style=False))
+        else:
+            print(val)
 
 def cmd_daemon(args):
     _require_engine(TreeSitterDaemonClient, "tree_sitter_daemon", "daemon", "Free / Team / Business / Enterprise")
@@ -1217,6 +1389,79 @@ def cmd_swarm(args):
     elif action == "fleet":
         _require_engine(FleetManager, "fleet_manager", "swarm fleet", "Business / Enterprise")
         mgr = FleetManager()
+
+        # Remote Intervention Action
+        if getattr(args, "action", None):
+            machine = getattr(args, "machine", None)
+            if not machine:
+                print("❌ Error: --machine <id> is required when triggering --action.")
+                sys.exit(1)
+            params = {}
+            if getattr(args, "params", None):
+                try:
+                    params = json.loads(args.params)
+                except Exception as e:
+                    print(f"❌ Error parsing --params JSON: {e}")
+                    sys.exit(1)
+            actor = getattr(args, "actor", "admin@enterprise.internal")
+            try:
+                res = mgr.execute_remote_action(machine_id=machine, action=args.action, params=params, actor=actor)
+                inv = res["intervention"]
+                print(f"✅ Remote Intervention Executed: {inv['intervention_id']}")
+                print(f"   Target Machine: {inv['machine_id']}")
+                print(f"   Action:         {inv['action'].upper()}")
+                print(f"   Actor:          {inv['actor']}")
+                print(f"   Details:        {inv['details']}")
+                print(f"   Machine Status: {res['machine']['health_status']}")
+            except Exception as e:
+                print(f"❌ Intervention failed: {e}")
+                sys.exit(1)
+            return
+
+        # Quarantine Incident Resolution
+        if getattr(args, "resolve_incident", None):
+            iid = args.resolve_incident
+            verdict = getattr(args, "resolution", "APPROVED_PATCH")
+            notes = getattr(args, "notes", "Resolved via CLI")
+            actor = getattr(args, "actor", "admin@enterprise.internal")
+            try:
+                res = mgr.resolve_quarantine_incident(incident_id=iid, resolution=verdict, resolution_notes=notes, actor=actor)
+                seal = res["merkle_seal"]
+                print(f"🛡️ Quarantine Incident Resolved: {iid}")
+                print(f"   Resolution:     [{verdict}]")
+                print(f"   Actor:          {actor}")
+                print(f"   Notes:          {notes}")
+                print(f"   Merkle Block:   #{seal.get('block_id', 'SEALED')}")
+                print(f"   Block Hash:     {seal.get('block_hash', seal.get('current_block_hash'))}")
+                print(f"   Merkle Root:    {seal.get('merkle_root')}")
+            except Exception as e:
+                print(f"❌ Quarantine resolution failed: {e}")
+                sys.exit(1)
+            return
+
+        # Quarantine Central Command Display
+        if getattr(args, "quarantine", False):
+            qc = mgr.get_quarantine_command_center()
+            st = qc["stats"]
+            print("🛡️ Enterprise Security & Quarantine Central Command (CAP-44):")
+            print(f"   Total Incidents: {st['total']} | Quarantined: {st['quarantined']} | Merkle Sealed: {st['resolved']}")
+            print(f"   Risk Breakdown:  Critical: {st['critical']} | High: {st['high']} | Medium: {st['medium']} | Low: {st['low']}")
+            print("\n   Active / Tracked Incidents:")
+            for inc in qc["incidents"]:
+                status_icon = "✔" if inc["status"] == "RESOLVED" else "🛑"
+                seal_str = f" [Sealed #{inc['merkle_seal']['block_id']}]" if inc.get("merkle_seal") else ""
+                print(f"   {status_icon} [{inc['severity']:8}] {inc['incident_id']:35} | {inc['category']:17} | {inc['target']:25} | {inc['status']}{seal_str}")
+            return
+
+        # Interventions Audit Log Display
+        if getattr(args, "interventions", False):
+            hist = mgr.get_interventions_audit(machine_id=getattr(args, "machine", None))
+            print("📜 Remote Admin Interventions Audit Log (CAP-44):")
+            print(f"   Total Logged: {len(hist)}")
+            for item in hist:
+                print(f"   • [{item['timestamp_utc'][:19]}] {item['intervention_id']} | {item['machine_id']} | {item['action'].upper():16} | {item['actor']} | {item['details']}")
+            return
+
         if getattr(args, "simulate_pulse", False):
             mgr.simulate_pulse(delta_tokens=50000, advance_task=True)
             print("⚡ Injected activity pulse (+50k tokens & milestone advancement) into fleet.")
@@ -1578,7 +1823,81 @@ def cmd_guardrail(args):
             print(res["remediation_prompt"])
 
 
+def cmd_sandbox(args):
+    _require_engine(MicroVMSandbox, "microvm_sandbox", "sandbox", "Free / Team / Business / Enterprise")
+    action = args.sandbox_action
+    mgr = MicroVMSandbox(workspace_root=REPO_ROOT)
+    if action == "exec":
+        from core.microvm_sandbox import SandboxConfig
+        cfg = SandboxConfig(
+            runtime=getattr(args, "runtime", "auto"),
+            memory_limit_mb=getattr(args, "memory", 512),
+            timeout_seconds=getattr(args, "timeout", 30)
+        )
+        res = mgr.run_sandboxed(cmd=args.cmd, config=cfg)
+        print(f"⚡ MicroVM Sandbox Execution Completed [{res.runtime_used}]:")
+        print(f"   Exit Code: {res.exit_code} | Boot Latency: {res.boot_latency_ms}ms | Wall Time: {res.duration_ms}ms")
+        print(f"   Memory Peak: {res.memory_peak_mb}MB | Sandboxed: {res.sandboxed}")
+        if res.stdout.strip():
+            out_str = res.stdout.strip()
+            print(f"   Output: {out_str}")
+        if res.stderr.strip():
+            err_str = res.stderr.strip()
+            print(f"   Stderr: {err_str}")
+        if res.security_violations:
+            print(f"   ⚠️ Security Violations: {', '.join(res.security_violations)}")
+        sys.exit(res.exit_code)
+    elif action == "list":
+        boxes = mgr.list_sandboxes()
+        print(f"📋 Active Ephemeral Sandboxes ({len(boxes)} active):")
+        for b in boxes:
+            print(f"   • {b['sandbox_id']}: runtime={b['runtime']} boot={b['boot_latency_ms']}ms mem={b['memory_limit_mb']}MB")
+
+def cmd_oidc(args):
+    _require_engine(OIDCAuthenticator, "oidc_authenticator", "oidc", "Free / Team / Business / Enterprise")
+    action = args.oidc_action
+    auth = OIDCAuthenticator(workspace_root=REPO_ROOT)
+    if action == "token":
+        tok = auth.mint_workload_token(
+            subject=args.subject,
+            audience=args.audience,
+            ttl_seconds=getattr(args, "ttl", 900)
+        )
+        print(f"🔑 Minted OIDC Workload Identity Token:")
+        print(f"   Subject: {args.subject}")
+        print(f"   Audience: {args.audience}")
+        print(f"   JWT: {tok}")
+    elif action == "exchange":
+        res = auth.exchange_cloud_credentials(
+            token=args.token,
+            provider=args.provider,
+            role_arn_or_pool=args.role
+        )
+        print(f"✅ Cloud Workload Identity Federation Succeeded [{res.provider}]:")
+        print(f"   Target Role: {res.target_role}")
+        print(f"   Access Token ID: {res.access_token_id}")
+        print(f"   Token Type: {res.token_type} | Expires: {res.expiration}")
+    elif action == "audit":
+        records = auth.get_exchange_audit_trail()
+        print(f"📋 OIDC Credential Federation Audit Trail ({len(records)} events):")
+        for r in records:
+            print(f"   • [{r['timestamp']}] {r['provider']} -> {r['target_role']} (actor: {r['actor']}) status: {r['status']}")
+
 def cmd_test(args):
+    # Check if test sharding is requested
+    total_shards = getattr(args, "total_shards", 1)
+    shard_index = getattr(args, "shard_index", 0)
+    if total_shards > 1:
+        _require_engine(DistributedTestRunner, "distributed_test_runner", "test shard", "Free / Team / Business / Enterprise")
+        runner = DistributedTestRunner(workspace_root=REPO_ROOT)
+        all_tests = runner.discover_tests()
+        shard_receipt = runner.run_shard(shard_index=shard_index, total_shards=total_shards, tests=all_tests)
+        print(f"⚡ Distributed Test Shard [{shard_index + 1}/{total_shards}] Complete:")
+        print(f"   Tests in shard: {len(shard_receipt.test_files)}")
+        print(f"   Status: {shard_receipt.status} ({shard_receipt.passed_count} passed, {shard_receipt.failed_count} failed)")
+        print(f"   Duration: {shard_receipt.duration_ms}ms")
+        print(f"   Shard Hash: {shard_receipt.shard_hash[:16]}...")
+        sys.exit(0 if shard_receipt.failed_count == 0 else 1)
     test_runner_dir = REPO_ROOT / ".nb" / "plan" / "test"
     if str(test_runner_dir) not in sys.path:
         sys.path.insert(0, str(test_runner_dir))
@@ -1593,7 +1912,8 @@ def cmd_test(args):
         tier=getattr(args, "tier", "all"),
         output_dir=out_dir,
         eval_ai=getattr(args, "eval_ai", True),
-        ai_triage=getattr(args, "ai_triage", False)
+        ai_triage=getattr(args, "ai_triage", False),
+        coverage=getattr(args, "coverage", False)
     )
     results = orchestrator.run_tests(quiet=getattr(args, "quiet", False))
     sys.exit(results.get("exit_code", 0))
@@ -1605,8 +1925,41 @@ def main():
     # init
     p_init = subparsers.add_parser("init", help="Bootstrap Quad-Space workspace")
     p_init.add_argument("--mode", default="multi_module", choices=["single_module", "multi_module"])
-    p_init.add_argument("--parent-plan", required=True)
+    p_init.add_argument("--parent-plan", default=None, help="Path to parent plan or .nbpack")
+    p_init.add_argument("--interactive", action="store_true", help="Launch interactive onboarding setup wizard")
     p_init.set_defaults(func=cmd_init)
+
+    # bot (GitOps PR Bot)
+    p_bot = subparsers.add_parser("bot", help="Interactive GitOps PR Bot (deploy, comment, slash-commands)")
+    p_bot_subs = p_bot.add_subparsers(dest="bot_action", required=True)
+    p_bot_deploy = p_bot_subs.add_parser("deploy", help="Deploy GitOps PR bot workflow & webhook configuration")
+    p_bot_comment = p_bot_subs.add_parser("comment", help="Format and post rich Markdown PR status card")
+    p_bot_comment.add_argument("--pr", default="1", help="PR number")
+    p_bot_comment.add_argument("--branch", default="main", help="Target branch")
+    p_bot_comment.add_argument("--sha", default="HEAD", help="Commit SHA")
+    p_bot_cmd = p_bot_subs.add_parser("command", help="Handle developer slash-command (/re-heal, /rollback, /verify)")
+    p_bot_cmd.add_argument("--cmd", required=True, help="Slash command text e.g. /verify")
+    p_bot_cmd.add_argument("--pr", default="1", help="PR number")
+    p_bot_cmd.add_argument("--actor", default="developer", help="Command author")
+    p_bot.set_defaults(func=cmd_bot)
+
+    # search (Hybrid Sparse-Dense Vector RAG)
+    p_search = subparsers.add_parser("search", help="Hybrid sparse-dense vector code retrieval alongside AST pruning")
+    p_search.add_argument("query", help="Code search or conceptual question query")
+    p_search.add_argument("--top-k", type=int, default=5, help="Number of results to retrieve")
+    p_search.add_argument("--alpha", type=float, default=0.5, help="Weight between dense vector (1.0) and sparse BM25 (0.0)")
+    p_search.add_argument("--reindex", action="store_true", help="Reindex codebase prior to search")
+    p_search.add_argument("--no-multi-hop", action="store_true", help="Disable multi-hop dependency expansion")
+    p_search.add_argument("--json", action="store_true", help="Output raw JSON results")
+    p_search.set_defaults(func=cmd_search)
+
+    # migrate (Conventional to Quad-Space)
+    p_migrate = subparsers.add_parser("migrate", help="Migrate conventional codebase into Quad-Space architecture")
+    p_migrate.add_argument("--from-conventional", action="store_true", help="Migrate from conventional layout")
+    p_migrate.add_argument("--analyze-only", action="store_true", help="Analyze and output dry-run report without moving files")
+    p_migrate.add_argument("--execute", action="store_true", help="Execute physical migration into workplace, user, .nb, .claude")
+    p_migrate.add_argument("--rollback", action="store_true", help="Roll back previously executed migration")
+    p_migrate.set_defaults(func=cmd_migrate)
 
     # pack
     p_pack = subparsers.add_parser("pack", help="Compile proprietary .nbpack bundle")
@@ -1824,6 +2177,15 @@ def main():
     # swarm fleet
     p_sw_flt = p_swarm_subs.add_parser("fleet", help="Inspect distributed workstation and node fleet metrics")
     p_sw_flt.add_argument("--simulate-pulse", action="store_true", help="Inject simulated pulse with +50k tokens")
+    p_sw_flt.add_argument("--action", choices=["pause", "resume", "surgical_rollback", "evict_lease", "flush_ast_cache"], help="Trigger remote admin intervention on a machine")
+    p_sw_flt.add_argument("--machine", help="Target machine ID for remote intervention")
+    p_sw_flt.add_argument("--params", help="JSON parameters for intervention")
+    p_sw_flt.add_argument("--actor", default="admin@enterprise.internal", help="Administrator email / identity")
+    p_sw_flt.add_argument("--interventions", action="store_true", help="List remote intervention audit log")
+    p_sw_flt.add_argument("--quarantine", action="store_true", help="Display Enterprise Security & Quarantine Central Command triage")
+    p_sw_flt.add_argument("--resolve-incident", help="Resolve a quarantined incident by ID")
+    p_sw_flt.add_argument("--resolution", choices=["APPROVED_PATCH", "DISMISSED", "SURGICALLY_ROLLED_BACK", "QUARANTINE_LIFTED", "RESOLVED"], default="APPROVED_PATCH", help="Resolution verdict to seal into Merkle ledger")
+    p_sw_flt.add_argument("--notes", default="Resolved via CLI triage", help="Triage notes for incident resolution")
 
     # swarm dispatch (DEWS remote fleet)
     p_sw_disp = p_swarm_subs.add_parser("dispatch", help="Dispatch plan derivation to distributed container fleet (DEWS)")
@@ -2045,8 +2407,20 @@ def main():
     p_stat = subparsers.add_parser("status", help="Show active plan bundle tier, provisioned core engines, and feature availability")
     p_stat.set_defaults(func=cmd_status)
 
-    p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan information and engine status")
-    p_plan_cmd.set_defaults(func=cmd_status)
+    p_plan_cmd = subparsers.add_parser("plan", help="Display commercial plan info, or orchestrate plan submodules (plan orchestrate/bundle)")
+    p_plan_cmd_subs = p_plan_cmd.add_subparsers(dest="plan_action")
+    p_plan_orch = p_plan_cmd_subs.add_parser("orchestrate", help="Project a plan + its submodules into agents, rules & a derivation workflow")
+    p_plan_orch.add_argument("--plan-dir", required=True, help="Plan directory (e.g. .nb/plan/master/enterprise-ui-design-system)")
+    p_plan_orch.add_argument("--check", action="store_true", help="Report drift without writing")
+    p_plan_orch.add_argument("--no-sync-registries", action="store_true", help="Skip settings.json reconciliation")
+    p_plan_orch.add_argument("--bundle-tier", default=None, help="Tier to package after generation (e.g. plan_business)")
+    p_plan_orch.add_argument("--bundle-target", default="intellij", help="Provisioning target when --provision is set")
+    p_plan_orch.add_argument("--provision", action="store_true", help="Provision artifacts onto a concrete target")
+    p_plan_bundle = p_plan_cmd_subs.add_parser("bundle", help="Bundle generated artifacts into a commercial release package")
+    p_plan_bundle.add_argument("--tier", default="plan_business", help="Commercial tier to package")
+    p_plan_bundle.add_argument("--target", default="intellij", help="Provisioning target (intellij/vscode/portal)")
+    p_plan_bundle.add_argument("--provision", action="store_true", help="Provision onto the concrete target")
+    p_plan_cmd.set_defaults(func=cmd_plan)
 
     # test
     p_test = subparsers.add_parser("test", help="Execute automatable AI-assisted test suites across architectural tiers")
@@ -2055,7 +2429,43 @@ def main():
     p_test.add_argument("--ai-triage", action="store_true", help="Perform automated AI failure diagnosis and surgical patch synthesis on failures")
     p_test.add_argument("--eval-ai", action="store_true", default=True, help="Run quantitative GenAI evaluation metrics")
     p_test.add_argument("--quiet", action="store_true", help="Suppress verbose test execution logs")
+    p_test.add_argument("--coverage", action="store_true", help="Generate unified code coverage reporting, terminal summary tables, and HTML artifacts")
+    p_test.add_argument("--total-shards", type=int, default=1, help="Total parallel test shards")
+    p_test.add_argument("--shard-index", type=int, default=0, help="Shard index to execute (0-based)")
     p_test.set_defaults(func=cmd_test)
+
+    # sandbox (MicroVM / gVisor / WASM)
+    p_sb = subparsers.add_parser("sandbox", help="Sub-second MicroVM / gVisor & WASM Sandbox Isolation")
+    p_sb_subs = p_sb.add_subparsers(dest="sandbox_action", required=True)
+    p_sb_exec = p_sb_subs.add_parser("exec", help="Execute command inside isolated sandbox")
+    p_sb_exec.add_argument("--cmd", required=True, help="Command string to execute in sandbox")
+    p_sb_exec.add_argument("--runtime", default="auto", choices=["auto", "firecracker", "gvisor", "wasm", "process_jail"], help="Isolation runtime backend")
+    p_sb_exec.add_argument("--memory", type=int, default=512, help="Memory limit in MB")
+    p_sb_exec.add_argument("--timeout", type=int, default=30, help="Timeout in seconds")
+    p_sb_list = p_sb_subs.add_parser("list", help="List active ephemeral sandboxes")
+    p_sb.set_defaults(func=cmd_sandbox)
+
+    # oidc (Keyless Cloud Workload Identity Federation)
+    p_oidc = subparsers.add_parser("oidc", help="OIDC Keyless Cloud Authentication (Workload Identity Federation)")
+    p_oidc_subs = p_oidc.add_subparsers(dest="oidc_action", required=True)
+    p_oidc_tok = p_oidc_subs.add_parser("token", help="Mint an ephemeral signed OIDC workload token")
+    p_oidc_tok.add_argument("--subject", default="subagent_worker_01", help="Token subject / actor")
+    p_oidc_tok.add_argument("--audience", default="sts.amazonaws.com", help="Target cloud audience")
+    p_oidc_tok.add_argument("--ttl", type=int, default=900, help="Token validity in seconds")
+    p_oidc_exch = p_oidc_subs.add_parser("exchange", help="Exchange OIDC token for temporary cloud credentials")
+    p_oidc_exch.add_argument("--token", required=True, help="OIDC JWT token string")
+    p_oidc_exch.add_argument("--provider", default="aws", choices=["aws", "gcp", "azure"], help="Cloud IAM provider")
+    p_oidc_exch.add_argument("--role", required=True, help="Target role ARN or Workload Identity pool")
+    p_oidc_aud = p_oidc_subs.add_parser("audit", help="View OIDC credential exchange audit trail")
+    p_oidc.set_defaults(func=cmd_oidc)
+
+    # config
+    p_cfg = subparsers.add_parser("config", help="Manage externalized platform configuration (.nb/config/platform_config.yaml)")
+    p_cfg_subs = p_cfg.add_subparsers(dest="config_action", required=True)
+    p_cfg_show = p_cfg_subs.add_parser("show", help="Display all active configuration values")
+    p_cfg_get = p_cfg_subs.add_parser("get", help="Get a specific configuration value by key path")
+    p_cfg_get.add_argument("key", help="Dot-notated key path (e.g. portal.port, daemon.endpoint_url)")
+    p_cfg.set_defaults(func=cmd_config)
 
     args = parser.parse_args()
     if not args.subcommand:

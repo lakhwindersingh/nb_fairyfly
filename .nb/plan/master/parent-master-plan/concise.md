@@ -2,9 +2,10 @@
 
 **Plan ID**: `master_parent_framework`  
 **Capability Rating**: `Master (CAP-01 to CAP-36)`  
-**Version**: `7.5.0`  
+**Version**: `7.6.0`  
 **Operating Modes**: `single_module | multi_module`  
-**Phase 1 Bootstrap Status**: ✅ COMPLETE (2026-10-13)
+**Phase 1 Bootstrap Status**: ✅ COMPLETE (2026-10-13)  
+**Phase 2 Registry & Hook Synchronization Status**: ✅ COMPLETE (2026-10-13)
 
 ---
 
@@ -37,6 +38,41 @@ The following capabilities are now **MANDATORY** for all deployments (Free, Team
 **Bootstrap Health Improvement**: 0.62 → **0.78 / 1.0** (+26%)
 
 **Implementation Tracking**: See `.nb/plan/master/PHASE_1_CAPABILITY_CHECKLIST.md` for complete checklist and Phase 2-4 roadmap.
+
+---
+
+## CRITICAL: Phase 2 Registry, Hook & Multi-LLM Synchronization (IMPLEMENTED)
+
+**Status**: ✅ IMPLEMENTED & WIRED INTO THE GATEKEEPER (2026-10-13)
+
+The following capabilities extend the Phase 1 bootstrap and are **MANDATORY** for Team, Business, and Enterprise deployments:
+
+1. **IMPL-2.2: Workflow Hook Registry Binding Validation** ✅ COMPLETE
+   - Engine: `.nb/core/agent_registry_synchronizer.py`; agent: `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` (v1.3.0)
+   - Reconciles the registry sections embedded in every AI agent settings file against their canonical filesystem sources of truth:
+     - `agent_registry`     ← `.nb/agentic/custom/agents/*.yaml` (declared `agent_id`s)
+     - `context_rules`      ← `.nb/context/rules/**`
+     - `context_contracts`  ← `.nb/context/contracts/**`
+     - `workflow_registry`  ← `.nb/agentic/workflows/**` + `.nb/agentic/custom/workflows/**`
+     - `workflow_hooks`     ← agent `autonomous_cicd_hooks` / `workflow_bindings` + workflow trigger events
+   - Gatekeeper preflight: `step_registry_sync` in `.nb/agentic/workflows/pr_gatekeeper.yaml` (`fail_action: QUARANTINE_AND_HALT`).
+   - Deterministic, idempotent, and key-preserving; never mutates rule, contract, agent, or workflow contents.
+   - Tiers: Team ✅, Business ✅, Enterprise ✅
+
+2. **Multi-LLM Settings Projection** ✅ COMPLETE
+   - Materializes the same governed registry view for every supported coding agent (mirroring `terminal_agent_ast_proxy.SUPPORTED_AGENTS`):
+     - Claude Code → `settings.json`, `.claude/settings.json` (top-level, back-compatible)
+     - Gemini CLI → `.gemini/settings.json` (namespaced `percipience`)
+     - Aider → `.aider.conf.yml` (namespaced `percipience`, YAML)
+     - Cursor CLI → `.cursor/settings.json` (namespaced `percipience`)
+   - Non-Claude providers nest the platform block under a `percipience` namespace so provider-native keys are never clobbered.
+
+3. **Sequential Plan Module Orchestration** ✅ COMPLETE
+   - Engine: `.nb/core/plan_module_orchestrator.py`; CLI `percipience plan orchestrate` / `percipience plan bundle`.
+   - Discovers a plan's declared and discovered submodules, then synthesizes per-module agents, context rules, and a sequential derivation workflow (root → modules in dependency order → Merkle seal); idempotent.
+   - Tiers: Business ✅, Enterprise ✅
+
+**Phase 2 Health Target**: 0.78 → **0.86 / 1.0** (+11%)
 
 ---
 
@@ -84,7 +120,7 @@ graph TD
 14. **CAP-14: Proprietary Context Obfuscation (`.nbpack`)**: AES-256-GCM authenticated encryption sealing proprietary prompts and schemas into binary envelopes.
 15. **CAP-15: External Issue Tracker & Jira MCP Integration**: Bidirectional MCP server bridge for Jira, Linear, GitHub Issues, and Azure DevOps.
 16. **CAP-16: Autonomous Closed-Loop CI/CD Triad**: Self-Sustaining worktree hygiene, Self-Recovering surgical rollbacks, and Self-Improving AST calibration.
-17. **CAP-17: Extensible Custom Agent Plugin Architecture**: Open plugin interface (`.nb/core/agent_plugin_engine.py`) for custom specialist agents in `.nb/agentic/custom/agents/`.
+17. **CAP-17: Extensible Custom Agent Plugin Architecture**: Open plugin interface (`.nb/core/agent_plugin_engine.py`) for custom specialist agents in `.nb/agentic/custom/agents/`; the `AgentRegistrySynchronizer` (`.nb/core/agent_registry_synchronizer.py`) keeps the `agent_registry`, `context_rules`, `context_contracts`, `workflow_registry`, and `workflow_hooks` sections of every LLM settings file faithful to these canonical sources (IMPL-2.2).
 18. **CAP-18: Production Token FinOps & Rev-Share Metering**: Tracks raw vs AST-pruned tokens and logs accounting to `.nb/context/ledger/token_savings_ledger.yaml`.
 19. **CAP-19: 5-Tab Enterprise Observability Hub**: Browser control plane with Radar diagnostics, Swarm manager, DAG visualizer, FinOps calculator, and CI/CD triad controls.
 20. **CAP-20: 3-Tier Layered Context Precedence Hierarchy & BYOR Adapter**: Tier 1 Base Invariants > Tier 2 Enterprise Global Rules > Tier 3 Team Custom Context; multi-VCS adapter for GitLab, GitHub Enterprise, Bitbucket.
@@ -101,7 +137,7 @@ graph TD
 31. **CAP-31: Ephemeral Worktree Redis Cache & Canary Deployments**: Distributed redis locking for worktree concurrency and canary verification.
 32. **CAP-32: WORM Egress Storage Manager**: Write-Once-Read-Many tamper-proof cloud storage for audit compliance (SOC2/ISO27001).
 33. **CAP-33: One-Click Tenant & Project Scaffolding Wizard**: Automated CLI and Web wizard bootstrapping multi-tenant environments in $< 3$ seconds.
-34. **CAP-34: Cross-Plugin IDE Synchronizer**: Seamless state and contract sync across JetBrains (IntelliJ/PyCharm) and VSCode extensions.
+34. **CAP-34: Cross-Plugin IDE Synchronizer**: Seamless state and contract sync across JetBrains (IntelliJ/PyCharm) and VSCode extensions, plus multi-LLM settings projection (Claude Code, Gemini CLI, Aider, Cursor CLI) driven by the `AgentRegistrySynchronizer`.
 35. **CAP-35: Dual-Format Plan Synchronization Engine**: Automated SHA-256 versioning maintaining bi-directional consistency between concise and detailed specifications.
 36. **CAP-36: Commercial Pricing Tier Packaging & Cross-Platform Provisioning**: End-to-end packaging, filtering, and provisioning of runtime assets and licenses across IntelliJ, VSCode, and SaaS Portal per commercial tiers (`plan_free`, `plan_team`, `plan_business`, `plan_enterprise`).
 
@@ -125,6 +161,8 @@ graph TD
 │   ├── ast_optimizer.py                  # Tree-Sitter AST compression
 │   ├── merkle_engine.py                  # SHA-256 state chain
 │   ├── autonomous_cicd.py                # Self-healing CI/CD triad
+│   ├── agent_registry_synchronizer.py    # Registry / hook / multi-LLM settings sync
+│   ├── plan_module_orchestrator.py       # Sequential plan submodule orchestration
 │   ├── surgical_rollback.py              # Context poisoning isolation
 │   └── nbpack_envelope.py                # Encrypted envelope packaging
 └── agentic/
@@ -148,4 +186,7 @@ graph TD
 
 # Compute Token FinOps savings
 ./.nb/bin/percipience tokens summary
+
+# Orchestrate a plan's submodules (also reconciles all LLM settings registries)
+./.nb/bin/percipience plan orchestrate --plan-dir .nb/plan/master/enterprise-ui-design-system
 ```

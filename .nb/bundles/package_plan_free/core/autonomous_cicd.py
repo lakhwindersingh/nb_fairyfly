@@ -75,10 +75,16 @@ class SelfSustainingEngine:
         return results
 
 
+try:
+    from core.config_manager import config
+except (ImportError, ModuleNotFoundError):
+    config = None
+
+
 class AutonomousHealer:
     """Auto-diagnoses test/build/contract failures and generates surgical auto-patches."""
 
-    MAX_RETRIES = 3
+    MAX_RETRIES = config.get_int("cicd.healing_max_retries", 3) if config else int(os.environ.get("PERCIPIENCE_HEAL_MAX_RETRIES", "3"))
 
     @classmethod
     def diagnose_and_heal(

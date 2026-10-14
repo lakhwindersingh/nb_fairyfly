@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security_PII_Vault_Contract",
+  "description": "NIST SP 800-38G FPE encryption, KMS envelope token vault, and dynamic role masking contract",
+  "type": "object",
+  "required": ["token_id", "tenant_id", "pii_type", "fpe_ciphertext", "masking_rules"],
+  "properties": {
+    "token_id": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "pii_type": {
+      "type": "string",
+      "enum": ["TAXPAYER_ID", "BANK_ACCOUNT", "LEGAL_NAME", "EMAIL", "PHONE", "API_SECRET"]
+    },
+    "sensitivity_level": {
+      "type": "string",
+      "enum": ["LEVEL_1_PUBLIC", "LEVEL_2_INTERNAL", "LEVEL_3_CONFIDENTIAL", "LEVEL_4_RESTRICTED_PII"]
+    },
+    "fpe_ciphertext": {
+      "type": "string"
+    },
+    "masking_rules": {
+      "type": "object",
+      "properties": {
+        "admin_style": { "type": "string", "enum": ["PARTIAL_TRAILING_FOUR", "EMAIL_MASK", "FULL_REDACTED", "PLAINTEXT"] },
+        "auditor_style": { "type": "string", "enum": ["PARTIAL_TRAILING_FOUR", "EMAIL_MASK", "FULL_REDACTED", "PLAINTEXT"] },
+        "public_style": { "type": "string", "enum": ["FULL_REDACTED"] }
+      }
+    },
+    "kms_key_arn": {
+      "type": "string"
+    }
+  }
+}

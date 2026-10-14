@@ -256,6 +256,14 @@ The Free Community Edition implements the exact same rigorous handover verificat
 6. **Cryptographic Merkle State Ledger Sealing**:
    - Every confirmed handoff automatically seals an immutable Merkle block (`RP_HO_*`) into `context_ledger.yaml` via `MerkleEngine.seal_block()`.
 
+### 5.6 Embedded Plugin Assets & Registry / Hook Synchronization Boundary
+
+The Free Community tier ships its runtime inside the IntelliJ / PyCharm plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) and operates strictly through the embedded gatekeeper CLI and plugin UI:
+- **Bundled free-tier runtime** (`percipience/`): the canonical `bin/percipience` gatekeeper, `config/` (billing + token compression), the filtered `core/` engines, `agentic/custom/workflows/` (including `basic_autonomous_cicd.yaml`), and both parent master plan templates under `plan/`.
+- **Free-tier workflow hooks**: the `basic_autonomous_cicd.yaml` pipeline links its steps via deterministic handoff hooks (`hook_hygiene_to_pruner`, `hook_pruner_to_verifier`, `hook_verifier_to_docs`, `hook_docs_to_merkle`).
+
+The registry / workflow-hook synchronizer (`IMPL-2.2`, `.nb/core/agent_registry_synchronizer.py`) that reconciles `agent_registry`, `context_rules`, `context_contracts`, `workflow_registry`, and `workflow_hooks` into every LLM settings file (Claude Code, Gemini CLI, Aider, Cursor CLI) — and the sequential plan module orchestrator (`.nb/core/plan_module_orchestrator.py`) — are **Team / Business / Enterprise** capabilities and are **not** included in the Free Community tier bundle.
+
 ---
 
 ## 6. Quad-Space Partitioning for Free Plan

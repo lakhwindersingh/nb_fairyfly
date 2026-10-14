@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security_ReBAC_Policy_Contract",
+  "description": "Zanzibar and OpenFGA-style ReBAC relationship tuple and evaluation contract",
+  "type": "object",
+  "required": ["tenant_id", "entity_type", "entity_id", "relation", "subject_type", "subject_id"],
+  "properties": {
+    "tuple_id": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["portfolio", "project", "workspace", "enclave", "module", "service", "document"]
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "relation": {
+      "type": "string",
+      "enum": ["owner", "editor", "viewer", "approver", "parent", "member"]
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": ["user", "role", "team", "service_account"]
+    },
+    "subject_id": {
+      "type": "string"
+    },
+    "condition_expr": {
+      "type": "object",
+      "properties": {
+        "mfa_required": { "type": "boolean" },
+        "min_device_trust": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "ip_allowlist": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

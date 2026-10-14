@@ -2,7 +2,7 @@
 
 **Plan ID**: `master_parent_free_community`  
 **Capability Rating**: `Free Community Tier`  
-**Version**: `7.5.0`  
+**Version**: `7.6.0`  
 
 ## Overview
 
@@ -10,8 +10,8 @@ The **Free Community Edition** of the Parent Master Plan delivers the core deter
 
 ## Quick Links
 
-- **Concise Plan**: [concise.md](./concise.md) — Compact community specification (~360 lines)
-- **Detailed Plan**: [detailed.md](./detailed.md) — Extended implementation guide & IDE integration reference (~150 lines)
+- **Concise Plan**: [concise.md](./concise.md) — Compact community specification
+- **Detailed Plan**: [detailed.md](./detailed.md) — Extended implementation guide & IDE integration reference
 - **Version Manifest**: [MANIFEST.yaml](./MANIFEST.yaml) — Cryptographic SHA-256 version ledger
 
 ## Key Features
@@ -20,7 +20,9 @@ The **Free Community Edition** of the Parent Master Plan delivers the core deter
 - **Embedded Free Tier Assets**: Platform binaries, configs, and CI/CD workflows packaged in IDE plugin JARs.
 - **AST Token Reduction**: 60%–80% context compression via Tree-Sitter AST skeletonization.
 - **SHA-256 Merkle Ledger**: Local tamper-evident audit chain in `context_ledger.yaml`.
-- **Basic Autonomous CI/CD**: Single-attempt bounded self-repair and contract verification.
+- **Basic Autonomous CI/CD**: Single-attempt bounded self-repair, contract verification, and deterministic workflow handoff hooks.
+
+> **Tier boundary**: the registry / hook / multi-LLM settings synchronizer (`IMPL-2.2`) and the sequential plan module orchestrator are **Team / Business / Enterprise** capabilities and are not bundled in the Free Community tier.
 
 ## Success Criteria
 

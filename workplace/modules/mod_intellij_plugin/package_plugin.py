@@ -66,7 +66,7 @@ def compile_kotlin_sources():
         Path.home() / "Applications/PyCharm.app/Contents",
         Path("/Applications/PyCharm.app/Contents"),
     ]:
-        if cand_root.is_dir():
+        if cand_root and cand_root.is_dir():
             idea_root = cand_root
             break
 

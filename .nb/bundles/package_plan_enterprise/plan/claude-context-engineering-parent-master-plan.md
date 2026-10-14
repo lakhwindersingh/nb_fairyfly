@@ -976,6 +976,37 @@ To eliminate agent spawn and runtime unreliability:
 - **Hermetic Worktree Sandbox**: Each spawned agent operates in an isolated worktree directory (`.nb/workspaces/subagent_<id>`), preventing concurrent filesystem collisions.
 - **Bounded Supervisor Retry Loop**: If an agent process fails due to transient API timeouts or memory spikes, the supervisor retries up to $N_{\max} = 3$ times with exponential backoff before escalating to HITL quarantine (`user/hitl/`).
 
+#### 4. Workflow Registry, Hook & Multi-LLM Settings Synchronizer (`IMPL-2.2`, `CAP-17`, `CAP-34`)
+Because workflows dynamically orchestrate agents declared in layered domain plans, the registry sections embedded in each AI coding agent's settings file are now reconciled against their canonical filesystem sources of truth by `.nb/core/agent_registry_synchronizer.py` (agent `agent_registry_synchronizer`, v1.3.0). It runs as the mandatory `step_registry_sync` preflight of `.nb/agentic/workflows/pr_gatekeeper.yaml` (`fail_action: QUARANTINE_AND_HALT`) before `step_ast_prune` executes.
+
+| Registry Section | Canonical Source | Projection Semantics |
+| :--- | :--- | :--- |
+| `agent_registry` | `.nb/agentic/custom/agents/*.yaml` | Sorted, de-duplicated list of declared `agent_id`s |
+| `context_rules` | `.nb/context/rules/**` | Map `key → path` (existing symbolic aliases preserved) |
+| `context_contracts` | `.nb/context/contracts/**` | Map `key → path` |
+| `workflow_registry` | `.nb/agentic/workflows/**` + `.nb/agentic/custom/workflows/**` | Map `key → path` across both workflow directories |
+| `workflow_hooks` | agent `autonomous_cicd_hooks` / `workflow_bindings` + workflow `trigger` events | Map `key → path`; keys `<agent_id>__<workflow_id>__<step_id>` and `<workflow_key>__<event>` |
+
+The synchronizer is deterministic and idempotent, preserves existing symbolic keys when they already point at a discovered file, retains entries that intentionally point outside the managed directories (e.g. the ledger), and never mutates rule, contract, agent, or workflow contents. Every run emits an explicit drift report; a convergence failure halts the gatekeeper with `QUARANTINE_AND_HALT`.
+
+**Multi-LLM Settings Projection.** The same governed registry projection is materialized for every supported coding agent (mirroring `terminal_agent_ast_proxy.SUPPORTED_AGENTS`):
+
+| Provider | Settings Target | Namespace | Notes |
+| :--- | :--- | :--- | :--- |
+| Claude Code | `settings.json`, `.claude/settings.json` | root (top-level) | Back-compatible; unchanged layout |
+| Gemini CLI | `.gemini/settings.json` | `percipience` | Provider-native keys preserved; records `.nb/context/percipience_gemini_context.md` |
+| Aider | `.aider.conf.yml` | `percipience` | YAML; `read` default pins `.nb/context/percipience_aider_context.md` |
+| Cursor CLI | `.cursor/settings.json` | `percipience` | Provider-native keys preserved |
+
+For non-Claude providers the platform block is nested under a `percipience` namespace so provider-native keys are never clobbered. The target table is data-driven and trivially extensible to additional agents. The synchronizer may be invoked directly (`python workplace/core/agent_registry_synchronizer.py [--check]`) or through the plan orchestrator (`percipience plan orchestrate`, which reconciles registries after generation).
+
+#### 5. Sequential Plan Module Orchestration (`CAP-35`, `CAP-36`)
+`.nb/core/plan_module_orchestrator.py` (CLI `percipience plan orchestrate` / `percipience plan bundle`) turns a governing master plan into an executable, sequentially-orchestrated agent swarm:
+- **Discovery**: Resolves the plan through its `MANIFEST.yaml`, then enumerates submodules from both the declared `modules:` list and the recursive `modules/**/*.md` tree (excluding `README.md`); declared-but-missing modules are reported explicitly.
+- **Synthesis**: Generates, per module, a dedicated agent manifest (`agent_<module_id>.yaml`), a context rule (`.nb/context/rules/<module_id>_rules.md`), and a sequential derivation workflow (root → modules in dependency order → `platform.merkle_ledger` seal) at `.nb/agentic/workflows/wf_<plan_id>_derivation.yaml`.
+- **Idempotency**: Writes only changed files; re-runs report `unchanged`.
+- **Tiered bundling**: The orchestrator is packaged for Business/Enterprise (`plan_business` `allowed_engines`), and the Commercial Packager Provisioner bundles `.nb/agentic/workflows/*.yaml` into every tier's distribution.
+
 ---
 
 ### Issue Tracker MCP Ingestion & Bi-Directional Lifecycle Architecture
@@ -1509,6 +1540,10 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`platform`** | Standardized Integration Test Suite | `workplace/tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Implemented** |
 | **`.nb/`**     | Section 17.2 SDLC Test Suite | `.nb/tests/test_agentic_sdlc_suite.py` | Python 3 Unittest | 16-Test Swarm & Workflow Governance Suite | **Implemented** |
 | **`.nb/`**     | Section 17.3 Cognitive Test Suite | `.nb/tests/test_section_17_3_suite.py` | Python 3 Unittest | 10-Test Fuzzing & Attention Budget Suite | **Implemented** |
+| **`.nb/`**     | Registry / Hook / Multi-LLM Synchronizer | `.nb/core/agent_registry_synchronizer.py` | Python 3 Module | Idempotent registry reconciliation across Claude/Gemini/Aider/Cursor settings | **Verified** |
+| **`.nb/`**     | Sequential Plan Module Orchestrator | `.nb/core/plan_module_orchestrator.py` | Python 3 Module | Plan submodule discovery, agent/rule/workflow synthesis & tiered bundling | **Verified** |
+| **`agentic/`** | Registry Synchronizer Agent Manifest | `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` | YAML Specification | Gatekeeper preflight registry & hook reconciliation guard (`IMPL-2.2`) | **Verified** |
+| **`.nb/`**     | Multi-LLM Settings Projections | `settings.json`, `.claude/settings.json`, `.gemini/settings.json`, `.aider.conf.yml`, `.cursor/settings.json` | JSON / YAML | `percipience`-namespaced registry projection for every supported coding agent | **Verified** |
 
 ---
 

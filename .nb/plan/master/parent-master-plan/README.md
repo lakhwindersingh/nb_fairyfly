@@ -1,8 +1,8 @@
 # Master Plan: Parent Master Context Engineering Framework
 
 **Plan ID**: `master_parent_framework`  
-**Capability Rating**: `Master (CAP-01 to CAP-35)`  
-**Version**: `7.5.0`  
+**Capability Rating**: `Master (CAP-01 to CAP-36)`  
+**Version**: `7.6.0`  
 
 ## Overview
 
@@ -10,15 +10,17 @@ The **Parent Master Context Engineering Framework** is the governing architectur
 
 ## Quick Links
 
-- **Concise Plan**: [concise.md](./concise.md) — High-level agentic specification (~130 lines)
-- **Detailed Plan**: [detailed.md](./detailed.md) — Complete 35-capability reference & implementation guide (~1620 lines)
+- **Concise Plan**: [concise.md](./concise.md) — High-level agentic specification
+- **Detailed Plan**: [detailed.md](./detailed.md) — Complete 36-capability reference & implementation guide
 - **Version Manifest**: [MANIFEST.yaml](./MANIFEST.yaml) — Cryptographic SHA-256 version ledger
 
 ## Key Features
 
 - **Quad-Space Isolation**: Customer workspaces (`workplace/`, `user/`) cleanly separated from proprietary engine assets (`.nb/`).
-- **35 Core Capabilities**: Covering autonomous MVS derivation, poisoning detection, Merkle state chaining, FinOps token tracking, and autonomous CI/CD.
+- **36 Core Capabilities**: Covering autonomous MVS derivation, poisoning detection, Merkle state chaining, FinOps token tracking, and autonomous CI/CD.
 - **Dynamic Multi-Model Tiering**: Cognitive routing across Tier A (reasoning), Tier B (throughput), and Tier C (deterministic) models.
+- **Registry, Hook & Multi-LLM Synchronization**: The `AgentRegistrySynchronizer` keeps `agent_registry`, `context_rules`, `context_contracts`, `workflow_registry`, and `workflow_hooks` faithful across Claude Code, Gemini CLI, Aider, and Cursor CLI settings (`IMPL-2.2`).
+- **Sequential Plan Module Orchestration**: `PlanModuleOrchestrator` synthesizes per-module agents, rules, and a derivation workflow from any governing master plan.
 - **Surgical Module Rollback**: Instantaneous recovery from context poisoning without collateral disruption to sibling modules.
 
 ## Success Criteria

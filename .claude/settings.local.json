@@ -8,7 +8,9 @@
       "Read(//tmp/**)",
       "Bash(git add *)",
       "Bash(git reset *)",
-      "Bash(git commit -m 'Refactor portal: consolidate 14 tabs into 7 with organized sub-tabs *)"
+      "Bash(git commit -m 'Refactor portal: consolidate 14 tabs into 7 with organized sub-tabs *)",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/percipience.yml'\\)\\)\")",
+      "Bash(bash -n .nb/git_hooks/pre-commit.sh)"
     ]
   }
 }

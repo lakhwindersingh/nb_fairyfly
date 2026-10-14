@@ -107,7 +107,8 @@ class CommercialPackagerProvisioner:
                 "cognitive_router.py", "adversarial_fuzzer.py", "diagnostic_reprompt.py",
                 "swarm_governor.py", "commercial_packager_provisioner.py", "handoff_validator.py",
                 "pii_sanitizer.py", "prompt_injection_guard.py", "output_guardrail_validator.py", "dynamic_dag_orchestrator.py", "self_reflection_engine.py", "consensus_quorum_engine.py", "agent_capability_guard.py", "fleet_manager.py", "fleet_agent.py", "agent_memory_engine.py", "tool_contract_validator.py", "few_shot_retriever.py", "hitl_checkpoint_manager.py", "container_plan_executor.py", "git_bundle_transport.py",
-                "otel_exporter.py", "context_gateway.py", "swarm_fleet_dispatcher.py", "consolidation_synthesizer.py"
+                "otel_exporter.py", "context_gateway.py", "swarm_fleet_dispatcher.py", "consolidation_synthesizer.py",
+                "plan_module_orchestrator.py", "agent_registry_synchronizer.py"
             },
             "allow_nbpack_compilation": True,
             "allow_custom_agent_creation": True,
@@ -316,6 +317,18 @@ class CommercialPackagerProvisioner:
             shutil.copy2(basic_cicd, dst_cicd)
             bundled_files.append("workflows/basic_autonomous_cicd.yaml")
             file_hashes["workflows/basic_autonomous_cicd.yaml"] = hashlib.sha256(dst_cicd.read_bytes()).hexdigest()
+
+        # 6c. Package canonical .nb/agentic/workflows/ (gatekeeper & plan derivation workflows)
+        canonical_workflows_src = workspace_root / ".nb" / "agentic" / "workflows"
+        if canonical_workflows_src.exists():
+            canonical_workflows_dst = agentic_dst / "workflows"
+            canonical_workflows_dst.mkdir(parents=True, exist_ok=True)
+            for f in sorted(canonical_workflows_src.glob("*.yaml")):
+                dst_file = canonical_workflows_dst / f.name
+                shutil.copy2(f, dst_file)
+                rel_path = f"agentic/workflows/{f.name}"
+                bundled_files.append(rel_path)
+                file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
 
         # 7. Package Master Plan template
         plan_dst = output_dir / "plan"

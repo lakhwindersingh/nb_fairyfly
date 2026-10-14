@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HierarchicalRuleContract",
+  "type": "object",
+  "required": [
+    "rule_id",
+    "condition",
+    "rules"
+  ],
+  "properties": {
+    "rule_id": {
+      "type": "string"
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "AND",
+        "OR"
+      ]
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field",
+          "operator",
+          "value"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              ">",
+              ">=",
+              "<",
+              "<=",
+              "==",
+              "!=",
+              "between",
+              "in"
+            ]
+          },
+          "value": {}
+        }
+      }
+    }
+  }
+}

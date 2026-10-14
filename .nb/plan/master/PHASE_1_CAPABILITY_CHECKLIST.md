@@ -2,7 +2,7 @@
 
 **Document Type**: Essential Capability Implementation Tracking  
 **Date Created**: 2026-10-13  
-**Status**: Phase 1 COMPLETE, Phases 2-4 PLANNED  
+**Status**: Phase 1 COMPLETE, Phase 2 COMPLETE (IMPL-2.2), Phases 3-4 PLANNED  
 **Governance**: Integrated into parent-master-plan & parent-master-free-plan  
 
 ---
@@ -121,16 +121,21 @@ This document formalizes Phase 1 implementation of critical agentic CI/CD bootst
 
 ## Phase 2 Essential Capabilities (Week 2)
 
-### IMPL-2.2: Workflow Hook Registry Binding Validation (HIGH)
+### ✅ IMPL-2.2: Workflow Hook Registry Binding Validation (HIGH)
 **Capability**: Validate workflow hook mappings to ensure agents execute correctly  
 **Rationale**: Prevents silent agent skips due to misconfigured hooks  
 **Associated CAP**: CAP-16 (CI/CD Triad), CAP-17 (Custom Agent Plugins)  
 **Tiers Affected**: Team ✅, Business ✅, Enterprise ✅
 
-- [ ] Implementation: Add registry validation step to percipience.yml
-- [ ] Validation Logic: Verify 13 workflow hooks map to workflow steps
-- [ ] Test Coverage: Hook binding validation tests
-- [ ] Expected Health Gain: +6%
+- [x] Implementation: `step_registry_sync` preflight added to `.nb/agentic/workflows/pr_gatekeeper.yaml`
+  - Engine: `.nb/core/agent_registry_synchronizer.py`; agent: `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` (v1.3.0)
+  - Gatekeeper `fail_action: QUARANTINE_AND_HALT`; `step_ast_prune` `depends_on: [step_registry_sync]`
+- [x] Validation Logic: Reconciles `agent_registry`, `context_rules`, `context_contracts`, `workflow_registry`, and `workflow_hooks` against canonical sources; verifies agent/workflow hook bindings resolve to real workflow steps
+- [x] Multi-LLM Projection: same registry view materialized for Claude Code (`settings.json`, `.claude/settings.json`), Gemini CLI (`.gemini/settings.json`), Aider (`.aider.conf.yml`), Cursor CLI (`.cursor/settings.json`)
+- [x] Test Coverage: `workplace/tests/test_agent_registry_synchronizer.py` (10 tests, incl. live drift assertions)
+- **Status**: ✅ PRODUCTION READY
+- **Deployed**: 2026-10-13
+- **Expected Health Gain**: +6%
 
 ### IMPL-4.1: Agent Capability Manifest & Quota Enforcement (MEDIUM)
 **Capability**: Define agent capability matrix with token budgets and timeout enforcement  
@@ -240,7 +245,7 @@ This document formalizes Phase 1 implementation of critical agentic CI/CD bootst
 
 ```
 Phase 1 (Week 1):  ████████████████ 26% gain (+4 implementations) ✅ COMPLETE
-Phase 2 (Week 2):  ██████████░░░░░░ +11% gain (est. 2 implementations)
+Phase 2 (Week 2):  ██████░░░░░░░░░░ 6% gain (+1 implementation: IMPL-2.2 ✅)
 Phase 3 (Week 3):  ████░░░░░░░░░░░░ +7% gain (est. 4 implementations)
 Phase 4 (Week 4):  ███░░░░░░░░░░░░░ +7% gain (est. 3 implementations)
 ─────────────────────────────────────────────────────────────────
@@ -299,7 +304,7 @@ Final Target:      ████████████████ 100% (Full A
 **Verifier**: Agentic CI/CD Bootstrap Audit  
 **Review Status**: Ready for Production Testing
 
-**Phase 2-4 Roadmap**: PLANNED & TRACKED  
+**Phase 2-4 Roadmap**: PHASE 2 (IMPL-2.2) COMPLETE; PHASES 3-4 PLANNED & TRACKED  
 **Expected Completion**: 2026-10-31 (4 weeks)  
 **Review Cycle**: Weekly progress updates in todo.md
 

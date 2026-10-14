@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security_MFA_Challenge_Contract",
+  "description": "FIDO2 / WebAuthn passkey challenge and RFC 6238 TOTP verification contract",
+  "type": "object",
+  "required": ["challenge_id", "user_id", "tenant_id", "challenge_type", "status", "risk_score"],
+  "properties": {
+    "challenge_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": ["WEBAUTHN_PASSKEY", "RFC6238_TOTP", "BACKUP_CODE"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING", "VERIFIED", "EXPIRED", "REJECTED"]
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "webauthn_challenge": {
+      "type": "string"
+    },
+    "rp_id": {
+      "type": "string"
+    },
+    "user_verification": {
+      "type": "string",
+      "enum": ["required", "preferred", "discouraged"]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,16 +1,18 @@
 schema_version: 3.0.0
 plan_id: master_parent_free_community
 plan_name: Parent Master Context Engineering Framework (Free Community Edition)
-version: 7.5.0
+version: 7.6.0
 layer: master
 capability_rating: Free Community Tier
 status: active
 phase_1_bootstrap_status: COMPLETE (2026-10-13)
+phase_2_embedded_plugin_status: COMPLETE (2026-10-13)
 essential_capabilities_implemented:
   - IMPL-1.1: Git Hook Auto-Installation ✅ COMPLETE (Free Tier)
   - IMPL-1.2: Pre-Commit Hook Validator ✅ COMPLETE (Free Tier)
   - IMPL-2.1: Agent Swarm Spawning (Basic Agents) ✅ COMPLETE (Free Tier)
   - IMPL-5.1: Merkle Chain Blocking ✅ COMPLETE (Free Tier)
+  - Embedded IDE Plugin Asset Integration & Workflow Hooks ✅ COMPLETE (Free Tier)
 maturity:
   stage: COMPLETED
   implementation_status: production_runtime_with_phase1_bootstrap
@@ -44,38 +46,40 @@ key_capabilities:
 - Git Hook Auto-Installation & Pre-Commit Validation (IMPL-1.1 + IMPL-1.2) — **PHASE 1 ✅**
 - Autonomous Agent Swarm Spawning — Basic Tier (IMPL-2.1) — **PHASE 1 ✅**
 - Merkle Chain Blocking Validation (IMPL-5.1) — **PHASE 1 ✅**
+- Embedded Free Tier Plugin Asset Integration & Workflow Handoff Hooks — **PHASE 2 ✅**
+- Registry / Hook / Multi-LLM Settings Synchronizer (IMPL-2.2) — **TEAM/BUSINESS/ENTERPRISE ONLY**
 file_versions:
   concise:
     path: concise.md
-    version: 7.5.0
+    version: 7.6.0
     last_modified: '2026-10-13'
-    content_hash: bfe2315b4e21753067ff5f77e7af4031fd2a73b7c2f56d4bf4e97bf86e9a51e0
-    line_count: 95
+    content_hash: 3dc04873d3c1bfe4203975fa2b9dabb1ff97b4876fa4e178724b35b27ec05455
+    line_count: 140
     primary_purpose: Complete specification for free tier with Phase 1 bootstrap tracking
   detailed:
     path: detailed.md
-    version: 7.5.0
+    version: 7.6.0
     last_modified: '2026-10-13'
-    content_hash: 3d4dc14c3e3299026bae80be549f2b10b89ec205377630d45ae831663fb9a380
-    line_count: 351
+    content_hash: 24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb
+    line_count: 359
     primary_purpose: Extended implementation guide with IDE embedding and Phase 1 verification
   readme:
     path: README.md
-    version: 7.5.0
+    version: 7.6.0
     last_modified: '2026-10-13'
-    content_hash: b3d33a3af6add6d604b478b4ca2e58dcf6086afaa2fcc1e4446fdad5c65fe21e
-    line_count: 29
+    content_hash: e5e928b80b608c276adbf1cfd516f6c0b26e39c9dd653088751c1dde257f3f44
+    line_count: 31
     primary_purpose: Quick reference and navigation
   phase1_checklist:
-    path: PHASE_1_CAPABILITY_CHECKLIST.md
+    path: ../PHASE_1_CAPABILITY_CHECKLIST.md
     version: 1.0.0
     last_modified: '2026-10-13'
-    content_hash: shared_with_enterprise_plan
-    line_count: 450
+    content_hash: 09226064f965c871a36a9fd2c6208f798632ed9f858d09dc9c3452e6f07d9924
+    line_count: 321
     primary_purpose: Absolute implementation tracker for Phase 1-4 essential capabilities
 implementation_phases:
   phase_1: ✅ COMPLETE (2026-10-13) — Local Quad-Space Scaffolding + Git Hooks + Basic Agent Spawning + Merkle Blocking
-  phase_2: 🟠 PLANNED (Week 2) — Embedded IDE Plugin Asset Integration & Workflow Hooks
+  phase_2: ✅ COMPLETE (2026-10-13) — Embedded IDE Plugin Asset Integration & Workflow Hooks
   phase_3: 🔵 PLANNED (Week 3) — Free Tier CI/CD Workflow & Token Compression
   phase_4: 🔵 PLANNED (Week 4) — Sandbox Permission Governance & Observability
 phase_1_implementation_artifacts:

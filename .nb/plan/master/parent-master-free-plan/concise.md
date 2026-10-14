@@ -8,9 +8,10 @@ plan_id: master_parent_free_community
 
 **Plan ID**: `master_parent_free_community`  
 **Capability Rating**: `Free Community Tier (CAP-01 to CAP-21 + Phase 1 Bootstrap)`  
-**Version**: `7.5.0`  
+**Version**: `7.6.0`  
 **Operating Modes**: `single_module` (optimized for local development)  
-**Phase 1 Bootstrap Status**: ✅ COMPLETE (2026-10-13)
+**Phase 1 Bootstrap Status**: ✅ COMPLETE (2026-10-13)  
+**Phase 2 Embedded Plugin & Hook Status**: ✅ COMPLETE (2026-10-13)
 
 ---
 
@@ -47,6 +48,31 @@ The following capabilities are now **MANDATORY** for Free Community Edition:
 **Bootstrap Health Improvement**: 0.62 → **0.78 / 1.0** (+26%)
 
 **Implementation Tracking**: See `.nb/plan/master/PHASE_1_CAPABILITY_CHECKLIST.md` for complete checklist and Phase 2-4 roadmap.
+
+---
+
+## CRITICAL: Phase 2 Embedded IDE Plugin Assets & Workflow Hooks (IMPLEMENTED)
+
+**Status**: ✅ IMPLEMENTED (2026-10-13)
+
+1. **Embedded Free Tier Platform Assets** ✅ COMPLETE
+   - The IntelliJ / PyCharm plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) packages the canonical free-tier runtime under its internal JAR resources (`percipience/`):
+     - `percipience/bin/percipience` — canonical CLI gatekeeper (Unix `0755` applied on extraction).
+     - `percipience/config/` — `billing_plans.yaml`, `token_compression_rules.yaml`.
+     - `percipience/core/` — bundled platform engines for offline, zero-dependency execution.
+     - `percipience/agentic/custom/workflows/` — ready-to-run free-tier workflows (`basic_autonomous_cicd.yaml`).
+     - `percipience/plan/` — the free community and parent master plan templates.
+   - Free Tier: ✅ INCLUDED
+
+2. **Workflow Hook Binding Validation in Free Workflows** ✅ COMPLETE
+   - The free-tier `basic_autonomous_cicd.yaml` pipeline links its steps through deterministic handoff hooks (`hook_hygiene_to_pruner`, `hook_pruner_to_verifier`, `hook_verifier_to_docs`, `hook_docs_to_merkle`).
+   - Free Tier: ✅ INCLUDED
+
+3. **Registry / Hook / Multi-LLM Settings Synchronizer** — Team / Business / Enterprise only
+   - `IMPL-2.2` (`agent_registry_synchronizer`) reconciles the `agent_registry`, `context_rules`, `context_contracts`, `workflow_registry`, and `workflow_hooks` sections of every LLM settings file (Claude Code, Gemini CLI, Aider, Cursor CLI) against canonical filesystem sources.
+   - Free Tier: ❌ NOT INCLUDED (Free tier operates strictly through the embedded gatekeeper CLI and plugin UI).
+
+**Phase 2 Health Target**: 0.78 → **0.86 / 1.0** (+11%)
 
 ---
 
