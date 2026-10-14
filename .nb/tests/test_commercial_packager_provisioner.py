@@ -157,7 +157,7 @@ class TestCommercialPackagerProvisioner(unittest.TestCase):
         wf_file = self.repo_root / ".nb" / "agentic" / "custom" / "workflows" / "commercial_packaging_provisioning_flow.yaml"
         self.assertTrue(wf_file.exists())
         wf_data = yaml.safe_load(wf_file.read_text(encoding="utf-8"))
-        self.assertEqual(wf_data["name"], "commercial_packaging_provisioning_flow")
+        self.assertEqual(wf_data.get("workflow_id", wf_data.get("name")), "commercial_packaging_provisioning_flow")
         self.assertGreaterEqual(len(wf_data.get("steps", [])), 5)
 
 

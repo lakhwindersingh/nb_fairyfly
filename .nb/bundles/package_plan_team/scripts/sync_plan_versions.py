@@ -40,6 +40,9 @@ class PlanVersionSync:
                 for sub in sorted(cat_path.iterdir()):
                     if sub.is_dir() and (sub / "MANIFEST.yaml").exists():
                         plan_dirs.append(sub)
+        test_dir = self.plan_root / "test"
+        if test_dir.exists() and (test_dir / "MANIFEST.yaml").exists():
+            plan_dirs.append(test_dir)
         return plan_dirs
 
     def update_manifest(self, plan_dir: Path) -> bool:

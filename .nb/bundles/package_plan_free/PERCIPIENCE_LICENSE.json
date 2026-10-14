@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_free_bd766d3d859a",
+  "license_id": "lic_plan_free_b2df14b39769",
   "tenant_id": "tenant_community_default",
   "tier": "plan_free",
   "tier_name": "Free Community Tier",
@@ -17,7 +17,7 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-14T18:33:01.049168+00:00",
+  "issued_at": "2026-10-14T19:41:02.596808+00:00",
   "total_files": 141,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
@@ -25,12 +25,12 @@
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/platform_config.yaml": "fc4901ae2de5b13791398d3c17ff224bf316446451dffe690f52ece6e95c1a7c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
-    "scripts/sync_plan_versions.py": "2f33d5ebcf84ba6517a69a023d51066289305aae765a478b9834cdb532d099a1",
+    "scripts/sync_plan_versions.py": "5de5ef5e11e85d6a63505cb9b2f6d95b7d5103abdb3f479576a4e208d168daf9",
     "scripts/install_git_hook.sh": "f275ead56bcf424dd29833fb0b2a97dddd8510c6412f2b7d74de20cd5d3ba0e9",
     "hooks/pre-commit.sh": "f4a82234c2d988138e7863431b6f80d3cf6a868b97ce056c6b2d73c83e23bfa4",
     "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
     "core/agent_capability_guard.py": "3016eb507eba8ad705102e8c74e0be381df2c13a27530e25bc7ab6b95d16f861",
-    "core/agent_memory_engine.py": "987347f7df838258b9b0dbbd0341b936ff4bdcec1050a3e3ca33618c3ea071e6",
+    "core/agent_memory_engine.py": "af6fafdda63ccac724d4fdedb12ec0f5336afdd7a356c2796829fc87ad61917a",
     "core/ambiguity_resolver.py": "69d1775159de2ffce1f59ea6c76b8ce697a4b51096f49574c5b74fbd0cad5b83",
     "core/ast_optimizer.py": "e3a887af891a7e1e201ae1ccc21f7893a605563556e49c79438ad3d16b134144",
     "core/attention_budgeter.py": "22b14dea8e9d1209a07a63d5a57cb24a2077ec6985f1418141c886ecfef9ade3",
@@ -162,5 +162,5 @@
     "agentic/workflows/pr_gatekeeper.yaml": "eba57ab720320574a168764b357b004afaf7e50954448171a02d20e5ec1ff7c1",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "c84f70ea8c5bb9ef21966d814900de3c90424269a003e49f6a20e2975c445d34"
+  "signature_sha256": "2f87eecd94837d245743f1a79046a9e64083fc9c79d39fda70f0256bfb334f57"
 }

@@ -1,44 +1,106 @@
-workflow_id: "basic_autonomous_cicd"
-name: "Free Community Autonomous CI/CD Pipeline"
-description: "Watered-down autonomous CI/CD workflow providing automated maintenance, AST token compression, basic bounded self-repair, and Merkle block sealing for the Free Plan."
-
+workflow_id: basic_autonomous_cicd
+name: Free Community Autonomous CI/CD Pipeline
+description: Watered-down autonomous CI/CD workflow providing automated maintenance,
+  AST token compression, basic bounded self-repair, and Merkle block sealing for the
+  Free Plan.
 steps:
-  - step_id: "sustain_maintenance"
-    name: "Self-Sustaining Workspace Hygiene"
-    executor: "platform.self_sustaining_engine"
-    description: "Reclaims local worktree locks, purges scratch temporary artifacts, and checks ledger continuity."
-    inputs: ["user/scratch/", ".nb/workspaces/"]
-    failure_action: "warn_and_continue"
+- step_id: sustain_maintenance
+  id: sustain_maintenance
+  name: Self-Sustaining Workspace Hygiene
+  executor: platform.self_sustaining_engine
+  description: Reclaims local worktree locks, purges scratch temporary artifacts,
+    and checks ledger continuity.
+  inputs:
+  - user/scratch/
+  - .nb/workspaces/
+  failure_action: warn_and_continue
+  handled_contracts:
+  - contract_id: observability_contract
+    name: Observability Telemetry & Log Format Contract
+    path: .nb/context/contracts/observability_contract.yaml
+    type: yaml_schema
+    action: validate
+    description: Enforces structured logging, health status schema, and hygiene execution metrics.
+  - contract_id: hierarchical_rule_contract
+    name: Hierarchical Space Isolation & Scratch Hygiene Contract
+    path: .nb/context/contracts/hierarchical_rule_contract.json
+    type: json_schema
+    action: enforce
+    description: Verifies boundary rules ensuring scratch directory cleanup does not violate quad-space isolation.
 
-  - step_id: "ast_token_reduction"
-    name: "AST Token Skeletonization & Attention Budgeting"
-    executor: "platform.ast_pruner"
-    depends_on: ["sustain_maintenance"]
-    inputs: ["workplace/"]
-    config:
-      target_compression_pct: 65.0
-      strip_function_bodies: true
-      preserve_signatures: true
+- step_id: ast_token_reduction
+  id: ast_token_reduction
+  name: AST Token Skeletonization & Attention Budgeting
+  executor: platform.ast_pruner
+  depends_on:
+  - sustain_maintenance
+  inputs:
+  - workplace/
+  config:
+    target_compression_pct: 65.0
+    strip_function_bodies: true
+    preserve_signatures: true
+  handled_contracts:
+  - contract_id: psi_ast_bridge_contract
+    name: AST Skeleton & Token Compression Contract
+    path: .nb/context/contracts/psi_ast_bridge_contract.yaml
+    type: yaml_schema
+    action: inspect_and_prune
+    description: Preserves function signatures and type annotations while stripping execution bodies to achieve 65% token compression.
 
-  - step_id: "contract_and_test_gate"
-    name: "Basic Contract & Test Verification"
-    executor: "platform.contract_verifier"
-    depends_on: ["ast_token_reduction"]
-    inputs:
-      - ".nb/context/contracts/"
-      - "workplace/tests/"
+- step_id: contract_and_test_gate
+  id: contract_and_test_gate
+  name: Basic Contract & Test Verification
+  executor: platform.contract_verifier
+  depends_on:
+  - ast_token_reduction
+  inputs:
+  - .nb/context/contracts/
+  - workplace/tests/
+  handled_contracts:
+  - contract_id: rbac_permission_matrix
+    name: RBAC Permission Matrix Contract
+    path: .nb/context/contracts/rbac_permission_matrix.json
+    type: json_schema
+    action: validate
+    description: Asserts baseline permission matrices and role access controls before test execution.
+  - contract_id: data_grid_contract
+    name: Data Grid & Table Schema Contract
+    path: .nb/context/contracts/data_grid_contract.json
+    type: json_schema
+    action: validate
+    description: Validates data structure formats across test payloads and fixture outputs.
 
-  - step_id: "bounded_auto_heal"
-    name: "Basic Single-Attempt Self-Healing"
-    executor: "platform.autonomous_healer"
-    depends_on: ["contract_and_test_gate"]
-    config:
-      max_retries: 1
-      fallback: "quarantine_and_notify"
+- step_id: bounded_auto_heal
+  id: bounded_auto_heal
+  name: Basic Single-Attempt Self-Healing
+  executor: platform.autonomous_healer
+  depends_on:
+  - contract_and_test_gate
+  config:
+    max_retries: 1
+    fallback: quarantine_and_notify
+  handled_contracts:
+  - contract_id: hierarchical_rule_contract
+    name: Bounded Self-Repair Fallback Policy Contract
+    path: .nb/context/contracts/hierarchical_rule_contract.json
+    type: json_schema
+    action: enforce
+    description: Bounds repair loops to a single attempt and triggers quarantine on second failure.
 
-  - step_id: "merkle_state_seal"
-    name: "Cryptographic Merkle State Block Seal"
-    executor: "platform.merkle_ledger"
-    depends_on: ["bounded_auto_heal"]
-    action: "SEAL_BLOCK"
-    description: "Appends verified SHA-256 state transition block to context_ledger.yaml and updates public projection."
+- step_id: merkle_state_seal
+  id: merkle_state_seal
+  name: Cryptographic Merkle State Block Seal
+  executor: platform.merkle_ledger
+  depends_on:
+  - bounded_auto_heal
+  action: SEAL_BLOCK
+  description: Appends verified SHA-256 state transition block to context_ledger.yaml
+    and updates public projection.
+  handled_contracts:
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Four-Eyes State Sealing Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_block
+    description: Signs block hash with SHA-256 and records immutable state transition in context ledger.

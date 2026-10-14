@@ -31,9 +31,14 @@ class AgentMemoryEngine:
         semantic_dir: Optional[Path] = None
     ):
         root = base_dir or REPO_ROOT
-        self.working_dir = working_dir or (root / ".nb" / "context" / "memory" / "working")
-        self.episodic_dir = episodic_dir or (root / ".nb" / "context" / "memory" / "episodic")
-        self.semantic_dir = semantic_dir or (root / ".nb" / "context" / "memory" / "semantic")
+        if root.name in ("swarm_memory", "memory") or (root / "episodic").exists():
+            self.working_dir = working_dir or (root / "working")
+            self.episodic_dir = episodic_dir or (root / "episodic")
+            self.semantic_dir = semantic_dir or (root / "semantic")
+        else:
+            self.working_dir = working_dir or (root / ".nb" / "context" / "memory" / "working")
+            self.episodic_dir = episodic_dir or (root / ".nb" / "context" / "memory" / "episodic")
+            self.semantic_dir = semantic_dir or (root / ".nb" / "context" / "memory" / "semantic")
 
         self.working_dir.mkdir(parents=True, exist_ok=True)
         self.episodic_dir.mkdir(parents=True, exist_ok=True)

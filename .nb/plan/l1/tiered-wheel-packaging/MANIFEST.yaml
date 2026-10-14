@@ -34,21 +34,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: a4c8a994127e9e3748a85845568f177a2d5fe7a7981469557e64f96f285fab6d
     line_count: 106
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: fda1a445c4beca1f7f1795fe06819eb3b6b7b5ba16129501d56e0d9801d02409
     line_count: 269
     primary_purpose: Extended implementation guide for multi-tier wheel packaging
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: db56f3e4f5dfbcd49b3c1df41a7095d158cb9ef3fcd5f2bf226c1b3303bc46b6
     line_count: 32
     primary_purpose: Quick reference and navigation

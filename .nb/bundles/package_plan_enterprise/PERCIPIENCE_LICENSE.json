@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_841cf9cdbdd6",
+  "license_id": "lic_plan_enterprise_4aef3366a2d9",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,7 +18,7 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-14T18:33:32.614043+00:00",
+  "issued_at": "2026-10-14T19:40:40.098924+00:00",
   "total_files": 183,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
@@ -26,14 +26,14 @@
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/platform_config.yaml": "fc4901ae2de5b13791398d3c17ff224bf316446451dffe690f52ece6e95c1a7c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
-    "scripts/sync_plan_versions.py": "2f33d5ebcf84ba6517a69a023d51066289305aae765a478b9834cdb532d099a1",
+    "scripts/sync_plan_versions.py": "5de5ef5e11e85d6a63505cb9b2f6d95b7d5103abdb3f479576a4e208d168daf9",
     "scripts/install_git_hook.sh": "f275ead56bcf424dd29833fb0b2a97dddd8510c6412f2b7d74de20cd5d3ba0e9",
     "hooks/pre-commit.sh": "f4a82234c2d988138e7863431b6f80d3cf6a868b97ce056c6b2d73c83e23bfa4",
     "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
     "core/adversarial_fuzzer.py": "9d7fe5846d97779c447bc01863f713bfe464fcb444298fe148deea50a08125fd",
     "core/agent_benchmark_harness.py": "4587b0ecf9299ad2682a174b910eed766f0ad7f563c741df88ed7f7362ec129f",
     "core/agent_capability_guard.py": "3016eb507eba8ad705102e8c74e0be381df2c13a27530e25bc7ab6b95d16f861",
-    "core/agent_memory_engine.py": "987347f7df838258b9b0dbbd0341b936ff4bdcec1050a3e3ca33618c3ea071e6",
+    "core/agent_memory_engine.py": "af6fafdda63ccac724d4fdedb12ec0f5336afdd7a356c2796829fc87ad61917a",
     "core/agent_plugin_engine.py": "99c9fc302ad0db1349d106e2c61cb27a05ea5ccc5868427a10ab0a80a67680b6",
     "core/agent_registry_synchronizer.py": "a52df6403b1cdbb66db714b572e48b43faad922e2d9b7b029113b413f315814b",
     "core/ambiguity_resolver.py": "69d1775159de2ffce1f59ea6c76b8ce697a4b51096f49574c5b74fbd0cad5b83",
@@ -205,5 +205,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "1ba97ac1f2e9763fa7653150954d12b64d4db1d91eb995ef32ee6ff1fb8183fc"
+  "signature_sha256": "c13813e2a2b8d93784a37a8b7dbbd6622122f0cd5bb53b2d2fa9027a07a9e816"
 }

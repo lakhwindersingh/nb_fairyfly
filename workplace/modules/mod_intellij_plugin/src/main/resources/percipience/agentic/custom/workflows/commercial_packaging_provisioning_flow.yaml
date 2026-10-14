@@ -1,0 +1,122 @@
+workflow_id: commercial_packaging_provisioning_flow
+name: Commercial Packaging, Multi-IDE Provisioning & Tier Permissions Delivery Flow
+version: 1.0.0
+description: End-to-End Commercial Packaging, Multi-IDE Provisioning and Tier Permissioning
+  Delivery Pipeline
+trigger:
+  type: manual_or_billing_event
+  events:
+  - tier_package_request
+  - tenant_provision_request
+  - billing_plan_updated
+steps:
+- id: step_validate_billing_rules
+  name: Validate Pricing Matrix & Billing Plans Schema
+  agent: agent_commercial_packager_provisioner
+  action: validate_schema
+  inputs:
+    config_file: .nb/config/billing_plans.yaml
+    contract_file: .nb/context/contracts/billing_meter_contract.yaml
+  timeout_ms: 10000
+  executor: agent_commercial_packager_provisioner
+  handled_contracts:
+  - contract_id: billing_meter_contract
+    name: Billing Meter & Tier Quotas Contract
+    path: .nb/context/contracts/billing_meter_contract.yaml
+    type: yaml_schema
+    action: validate
+    description: Verifies subscription tiers, feature flags, and token budget ceilings against billing specifications.
+
+- id: step_filter_and_package_tier
+  name: Filter Runtime Assets & Build Tier Distribution Bundle
+  agent: agent_commercial_packager_provisioner
+  action: package_tier
+  inputs:
+    target_tier: ${input.tier:-plan_free}
+    source_spaces:
+    - .nb/bin
+    - .nb/config
+    - .nb/scripts
+    - .nb/core
+    - .nb/context
+    - .nb/agentic
+    - .nb/plan
+  timeout_ms: 30000
+  executor: agent_commercial_packager_provisioner
+  handled_contracts:
+  - contract_id: commercial_provisioning_contract
+    name: Commercial Provisioning & Asset Filter Contract
+    path: .nb/context/contracts/commercial_provisioning_contract.yaml
+    type: yaml_schema
+    action: filter_and_bundle
+    description: Governs selective file packaging per tier, enforcing platform core encryption and plaintext user plans.
+
+- id: step_sign_and_seal_license
+  name: Generate Cryptographically Signed License & Merkle Seal
+  agent: agent_commercial_packager_provisioner
+  action: seal_license
+  inputs:
+    tenant_id: ${input.tenant_id:-tenant_community_default}
+    merkle_action: PACKAGE_TIER
+  timeout_ms: 15000
+  executor: agent_commercial_packager_provisioner
+  handled_contracts:
+  - contract_id: security_tenant_profile_contract
+    name: Tenant Identity & Cryptographic Licensing Contract
+    path: .nb/context/contracts/security_tenant_profile_contract.json
+    type: json_schema
+    action: seal_license
+    description: Encodes tenant profile attributes, tier expiration, and cryptographic signature in license payload.
+
+- id: step_provision_ide_and_portal
+  name: Provision Runtime Bundle to IntelliJ, VSCode, and SaaS Portal
+  agent: agent_commercial_packager_provisioner
+  action: provision_target
+  inputs:
+    targets:
+    - intellij
+    - vscode
+    - portal
+  timeout_ms: 45000
+  executor: agent_commercial_packager_provisioner
+  handled_contracts:
+  - contract_id: intellij_plugin_manifest_contract
+    name: IntelliJ IDEA Plugin Manifest Contract
+    path: .nb/context/contracts/intellij_plugin_manifest_contract.json
+    type: json_schema
+    action: verify_manifest
+    description: Validates plugin.xml extension point compatibility and bundled toolwindow components.
+  - contract_id: package_json_manifest_contract
+    name: VS Code Package Manifest Contract
+    path: .nb/context/contracts/package_json_manifest_contract.json
+    type: json_schema
+    action: verify_manifest
+    description: Validates package.json contributes layout, commands, and activation events for the extension.
+
+- id: step_verify_tier_permissions
+  name: Verify Cross-Platform Feature Gating & RBAC Permissions
+  agent: agent_commercial_packager_provisioner
+  action: verify_permissions
+  inputs:
+    test_features:
+    - ast_token_pruning
+    - merkle_chain_audit
+    - basic_autonomous_cicd
+    - basic_platform_tools_exposure
+    - nbpack_obfuscation
+    - private_vpc_deploy
+  timeout_ms: 15000
+  executor: agent_commercial_packager_provisioner
+  handled_contracts:
+  - contract_id: sandbox_permission_contract
+    name: Sandbox Capability Broker Contract
+    path: .nb/context/contracts/sandbox_permission_contract.json
+    type: json_schema
+    action: verify_security_sandbox
+    description: Enforces read/write sandboxing policies and AST token pruning constraints on LLM plugins.
+  - contract_id: rbac_permission_matrix
+    name: Role-Based Access Control Entitlement Matrix
+    path: .nb/context/contracts/rbac_permission_matrix.json
+    type: json_schema
+    action: enforce_entitlements
+    description: Guarantees Free Community users cannot execute unexposed basic platform tools or enterprise private VPC endpoints.

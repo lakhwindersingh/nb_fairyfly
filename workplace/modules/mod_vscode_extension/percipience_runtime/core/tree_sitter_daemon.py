@@ -24,7 +24,12 @@ class TreeSitterDaemonClient:
     """High-throughput IPC client communicating with the native Tree-Sitter AST daemon."""
 
     def __init__(self, endpoint_url: Optional[str] = None, endpoint: Optional[str] = None):
-        self.endpoint_url = endpoint or endpoint_url or os.environ.get("PERCIPIENCE_DAEMON_URL", "http://127.0.0.1:8585")
+        try:
+            from core.config_manager import config
+        except (ImportError, ModuleNotFoundError):
+            config = None
+        def_daemon = config.get_str("daemon.endpoint_url", "http://127.0.0.1:8585") if config else "http://127.0.0.1:8585"
+        self.endpoint_url = endpoint or endpoint_url or os.environ.get("PERCIPIENCE_DAEMON_URL", def_daemon)
         self.daemon_active = False
 
     def check_health(self) -> Dict[str, Any]:

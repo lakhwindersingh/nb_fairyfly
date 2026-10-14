@@ -1,0 +1,163 @@
+# ==============================================================================
+# Percipience Enterprise Context Engineering OS - Platform Configuration
+# Governing Architecture: Quad-Space Partitioning & Zero-Dial Engine
+# ==============================================================================
+# Note: Every parameter here can be overridden by an environment variable with
+# the prefix PERCIPIENCE_ (e.g., PERCIPIENCE_PORTAL_PORT, PERCIPIENCE_WORKTREE_DEFAULT_TTL).
+# Priority Order: Environment Variable > platform_config.yaml > Hardcoded Safe Default.
+# ==============================================================================
+
+version: "1.0.0"
+
+# ------------------------------------------------------------------------------
+# 1. System & Workspace Runtime
+# ------------------------------------------------------------------------------
+system:
+  workspace_name: "nb_fairyfly"
+  environment: "production" # "development" | "staging" | "production"
+  dev_mode: false
+  terminal_mode: true
+  log_level: "INFO" # "DEBUG" | "INFO" | "WARNING" | "ERROR"
+  default_encoding: "utf-8"
+
+# ------------------------------------------------------------------------------
+# 2. SaaS Portal & Control Plane Gateway
+# ------------------------------------------------------------------------------
+portal:
+  host: "0.0.0.0"
+  port: 3000
+  reload: false
+  cors_allowed_origins:
+    - "*"
+  session_ttl_seconds: 86400
+  enable_merkle_explorer: true
+  enable_finops_meter: true
+  enable_swarm_dashboard: true
+
+# ------------------------------------------------------------------------------
+# 3. High-Speed AST Tree-Sitter Daemon
+# ------------------------------------------------------------------------------
+daemon:
+  endpoint_url: "http://127.0.0.1:8585"
+  target_latency_ms: 20
+  supported_languages:
+    - "python"
+    - "typescript"
+    - "javascript"
+    - "go"
+    - "rust"
+  in_process_fallback: true
+
+# ------------------------------------------------------------------------------
+# 4. Distributed State & Concurrency (Redis Redlock)
+# ------------------------------------------------------------------------------
+redis:
+  url: "redis://localhost:6379/0"
+  cluster_urls: []
+  socket_timeout_seconds: 5
+  max_connections: 50
+  fallback_in_memory: true
+
+# ------------------------------------------------------------------------------
+# 5. Ephemeral Git Worktree Manager
+# ------------------------------------------------------------------------------
+worktree:
+  default_ttl_seconds: 3600
+  max_ttl_seconds: 86400
+  base_branch: "main"
+  workspaces_dir: ".nb/workspaces"
+  auto_reclaim_expired: true
+  posix_pid_probing: true
+
+# ------------------------------------------------------------------------------
+# 6. Cryptographic Merkle DAG Ledger
+# ------------------------------------------------------------------------------
+merkle:
+  hash_algorithm: "sha256"
+  auto_checkpoint_threshold: 50
+  retain_active_blocks: 25
+  retain_active_recovery_points: 20
+  ledger_path: ".nb/context/ledger/context_ledger.yaml"
+  public_projection_path: ".nb/context/ledger/context_ledger.public.yaml"
+  archive_dir: ".nb/context/ledger/archive"
+
+# ------------------------------------------------------------------------------
+# 7. Autonomous CI/CD Triad & Self-Healing
+# ------------------------------------------------------------------------------
+cicd:
+  healing_max_retries: 3
+  default_target_module: "mod_portal_marketing"
+  sustain_scratch_cleanup: true
+  min_maturity_threshold: 0.85
+
+# ------------------------------------------------------------------------------
+# 8. Token Optimization & FinOps Ledger
+# ------------------------------------------------------------------------------
+token_optimization:
+  performance_rev_share_pct: 15.0
+  target_reduction_pct: 60.0
+  default_model: "claude-3-5-sonnet-20241022"
+  pricing_rates:
+    claude-3-5-sonnet-20241022:
+      input_per_mtok: 3.00
+      cached_input_per_mtok: 0.30
+      output_per_mtok: 15.00
+    claude-3-opus-20240229:
+      input_per_mtok: 15.00
+      cached_input_per_mtok: 1.50
+      output_per_mtok: 75.00
+    gpt-4o:
+      input_per_mtok: 2.50
+      cached_input_per_mtok: 1.25
+      output_per_mtok: 10.00
+    gemini-2.0-flash:
+      input_per_mtok: 0.10
+      cached_input_per_mtok: 0.025
+      output_per_mtok: 0.40
+
+# ------------------------------------------------------------------------------
+# 9. MicroVM & Process Jail Sandboxing
+# ------------------------------------------------------------------------------
+sandbox:
+  default_runtime: "auto" # "auto" | "firecracker" | "gvisor" | "wasm" | "process_jail"
+  memory_limit_mb: 512
+  vcpu_count: 2
+  timeout_seconds: 30
+  read_only_root: true
+  network_egress: false
+  wasm_engine: "wasmtime"
+
+# ------------------------------------------------------------------------------
+# 10. OIDC Keyless Cloud Workload Federation
+# ------------------------------------------------------------------------------
+oidc:
+  issuer_url: "https://auth.percipience.internal"
+  token_ttl_seconds: 3600
+  keys_dir: ".nb/context/oidc_keys"
+  audit_log_path: ".nb/context/ledger/oidc_exchange_audit.jsonl"
+
+# ------------------------------------------------------------------------------
+# 11. Immutable WORM Cloud Egress (SEC 17a-4 / FINRA)
+# ------------------------------------------------------------------------------
+worm_egress:
+  s3_bucket: "percipience-prod-worm-ledger"
+  gcs_bucket: "percipience-prod-worm-ledger"
+  retention_days: 365
+  compliance_mode: "COMPLIANCE"
+
+# ------------------------------------------------------------------------------
+# 12. Interactive GitOps PR Gatekeeper Bot
+# ------------------------------------------------------------------------------
+gitops:
+  preview_domain: "preview.percipience.internal"
+  default_platform: "github" # "github" | "gitlab"
+  comment_card_tag: "<!-- percipience:pr-status-card -->"
+
+# ------------------------------------------------------------------------------
+# 13. OpenTelemetry (OTel) GenAI Observability
+# ------------------------------------------------------------------------------
+otel:
+  service_name: "percipience-context-os"
+  otlp_endpoint: "" # e.g. "http://localhost:4318/v1/traces"
+  sample_rate: 1.0
+  spans_log_path: ".nb/context/ledger/otel_spans.jsonl"

@@ -1,35 +1,157 @@
 workflow_id: vscode_plugin_delivery_flow
 name: Visual Studio Code Extension End-to-End Delivery Flow
-version: "1.0.0"
-description: Multi-stage automated delivery pipeline for Visual Studio Code VSIX Extension & LSP Client
+version: 1.0.0
+description: Multi-stage automated delivery pipeline for Visual Studio Code VSIX Extension
+  & LSP Client
 stages:
-  - id: stage_1_manifest_and_activation
-    name: Package Manifest & Lazy Activation Gate
-    agent: agent_vscode_extension_architect
-    tasks:
-      - validate_package_json_manifest
-      - verify_zero_wildcard_activation
-      - check_secret_storage_invariants
+- id: stage_1_manifest_and_activation
+  name: Package Manifest & Lazy Activation Gate
+  agent: agent_vscode_extension_architect
+  executor: agent_vscode_extension_architect
+  tasks: &id001
+  - validate_package_json_manifest
+  - verify_zero_wildcard_activation
+  - check_secret_storage_invariants
+  handled_contracts:
+  - contract_id: package_json_manifest_contract
+    name: VS Code package.json Extension Manifest Contract
+    path: .nb/context/contracts/package_json_manifest_contract.json
+    type: json_schema
+    action: validate_manifest
+    description: Verifies contributes schemas, views, commands, and activationEvents configuration.
+  - contract_id: sandbox_permission_contract
+    name: Extension Sandbox & Zero Wildcard Activation Contract
+    path: .nb/context/contracts/sandbox_permission_contract.json
+    type: json_schema
+    action: enforce_sandbox_isolation
+    description: Prohibits wildcard onStartupFinished activation, requiring explicit onCommand or onLanguage triggers.
 
-  - id: stage_2_lsp_subsystem
-    name: LSP 3.17 Server & Diagnostic Verification
-    agent: agent_lsp_language_features_specialist
-    tasks:
-      - test_lsp_incremental_sync
-      - benchmark_diagnostic_latency
-      - verify_codelens_providers
+- id: stage_2_lsp_subsystem
+  name: LSP 3.17 Server & Diagnostic Verification
+  agent: agent_lsp_language_features_specialist
+  executor: agent_lsp_language_features_specialist
+  tasks: &id002
+  - test_lsp_incremental_sync
+  - benchmark_diagnostic_latency
+  - verify_codelens_providers
+  handled_contracts:
+  - contract_id: lsp_protocol_contract
+    name: Language Server Protocol 3.17 Specification Contract
+    path: .nb/context/contracts/lsp_protocol_contract.yaml
+    type: yaml_schema
+    action: test_lsp_compliance
+    description: Tests textDocument/publishDiagnostics, codeLens, and incremental synchronization latency (<50ms).
 
-  - id: stage_3_webview_dashboard
-    name: Webview Dashboard & Theme Sync
-    agent: agent_vscode_webview_ux_engineer
-    tasks:
-      - verify_nonce_csp_security
-      - test_theme_color_synchronization
-      - benchmark_mermaid_render_fps
+- id: stage_3_webview_dashboard
+  name: Webview Dashboard & Theme Sync
+  agent: agent_vscode_webview_ux_engineer
+  executor: agent_vscode_webview_ux_engineer
+  tasks: &id003
+  - verify_nonce_csp_security
+  - test_theme_color_synchronization
+  - benchmark_mermaid_render_fps
+  handled_contracts:
+  - contract_id: webview_message_rpc_contract
+    name: Webview RPC & Nonce-Based CSP Contract
+    path: .nb/context/contracts/webview_message_rpc_contract.json
+    type: json_schema
+    action: verify_csp_and_rpc
+    description: Ensures zero inline script execution without cryptographic nonces, and validates postMessage RPC schemas.
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System Tokens Contract
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_theme_sync
+    description: Synchronizes VS Code CSS variables (--vscode-*) with corporate design tokens for light and dark modes.
 
-  - id: stage_4_ipc_and_gate_seal
-    name: Socket IPC Bridge & Merkle Seal
-    agent: agent_vscode_extension_architect
-    tasks:
-      - test_socket_ipc_throughput
-      - seal_merkle_recovery_block
+- id: stage_4_ipc_and_gate_seal
+  name: Socket IPC Bridge & Merkle Seal
+  agent: agent_vscode_extension_architect
+  executor: agent_vscode_extension_architect
+  tasks: &id004
+  - test_socket_ipc_throughput
+  - seal_merkle_recovery_block
+  handled_contracts:
+  - contract_id: daemon_rpc_contract
+    name: Percipience Daemon IPC Protocol Contract
+    path: .nb/context/contracts/daemon_rpc_contract.json
+    type: json_schema
+    action: test_socket_ipc
+    description: Verifies UNIX socket IPC throughput and error handling between extension and CLI daemon.
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Four-Eyes Release Seal Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_recovery_block
+    description: Signs VSIX package distribution hash into the local Merkle ledger before publication.
+
+steps:
+- id: stage_1_manifest_and_activation
+  name: Package Manifest & Lazy Activation Gate
+  agent: agent_vscode_extension_architect
+  executor: agent_vscode_extension_architect
+  tasks: *id001
+  handled_contracts:
+  - contract_id: package_json_manifest_contract
+    name: VS Code package.json Extension Manifest Contract
+    path: .nb/context/contracts/package_json_manifest_contract.json
+    type: json_schema
+    action: validate_manifest
+    description: Verifies contributes schemas, views, commands, and activationEvents configuration.
+  - contract_id: sandbox_permission_contract
+    name: Extension Sandbox & Zero Wildcard Activation Contract
+    path: .nb/context/contracts/sandbox_permission_contract.json
+    type: json_schema
+    action: enforce_sandbox_isolation
+    description: Prohibits wildcard onStartupFinished activation, requiring explicit onCommand or onLanguage triggers.
+
+- id: stage_2_lsp_subsystem
+  name: LSP 3.17 Server & Diagnostic Verification
+  agent: agent_lsp_language_features_specialist
+  executor: agent_lsp_language_features_specialist
+  tasks: *id002
+  handled_contracts:
+  - contract_id: lsp_protocol_contract
+    name: Language Server Protocol 3.17 Specification Contract
+    path: .nb/context/contracts/lsp_protocol_contract.yaml
+    type: yaml_schema
+    action: test_lsp_compliance
+    description: Tests textDocument/publishDiagnostics, codeLens, and incremental synchronization latency (<50ms).
+
+- id: stage_3_webview_dashboard
+  name: Webview Dashboard & Theme Sync
+  agent: agent_vscode_webview_ux_engineer
+  executor: agent_vscode_webview_ux_engineer
+  tasks: *id003
+  handled_contracts:
+  - contract_id: webview_message_rpc_contract
+    name: Webview RPC & Nonce-Based CSP Contract
+    path: .nb/context/contracts/webview_message_rpc_contract.json
+    type: json_schema
+    action: verify_csp_and_rpc
+    description: Ensures zero inline script execution without cryptographic nonces, and validates postMessage RPC schemas.
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System Tokens Contract
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_theme_sync
+    description: Synchronizes VS Code CSS variables (--vscode-*) with corporate design tokens for light and dark modes.
+
+- id: stage_4_ipc_and_gate_seal
+  name: Socket IPC Bridge & Merkle Seal
+  agent: agent_vscode_extension_architect
+  executor: agent_vscode_extension_architect
+  tasks: *id004
+  handled_contracts:
+  - contract_id: daemon_rpc_contract
+    name: Percipience Daemon IPC Protocol Contract
+    path: .nb/context/contracts/daemon_rpc_contract.json
+    type: json_schema
+    action: test_socket_ipc
+    description: Verifies UNIX socket IPC throughput and error handling between extension and CLI daemon.
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Four-Eyes Release Seal Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_recovery_block
+    description: Signs VSIX package distribution hash into the local Merkle ledger before publication.

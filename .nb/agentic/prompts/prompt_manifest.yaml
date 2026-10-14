@@ -9,8 +9,8 @@ prompts:
   derivation_prompt.md:
     has_prefix_pinning: true
     role: derivation
-    sha256: 993661d05bd7e610faee086c2c6ba44e4ff690ab6d462cdb99c2c4084fed0f47
-    size_bytes: 1107
+    sha256: 722d76f106411a13752b9cfcd56af3d98a566ca3e730de42efbcb0bc02f6bd08
+    size_bytes: 2174
     version: 1.0.0
   evaluation_refinement_prompt.md:
     has_prefix_pinning: true

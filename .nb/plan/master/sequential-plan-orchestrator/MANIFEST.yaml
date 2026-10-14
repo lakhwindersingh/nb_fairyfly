@@ -45,21 +45,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: 2c29d49778b3d61f71857773fad49c965efd5dc9c15496861299496168fb53b1
     line_count: 158
     primary_purpose: Concise documentation
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: 17be881ab98d9704fb9bbf53b697da3f65c8ccbef90d06d8fe69e390ad4b8bcc
     line_count: 707
     primary_purpose: Detailed documentation
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: 10162aa4332e914ffdec1cfc3d7332fb7e41359e0f2284569ff03ff30b0db49d
     line_count: 46
     primary_purpose: Readme documentation

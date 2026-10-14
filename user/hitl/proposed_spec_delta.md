@@ -1,11 +1,11 @@
-# Proposed Specification Delta RFC: DELTA_20261014_183346
+# Proposed Specification Delta RFC: DELTA_20261014_194100
 ## Evolutionary Architecture Request (Evolve Mode)
 
-- **Delta ID:** `DELTA_20261014_183346`
+- **Delta ID:** `DELTA_20261014_194100`
 - **Source Module:** `mod_portal_marketing`
 - **Title:** Add Streaming Response Header
 - **Status:** `AWAITING_HITL_REVIEW`
-- **Created At:** `2026-10-14T18:33:46.674714+00:00`
+- **Created At:** `2026-10-14T19:41:00.077883+00:00`
 
 ---
 
@@ -31,5 +31,5 @@ Necessary wire addition for async chunking.
 ### 4. Human-in-the-Loop Decision Gate
 To approve this specification delta and baseline `user/inputs/`, run:
 ```bash
-./workplace/bin/percipience drift approve-delta --delta-id DELTA_20261014_183346
+./workplace/bin/percipience drift approve-delta --delta-id DELTA_20261014_194100
 ```

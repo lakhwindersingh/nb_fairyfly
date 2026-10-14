@@ -34,21 +34,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: 905c6c43de5803b607a0615165e2f2c4932141dcf9a1e5c85d371a7676eec11c
     line_count: 133
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: 87c34a62453cf506cd85b543b62bbf12ff1d7e3f87fed85732dee4064514ded2
     line_count: 354
     primary_purpose: Extended implementation guide for npx distribution
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-10-14'
     content_hash: d38cb84d417f0d1684156a32f25c845393dde09d9e4466489b243417a9f6ee79
     line_count: 28
     primary_purpose: Quick reference and navigation

@@ -1,0 +1,20 @@
+{
+  "handoff_id": "HO_TODO_STAGE_01",
+  "payload": {
+    "handoff_id": "HO_TODO_STAGE_01",
+    "from_agent": "agent_ast_optimizer",
+    "to_agent": "agent_dependency_cve_sentinel",
+    "workflow_id": "wf_pr_gatekeeper",
+    "stage": "stage_1_ast_diff",
+    "payload_artifact": "art_ast_diff_01",
+    "token_hash": "0761b3f2d7010724f5bfe16c15de123cd83bb33da99d10c8038823a6ed56e86a",
+    "timestamp": "2026-09-17T20:00:00Z",
+    "hop_count": 1,
+    "lineage": [
+      "agent_ast_optimizer"
+    ]
+  },
+  "dispatched_at": "2026-10-14T19:41:00.081477+00:00",
+  "status": "DISPATCHED_PENDING_ACK",
+  "delivery_attempts": 1
+}
