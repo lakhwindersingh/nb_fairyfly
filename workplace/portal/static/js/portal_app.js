@@ -2795,3 +2795,265 @@ window.closeContractDrawer = function() {
   const drawer = document.getElementById('contractPreviewDrawer');
   if (drawer) drawer.style.display = 'none';
 };
+
+
+/* ==========================================================================
+   ENTERPRISE UI DESIGN SYSTEM SHOWCASE
+   Plan: .nb/plan/master/enterprise-ui-design-system (v2.0.0_look_and_feel_agnostic)
+   Resources -> UI Design System pane interactions
+   ========================================================================== */
+
+window.dsTabularRafId = null;
+
+window.initDesignSystemShowcase = function() {
+  dsSyncActiveTheme();
+
+  if (dsTabularRafId) return;
+  let last = 0;
+  let value = 0.0;
+
+  const step = (ts) => {
+    dsTabularRafId = requestAnimationFrame(step);
+    if (ts - last < 100) return;
+    last = ts;
+    value += Math.random() * 0.000642;
+    if (value > 9.999999) value = 0.0;
+    const text = '$' + value.toFixed(6);
+    const tabular = document.getElementById('dsTabularDemo');
+    const jitter = document.getElementById('dsJitterDemo');
+    if (tabular) tabular.textContent = text;
+    if (jitter) jitter.textContent = text;
+  };
+  dsTabularRafId = requestAnimationFrame(step);
+};
+
+window.dsSyncActiveTheme = function() {
+  const badge = document.getElementById('dsActiveThemeBadge');
+  if (!badge) return;
+  badge.textContent = document.documentElement.getAttribute('data-theme') || 'corporate-light';
+};
+
+window.dsApplyTheme = function(theme) {
+  if (typeof switchTheme === 'function') switchTheme(theme);
+  dsSyncActiveTheme();
+};
+
+window.dsSelectWorkspaceTab = function(paneId, btn) {
+  const container = document.getElementById('dsWorkspaceDemo');
+  if (!container) return;
+  container.querySelectorAll('.ds-tabpane').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+  container.querySelectorAll('.ds-tab').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(paneId);
+  if (pane) {
+    pane.style.display = 'block';
+    pane.classList.add('active');
+  }
+  if (btn) btn.classList.add('active');
+};
+
+window.dsGridStateChanged = function() {
+  const filter = document.getElementById('dsGridFilter');
+  const sort = document.getElementById('dsGridSort');
+  const badge = document.getElementById('dsGridStateBadge');
+  if (!badge) return;
+  const f = filter ? filter.value.trim() : '';
+  const s = sort ? sort.value : 'metric';
+  badge.textContent = 'state: ' + (f ? 'filter="' + f + '"' : 'no-filter') + ' | sort=' + s;
+  badge.className = 'badge badge-cyan';
+};
+
+window.dsFocusWorkspaceDemo = function() {
+  const demo = document.getElementById('dsWorkspaceDemo');
+  if (demo) demo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+window.dsSidebarStates = ['expanded', 'rail', 'collapsed'];
+window.dsSidebarLabels = { expanded: 'sidebar: 240px expanded', rail: 'sidebar: 64px icon rail', collapsed: 'sidebar: 0px collapsed' };
+
+window.dsCycleSidebar = function() {
+  const sidebar = document.getElementById('dsShellSidebar');
+  const badge = document.getElementById('dsShellStateBadge');
+  if (!sidebar) return;
+  const current = sidebar.getAttribute('data-state') || 'expanded';
+  const next = dsSidebarStates[(dsSidebarStates.indexOf(current) + 1) % dsSidebarStates.length];
+  sidebar.setAttribute('data-state', next);
+  if (badge) badge.textContent = dsSidebarLabels[next] || ('sidebar: ' + next);
+};
+
+window.dsToggleInspector = function() {
+  const inspector = document.getElementById('dsInspectorDemo');
+  if (inspector) inspector.classList.toggle('open');
+};
+
+// ---------------------------------------------------------------------------
+// GLOBAL COMMAND PALETTE (Cmd+K)
+// ---------------------------------------------------------------------------
+window.dsCommandRegistry = [
+  { label: 'Overview', hint: 'tab', keywords: 'home dashboard', run: () => showTab('overview') },
+  { label: '52 Capabilities', hint: 'tab', keywords: 'platform engines', run: () => showTab('platform') },
+  { label: 'Economics', hint: 'tab', keywords: 'roi pricing infra', run: () => showTab('economics') },
+  { label: 'Comparatives', hint: 'tab', keywords: 'benchmark competitor', run: () => showTab('comparatives') },
+  { label: 'Lab', hint: 'tab', keywords: 'gateway sandbox', run: () => showTab('lab') },
+  { label: 'Resources', hint: 'tab', keywords: 'docs reports', run: () => showTab('resources') },
+  { label: 'UI Design System', hint: 'resources', keywords: 'tokens themes surfaces design system', run: () => showTab('design-system') },
+  { label: 'Delivery Pipelines & Contracts', hint: 'resources', keywords: 'workflow dag contracts', run: () => showResourceSubtab('res-pipelines') },
+  { label: 'Client Space', hint: 'surface', keywords: 'tenant governance', run: () => showTab('client') },
+  { label: 'Corporate Surface', hint: 'surface', keywords: 'public marketing', run: () => switchSurface('corporate') },
+  { label: 'Admin Console', hint: 'surface', keywords: 'governance approval', run: () => switchSurface('admin') },
+  { label: 'Cycle Theme', hint: 'action', keywords: 'dark light oled theme', run: () => { const c = document.documentElement.getAttribute('data-theme') || 'corporate-light'; const n = c === 'corporate-light' ? 'enterprise-dark' : (c === 'enterprise-dark' ? 'pro-oled' : 'corporate-light'); switchTheme(n); dsSyncActiveTheme(); } },
+  { label: 'Cycle Workspace Sidebar', hint: 'action', keywords: 'collapse chrome sidebar', run: () => dsCycleSidebar() },
+  { label: 'Toggle Zen Focus Mode', hint: 'action', keywords: 'focus distraction', run: () => toggleZenMode() }
+];
+
+window.dsRenderPalette = function(query) {
+  const list = document.getElementById('cmdPaletteList');
+  if (!list) return;
+  const q = (query || '').toLowerCase().trim();
+  const items = dsCommandRegistry.filter(c => !q || c.label.toLowerCase().includes(q) || c.keywords.includes(q));
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = '<div class="cmd-empty">No matching commands</div>';
+    return;
+  }
+  items.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cmd-item' + (i === 0 ? ' active' : '');
+    el.innerHTML = '<span>' + c.label + '</span><span class="cmd-hint">' + c.hint + '</span>';
+    el.onclick = () => dsRunPaletteCommand(c);
+    list.appendChild(el);
+  });
+};
+
+window.dsRunPaletteCommand = function(c) {
+  dsClosePalette();
+  try { c.run(); } catch (e) {}
+};
+
+window.dsMovePaletteSelection = function(delta) {
+  const list = document.getElementById('cmdPaletteList');
+  if (!list) return;
+  const items = Array.from(list.querySelectorAll('.cmd-item'));
+  if (!items.length) return;
+  let idx = items.findIndex(el => el.classList.contains('active'));
+  if (idx < 0) idx = 0;
+  idx = (idx + delta + items.length) % items.length;
+  items.forEach(el => el.classList.remove('active'));
+  items[idx].classList.add('active');
+  items[idx].scrollIntoView({ block: 'nearest' });
+};
+
+window.triggerCommandPalette = function() {
+  if (document.getElementById('cmdPaletteOverlay')) {
+    dsClosePalette();
+    return;
+  }
+  const overlay = document.createElement('div');
+  overlay.className = 'cmd-palette-overlay';
+  overlay.id = 'cmdPaletteOverlay';
+  overlay.innerHTML =
+    '<div class="cmd-palette" role="dialog" aria-modal="true" aria-label="Command Palette">' +
+      '<input class="cmd-palette-input" id="cmdPaletteInput" placeholder="Type a command or search..." autocomplete="off">' +
+      '<div class="cmd-palette-list" id="cmdPaletteList"></div>' +
+      '<div class="cmd-palette-footer"><span>&uarr;&darr; navigate</span><span>&crarr; run</span><span>esc close</span></div>' +
+    '</div>';
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) dsClosePalette(); });
+  document.body.appendChild(overlay);
+
+  const input = document.getElementById('cmdPaletteInput');
+  dsRenderPalette('');
+  input.addEventListener('input', () => dsRenderPalette(input.value));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); dsMovePaletteSelection(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); dsMovePaletteSelection(-1); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      const active = document.querySelector('#cmdPaletteList .cmd-item.active');
+      if (active) active.click();
+    } else if (e.key === 'Escape') { e.preventDefault(); dsClosePalette(); }
+  });
+  input.focus();
+};
+
+window.dsClosePalette = function() {
+  const overlay = document.getElementById('cmdPaletteOverlay');
+  if (overlay) overlay.remove();
+};
+
+// ---------------------------------------------------------------------------
+// ZEN FOCUS MODE
+// ---------------------------------------------------------------------------
+window.toggleZenMode = function() {
+  const on = document.body.classList.toggle('zen-mode');
+  let exit = document.getElementById('zenExitBtn');
+  if (on && !exit) {
+    exit = document.createElement('button');
+    exit.id = 'zenExitBtn';
+    exit.className = 'zen-exit-btn';
+    exit.innerHTML = '✕ Exit Zen Focus Mode (Esc)';
+    exit.onclick = () => toggleZenMode();
+    document.body.appendChild(exit);
+  } else if (!on && exit) {
+    exit.remove();
+  }
+};
+
+// ---------------------------------------------------------------------------
+// ADMIN DUAL-CONTROL SHIM (admin_portal.html -> resolveApproval)
+// ---------------------------------------------------------------------------
+window.resolveApproval = function(action) {
+  if (action === 'APPROVE' && typeof signDualControlProposal === 'function') {
+    signDualControlProposal();
+  } else if (typeof revertDualControlProposal === 'function') {
+    revertDualControlProposal();
+  }
+};
+
+// ---------------------------------------------------------------------------
+// GLOBAL KEYBOARD SHORTCUTS
+// ---------------------------------------------------------------------------
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', function(e) {
+    const meta = e.metaKey || e.ctrlKey;
+
+    if (meta && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      triggerCommandPalette();
+      return;
+    }
+
+    if (e.key === 'Escape' && document.getElementById('cmdPaletteOverlay')) {
+      dsClosePalette();
+      return;
+    }
+
+    if (e.key === 'Escape' && document.body.classList.contains('zen-mode')) {
+      toggleZenMode();
+      return;
+    }
+
+    if (meta && e.shiftKey && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      toggleZenMode();
+      return;
+    }
+
+    if (meta && e.key.toLowerCase() === 'i') {
+      e.preventDefault();
+      dsToggleInspector();
+      return;
+    }
+
+    if (meta && e.key.toLowerCase() === 'b') {
+      const pane = document.getElementById('design-system');
+      const visible = pane && pane.classList.contains('active') && pane.style.display !== 'none';
+      if (visible) {
+        e.preventDefault();
+        dsCycleSidebar();
+      }
+    }
+  });
+}
+

@@ -218,6 +218,7 @@ window.showResourceSubtab = function(subtabId) {
   if (subtabId === 'res-observability' && typeof fetchOtelSpans === 'function') fetchOtelSpans();
   if (subtabId === 'res-swarm' && typeof loadSwarmFleetTelemetry === 'function') loadSwarmFleetTelemetry();
   if (subtabId === 'res-pipelines' && typeof loadWorkflowsPipelineVisualizer === 'function') loadWorkflowsPipelineVisualizer();
+  if (subtabId === 'res-design-system' && typeof initDesignSystemShowcase === 'function') initDesignSystemShowcase();
 };
 
 // Main Tab Routing - hoisted and attached to window
@@ -275,6 +276,8 @@ function showTab(id) {
     'docs': 'res-docs',
     'reports': 'res-reports',
     'observability': 'res-observability',
+    'design-system': 'res-design-system',
+    'ui-design-system': 'res-design-system',
     'swarm-fleet': 'res-swarm'
   };
   if (resTabs[id]) {

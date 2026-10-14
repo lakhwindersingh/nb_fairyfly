@@ -4,6 +4,7 @@
     <button class="res-subtab-btn" data-res-btn="res-reports" onclick="showResourceSubtab('res-reports')">📄 Deep Reports</button>
     <button class="res-subtab-btn" data-res-btn="res-observability" onclick="showResourceSubtab('res-observability')">📡 Observability Hub</button>
     <button class="res-subtab-btn" data-res-btn="res-pipelines" onclick="showResourceSubtab('res-pipelines')">🔄 Delivery Pipelines &amp; Contracts</button>
+    <button class="res-subtab-btn" data-res-btn="res-design-system" onclick="showResourceSubtab('res-design-system')">🎨 UI Design System</button>
     <button class="res-subtab-btn" data-res-btn="res-swarm" onclick="showTab('swarm-fleet')">🐝 Swarm Fleet Telemetry</button>
   </div>
 
@@ -389,7 +390,7 @@ percipience rollback \
 
   <div id="pipelines" data-res-subtab="res-pipelines" class="res-subtab-pane" style="display:none;">
     <div class="section-title">Visual Delivery Pipelines &amp; Stage Contract Governance</div>
-    <div class="section-desc">Interactive DAG workflow visualizer detailing stage execution progressions, assigned agent executors, and cryptographic contracts handled by each stage across all 7 autonomous delivery flows.</div>
+    <div class="section-desc">Interactive DAG workflow visualizer detailing stage execution progressions, assigned agent executors, and cryptographic contracts handled by each stage across all 10 registered autonomous delivery flows &mdash; 7 application delivery flows (SaaS portal, plugins, IoT, packaging, enterprise SDLC), the PR Gatekeeper, the Quad-Space Plan-to-Code derivation pipeline, and the Enterprise UI Design System module derivation.</div>
 
     <!-- PIPELINE SELECTOR AND SUMMARY CARD -->
     <div class="card" style="margin-bottom:20px; padding:18px;">
@@ -461,6 +462,360 @@ percipience rollback \
         <button class="btn btn-secondary" onclick="closeContractDrawer()" style="padding:4px 10px; font-size:12px;">✕ Close</button>
       </div>
       <pre id="contractDrawerContent" style="max-height:420px; overflow-y:auto; background:var(--bg-alt); padding:14px; border-radius:6px; font-size:12px; line-height:1.45;"></pre>
+    </div>
+  </div>
+
+  <div id="design-system" data-res-subtab="res-design-system" class="res-subtab-pane" style="display:none;">
+    <div class="section-title">Enterprise Unified Design System &amp; Universal Look-and-Feel Architecture</div>
+    <div class="section-desc">
+      Terminology-agnostic, domain-neutral design-token &amp; component architecture delivering 100% visual consistency across three
+      specialized application surfaces. <code>plan_id: master_enterprise_ui_design_system</code> &bull;
+      <code>v2.0.0_look_and_feel_agnostic</code> &bull; <span class="badge badge-emerald" style="font-size:10px;">ACTIVE</span>
+      &bull; semantic parity <span class="badge badge-cyan" style="font-size:10px;">0.985 PASSED</span>
+      <button class="btn btn-xs btn-secondary" style="margin-left:8px;" onclick="showResourceSubtab('res-pipelines')">⚡ View Derivation Workflow</button>
+    </div>
+
+    <!-- METRIC STRIP -->
+    <div class="grid-cards" style="margin-bottom:22px;">
+      <div class="metric-card"><div class="metric-val text-cyan">8px</div><div class="metric-label">Base Spatial Grid</div></div>
+      <div class="metric-card"><div class="metric-val text-purple">5 Tiers</div><div class="metric-label">Standardized Control Heights</div></div>
+      <div class="metric-card"><div class="metric-val text-emerald">3 Themes</div><div class="metric-label">Certified Theme Presets</div></div>
+      <div class="metric-card"><div class="metric-val text-amber">7.0:1</div><div class="metric-label">WCAG 2.2 AAA Contrast</div></div>
+      <div class="metric-card"><div class="metric-val text-cyan" id="dsFrameBudgetVal">16.6 ms</div><div class="metric-label">60 FPS Frame Budget</div></div>
+      <div class="metric-card"><div class="metric-val text-purple">6 Modules</div><div class="metric-label">Modular Specifications</div></div>
+    </div>
+
+    <!-- CORE INVARIANTS + PROVENANCE -->
+    <div class="grid-2" style="margin-bottom:22px;">
+      <div class="card">
+        <div class="card-title">⚖️ Core Invariants &amp; Governance Rules</div>
+        <div class="vector-list">
+          <div class="vector-item">
+            <div class="vector-header"><span>1. 8px Spatial Rhythm</span><span class="badge badge-cyan" style="font-size:10px;">ENFORCED</span></div>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">All padding, margins &amp; layout gaps are exact multiples of 8px (4px micro-increments for compact badges &amp; icon gaps).</p>
+          </div>
+          <div class="vector-item">
+            <div class="vector-header"><span>2. Standardized Control Sizing</span><span class="badge badge-cyan" style="font-size:10px;">5-TIER</span></div>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">XS 24px &bull; SM 32px &bull; MD 40px &bull; LG 48px &bull; XL 56px &mdash; every interactive control conforms.</p>
+          </div>
+          <div class="vector-item">
+            <div class="vector-header"><span>3. Tabular Numeric Formatting</span><span class="badge badge-cyan" style="font-size:10px;">ANTI-JITTER</span></div>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">Live telemetry uses <code>font-variant-numeric: tabular-nums</code> to prevent horizontal jitter during updates.</p>
+          </div>
+          <div class="vector-item">
+            <div class="vector-header"><span>4. WCAG 2.2 AAA Accessibility</span><span class="badge badge-emerald" style="font-size:10px;">&ge; 7.0:1</span></div>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">Text/background contrast &ge; 7.0:1; touch targets comply with WCAG 2.5.5 (&ge; 44px).</p>
+          </div>
+          <div class="vector-item">
+            <div class="vector-header"><span>5. Fluid Responsive Design</span><span class="badge badge-cyan" style="font-size:10px;">NO FRAMES</span></div>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">Responsive CSS grid/flexbox adapts to desktop, tablet &amp; mobile without artificial device-simulator frames.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🗂️ Plan Provenance &amp; Capability Registry</div>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start; gap:6px; margin-bottom:12px;">
+          <div><b>Layer:</b> <code>master</code> &bull; <b>Capability:</b> <code>TIER_MASTER</code></div>
+          <div><b>Status:</b> Active Architecture Specification &bull; production_runtime</div>
+          <div><b>Semantic Parity:</b> 0.985 composite &mdash; gate <span class="text-emerald" style="font-weight:700;">PASSED</span></div>
+          <div><b>Dependencies:</b> requires <code>master_parent_framework</code> &bull; enables <code>domain_saas_portal</code></div>
+        </div>
+        <div class="card-badge">Capability Flags</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+          <span class="ds-chip">unified_design_tokens</span>
+          <span class="ds-chip">universal_look_and_feel</span>
+          <span class="ds-chip">terminology_agnostic</span>
+          <span class="ds-chip">multi_surface_layouts</span>
+          <span class="ds-chip">virtualized_data_grid</span>
+          <span class="ds-chip">collapsible_chrome</span>
+          <span class="ds-chip">tabbed_workspaces</span>
+          <span class="ds-chip">fluid_responsive</span>
+          <span class="ds-chip">docker_agents_compatible</span>
+          <span class="ds-chip">interactive_showcase</span>
+        </div>
+        <div style="margin-top:14px; font-size:12px; color:var(--muted);">
+          <b>Toolchain:</b> React 19 / Next.js 16 &bull; Tailwind CSS v4 + W3C Design Tokens &bull; Radix UI / React Aria &bull; TanStack Virtual v3.
+        </div>
+      </div>
+    </div>
+
+    <!-- SPATIAL GRID & TOKEN SCALE -->
+    <div class="card" style="margin-bottom:22px;">
+      <div class="card-title">📐 Design Token Scale: Spatial Grid, Control Heights &amp; Radii</div>
+      <p style="font-size:12px; color:var(--muted); margin:4px 0 14px;">Spacing(n) = 8n px, n &isin; {0.5, 1, 1.5, 2, 3, 4, 6, 8, 12}.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;">
+        <span class="ds-chip ds-chip-mono">4px</span><span class="ds-chip ds-chip-mono">8px</span><span class="ds-chip ds-chip-mono">12px</span>
+        <span class="ds-chip ds-chip-mono">16px</span><span class="ds-chip ds-chip-mono">24px</span><span class="ds-chip ds-chip-mono">32px</span>
+        <span class="ds-chip ds-chip-mono">48px</span><span class="ds-chip ds-chip-mono">64px</span><span class="ds-chip ds-chip-mono">96px</span>
+      </div>
+      <div class="table-wrap" style="margin:0 0 18px;">
+        <table class="table">
+          <thead><tr><th>Tier</th><th>Height</th><th>Applied Usage</th><th>WCAG Touch</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-cyan" style="font-size:10px;">XS</span></td><td><code class="ds-mono">24px</code></td><td>Table action buttons, compact badges</td><td>Informational</td></tr>
+            <tr><td><span class="badge badge-cyan" style="font-size:10px;">SM</span></td><td><code class="ds-mono">32px</code></td><td>High-density data grid controls, secondary inputs</td><td>Informational</td></tr>
+            <tr><td><span class="badge badge-emerald" style="font-size:10px;">MD</span></td><td><code class="ds-mono">40px</code></td><td>Standard form inputs, modal actions</td><td>Informational</td></tr>
+            <tr><td><span class="badge badge-emerald" style="font-size:10px;">LG</span></td><td><code class="ds-mono">48px</code></td><td>Primary CTAs, touch-ergonomic buttons</td><td class="text-emerald" style="font-weight:700;">&ge; 44px PASS</td></tr>
+            <tr><td><span class="badge badge-emerald" style="font-size:10px;">XL</span></td><td><code class="ds-mono">56px</code></td><td>Hero buttons, prominent actions</td><td class="text-emerald" style="font-weight:700;">&ge; 44px PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:24px; font-size:12px; color:var(--muted);">
+        <div><b>Radii:</b> <span class="ds-chip ds-chip-mono">4px</span> <span class="ds-chip ds-chip-mono">6px</span> <span class="ds-chip ds-chip-mono">8px</span></div>
+        <div><b>Motion:</b> <span class="ds-chip ds-chip-mono">150ms ease</span> <span class="ds-chip ds-chip-mono">200ms ease</span></div>
+        <div><b>Shadows:</b> <span class="ds-chip ds-chip-mono">card</span> <span class="ds-chip ds-chip-mono">raised</span></div>
+      </div>
+    </div>
+
+    <!-- TYPOGRAPHY + THEMES -->
+    <div class="grid-2" style="margin-bottom:22px;">
+      <div class="card">
+        <div class="card-title">🔤 Typography Scale &amp; Tabular Numerics</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+          <div style="border-left:3px solid var(--cyan); padding-left:10px;"><div style="font-size:14px; font-weight:700;">Inter</div><div style="font-size:12px; color:var(--muted);">UI text, body copy &amp; labels</div></div>
+          <div style="border-left:3px solid var(--purple); padding-left:10px;"><div style="font-size:14px; font-weight:700;">Plus Jakarta Sans</div><div style="font-size:12px; color:var(--muted);">Marketing headings &amp; hero display</div></div>
+          <div style="border-left:3px solid var(--emerald); padding-left:10px;"><div class="ds-mono" style="font-size:14px; font-weight:700;">JetBrains Mono</div><div style="font-size:12px; color:var(--muted);">Code, wire contracts, tabular numerics</div></div>
+        </div>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div style="font-size:12px; font-weight:700;">Live Telemetry Anti-Jitter Demo</div>
+          <div style="display:flex; gap:20px; align-items:baseline;">
+            <div><div style="font-size:10px; color:var(--muted); text-transform:uppercase;">tabular-nums</div><div class="ds-mono" id="dsTabularDemo" style="font-size:22px; font-weight:800; color:var(--emerald);">$0.000000</div></div>
+            <div><div style="font-size:10px; color:var(--muted); text-transform:uppercase;">proportional</div><div id="dsJitterDemo" style="font-size:22px; font-weight:800; color:var(--rose);">$0.000000</div></div>
+          </div>
+          <div style="font-size:11px; color:var(--muted);">Both counters update in lock-step &mdash; only the tabular column stays fixed-width.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎨 Certified Theme Presets <span class="badge badge-cyan" style="font-size:10px; margin-left:6px;">Active: <span id="dsActiveThemeBadge">corporate-light</span></span></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="ds-theme-card">
+            <div>
+              <div style="font-weight:700; font-size:13px;">Corporate Light</div>
+              <div style="font-size:11px; color:var(--muted);">Corporate Light &bull; clean white/light marketing surface</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="ds-swatch" style="background:#F8FAFC; border:1px solid #E2E8F0;"></span>
+              <span class="ds-swatch" style="background:#FFFFFF; border:1px solid #E2E8F0;"></span>
+              <span class="ds-swatch" style="background:#0284C7;"></span>
+              <span class="ds-swatch" style="background:#0F172A;"></span>
+              <button class="btn btn-xs btn-secondary" onclick="dsApplyTheme('corporate-light')">Apply</button>
+            </div>
+          </div>
+          <div class="ds-theme-card">
+            <div>
+              <div style="font-weight:700; font-size:13px;">Enterprise Slate Dark</div>
+              <div style="font-size:11px; color:var(--muted);">Enterprise Slate Dark &bull; admin console &amp; ops telemetry</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="ds-swatch" style="background:#070B14; border:1px solid #1E2D4A;"></span>
+              <span class="ds-swatch" style="background:#111C33; border:1px solid #1E2D4A;"></span>
+              <span class="ds-swatch" style="background:#00F2FE;"></span>
+              <span class="ds-swatch" style="background:#F8FAFC;"></span>
+              <button class="btn btn-xs btn-secondary" onclick="dsApplyTheme('enterprise-dark')">Apply</button>
+            </div>
+          </div>
+          <div class="ds-theme-card">
+            <div>
+              <div style="font-weight:700; font-size:13px;">High-Contrast OLED</div>
+              <div style="font-size:11px; color:var(--muted);">High-Contrast OLED &bull; true-black, maximum legibility</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="ds-swatch" style="background:#000000; border:1px solid #1A1A1A;"></span>
+              <span class="ds-swatch" style="background:#050505; border:1px solid #1A1A1A;"></span>
+              <span class="ds-swatch" style="background:#00F2FE;"></span>
+              <span class="ds-swatch" style="background:#FFFFFF;"></span>
+              <button class="btn btn-xs btn-secondary" onclick="dsApplyTheme('pro-oled')">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIVERSAL SURFACES -->
+    <div style="margin-bottom:22px;">
+      <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span>🗺️</span> Three Universal Application Surfaces</h3>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-badge">Surface 1</div>
+          <h3>🌐 Public &amp; Product Showcase</h3>
+          <p>High aesthetic polish, marketing storytelling, fluid responsive layout, fast Core Web Vitals (LCP &lt; 1.2s) and clean visual hierarchy.</p>
+          <button class="btn btn-secondary" style="width:100%; font-size:11px;" onclick="switchSurface('corporate')">Open Corporate Surface &rarr;</button>
+        </div>
+        <div class="card">
+          <div class="card-badge">Surface 2</div>
+          <h3>🛡️ Admin &amp; Governance Console</h3>
+          <p>High data density, hierarchical navigation, audit oversight, settings management and dual-control approval workflows.</p>
+          <button class="btn btn-secondary" style="width:100%; font-size:11px;" onclick="switchSurface('admin')">Open Admin Console &rarr;</button>
+        </div>
+        <div class="card">
+          <div class="card-badge">Surface 3</div>
+          <h3>📊 Analytics &amp; Operations Workspace</h3>
+          <p>Full-width layouts, high-performance virtualized data grids, real-time telemetry, dockable multi-pane views and micro-interactions.</p>
+          <button class="btn btn-secondary" style="width:100%; font-size:11px;" onclick="dsFocusWorkspaceDemo()">Preview Multi-Pane Workspace &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE OF 3 / TABBED WORKSPACE DEMO -->
+    <div class="card" id="dsWorkspaceDemo" style="margin-bottom:22px;">
+      <div class="card-title">🧩 Rule of 3 &amp; ContextTabbedWorkspace &mdash; State-Preserving Decluttering</div>
+      <p style="font-size:12px; color:var(--muted); margin:4px 0 14px;">
+        Max 3 primary actions per view; a primary cluster (2 panes) plus a secondary tool rail. Secondary tools stay
+        <b>mounted but hidden</b> &mdash; switch away and back and your filter/sort state survives.
+      </p>
+
+      <div class="ds-tabbar">
+        <span class="ds-tabbar-label">Ops Workspace</span>
+        <button class="ds-tab active" data-ds-tab onclick="dsSelectWorkspaceTab('dsPaneGrid', this)">▦ Virtualized Data Grid</button>
+        <button class="ds-tab" data-ds-tab onclick="dsSelectWorkspaceTab('dsPaneRule', this)">🌳 Boolean Rule Builder</button>
+        <button class="ds-tab" data-ds-tab onclick="dsSelectWorkspaceTab('dsPaneSettings', this)">⚙️ Settings &amp; Dual-Control</button>
+        <span class="ds-tabbar-spacer"></span>
+        <span class="badge badge-cyan" style="font-size:10px;">Primary cluster: 2 panes</span>
+      </div>
+
+      <div class="ds-tabpane active" id="dsPaneGrid">
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:10px;">
+          <input class="input input-sm" id="dsGridFilter" placeholder="Filter rows... (state persists)" style="width:220px;" oninput="dsGridStateChanged()">
+          <select class="input input-sm" id="dsGridSort" style="width:180px;" onchange="dsGridStateChanged()">
+            <option value="metric">Sort: primary_metric</option>
+            <option value="change">Sort: change_pct</option>
+            <option value="name">Sort: name</option>
+          </select>
+          <button class="btn btn-xs btn-secondary" onclick="dsGridStateChanged()">🔎 Apply</button>
+          <span class="badge badge-emerald" id="dsGridStateBadge" style="font-size:10px;">state: idle</span>
+        </div>
+        <div class="table-wrap" style="margin:0;">
+          <table class="table">
+            <thead><tr><th>row_id</th><th>name</th><th>category</th><th>status</th><th class="ds-mono" style="text-align:right;">primary_metric</th><th class="ds-mono" style="text-align:right;">change_pct</th></tr></thead>
+            <tbody>
+              <tr><td><code>rw_9001</code></td><td>Atlas Core Engine</td><td>Compute</td><td><span class="status-pill status-active">ACTIVE</span></td><td class="ds-mono" style="text-align:right;">1,284,550</td><td class="text-emerald ds-mono" style="text-align:right;">+2.41%</td></tr>
+              <tr><td><code>rw_9002</code></td><td>Helios Telemetry Bus</td><td>Streaming</td><td><span class="status-pill status-active">ACTIVE</span></td><td class="ds-mono" style="text-align:right;">842,110</td><td class="text-emerald ds-mono" style="text-align:right;">+0.87%</td></tr>
+              <tr><td><code>rw_9003</code></td><td>Nimbus Edge Cache</td><td>Network</td><td><span class="status-pill status-warning">WARNING</span></td><td class="ds-mono" style="text-align:right;">512,004</td><td class="text-rose ds-mono" style="text-align:right;">-1.18%</td></tr>
+              <tr><td><code>rw_9004</code></td><td>Vertex Ledger Node</td><td>FinOps</td><td><span class="status-pill status-active">ACTIVE</span></td><td class="ds-mono" style="text-align:right;">299,781</td><td class="text-emerald ds-mono" style="text-align:right;">+3.06%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ds-tabpane" id="dsPaneRule" style="display:none;">
+        <div class="ds-mono" style="font-size:12px; line-height:1.7; background:var(--code-bg); padding:12px; border-radius:6px;">
+          <div>WHEN <span class="text-cyan">category == "Network"</span></div>
+          <div>&nbsp;&nbsp;AND ( <span class="text-cyan">change_pct &lt; -1.0</span> OR <span class="text-cyan">status == "WARNING"</span> )</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;THEN action = <span class="text-amber">THROTTLE</span> &bull; approval = <span class="text-rose">FOUR_EYES</span></div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:10px;">Nested AND/OR condition trees validated against <code>hierarchical_rule_contract.json</code>.</p>
+      </div>
+
+      <div class="ds-tabpane" id="dsPaneSettings" style="display:none;">
+        <div class="diff-box">
+          <div>&nbsp; "theme": "enterprise-dark",</div>
+          <div class="diff-del">- "frame_budget_ms": 33.3,</div>
+          <div class="diff-add">+ "frame_budget_ms": 16.6,</div>
+          <div>&nbsp; "approval_protocol": "NIST_800_63B_AAL3_FOUR_EYES"</div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:10px;">Side-by-side diff with dual-control badge; sign-off gated by <code>security_four_eyes_contract.json</code>.</p>
+      </div>
+    </div>
+
+    <!-- COLLAPSIBLE CHROME SHELL -->
+    <div class="card" style="margin-bottom:22px;">
+      <div class="card-title">🪟 Collapsible Chrome Shell &mdash; 3-State Sidebar, Inspector Drawer &amp; Zen Focus Mode</div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 14px;">
+        <button class="btn btn-xs btn-primary" onclick="dsCycleSidebar()">⇔ Cycle Sidebar (<span class="ds-mono">Cmd+B</span>)</button>
+        <button class="btn btn-xs btn-secondary" onclick="dsToggleInspector()">🧭 Toggle Inspector (<span class="ds-mono">Cmd+I</span>)</button>
+        <button class="btn btn-xs btn-secondary" onclick="toggleZenMode()">🎯 Zen Focus Mode (<span class="ds-mono">Cmd+Shift+F</span>)</button>
+        <button class="btn btn-xs btn-secondary" onclick="triggerCommandPalette()">🔍 Command Palette (<span class="ds-mono">Cmd+K</span>)</button>
+      </div>
+
+      <div class="ds-shell-demo" id="dsShellDemo">
+        <div class="ds-shell-sidebar" id="dsShellSidebar" data-state="expanded">
+          <div class="ds-shell-item"><span class="ds-shell-ico">▦</span><span class="ds-shell-txt">Data Grid</span></div>
+          <div class="ds-shell-item ds-shell-item-active"><span class="ds-shell-ico">📊</span><span class="ds-shell-txt">Operations</span></div>
+          <div class="ds-shell-item"><span class="ds-shell-ico">🌳</span><span class="ds-shell-txt">Rule Builder</span></div>
+          <div class="ds-shell-item"><span class="ds-shell-ico">⚙️</span><span class="ds-shell-txt">Settings</span></div>
+        </div>
+        <div class="ds-shell-main">
+          <div class="ds-shell-topbar">
+            <span class="ds-shell-txt" style="font-weight:700;">Operations Workspace</span>
+            <span class="badge badge-cyan" style="font-size:10px;" id="dsShellStateBadge">sidebar: 240px expanded</span>
+          </div>
+          <div class="ds-shell-body">
+            <div class="ds-shell-skeleton"><div style="width:38%;"></div><div style="width:72%;"></div><div style="width:56%;"></div><div style="width:64%;"></div></div>
+            <div class="ds-inspector-demo" id="dsInspectorDemo">
+              <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">Inspector &mdash; 360px slide-over</div>
+              <div style="font-size:12px; color:var(--text-secondary);">Contextual properties, provenance &amp; contract bindings for the selected node.</div>
+              <div class="ds-chip ds-chip-mono" style="margin-top:8px;">row_id: rw_9002</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:var(--muted); margin-top:10px;">
+        Sidebar transitions 240px &rarr; 64px (icon rail) &rarr; 0px (fully collapsed). Zen mode hides the global header for distraction-free review; all states are keyboard-accessible.
+      </div>
+    </div>
+
+    <!-- COMPLEX WIDGET SUITE -->
+    <h3 style="font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span>🧱</span> Complex Data &amp; Governance Widget Suite</h3>
+    <div class="grid-2" style="margin-bottom:22px;">
+      <div class="card">
+        <div class="card-badge">mod_03</div>
+        <h3>Virtualized High-Density Data Grid</h3>
+        <p>TanStack Virtual v3 windowing, GPU-accelerated cell flashing, sort/filter/pin &amp; 60 FPS RAF updates.</p>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start;"><div>Contract: <code>data_grid_contract.json</code></div><div class="text-emerald" style="font-weight:700; margin-top:4px;">Render &le; 60 Hz &bull; main thread &le; 8.0 ms</div></div>
+      </div>
+      <div class="card">
+        <div class="card-badge">mod_03</div>
+        <h3>Hierarchical Boolean Rule Builder</h3>
+        <p>Nested AND/OR condition trees with action triggers, validated as a JSON Schema AST.</p>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start;"><div>Contract: <code>hierarchical_rule_contract.json</code></div><div class="text-cyan" style="font-weight:700; margin-top:4px;">Unbounded nesting depth &bull; live validation</div></div>
+      </div>
+      <div class="card">
+        <div class="card-badge">mod_03</div>
+        <h3>Dual-Control Approval Signer</h3>
+        <p>Side-by-side diff viewer with FIDO2/Passkey cryptographic signer and four-eyes enforcement.</p>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start;"><div>Contract: <code>security_four_eyes_contract.json</code></div><div class="text-amber" style="font-weight:700; margin-top:4px;">NIST 800-63B AAL3 &bull; AAL3 four-eyes</div></div>
+      </div>
+      <div class="card">
+        <div class="card-badge">mod_03</div>
+        <h3>Monaco DSL / JSON Schema Editor</h3>
+        <p>Embedded editor with live invariant linting, auto-complete &amp; error underlining.</p>
+        <div class="stat-box" style="flex-direction:column; align-items:flex-start;"><div>Contract: <code>ui_theme_token_contract.json</code></div><div class="text-purple" style="font-weight:700; margin-top:4px;">Inline diagnostics &bull; schema-aware completion</div></div>
+      </div>
+    </div>
+
+    <!-- GOVERNANCE & MODULE MATRIX -->
+    <div class="grid-2" style="margin-bottom:6px;">
+      <div class="card">
+        <div class="card-title">🛡️ Governance, Testing &amp; CI/CD Gates (mod_06)</div>
+        <div class="vector-list">
+          <div class="vector-item"><div class="vector-header"><span>Storybook Component Catalog</span><strong class="text-cyan">Interactive</strong></div><div class="bar-track"><div class="bar-fill bg-cyan" style="width:100%;"></div></div></div>
+          <div class="vector-item"><div class="vector-header"><span>Playwright Pixel-Diff Regression</span><strong class="text-emerald">&Delta;E &lt; 0.2%</strong></div><div class="bar-track"><div class="bar-fill bg-emerald" style="width:100%;"></div></div></div>
+          <div class="vector-item"><div class="vector-header"><span>axe-core Accessibility Gate</span><strong class="text-emerald">0 Violations</strong></div><div class="bar-track"><div class="bar-fill bg-emerald" style="width:100%;"></div></div></div>
+          <div class="vector-item"><div class="vector-header"><span>Token Consistency Validator</span><strong class="text-purple">8px &amp; WCAG</strong></div><div class="bar-track"><div class="bar-fill bg-purple" style="width:100%;"></div></div></div>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:10px;">
+          Shared infra: <code>.nb/context/rules/ui_token_consistency_rules.md</code>, <code>realtime_rendering_rules.md</code>, and the Merkle state hash chain.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📦 Modular Specification Matrix</div>
+        <div class="table-wrap" style="margin:0;">
+          <table class="table">
+            <thead><tr><th>Module</th><th>Core Focus</th></tr></thead>
+            <tbody>
+              <tr><td><code>mod_01</code></td><td>Design tokens, 8px grid, control sizing scale, 3 certified themes</td></tr>
+              <tr><td><code>mod_02</code></td><td>Accessible headless primitives, typography, inputs, modals, toasts</td></tr>
+              <tr><td><code>mod_03</code></td><td>Data grids, Boolean rule builders, diff viewers, schema editors</td></tr>
+              <tr><td><code>mod_04</code></td><td>Public / Admin / Operations surface layouts, Rule of 3, Chrome shell</td></tr>
+              <tr><td><code>mod_05</code></td><td>Real-time state sync, 60 FPS frame budgeting, RAF debouncing</td></tr>
+              <tr><td><code>mod_06</code></td><td>Storybook showcase, visual regression, token consistency validation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </section>
