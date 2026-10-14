@@ -126,5 +126,46 @@ class TestCommercialLicenseManagement(unittest.TestCase):
         self.assertEqual(active["payment_reference"], "ch_stripe_autotest_9981")
 
 
+    def test_07_tier_gated_workflow_and_hook_bundling(self):
+        """Validates per-tier workflow gating (mirrors CORE_TIER_RULES) and git hook bundling."""
+        expected_workflows = {
+            "plan_free": {"basic_autonomous_cicd.yaml", "intellij_pycharm_plugin_delivery_flow.yaml"},
+            "plan_team": {"basic_autonomous_cicd.yaml", "intellij_pycharm_plugin_delivery_flow.yaml",
+                          "vscode_plugin_delivery_flow.yaml"},
+        }
+        for tier, wf_set in expected_workflows.items():
+            res = CommercialPackagerProvisioner.package_tier(
+                workspace_root=REPO_ROOT,
+                tier=tier,
+                output_dir=self.workspace_root / f"bundle_{tier}",
+                tenant_id=f"tenant_{tier}_wf"
+            )
+            pkg = Path(res["package_dir"])
+            bundled_wf = {p.name for p in (pkg / "workflows").glob("*.yaml")}
+            self.assertEqual(bundled_wf, wf_set, f"{tier} workflow set mismatch")
+            self.assertTrue((pkg / "hooks" / "pre-commit.sh").exists(), "git hook must be bundled")
+            self.assertTrue((pkg / "scripts" / "install_git_hook.sh").exists(), "hook installer must be bundled")
+            self.assertIn("hooks/pre-commit.sh", res["bundled_files"])
+
+        biz = Path(CommercialPackagerProvisioner.package_tier(
+            workspace_root=REPO_ROOT, tier="plan_business",
+            output_dir=self.workspace_root / "bundle_business", tenant_id="t_biz")["package_dir"])
+        biz_wf = {p.name for p in (biz / "workflows").glob("*.yaml")}
+        self.assertTrue({"commercial_packaging_provisioning_flow.yaml", "saas_portal_delivery_flow.yaml",
+                         "iot_mobile_delivery_flow.yaml"} <= biz_wf)
+
+        ent = Path(CommercialPackagerProvisioner.package_tier(
+            workspace_root=REPO_ROOT, tier="plan_enterprise",
+            output_dir=self.workspace_root / "bundle_enterprise", tenant_id="t_ent")["package_dir"])
+        ent_wf = {p.name for p in (ent / "workflows").glob("*.yaml")}
+        self.assertIn("enterprise_sdlc.yaml", ent_wf)
+
+        # Entitlement spec exposes the tier-gated workflow allowlist
+        ent_spec = CommercialPackagerProvisioner.get_tier_spec("plan_enterprise", REPO_ROOT)
+        self.assertEqual(ent_spec["rules"]["allowed_workflows"], "ALL")
+        free_spec = CommercialPackagerProvisioner.get_tier_spec("plan_free", REPO_ROOT)
+        self.assertNotIn("enterprise_sdlc.yaml", free_spec["rules"]["allowed_workflows"])
+
+
 if __name__ == "__main__":
     unittest.main()

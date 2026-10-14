@@ -2,7 +2,7 @@ schema_version: 3.0.0
 plan_id: domain_intellij_pycharm_plugin
 plan_name: IntelliJ IDEA & PyCharm IDE Plugin, PSI AST Analysis & Percipience Control
   Plane Space
-version: 1.1.0
+version: 1.2.0
 layer: l1
 capability_rating: L1
 status: active
@@ -29,6 +29,7 @@ key_capabilities:
 - JetBrains Platform SDK & ToolWindow Control Plane
 - Dynamic Tier-Aware Control Plane Action Button Matrix
 - Model Context Protocol (MCP) Interoperability Across All Bundles (.claude/mcp.json)
+- Tier-Gated Autonomous Delivery Workflow & Git Hook Bundling (percipience/workflows/, percipience/hooks/)
 - Program Structure Interface (PSI) Multi-Language AST Pruning
 - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
 - JCEF Chromium Embedded Living Visualizer
@@ -36,25 +37,25 @@ key_capabilities:
 file_versions:
   concise:
     path: concise.md
-    version: 1.1.0
-    last_modified: '2026-10-11'
-    content_hash: 30fc331305205cab6c262a620a50e36f33f314a78c79cb12deaf01c32c62b78c
-    line_count: 102
+    version: 1.2.0
+    last_modified: '2026-10-13'
+    content_hash: 3d48f5f3c36ddbe1ca40feba70e63dcb0ad5f786c2a842513b4698fd1f17031b
+    line_count: 118
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
-    version: 1.1.0
-    last_modified: '2026-10-11'
-    content_hash: 19c82145d3cc77683b4ef795449efbfafb130ebb3ff6bbd57d543304c5aca6a8
-    line_count: 640
+    version: 1.2.0
+    last_modified: '2026-10-13'
+    content_hash: 00565a6dba706eb61acd12ef19860a97ac4cc26de430f269a09afb09bb016c13
+    line_count: 647
     primary_purpose: Extended implementation guide with JetBrains SDK, PSI architecture,
       and Claude MCP integration
   readme:
     path: README.md
-    version: 1.1.0
-    last_modified: '2026-10-11'
-    content_hash: 545aac132c1630906880004bd00d6d33fccb89f673e0cf85ca71d91a86543cce
-    line_count: 33
+    version: 1.2.0
+    last_modified: '2026-10-13'
+    content_hash: 7ef05368a8cea9aa635f67de2a784a3dc6781751489fa17febf6f0726732263c
+    line_count: 34
     primary_purpose: Quick reference and navigation
 implementation_phases:
   phase_1: Wire Contracts & PSI Bridge Specification

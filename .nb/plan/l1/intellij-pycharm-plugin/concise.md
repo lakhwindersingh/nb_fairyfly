@@ -24,6 +24,7 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 4. **In-Editor Annotators, Gutter Icons & Quick-Fix Intentions**: Real-time contract verification, line markers, and action triggers.
 5. **Hermetic Threading & Read/Write Action Safety**: Strict EDT freedom ($<16\text{ms}$ latency) and background execution.
 6. **Model Context Protocol (MCP) & Agent Interoperability (All Bundles)**: Natively provisioned `.claude/mcp.json` and `.claude/settings.json` across all plugin bundles (`free`, `team`, `business`, `enterprise`, and `universal`), providing transparent prompt compression (60-85%) and FinOps metering for Claude Code, Gemini CLI, Cursor, and terminal agents.
+7. **Tier-Gated Workflow & Git Hook Bundling**: Each tier plugin JAR/ZIP embeds only the autonomous delivery workflows entitled to that tier (`percipience/workflows/`) plus the git pre-commit guardrail hook (`percipience/hooks/pre-commit.sh`) and its installer (`percipience/scripts/install_git_hook.sh`), mirroring the `CORE_TIER_RULES` engine gating so Free bundles the baseline CI/CD + IntelliJ delivery flows while Business/Enterprise additionally bundle packaging, SaaS, IoT, and enterprise SDLC flows.
 
 ```mermaid
 graph TD
@@ -93,6 +94,21 @@ python workplace/modules/mod_intellij_plugin/package_plugin.py --tier all
 # Apply layer bundle
 ./.nb/bin/percipience layer apply --pack .nb/bundles/intellij_pycharm_plugin_domain.nbpack --in-memory-only
 ```
+
+### 3.1 Tier-Gated Bundled Workflows & Git Hooks
+
+`CommercialPackagerProvisioner.package_tier()` mirrors the `CORE_TIER_RULES` gating for autonomous workflows via a per-tier `allowed_workflows` entitlement set, and bundles git guardrail hooks:
+
+| Tier | Bundled `workflows/` delivery flows | Bundled `hooks/` |
+| :--- | :--- | :--- |
+| **Free Community** (`plan_free`) | `basic_autonomous_cicd.yaml`, `intellij_pycharm_plugin_delivery_flow.yaml`, `agentic/workflows/*` (derivation + pr_gatekeeper) | `pre-commit.sh` + `scripts/install_git_hook.sh` |
+| **Team** (`plan_team`) | + `vscode_plugin_delivery_flow.yaml` | `pre-commit.sh` + `scripts/install_git_hook.sh` |
+| **Business** (`plan_business`) | + `commercial_packaging_provisioning_flow.yaml`, `saas_portal_delivery_flow.yaml`, `iot_mobile_delivery_flow.yaml` | `pre-commit.sh` + `scripts/install_git_hook.sh` |
+| **Enterprise Dedicated** (`plan_enterprise`) | ALL delivery flows (incl. `enterprise_sdlc.yaml`) | `pre-commit.sh` + `scripts/install_git_hook.sh` |
+
+These resources are provisioned into each plugin JAR/ZIP at `percipience/workflows/`, `percipience/hooks/`, and `percipience/scripts/`, and hydrated into the workspace by `WorkspaceBootstrapper.kt` (`.nb/agentic/custom/workflows/`, `.nb/git_hooks/pre-commit.sh`, `.nb/scripts/install_git_hook.sh`).
+
+---
 
 ## 4. Visual Delivery Pipelines & Stage Handled Contracts Governance
 

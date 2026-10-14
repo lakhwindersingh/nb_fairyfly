@@ -79,6 +79,10 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │       │   └── agent_intellij_ui_ux_engineer.yaml         # Subagent: Swing/JCEF ToolWindow UI
 │       └── workflows/
 │           └── intellij_pycharm_plugin_delivery_flow.yaml # Build -> PSI Test -> ToolWindow -> Package
+├── .nb/git_hooks/
+│   └── pre-commit.sh                                # Strict Merkle/parity guardrail (bundled per tier)
+├── .nb/scripts/
+│   └── install_git_hook.sh                          # One-command pre-commit hook installer (bundled per tier)
 ├── workplace/
 │   ├── docs/
 │   │   ├── intellij_pycharm_plugin_architecture.md        # System C4 component topologies & module interfaces (Mermaid)
@@ -392,11 +396,12 @@ The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-
 1. `percipience/bin/percipience` with Unix `0755` executable permissions.
 2. `percipience/core/*.py` into `.nb/core/` (AST optimizer, Merkle engine, CI/CD, token tracker, etc.).
 3. `percipience/config/` (`billing_plans.yaml`, `token_compression_rules.yaml`).
-4. `percipience/workflows/` (`basic_autonomous_cicd.yaml`).
-5. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
-6. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).
-7. Claude Model Context Protocol (MCP) server descriptor (`.claude/mcp.json` and `mcp.json`).
-8. Claude agent configuration, model tiering routing, and context rule bindings (`.claude/settings.json` and `settings.json`).
+4. `percipience/workflows/` — the tier-gated autonomous delivery flows entitled to the active license (`basic_autonomous_cicd.yaml` in Free; `+vscode_plugin_delivery_flow.yaml` in Team; `+commercial_packaging_provisioning_flow.yaml`, `saas_portal_delivery_flow.yaml`, `iot_mobile_delivery_flow.yaml` in Business; all flows incl. `enterprise_sdlc.yaml` in Enterprise) into `.nb/agentic/custom/workflows/`.
+5. `percipience/hooks/pre-commit.sh` (strict Merkle/parity guardrail) into `.nb/git_hooks/` and `percipience/scripts/install_git_hook.sh` into `.nb/scripts/`, enabling one-command pre-commit gate installation.
+6. `percipience/plan/` (`claude-context-engineering-parent-master-free_plan.md`).
+7. Genesis Merkle state ledger (`.nb/context/ledger/context_ledger.yaml`).
+8. Claude Model Context Protocol (MCP) server descriptor (`.claude/mcp.json` and `mcp.json`).
+9. Claude agent configuration, model tiering routing, and context rule bindings (`.claude/settings.json` and `settings.json`).
 
 ### 6.4. Separate Multi-Tier Plugin Bundles for Permission Verification
 To test and verify dynamic permission enforcement across all tiers in staging and automated test harnesses, the packager (`package_plugin.py`) generates dedicated tier-aware plugin distributions in `.nb/bundles/`:
@@ -405,6 +410,8 @@ To test and verify dynamic permission enforcement across all tiers in staging an
 - `percipience-intellij-plugin-business-1.0.0.zip`: Business edition with full platform tools, NBPack encrypted packaging, and multi-tenant provisioner.
 - `percipience-intellij-plugin-enterprise-1.0.0.zip`: Enterprise edition with private VPC isolation, swarm triad orchestrator, and WORM cloud egress.
 - `percipience-intellij-plugin-1.0.0.zip`: Universal distribution defaulting to active workspace license.
+
+Each tier bundle is assembled by `CommercialPackagerProvisioner.package_tier()`, which mirrors the `CORE_TIER_RULES` engine gating with a per-tier `allowed_workflows` entitlement set: Free ships the baseline CI/CD + IntelliJ delivery flows, Team adds the VS Code delivery flow, Business adds the commercial packaging, SaaS portal, and IoT/mobile flows, and Enterprise ships every flow (including `enterprise_sdlc.yaml`). Git guardrail hooks (`percipience/hooks/pre-commit.sh`) and the installer (`percipience/scripts/install_git_hook.sh`) are bundled into every tier and hydrated into `.nb/git_hooks/` and `.nb/scripts/` by `WorkspaceBootstrapper.kt`.
 
 ---
 

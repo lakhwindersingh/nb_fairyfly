@@ -31,7 +31,7 @@
     <change-notes><![CDATA[
     <h3>Version 1.2.0 Release</h3>
     <ul>
-        <li>Included canonical .nb/bin/percipience CLI binary, billing plans configuration, and basic CI/CD workflow directly in plugin resources.</li>
+        <li>Included canonical .nb/bin/percipience CLI binary, billing plans configuration, tier-gated autonomous delivery workflows (<code>percipience/workflows/</code>), and git pre-commit guardrail hooks (<code>percipience/hooks/</code> + <code>percipience/scripts/install_git_hook.sh</code>) directly in plugin resources.</li>
         <li>Added automatic new workspace detection and interactive initialization prompt on project startup.</li>
         <li>Added PercipienceExecutionService for asynchronous command execution directly inside IntelliJ.</li>
         <li>Added Control Plane actions for PR Gatekeeper, Merkle Audit, Basic CI/CD, Layer Validation, and Token Savings Summary.</li>

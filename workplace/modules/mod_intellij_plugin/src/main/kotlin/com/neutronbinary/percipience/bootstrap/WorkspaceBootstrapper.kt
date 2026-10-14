@@ -58,6 +58,7 @@ object WorkspaceBootstrapper {
             ".nb/agentic/custom/agents",
             ".nb/agentic/custom/workflows",
             ".nb/agentic/prompts",
+            ".nb/git_hooks",
             ".nb/scripts",
             ".nb/tests",
             ".claude",
@@ -313,18 +314,39 @@ presets:
             createdFiles.add(".nb/config/token_compression_rules.yaml")
         }
 
-        // 6. Ensure basic autonomous CI/CD workflow (.nb/agentic/custom/workflows/basic_autonomous_cicd.yaml)
-        val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
-        if (!cicdFile.exists()) {
-            val resourceStream = javaClass.getResourceAsStream("/percipience/workflows/basic_autonomous_cicd.yaml")
-            if (resourceStream != null) {
-                resourceStream.use { input ->
-                    cicdFile.outputStream().use { output ->
+        // 6. Deploy tier-appropriate autonomous delivery workflows (.nb/agentic/custom/workflows/)
+        val workflowsDir = File(root, ".nb/agentic/custom/workflows")
+        workflowsDir.mkdirs()
+        val workflowNames = listOf(
+            "basic_autonomous_cicd.yaml",
+            "intellij_pycharm_plugin_delivery_flow.yaml",
+            "vscode_plugin_delivery_flow.yaml",
+            "commercial_packaging_provisioning_flow.yaml",
+            "saas_portal_delivery_flow.yaml",
+            "iot_mobile_delivery_flow.yaml",
+            "enterprise_sdlc.yaml"
+        )
+        for (workflowName in workflowNames) {
+            val targetWorkflow = File(workflowsDir, workflowName)
+            if (targetWorkflow.exists()) {
+                continue
+            }
+            val workflowStream = javaClass.getResourceAsStream("/percipience/workflows/$workflowName")
+                ?: javaClass.getResourceAsStream("/percipience/agentic/custom/workflows/$workflowName")
+            if (workflowStream != null) {
+                workflowStream.use { input ->
+                    targetWorkflow.outputStream().use { output ->
                         input.copyTo(output)
                     }
                 }
-            } else {
-                val cicdContent = """
+                createdFiles.add(".nb/agentic/custom/workflows/$workflowName")
+            }
+        }
+
+        // 6b. Ensure baseline CI/CD workflow fallback when plugin resources are unavailable
+        val cicdFile = File(workflowsDir, "basic_autonomous_cicd.yaml")
+        if (!cicdFile.exists()) {
+            val cicdContent = """
 workflow_id: "basic_autonomous_cicd"
 name: "Free Community Autonomous CI/CD Pipeline"
 description: "Watered-down autonomous CI/CD workflow providing maintenance, AST token compression, basic bounded self-repair, and Merkle block sealing for the Free Plan."
@@ -364,9 +386,36 @@ steps:
     depends_on: ["bounded_auto_heal"]
     action: "SEAL_BLOCK"
 """.trimIndent()
-                cicdFile.writeText(cicdContent)
-            }
+            cicdFile.writeText(cicdContent)
             createdFiles.add(".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
+        }
+
+        // 6c. Deploy git hooks (.nb/git_hooks/) and the hook installer (.nb/scripts/)
+        val gitHooksDir = File(root, ".nb/git_hooks")
+        gitHooksDir.mkdirs()
+        val hookStream = javaClass.getResourceAsStream("/percipience/hooks/pre-commit.sh")
+        if (hookStream != null) {
+            val targetHook = File(gitHooksDir, "pre-commit.sh")
+            hookStream.use { input ->
+                targetHook.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            targetHook.setExecutable(true, false)
+            createdFiles.add(".nb/git_hooks/pre-commit.sh")
+        }
+        val scriptsDir = File(root, ".nb/scripts")
+        scriptsDir.mkdirs()
+        val installerStream = javaClass.getResourceAsStream("/percipience/scripts/install_git_hook.sh")
+        if (installerStream != null) {
+            val targetInstaller = File(scriptsDir, "install_git_hook.sh")
+            installerStream.use { input ->
+                targetInstaller.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            targetInstaller.setExecutable(true, false)
+            createdFiles.add(".nb/scripts/install_git_hook.sh")
         }
 
         // 7. Ensure Parent Master Plan (.nb/plan/claude-context-engineering-parent-master-free_plan.md)

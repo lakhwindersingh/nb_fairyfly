@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_enterprise_5d05c15305b3",
+  "license_id": "lic_plan_enterprise_6fd82b447e3f",
   "tenant_id": "tenant_acme_fintech",
   "tier": "plan_enterprise",
   "tier_name": "Enterprise Dedicated Tier",
@@ -18,8 +18,8 @@
     "private_vpc_deploy": true,
     "dedicated_slack_sla": true
   },
-  "issued_at": "2026-10-14T01:00:05.669758+00:00",
-  "total_files": 175,
+  "issued_at": "2026-10-14T01:58:01.148578+00:00",
+  "total_files": 182,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -27,7 +27,8 @@
     "config/platform_config.yaml": "fc4901ae2de5b13791398d3c17ff224bf316446451dffe690f52ece6e95c1a7c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
     "scripts/sync_plan_versions.py": "2f33d5ebcf84ba6517a69a023d51066289305aae765a478b9834cdb532d099a1",
-    "scripts/install_git_hook.sh": "f2e71b89f739185f8579291de13937a6581603a8844da33a05bb30e641f1415f",
+    "scripts/install_git_hook.sh": "f275ead56bcf424dd29833fb0b2a97dddd8510c6412f2b7d74de20cd5d3ba0e9",
+    "hooks/pre-commit.sh": "f4a82234c2d988138e7863431b6f80d3cf6a868b97ce056c6b2d73c83e23bfa4",
     "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
     "core/adversarial_fuzzer.py": "9d7fe5846d97779c447bc01863f713bfe464fcb444298fe148deea50a08125fd",
     "core/agent_benchmark_harness.py": "4587b0ecf9299ad2682a174b910eed766f0ad7f563c741df88ed7f7362ec129f",
@@ -41,7 +42,7 @@
     "core/autonomous_cicd.py": "39d0723b26adc05025735e3fa967a791a17a79224ce311dc9050c256f80e8e39",
     "core/byor_adapter.py": "72881f08ae56503d86e736dfc5a4e978e6fa740f9c829c9cd8e43e38f5b600ac",
     "core/cognitive_router.py": "b786862a44a95a9c4f9dcba0014bfd954226be9e7405a77cf695424e46d5b640",
-    "core/commercial_packager_provisioner.py": "eebb81ea1121b98749aef3fd2b51bd1c19ecd8620bd847180457e00ed2498218",
+    "core/commercial_packager_provisioner.py": "8b9865752b5958aa9b81521dfa16c691c697666fbe50ffb1da2c25272cc44365",
     "core/config_manager.py": "169c4b7ae31d43458f01c7b60ff4eb907bab536127a0c2c9580ba527ac47dce5",
     "core/consensus_quorum_engine.py": "53caaad2c6b2ad377bc6a768e9473a4f7b7088c53e3de37e2c6a7dfac79138ca",
     "core/consolidation_synthesizer.py": "e2be2b6b7525c207676c38bcd46e50c651fcd8eb19c017e776efbfc2c538b946",
@@ -191,11 +192,17 @@
     "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "2bd8453f19220b6be26dd7b88bb23303bef286c3439108342186a641154ed3d1",
     "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "8c0fb8b5e57a8e5134c5e686d7fd6c50db0a5e7f4241119e54a4c20d26d48c14",
     "workflows/basic_autonomous_cicd.yaml": "7b6ab57c8f627ee947c43c510f1a6cf5fb5271b3d1ff101137635357bd301d70",
+    "workflows/commercial_packaging_provisioning_flow.yaml": "2ed6a0d6ca79343faba4ba9dc39118f7da87243385acd28f716bf64cc0b18597",
+    "workflows/enterprise_sdlc.yaml": "4e9c6f0d9481b30b1704991a366cdd0d4fc34bee37709fc1c0b4541d61a7fdf7",
+    "workflows/intellij_pycharm_plugin_delivery_flow.yaml": "f353817e75864228bb21009b8d8ccb743ae6a1888fbce48adf6e0c3fab747ba4",
+    "workflows/iot_mobile_delivery_flow.yaml": "14f466d00f4dbd9e489fa2ee5a7de8dfaab24efaa54f29ded23fe7082c2a95fe",
+    "workflows/saas_portal_delivery_flow.yaml": "2bd8453f19220b6be26dd7b88bb23303bef286c3439108342186a641154ed3d1",
+    "workflows/vscode_plugin_delivery_flow.yaml": "8c0fb8b5e57a8e5134c5e686d7fd6c50db0a5e7f4241119e54a4c20d26d48c14",
     "agentic/workflows/derivation_pipeline.yaml": "0b0fcabfca38c0f1c53d6bf1646c1463ffe270914e9fbdcd6bb5859ab3335010",
     "agentic/workflows/pr_gatekeeper.yaml": "eba57ab720320574a168764b357b004afaf7e50954448171a02d20e5ec1ff7c1",
     "agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml": "00629be2a62d7864a04a81e7e0f3cfa73a4db85461f34f47d77b2a5f535a2edc",
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "dbc008d4d65b67f7fa0cbbc0ac24b441b82b0722625dc2aaaef87d21818b5793"
+  "signature_sha256": "0184555061226c3b61ca5f01328da11ea2c78929c9d97e55cd131b24b8a2ddfa"
 }

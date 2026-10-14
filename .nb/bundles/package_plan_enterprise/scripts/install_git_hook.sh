@@ -4,10 +4,17 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 HOOK_FILE="${REPO_ROOT}/.git/hooks/pre-commit"
+STRICT_HOOK="${REPO_ROOT}/.nb/git_hooks/pre-commit.sh"
 
 echo "🔧 Installing Percipience local pre-commit hook..."
 
-cat << 'EOF' > "${HOOK_FILE}"
+mkdir -p "${REPO_ROOT}/.git/hooks" 2>/dev/null || true
+
+if [ -f "${STRICT_HOOK}" ]; then
+  # Prefer the canonical strict guardrail hook bundled with the plugin/platform
+  cp "${STRICT_HOOK}" "${HOOK_FILE}"
+else
+  cat << 'EOF' > "${HOOK_FILE}"
 #!/usr/bin/env bash
 # Percipience Pre-Commit Gatekeeper & Token Savings Metering Hook
 set -e
@@ -24,6 +31,7 @@ else
   echo "⚠️ Percipience CLI not found at ${PERCIPIENCE}. Skipping hook."
 fi
 EOF
+fi
 
 chmod +x "${HOOK_FILE}"
 echo "✅ Percipience pre-commit hook installed successfully at: ${HOOK_FILE}"

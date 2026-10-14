@@ -567,6 +567,47 @@ class TestIdePluginsSpace(unittest.TestCase):
         exec_receipt = WorkflowOrchestrator.execute_workflow(wf_def)
         self.assertEqual(exec_receipt["status"], "COMPLETED")
 
+    def test_20_tier_gated_workflows_and_hooks_bundled_in_plugin(self):
+        """Validates tier-gated delivery workflows and git hooks are embedded in each plugin bundle."""
+        bundles_dir = self.repo_root / ".nb" / "bundles"
+
+        def jar_namelist(tier: str):
+            tag = f"-{tier}-" if tier else "-"
+            zip_path = bundles_dir / f"percipience-intellij-plugin{tag}1.0.0.zip"
+            self.assertTrue(zip_path.exists(), f"{zip_path.name} must exist")
+            with zipfile.ZipFile(zip_path, "r") as zf:
+                jar_name = [n for n in zf.namelist() if n.endswith(".jar")][0]
+                with zipfile.ZipFile(io.BytesIO(zf.read(jar_name))) as jar:
+                    return jar.namelist()
+
+        expected_workflows = {
+            "free": {"basic_autonomous_cicd.yaml", "intellij_pycharm_plugin_delivery_flow.yaml"},
+            "team": {"basic_autonomous_cicd.yaml", "intellij_pycharm_plugin_delivery_flow.yaml", "vscode_plugin_delivery_flow.yaml"},
+        }
+        for tier, wf_set in expected_workflows.items():
+            names = jar_namelist(tier)
+            jar_workflows = {n.rsplit("/", 1)[1] for n in names if n.startswith("percipience/workflows/")}
+            self.assertEqual(jar_workflows, wf_set, f"{tier} bundled workflow set mismatch")
+            self.assertIn("percipience/hooks/pre-commit.sh", names, f"{tier} must bundle git hook")
+            self.assertIn("percipience/scripts/install_git_hook.sh", names, f"{tier} must bundle hook installer")
+
+        # Enterprise bundle ships the full flow set including the enterprise SDLC + design-system derivation
+        ent_names = jar_namelist("enterprise")
+        ent_workflows = {n.rsplit("/", 1)[1] for n in ent_names if n.startswith("percipience/workflows/")}
+        self.assertIn("enterprise_sdlc.yaml", ent_workflows)
+        self.assertIn("commercial_packaging_provisioning_flow.yaml", ent_workflows)
+        ent_basenames = {n.rsplit("/", 1)[1] for n in ent_names}
+        self.assertIn("wf_master_enterprise_ui_design_system_derivation.yaml", ent_basenames)
+        self.assertIn("percipience/hooks/pre-commit.sh", ent_names)
+
+        # Free bundle must NOT leak higher-tier-only delivery flows or the enterprise design-system derivation
+        free_names = jar_namelist("free")
+        free_workflows = {n.rsplit("/", 1)[1] for n in free_names if n.startswith("percipience/workflows/")}
+        free_basenames = {n.rsplit("/", 1)[1] for n in free_names}
+        self.assertNotIn("enterprise_sdlc.yaml", free_workflows)
+        self.assertNotIn("commercial_packaging_provisioning_flow.yaml", free_workflows)
+        self.assertNotIn("wf_master_enterprise_ui_design_system_derivation.yaml", free_basenames)
+
 
 if __name__ == "__main__":
     unittest.main()

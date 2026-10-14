@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_team_02494b547ce7",
+  "license_id": "lic_plan_team_a39276805a55",
   "tenant_id": "tenant_team_test",
   "tier": "plan_team",
   "tier_name": "Team Tier",
@@ -17,8 +17,8 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-10-13T23:19:28.064885+00:00",
-  "total_files": 151,
+  "issued_at": "2026-10-14T01:57:23.316151+00:00",
+  "total_files": 149,
   "file_manifest": {
     "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
@@ -26,7 +26,8 @@
     "config/platform_config.yaml": "fc4901ae2de5b13791398d3c17ff224bf316446451dffe690f52ece6e95c1a7c",
     "config/token_compression_rules.yaml": "35b7186c3c82ed07ee1c8f98a6fc490c7988fdc7ce80f8b8c8f492dfed2b4c65",
     "scripts/sync_plan_versions.py": "2f33d5ebcf84ba6517a69a023d51066289305aae765a478b9834cdb532d099a1",
-    "scripts/install_git_hook.sh": "f2e71b89f739185f8579291de13937a6581603a8844da33a05bb30e641f1415f",
+    "scripts/install_git_hook.sh": "f275ead56bcf424dd29833fb0b2a97dddd8510c6412f2b7d74de20cd5d3ba0e9",
+    "hooks/pre-commit.sh": "f4a82234c2d988138e7863431b6f80d3cf6a868b97ce056c6b2d73c83e23bfa4",
     "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
     "core/agent_capability_guard.py": "3016eb507eba8ad705102e8c74e0be381df2c13a27530e25bc7ab6b95d16f861",
     "core/agent_memory_engine.py": "987347f7df838258b9b0dbbd0341b936ff4bdcec1050a3e3ca33618c3ea071e6",
@@ -34,7 +35,7 @@
     "core/ast_optimizer.py": "e3a887af891a7e1e201ae1ccc21f7893a605563556e49c79438ad3d16b134144",
     "core/attention_budgeter.py": "22b14dea8e9d1209a07a63d5a57cb24a2077ec6985f1418141c886ecfef9ade3",
     "core/autonomous_cicd.py": "39d0723b26adc05025735e3fa967a791a17a79224ce311dc9050c256f80e8e39",
-    "core/commercial_packager_provisioner.py": "eebb81ea1121b98749aef3fd2b51bd1c19ecd8620bd847180457e00ed2498218",
+    "core/commercial_packager_provisioner.py": "8b9865752b5958aa9b81521dfa16c691c697666fbe50ffb1da2c25272cc44365",
     "core/consensus_quorum_engine.py": "53caaad2c6b2ad377bc6a768e9473a4f7b7088c53e3de37e2c6a7dfac79138ca",
     "core/container_plan_executor.py": "f8ab2a8a944767305c2338351a0c303ea27d934cdaa7d1816cf7160efd22a897",
     "core/contract_compatibility_checker.py": "5efba61538b319ecc86d6de7bf23382c91940c9831c6da8eb5259ebb6f6e62a5",
@@ -159,18 +160,15 @@
     "agentic/custom/agents/test_finops_auditor.yaml": "932ad5142da7922995976f86797cfc6eada43cc3a63cd90d85859cb89dbdaade",
     "agentic/custom/agents/token_finops_auditor.yaml": "7893a4d1994007d4297ffbcca086e25263ece4b17731cb5a5125570de38502bf",
     "agentic/custom/workflows/basic_autonomous_cicd.yaml": "7b6ab57c8f627ee947c43c510f1a6cf5fb5271b3d1ff101137635357bd301d70",
-    "agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml": "2ed6a0d6ca79343faba4ba9dc39118f7da87243385acd28f716bf64cc0b18597",
-    "agentic/custom/workflows/enterprise_sdlc.yaml": "4e9c6f0d9481b30b1704991a366cdd0d4fc34bee37709fc1c0b4541d61a7fdf7",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "f353817e75864228bb21009b8d8ccb743ae6a1888fbce48adf6e0c3fab747ba4",
-    "agentic/custom/workflows/iot_mobile_delivery_flow.yaml": "14f466d00f4dbd9e489fa2ee5a7de8dfaab24efaa54f29ded23fe7082c2a95fe",
-    "agentic/custom/workflows/saas_portal_delivery_flow.yaml": "2bd8453f19220b6be26dd7b88bb23303bef286c3439108342186a641154ed3d1",
     "agentic/custom/workflows/vscode_plugin_delivery_flow.yaml": "8c0fb8b5e57a8e5134c5e686d7fd6c50db0a5e7f4241119e54a4c20d26d48c14",
     "workflows/basic_autonomous_cicd.yaml": "7b6ab57c8f627ee947c43c510f1a6cf5fb5271b3d1ff101137635357bd301d70",
+    "workflows/intellij_pycharm_plugin_delivery_flow.yaml": "f353817e75864228bb21009b8d8ccb743ae6a1888fbce48adf6e0c3fab747ba4",
+    "workflows/vscode_plugin_delivery_flow.yaml": "8c0fb8b5e57a8e5134c5e686d7fd6c50db0a5e7f4241119e54a4c20d26d48c14",
     "agentic/workflows/derivation_pipeline.yaml": "0b0fcabfca38c0f1c53d6bf1646c1463ffe270914e9fbdcd6bb5859ab3335010",
     "agentic/workflows/pr_gatekeeper.yaml": "eba57ab720320574a168764b357b004afaf7e50954448171a02d20e5ec1ff7c1",
-    "agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml": "00629be2a62d7864a04a81e7e0f3cfa73a4db85461f34f47d77b2a5f535a2edc",
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "96590031cebe3dfebc84a7189c3a64232dbc492cbe0fa7d84f8bf66b19a7d15e"
+  "signature_sha256": "a5fecfabda21fb088e61180979b67e4b6105fdb338732fb5e34a0852d1ed4e22"
 }

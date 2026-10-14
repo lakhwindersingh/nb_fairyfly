@@ -1,0 +1,186 @@
+workflow_id: intellij_pycharm_plugin_delivery_flow
+name: IntelliJ IDEA & PyCharm Plugin End-to-End Delivery Flow
+version: 1.0.0
+description: Multi-stage automated delivery pipeline for JetBrains IntelliJ & PyCharm
+  IDE plugins
+stages:
+- id: stage_1_manifest_and_contracts
+  name: Manifest & Wire Contract Validation
+  agent: agent_jetbrains_plugin_architect
+  executor: agent_jetbrains_plugin_architect
+  tasks: &id001
+  - validate_plugin_xml_manifest
+  - verify_psi_ast_bridge_contract
+  - check_compatibility_matrix
+  handled_contracts:
+  - contract_id: intellij_plugin_manifest_contract
+    name: JetBrains plugin.xml Extension Point Manifest Contract
+    path: .nb/context/contracts/intellij_plugin_manifest_contract.json
+    type: json_schema
+    action: validate_manifest
+    description: Verifies plugin ID, depends tags (platform, lang), toolWindow declarations, and external annotators.
+  - contract_id: psi_ast_bridge_contract
+    name: JetBrains PSI-to-AST Protocol Bridge Contract
+    path: .nb/context/contracts/psi_ast_bridge_contract.yaml
+    type: yaml_schema
+    action: verify_protocol
+    description: Specifies in-memory PyFile/PsiFile AST traversal and token reduction invariants (<35ms latency).
+
+- id: stage_2_psi_engine_and_token_meter
+  name: PSI AST Engine & Token Compression
+  agent: agent_psi_ast_bridge_specialist
+  executor: agent_psi_ast_bridge_specialist
+  tasks: &id002
+  - test_psi_symbol_extraction
+  - benchmark_token_reduction_ratio
+  - verify_contract_annotator_diagnostics
+  handled_contracts:
+  - contract_id: psi_ast_bridge_contract
+    name: PSI AST Extraction & Token Compression Contract
+    path: .nb/context/contracts/psi_ast_bridge_contract.yaml
+    type: yaml_schema
+    action: benchmark_ast_pruner
+    description: Evaluates symbol extraction accuracy and ensures >60% token compression ratio across Python & Kotlin ASTs.
+
+- id: stage_3_toolwindow_and_ui
+  name: ToolWindow, JCEF & Action Integration
+  agent: agent_intellij_ui_ux_engineer
+  executor: agent_intellij_ui_ux_engineer
+  tasks: &id003
+  - verify_toolwindow_registration
+  - audit_jcef_csp_compliance
+  - test_gutter_linemarkers_and_actions
+  handled_contracts:
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System & Theme Token Contract
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_theme_tokens
+    description: Enforces Corporate Light & Enterprise Dark color tokens, WCAG AA contrast (>= 4.5:1), and terminology-neutral styling.
+  - contract_id: data_grid_contract
+    name: Interactive Data Grid & Table Schema Contract
+    path: .nb/context/contracts/data_grid_contract.json
+    type: json_schema
+    action: validate_ui_grid
+    description: Validates high-density audit grids and telemetry views in the ToolWindow tab panels.
+
+- id: stage_4_daemon_rpc_and_merkle_seal
+  name: Daemon IPC Bridge & Merkle Seal
+  agent: agent_jetbrains_plugin_architect
+  executor: agent_jetbrains_plugin_architect
+  tasks: &id004
+  - test_daemon_json_rpc_latency
+  - seal_merkle_recovery_block
+  handled_contracts:
+  - contract_id: daemon_rpc_contract
+    name: Percipience Daemon JSON-RPC Protocol Contract
+    path: .nb/context/contracts/daemon_rpc_contract.json
+    type: json_schema
+    action: test_ipc_bridge
+    description: Verifies bidirectional UNIX socket/IPC communication between IDE ToolWindow and .nb/bin/percipience binary.
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Merkle State Seal Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_recovery_block
+    description: Cryptographically seals verified build hash into local Merkle ledger before deployment.
+
+- id: stage_5_terminal_agent_interceptor
+  name: Terminal Mode Agent Interceptor & FinOps Optimizer
+  agent: agent_terminal_mode_specialist
+  executor: agent_terminal_mode_specialist
+  tasks: &id005
+  - test_terminal_agent_wrapping
+  - benchmark_shell_hook_latency
+  - verify_token_finops_metering
+  handled_contracts:
+  - contract_id: terminal_agent_ast_contract
+    name: Terminal Mode AST Proxy & Prompt Interceptor Contract
+    path: .nb/context/contracts/terminal_agent_ast_contract.yaml
+    type: yaml_schema
+    action: verify_terminal_hook
+    description: Injects AST-compressed context into Claude Code, Gemini CLI, and Aider sessions with zero disk contamination.
+
+steps:
+- id: stage_1_manifest_and_contracts
+  name: Manifest & Wire Contract Validation
+  agent: agent_jetbrains_plugin_architect
+  executor: agent_jetbrains_plugin_architect
+  tasks: *id001
+  handled_contracts:
+  - contract_id: intellij_plugin_manifest_contract
+    name: JetBrains plugin.xml Extension Point Manifest Contract
+    path: .nb/context/contracts/intellij_plugin_manifest_contract.json
+    type: json_schema
+    action: validate_manifest
+    description: Verifies plugin ID, depends tags (platform, lang), toolWindow declarations, and external annotators.
+  - contract_id: psi_ast_bridge_contract
+    name: JetBrains PSI-to-AST Protocol Bridge Contract
+    path: .nb/context/contracts/psi_ast_bridge_contract.yaml
+    type: yaml_schema
+    action: verify_protocol
+    description: Specifies in-memory PyFile/PsiFile AST traversal and token reduction invariants (<35ms latency).
+
+- id: stage_2_psi_engine_and_token_meter
+  name: PSI AST Engine & Token Compression
+  agent: agent_psi_ast_bridge_specialist
+  executor: agent_psi_ast_bridge_specialist
+  tasks: *id002
+  handled_contracts:
+  - contract_id: psi_ast_bridge_contract
+    name: PSI AST Extraction & Token Compression Contract
+    path: .nb/context/contracts/psi_ast_bridge_contract.yaml
+    type: yaml_schema
+    action: benchmark_ast_pruner
+    description: Evaluates symbol extraction accuracy and ensures >60% token compression ratio across Python & Kotlin ASTs.
+
+- id: stage_3_toolwindow_and_ui
+  name: ToolWindow, JCEF & Action Integration
+  agent: agent_intellij_ui_ux_engineer
+  executor: agent_intellij_ui_ux_engineer
+  tasks: *id003
+  handled_contracts:
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System & Theme Token Contract
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_theme_tokens
+    description: Enforces Corporate Light & Enterprise Dark color tokens, WCAG AA contrast (>= 4.5:1), and terminology-neutral styling.
+  - contract_id: data_grid_contract
+    name: Interactive Data Grid & Table Schema Contract
+    path: .nb/context/contracts/data_grid_contract.json
+    type: json_schema
+    action: validate_ui_grid
+    description: Validates high-density audit grids and telemetry views in the ToolWindow tab panels.
+
+- id: stage_4_daemon_rpc_and_merkle_seal
+  name: Daemon IPC Bridge & Merkle Seal
+  agent: agent_jetbrains_plugin_architect
+  executor: agent_jetbrains_plugin_architect
+  tasks: *id004
+  handled_contracts:
+  - contract_id: daemon_rpc_contract
+    name: Percipience Daemon JSON-RPC Protocol Contract
+    path: .nb/context/contracts/daemon_rpc_contract.json
+    type: json_schema
+    action: test_ipc_bridge
+    description: Verifies bidirectional UNIX socket/IPC communication between IDE ToolWindow and .nb/bin/percipience binary.
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Merkle State Seal Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_recovery_block
+    description: Cryptographically seals verified build hash into local Merkle ledger before deployment.
+
+- id: stage_5_terminal_agent_interceptor
+  name: Terminal Mode Agent Interceptor & FinOps Optimizer
+  agent: agent_terminal_mode_specialist
+  executor: agent_terminal_mode_specialist
+  tasks: *id005
+  handled_contracts:
+  - contract_id: terminal_agent_ast_contract
+    name: Terminal Mode AST Proxy & Prompt Interceptor Contract
+    path: .nb/context/contracts/terminal_agent_ast_contract.yaml
+    type: yaml_schema
+    action: verify_terminal_hook
+    description: Injects AST-compressed context into Claude Code, Gemini CLI, and Aider sessions with zero disk contamination.

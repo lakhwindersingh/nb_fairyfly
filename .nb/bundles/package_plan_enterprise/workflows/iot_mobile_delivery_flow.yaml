@@ -1,0 +1,63 @@
+workflow_id: wf_iot_mobile_delivery
+name: Connected IoT, Embedded Firmware & Mobile Delivery Flow
+description: Orchestrates BLE GATT contract verification, FreeRTOS/Zephyr firmware,
+  KMP mobile client, and virtual loopback bridge
+version: 1.0.0
+steps:
+- id: step_ble_gatt_contract_gate
+  name: BLE GATT Service Contract Compatibility Gate
+  agent: agent_contract_compatibility_checker
+  inputs:
+    contract_path: .nb/context/contracts/ble_gatt_spec.yaml
+  enforce_merkle_seal: true
+  executor: agent_contract_compatibility_checker
+  handled_contracts:
+  - contract_id: ble_gatt_spec
+    name: Bluetooth Low Energy GATT Specification Contract
+    path: .nb/context/contracts/ble_gatt_spec.yaml
+    type: yaml_schema
+    action: verify_gatt_services
+    description: Validates primary UUIDs, MTU constraints (up to 512 bytes), and characteristic read/write/notify permission profiles.
+
+- id: step_mobile_kmp_client
+  name: KMP Shared BLE Client & UI Verification
+  agent: agent_mobile_developer
+  inputs:
+    target_module: workplace/modules/mobile_app
+    rules_ref: .nb/context/custom/rules/mobile_ble_lifecycle_rules.md
+  enforce_merkle_seal: true
+  executor: agent_mobile_developer
+  handled_contracts:
+  - contract_id: ota_firmware_manifest
+    name: OTA Firmware Package Manifest Contract
+    path: .nb/context/contracts/ota_firmware_manifest.json
+    type: json_schema
+    action: verify_ota_payload
+    description: Verifies cryptographic hash, firmware version semver, and target hardware architecture metadata.
+  - contract_id: ui_theme_token_contract
+    name: Enterprise UI Design System Tokens
+    path: .nb/context/contracts/ui_theme_token_contract.json
+    type: json_schema
+    action: audit_mobile_tokens
+    description: Enforces design token consistency and WCAG compliance for Kotlin Multiplatform mobile screens.
+
+- id: step_iot_ecosystem_audit
+  name: BLE Mesh, Power & Security Invariant Audit
+  agent: agent_iot_mobile_ecosystem_architect
+  inputs:
+    scope: workplace/modules/iot_node,workplace/modules/mobile_app
+  enforce_merkle_seal: true
+  executor: agent_iot_mobile_ecosystem_architect
+  handled_contracts:
+  - contract_id: security_pii_vault_contract
+    name: PII Redaction & IoT Payload Sanitization Contract
+    path: .nb/context/contracts/security_pii_vault_contract.json
+    type: json_schema
+    action: sanitize_telemetry
+    description: Guarantees sensor and location metrics sent from embedded nodes do not leak unredacted PII.
+  - contract_id: security_four_eyes_contract
+    name: Cryptographic Four-Eyes Release Seal Contract
+    path: .nb/context/contracts/security_four_eyes_contract.json
+    type: json_schema
+    action: seal_firmware_release
+    description: Cryptographically seals binary firmware payload hash and KMP client artifacts before publication.

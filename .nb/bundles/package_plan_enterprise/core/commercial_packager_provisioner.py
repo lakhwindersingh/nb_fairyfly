@@ -69,7 +69,14 @@ class CommercialPackagerProvisioner:
             "allow_private_vpc": False,
             "allow_worm_egress": False,
             "allow_multi_tenant_gateway": False,
-            "expose_basic_platform_tools": False
+            "expose_basic_platform_tools": False,
+            # Autonomous delivery workflows bundled per tier (mirrors allowed_engines gating)
+            "allowed_workflows": {
+                "basic_autonomous_cicd.yaml",
+                "intellij_pycharm_plugin_delivery_flow.yaml",
+                "derivation_pipeline.yaml",
+                "pr_gatekeeper.yaml"
+            }
         },
         "plan_team": {
             "allowed_engines": {
@@ -90,7 +97,14 @@ class CommercialPackagerProvisioner:
             "allow_private_vpc": False,
             "allow_worm_egress": False,
             "allow_multi_tenant_gateway": False,
-            "expose_basic_platform_tools": False
+            "expose_basic_platform_tools": False,
+            "allowed_workflows": {
+                "basic_autonomous_cicd.yaml",
+                "intellij_pycharm_plugin_delivery_flow.yaml",
+                "vscode_plugin_delivery_flow.yaml",
+                "derivation_pipeline.yaml",
+                "pr_gatekeeper.yaml"
+            }
         },
         "plan_business": {
             "allowed_engines": {
@@ -115,7 +129,17 @@ class CommercialPackagerProvisioner:
             "allow_private_vpc": False,
             "allow_worm_egress": False,
             "allow_multi_tenant_gateway": True,
-            "expose_basic_platform_tools": True
+            "expose_basic_platform_tools": True,
+            "allowed_workflows": {
+                "basic_autonomous_cicd.yaml",
+                "intellij_pycharm_plugin_delivery_flow.yaml",
+                "vscode_plugin_delivery_flow.yaml",
+                "commercial_packaging_provisioning_flow.yaml",
+                "saas_portal_delivery_flow.yaml",
+                "iot_mobile_delivery_flow.yaml",
+                "derivation_pipeline.yaml",
+                "pr_gatekeeper.yaml"
+            }
         },
         "plan_enterprise": {
             "allowed_engines": "ALL", # All engines permitted
@@ -124,7 +148,8 @@ class CommercialPackagerProvisioner:
             "allow_private_vpc": True,
             "allow_worm_egress": True,
             "allow_multi_tenant_gateway": True,
-            "expose_basic_platform_tools": True
+            "expose_basic_platform_tools": True,
+            "allowed_workflows": "ALL"
         }
     }
 
@@ -166,6 +191,8 @@ class CommercialPackagerProvisioner:
         tier_rules = dict(raw_rules)
         if isinstance(tier_rules.get("allowed_engines"), set):
             tier_rules["allowed_engines"] = sorted(list(tier_rules["allowed_engines"]))
+        if isinstance(tier_rules.get("allowed_workflows"), set):
+            tier_rules["allowed_workflows"] = sorted(list(tier_rules["allowed_workflows"]))
 
         canonical_name = tier_data.get("name", norm_tier)
         return {
@@ -196,6 +223,9 @@ class CommercialPackagerProvisioner:
         spec = cls.get_tier_spec(tier, workspace_root)
         tier_id = spec["tier_id"]
         rules = spec["rules"]
+        allowed_workflows = rules.get("allowed_workflows", [])
+        is_all_workflows = allowed_workflows == "ALL"
+        allowed_workflow_set = set(allowed_workflows) if isinstance(allowed_workflows, list) else set()
 
         if output_dir is None:
             output_dir = workspace_root / ".nb" / "bundles" / f"package_{tier_id}"
@@ -244,6 +274,20 @@ class CommercialPackagerProvisioner:
                     shutil.copy2(f, dst_file)
                     dst_file.chmod(0o755)
                     rel_path = f"scripts/{f.name}"
+                    bundled_files.append(rel_path)
+                    file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
+
+        # 3b. Package .nb/git_hooks/ (pre-commit guardrail hooks) for plugin & IDE bootstrapping
+        git_hooks_src = workspace_root / ".nb" / "git_hooks"
+        hooks_dst = output_dir / "hooks"
+        hooks_dst.mkdir(parents=True, exist_ok=True)
+        if git_hooks_src.exists():
+            for f in sorted(git_hooks_src.glob("*")):
+                if f.is_file() and not f.name.startswith("."):
+                    dst_file = hooks_dst / f.name
+                    shutil.copy2(f, dst_file)
+                    dst_file.chmod(0o755)
+                    rel_path = f"hooks/{f.name}"
                     bundled_files.append(rel_path)
                     file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
 
@@ -296,8 +340,12 @@ class CommercialPackagerProvisioner:
                     sub_dst = agentic_dst / sub
                     sub_dst.mkdir(parents=True, exist_ok=True)
                     for f in sorted(sub_src.glob("*.yaml")):
-                        # In Free Tier, only package basic free agents & basic CI/CD workflow
-                        if tier_id == "plan_free":
+                        # Tier-gate autonomous delivery workflows (mirrors CORE_TIER_RULES gating)
+                        if sub == "custom/workflows":
+                            if not is_all_workflows and f.name not in allowed_workflow_set:
+                                continue
+                        elif sub == "custom/agents" and tier_id == "plan_free":
+                            # Free Tier retains only baseline agents (no enterprise / portal / iot agents)
                             if "enterprise" in f.name or "saas_portal" in f.name or "iot_mobile" in f.name:
                                 continue
                         dst_file = sub_dst / f.name
@@ -306,17 +354,21 @@ class CommercialPackagerProvisioner:
                         bundled_files.append(rel_path)
                         file_hashes[rel_path] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
 
-        # 6b. Package workflows directory (basic_autonomous_cicd.yaml)
+        # 6b. Package tier-appropriate autonomous delivery workflows (workflows/)
         workflows_dst = output_dir / "workflows"
         workflows_dst.mkdir(parents=True, exist_ok=True)
-        basic_cicd = workspace_root / ".nb" / "agentic" / "custom" / "workflows" / "basic_autonomous_cicd.yaml"
-        if not basic_cicd.exists():
-            basic_cicd = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "workflows" / "basic_autonomous_cicd.yaml"
-        if basic_cicd.exists():
-            dst_cicd = workflows_dst / "basic_autonomous_cicd.yaml"
-            shutil.copy2(basic_cicd, dst_cicd)
-            bundled_files.append("workflows/basic_autonomous_cicd.yaml")
-            file_hashes["workflows/basic_autonomous_cicd.yaml"] = hashlib.sha256(dst_cicd.read_bytes()).hexdigest()
+        delivery_workflows_src = workspace_root / ".nb" / "agentic" / "custom" / "workflows"
+        if not delivery_workflows_src.exists():
+            delivery_workflows_src = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience" / "agentic" / "custom" / "workflows"
+        if delivery_workflows_src.exists():
+            for f in sorted(delivery_workflows_src.glob("*.yaml")):
+                if not is_all_workflows and f.name not in allowed_workflow_set:
+                    continue
+                dst_cicd = workflows_dst / f.name
+                shutil.copy2(f, dst_cicd)
+                rel_path = f"workflows/{f.name}"
+                bundled_files.append(rel_path)
+                file_hashes[rel_path] = hashlib.sha256(dst_cicd.read_bytes()).hexdigest()
 
         # 6c. Package canonical .nb/agentic/workflows/ (gatekeeper & plan derivation workflows)
         canonical_workflows_src = workspace_root / ".nb" / "agentic" / "workflows"
@@ -324,6 +376,8 @@ class CommercialPackagerProvisioner:
             canonical_workflows_dst = agentic_dst / "workflows"
             canonical_workflows_dst.mkdir(parents=True, exist_ok=True)
             for f in sorted(canonical_workflows_src.glob("*.yaml")):
+                if not is_all_workflows and f.name not in allowed_workflow_set:
+                    continue
                 dst_file = canonical_workflows_dst / f.name
                 shutil.copy2(f, dst_file)
                 rel_path = f"agentic/workflows/{f.name}"
@@ -487,7 +541,7 @@ class CommercialPackagerProvisioner:
         if target in ["all", "intellij", "pycharm", "ide", "mod_intellij_plugin"]:
             ij_resources = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience"
             ij_resources.mkdir(parents=True, exist_ok=True)
-            for item in ["bin", "config", "core", "agentic", "plan", "workflows"]:
+            for item in ["bin", "config", "core", "agentic", "plan", "workflows", "scripts", "hooks"]:
                 src_item = src_pkg_dir / item
                 dst_item = ij_resources / item
                 if src_item.exists():
@@ -520,7 +574,7 @@ class CommercialPackagerProvisioner:
             if vscode_dir.exists():
                 vscode_runtime = vscode_dir / "percipience_runtime"
                 vscode_runtime.mkdir(parents=True, exist_ok=True)
-                for item in ["bin", "config", "core", "agentic", "plan", "workflows"]:
+                for item in ["bin", "config", "core", "agentic", "plan", "workflows", "scripts", "hooks"]:
                     src_item = src_pkg_dir / item
                     dst_item = vscode_runtime / item
                     if src_item.exists():
