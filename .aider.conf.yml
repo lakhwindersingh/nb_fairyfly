@@ -6,9 +6,11 @@ percipience:
   format: yaml
   context_file: .nb/context/percipience_aider_context.md
   agent_registry:
+  - agent_adaptive_authentication_and_mfa
   - agent_adversarial_fuzzer
   - agent_ambiguity_resolver
   - agent_cloud_security_officer
+  - agent_cloud_security_posture_and_compliance
   - agent_commercial_packager_provisioner
   - agent_consolidation_synthesizer
   - agent_contract_compatibility_checker
@@ -16,12 +18,14 @@ percipience:
   - agent_doc_drift_synchronizer
   - agent_enterprise_saas_portal_architect
   - agent_flaky_test_detector
+  - agent_generic_multitenant_security_mesh
   - agent_intellij_ui_ux_engineer
   - agent_iot_mobile_ecosystem_architect
   - agent_jetbrains_plugin_architect
   - agent_living_doc_architect
   - agent_lsp_language_features_specialist
   - agent_master_enterprise_ui_design_system
+  - agent_master_parent_framework
   - agent_mobile_developer
   - agent_mod_complex_data_and_governance_widgets
   - agent_mod_core_component_library
@@ -29,6 +33,9 @@ percipience:
   - agent_mod_governance_and_showcase
   - agent_mod_realtime_data_and_state
   - agent_mod_surface_specialization
+  - agent_multitenant_rbac_rebac_engine
+  - agent_pii_protection_and_obfuscation
+  - agent_plan_injection_and_agentic_workflow
   - agent_portal_developer
   - agent_privacy_compliance_auditor
   - agent_psi_ast_bridge_specialist
@@ -44,9 +51,12 @@ percipience:
   - agent_ui_design_system_architect
   - agent_vscode_extension_architect
   - agent_vscode_webview_ux_engineer
+  - agent_zero_trust_authorization_and_mtls
   context_rules:
+    adaptive_authentication_and_mfa_rules: .nb/context/rules/adaptive_authentication_and_mfa_rules.md
     banking_security: .nb/context/rules/banking_security.md
     capability_tokens: .nb/context/rules/capability_tokens.yaml
+    cloud_security_posture_and_compliance_rules: .nb/context/rules/cloud_security_posture_and_compliance_rules.md
     commercial_tier_permissioning_rules: .nb/context/rules/commercial_tier_permissioning_rules.md
     jcef_security_invariants: .nb/context/rules/jcef_security_invariants.md
     jetbrains_platform_threading_rules: .nb/context/rules/jetbrains_platform_threading_rules.md
@@ -57,7 +67,10 @@ percipience:
     mod_realtime_data_and_state_rules: .nb/context/rules/mod_realtime_data_and_state_rules.md
     mod_surface_specialization_rules: .nb/context/rules/mod_surface_specialization_rules.md
     multitenant_isolation_rules: .nb/context/rules/multitenant_isolation_rules.md
+    multitenant_rbac_rebac_engine_rules: .nb/context/rules/multitenant_rbac_rebac_engine_rules.md
+    pii_protection_and_obfuscation_rules: .nb/context/rules/pii_protection_and_obfuscation_rules.md
     pii_protection_rules: .nb/context/rules/pii_protection_rules.md
+    plan_injection_and_agentic_workflow_rules: .nb/context/rules/plan_injection_and_agentic_workflow_rules.md
     psi_read_lock_invariants: .nb/context/rules/psi_read_lock_invariants.md
     rbac_governance_rules: .nb/context/rules/rbac_governance_rules.md
     realtime_rendering_rules: .nb/context/rules/realtime_rendering_rules.md
@@ -65,6 +78,7 @@ percipience:
     ui_token_consistency_rules: .nb/context/rules/ui_token_consistency_rules.md
     vscode_activation_invariants: .nb/context/rules/vscode_activation_invariants.md
     webview_security_invariants: .nb/context/rules/webview_security_invariants.md
+    zero_trust_authorization_and_mtls_rules: .nb/context/rules/zero_trust_authorization_and_mtls_rules.md
     zero_trust_rules: .nb/context/rules/zero_trust_rules.md
   context_contracts:
     billing_meter_contract: .nb/context/contracts/billing_meter_contract.yaml
@@ -103,12 +117,20 @@ percipience:
     vscode_plugin_delivery_flow: .nb/agentic/custom/workflows/vscode_plugin_delivery_flow.yaml
     derivation_pipeline: .nb/agentic/workflows/derivation_pipeline.yaml
     pr_gatekeeper: .nb/agentic/workflows/pr_gatekeeper.yaml
+    wf_generic_multitenant_security_mesh_derivation: .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     wf_master_enterprise_ui_design_system_derivation: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
+    wf_master_parent_framework_derivation: .nb/agentic/workflows/wf_master_parent_framework_derivation.yaml
   workflow_hooks:
+    ? agent_adaptive_authentication_and_mfa__wf_generic_multitenant_security_mesh_derivation__step_adaptive_authentication_and_mfa
+    : .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     agent_adversarial_fuzzer__wf_pr_gatekeeper__step_adversarial_fuzz_audit: .nb/agentic/workflows/pr_gatekeeper.yaml
     agent_ambiguity_resolver__wf_derivation_pipeline__step_evaluate_ambiguity_gate: .nb/agentic/workflows/derivation_pipeline.yaml
+    ? agent_cloud_security_posture_and_compliance__wf_generic_multitenant_security_mesh_derivation__step_cloud_security_posture_and_compliance
+    : .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     agent_consolidation_synthesizer__wf_pr_gatekeeper__step_topological_consolidation: .nb/agentic/workflows/pr_gatekeeper.yaml
+    agent_generic_multitenant_security_mesh__wf_generic_multitenant_security_mesh_derivation__step_plan_root: .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     agent_master_enterprise_ui_design_system__wf_master_enterprise_ui_design_system_derivation__step_plan_root: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
+    agent_master_parent_framework__wf_master_parent_framework_derivation__step_plan_root: .nb/agentic/workflows/wf_master_parent_framework_derivation.yaml
     ? agent_mod_complex_data_and_governance_widgets__wf_master_enterprise_ui_design_system_derivation__step_mod_complex_data_and_governance_widgets
     : .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
     agent_mod_core_component_library__wf_master_enterprise_ui_design_system_derivation__step_mod_core_component_library: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
@@ -116,9 +138,15 @@ percipience:
     agent_mod_governance_and_showcase__wf_master_enterprise_ui_design_system_derivation__step_mod_governance_and_showcase: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
     agent_mod_realtime_data_and_state__wf_master_enterprise_ui_design_system_derivation__step_mod_realtime_data_and_state: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
     agent_mod_surface_specialization__wf_master_enterprise_ui_design_system_derivation__step_mod_surface_specialization: .nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml
+    agent_multitenant_rbac_rebac_engine__wf_generic_multitenant_security_mesh_derivation__step_multitenant_rbac_rebac_engine: .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
+    agent_pii_protection_and_obfuscation__wf_generic_multitenant_security_mesh_derivation__step_pii_protection_and_obfuscation: .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
+    ? agent_plan_injection_and_agentic_workflow__wf_generic_multitenant_security_mesh_derivation__step_plan_injection_and_agentic_workflow
+    : .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     agent_quality_guard__wf_pr_gatekeeper__step_quality_guard: .nb/agentic/workflows/pr_gatekeeper.yaml
     agent_registry_synchronizer__wf_pr_gatekeeper__step_registry_sync: .nb/agentic/workflows/pr_gatekeeper.yaml
     agent_test_finops_auditor__wf_pr_gatekeeper__step_test_finops_auditor: .nb/agentic/workflows/pr_gatekeeper.yaml
+    ? agent_zero_trust_authorization_and_mtls__wf_generic_multitenant_security_mesh_derivation__step_zero_trust_authorization_and_mtls
+    : .nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml
     commercial_packaging_provisioning_flow__billing_plan_updated: .nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml
     commercial_packaging_provisioning_flow__tenant_provision_request: .nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml
     commercial_packaging_provisioning_flow__tier_package_request: .nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml

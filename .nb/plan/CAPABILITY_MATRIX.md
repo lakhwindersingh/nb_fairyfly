@@ -9,15 +9,15 @@
 
 | Plan ID | Layer | Stage | Parity ($S_{SP}$) | Production Ready | Capabilities Count |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| [`domain_intellij_pycharm_plugin`](./l1/intellij-pycharm-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 7 |
+| [`domain_intellij_pycharm_plugin`](./l1/intellij-pycharm-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 9 |
 | [`domain_npx_installer`](./l1/npx-installer) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_saas_portal`](./l1/saas-portal-domain) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
 | [`domain_tiered_wheel_packaging`](./l1/tiered-wheel-packaging) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_vscode_plugin`](./l1/vscode-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`master_cloud_agnostic_infrastructure_substrate`](./master/cloud-agnostic-infrastructure-substrate) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 10 |
 | [`master_enterprise_ui_design_system`](./master/enterprise-ui-design-system) | `master` | `active_draft` | `0.985` | ✅ Ready | 12 |
-| [`master_parent_free_community`](./master/parent-master-free-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
-| [`master_parent_framework`](./master/parent-master-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 8 |
+| [`master_parent_free_community`](./master/parent-master-free-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 10 |
+| [`master_parent_framework`](./master/parent-master-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 14 |
 | [`master_plan_assessment`](./master/plan-assessment) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
 | [`generic_multitenant_security_mesh`](./master/security-mesh) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 1 |
 | [`master_sequential_plan_orchestrator`](./master/sequential-plan-orchestrator) | `master` | `planned` | `0.985` | ✅ Ready | 15 |
@@ -35,6 +35,8 @@
   - JetBrains Platform SDK & ToolWindow Control Plane
   - Dynamic Tier-Aware Control Plane Action Button Matrix
   - Model Context Protocol (MCP) Interoperability Across All Bundles (.claude/mcp.json)
+  - Tier-Gated Autonomous Delivery Workflow & Git Hook Bundling (percipience/workflows/, percipience/hooks/)
+  - Offline Local-Filesystem Plugin Auto-Upgrade (percipience/version.json, plugin_update_resolver.py)
   - Program Structure Interface (PSI) Multi-Language AST Pruning
   - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
   - JCEF Chromium Embedded Living Visualizer
@@ -124,11 +126,16 @@
 - **Layer**: `master`
 - **Requires**: `master_parent_framework`
 - **Key Capabilities**:
-  - Single Canonical Gatekeeper Binary (.nb/bin/percipience)
-  - Embedded Free Tier Plugin Assets & Startup Notification
-  - Tree-Sitter AST Token Reduction (60-80%)
-  - SHA-256 Merkle Ledger State Chaining
-  - Basic Autonomous CI/CD Self-Repair Loop
+  - Single Canonical Gatekeeper Binary (.nb/bin/percipience) (CAP-36)
+  - Embedded Free Tier Plugin Assets & Startup Notification (CAP-36)
+  - Tree-Sitter AST Token Reduction (60-80%) (CAP-03)
+  - SHA-256 Merkle Ledger State Chaining (CAP-08)
+  - Basic Autonomous CI/CD Self-Repair Loop (CAP-16)
+  - Git Hook Auto-Installation & Pre-Commit Validation (IMPL-1.1 + IMPL-1.2) — **PHASE 1 ✅**
+  - Autonomous Agent Swarm Spawning — Basic Tier (IMPL-2.1) — **PHASE 1 ✅**
+  - Merkle Chain Blocking Validation (IMPL-5.1) — **PHASE 1 ✅**
+  - Embedded Free Tier Plugin Asset Integration & Workflow Handoff Hooks — **PHASE 2 ✅**
+  - Registry / Hook / Multi-LLM Settings Synchronizer (IMPL-2.2) — **TEAM/BUSINESS/ENTERPRISE ONLY**
 
 ### `master_parent_framework`: Parent Master Context Engineering Framework
 - **Location**: [master/parent-master-plan](./master/parent-master-plan)
@@ -141,8 +148,14 @@
   - Dynamic Multi-Model Cascading (CAP-04)
   - Git Worktree Workspace Isolation (CAP-05)
   - Cryptographic Merkle State Ledger (CAP-08)
-  - Autonomous Closed-Loop CI/CD Triad (CAP-16)
+  - Autonomous Closed-Loop CI/CD Triad (CAP-16) — **NOW ENABLED WITH PHASE 1**
   - 3-Tier Layered Context Precedence Hierarchy (CAP-20)
+  - Git Hook Auto-Installation & Pre-Commit Validation (IMPL-1.1 + IMPL-1.2) — **PHASE 1 ✅**
+  - Autonomous Agent Swarm Spawning (IMPL-2.1) — **PHASE 1 ✅**
+  - Merkle Chain Blocking Validation (IMPL-5.1) — **PHASE 1 ✅**
+  - Workflow Hook Registry Binding Validation (IMPL-2.2) — **PHASE 2 ✅**
+  - Multi-LLM Registry Settings Projection (Claude / Gemini / Aider / Cursor) — **PHASE 2 ✅**
+  - Sequential Plan Module Orchestration & Tiered Bundling — **PHASE 2 ✅**
 
 ### `master_plan_assessment`: Percipience Master Plan Assessment Framework
 - **Location**: [master/plan-assessment](./master/plan-assessment)
