@@ -1,0 +1,27 @@
+agent_id: agent_master_parent_framework
+name: Parent Master Context Engineering Framework - Root Plan Orchestrator
+version: 1.0.0
+category: plan_derivation
+model: claude-3-5-sonnet
+model_tier: tier_a
+temperature: 0.1
+role: Parent Master Context Engineering Framework Root Derivation Orchestrator
+description: |
+  Root derivation orchestrator for the master_parent_framework master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.
+source_plan: .nb/plan/master/parent-master-plan
+source_documents:
+- concise.md
+- detailed.md
+workflow_bindings:
+- workflow_id: wf_master_parent_framework_derivation
+  stage: step_plan_root
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+module_scope:
+  allowed_modules:
+  - workplace/
+  denied_paths:
+  - .git
+  - .nb/context/invariants
+system_prompt: |
+  You are the root derivation orchestrator for the master_parent_framework master plan (Parent Master Context Engineering Framework).
+  Execute the root specification in .nb/plan/master/parent-master-plan and coordinate the sequential derivation of each discovered submodule.
