@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinancialModelSpec",
+  "type": "object",
+  "required": [
+    "discount_rate",
+    "time_horizon_months",
+    "gpu_hourly_rates",
+    "token_volume_growth_monthly",
+    "capex_breakdown",
+    "opex_baseline_monthly"
+  ],
+  "properties": {
+    "discount_rate": { "type": "number", "default": 0.085 },
+    "time_horizon_months": { "type": "integer", "default": 36 },
+    "gpu_hourly_rates": {
+      "type": "object",
+      "properties": {
+        "local_m_series": { "type": "number", "default": 0.00 },
+        "nvidia_a10g": { "type": "number", "default": 1.85 },
+        "nvidia_h100": { "type": "number", "default": 3.90 }
+      }
+    },
+    "token_volume_growth_monthly": { "type": "number", "default": 0.10 },
+    "capex_breakdown": {
+      "type": "object",
+      "required": ["engineering_r_and_d", "infrastructure_setup", "base_checkpoint_training"],
+      "properties": {
+        "engineering_r_and_d": { "type": "number" },
+        "infrastructure_setup": { "type": "number" },
+        "base_checkpoint_training": { "type": "number" }
+      }
+    },
+    "opex_baseline_monthly": { "type": "number" }
+  }
+}

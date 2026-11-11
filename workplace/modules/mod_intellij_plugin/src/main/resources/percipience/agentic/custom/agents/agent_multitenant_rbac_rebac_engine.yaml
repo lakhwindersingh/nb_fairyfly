@@ -1,0 +1,44 @@
+agent_id: agent_multitenant_rbac_rebac_engine
+name: 'Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control'
+version: 1.0.0
+category: plan_module_derivation
+model: claude-3-5-sonnet
+model_tier: tier_b
+temperature: 0.1
+role: 'Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control
+  Derivation Specialist'
+description: |
+  Autonomous derivation specialist for plan module multitenant_rbac_rebac_engine of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control under sandboxed worktree isolation.
+source_plan: .nb/plan/master/security-mesh
+source_module: modules/01_multitenant_rbac_rebac_engine.md
+governing_rules:
+- .nb/context/rules/multitenant_rbac_rebac_engine_rules.md
+sandboxed_worktree: .nb/workspaces/wt_multitenant_rbac_rebac_engine
+module_scope:
+  allowed_modules:
+  - workplace/
+  denied_paths:
+  - .git
+  - .nb/context/invariants
+tools_and_capabilities:
+- name: derive_module
+  description: Executes the bounded derivation of the module under worktree isolation
+  handler: workplace/core/container_plan_executor.py
+- name: enforce_module_invariants
+  description: Validates layered context and module invariants
+  handler: workplace/core/layered_context_validator.py
+workflow_bindings:
+- workflow_id: wf_generic_multitenant_security_mesh_derivation
+  stage: step_multitenant_rbac_rebac_engine
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+autonomous_cicd_hooks:
+  auto_trigger_in_cicd: true
+  target_workflows:
+  - workflow_id: wf_generic_multitenant_security_mesh_derivation
+    step_id: step_multitenant_rbac_rebac_engine
+    step_name: Derive module multitenant_rbac_rebac_engine
+    fail_action: AUTO_HEAL_OR_ROLLBACK
+system_prompt: |
+  You are the Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control derivation specialist for the generic_multitenant_security_mesh master plan.
+  Derive the multitenant_rbac_rebac_engine submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/01_multitenant_rbac_rebac_engine.md, honoring .nb/context/rules/multitenant_rbac_rebac_engine_rules.md.
+  Operate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.

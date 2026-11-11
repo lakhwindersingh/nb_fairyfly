@@ -1,0 +1,29 @@
+agent_id: agent_master_enterprise_ui_design_system
+name: Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture - Root Plan
+  Orchestrator
+version: 1.0.0
+category: plan_derivation
+model: claude-3-5-sonnet
+model_tier: tier_a
+temperature: 0.1
+role: Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture Root Derivation
+  Orchestrator
+description: |
+  Root derivation orchestrator for the master_enterprise_ui_design_system master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.
+source_plan: .nb/plan/master/enterprise-ui-design-system
+source_documents:
+- concise.md
+- detailed.md
+workflow_bindings:
+- workflow_id: wf_master_enterprise_ui_design_system_derivation
+  stage: step_plan_root
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+module_scope:
+  allowed_modules:
+  - workplace/
+  denied_paths:
+  - .git
+  - .nb/context/invariants
+system_prompt: |
+  You are the root derivation orchestrator for the master_enterprise_ui_design_system master plan (Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture).
+  Execute the root specification in .nb/plan/master/enterprise-ui-design-system and coordinate the sequential derivation of each discovered submodule.

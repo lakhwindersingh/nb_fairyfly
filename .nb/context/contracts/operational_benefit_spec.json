@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OperationalBenefitSpec",
+  "type": "object",
+  "required": [
+    "target_verticals",
+    "tangible_benefits",
+    "intangible_benefits",
+    "stage_gates",
+    "kpi_milestones"
+  ],
+  "properties": {
+    "target_verticals": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tangible_benefits": {
+      "type": "object",
+      "properties": {
+        "compute_reduction_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "uptime_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "storage_reduction_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 }
+      }
+    },
+    "intangible_benefits": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stage_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "name", "duration_weeks", "exit_criteria"],
+        "properties": {
+          "phase": { "type": "integer" },
+          "name": { "type": "string" },
+          "duration_weeks": { "type": "integer" },
+          "exit_criteria": { "type": "string" }
+        }
+      }
+    },
+    "kpi_milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kpi_name", "target_value", "measurement_unit"],
+        "properties": {
+          "kpi_name": { "type": "string" },
+          "target_value": { "type": "number" },
+          "measurement_unit": { "type": "string" }
+        }
+      }
+    }
+  }
+}

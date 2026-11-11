@@ -1,14 +1,17 @@
 workflow_id: wf_enterprise_pr_gate
 name: Enterprise PR Gate with Custom Infosec & FinOps Audit
-description: Demonstrates hybrid composition of sealed platform executors with customer
-  custom agents.
+description: Demonstrates hybrid composition of sealed platform executors with customer custom agents.
 steps:
 - step_id: ast_prune
   id: ast_prune
   name: Structural AST Token Pruner
+  agent: platform.ast_pruner
   executor: platform.ast_pruner
+  depends_on: []
   inputs:
   - workplace/
+  output_artifacts:
+  - art_ast_pruned_workspace
   handled_contracts:
   - contract_id: psi_ast_bridge_contract
     name: Structural AST Bridge & Token Slicing Contract
@@ -20,11 +23,16 @@ steps:
 - step_id: token_savings_audit
   id: token_savings_audit
   name: Autonomous Token FinOps & Metering Verification
+  agent: agent_token_finops_auditor
   executor: agent_token_finops_auditor
   depends_on:
   - ast_prune
+  input_artifacts:
+  - art_ast_pruned_workspace
   inputs:
   - .nb/context/ledger/token_savings_ledger.yaml
+  output_artifacts:
+  - art_token_savings_audit_receipt
   failure_action: warn_and_meter
   handled_contracts:
   - contract_id: billing_meter_contract
@@ -37,12 +45,17 @@ steps:
 - step_id: custom_security_audit
   id: custom_security_audit
   name: Enterprise Infosec & Banking Rule Audit
+  agent: agent_security_auditor
   executor: agent_security_auditor
   depends_on:
   - token_savings_audit
+  input_artifacts:
+  - art_token_savings_audit_receipt
   inputs:
   - workplace/
   - .nb/context/custom/rules/banking_security.md
+  output_artifacts:
+  - art_custom_security_audit_receipt
   failure_action: quarantine_and_pause
   handled_contracts:
   - contract_id: security_rebac_policy_contract
@@ -61,12 +74,17 @@ steps:
 - step_id: contract_verification
   id: contract_verification
   name: Cross-Module Schema Verification
+  agent: platform.contract_verifier
   executor: platform.contract_verifier
   depends_on:
   - custom_security_audit
+  input_artifacts:
+  - art_custom_security_audit_receipt
   inputs:
   - .nb/context/contracts/
   - .nb/context/custom/schemas/
+  output_artifacts:
+  - art_cross_module_schema_verification_receipt
   handled_contracts:
   - contract_id: portal_openapi_spec
     name: OpenAPI 3.1 REST Wire Specification Contract
@@ -84,9 +102,14 @@ steps:
 - step_id: merkle_seal
   id: merkle_seal
   name: Merkle State DAG Block Sealer
+  agent: platform.merkle_ledger
   executor: platform.merkle_ledger
   depends_on:
   - contract_verification
+  input_artifacts:
+  - art_cross_module_schema_verification_receipt
+  output_artifacts:
+  - art_merkle_sealed_block_receipt
   action: SEAL_BLOCK
   handled_contracts:
   - contract_id: security_four_eyes_contract

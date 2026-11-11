@@ -27,6 +27,37 @@ class TestPlanModuleOrchestrator(unittest.TestCase):
     def setUp(self):
         self.workspace_root = Path(__file__).resolve().parents[2]
 
+    def test_dependency_synchronization_orders_and_validates_before_writing(self):
+        root, target = self._make_plan(modules_dir=False)
+        base = root / ".nb/plan/l1/base"
+        _write(base / "MANIFEST.yaml", yaml.safe_dump({"plan_id": "base"}))
+        manifest_path = target / "MANIFEST.yaml"
+        manifest = yaml.safe_load(manifest_path.read_text())
+        manifest["dependencies"] = {"requires": ["l1/base"]}
+        _write(manifest_path, yaml.safe_dump(manifest))
+        orch = PlanModuleOrchestrator(root)
+        reports = orch.synchronize_dependencies("master_demo_plan", apply=False, sync_registries=False)
+        self.assertEqual([report["plan_id"] for report in reports], ["base", "master_demo_plan"])
+        _write(base / "MANIFEST.yaml", yaml.safe_dump({"plan_id": "base", "dependencies": ["master_demo_plan"]}))
+        with self.assertRaisesRegex(ValueError, "cycle"):
+            orch.synchronize_dependencies("master_demo_plan", sync_registries=False)
+        self.assertFalse((root / ".nb/agentic").exists())
+
+    def test_dependency_synchronization_rejects_missing_and_ambiguous_references(self):
+        root, target = self._make_plan(modules_dir=False)
+        manifest_path = target / "MANIFEST.yaml"
+        manifest = yaml.safe_load(manifest_path.read_text())
+        manifest["dependencies"] = {"requires": ["missing"]}
+        _write(manifest_path, yaml.safe_dump(manifest))
+        orch = PlanModuleOrchestrator(root)
+        with self.assertRaisesRegex(ValueError, "Unknown plan dependency"):
+            orch.synchronize_dependencies("master_demo_plan")
+        _write(root / ".nb/plan/l1/one/MANIFEST.yaml", "plan_id: missing\n")
+        _write(root / ".nb/plan/l1/two/MANIFEST.yaml", "plan_id: missing\n")
+        with self.assertRaisesRegex(ValueError, "Ambiguous plan dependency"):
+            orch.synchronize_dependencies("master_demo_plan")
+        self.assertFalse((root / ".nb/agentic").exists())
+
     def _make_plan(self, modules_dir: bool = True, manifest_modules=None):
         tmp = tempfile.TemporaryDirectory()
         root = Path(tmp.name)

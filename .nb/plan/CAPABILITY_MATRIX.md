@@ -15,7 +15,7 @@
 | [`master_parent_framework`](./master/parent-master-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 14 |
 | [`master_parent_free_community`](./master/parent-master-free-plan) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 10 |
 | [`master_plan_assessment`](./master/plan-assessment) | `master` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
-| [`master_sequential_plan_orchestrator`](./master/sequential-plan-orchestrator) | `master` | `planned` | `N/A` | ⚠️ Pending | 15 |
+| [`master_sequential_plan_orchestrator`](./master/sequential-plan-orchestrator) | `master` | `planned` | `0.985` | ⚠️ Pending | 15 |
 | [`domain_intellij_pycharm_plugin`](./l1/intellij-pycharm-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 9 |
 | [`domain_npx_installer`](./l1/npx-installer) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_saas_portal`](./l1/saas-portal-domain) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
@@ -119,7 +119,7 @@
 ### `master_sequential_plan_orchestrator`: Sequential Plan Implementation & Zero-Drift Orchestration Framework
 - **Location**: [master/sequential-plan-orchestrator](./master/sequential-plan-orchestrator)
 - **Layer**: `master`
-- **Requires**: `master/parent-master-plan`, `master/plan-assessment`
+- **Requires**: `master_parent_framework`, `master_plan_assessment`
 - **Key Capabilities**:
   - Sequential Topological Execution
   - Token Budget Phased Gating

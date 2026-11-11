@@ -145,6 +145,7 @@ InteractiveOnboardingWizard = _load_engine("onboarding_wizard", ["InteractiveOnb
 MicroVMSandbox = _load_engine("microvm_sandbox", ["MicroVMSandbox"])
 OIDCAuthenticator = _load_engine("oidc_authenticator", ["OIDCAuthenticator"])
 DistributedTestRunner = _load_engine("distributed_test_runner", ["DistributedTestRunner"])
+WorkflowRunner = _load_engine("workflow_runner", ["WorkflowRunner"])
 
 def cmd_license(args):
     """Manages, mints, installs, and verifies commercial tier licenses."""
@@ -918,12 +919,57 @@ def cmd_validate(args):
             sys.exit(1)
 
 def cmd_run(args):
-    print(f"▶️ Executing workflow: {args.workflow} (Dry-run: {args.dry_run})")
-    print(f"   Step 1: AST Pruner -> Execution OK")
-    print(f"   Step 2: Custom Security Audit -> Execution OK")
-    print(f"   Step 3: Contract Verification -> Execution OK")
-    print(f"   Step 4: Merkle State Sealer -> Execution OK")
-    print("✅ Workflow execution completed successfully.")
+    _require_engine(WorkflowRunner, "workflow_runner", "run", "Free / Team / Business / Enterprise")
+    workflow_arg = args.workflow.strip()
+    dry_run = bool(args.dry_run)
+
+    print(f"▶️ Executing workflow: {workflow_arg} (Dry-run: {dry_run})")
+    
+    if workflow_arg.lower() == "all":
+        res = WorkflowRunner.run_all_workflows(dry_run=dry_run)
+        print(f"\n📊 Workflow Batch Execution Summary ({res['total_workflows']} Workflows, {res['total_steps']} Total Steps):")
+        for w in res['workflows']:
+            status_icon = "✅" if w['status'] in ("COMPLETED", "DRY_RUN") else "❌"
+            print(f"   {status_icon} [{w['workflow_id']}] ({w['file']}) - {w['status']} ({w.get('step_count', 0)} steps, {w.get('duration_sec', 0.0)}s)")
+            for sid, sres in w.get('executed_steps', {}).items():
+                s_icon = "✓" if sres.get('status') == "SUCCESS" else "✗"
+                print(f"      [{s_icon}] {sid}: {sres.get('status')} ({sres.get('duration_sec', 0.0)}s)")
+        if res['all_passed']:
+            print(f"\n🎉 All {res['total_workflows']} workflows executed successfully with 0 gaps!")
+        else:
+            print("\n❌ Some workflows failed execution!")
+            sys.exit(1)
+    else:
+        wf_dir = WorkflowRunner.WORKFLOWS_DIR
+        target_file = None
+        if (wf_dir / workflow_arg).exists():
+            target_file = wf_dir / workflow_arg
+        elif (wf_dir / f"{workflow_arg}.yaml").exists():
+            target_file = wf_dir / f"{workflow_arg}.yaml"
+        else:
+            for p in wf_dir.glob("*.yaml"):
+                with open(p, "r", encoding="utf-8") as f:
+                    c = yaml.safe_load(f) or {}
+                if c.get("workflow_id") == workflow_arg:
+                    target_file = p
+                    break
+        
+        if not target_file:
+            print(f"❌ Workflow '{workflow_arg}' not found in {wf_dir}")
+            sys.exit(1)
+
+        res = WorkflowRunner.run_workflow_by_file(target_file, dry_run=dry_run)
+        print(f"\n📋 Workflow [{res['workflow_id']}] ({target_file.name}): {res['status']} ({res.get('duration_sec', 0.0)}s)")
+        for sid, sres in res.get('executed_steps', {}).items():
+            s_icon = "✓" if sres.get('status') == "SUCCESS" else "✗"
+            print(f"   [{s_icon}] {sid} ({sres.get('name')}): {sres.get('status')} ({sres.get('duration_sec', 0.0)}s)")
+        
+        if res['status'] in ("COMPLETED", "DRY_RUN"):
+            print(f"✅ Workflow '{workflow_arg}' completed successfully with 0 gaps.")
+        else:
+            print(f"❌ Workflow '{workflow_arg}' failed: {res.get('error')}")
+            sys.exit(1)
+
 
 def cmd_tokens(args):
     _require_engine(UnifiedTokenOptimizer, "token_optimizer_suite", "tokens", "Free / Team / Business / Enterprise")

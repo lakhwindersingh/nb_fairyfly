@@ -2,81 +2,77 @@ plan:
   id: master_sequential_plan_orchestrator
   name: Sequential Plan Implementation & Zero-Drift Orchestration Framework
   category: master
-  layer: Master
+  layer: master
   language: rust
   cargo_crate: beehive-sequential-orchestrator
-  rust_stack:
-  - tokio
-  - petgraph
-  - candle-core
-  - serde
-  - serde_json
-  - serde_yaml
-  - rkyv
-  - sha2
-  - blake3
-  - hmac
-  - ed25519-dalek
-  - tree-sitter
-  - arc-swap
-  - parking_lot
-  - rayon
-versions:
-  concise:
-    file: concise.md
-    format: token_optimized
-    target_tokens: 3500
-    last_updated: '2026-11-11T18:04:01.097386Z'
-    version: 2.0.0
-    content_hash: sha256:ee91f56a525ad4b81420f42a91fed3b5b9304475438633d6af7c98cfeababc5b
-    lines: 158
-  detailed:
-    file: detailed.md
-    format: implementation_spec
-    target_tokens: 42000
-    last_updated: '2026-11-11T18:04:01.097386Z'
-    version: 2.0.0
-    content_hash: sha256:665d8296a2542db98f13a4b9abac977244adc19b4bf77ca3ee299978fb2efb7a
-    lines: 695
-  mini:
-    file: null
-    exists: false
-  readme:
-    file: README.md
-    format: overview
-    version: latest
-    last_updated: '2026-11-11T18:04:01.097386Z'
-    content_hash: sha256:caeeb2c7197674b24b56ece4ac6599ee8e39f4d78c9ffe3793e2d106afa51ec9
-    lines: 59
-sync_status:
-  in_sync: true
-  last_sync: '2026-11-11T18:04:01.097386Z'
-  sync_direction: bidirectional
-  differences: []
-capabilities:
-  sequential_topological_execution: true
-  token_budget_phased_gating: true
-  reentrant_state_resumption: true
-  zero_token_fast_forward: true
-  hallucination_drift_prevention: true
-  six_vector_semantic_parity: true
-  reentrant_hook_lifecycle: true
-  bounded_tdd_self_healing: true
-  context_poisoning_isolation_rollback: true
-  dynamic_model_tiering_router: true
-  ephemeral_worktree_isolation: true
-  cryptographic_merkle_state_sealing: true
-  autonomous_living_docs_synthesis: true
-  differential_skippability_engine: true
-  target_plan_boundary_resolver: true
+schema_version: 3.0.0
+plan_id: master_sequential_plan_orchestrator
+plan_name: Sequential Plan Implementation & Zero-Drift Orchestration Framework
+version: 2.0.0
+layer: master
+capability_rating: TIER_MASTER
+status: active
+maturity:
+  stage: planned
+  implementation_status: design_complete
+  test_coverage: 0
+  production_ready: false
+semantic_parity:
+  composite_score: 0.985
+  gate_status: PASSED
+  vectors:
+    ast_parity: 0.99
+    contract_parity: 0.98
+    behavior_parity: 0.99
+    handover_parity: 0.98
+    doc_parity: 0.98
+    supply_chain_parity: 0.99
 dependencies:
   requires:
-  - master/parent-master-plan
-  - master/plan-assessment
+  - master_parent_framework
+  - master_plan_assessment
   enables: []
   enabled_use_cases:
   - all_sequential_plan_implementations
   - l1_through_l5_autonomous_pipeline
+key_capabilities:
+- 'Sequential Topological Execution'
+- 'Token Budget Phased Gating'
+- 'Reentrant State Resumption'
+- 'Zero Token Fast Forward'
+- 'Hallucination Drift Prevention'
+- 'Six Vector Semantic Parity'
+- 'Reentrant Hook Lifecycle'
+- 'Bounded Tdd Self Healing'
+- 'Context Poisoning Isolation Rollback'
+- 'Dynamic Model Tiering Router'
+- 'Ephemeral Worktree Isolation'
+- 'Cryptographic Merkle State Sealing'
+- 'Autonomous Living Docs Synthesis'
+- 'Differential Skippability Engine'
+- 'Target Plan Boundary Resolver'
+file_versions:
+  concise:
+    path: concise.md
+    version: 2.0.0
+    last_modified: '2026-11-11'
+    content_hash: ee91f56a525ad4b81420f42a91fed3b5b9304475438633d6af7c98cfeababc5b
+    line_count: 158
+    primary_purpose: Compact token-optimized agentic specification for sequential execution
+  detailed:
+    path: detailed.md
+    version: 2.0.0
+    last_modified: '2026-11-11'
+    content_hash: 665d8296a2542db98f13a4b9abac977244adc19b4bf77ca3ee299978fb2efb7a
+    line_count: 695
+    primary_purpose: Exhaustive implementation guide, topological stages, Rust architecture, and zero-drift mechanics
+  readme:
+    path: README.md
+    version: 2.0.0
+    last_modified: '2026-11-11'
+    content_hash: caeeb2c7197674b24b56ece4ac6599ee8e39f4d78c9ffe3793e2d106afa51ec9
+    line_count: 59
+    primary_purpose: Master plan directory overview, navigation guide, and architectural summary
 rust_deliverables:
   workspace_crate: crates/beehive-sequential-orchestrator
   manifest: crates/beehive-sequential-orchestrator/Cargo.toml
@@ -91,9 +87,4 @@ rust_deliverables:
   - crates/beehive-sequential-orchestrator/tests/test_topological_dag.rs
   - crates/beehive-sequential-orchestrator/tests/test_token_budget_and_resume.rs
   - crates/beehive-sequential-orchestrator/benches/orchestrator_fast_forward_bench.rs
-maturity:
-  stage: planned
-  implementation_status: design_complete
-  test_coverage: 0
-  production_ready: false
 parent_plan: master/parent-master-plan/detailed.md

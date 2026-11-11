@@ -112,9 +112,36 @@ class MerkleEngine:
         return cls.compute_merkle_root(key_files)
 
     @classmethod
-    def compute_block_hash(cls, block_id: int, prev_hash: str, merkle_root: str, git_sha: str, timestamp: str) -> str:
-        payload = f"{block_id}|{prev_hash}|{merkle_root}|{git_sha}|{timestamp}"
-        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    def compute_block_hash(
+        cls,
+        block_id: int,
+        prev_hash: str,
+        merkle_root: str,
+        git_sha: str,
+        timestamp: str,
+        recovery_point_id: Optional[str] = None,
+        action: Optional[str] = None,
+    ) -> str:
+        if action is not None:
+            payload = json.dumps(
+                {
+                    "version": 2,
+                    "block_id": block_id,
+                    "prev_hash": prev_hash,
+                    "merkle_root": merkle_root,
+                    "git_sha": git_sha,
+                    "timestamp": timestamp,
+                    "recovery_point_id": recovery_point_id,
+                    "action": action,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            return hashlib.sha256(payload).hexdigest()
+        legacy_payload = f"{block_id}|{prev_hash}|{merkle_root}|{git_sha}|{timestamp}"
+        if recovery_point_id:
+            legacy_payload += f"|{recovery_point_id}"
+        return hashlib.sha256(legacy_payload.encode("utf-8")).hexdigest()
 
     @classmethod
     def seal_block(cls, workspace_root: Path, action: str, git_sha: str = "HEAD", recovery_point_id: Optional[str] = None) -> Dict[str, Any]:
@@ -126,29 +153,57 @@ class MerkleEngine:
             raise FileNotFoundError(f"Ledger not found at {ledger_path}")
 
         with open(ledger_path, "r", encoding="utf-8") as f:
-            if yaml and SafeLoader:
-                data = yaml.load(f, Loader=SafeLoader)
-            elif yaml:
-                data = yaml.safe_load(f)
+            if yaml:
+                docs = [d for d in yaml.safe_load_all(f) if isinstance(d, dict)]
+                data = docs[0] if docs else {}
             else:
                 data = json.load(f)
 
         chain = data.get("ledger_chain", [])
+        if not chain and (data.get("epoch_rollups") or data.get("recovery_points")):
+            raise ValueError("Cannot seal without a verifiable active ledger chain")
+        if chain:
+            chain_valid, details = cls.verify_chain(workspace_root)
+            if not chain_valid:
+                reason = details[-1] if details else "unknown ledger error"
+                raise ValueError(f"Cannot seal on an unverifiable ledger: {reason}")
         last_block = chain[-1] if chain else None
-        prev_hash = last_block["current_block_hash"] if last_block else "0" * 64
-        next_block_id = (last_block["block_id"] + 1) if last_block else 0
+        prev_hash = (last_block.get("current_block_hash") or last_block.get("block_hash")) if last_block else "0" * 64
+        
+        if last_block and isinstance(last_block.get("block_id"), int):
+            next_block_id = last_block["block_id"] + 1
+            height = next_block_id + 1
+        elif last_block and isinstance(last_block.get("block_id"), str):
+            import re
+            m = re.search(r"\d+", last_block["block_id"])
+            if m:
+                num = int(m.group(0)) + 1
+                clean_act = action[:20].upper().replace(" ", "_").replace("(", "").replace(")", "").replace(":", "_")
+                next_block_id = f"BLOCK_{num:03d}_{clean_act}"
+                height = num + 1
+            else:
+                next_block_id = f"BLOCK_{len(chain):03d}"
+                height = len(chain) + 1
+        else:
+            next_block_id = len(chain)
+            height = len(chain) + 1
 
         timestamp = datetime.now(timezone.utc).isoformat()
         merkle_root = cls.compute_workspace_merkle_root(workspace_root)
-        current_hash = cls.compute_block_hash(next_block_id, prev_hash, merkle_root, git_sha, timestamp)
+        current_hash = cls.compute_block_hash(
+            next_block_id, prev_hash, merkle_root, git_sha, timestamp, recovery_point_id, action
+        )
 
         new_block = {
+            "hash_version": 2,
             "block_id": next_block_id,
             "block_type": "AUDIT_VERIFIED" if "VERIFY" in action else "STATE_UPDATE",
             "prev_block_hash": prev_hash,
             "timestamp": timestamp,
+            "git_sha": git_sha,
             "merkle_root": merkle_root,
             "current_block_hash": current_hash,
+            "recovery_point_id": recovery_point_id,
             "action": action
         }
         new_block["block_hash"] = current_hash
@@ -162,7 +217,9 @@ class MerkleEngine:
                 "git_commit": git_sha,
                 "timestamp": timestamp,
                 "status": "VERIFIED",
-                "description": action
+                "description": action,
+                "block_id": next_block_id,
+                "block_hash": current_hash,
             })
 
         # Atomic save context_ledger.yaml
@@ -173,7 +230,7 @@ class MerkleEngine:
             "ledger_version": data.get("ledger_version", "7.5.0"),
             "project": data.get("project", {}),
             "active_recovery_point": recovery_point_id or (data.get("recovery_points", [{}])[-1].get("id", "RP_GENESIS_000")),
-            "merkle_block_height": next_block_id + 1,
+            "merkle_block_height": height,
             "overall_maturity_score": 0.990,
             "quarantined_tests_count": len(data.get("quarantined_tests", [])),
             "active_poisoning_incidents": len(data.get("poisoning_incidents", [])),
@@ -208,10 +265,9 @@ class MerkleEngine:
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         with open(ledger_path, "r", encoding="utf-8") as f:
-            if yaml and SafeLoader:
-                data = yaml.load(f, Loader=SafeLoader)
-            elif yaml:
-                data = yaml.safe_load(f)
+            if yaml:
+                docs = [d for d in yaml.safe_load_all(f) if isinstance(d, dict)]
+                data = docs[0] if docs else {}
             else:
                 data = json.load(f)
 
@@ -237,11 +293,14 @@ class MerkleEngine:
 
             start_id = archived_blocks[0]["block_id"]
             end_id = archived_blocks[-1]["block_id"]
-            epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+            if isinstance(start_id, int) and isinstance(end_id, int):
+                epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+            else:
+                epoch_id = f"epoch_{str(start_id).lower()}_{str(end_id).lower()}"
             epoch_file = archive_dir / f"{epoch_id}.json"
 
             # Compute epoch Merkle root
-            block_hashes = [b["current_block_hash"] for b in archived_blocks]
+            block_hashes = [(b.get("current_block_hash") or b.get("block_hash") or b.get("merkle_hash") or "") for b in archived_blocks]
             epoch_rollup_hash = hashlib.sha256("".join(block_hashes).encode("utf-8")).hexdigest()
 
             epoch_payload = {
@@ -292,6 +351,25 @@ class MerkleEngine:
             "archive_file": str(epoch_file) if epoch_file else None
         }
 
+    @staticmethod
+    def _resolve_archive_file(workspace_root: Path, archive_path: str) -> Optional[Path]:
+        root = Path(workspace_root).resolve()
+        if not isinstance(archive_path, str) or not archive_path:
+            return None
+        relative = Path(archive_path)
+        if relative.is_absolute():
+            return None
+        candidates = [root / relative]
+        if archive_path.startswith(".nb/"):
+            candidates.append(root / archive_path[4:])
+        else:
+            candidates.append(root / ".nb" / relative)
+        for candidate in candidates:
+            resolved = candidate.resolve()
+            if resolved.is_relative_to(root) and resolved.is_file():
+                return resolved
+        return None
+
     @classmethod
     def verify_chain(cls, workspace_root: Path) -> Tuple[bool, List[str]]:
         """Verifies 100% cryptographic continuity across archived epochs and the active rolling chain."""
@@ -300,10 +378,9 @@ class MerkleEngine:
             return False, [f"Ledger file missing at {ledger_path}"]
 
         with open(ledger_path, "r", encoding="utf-8") as f:
-            if yaml and SafeLoader:
-                data = yaml.load(f, Loader=SafeLoader)
-            elif yaml:
-                data = yaml.safe_load(f)
+            if yaml:
+                docs = [d for d in yaml.safe_load_all(f) if isinstance(d, dict)]
+                data = docs[0] if docs else {}
             else:
                 data = json.load(f)
 
@@ -312,23 +389,63 @@ class MerkleEngine:
 
         # 1. Verify any archived epochs
         for ep in data.get("epoch_rollups", []):
-            archive_file = workspace_root / ep["archive_path"]
-            if not archive_file.exists():
-                if (workspace_root / ".nb" / ep["archive_path"]).exists():
-                    archive_file = workspace_root / ".nb" / ep["archive_path"]
-                elif ep["archive_path"].startswith(".nb/") and (workspace_root / ep["archive_path"][4:]).exists():
-                    archive_file = workspace_root / ep["archive_path"][4:]
-                else:
-                    return False, [f"Missing epoch archive: {archive_file}"]
+            archive_file = cls._resolve_archive_file(workspace_root, ep.get("archive_path", ""))
+            if not archive_file:
+                return False, [f"Missing or invalid epoch archive: {ep.get('archive_path')}"]
             with open(archive_file, "r", encoding="utf-8") as f:
                 ep_data = json.load(f)
-            for b in ep_data.get("blocks", []):
-                b_id = b["block_id"]
-                p_hash = b["prev_block_hash"]
-                if b_id > 0 and p_hash != prev_hash:
+            archived_blocks = ep_data.get("blocks", [])
+            archived_hashes = [
+                block.get("current_block_hash") or block.get("block_hash") or ""
+                for block in archived_blocks
+            ]
+            rollup_hash = hashlib.sha256("".join(archived_hashes).encode("utf-8")).hexdigest()
+            if (
+                rollup_hash != ep.get("epoch_rollup_hash")
+                or rollup_hash != ep_data.get("epoch_rollup_hash")
+            ):
+                return False, [f"Invalid epoch rollup hash: {ep.get('epoch_id')}"]
+            for b in archived_blocks:
+                b_id = b.get("block_id")
+                p_hash = b.get("prev_block_hash") or b.get("prev_hash")
+                if p_hash != prev_hash:
                     logs.append(f"Break in Archive at Block {b_id}: expected prev_hash {prev_hash}, got {p_hash}")
                     return False, logs
-                prev_hash = b["current_block_hash"]
+                current_hash = b.get("current_block_hash") or b.get("block_hash")
+                if b.get("current_block_hash") and b.get("block_hash") and b["current_block_hash"] != b["block_hash"]:
+                    logs.append(f"Conflicting block hashes in archive at Block {b_id}")
+                    return False, logs
+                hash_version = b.get("hash_version")
+                if hash_version not in (None, 2):
+                    logs.append(f"Unsupported block hash version in archive at Block {b_id}")
+                    return False, logs
+                if hash_version is None and b.get("git_sha") is None:
+                    logs.append(f"Legacy block {b_id} lacks verifiable hash inputs")
+                    return False, logs
+                expected_hash = None
+                if hash_version == 2 and b.get("git_sha") is not None:
+                    expected_hash = cls.compute_block_hash(
+                        b_id,
+                        p_hash,
+                        b.get("merkle_root", ""),
+                        b["git_sha"],
+                        b.get("timestamp", ""),
+                        b.get("recovery_point_id"),
+                        b.get("action"),
+                    )
+                elif hash_version is None and b.get("git_sha") is not None:
+                    expected_hash = cls.compute_block_hash(
+                        b_id, p_hash, b.get("merkle_root", ""), b["git_sha"], b.get("timestamp", "")
+                    )
+                if (hash_version == 2 and expected_hash is None) or (
+                    expected_hash is not None and current_hash != expected_hash
+                ):
+                    logs.append(f"Invalid block hash in archive at Block {b_id}")
+                    return False, logs
+                if not current_hash:
+                    logs.append(f"Missing block hash in archive at Block {b_id}")
+                    return False, logs
+                prev_hash = current_hash
                 logs.append(f"Block {b_id} [OK] - {b.get('action', 'N/A')} - Hash: {prev_hash[:16]}...")
 
         # 2. Verify active chain
@@ -337,12 +454,96 @@ class MerkleEngine:
             return False, ["No blocks found in ledger_chain"]
 
         for b in chain:
-            b_id = b["block_id"]
-            p_hash = b["prev_block_hash"]
-            if b_id > 0 and p_hash != prev_hash:
+            b_id = b.get("block_id")
+            p_hash = b.get("prev_block_hash") or b.get("prev_hash")
+            if p_hash != prev_hash:
                 logs.append(f"Break in Active Chain at Block {b_id}: expected prev_hash {prev_hash}, got {p_hash}")
                 return False, logs
-            prev_hash = b["current_block_hash"]
+            current_hash = b.get("current_block_hash") or b.get("block_hash")
+            if b.get("current_block_hash") and b.get("block_hash") and b["current_block_hash"] != b["block_hash"]:
+                logs.append(f"Conflicting block hashes in active chain at Block {b_id}")
+                return False, logs
+            hash_version = b.get("hash_version")
+            if hash_version not in (None, 2):
+                logs.append(f"Unsupported block hash version in active chain at Block {b_id}")
+                return False, logs
+            if hash_version is None and b.get("git_sha") is None:
+                logs.append(f"Legacy block {b_id} lacks verifiable hash inputs")
+                return False, logs
+            expected_hash = None
+            if hash_version == 2 and b.get("git_sha") is not None:
+                expected_hash = cls.compute_block_hash(
+                    b_id,
+                    p_hash,
+                    b.get("merkle_root", ""),
+                    b["git_sha"],
+                    b.get("timestamp", ""),
+                    b.get("recovery_point_id"),
+                    b.get("action"),
+                )
+            elif hash_version is None and b.get("git_sha") is not None:
+                expected_hash = cls.compute_block_hash(
+                    b_id, p_hash, b.get("merkle_root", ""), b["git_sha"], b.get("timestamp", "")
+                )
+            if (hash_version == 2 and expected_hash is None) or (
+                expected_hash is not None and current_hash != expected_hash
+            ):
+                logs.append(f"Invalid block hash in active chain at Block {b_id}")
+                return False, logs
+            if not current_hash:
+                logs.append(f"Missing block hash in active chain at Block {b_id}")
+                return False, logs
+            prev_hash = current_hash
             logs.append(f"Block {b_id} [OK] - {b.get('action', 'N/A')} - Hash: {prev_hash[:16]}...")
 
         return True, logs
+
+    @classmethod
+    def verify_recovery_point(cls, workspace_root: Path, recovery_point_id: str) -> bool:
+        """Verify a recovery point is ledger-backed by a block on a valid chain."""
+        workspace_root = Path(workspace_root)
+        ledger_path = (
+            workspace_root / ".nb" / "context" / "ledger" / "context_ledger.yaml"
+            if (workspace_root / ".nb" / "context").exists()
+            else workspace_root / "context" / "ledger" / "context_ledger.yaml"
+        )
+        if not recovery_point_id or not ledger_path.is_file():
+            return False
+        try:
+            chain_valid, _ = cls.verify_chain(workspace_root)
+            if not chain_valid:
+                return False
+            with open(ledger_path, "r", encoding="utf-8") as f:
+                if yaml:
+                    docs = [doc for doc in yaml.safe_load_all(f) if isinstance(doc, dict)]
+                    data = docs[0] if docs else {}
+                else:
+                    data = json.load(f)
+            recovery_point = next(
+                (point for point in data.get("recovery_points", []) if point.get("id") == recovery_point_id),
+                None,
+            )
+            if not recovery_point or recovery_point.get("status") != "VERIFIED":
+                return False
+            block_id = recovery_point.get("block_id")
+            block_hash = recovery_point.get("block_hash")
+            if block_id is None or not block_hash:
+                return False
+
+            blocks = list(data.get("ledger_chain", []))
+            for epoch in data.get("epoch_rollups", []):
+                archive_path = cls._resolve_archive_file(workspace_root, epoch.get("archive_path", ""))
+                if not archive_path:
+                    return False
+                with open(archive_path, "r", encoding="utf-8") as f:
+                    blocks.extend(json.load(f).get("blocks", []))
+            return any(
+                block.get("block_id") == block_id
+                and block.get("hash_version") == 2
+                and isinstance(block.get("git_sha"), str)
+                and block.get("recovery_point_id") == recovery_point_id
+                and (block.get("current_block_hash") or block.get("block_hash")) == block_hash
+                for block in blocks
+            )
+        except Exception:
+            return False

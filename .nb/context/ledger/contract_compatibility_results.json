@@ -1,0 +1,208 @@
+{
+  "checks": [
+    {
+      "baseline_path": ".nb/context/contracts/architectural_footprint_spec.json",
+      "baseline_sha256": "ab677bba63cafc285e0d25fdd5695ee8b75b97c6f90eccfb9c023fe98b24debf",
+      "candidate_path": ".nb/context/contracts/architectural_footprint_spec.json",
+      "candidate_sha256": "ab677bba63cafc285e0d25fdd5695ee8b75b97c6f90eccfb9c023fe98b24debf"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/billing_webhook_contract.json",
+      "baseline_sha256": "02c24ca87f2e38865e25b143e230c80fd86cd4f46bc31ba3e8b982806e3b2c41",
+      "candidate_path": ".nb/context/contracts/billing_webhook_contract.json",
+      "candidate_sha256": "02c24ca87f2e38865e25b143e230c80fd86cd4f46bc31ba3e8b982806e3b2c41"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/common_schema.json",
+      "baseline_sha256": "14606f12db75c556051b2eca8d20d9492d8741cfa62fed4086493a795363ea07",
+      "candidate_path": ".nb/context/contracts/common_schema.json",
+      "candidate_sha256": "14606f12db75c556051b2eca8d20d9492d8741cfa62fed4086493a795363ea07"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/daemon_rpc_contract.json",
+      "baseline_sha256": "7ae7165ff3a3fde83872f5668d4d9d1f46ea029c411f2d389cb06909f345d187",
+      "candidate_path": ".nb/context/contracts/daemon_rpc_contract.json",
+      "candidate_sha256": "7ae7165ff3a3fde83872f5668d4d9d1f46ea029c411f2d389cb06909f345d187"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/data_grid_contract.json",
+      "baseline_sha256": "530a3ee39b46b05169fb9d94fc78f416ee4bd7edeadaff334fb683a40a3237b6",
+      "candidate_path": ".nb/context/contracts/data_grid_contract.json",
+      "candidate_sha256": "530a3ee39b46b05169fb9d94fc78f416ee4bd7edeadaff334fb683a40a3237b6"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/financial_model_spec.json",
+      "baseline_sha256": "850c306a40f718e8b316fe395443bbbc48f33442b90231aad30d22a7b3c47901",
+      "candidate_path": ".nb/context/contracts/financial_model_spec.json",
+      "candidate_sha256": "850c306a40f718e8b316fe395443bbbc48f33442b90231aad30d22a7b3c47901"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/hierarchical_rule_contract.json",
+      "baseline_sha256": "2c7ace02a74fa0b8828e21f387bba8d67a9ad16c06d552245cdaac9c81527788",
+      "candidate_path": ".nb/context/contracts/hierarchical_rule_contract.json",
+      "candidate_sha256": "2c7ace02a74fa0b8828e21f387bba8d67a9ad16c06d552245cdaac9c81527788"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
+      "baseline_sha256": "b1c2b77ec6a8d65e1e4d91587935a2434c530d6c98541aee17eb1d3c96c93338",
+      "candidate_path": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
+      "candidate_sha256": "b1c2b77ec6a8d65e1e4d91587935a2434c530d6c98541aee17eb1d3c96c93338"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/mathematical_audit_spec.json",
+      "baseline_sha256": "44adfcd19cee936562861c34dabae0d22ab5aaa91f283503e7e196c94cca1004",
+      "candidate_path": ".nb/context/contracts/mathematical_audit_spec.json",
+      "candidate_sha256": "44adfcd19cee936562861c34dabae0d22ab5aaa91f283503e7e196c94cca1004"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/mtls_provisioning_contract.json",
+      "baseline_sha256": "1d770b4eb77d1ae34dcbabcf5550cf69106f50384948b810cc32055082d36660",
+      "candidate_path": ".nb/context/contracts/mtls_provisioning_contract.json",
+      "candidate_sha256": "1d770b4eb77d1ae34dcbabcf5550cf69106f50384948b810cc32055082d36660"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/operational_benefit_spec.json",
+      "baseline_sha256": "1a8dad479f4a504408b8fe1853ee246a58dd5fc42ddc9b75b136f4abb72c689a",
+      "candidate_path": ".nb/context/contracts/operational_benefit_spec.json",
+      "candidate_sha256": "1a8dad479f4a504408b8fe1853ee246a58dd5fc42ddc9b75b136f4abb72c689a"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/ota_firmware_manifest.json",
+      "baseline_sha256": "ffbc39816820a72d94807bbb14801621fe7c23038fb155e35654a9a5576215c4",
+      "candidate_path": ".nb/context/contracts/ota_firmware_manifest.json",
+      "candidate_sha256": "ffbc39816820a72d94807bbb14801621fe7c23038fb155e35654a9a5576215c4"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/package_json_manifest_contract.json",
+      "baseline_sha256": "05457ad5d450dfc7debc77c3aa9cd18a449ba4d041845bffc37d54be6d52fc36",
+      "candidate_path": ".nb/context/contracts/package_json_manifest_contract.json",
+      "candidate_sha256": "05457ad5d450dfc7debc77c3aa9cd18a449ba4d041845bffc37d54be6d52fc36"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/plan_viability_contract.json",
+      "baseline_sha256": "ff4396afc85aa007c6cab9787e8c86a0b14827cb20c76faa383a3588fb1d0747",
+      "candidate_path": ".nb/context/contracts/plan_viability_contract.json",
+      "candidate_sha256": "ff4396afc85aa007c6cab9787e8c86a0b14827cb20c76faa383a3588fb1d0747"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/rbac_permission_matrix.json",
+      "baseline_sha256": "5656a8772c77889ac9da2ec158c1d0774eb0e6d58b63cffc09efd65424f01900",
+      "candidate_path": ".nb/context/contracts/rbac_permission_matrix.json",
+      "candidate_sha256": "5656a8772c77889ac9da2ec158c1d0774eb0e6d58b63cffc09efd65424f01900"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/sandbox_permission_contract.json",
+      "baseline_sha256": "d0ab4a8286a7a95eb387ece7d354520a11566def4a7dad40ffbba348a47df8fc",
+      "candidate_path": ".nb/context/contracts/sandbox_permission_contract.json",
+      "candidate_sha256": "d0ab4a8286a7a95eb387ece7d354520a11566def4a7dad40ffbba348a47df8fc"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/security_four_eyes_contract.json",
+      "baseline_sha256": "07dbdb49263b207605fd56e1d59f4c0ee4b7b9fae9bb7b77483897064d336066",
+      "candidate_path": ".nb/context/contracts/security_four_eyes_contract.json",
+      "candidate_sha256": "07dbdb49263b207605fd56e1d59f4c0ee4b7b9fae9bb7b77483897064d336066"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/security_mfa_challenge_contract.json",
+      "baseline_sha256": "aa2b02e2666384ed6a567c2aa53520ba91c813eb8ebfe32fa933ea11af8db8e5",
+      "candidate_path": ".nb/context/contracts/security_mfa_challenge_contract.json",
+      "candidate_sha256": "aa2b02e2666384ed6a567c2aa53520ba91c813eb8ebfe32fa933ea11af8db8e5"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/security_pii_vault_contract.json",
+      "baseline_sha256": "4dc146e654fca08cf8c0933a621739593898d8da22185a80bd9fb4d185ed7f1b",
+      "candidate_path": ".nb/context/contracts/security_pii_vault_contract.json",
+      "candidate_sha256": "4dc146e654fca08cf8c0933a621739593898d8da22185a80bd9fb4d185ed7f1b"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/security_rebac_policy_contract.json",
+      "baseline_sha256": "2626d474906fda63e3523c83bb36b457d442cc7d95103a4ce6e840a5e15e99b8",
+      "candidate_path": ".nb/context/contracts/security_rebac_policy_contract.json",
+      "candidate_sha256": "2626d474906fda63e3523c83bb36b457d442cc7d95103a4ce6e840a5e15e99b8"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/security_tenant_profile_contract.json",
+      "baseline_sha256": "1c1ec90ec5af8343198496da6545a49d3784f23e667d87b293f04a251da2b0ac",
+      "candidate_path": ".nb/context/contracts/security_tenant_profile_contract.json",
+      "candidate_sha256": "1c1ec90ec5af8343198496da6545a49d3784f23e667d87b293f04a251da2b0ac"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/ui_theme_token_contract.json",
+      "baseline_sha256": "784cb85316f912390cc44221da126e1e3646459586bf2de350f0802c9c1c4161",
+      "candidate_path": ".nb/context/contracts/ui_theme_token_contract.json",
+      "candidate_sha256": "784cb85316f912390cc44221da126e1e3646459586bf2de350f0802c9c1c4161"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/webview_message_rpc_contract.json",
+      "baseline_sha256": "e2762971aa75d34f8176e01f1c59987224a558dc4d7d96870df25224b78e782c",
+      "candidate_path": ".nb/context/contracts/webview_message_rpc_contract.json",
+      "candidate_sha256": "e2762971aa75d34f8176e01f1c59987224a558dc4d7d96870df25224b78e782c"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/billing_meter_contract.yaml",
+      "baseline_sha256": "e54933b1c65d36c9d420038b1cd09b065443ab52aebe1daccca794bf4a5c0a3e",
+      "candidate_path": ".nb/context/contracts/billing_meter_contract.yaml",
+      "candidate_sha256": "e54933b1c65d36c9d420038b1cd09b065443ab52aebe1daccca794bf4a5c0a3e"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/ble_gatt_spec.yaml",
+      "baseline_sha256": "2e338f08a72eb1713ebd7b216e9b64c91b99bda6264c45d679e148a425b74e59",
+      "candidate_path": ".nb/context/contracts/ble_gatt_spec.yaml",
+      "candidate_sha256": "2e338f08a72eb1713ebd7b216e9b64c91b99bda6264c45d679e148a425b74e59"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/commercial_provisioning_contract.yaml",
+      "baseline_sha256": "e7a8decc05230d584697f20c782b913fd911b808908cd56e006ab1ea772873f9",
+      "candidate_path": ".nb/context/contracts/commercial_provisioning_contract.yaml",
+      "candidate_sha256": "e7a8decc05230d584697f20c782b913fd911b808908cd56e006ab1ea772873f9"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/event_stream_spec.yaml",
+      "baseline_sha256": "58e94bee24c5c93d39389229a7851d06da25d84f89733e3f4ad06d8dda4ccd7e",
+      "candidate_path": ".nb/context/contracts/event_stream_spec.yaml",
+      "candidate_sha256": "58e94bee24c5c93d39389229a7851d06da25d84f89733e3f4ad06d8dda4ccd7e"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/lsp_protocol_contract.yaml",
+      "baseline_sha256": "0f3acd274d3f1ed96069f7992e98cb3d41e4f4bea81029467b346d3bfe1e00f8",
+      "candidate_path": ".nb/context/contracts/lsp_protocol_contract.yaml",
+      "candidate_sha256": "0f3acd274d3f1ed96069f7992e98cb3d41e4f4bea81029467b346d3bfe1e00f8"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/observability_contract.yaml",
+      "baseline_sha256": "f2a1a4827456501443ed5997cdbb6d750048b671a557a2ce977d7f124d68de4a",
+      "candidate_path": ".nb/context/contracts/observability_contract.yaml",
+      "candidate_sha256": "f2a1a4827456501443ed5997cdbb6d750048b671a557a2ce977d7f124d68de4a"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/onboarding_contract.yaml",
+      "baseline_sha256": "45407f4a2f400f050adeba1e12c472fec3c2b01e984bf5509e522ca53638818f",
+      "candidate_path": ".nb/context/contracts/onboarding_contract.yaml",
+      "candidate_sha256": "45407f4a2f400f050adeba1e12c472fec3c2b01e984bf5509e522ca53638818f"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/portal_openapi_spec.yaml",
+      "baseline_sha256": "8055e8145e90d5d05a4ec68615ff7bad5613cdb8f3486ce2a87741b1414bdf45",
+      "candidate_path": ".nb/context/contracts/portal_openapi_spec.yaml",
+      "candidate_sha256": "8055e8145e90d5d05a4ec68615ff7bad5613cdb8f3486ce2a87741b1414bdf45"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/psi_ast_bridge_contract.yaml",
+      "baseline_sha256": "1a1b5ea1595188df00682adbf1d779408cd1bc51e00f641e0c7a12c11c48f950",
+      "candidate_path": ".nb/context/contracts/psi_ast_bridge_contract.yaml",
+      "candidate_sha256": "1a1b5ea1595188df00682adbf1d779408cd1bc51e00f641e0c7a12c11c48f950"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/service_contract.yaml",
+      "baseline_sha256": "b5192950facff8e725d5d34ca3cd33f5e89f912d6d14c0ecc96dee2723828b8f",
+      "candidate_path": ".nb/context/contracts/service_contract.yaml",
+      "candidate_sha256": "b5192950facff8e725d5d34ca3cd33f5e89f912d6d14c0ecc96dee2723828b8f"
+    },
+    {
+      "baseline_path": ".nb/context/contracts/terminal_agent_ast_contract.yaml",
+      "baseline_sha256": "2ae76861b403f92d0252ff876f1394a35ce7c2511ab9d64e0872a88d375a0f23",
+      "candidate_path": ".nb/context/contracts/terminal_agent_ast_contract.yaml",
+      "candidate_sha256": "2ae76861b403f92d0252ff876f1394a35ce7c2511ab9d64e0872a88d375a0f23"
+    }
+  ]
+}

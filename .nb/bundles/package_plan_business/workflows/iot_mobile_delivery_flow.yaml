@@ -17,30 +17,38 @@ steps:
     path: .nb/context/contracts/ble_gatt_spec.yaml
     type: yaml_schema
     action: verify_gatt_services
-    description: Validates primary UUIDs, MTU constraints (up to 512 bytes), and characteristic read/write/notify permission profiles.
-
+    description: Validates primary UUIDs, MTU constraints (up to 512 bytes), and characteristic
+      read/write/notify permission profiles.
+  depends_on: []
+  output_artifacts:
+  - workplace/artifacts/step_ble_gatt_contract_gate_output.json
 - id: step_mobile_kmp_client
   name: KMP Shared BLE Client & UI Verification
-  agent: agent_mobile_developer
+  agent: agent_portal_developer
   inputs:
     target_module: workplace/modules/mobile_app
     rules_ref: .nb/context/custom/rules/mobile_ble_lifecycle_rules.md
   enforce_merkle_seal: true
-  executor: agent_mobile_developer
+  executor: agent_portal_developer
   handled_contracts:
   - contract_id: ota_firmware_manifest
     name: OTA Firmware Package Manifest Contract
     path: .nb/context/contracts/ota_firmware_manifest.json
     type: json_schema
     action: verify_ota_payload
-    description: Verifies cryptographic hash, firmware version semver, and target hardware architecture metadata.
+    description: Verifies cryptographic hash, firmware version semver, and target
+      hardware architecture metadata.
   - contract_id: ui_theme_token_contract
     name: Enterprise UI Design System Tokens
     path: .nb/context/contracts/ui_theme_token_contract.json
     type: json_schema
     action: audit_mobile_tokens
-    description: Enforces design token consistency and WCAG compliance for Kotlin Multiplatform mobile screens.
-
+    description: Enforces design token consistency and WCAG compliance for Kotlin
+      Multiplatform mobile screens.
+  depends_on:
+  - step_ble_gatt_contract_gate
+  output_artifacts:
+  - workplace/artifacts/step_mobile_kmp_client_output.json
 - id: step_iot_ecosystem_audit
   name: BLE Mesh, Power & Security Invariant Audit
   agent: agent_iot_mobile_ecosystem_architect
@@ -54,10 +62,16 @@ steps:
     path: .nb/context/contracts/security_pii_vault_contract.json
     type: json_schema
     action: sanitize_telemetry
-    description: Guarantees sensor and location metrics sent from embedded nodes do not leak unredacted PII.
+    description: Guarantees sensor and location metrics sent from embedded nodes do
+      not leak unredacted PII.
   - contract_id: security_four_eyes_contract
     name: Cryptographic Four-Eyes Release Seal Contract
     path: .nb/context/contracts/security_four_eyes_contract.json
     type: json_schema
     action: seal_firmware_release
-    description: Cryptographically seals binary firmware payload hash and KMP client artifacts before publication.
+    description: Cryptographically seals binary firmware payload hash and KMP client
+      artifacts before publication.
+  depends_on:
+  - step_mobile_kmp_client
+  output_artifacts:
+  - workplace/artifacts/step_iot_ecosystem_audit_output.json

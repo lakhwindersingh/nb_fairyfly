@@ -1,16 +1,19 @@
 workflow_id: wf_saas_portal_delivery
 name: Enterprise SaaS & Portal Multi-Module Delivery Flow
-description: Orchestrates Next.js/Tailwind frontend, API gateway, Stripe billing webhooks,
-  and Playwright verification
+description: Orchestrates Next.js/Tailwind frontend, API gateway, Stripe billing webhooks, and Playwright verification
 version: 1.0.0
 steps:
 - id: step_openapi_contract_gate
+  step_id: step_openapi_contract_gate
   name: OpenAPI 3.1 Contract Compatibility Gate
   agent: agent_contract_compatibility_checker
+  executor: agent_contract_compatibility_checker
+  depends_on: []
   inputs:
     contract_path: .nb/context/contracts/portal_openapi_spec.yaml
+  output_artifacts:
+    - art_openapi_contract_gate_receipt
   enforce_merkle_seal: true
-  executor: agent_contract_compatibility_checker
   handled_contracts:
   - contract_id: portal_openapi_spec
     name: OpenAPI 3.1 REST API Specification Contract
@@ -20,13 +23,20 @@ steps:
     description: Validates REST route schemas, response codes, and request bodies for SaaS portal endpoints.
 
 - id: step_portal_frontend_scaffold
+  step_id: step_portal_frontend_scaffold
   name: Build Responsive React/Tailwind Frontend
   agent: agent_portal_developer
+  executor: agent_portal_developer
+  depends_on:
+    - step_openapi_contract_gate
+  input_artifacts:
+    - art_openapi_contract_gate_receipt
   inputs:
     target_module: workplace/modules/mod_portal_marketing
     theme_tokens: workplace/modules/mod_portal_marketing/config/tailwind.config.js
+  output_artifacts:
+    - art_portal_frontend_scaffold_receipt
   enforce_merkle_seal: true
-  executor: agent_portal_developer
   handled_contracts:
   - contract_id: ui_theme_token_contract
     name: Enterprise UI Design System Tokens Contract
@@ -42,13 +52,20 @@ steps:
     description: Validates responsive data table rendering, pagination, and sorting structures in the portal UI.
 
 - id: step_saas_backend_gateway
+  step_id: step_saas_backend_gateway
   name: Gateway & Stripe Webhook Integration
   agent: agent_saas_backend_developer
+  executor: agent_saas_backend_developer
+  depends_on:
+    - step_portal_frontend_scaffold
+  input_artifacts:
+    - art_portal_frontend_scaffold_receipt
   inputs:
     target_module: workplace/portal
     webhook_contract: .nb/context/contracts/billing_webhook_contract.json
+  output_artifacts:
+    - art_saas_backend_gateway_receipt
   enforce_merkle_seal: true
-  executor: agent_saas_backend_developer
   handled_contracts:
   - contract_id: billing_webhook_contract
     name: Billing Webhook & Event Schema Contract
@@ -64,12 +81,19 @@ steps:
     description: Enforces tenant seat quotas, token consumption limits, and tier feature gates.
 
 - id: step_saas_security_audit
+  step_id: step_saas_security_audit
   name: Multi-Tenant SOC 2 & RLS Security Audit
   agent: agent_enterprise_saas_portal_architect
+  executor: agent_enterprise_saas_portal_architect
+  depends_on:
+    - step_saas_backend_gateway
+  input_artifacts:
+    - art_saas_backend_gateway_receipt
   inputs:
     scope: workplace/modules/mod_portal_admin
+  output_artifacts:
+    - art_saas_security_audit_receipt
   enforce_merkle_seal: true
-  executor: agent_enterprise_saas_portal_architect
   handled_contracts:
   - contract_id: security_tenant_profile_contract
     name: Multi-Tenant Profile & Isolation Contract

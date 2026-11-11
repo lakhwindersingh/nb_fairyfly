@@ -1,5 +1,5 @@
 {
-  "license_id": "lic_plan_team_3acdb2467acc",
+  "license_id": "lic_plan_team_5c782c4020a9",
   "tenant_id": "tenant_provision_test",
   "tier": "plan_team",
   "tier_name": "Team Tier",
@@ -17,10 +17,10 @@
     "basic_platform_tools_exposure": false,
     "private_vpc_deploy": false
   },
-  "issued_at": "2026-11-11T18:08:32.490360+00:00",
-  "total_files": 316,
+  "issued_at": "2026-11-11T19:30:55.494585+00:00",
+  "total_files": 315,
   "file_manifest": {
-    "bin/percipience": "c73bf48b8c38b8f0223e76889e1a5a739bd84a079368d5a496a060e5eacc2363",
+    "bin/percipience": "7981c67be310553e72b8d47d2a5adf425481fa084390a8e5e45dad019d3783ef",
     "config/issue_tracker_mcp.yaml": "546d180a261d0e56235bf769f92d8eb2727174579ae1c738a4c23b28346687ad",
     "config/billing_plans.yaml": "92bfb8e7c7d48ed41ee5e63429646c82cc7bbc6356683f9395149456d24b103c",
     "config/platform_config.yaml": "fc4901ae2de5b13791398d3c17ff224bf316446451dffe690f52ece6e95c1a7c",
@@ -28,7 +28,7 @@
     "scripts/sync_plan_versions.py": "5de5ef5e11e85d6a63505cb9b2f6d95b7d5103abdb3f479576a4e208d168daf9",
     "scripts/install_git_hook.sh": "f275ead56bcf424dd29833fb0b2a97dddd8510c6412f2b7d74de20cd5d3ba0e9",
     "hooks/pre-commit.sh": "f4a82234c2d988138e7863431b6f80d3cf6a868b97ce056c6b2d73c83e23bfa4",
-    "core/__init__.py": "38f7bdba11fdd1a8478cff62198d164293ef03865bd64482a83c21e0be0a08c4",
+    "core/__init__.py": "2b7ee8a6d9d196bdeee56c5ad4e0af9099e5650796445ef972090b6def5f8299",
     "core/agent_capability_guard.py": "3016eb507eba8ad705102e8c74e0be381df2c13a27530e25bc7ab6b95d16f861",
     "core/agent_memory_engine.py": "af6fafdda63ccac724d4fdedb12ec0f5336afdd7a356c2796829fc87ad61917a",
     "core/ambiguity_resolver.py": "69d1775159de2ffce1f59ea6c76b8ce697a4b51096f49574c5b74fbd0cad5b83",
@@ -73,7 +73,7 @@
     "core/tool_contract_validator.py": "7923b95ff4769fbb6644342344b7dae71c01efc48cdc408b4a468366677c640a",
     "core/trajectory_recorder.py": "2a52a034202adff505cf9717ffe05fff0cbc2f11709d9d16545c6b3e85977ad8",
     "core/tree_sitter_daemon.py": "397030d1d60e1c1d500a964ba92aff6cd4f3dbf148eca10e3217715d0a83faf8",
-    "core/workflow_orchestrator.py": "39ef14a1b617bf301b2c9fc045d06eaded443f128b6314a1c38458f7f27b68ac",
+    "core/workflow_orchestrator.py": "2dcfaa0b6a1ac4d9afbfc3cb6b5153ce852ca3e9ed21b14431a1862c0cf8b16c",
     "core/worktree_engine.py": "501d3de23a15fdea5fda6f10f9ab66720fa89ace43b1a5a3068bbb61b8476512",
     "context/contracts/architectural_footprint_spec.json": "ab677bba63cafc285e0d25fdd5695ee8b75b97c6f90eccfb9c023fe98b24debf",
     "context/contracts/arena_spec.json": "7c59d16a57df7bd930c167d4f1dbeb54db43c260f9dab150dfe76dd17a093d4c",
@@ -324,7 +324,6 @@
     "agentic/custom/agents/saas_backend_developer.yaml": "6ab0c0bee36c1e5b46a1963e387691be114c3030489946c0513cdaba64e32b86",
     "agentic/custom/agents/security_auditor.yaml": "e55766d0649f32ae060a8e629f9c6990502b9b7b7d7da146617e830b01b53130",
     "agentic/custom/agents/test_finops_auditor.yaml": "932ad5142da7922995976f86797cfc6eada43cc3a63cd90d85859cb89dbdaade",
-    "agentic/custom/agents/test_perf_guard.yaml": "d36fddf15784ba79827f24f31f2b7276df73935f0767d7289603610223b22c3f",
     "agentic/custom/agents/token_finops_auditor.yaml": "7893a4d1994007d4297ffbcca086e25263ece4b17731cb5a5125570de38502bf",
     "agentic/custom/workflows/basic_autonomous_cicd.yaml": "445435bb9822bc4f4d511b2f0ee8a28a3592788816e76bcd28f844bfd145fe02",
     "agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml": "983bddd6c189bc7ba83c7e31f8602fb69e9d4ecf8bd5b032f8f76842660d8827",
@@ -337,5 +336,5 @@
     "plan/claude-context-engineering-parent-master-plan.md": "6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215",
     "plan/claude-context-engineering-parent-master-free_plan.md": "24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb"
   },
-  "signature_sha256": "16a83b2b49d00f4042e52e47b6ca5b841eda4693bf45bae7490d319f6ba5fc3f"
+  "signature_sha256": "5a5fc577fe8c08acb997bf09320245e2507cb3b00634988ffea331a5ea88a588"
 }

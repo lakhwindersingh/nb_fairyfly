@@ -1,0 +1,145 @@
+workflow_id: commercial_packaging_provisioning_flow
+name: Commercial Packaging, Multi-Tenant Provisioning & Tier Permissions Delivery Flow
+version: 1.0.0
+description: End-to-End Commercial Packaging, Multi-Tenant Provisioning and Tier Permissioning Delivery Pipeline
+trigger:
+  type: manual_or_billing_event
+  events:
+  - tier_package_request
+  - tenant_provision_request
+  - billing_plan_updated
+steps:
+- id: step_validate_billing_rules
+  step_id: step_validate_billing_rules
+  name: Validate Pricing Matrix & Billing Plans Schema
+  agent: agent_commercial_packager_provisioner
+  executor: agent_commercial_packager_provisioner
+  action: validate_schema
+  depends_on: []
+  inputs:
+    config_file: .nb/config/billing_plans.yaml
+    contract_file: .nb/context/contracts/billing_meter_contract.yaml
+  output_artifacts:
+    - art_billing_rules_validation_receipt
+  timeout_ms: 10000
+  handled_contracts:
+  - contract_id: billing_meter_contract
+    name: Billing Meter & Tier Quotas Contract
+    path: .nb/context/contracts/billing_meter_contract.yaml
+    type: yaml_schema
+    action: validate
+    description: Verifies subscription tiers, feature flags, and token budget ceilings against billing specifications.
+
+- id: step_filter_and_package_tier
+  step_id: step_filter_and_package_tier
+  name: Filter Runtime Assets & Build Tier Distribution Bundle
+  agent: agent_commercial_packager_provisioner
+  executor: agent_commercial_packager_provisioner
+  action: package_tier
+  depends_on:
+    - step_validate_billing_rules
+  input_artifacts:
+    - art_billing_rules_validation_receipt
+  inputs:
+    target_tier: ${input.tier:-plan_free}
+    source_spaces:
+    - .nb/bin
+    - .nb/config
+    - .nb/scripts
+    - .nb/core
+    - .nb/context
+    - .nb/agentic
+    - .nb/plan
+  output_artifacts:
+    - art_tier_distribution_bundle
+  timeout_ms: 30000
+  handled_contracts:
+  - contract_id: commercial_provisioning_contract
+    name: Commercial Provisioning & Asset Filter Contract
+    path: .nb/context/contracts/commercial_provisioning_contract.yaml
+    type: yaml_schema
+    action: filter_and_bundle
+    description: Governs selective file packaging per tier, enforcing platform core encryption and plaintext user plans.
+
+- id: step_sign_and_seal_license
+  step_id: step_sign_and_seal_license
+  name: Generate Cryptographically Signed License & Merkle Seal
+  agent: agent_commercial_packager_provisioner
+  executor: agent_commercial_packager_provisioner
+  action: seal_license
+  depends_on:
+    - step_filter_and_package_tier
+  input_artifacts:
+    - art_tier_distribution_bundle
+  inputs:
+    tenant_id: ${input.tenant_id:-tenant_community_default}
+    merkle_action: PACKAGE_TIER
+  output_artifacts:
+    - art_signed_tenant_license
+  timeout_ms: 15000
+  handled_contracts:
+  - contract_id: security_tenant_profile_contract
+    name: Tenant Identity & Cryptographic Licensing Contract
+    path: .nb/context/contracts/security_tenant_profile_contract.json
+    type: json_schema
+    action: seal_license
+    description: Encodes tenant profile attributes, tier expiration, and cryptographic signature in license payload.
+
+- id: step_provision_portal
+  step_id: step_provision_portal
+  name: Provision Runtime Bundle to SaaS Portal
+  agent: agent_commercial_packager_provisioner
+  executor: agent_commercial_packager_provisioner
+  action: provision_target
+  depends_on:
+    - step_sign_and_seal_license
+  input_artifacts:
+    - art_signed_tenant_license
+  inputs:
+    targets:
+    - portal
+  output_artifacts:
+    - art_portal_provisioning_receipt
+  timeout_ms: 45000
+  handled_contracts:
+  - contract_id: portal_openapi_spec
+    name: SaaS Portal OpenAPI Specification Contract
+    path: .nb/context/contracts/portal_openapi_spec.yaml
+    type: openapi_spec
+    action: verify_manifest
+    description: Validates portal endpoints and deployment targets for the packaged tenant bundle.
+
+- id: step_verify_tier_permissions
+  step_id: step_verify_tier_permissions
+  name: Verify Feature Gating & RBAC Permissions
+  agent: agent_commercial_packager_provisioner
+  executor: agent_commercial_packager_provisioner
+  action: verify_permissions
+  depends_on:
+    - step_provision_portal
+  input_artifacts:
+    - art_portal_provisioning_receipt
+  inputs:
+    test_features:
+    - ast_token_pruning
+    - merkle_chain_audit
+    - basic_autonomous_cicd
+    - basic_platform_tools_exposure
+    - nbpack_obfuscation
+    - private_vpc_deploy
+  output_artifacts:
+    - art_tier_permissions_verification_receipt
+  timeout_ms: 15000
+  handled_contracts:
+  - contract_id: sandbox_permission_contract
+    name: Sandbox Capability Broker Contract
+    path: .nb/context/contracts/sandbox_permission_contract.json
+    type: json_schema
+    action: verify_security_sandbox
+    description: Enforces read/write sandboxing policies and AST token pruning constraints on plugins.
+  - contract_id: rbac_permission_matrix
+    name: Role-Based Access Control Entitlement Matrix
+    path: .nb/context/contracts/rbac_permission_matrix.json
+    type: json_schema
+    action: enforce_entitlements
+    description: Guarantees Free Community users cannot execute unexposed basic platform tools or enterprise private VPC endpoints.
