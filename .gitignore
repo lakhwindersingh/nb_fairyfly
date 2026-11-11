@@ -3,6 +3,8 @@
 Thumbs.db
 .idea/
 .vscode/
+.gradle/
+.intellijPlatform/
 *.swp
 *.swo
 

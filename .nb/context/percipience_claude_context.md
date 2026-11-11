@@ -1,6 +1,6 @@
 # Percipience AST-Compressed Project Context for Claude Code
 > **Notice to Claude Code**: All source files below are presented in AST-pruned skeleton format (function signatures, docstrings, type annotations, and structural DOM tags). Full internal implementation bodies have been stripped by Percipience to optimize token efficiency (~70% savings). If you need full function implementations to perform surgical refactors, inspect specific files or lines using your file viewing tools.
-> **FinOps Efficiency**: Raw Context: 919,059 tokens | Pruned Context: 435,162 tokens | Savings: 52.7%
+> **FinOps Efficiency**: Raw Context: 919,717 tokens | Pruned Context: 435,313 tokens | Savings: 52.7%
 
 ## Active Wire Contracts & Schemas
 ### Contract: billing_meter_contract.yaml
@@ -12045,12 +12045,15 @@ class WorkflowOrchestrator:
         func = executors.get(executor_key) or executors.get(sid)
 
         start_time = time.time()
-                res = func(step=step, context=context)
+                    res = func(step=step, context=context)
+                        res = func(context)
+                        res = func(step, context)
                 duration = round(time.time() - start_time, 4)
                 status = res.get("status")
                     "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
                     "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
+            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
@@ -17321,6 +17324,9 @@ object PluginUpdateChecker {
 Percipience Platform Core Engines Package.
 Houses all 38 platform engines: AST optimizer, Merkle engine, CI/CD, token tracker, etc.
 """
+
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
 
 __version__ = "1.0.0"
 ```
@@ -24055,7 +24061,7 @@ class SemanticParityEngine:
     @classmethod
     def evaluate_ast_symbols(cls, workspace_root: Path) -> float:
         ...
-        """AST parity has no verified evidence implementation yet; fail closed."""
+        """Evaluates AST symbol completeness and unmapped drift."""
     @staticmethod
     def _read_hashed_artifact(workspace_root: Path, relative_path: str, expected_hash: str) -> bytes:
         ...
@@ -25499,12 +25505,15 @@ class WorkflowOrchestrator:
         func = executors.get(executor_key) or executors.get(sid)
 
         start_time = time.time()
-                res = func(step=step, context=context)
+                    res = func(step=step, context=context)
+                        res = func(context)
+                        res = func(step, context)
                 duration = round(time.time() - start_time, 4)
                 status = res.get("status")
                     "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
                     "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
+            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
@@ -26661,6 +26670,9 @@ if __name__ == "__main__":
 Percipience Platform Core Engines Package.
 Houses all 38 platform engines: AST optimizer, Merkle engine, CI/CD, token tracker, etc.
 """
+
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
 
 __version__ = "1.0.0"
 ```
@@ -33065,12 +33077,15 @@ class WorkflowOrchestrator:
         func = executors.get(executor_key) or executors.get(sid)
 
         start_time = time.time()
-                res = func(step=step, context=context)
+                    res = func(step=step, context=context)
+                        res = func(context)
+                        res = func(step, context)
                 duration = round(time.time() - start_time, 4)
                 status = res.get("status")
                     "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
                     "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
+            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
