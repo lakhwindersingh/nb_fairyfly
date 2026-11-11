@@ -1,0 +1,44 @@
+agent_id: agent_pii_protection_and_obfuscation
+name: 'Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation'
+version: 1.0.0
+category: plan_module_derivation
+model: claude-3-5-sonnet
+model_tier: tier_b
+temperature: 0.1
+role: 'Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation
+  Derivation Specialist'
+description: |
+  Autonomous derivation specialist for plan module pii_protection_and_obfuscation of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation under sandboxed worktree isolation.
+source_plan: .nb/plan/master/security-mesh
+source_module: modules/04_pii_protection_and_obfuscation.md
+governing_rules:
+- .nb/context/rules/pii_protection_and_obfuscation_rules.md
+sandboxed_worktree: .nb/workspaces/wt_pii_protection_and_obfuscation
+module_scope:
+  allowed_modules:
+  - workplace/
+  denied_paths:
+  - .git
+  - .nb/context/invariants
+tools_and_capabilities:
+- name: derive_module
+  description: Executes the bounded derivation of the module under worktree isolation
+  handler: workplace/core/container_plan_executor.py
+- name: enforce_module_invariants
+  description: Validates layered context and module invariants
+  handler: workplace/core/layered_context_validator.py
+workflow_bindings:
+- workflow_id: wf_generic_multitenant_security_mesh_derivation
+  stage: step_pii_protection_and_obfuscation
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+autonomous_cicd_hooks:
+  auto_trigger_in_cicd: true
+  target_workflows:
+  - workflow_id: wf_generic_multitenant_security_mesh_derivation
+    step_id: step_pii_protection_and_obfuscation
+    step_name: Derive module pii_protection_and_obfuscation
+    fail_action: AUTO_HEAL_OR_ROLLBACK
+system_prompt: |
+  You are the Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation derivation specialist for the generic_multitenant_security_mesh master plan.
+  Derive the pii_protection_and_obfuscation submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/04_pii_protection_and_obfuscation.md, honoring .nb/context/rules/pii_protection_and_obfuscation_rules.md.
+  Operate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.

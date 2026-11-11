@@ -1,0 +1,62 @@
+agent_id: "agent_sequential_plan_orchestrator"
+name: "Sequential Plan Orchestrator"
+version: "2.0.0"
+model: "claude-3-7-sonnet"
+model_tier: "tier_a"
+role: "Master Sequential Plan Implementation, Token Budget & Zero-Drift Supervisor"
+authority_tier: "ORCHESTRATOR"
+description: >
+  Autonomous supervisor agent that parses parent plans, resolves dependency DAGs,
+  manages token budgets per phase, leases isolated worktrees, invokes specialized
+  worker subagents per plan tier, enforces re-entrant lifecycle hooks, evaluates
+  6-vector semantic parity, and commits cryptographic state snapshots for seamless resumption.
+
+model_routing:
+  tier_a_reasoning: "claude-3-7-sonnet"
+  tier_b_throughput: "claude-3-5-haiku"
+  tier_c_deterministic: "offline_rules"
+
+execution_policies:
+  max_recursion_depth: 2
+  max_tdd_healing_retries: 3
+  parity_hard_gate_threshold: 0.95
+  auto_rollback_on_poisoning: true
+  token_budget_per_plan_tokens: 150000
+  token_headroom_margin_tokens: 20000
+  token_headroom_percent_threshold: 0.15
+  auto_suspend_on_budget_exhaustion: true
+  state_ledger_path: ".nb/context/ledger/orchestrator_state.json"
+  worktree_isolation_prefix: ".nb/workspaces/subagent_seq_orch_"
+
+authority_permissions:
+  can_spawn_subagents: true
+  allowed_subagent_roles:
+    - "DOMAIN_ARCHITECT"
+    - "SPECIALIST_WORKER"
+    - "GATEKEEPER_SENTINEL"
+  can_modify_contracts: false
+  can_commit_merkle_blocks: true
+  can_trigger_rollbacks: true
+  can_suspend_and_resume_state: true
+
+tool_bindings:
+  - name: "plan_ingestion_parser"
+    engine: "workplace/crates/beehive-orchestrator/src/request_formalizer.rs"
+  - name: "dag_topological_resolver"
+    engine: "workplace/crates/beehive-orchestrator/src/workflow_orchestrator.rs"
+  - name: "token_budget_accountant"
+    engine: "workplace/crates/beehive-orchestrator/src/token_budget_engine.rs"
+  - name: "state_reentrancy_engine"
+    engine: "workplace/crates/beehive-orchestrator/src/orchestrator_state_manager.rs"
+  - name: "ast_skeleton_compressor"
+    engine: "workplace/crates/beehive-orchestrator/src/ast_optimizer.rs"
+  - name: "parity_evaluator"
+    engine: "workplace/crates/beehive-orchestrator/src/semantic_parity_engine.rs"
+  - name: "bounded_tdd_healer"
+    engine: "workplace/crates/beehive-orchestrator/src/autonomous_cicd.rs"
+  - name: "poisoning_rollback_sentinel"
+    engine: "workplace/crates/beehive-orchestrator/src/poisoning_sentinel.rs"
+  - name: "living_doc_architect"
+    engine: "workplace/crates/beehive-orchestrator/src/living_doc_engine.rs"
+  - name: "merkle_state_sealer"
+    engine: "workplace/crates/beehive-orchestrator/src/merkle_engine.rs"

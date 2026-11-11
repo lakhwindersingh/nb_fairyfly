@@ -71,3 +71,6 @@ tmp/
 /.nb/context/handoffs/outbox/
 /.nb/bundles/
 /.nb/bundles/
+/.nb/tests/
+/.nb/checkpoints/
+/.nb/plan/bundle/

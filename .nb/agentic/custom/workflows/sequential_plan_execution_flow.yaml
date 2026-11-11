@@ -1,0 +1,340 @@
+workflow_id: "wf_sequential_plan_execution"
+name: "Unified L1->L5 Sequential Plan Implementation Pipeline"
+version: "2.0.0"
+description: >
+  The runner resolves the target's transitive manifest dependencies and verifies
+  each executor-provided handover. The static steps below describe a legacy full-pipeline template.
+
+parameters:
+  target_plan: "master_sequential_plan_orchestrator"
+  drift_revert_mode: "strict"
+  enable_step_caching: true
+  token_budget_per_run: 1000000
+
+plan_resolution:
+  target_parameter: "target_plan"
+  source: ".nb/plan/**/MANIFEST.yaml"
+  dependency_scope: "transitive_prerequisites"
+  missing_executor_policy: "fail_closed"
+  handover_contract: ".nb/context/contracts/plan_handover_contract.json"
+  dry_run_mode: "preview_only"
+
+steps:
+  # =========================================================================
+  # PHASE 1: L1 FOUNDATION LAYER
+  # =========================================================================
+  - id: "step_plan_l1_transmutative_reasoning"
+    step_id: "step_plan_l1_transmutative_reasoning"
+    name: "Implement L1 Transmutative Reasoning"
+    plan_id: "l1_transmutative_reasoning"
+    plan_path: "l1/transmutative-reasoning"
+    agent: "agent_transmutative_specialist"
+    executor: "agent_transmutative_specialist"
+    action: "implement_latent_energy_descent_and_net2net"
+    depends_on: []
+    inputs:
+      - ".nb/plan/l1/transmutative-reasoning/concise.md"
+    output_artifacts:
+      - "RP_L1_FOUNDATION"
+    outputs:
+      - "workplace/src/l1/transmutative/"
+      - "workplace/tests/l1/test_transmutative.py"
+      - "RP_L1_FOUNDATION"
+
+  # =========================================================================
+  # PHASE 2: L2 SELF-EVOLUTION LAYER
+  # =========================================================================
+  - id: "step_plan_l2_neural_foundation"
+    step_id: "step_plan_l2_neural_foundation"
+    name: "Implement L2 Neural Architecture Foundation"
+    plan_id: "l2_neural_foundation"
+    plan_path: "l2/neural-architecture-foundation"
+    agent: "agent_neural_foundation_specialist"
+    executor: "agent_neural_foundation_specialist"
+    action: "implement_cls_memory_and_fisher_protection"
+    depends_on:
+      - "step_plan_l1_transmutative_reasoning"
+    inputs:
+      - "RP_L1_FOUNDATION"
+      - ".nb/plan/l2/neural-architecture-foundation/concise.md"
+    output_artifacts:
+      - "RP_L2_FOUNDATION"
+    outputs:
+      - "workplace/src/l2/neural_foundation/"
+      - "workplace/tests/l2/test_neural_foundation.py"
+      - "RP_L2_FOUNDATION"
+
+  - id: "step_plan_l2_nlp_toolchain"
+    step_id: "step_plan_l2_nlp_toolchain"
+    name: "Implement L2 NLP Self-Evolution Toolchain"
+    plan_id: "l2_nlp_toolchain"
+    plan_path: "l2/nlp-self-evolution-toolchain"
+    agent: "agent_nlp_toolchain_specialist"
+    executor: "agent_nlp_toolchain_specialist"
+    action: "implement_16_tool_simd_morphogenesis"
+    depends_on:
+      - "step_plan_l2_neural_foundation"
+    inputs:
+      - "RP_L2_FOUNDATION"
+      - ".nb/plan/l2/nlp-self-evolution-toolchain/concise.md"
+    output_artifacts:
+      - "RP_L2_TOOLCHAIN"
+    outputs:
+      - "workplace/src/l2/nlp_toolchain/"
+      - "workplace/tests/l2/test_nlp_toolchain.py"
+      - "RP_L2_TOOLCHAIN"
+
+  # =========================================================================
+  # PHASE 3: L3 PRODUCTION & DOMAIN EXECUTION LAYER
+  # =========================================================================
+  - id: "step_plan_l3_nlp_inference_dsl"
+    step_id: "step_plan_l3_nlp_inference_dsl"
+    name: "Implement L3 NLP Inference DSL"
+    plan_id: "l3_nlp_inference_dsl"
+    plan_path: "l3/nlp-inference-dsl"
+    agent: "agent_inference_dsl_specialist"
+    executor: "agent_inference_dsl_specialist"
+    action: "implement_gpu_native_morph_risc_vm"
+    depends_on:
+      - "step_plan_l2_nlp_toolchain"
+    inputs:
+      - "RP_L2_TOOLCHAIN"
+      - ".nb/plan/l3/nlp-inference-dsl/concise.md"
+    output_artifacts:
+      - "RP_L3_DSL"
+    outputs:
+      - "workplace/src/l3/dsl/"
+      - "workplace/tests/l3/test_inference_dsl.py"
+      - "RP_L3_DSL"
+
+  - id: "step_plan_l3_performance_ledger"
+    step_id: "step_plan_l3_performance_ledger"
+    name: "Implement L3 Performance Ledger"
+    plan_id: "l3_performance_ledger"
+    plan_path: "l3/performance-ledger"
+    agent: "agent_performance_ledger_specialist"
+    executor: "agent_performance_ledger_specialist"
+    action: "implement_bayesian_priors_and_merkle_ledger"
+    depends_on:
+      - "step_plan_l2_neural_foundation"
+    inputs:
+      - "RP_L2_FOUNDATION"
+      - ".nb/plan/l3/performance-ledger/concise.md"
+    output_artifacts:
+      - "RP_L3_LEDGER"
+    outputs:
+      - "workplace/src/l3/ledger/"
+      - "workplace/tests/l3/test_performance_ledger.py"
+      - "RP_L3_LEDGER"
+
+  - id: "step_plan_l3_system_one_decision_dsl"
+    step_id: "step_plan_l3_system_one_decision_dsl"
+    name: "Implement L3 System One Decision DSL"
+    plan_id: "l3_system_one_decision_dsl"
+    plan_path: "l3/system-one-decision-dsl"
+    agent: "agent_system_one_specialist"
+    executor: "agent_system_one_specialist"
+    action: "implement_fast_judgment_engine_and_32_opcodes"
+    depends_on:
+      - "step_plan_l2_neural_foundation"
+    inputs:
+      - "RP_L2_FOUNDATION"
+      - ".nb/plan/l3/system-one-decision-dsl/concise.md"
+    output_artifacts:
+      - "RP_L3_SYSTEM_ONE"
+    outputs:
+      - "workplace/src/l3/system_one/"
+      - "workplace/tests/l3/test_system_one.py"
+      - "RP_L3_SYSTEM_ONE"
+
+  - id: "step_plan_l3_production_verification"
+    step_id: "step_plan_l3_production_verification"
+    name: "Implement L3 Production Verification Suite"
+    plan_id: "l3_production_verification"
+    plan_path: "l3/production-runtime-verification"
+    agent: "agent_runtime_verifier"
+    executor: "agent_runtime_verifier"
+    action: "implement_5_tier_safety_and_verification_suite"
+    depends_on:
+      - "step_plan_l3_nlp_inference_dsl"
+      - "step_plan_l3_performance_ledger"
+      - "step_plan_l3_system_one_decision_dsl"
+    inputs:
+      - "RP_L3_DSL"
+      - "RP_L3_LEDGER"
+      - "RP_L3_SYSTEM_ONE"
+      - ".nb/plan/l3/production-runtime-verification/concise.md"
+    output_artifacts:
+      - "RP_L3_VERIFICATION"
+    outputs:
+      - "workplace/src/l3/verification/"
+      - "workplace/tests/l3/test_production_verification.py"
+      - "RP_L3_VERIFICATION"
+
+  - id: "step_plan_l3_device_native_gui"
+    step_id: "step_plan_l3_device_native_gui"
+    name: "Implement L3 Device Native GUI"
+    plan_id: "l3_device_native_gui"
+    plan_path: "l3/device-native-gui"
+    agent: "agent_gui_specialist"
+    executor: "agent_gui_specialist"
+    action: "implement_cross_platform_model_manager_gui"
+    depends_on:
+      - "step_plan_l3_production_verification"
+    inputs:
+      - "RP_L3_VERIFICATION"
+      - ".nb/plan/l3/device-native-gui/concise.md"
+    output_artifacts:
+      - "RP_L3_GUI"
+    outputs:
+      - "workplace/src/l3/gui/"
+      - "RP_L3_GUI"
+
+  # =========================================================================
+  # PHASE 4: L4 AUTOPOIETIC POLY-MORPHOGENESIS LAYER
+  # =========================================================================
+  - id: "step_plan_l4_poly_morphogenesis"
+    step_id: "step_plan_l4_poly_morphogenesis"
+    name: "Implement L4 Poly-Architectural Morphogenesis"
+    plan_id: "l4_poly_morphogenesis"
+    plan_path: "l4/poly-architectural-morphogenesis"
+    agent: "agent_poly_morph_specialist"
+    executor: "agent_poly_morph_specialist"
+    action: "implement_cross_family_transmutation_opcodes"
+    depends_on:
+      - "step_plan_l3_production_verification"
+    inputs:
+      - "RP_L3_VERIFICATION"
+      - ".nb/plan/l4/poly-architectural-morphogenesis/concise.md"
+    output_artifacts:
+      - "RP_L4_POLYMORPH"
+    outputs:
+      - "workplace/src/l4/poly_morph/"
+      - "workplace/tests/l4/test_poly_morph.py"
+      - "RP_L4_POLYMORPH"
+
+  - id: "step_plan_l4_cognitive_fusion"
+    step_id: "step_plan_l4_cognitive_fusion"
+    name: "Implement L4 Cognitive Fusion"
+    plan_id: "l4_cognitive_fusion"
+    plan_path: "l4/cognitive-orchestrator-fusion"
+    agent: "agent_cognitive_fusion_specialist"
+    executor: "agent_cognitive_fusion_specialist"
+    action: "implement_dual_process_s1_s2_synthesis"
+    depends_on:
+      - "step_plan_l4_poly_morphogenesis"
+    inputs:
+      - "RP_L4_POLYMORPH"
+      - ".nb/plan/l4/cognitive-orchestrator-fusion/concise.md"
+    output_artifacts:
+      - "RP_L4_FUSION"
+    outputs:
+      - "workplace/src/l4/cognitive_fusion/"
+      - "workplace/tests/l4/test_cognitive_fusion.py"
+      - "RP_L4_FUSION"
+
+  - id: "step_plan_l4_zk_ledger"
+    step_id: "step_plan_l4_zk_ledger"
+    name: "Implement L4 ZK Formal Verification Ledger"
+    plan_id: "l4_zk_formal_ledger"
+    plan_path: "l4/zk-formal-verification-ledger"
+    agent: "agent_zk_ledger_specialist"
+    executor: "agent_zk_ledger_specialist"
+    action: "implement_snark_fisher_nullspace_verifier"
+    depends_on:
+      - "step_plan_l4_cognitive_fusion"
+    inputs:
+      - "RP_L4_FUSION"
+      - ".nb/plan/l4/zk-formal-verification-ledger/concise.md"
+    output_artifacts:
+      - "RP_L4_ZK"
+    outputs:
+      - "workplace/src/l4/zk_ledger/"
+      - "workplace/tests/l4/test_zk_ledger.py"
+      - "RP_L4_ZK"
+
+  # =========================================================================
+  # PHASE 5: L5 SWARM CONSENSUS, CAUSAL & ROBOTICS LAYER
+  # =========================================================================
+  - id: "step_plan_l5_swarm_consensus"
+    step_id: "step_plan_l5_swarm_consensus"
+    name: "Implement L5 Swarm Consensus"
+    plan_id: "l5_swarm_consensus"
+    plan_path: "l5/swarm-consensus-collective-beehive"
+    agent: "agent_swarm_specialist"
+    executor: "agent_swarm_specialist"
+    action: "implement_byzantine_p2p_gossip_and_consensus"
+    depends_on:
+      - "step_plan_l4_zk_ledger"
+    inputs:
+      - "RP_L4_ZK"
+      - ".nb/plan/l5/swarm-consensus-collective-beehive/concise.md"
+    output_artifacts:
+      - "RP_L5_SWARM"
+    outputs:
+      - "workplace/src/l5/swarm/"
+      - "workplace/tests/l5/test_swarm.py"
+      - "RP_L5_SWARM"
+
+  - id: "step_plan_l5_causal_world_emulator"
+    step_id: "step_plan_l5_causal_world_emulator"
+    name: "Implement L5 Causal Physical World Emulator"
+    plan_id: "l5_causal_world_emulator"
+    plan_path: "l5/causal-physical-world-emulator"
+    agent: "agent_causal_emulator_specialist"
+    executor: "agent_causal_emulator_specialist"
+    action: "implement_scm_dag_discovery_and_neuromorphic_cim"
+    depends_on:
+      - "step_plan_l5_swarm_consensus"
+    inputs:
+      - "RP_L5_SWARM"
+      - ".nb/plan/l5/causal-physical-world-emulator/concise.md"
+    output_artifacts:
+      - "RP_L5_CAUSAL"
+    outputs:
+      - "workplace/src/l5/causal_emulator/"
+      - "workplace/tests/l5/test_causal_emulator.py"
+      - "RP_L5_CAUSAL"
+
+  - id: "step_plan_l5_robotics_kinematics"
+    step_id: "step_plan_l5_robotics_kinematics"
+    name: "Implement L5 Robotics Kinematics Control"
+    plan_id: "l5_robotics_kinematics"
+    plan_path: "l5/robotics-kinematics-control"
+    agent: "agent_robotics_kinematics_specialist"
+    executor: "agent_robotics_kinematics_specialist"
+    action: "implement_ros2_preempt_rt_and_isaac_sim_bridge"
+    depends_on:
+      - "step_plan_l5_causal_world_emulator"
+    inputs:
+      - "RP_L5_CAUSAL"
+      - ".nb/plan/l5/robotics-kinematics-control/concise.md"
+    output_artifacts:
+      - "RP_L5_ROBOTICS"
+    outputs:
+      - "workplace/src/l5/robotics/"
+      - "workplace/tests/l5/test_robotics.py"
+      - "RP_L5_ROBOTICS"
+
+  # =========================================================================
+  # FINAL SYNTHESIS & MERKLE SEALING
+  # =========================================================================
+  - id: "step_pipeline_finalize_and_seal"
+    step_id: "step_pipeline_finalize_and_seal"
+    name: "Final Synthesis & Merkle Sealing"
+    agent: "agent_living_doc_architect"
+    executor: "agent_living_doc_architect"
+    action: "synthesize_master_living_docs_and_seal"
+    depends_on:
+      - "step_plan_l5_robotics_kinematics"
+      - "step_plan_l3_device_native_gui"
+    inputs:
+      - "RP_L5_ROBOTICS"
+      - "RP_L3_GUI"
+    output_artifacts:
+      - "RP_MASTER_FINAL"
+    outputs:
+      - "workplace/docs/master_architecture.md"
+      - "workplace/docs/master_sequence_flows.md"
+      - "user/outputs/context_maturity_report.md"
+      - "RP_MASTER_FINAL"

@@ -1,0 +1,29 @@
+agent_id: agent_generic_multitenant_security_mesh
+name: Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection
+  Mesh - Root Plan Orchestrator
+version: 1.0.0
+category: plan_derivation
+model: claude-3-5-sonnet
+model_tier: tier_a
+temperature: 0.1
+role: Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection
+  Mesh Root Derivation Orchestrator
+description: |
+  Root derivation orchestrator for the generic_multitenant_security_mesh master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.
+source_plan: .nb/plan/master/security-mesh
+source_documents:
+- concise.md
+- detailed.md
+workflow_bindings:
+- workflow_id: wf_generic_multitenant_security_mesh_derivation
+  stage: step_plan_root
+  fail_action: AUTO_HEAL_OR_ROLLBACK
+module_scope:
+  allowed_modules:
+  - workplace/
+  denied_paths:
+  - .git
+  - .nb/context/invariants
+system_prompt: |
+  You are the root derivation orchestrator for the generic_multitenant_security_mesh master plan (Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh).
+  Execute the root specification in .nb/plan/master/security-mesh and coordinate the sequential derivation of each discovered submodule.
