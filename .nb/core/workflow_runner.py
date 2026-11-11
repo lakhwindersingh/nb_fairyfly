@@ -63,7 +63,22 @@ class WorkflowRunner:
     @classmethod
     def get_step_executors(cls) -> Dict[str, Callable]:
         """Builds dispatch map from step action or executor to actual code execution."""
-        return {
+        def _safe_wrapper(fn):
+            def _wrapped(step, context):
+                try:
+                    return fn(step, context)
+                except (ImportError, ModuleNotFoundError) as exc:
+                    if context.get("dry_run", False):
+                        return {
+                            "status": "SUCCESS",
+                            "dry_run": True,
+                            "simulated": True,
+                            "notice": f"Simulated dry-run for optional module: {exc}",
+                        }
+                    raise
+            return _wrapped
+
+        raw_executors = {
             # === SM-ResNet Actions ===
             "profile_block_attributions": cls._exec_sm_resnet_profile_attribution,
             "train_shadow_block": cls._exec_sm_resnet_shadow_training,
@@ -99,6 +114,7 @@ class WorkflowRunner:
             "merkle_state_seal": cls._exec_merkle_seal,
             "certify_and_seal_viability_block": cls._exec_merkle_seal,
         }
+        return {k: _safe_wrapper(v) for k, v in raw_executors.items()}
 
     # -------------------------------------------------------------
     # SM-ResNet Handlers
@@ -659,7 +675,7 @@ class WorkflowRunner:
             res = cls.run_workflow_by_file(f, dry_run=dry_run)
             results.append(res)
             total_steps += res.get("step_count", 0)
-            if res.get("status") != "COMPLETED":
+            if res.get("status") not in ("COMPLETED", "DRY_RUN"):
                 all_passed = False
 
         return {
