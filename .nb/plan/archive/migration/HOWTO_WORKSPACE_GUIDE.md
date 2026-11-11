@@ -36,15 +36,26 @@ nb_fairyfly/ (Workspace Root)
 │   └── custom/                               # [EXTENSIBLE] User-defined custom agents & workflows
 ├── workplace/                                # Application source code, configs, tests & modules
 │   ├── config/                               # Global parameters, environment configs, token tiers
-│   ├── core/                                 # Percipience OS core engines (AST, Merkle, Sentinel, etc.)
-│   ├── modules/                              # Poly-module Play 3 application subsystems
+│   ├── modules/                              # 15 Poly-module application subsystems
+│   │   ├── [Autonomous Intelligence & Simulation Modules]
+│   │   ├── mod_transmutative_trading/        # Quant-RISC VM (32 opcodes), SVI range options, situational gates
+│   │   ├── mod_transmutative_reasoning/      # Cognitive energy, reasoning core, CLS memory, pathway protection
+│   │   ├── mod_data_stream/                  # Multimodal event streaming, CoinMarketCap sourcer, market simulator
+│   │   ├── mod_world_model_framework/        # Unified world model protocol, 8 multi-domain adapters, rollouts
+│   │   ├── mod_device_native_gui/            # Device-native GUI backend, crypto simulation service, mutation ctrl
+│   │   ├── mod_morphogenetic_moe/            # M3-JEPA MoE, shadow expert trainer, canary cutover manager
+│   │   ├── mod_sm_resnet/                    # In-memory splicing, canary blender, spectral invariance auditor
+│   │   ├── mod_system_one_dsl/               # Fast-judgment decision DSL, zero token output, Platt scaling
+│   │   ├── [Cloud SaaS & Developer Tooling Modules]
 │   │   ├── mod_portal_marketing/             # Public marketing, SEO, MDX docs, ROI calculator
 │   │   ├── mod_tenant_onboarding/            # Self-serve onboarding, auth, Quad-Space setup
 │   │   ├── mod_billing_metering/             # Stripe billing, usage metering, 15% rev-share
 │   │   ├── mod_observability_usage/          # Live telemetry dashboard, Merkle visualizer
-│   │   └── mod_shared_infra_bridge/          # Shared-to-decoupled infrastructure adapter
+│   │   ├── mod_shared_infra_bridge/          # Shared-to-decoupled infrastructure adapter
+│   │   ├── mod_vscode_extension/             # Visual Studio Code VSIX extension & LSP client
+│   │   └── mod_intellij_plugin/              # JetBrains PyCharm/IntelliJ PSI AST analysis plugin
 │   ├── portal/                               # Cloud SaaS Portal Web Server & API Gateway (server.py)
-│   └── templates/                            # Standalone automation, verification & testing suites
+│   └── tests/                                # Module-level test pyramids & verification suites
 └── user/                                     # Human interface, MVS inputs, HITL gates & reports
     ├── inputs/                               # Minimum Viable Set (MVS) specifications & sketches
     │   └── templates/                        # 6 Standard MVS ingestion templates
@@ -54,6 +65,60 @@ nb_fairyfly/ (Workspace Root)
         ├── context_maturity_report.md        # 6-dimensional context maturity evaluation scorecard
         └── dashboard/index.html              # Interactive visual DAG & time-travel web console
 ```
+
+### The L0 → L5 Autonomy Spectrum & Capability Hierarchy
+
+Governed by the [Master Architectural Assessment & Capability Rating Matrix](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/rating.md), the workspace establishes a living, self-evolving, transmutative intelligence framework. Traditional AI architectures freeze neural graphs, weights, and routing topologies post-training; Percipience workspaces, in contrast, partition capabilities across an explicit 6-tier autonomy continuum:
+
+```mermaid
+flowchart LR
+  L0["<b>L0: Parametric Mutation</b><br/>• Fixed Graph Topology<br/>• In-Core Weight Perturbation<br/>• Recurrence & Low-Rank Updates<br/>• Passive Token Generation"]
+  --> L1["<b>L1: Structural Plasticity</b><br/>• In-Transit Net2WiderNet<br/>• Net2DeeperNet Insertion<br/>• Dynamic MoE Spawning<br/>• Exact Function Preservation"]
+  --> L2["<b>L2: Metacognitive Control</b><br/>• In-Core Self-Execution Gates<br/>• CLS Hippocampal Consolidation<br/>• Fisher Pathway Protection<br/>• 14-Instrument SIMD Toolchain"]
+  --> L3["<b>L3: World Simulation</b><br/>• Multi-Modal JEPA Morphogenesis<br/>• 113-Opcode Quant-RISC ISA<br/>• Equities & Options Greeks Oracle<br/>• Active Self-Improvement Ledger"]
+  --> L4["<b>L4: Poly-Morphogenesis</b><br/>• Async System 1 & 2 Fusion<br/>• Cross-Family Layer Transmutation<br/>• zk-SNARK Invariant Proofs<br/>• Provable Bounded Convergence"]
+  --> L5["<b>L5: Swarm Consensus</b><br/>• Causal Physical World Emulator<br/>• ROS 2 PREEMPT_RT Kinematics<br/>• Byzantine-Resilient Beehive Swarm<br/>• Distributed Superintelligence"]
+```
+
+#### The Eight Architectural Evaluation Dimensions
+Every capability plan in `.nb/plan/` (spanning `l1/` to `l5/`) is formally audited and scored across eight dimensions:
+1. **Graph Structural Plasticity**: Capacity for runtime topological mutation ($L$, $d_{\text{model}}$, $d_{\text{ffn}}$, $n_h$, $E$) with sub-millisecond function-preserving surgery.
+2. **Latency & Execution Horizon**: Guaranteed execution latencies across test-time inference, in-flight surgery, and live telemetry feeds.
+3. **Memory Architecture & Hippocampal Consolidation**: Dual-memory Complementary Learning Systems (CLS) with episodic buffers and synaptic consolidation.
+4. **Toolchain, ISA & Opcode Layering**: Native hardware-accelerated instructions (113-Opcode Quant-RISC ISA, SIMD vector routines).
+5. **Mathematical & Formal Verification**: Provable invariants, Lyapunov stability, symplectic dynamics, and zero-knowledge validity proofs.
+6. **Autonomy, Reentrancy & Drift Resistance**: Zero-drift multi-session resumption, bounded self-healing loops, and cryptographic state tracking.
+7. **Multi-Asset & Multi-Domain Generalization**: Cross-market order books, multi-token cross-attention, robotics kinematics, and NLP world models.
+8. **Hardware Topology & Enclave Security**: Apple Silicon M4 / NEON / Metal, NVIDIA H100 / Blackwell Hopper, and tamper-evident WORM audit vaults.
+
+For the exhaustive comparative analysis of industry frontier models (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro) against the workspace transmutative architecture, consult [`rating.md`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/rating.md).
+
+### Poly-Module Architecture & Subsystem Catalog (15 Modules)
+
+The workspace organizes application code within [`workplace/modules/`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules) across two coordinated domains: **Autonomous Intelligence & Quant-RISC Simulation** and **Cloud SaaS Platform & Developer Tooling**:
+
+#### 1. Autonomous Intelligence & Quant-RISC Simulation Engines
+| Module | Governing Plan Specification | Core Capabilities & Key Source Files |
+| :--- | :--- | :--- |
+| [`mod_transmutative_trading`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_trading) | [`l3/range-options-pricing-engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/range-options-pricing-engine/MANIFEST.yaml)<br/>[`l3/capital-markets-dsl`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/capital-markets-dsl/MANIFEST.yaml) | • **Quant-RISC Virtual Machine**: 32 hardware-native opcodes ([`quant_risc_vm.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_trading/src/quant_dsl/quant_risc_vm.py)).<br/>• **GPU Range Options Engine**: SVI total variance surface & multi-horizon carry ([`gpu_range_options_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_trading/src/model/gpu_range_options_engine.py)).<br/>• **12 Situational Gates**: Liquidity, volatility, and execution barriers ([`situational_awareness_gates.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_trading/src/gates/situational_awareness_gates.py)).<br/>• **M4 Performance Ledger**: Active self-improvement telemetry ([`m4_performance_ledger.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_trading/src/model/m4_performance_ledger.py)). |
+| [`mod_transmutative_reasoning`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_reasoning) | [`l1/transmutative-reasoning`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/transmutative-reasoning/MANIFEST.yaml) | • **Reasoning Core**: Energy-bounded deliberative thought loops ([`reasoning_core.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_reasoning/src/reasoning_core.py)).<br/>• **CLS Hippocampal Engine**: Fast episodic buffering & synaptic consolidation ([`cls_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_reasoning/src/memory/cls_engine.py)).<br/>• **Fisher Pathway Protection**: Prevents catastrophic forgetting during parameter surgery ([`pathway_protection.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_transmutative_reasoning/src/safety/pathway_protection.py)). |
+| [`mod_data_stream`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_data_stream) | [`architecture/data-stream`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/architecture/data-stream/MANIFEST.yaml) | • **Multimodal Event Stream**: High-throughput async event bus ([`event_stream_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_data_stream/src/event_stream_engine.py)).<br/>• **Market Simulation**: Differentiable Limit Order Book (LOB) dynamics ([`market_simulation_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_data_stream/src/market_simulation_engine.py)).<br/>• **CoinMarketCap Sourcer**: Real-time 24/7 crypto ingestion ([`coinmarketcap_sourcer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_data_stream/src/coinmarketcap_sourcer.py)). |
+| [`mod_world_model_framework`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_world_model_framework) | [`architecture/pluggable-world-model`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/architecture/pluggable-world-model/MANIFEST.yaml)<br/>[`l3/pluggable-bipedal-world-model`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/pluggable-bipedal-world-model/MANIFEST.yaml) | • **Unified Protocol**: Strict `WorldModelProtocol` contract ([`state_action_protocol.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_world_model_framework/src/interface/state_action_protocol.py)).<br/>• **8 Multi-Domain Adapters**: RSSM (Robotics), Transformer (NLP), Physics (Dynamics), Financial Market (LOB), Industrial Prognostics (C-MAPSS), Crypto Market, System One, and Bipedal Walker.<br/>• **Simulation Infrastructure**: Parallel rollouts, imagination planner, and horizon scheduler. |
+| [`mod_device_native_gui`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_device_native_gui) | [`l3/device-native-gui`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/device-native-gui/MANIFEST.yaml) | • **FastAPI & WebSocket Backend**: Low-latency telemetry streaming ([`gui_backend_service.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_device_native_gui/src/gui_backend_service.py)).<br/>• **Mutation Controller**: Real-time model lifecycle management and parameter surgery visualizer ([`mutation_controller.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_device_native_gui/src/mutation_controller.py)).<br/>• **Multi-Asset Simulation**: Real-time portfolio monitoring & risk gauges. |
+| [`mod_morphogenetic_moe`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_morphogenetic_moe) | [`l3/jepa-morphogenesis-architecture`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/jepa-morphogenesis-architecture/MANIFEST.yaml) | • **M3-JEPA MoE Core**: Dynamic expert spawning and routing ([`moe.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_morphogenetic_moe/src/model/moe.py)).<br/>• **Shadow Expert Trainer**: Isolated background training of candidate expert layers ([`shadow_expert_trainer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_morphogenetic_moe/src/training/shadow_expert_trainer.py)).<br/>• **Spectral Invariance Auditor**: Validates zero functional regression prior to canary cutover ([`spectral_auditor.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_morphogenetic_moe/src/verification/spectral_auditor.py)). |
+| [`mod_sm_resnet`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_sm_resnet) | [`master/parent-master-plan`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/master/parent-master-plan/detailed.md) | • **In-Memory Splicer**: Sub-millisecond residual block insertion ([`in_memory_splicer.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_sm_resnet/src/splicing/in_memory_splicer.py)).<br/>• **Canary Blender**: Smooth convex weight blending $\alpha W_{\text{old}} + (1-\alpha) W_{\text{new}}$ ([`canary_blender.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_sm_resnet/src/canary/canary_blender.py)).<br/>• **Identity Verifier**: Guarantees zero disruption to incumbent neural pathways. |
+| [`mod_system_one_dsl`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_system_one_dsl) | [`l3/system-one-decision-dsl`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/system-one-decision-dsl/MANIFEST.yaml) | • **Fast-Judgment Engine**: Bounded probabilistic classification with zero autoregressive output tokens ([`system_one_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_system_one_dsl/src/system_one_engine.py)).<br/>• **Platt Temperature Calibration**: Well-calibrated Bayesian risk probabilities.<br/>• **Net2Wider Expansion**: Dynamic decision head expansion with exact logit preservation. |
+
+#### 2. Cloud SaaS Platform & Developer Tooling Modules
+| Module | Governing Plan Specification | Core Capabilities & Key Source Files |
+| :--- | :--- | :--- |
+| [`mod_portal_marketing`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_portal_marketing) | Play 3 SaaS Portal Plan | Public corporate platform, landing page, MDX documentation, and FinOps ROI calculator. |
+| [`mod_tenant_onboarding`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_tenant_onboarding) | Play 3 OS Plan | Self-serve tenant registration, OAuth2/OIDC authentication, and automated Quad-Space provisioning. |
+| [`mod_billing_metering`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_billing_metering) | Play 3 FinOps Plan | Stripe billing integration, real-time token savings metering, and 15% performance fee calculation. |
+| [`mod_observability_usage`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_observability_usage) | Play 3 OS Plan | OpenTelemetry distributed trace exporter, Merkle DAG visualizer, and token burn analytics. |
+| [`mod_shared_infra_bridge`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_shared_infra_bridge) | Play 3 Infra Plan | Bridge adapter coordinating shared PostgreSQL/Redis multi-tenant pooling vs isolated enclaves. |
+| [`mod_vscode_extension`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_vscode_extension) | VS Code Extension Plan | VS Code extension source, Language Server Protocol (LSP 3.17) client, webview dashboard, and IPC socket. |
+| [`mod_intellij_plugin`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/workplace/modules/mod_intellij_plugin) | IntelliJ/PyCharm Plugin Plan | PyCharm/IntelliJ plugin source, native PSI AST analysis proxy, and IDE toolwindow control plane. |
 
 ### Architectural Boundaries: Platform Runtime (`.nb/core/`) vs Application Code (`workplace/core/`)
 
@@ -461,6 +526,88 @@ If your team uses self-hosted GitLab, GitHub Enterprise Server, Bitbucket Data C
 
 ---
 
+### Step 7: Sequential Plan Execution & Zero-Drift Multi-Session Resumption
+
+For complex multi-tier architectures spanning dozens of interdependent plans (such as [`l3_range_options_pricing_engine`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l3/range-options-pricing-engine/MANIFEST.yaml)), Percipience provides an enterprise **Sequential Plan Implementation & Zero-Drift Orchestrator**. 
+
+Conventional prompt chains or ad-hoc orchestration scripts suffer from context drift, redundant re-execution of completed modules, and unverified handovers between agents. Percipience solves this with four tightly integrated platform engines:
+
+```mermaid
+flowchart TD
+  Target["<b>Target Plan Request</b><br/><code>target_plan_id: l3_range_options_pricing_engine</code>"]
+  --> Resolver["<b>1. PlanDependencyResolver</b><br/>Indexes <code>MANIFEST.yaml</code> files, resolves aliases,<br/>and builds topological DAG execution order"]
+  --> StateMgr["<b>2. OrchestratorStateManager</b><br/>Verifies HMAC-SHA256 signature on <code>orchestrator_state.json</code><br/>Identifies completed steps and validates recovery points"]
+  --> Handover["<b>3. PlanHandoverVerifier</b><br/>Validates SHA-256 evidence, prerequisite handovers,<br/>and bindings to Merkle recovery points"]
+  --> Runner["<b>4. WorkflowRunner</b><br/>Acquires POSIX <code>plan_execution.lock</code>,<br/>executes step via registered agent or sandbox"]
+  --> Merkle["<b>5. MerkleEngine Seal</b><br/>Calculates Version 2 block hash with action<br/>and recovery point provenance"]
+  --> StateUpdate["<b>6. Authenticated State Persistence</b><br/>Appends completed step and signs state ledger with HMAC"]
+  
+  StateUpdate --> Resolver
+```
+
+#### 1. Transitive Dependency Resolution ([`core/plan_dependency_resolver.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/plan_dependency_resolver.py))
+The `PlanDependencyResolver` scans all manifests under `.nb/plan/`, normalizes relative path aliases (e.g. `l3/range-options-pricing-engine` $	o$ `l3_range_options_pricing_engine`), detects circular dependency cycles, and computes the complete transitive topological closure:
+
+```python
+from pathlib import Path
+from core.plan_dependency_resolver import PlanDependencyResolver
+
+resolver = PlanDependencyResolver(Path(".nb/plan"))
+plans = resolver.resolve("l3_range_options_pricing_engine")
+# Returns exact layer execution sequence:
+# 1. master_parent_framework
+# 2. l1_transmutative_reasoning
+# 3. l2_neural_foundation
+# 4. l3_equities_options_oracle
+# 5. l3_capital_markets_dsl
+# 6. l3_range_options_pricing_engine
+```
+
+#### 2. Cryptographic Handover Contracts ([`core/plan_handover.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/plan_handover.py))
+Between each stage of the plan execution DAG, the `PlanHandoverVerifier` binds inputs, dependencies, specifications, and generated artifacts into an immutable handover receipt:
+- Verifies that every declared output artifact exists and matches its recorded SHA-256 digest.
+- Verifies that all prerequisite handover hashes match the parent dependencies.
+- Validates that the handover is sealed to a verified Merkle recovery point via `MerkleEngine.verify_recovery_point`.
+
+```python
+from core.plan_handover import PlanHandoverVerifier
+
+# Build content-addressed handover upon step completion
+handover = PlanHandoverVerifier.build_handover(
+    plan_definition=current_step,
+    workspace_root=Path("."),
+    artifact_relative_paths=["workplace/modules/mod_oracle/engine.py"],
+    prerequisite_handovers=parent_handovers,
+    recovery_point_id="RP_EQUITIES_OPTIONS_ORACLE_001"
+)
+```
+
+#### 3. Persistent HMAC State & Zero-Drift Reentrancy ([`core/orchestrator_state_manager.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/orchestrator_state_manager.py))
+To prevent session interruptions from forcing operators to rebuild prior stages, `OrchestratorStateManager` persists execution progress into `.nb/context/ledger/orchestrator_state.json`. 
+- **HMAC Authentication**: Each state record is signed using a 32-byte secret (`BEEHIVE_ORCHESTRATOR_STATE_KEY`). Any manual tampering, step injection, or bit manipulation invalidates the signature and causes the engine to fail closed.
+- **Atomic Disk Synchronization**: Updates are written to a temporary sibling file and replaced atomically (`os.replace`), preventing partial writes upon process termination.
+- **Reentrancy**: On restart, the engine revalidates every completed dependency before skipping it, ensuring zero context drift across sessions.
+
+#### 4. Executing Sequential Plans via WorkflowRunner ([`core/workflow_runner.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/workflow_runner.py))
+Operators execute sequential plans using the unified workflow runner or CLI:
+
+```bash
+# 1. Inspect resolved DAG closure in dry-run mode
+python3 -c "from core.workflow_runner import WorkflowRunner; print(WorkflowRunner.run_plan_by_id('l3_range_options_pricing_engine', dry_run=True))"
+
+# 2. Execute live sequential plan flow with POSIX locking and authenticated state
+python3 -c "
+from core.workflow_runner import WorkflowRunner
+result = WorkflowRunner.run_plan_by_id(
+    target_plan_id='l3_range_options_pricing_engine',
+    dry_run=False
+)
+print('Status:', result['status'])
+"
+```
+
+---
+
 ## 4. Inspection, Auditing & Evaluation Tools
 
 ### 1. Master Context Ledger ([`context/ledger/context_ledger.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/context/ledger/context_ledger.yaml))
@@ -557,6 +704,51 @@ python3 workplace/tests/test_play3_suite.py
 | **Worktree Engine** | `workplace/core/worktree_engine.py` | Ephemeral Git worktree lease manager |
 | **BYOR Adapter** | `workplace/core/byor_adapter.py` | Self-hosted GitLab/GHES/Bitbucket multi-VCS connector |
 | **Layered Context Validator** | `workplace/core/layered_context_validator.py`| 3-tier precedence hierarchy enforcement |
+
+---
+
+### 5. Evidence-Based Semantic Parity ($S_{SP}$) & Fail-Closed Gatekeeper
+
+Percipience implements an evidence-based Semantic Parity ($S_{SP}$) evaluation engine ([`core/semantic_parity_engine.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/core/semantic_parity_engine.py)). Rather than relying on heuristic token similarity or soft confidence metrics, the platform enforces mathematical and cryptographic rigor:
+
+$$\\text{Parity Score } S_{SP} = w_1 S_{\\text{AST}} + w_2 S_{\\text{Wire}} + w_3 S_{\\text{TDD}} + w_4 S_{\\text{Handover}} + w_5 S_{\\text{Doc}} + w_6 S_{\\text{CVE}}$$
+
+| Parity Dimension | Evidence Requirement | Verification Mechanism | Failure Action |
+| :--- | :--- | :--- | :--- |
+| **AST Symbols ($S_{\text{AST}}$)** | Verified AST symbol map & signature diffs | Tree-Sitter daemon symbol comparison | Fail closed ($0.0$) if unproven |
+| **Wire Contracts ($S_{\text{Wire}}$)** | `.nb/context/ledger/contract_compatibility_results.json` | Hash-checked baseline vs candidate schemas via `ContractCompatibilityChecker` | Reject breaking changes ($0.0$) |
+| **Behavioral Tests ($S_{\text{TDD}}$)** | `.nb/context/ledger/test_results.json` | Parsing JUnit XML reports (`junit_path`, `junit_sha256`); zero failures, zero errors | Fail closed ($0.0$) on failure or missing report |
+| **Handover Integrity ($S_{\text{Handover}}$)** | `.nb/context/ledger/plan_handovers.json` | `PlanHandoverVerifier` validation against recovery points (`MerkleEngine.verify_recovery_point`) | Fail closed ($0.0$) on broken chain |
+| **Living Docs ($S_{\text{Doc}}$)** | `workplace/docs/` markdown artifacts | Strict AST diagram syntax validation | Quarantine drift ($0.0$) |
+| **Security & CVE ($S_{\text{CVE}}$)** | `DependencyCVESentinel` audit | AST secret scanning & dependency vulnerability database | Block commit ($0.0$) |
+
+### 6. Automated Plan Compilation, Version Synchronization & M4 Prototypes
+
+The platform runtime includes standalone engineering tools in `.nb/tools/`:
+
+#### 1. Plan Manifest Version Synchronizer ([`.nb/tools/sync_plan_versions.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/tools/sync_plan_versions.py))
+Audits all 45+ plan manifests across `master/`, `architecture/`, and `l1/` through `l5/`, ensuring SHA-256 specification hashes, version tags, and line counts match the canonical specification files:
+```bash
+python3 .nb/tools/sync_plan_versions.py
+# Scans and validates all 45 plan manifests, reporting sync status per tier.
+```
+
+#### 2. Cryptographic Bundle Compiler ([`.nb/tools/bundle_compiler.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/tools/bundle_compiler.py))
+Compiles plaintext plans into tamper-evident, AES-256-GCM encrypted and Ed25519-signed binary envelopes (`.nbpack`):
+```bash
+python3 .nb/tools/bundle_compiler.py
+# Outputs 45 encrypted .nbpack bundles into .nb/plan/bundle/
+# Validates Ed25519 signatures and AES-256-GCM authentication tags.
+```
+
+#### 3. Apple Silicon M4 Hardware Prototype Suite ([`.nb/tools/run_m4_prototype_suite.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/tools/run_m4_prototype_suite.py))
+Executes localized prototype verification on Apple Silicon M4 / NEON / Metal hardware, measuring memory allocations, GPU tensor operations, and microsecond latency bounds for Quant-RISC models:
+```bash
+python3 .nb/tools/run_m4_prototype_suite.py
+```
+
+#### 4. Sealed Enclave Unpacker ([`.nb/tools/unpack_nbpack.py`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/tools/unpack_nbpack.py))
+Extracts and verifies signed `.nbpack` bundles in volatile memory (`tmpfs` / RAM disk) without writing plaintext artifacts to persistent storage.
 
 ---
 
@@ -667,3 +859,8 @@ percipience_gatekeeper:
 | `./start_portal.sh [port]` | Launch the interactive Cloud SaaS Portal and API Gateway locally. |
 | `./.nb/bin/percipience config show` | Display all externalized configuration parameters from `.nb/config/platform_config.yaml`. |
 | `./.nb/bin/percipience config get <key>` | Query a specific configuration parameter by dot-notated key path. |
+| `python3 .nb/tools/sync_plan_versions.py` | Audit and synchronize manifest hashes, versions, and line counts across all 45+ plans. |
+| `python3 .nb/tools/bundle_compiler.py` | Compile, encrypt (AES-256-GCM), and cryptographically sign (Ed25519) all plan bundles. |
+| `python3 .nb/tools/run_m4_prototype_suite.py` | Execute localized hardware verification and performance benchmarking for M4/Metal. |
+| `python3 -c "from core.workflow_runner import WorkflowRunner; WorkflowRunner.run_plan_by_id('<id>', dry_run=True)"` | Preview topological DAG resolution and missing executors for any target plan. |
+| `python3 -c "from core.workflow_runner import WorkflowRunner; WorkflowRunner.run_plan_by_id('<id>', dry_run=False)"` | Execute sequential plan flow with POSIX locking, artifact handovers, and HMAC state resumption. |
