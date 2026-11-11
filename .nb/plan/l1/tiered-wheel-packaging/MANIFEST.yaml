@@ -1,3 +1,8 @@
+plan:
+  id: domain_tiered_wheel_packaging
+  name: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
+  category: l1
+  layer: l1
 schema_version: 3.0.0
 plan_id: domain_tiered_wheel_packaging
 plan_name: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
@@ -34,21 +39,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: a4c8a994127e9e3748a85845568f177a2d5fe7a7981469557e64f96f285fab6d
     line_count: 106
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: fda1a445c4beca1f7f1795fe06819eb3b6b7b5ba16129501d56e0d9801d02409
     line_count: 269
     primary_purpose: Extended implementation guide for multi-tier wheel packaging
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: db56f3e4f5dfbcd49b3c1df41a7095d158cb9ef3fcd5f2bf226c1b3303bc46b6
     line_count: 32
     primary_purpose: Quick reference and navigation
@@ -58,3 +63,32 @@ implementation_phases:
   phase_3: In-Package Tier Broker & Console Script Entry Points
   phase_4: Merkle State Sealing & Clean Virtualenv Smoke Testing
   phase_5: Index Distribution & Air-Gapped Packaging Workflows
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.882229Z'
+    content_hash: sha256:a4c8a994127e9e3748a85845568f177a2d5fe7a7981469557e64f96f285fab6d
+    lines: 106
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.882229Z'
+    content_hash: sha256:fda1a445c4beca1f7f1795fe06819eb3b6b7b5ba16129501d56e0d9801d02409
+    lines: 269
+  readme:
+    file: README.md
+    format: overview
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.882229Z'
+    content_hash: sha256:db56f3e4f5dfbcd49b3c1df41a7095d158cb9ef3fcd5f2bf226c1b3303bc46b6
+    lines: 32
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:00.882229Z'
+  sync_direction: concise_to_detailed
+  differences: []

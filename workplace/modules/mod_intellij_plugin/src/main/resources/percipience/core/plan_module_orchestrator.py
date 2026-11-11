@@ -490,6 +490,72 @@ class PlanModuleOrchestrator:
     # ------------------------------------------------------------------
     # Orchestration
     # ------------------------------------------------------------------
+    def synchronize_dependencies(self, target: str, **kwargs) -> List[Dict[str, Any]]:
+        """Synchronize a target and its manifest prerequisites in dependency order."""
+        plan_root = self.workspace_root / ".nb/plan"
+        aliases: Dict[str, List[Path]] = {}
+        manifests: Dict[Path, Dict[str, Any]] = {}
+
+        def normalize(value: str) -> str:
+            value = value.strip().replace("\\", "/")
+            if ".nb/plan/" in value:
+                value = value.split(".nb/plan/", 1)[1]
+            value = value.removeprefix("./").strip("/")
+            for suffix in ("/MANIFEST.yaml", "/concise.md", "/detailed.md"):
+                if value.endswith(suffix):
+                    value = value[:-len(suffix)]
+                    break
+            return value.lower().replace("-", "_").replace("/", "_")
+
+        for path in sorted(plan_root.rglob("MANIFEST.yaml")):
+            relative = path.parent.relative_to(plan_root)
+            if relative.parts and relative.parts[0] in ("archive", "templates"):
+                continue
+            manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
+            if not isinstance(manifest, dict):
+                raise ValueError(f"Invalid plan manifest: {path}")
+            metadata = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else manifest
+            identity = metadata.get("id") or manifest.get("plan_id") or relative.as_posix()
+            if not isinstance(identity, str) or not identity.strip():
+                raise ValueError(f"Invalid plan identity: {path}")
+            manifests[path] = manifest
+            for alias in {normalize(identity), normalize(relative.as_posix())}:
+                aliases.setdefault(alias, []).append(path)
+
+        def resolve(reference: str) -> Path:
+            matches = aliases.get(normalize(reference), [])
+            if len(matches) != 1:
+                raise ValueError(f"{'Ambiguous' if matches else 'Unknown'} plan dependency: {reference}")
+            return matches[0]
+
+        ordered: List[Path] = []
+        visiting: List[Path] = []
+        visited = set()
+
+        def visit(path: Path) -> None:
+            if path in visiting:
+                raise ValueError(f"Plan dependency cycle: {' -> '.join(str(p.parent.name) for p in visiting + [path])}")
+            if path in visited:
+                return
+            visiting.append(path)
+            manifest = manifests[path]
+            metadata = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else manifest
+            dependencies = manifest.get("dependencies", metadata.get("dependencies", []))
+            if isinstance(dependencies, dict):
+                dependencies = dependencies.get("requires", [])
+            if isinstance(dependencies, str):
+                dependencies = [dependencies]
+            if not isinstance(dependencies, list) or any(not isinstance(d, str) or not d.strip() for d in dependencies):
+                raise ValueError(f"Invalid plan dependencies: {path}")
+            for dependency in dependencies:
+                visit(resolve(dependency))
+            visiting.pop()
+            visited.add(path)
+            ordered.append(path)
+
+        visit(resolve(target))
+        return [self.synchronize(path.parent, **kwargs) for path in ordered]
+
     def synchronize(
         self,
         plan_dir: Path,

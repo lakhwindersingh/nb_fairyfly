@@ -10,10 +10,17 @@ multi-agent handovers, living documentation, and supply-chain purity.
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List
+import hashlib
+import json
+import xml.etree.ElementTree as ET
 
-from .living_doc_engine import LivingDocEngine
 from .contract_compatibility_checker import ContractCompatibilityChecker
+from .living_doc_engine import LivingDocEngine
 from .dependency_cve_sentinel import DependencyCVESentinel
+from .merkle_engine import MerkleEngine
+from .orchestrator_state_manager import OrchestratorStateManager
+from .plan_dependency_resolver import PlanDependencyResolver
+from .plan_handover import PlanHandoverVerifier
 
 
 class SemanticParityEngine:
@@ -30,30 +37,185 @@ class SemanticParityEngine:
 
     @classmethod
     def evaluate_ast_symbols(cls, workspace_root: Path) -> float:
-        """Evaluates AST symbol completeness and unmapped drift."""
-        return 0.98
+        """AST parity has no verified evidence implementation yet; fail closed."""
+        return 0.0
+
+    @staticmethod
+    def _read_hashed_artifact(workspace_root: Path, relative_path: str, expected_hash: str) -> bytes:
+        root = Path(workspace_root).resolve()
+        if not isinstance(relative_path, str) or not relative_path or Path(relative_path).is_absolute():
+            raise ValueError("Evidence path must be workspace-relative")
+        artifact = (root / relative_path).resolve()
+        if not artifact.is_relative_to(root) or not artifact.is_file():
+            raise ValueError("Evidence file is missing or outside the workspace")
+        content = artifact.read_bytes()
+        if not isinstance(expected_hash, str) or hashlib.sha256(content).hexdigest() != expected_hash:
+            raise ValueError("Evidence hash mismatch")
+        return content
+
+    @staticmethod
+    def _conservative_contract_compatibility(base: Dict[str, Any], head: Dict[str, Any]) -> bool:
+        if not isinstance(base, dict) or not isinstance(head, dict):
+            return False
+        base_properties, head_properties = base.get("properties"), head.get("properties")
+        base_required, head_required = base.get("required", []), head.get("required", [])
+        if not isinstance(base_properties, dict) or not isinstance(head_properties, dict):
+            return False
+        if not isinstance(base_required, list) or not isinstance(head_required, list):
+            return False
+        if any(not isinstance(field, str) for field in base_required + head_required):
+            return False
+        if any(not isinstance(spec, dict) for spec in list(base_properties.values()) + list(head_properties.values())):
+            return False
+        if set(base_required) != set(head_required):
+            return False
+        if not set(base_required) <= set(base_properties):
+            return False
+        if {k: v for k, v in base.items() if k not in ("properties", "required")} != {
+            k: v for k, v in head.items() if k not in ("properties", "required")
+        }:
+            return False
+        if any(field not in head_properties or head_properties[field] != spec for field, spec in base_properties.items()):
+            return False
+        added_fields = set(head_properties) - set(base_properties)
+        if added_fields and (base.get("additionalProperties") is not False or base.get("patternProperties")):
+            return False
+        return bool(ContractCompatibilityChecker.check_compatibility(base, head).get("is_compatible"))
 
     @classmethod
     def evaluate_wire_contracts(cls, workspace_root: Path) -> float:
-        """Evaluates OpenAPI/AsyncAPI wire contracts for breaking changes."""
-        contracts_dir = (workspace_root / ".nb" / "context" / "contracts" if (workspace_root / ".nb" / "context").exists() else workspace_root / "context" / "contracts")
-        if not contracts_dir.exists():
+        """Score explicit compatibility evidence; missing baselines fail closed."""
+        evidence_path = workspace_root / ".nb" / "context" / "ledger" / "contract_compatibility_results.json"
+        try:
+            evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+            checks = evidence.get("checks")
+            if not isinstance(checks, list) or not checks:
+                return 0.0
+            for check in checks:
+                if not isinstance(check, dict):
+                    return 0.0
+                base = json.loads(cls._read_hashed_artifact(
+                    workspace_root, check.get("baseline_path"), check.get("baseline_sha256")
+                ))
+                head = json.loads(cls._read_hashed_artifact(
+                    workspace_root, check.get("candidate_path"), check.get("candidate_sha256")
+                ))
+                if not cls._conservative_contract_compatibility(base, head):
+                    return 0.0
             return 1.0
-        # If contracts exist, check baseline compatibility
-        sample_base = {"type": "object", "properties": {"status": {"type": "string"}}, "required": ["status"]}
-        sample_head = {"type": "object", "properties": {"status": {"type": "string"}, "v": {"type": "integer"}}, "required": ["status"]}
-        res = ContractCompatibilityChecker.check_compatibility(sample_base, sample_head)
-        return 1.0 if res.get("is_compatible") else 0.70
+        except (OSError, ValueError, TypeError, KeyError):
+            return 0.0
 
     @classmethod
     def evaluate_behavior_tests(cls, workspace_root: Path) -> float:
-        """Evaluates TDD / unit & integration test coverage & pass rate."""
-        return 1.00
+        """Score a complete test-run report rather than assuming tests passed."""
+        evidence_path = workspace_root / ".nb" / "context" / "ledger" / "test_results.json"
+        try:
+            evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+            report = cls._read_hashed_artifact(
+                workspace_root, evidence.get("junit_path"), evidence.get("junit_sha256")
+            )
+            root = ET.fromstring(report)
+            suites = [root] if root.tag == "testsuite" else list(root) if root.tag == "testsuites" else []
+            if not suites or any(suite.tag != "testsuite" for suite in suites):
+                return 0.0
+            total = 0
+            passed = 0
+            for suite in suites:
+                tests = int(suite.attrib["tests"])
+                failures = int(suite.get("failures", 0))
+                errors = int(suite.get("errors", 0))
+                skipped = int(suite.get("skipped", 0))
+                if min(tests, failures, errors, skipped) < 0 or failures + errors + skipped > tests:
+                    return 0.0
+                test_cases = suite.findall(".//testcase")
+                if (
+                    len(test_cases) != tests
+                    or sum(case.find("failure") is not None for case in test_cases) != failures
+                    or sum(case.find("error") is not None for case in test_cases) != errors
+                    or sum(case.find("skipped") is not None for case in test_cases) != skipped
+                ):
+                    return 0.0
+                total += tests
+                passed += tests - failures - errors - skipped
+            return 1.0 if total > 0 and passed == total else 0.0
+        except (OSError, ValueError, TypeError, KeyError, ET.ParseError):
+            return 0.0
 
     @classmethod
     def evaluate_handover_integrity(cls, workspace_root: Path) -> float:
-        """Evaluates inter-agent handoff conformity and zero rogue subagents."""
-        return 1.00
+        """Validate persisted plan handovers against specs, artifacts, and Merkle RPs."""
+        ledger_path = workspace_root / ".nb" / "context" / "ledger" / "plan_handovers.json"
+        try:
+            payload = json.loads(ledger_path.read_text(encoding="utf-8"))
+            if not isinstance(payload, dict):
+                return 0.0
+            handovers = payload.get("handovers")
+            if payload.get("schema_version") != PlanHandoverVerifier.SCHEMA_VERSION:
+                return 0.0
+            if not isinstance(handovers, list) or not handovers:
+                return 0.0
+
+            resolver = PlanDependencyResolver(workspace_root / ".nb" / "plan")
+            by_plan_id = {}
+            for entry in handovers:
+                if not isinstance(entry, dict) or not isinstance(entry.get("plan_id"), str):
+                    return 0.0
+                if entry["plan_id"] in by_plan_id:
+                    return 0.0
+                by_plan_id[entry["plan_id"]] = entry.get("handover")
+
+            target_plan_id = payload.get("target_plan_id")
+            if not isinstance(target_plan_id, str) or not target_plan_id:
+                return 0.0
+            state_path = OrchestratorStateManager.target_state_path(workspace_root, target_plan_id)
+            state = OrchestratorStateManager(str(state_path)).load_and_verify_state()
+            if not state or state.get("target_plan_id") != target_plan_id:
+                return 0.0
+            completed_steps = state.get("completed_steps")
+            if not isinstance(completed_steps, list):
+                return 0.0
+            signed_handovers = {}
+            for record in completed_steps:
+                if not isinstance(record, dict) or record.get("status") != "SUCCESS":
+                    return 0.0
+                plan_id = record.get("plan_id")
+                handover = record.get("handover")
+                if (
+                    not isinstance(plan_id, str)
+                    or plan_id in signed_handovers
+                    or record.get("step_id") != f"plan:{plan_id}"
+                    or not isinstance(handover, dict)
+                    or record.get("recovery_point") != handover.get("recovery_point_id")
+                ):
+                    return 0.0
+                signed_handovers[plan_id] = handover
+            if signed_handovers != by_plan_id:
+                return 0.0
+            target_closure = resolver.resolve(target_plan_id)
+            if set(by_plan_id) != {plan["plan_id"] for plan in target_closure}:
+                return 0.0
+
+            for plan in target_closure:
+                plan_id = plan["plan_id"]
+                handover = by_plan_id[plan_id]
+                prerequisites = {
+                    dependency_id: by_plan_id[dependency_id]
+                    for dependency_id in plan["dependency_ids"]
+                    if dependency_id in by_plan_id
+                }
+                valid, _ = PlanHandoverVerifier.validate_handover(
+                    handover,
+                    plan,
+                    workspace_root,
+                    prerequisites,
+                    lambda recovery_point: MerkleEngine.verify_recovery_point(workspace_root, recovery_point),
+                )
+                if not valid:
+                    return 0.0
+            return 1.0
+        except (OSError, ValueError, TypeError, KeyError):
+            return 0.0
 
     @classmethod
     def evaluate_living_docs(cls, workspace_root: Path) -> float:

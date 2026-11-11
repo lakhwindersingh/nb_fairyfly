@@ -1,3 +1,8 @@
+plan:
+  id: master_parent_free_community
+  name: Parent Master Context Engineering Framework (Free Community Edition)
+  category: master
+  layer: master
 schema_version: 3.0.0
 plan_id: master_parent_free_community
 plan_name: Parent Master Context Engineering Framework (Free Community Edition)
@@ -55,14 +60,14 @@ file_versions:
   concise:
     path: concise.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 3dc04873d3c1bfe4203975fa2b9dabb1ff97b4876fa4e178724b35b27ec05455
     line_count: 140
     primary_purpose: Complete specification for free tier with Phase 1 bootstrap tracking
   detailed:
     path: detailed.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb
     line_count: 359
     primary_purpose: Extended implementation guide with IDE embedding and Phase 1
@@ -70,14 +75,14 @@ file_versions:
   readme:
     path: README.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: e5e928b80b608c276adbf1cfd516f6c0b26e39c9dd653088751c1dde257f3f44
     line_count: 31
     primary_purpose: Quick reference and navigation
   phase1_checklist:
     path: ../PHASE_1_CAPABILITY_CHECKLIST.md
     version: 1.0.0
-    last_modified: '2026-10-13'
+    last_modified: '2026-11-11'
     content_hash: 09226064f965c871a36a9fd2c6208f798632ed9f858d09dc9c3452e6f07d9924
     line_count: 321
     primary_purpose: Absolute implementation tracker for Phase 1-4 essential capabilities
@@ -113,3 +118,32 @@ free_tier_phase1_coverage:
   local_token_reduction: ✅ INCLUDED (60-80%)
   cryptographic_ledger: ✅ INCLUDED (local sha256)
   cost_to_end_user: $0 (Free Forever)
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.068320Z'
+    content_hash: sha256:3dc04873d3c1bfe4203975fa2b9dabb1ff97b4876fa4e178724b35b27ec05455
+    lines: 140
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.068320Z'
+    content_hash: sha256:24b71fe3ad5ccb9f8f102778325dbb490eab6b54d37f58c25bad456044aa86fb
+    lines: 359
+  readme:
+    file: README.md
+    format: overview
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.068320Z'
+    content_hash: sha256:e5e928b80b608c276adbf1cfd516f6c0b26e39c9dd653088751c1dde257f3f44
+    lines: 31
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.068320Z'
+  sync_direction: concise_to_detailed
+  differences: []

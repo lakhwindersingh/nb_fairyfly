@@ -1,3 +1,8 @@
+plan:
+  id: play_3_enterprise_os
+  name: Enterprise Context Engineering OS & CI/CD Gatekeeper (Play 3)
+  category: l2
+  layer: l2
 schema_version: 3.0.0
 plan_id: play_3_enterprise_os
 plan_name: Enterprise Context Engineering OS & CI/CD Gatekeeper (Play 3)
@@ -38,14 +43,14 @@ file_versions:
   concise:
     path: concise.md
     version: 3.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-11-11'
     content_hash: 4cdfa095d173ee4c5e94cfffbeb36492a2313ea162eb0a163ff272de99f4d6f2
     line_count: 62
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 3.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-11-11'
     content_hash: 4759f20c789cbc034ba687e34b40ba2aefe1e48a27c780c9f9e37d10d509e460
     line_count: 1073
     primary_purpose: Extended implementation guide with commercial strategy, architecture,
@@ -53,7 +58,7 @@ file_versions:
   readme:
     path: README.md
     version: 3.0.0
-    last_modified: '2026-10-11'
+    last_modified: '2026-11-11'
     content_hash: bb03171c835ed27071c18a5bc506756e1d21a874a5258f133d92384a86c2f8ac
     line_count: 28
     primary_purpose: Quick reference and navigation
@@ -62,3 +67,32 @@ implementation_phases:
   phase_2: IDE Plugin Packaging (IntelliJ & VSCode)
   phase_3: Multi-Tenant Gateway & Observability Hub
   phase_4: Multi-Cloud Production Blueprints
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 3.0.0
+    last_updated: '2026-11-11T18:04:00.860618Z'
+    content_hash: sha256:4cdfa095d173ee4c5e94cfffbeb36492a2313ea162eb0a163ff272de99f4d6f2
+    lines: 62
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 3.0.0
+    last_updated: '2026-11-11T18:04:00.860618Z'
+    content_hash: sha256:4759f20c789cbc034ba687e34b40ba2aefe1e48a27c780c9f9e37d10d509e460
+    lines: 1073
+  readme:
+    file: README.md
+    format: overview
+    version: 3.0.0
+    last_updated: '2026-11-11T18:04:00.860618Z'
+    content_hash: sha256:bb03171c835ed27071c18a5bc506756e1d21a874a5258f133d92384a86c2f8ac
+    lines: 28
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:00.860618Z'
+  sync_direction: concise_to_detailed
+  differences: []

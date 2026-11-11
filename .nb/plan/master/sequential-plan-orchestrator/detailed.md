@@ -40,7 +40,7 @@ graph TD
   subgraph ExecutionRoadmap["4. Stratified Phased Plan Execution"]
     L1Layer["L1: Transmutative Reasoning<br/>(Latent Energy Descent & Net2Net)"]
     L2Layer["L2: Neural Foundation & NLP Toolchain<br/>(CLS Memory, Fisher Defense, 16 SIMD Tools)"]
-    L3Layer["L3: Production DSL, Ledger, GUI & IoT<br/>(GPU Surgery, Verifier, Embedded RTOS)"]
+    L3Layer["L3: Production DSL, Ledger & GUI<br/>(GPU Surgery, Verifier & Model Manager)"]
     L4Layer["L4: Poly-Morph, Cognitive Fusion & zk-SNARK<br/>(Poly-Morph ISA, S1/S2 Fusion, zk-Proof Ledger)"]
     L5Layer["L5: Swarm Consensus, Causal & Robotics<br/>(Swarm BFT, Causal SCM, ROS 2 Kinematics)"]
     TargetPlan["Target User-Requested Plan<br/>(Sealed Merkle DAG & Verified State)"]
@@ -565,18 +565,6 @@ steps:
       - "RP_L3_GUI"
     depends_on: ["step_plan_l3_production_verification"]
 
-  - step_id: "step_plan_l3_iot_embedded_firmware"
-    plan_id: "l3_iot_embedded_firmware"
-    plan_path: "l3/iot-embedded-firmware"
-    executor: "agent_embedded_specialist"
-    action: "implement_freertos_zephyr_ble_and_qemu_bridge"
-    inputs:
-      - "RP_L3_VERIFICATION"
-      - ".nb/plan/l3/iot-embedded-firmware/concise.md"
-    outputs:
-      - "workplace/src/l3/firmware/"
-      - "RP_L3_FIRMWARE"
-    depends_on: ["step_plan_l3_production_verification"]
 
   # =========================================================================
   # PHASE 4: L4 AUTOPOIETIC POLY-MORPHOGENESIS LAYER

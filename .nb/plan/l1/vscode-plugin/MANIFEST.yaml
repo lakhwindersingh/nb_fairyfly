@@ -1,3 +1,9 @@
+plan:
+  id: domain_vscode_plugin
+  name: Visual Studio Code Extension, Language Server Protocol & Percipience Control
+    Plane Space
+  category: l1
+  layer: l1
 schema_version: 3.0.0
 plan_id: domain_vscode_plugin
 plan_name: Visual Studio Code Extension, Language Server Protocol & Percipience Control
@@ -35,21 +41,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 2fbd41358615b6e4d0213aac5a601eb8c367ac7b1e9900c86a6ad692450eb411
     line_count: 92
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 69b11cea8b76979aa46fa24b5bdb30a65de53fb3215eb14e4fd51689797b8881
     line_count: 340
     primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: b0a8877f08e46135c4bfef9b921b9acd645292562d2d35c37b77c57db0ce4cd4
     line_count: 31
     primary_purpose: Quick reference and navigation
@@ -59,3 +65,32 @@ implementation_phases:
   phase_3: Language Server Implementation & CodeLens Providers
   phase_4: Webview Dashboard & Theme Synchronizer
   phase_5: VSIX Packaging & CI Verification
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.891883Z'
+    content_hash: sha256:2fbd41358615b6e4d0213aac5a601eb8c367ac7b1e9900c86a6ad692450eb411
+    lines: 92
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.891883Z'
+    content_hash: sha256:69b11cea8b76979aa46fa24b5bdb30a65de53fb3215eb14e4fd51689797b8881
+    lines: 340
+  readme:
+    file: README.md
+    format: overview
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.891883Z'
+    content_hash: sha256:b0a8877f08e46135c4bfef9b921b9acd645292562d2d35c37b77c57db0ce4cd4
+    lines: 31
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:00.891883Z'
+  sync_direction: concise_to_detailed
+  differences: []

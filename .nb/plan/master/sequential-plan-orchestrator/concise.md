@@ -34,7 +34,7 @@ graph TD
   subgraph Execution["3. Zero-Drift Pipeline Execution"]
     L1Exec["L1 Foundation<br/>(Transmutative Reasoning)"]
     L2Exec["L2 Self-Evolution<br/>(Neural Foundation & Toolchain)"]
-    L3Exec["L3 Production<br/>(DSL, Verification, Ledger, GUI, IoT)"]
+    L3Exec["L3 Production<br/>(DSL, Verification, Ledger, GUI)"]
     L4Exec["L4 Poly-Morphogenesis<br/>(Poly-Morph, S1/S2 Fusion, zk-SNARK)"]
     L5Exec["L5 Swarm & Embodiment<br/>(Swarm BFT, Causal SCM, Robotics)"]
     TargetPlan["Target Requested Plan<br/>(Sealed & Verified)"]

@@ -1,3 +1,8 @@
+plan:
+  id: master_plan_assessment
+  name: Percipience Master Plan Assessment Framework
+  category: master
+  layer: master
 schema_version: 3.0.0
 plan_id: master_plan_assessment
 plan_name: Percipience Master Plan Assessment Framework
@@ -36,21 +41,50 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 027c6800f1571f66605bed90ce9d8fb9412cf30f2db903969f17bd88b1114c8e
     line_count: 669
     primary_purpose: Concise documentation
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 8557aa88125ed55b69aef029c772b891fd72036cbdbaab0020f7a270ee24fa1d
     line_count: 1681
     primary_purpose: Detailed documentation
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 518e026b219e058d372e5025fec36a35dd38ddc6850a5218b9d9e0203e235778
     line_count: 39
     primary_purpose: Readme documentation
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: None
+    last_updated: '2026-11-11T18:04:01.085858Z'
+    content_hash: sha256:027c6800f1571f66605bed90ce9d8fb9412cf30f2db903969f17bd88b1114c8e
+    lines: 669
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: None
+    last_updated: '2026-11-11T18:04:01.085858Z'
+    content_hash: sha256:8557aa88125ed55b69aef029c772b891fd72036cbdbaab0020f7a270ee24fa1d
+    lines: 1681
+  readme:
+    file: README.md
+    format: overview
+    version: None
+    last_updated: '2026-11-11T18:04:01.085858Z'
+    content_hash: sha256:518e026b219e058d372e5025fec36a35dd38ddc6850a5218b9d9e0203e235778
+    lines: 39
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.085858Z'
+  sync_direction: concise_to_detailed
+  differences: []

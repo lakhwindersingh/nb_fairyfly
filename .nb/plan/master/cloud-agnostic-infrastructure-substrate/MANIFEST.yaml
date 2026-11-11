@@ -1,3 +1,9 @@
+plan:
+  id: master_cloud_agnostic_infrastructure_substrate
+  name: Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment Mesh
+    (OpenShift, GCP, AWS, Azure)
+  category: master
+  layer: master
 schema_version: 3.0.0
 plan_id: master_cloud_agnostic_infrastructure_substrate
 plan_name: Master Cloud-Agnostic Infrastructure Substrate & Multi-Cloud Deployment
@@ -41,21 +47,50 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: daf7ca5378c2cf71d3e0eee7a92d909de5f3853a48cb6f8b774108b6d506a4d9
     line_count: 200
     primary_purpose: Concise documentation
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 0e6c30f4ce4a626729c108957609b50d55792784c6688602c57d2213e26c2aaf
     line_count: 488
     primary_purpose: Detailed documentation
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 90e2c5b3d6080103bc795c2bb016feefb2b834cdd3de5f0f77c616177dc92656
     line_count: 122
     primary_purpose: Readme documentation
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: None
+    last_updated: '2026-11-11T18:04:01.053634Z'
+    content_hash: sha256:daf7ca5378c2cf71d3e0eee7a92d909de5f3853a48cb6f8b774108b6d506a4d9
+    lines: 200
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: None
+    last_updated: '2026-11-11T18:04:01.053634Z'
+    content_hash: sha256:0e6c30f4ce4a626729c108957609b50d55792784c6688602c57d2213e26c2aaf
+    lines: 488
+  readme:
+    file: README.md
+    format: overview
+    version: None
+    last_updated: '2026-11-11T18:04:01.053634Z'
+    content_hash: sha256:90e2c5b3d6080103bc795c2bb016feefb2b834cdd3de5f0f77c616177dc92656
+    lines: 122
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.053634Z'
+  sync_direction: concise_to_detailed
+  differences: []

@@ -1,6 +1,6 @@
 # Percipience AST-Compressed Project Context for Claude Code
 > **Notice to Claude Code**: All source files below are presented in AST-pruned skeleton format (function signatures, docstrings, type annotations, and structural DOM tags). Full internal implementation bodies have been stripped by Percipience to optimize token efficiency (~70% savings). If you need full function implementations to perform surgical refactors, inspect specific files or lines using your file viewing tools.
-> **FinOps Efficiency**: Raw Context: 907,534 tokens | Pruned Context: 432,353 tokens | Savings: 52.4%
+> **FinOps Efficiency**: Raw Context: 919,059 tokens | Pruned Context: 435,162 tokens | Savings: 52.7%
 
 ## Active Wire Contracts & Schemas
 ### Contract: billing_meter_contract.yaml
@@ -84,6 +84,98 @@ characteristics:
     properties: ["WRITE", "INDICATE"]
     max_payload_bytes: 512
 ```
+### Contract: canary_blending_spec.yaml
+```yaml
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "CanaryBlendingSpec"
+type: "object"
+required:
+  - strategy
+  - formula
+  - alpha_steps
+  - regression_threshold
+  - instant_snapback_enabled
+  - quarantine_on_failure
+  - quarantine_target
+  - shadow_eval_batch_size
+  - verification_metric
+properties:
+  strategy:
+    type: string
+    default: "linear_residual_interpolation"
+  formula:
+    type: string
+    default: "y_l = h_l + (1 - alpha_t) * F_old(h_l) + alpha_t * F_new(h_l)"
+  alpha_steps:
+    type: array
+    items:
+      type: number
+    default: [0.0, 0.25, 0.50, 0.75, 1.0]
+  regression_threshold:
+    type: number
+    default: 0.005
+  instant_snapback_enabled:
+    type: boolean
+    default: true
+  quarantine_on_failure:
+    type: boolean
+    default: true
+  quarantine_target:
+    type: string
+    default: "user/hitl/poisoning_quarantine.md"
+  shadow_eval_batch_size:
+    type: integer
+    default: 64
+  verification_metric:
+    type: string
+    default: "mean_squared_error"
+canary_blending:
+  strategy: "linear_residual_interpolation"
+  formula: "y_l = h_l + (1 - alpha_t) * F_old(h_l) + alpha_t * F_new(h_l)"
+  alpha_steps: [0.0, 0.25, 0.50, 0.75, 1.0]
+  regression_threshold: 0.005 # 0.5% max allowed validation regression
+  instant_snapback_enabled: true
+  quarantine_on_failure: true
+  quarantine_target: "user/hitl/poisoning_quarantine.md"
+  shadow_eval_batch_size: 64
+  verification_metric: "mean_squared_error"
+```
+### Contract: canary_cutover_spec.yaml
+```yaml
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "CanaryCutoverSpec"
+type: "object"
+required:
+  - alpha_schedule
+  - eval_batch_size
+  - regression_threshold_pct
+  - quarantine_on_regression
+  - auto_snapback_alpha
+properties:
+  alpha_schedule:
+    type: array
+    items:
+      type: number
+    default: [0.0, 0.25, 0.50, 0.75, 1.0]
+  eval_batch_size:
+    type: integer
+    default: 64
+  regression_threshold_pct:
+    type: number
+    default: 0.5
+  quarantine_on_regression:
+    type: boolean
+    default: true
+  auto_snapback_alpha:
+    type: number
+    default: 0.0
+canary_cutover_spec:
+  alpha_schedule: [0.0, 0.25, 0.50, 0.75, 1.0]
+  eval_batch_size: 64
+  regression_threshold_pct: 0.5
+  quarantine_on_regression: true
+  auto_snapback_alpha: 0.0
+```
 ### Contract: commercial_provisioning_contract.yaml
 ```yaml
 $schema: "http://json-schema.org/draft-07/schema#"
@@ -121,6 +213,38 @@ properties:
   timestamp:
     type: "string"
     format: "date-time"
+```
+### Contract: event_stream_spec.yaml
+```yaml
+title: "Percipience Cross-Module Event Stream"
+type: "object"
+required:
+  - asyncapi
+  - info
+  - channels
+asyncapi: 3.0.0
+info:
+  title: Percipience Cross-Module Event Stream
+  version: 2.0.0
+  description: Event stream contract for cross-module asynchronous pub/sub messaging.
+channels:
+  systemEvents:
+    address: events.system.v1
+    messages:
+      stateTransition:
+        summary: Module state transition event
+        payload:
+          type: object
+          properties:
+            event_id:
+              type: string
+            module_id:
+              type: string
+            transition_type:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
 ```
 ### Contract: lsp_protocol_contract.yaml
 ```yaml
@@ -372,6 +496,56 @@ performance_targets:
   max_memory_per_file_kb: 512
   min_token_reduction_ratio: 0.60
 ```
+### Contract: service_contract.yaml
+```yaml
+title: "Percipience Core Provider Service API"
+type: "object"
+required:
+  - openapi
+  - info
+  - paths
+openapi: 3.1.0
+info:
+  title: Percipience Core Provider Service API
+  version: 1.2.0
+  description: Canonical cross-module service contract for provider-consumer boundaries.
+paths:
+  /api/v1/health:
+    get:
+      summary: Health Check Endpoint
+      operationId: checkHealth
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  uptime_seconds:
+                    type: number
+                  version:
+                    type: string
+                    example: 1.2.0
+  /api/v1/telemetry:
+    post:
+      summary: Ingest Component Telemetry
+      operationId: ingestTelemetry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './common_schema.json#/definitions/TelemetryBatch'
+      responses:
+        '202':
+          description: Telemetry accepted for asynchronous processing
+        '400':
+          description: Invalid telemetry payload
+```
 ### Contract: terminal_agent_ast_contract.yaml
 ```yaml
 $schema: "http://json-schema.org/draft-07/schema#"
@@ -452,6 +626,93 @@ ledger_tracking:
   target_ledger: ".nb/context/ledger/token_savings_ledger.yaml"
   rev_share_pct: 15.0
 ```
+### Contract: architectural_footprint_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ArchitecturalFootprintSpec",
+  "type": "object",
+  "required": [
+    "max_ram_enclave_mb",
+    "max_hot_swap_latency_ms",
+    "supported_hardware_targets",
+    "max_layer_depth"
+  ],
+  "properties": {
+    "max_ram_enclave_mb": { "type": "number", "default": 512.0 },
+    "max_hot_swap_latency_ms": { "type": "number", "default": 2.0 },
+    "supported_hardware_targets": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "max_layer_depth": { "type": "integer", "default": 8 }
+  }
+}
+```
+### Contract: arena_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CompetitiveArenaSpec",
+  "type": "object",
+  "properties": {
+    "arena_name": { "type": "string" },
+    "joint_observation_dim": { "type": "integer", "minimum": 4 },
+    "agent_a_action_dim": { "type": "integer", "minimum": 1 },
+    "agent_b_action_dim": { "type": "integer", "minimum": 1 },
+    "latent_dim": { "type": "integer", "minimum": 8 },
+    "physics_coupling": { "type": "string", "enum": ["adversarial_tug_of_war", "pursuit_evasion", "coupled_pendulum_duel"] },
+    "max_steps_per_round": { "type": "integer", "minimum": 50 }
+  },
+  "required": [
+    "arena_name",
+    "joint_observation_dim",
+    "agent_a_action_dim",
+    "agent_b_action_dim",
+    "latent_dim",
+    "physics_coupling"
+  ]
+}
+```
+### Contract: assessor_reasoning_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AssessorReasoningContract",
+  "type": "object",
+  "required": [
+    "effective_rank_bottleneck_threshold",
+    "penalty_escalation_window",
+    "loss_weights"
+  ],
+  "properties": {
+    "effective_rank_bottleneck_threshold": {
+      "type": "number",
+      "minimum": 0.10,
+      "maximum": 0.90,
+      "default": 0.35,
+      "description": "Ratio erank(Z)/d_z below which representational bottleneck triggers Net2WiderNet."
+    },
+    "penalty_escalation_window": {
+      "type": "integer",
+      "minimum": 2,
+      "default": 5,
+      "description": "Rolling window size for evaluating continuous penalty escalation."
+    },
+    "loss_weights": {
+      "type": "object",
+      "properties": {
+        "task_loss": { "type": "number", "default": 1.0 },
+        "var_risk": { "type": "number", "default": 0.5 },
+        "probe_drift": { "type": "number", "default": 2.0 },
+        "spectral_excess": { "type": "number", "default": 1.5 },
+        "rank_collapse": { "type": "number", "default": 0.8 }
+      },
+      "required": ["task_loss", "var_risk", "probe_drift", "spectral_excess", "rank_collapse"]
+    }
+  }
+}
+```
 ### Contract: billing_webhook_contract.json
 ```yaml
 {
@@ -495,6 +756,381 @@ ledger_tracking:
     "signature": {
       "type": "string",
       "description": "HMAC-SHA256 signature generated using tenant webhook signing secret"
+    }
+  }
+}
+```
+### Contract: checkpoint_manifest_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CheckpointManifestSpec",
+  "type": "object",
+  "properties": {
+    "checkpoint_id": { "type": "string" },
+    "phase_name": { "type": "string" },
+    "model_type": { "type": "string", "enum": ["sm_resnet", "morphogenetic_moe", "competitive_arena"] },
+    "epoch_step": { "type": "integer", "minimum": 0 },
+    "sha256_hash": { "type": "string" },
+    "safetensors_file": { "type": "string" },
+    "architecture_metadata": { "type": "object" },
+    "metrics": { "type": "object" }
+  },
+  "required": [
+    "checkpoint_id",
+    "phase_name",
+    "model_type",
+    "sha256_hash",
+    "safetensors_file"
+  ]
+}
+```
+### Contract: common_schema.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Percipience Common DTO Schemas",
+  "type": "object",
+  "required": [
+    "definitions"
+  ],
+  "definitions": {
+    "TelemetryBatch": {
+      "type": "object",
+      "required": ["batch_id", "producer_id", "timestamp", "metrics"],
+      "properties": {
+        "batch_id": { "type": "string" },
+        "producer_id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "number" },
+              "unit": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+### Contract: contract_ast_optimization.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AstOptimizationContract",
+  "description": "Tree-Sitter AST skeletonization and token FinOps metering wire contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "language",
+    "uncompressed_tokens",
+    "pruned_tokens",
+    "reduction_percentage",
+    "preserve_public_signatures"
+  ],
+  "properties": {
+    "language": { "type": "string", "enum": ["rust", "python", "typescript", "javascript", "go", "markdown", "yaml", "json"] },
+    "uncompressed_tokens": { "type": "integer", "minimum": 0 },
+    "pruned_tokens": { "type": "integer", "minimum": 0 },
+    "reduction_percentage": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+    "preserve_public_signatures": { "type": "boolean", "const": true }
+  }
+}
+```
+### Contract: contract_autonomous_cicd_triad.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AutonomousCicdTriadContract",
+  "description": "Bounded self-sustaining, self-recovering, and self-improving CI/CD triad contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "max_healing_attempts",
+    "worktree_isolated",
+    "surgical_rollback_enabled",
+    "merkle_sealed"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "max_healing_attempts": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "worktree_isolated": { "type": "boolean", "const": true },
+    "surgical_rollback_enabled": { "type": "boolean", "const": true },
+    "merkle_sealed": { "type": "boolean", "const": true }
+  }
+}
+```
+### Contract: contract_domain_opcode_translation.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DomainOpcodeTranslationContract",
+  "description": "4-tier hierarchical domain opcode lowering contract (Quant-RISC / NLP-RISC -> Morph-RISC ISA) with zero-residual lowering proof.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "domain_tier",
+    "source_opcode",
+    "lowered_microcode_ops",
+    "max_dispatch_latency_ns",
+    "zero_residual_verified"
+  ],
+  "properties": {
+    "domain_tier": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "source_opcode": { "type": "string", "minLength": 1 },
+    "lowered_microcode_ops": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "max_dispatch_latency_ns": { "type": "number", "maximum": 15.0 },
+    "zero_residual_verified": { "type": "boolean", "const": true }
+  }
+}
+```
+### Contract: contract_merkle_ledger_schema.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MerkleLedgerSchemaContract",
+  "description": "Schema contract for SHA-256/Blake3 Merkle state chain blocks and verified recovery points.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "hash_version",
+    "block_id",
+    "prev_block_hash",
+    "merkle_root",
+    "git_sha",
+    "timestamp",
+    "current_block_hash",
+    "action"
+  ],
+  "properties": {
+    "hash_version": { "type": "integer", "const": 2 },
+    "block_id": { "type": ["integer", "string"] },
+    "block_type": { "type": "string" },
+    "prev_block_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "merkle_root": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "git_sha": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "minLength": 1 },
+    "current_block_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "block_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "recovery_point_id": { "type": ["string", "null"] },
+    "action": { "type": "string", "minLength": 1 }
+  }
+}
+```
+### Contract: contract_quad_space_boundary.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QuadSpaceBoundaryContract",
+  "description": "Enforces Quad-Space directory isolation across workplace/, user/, .nb/context/, and .nb/agentic/ with zero unauthorized symlink traversal.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "spaces",
+    "forbid_external_symlinks",
+    "enclave_hydration_only"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "spaces": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string",
+        "enum": ["workplace", "user", ".nb/context", ".nb/agentic", ".nb/plan"]
+      }
+    },
+    "forbid_external_symlinks": { "type": "boolean", "const": true },
+    "enclave_hydration_only": { "type": "boolean", "default": true }
+  }
+}
+```
+### Contract: contract_robotics_kinematics.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RoboticsKinematicsContract",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "cargo_crate",
+    "rust_stack",
+    "realtime_sla",
+    "safety_invariants",
+    "deployment_gate"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "default": "l5_robotics_kinematics"
+    },
+    "cargo_crate": {
+      "type": "string",
+      "default": "beehive-l5-robotics-kinematics"
+    },
+    "rust_stack": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["nalgebra", "rapier3d", "candle-core", "tokio", "arc-swap"]
+    },
+    "realtime_sla": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "control_loop_hz": { "type": "integer", "minimum": 1000, "maximum": 1000, "default": 1000 },
+        "max_jitter_us": { "type": "number", "minimum": 0, "maximum": 50.0, "default": 50.0 },
+        "fk_max_latency_us": { "type": "number", "minimum": 0, "maximum": 45.0, "default": 45.0 },
+        "ik_max_latency_us": { "type": "number", "minimum": 0, "maximum": 180.0, "default": 180.0 },
+        "impedance_max_latency_us": { "type": "number", "minimum": 0, "maximum": 75.0, "default": 75.0 }
+      },
+      "required": ["control_loop_hz", "max_jitter_us"]
+    },
+    "safety_invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lyapunov_dv_dt_max": { "type": "number", "maximum": 0.0, "default": 0.0 },
+        "zero_self_collision": { "type": "boolean", "const": true, "default": true },
+        "enforce_torque_clamp": { "type": "boolean", "const": true, "default": true }
+      },
+      "required": ["lyapunov_dv_dt_max", "zero_self_collision", "enforce_torque_clamp"]
+    },
+    "deployment_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "robot_model_id",
+            "firmware_version",
+            "safety_case_sha256",
+            "hardware_test_report_sha256",
+            "fault_injection_report_sha256",
+            "independent_safety_review"
+          ],
+          "properties": {
+            "robot_model_id": { "type": "string", "minLength": 1 },
+            "firmware_version": { "type": "string", "minLength": 1 },
+            "safety_case_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "hardware_test_report_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "fault_injection_report_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "independent_safety_review": { "type": "boolean", "const": true }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "enabled": { "const": true } }, "required": ["enabled"] },
+          "then": { "required": ["evidence"] }
+        }
+      ]
+    }
+  },
+  "$comment": "Schema validation checks evidence shape only. Keep deployment disabled until an independent verifier validates the referenced artifacts and hardware acceptance results."
+}
+```
+### Contract: contract_semantic_parity_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SemanticParitySpecContract",
+  "description": "6-vector composite semantic parity (S_SP) verification contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "composite_s_sp",
+    "classification",
+    "vector_scores",
+    "minimum_merge_threshold"
+  ],
+  "properties": {
+    "composite_s_sp": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "classification": {
+      "type": "string",
+      "enum": ["ALIGNED_MERGE_READY", "RECONCILIATION_REQUIRED", "CRITICAL_DRIFT_QUARANTINED"]
+    },
+    "minimum_merge_threshold": { "type": "number", "const": 0.95 },
+    "vector_scores": {
+      "type": "object",
+      "required": ["ast_symbols", "wire_contracts", "behavior_tests", "handover_integrity", "living_docs", "supply_chain"]
+    }
+  }
+}
+```
+### Contract: contract_wire_governance_schema.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WireGovernanceSchemaContract",
+  "description": "Cross-module wire contract backward-compatibility and SemVer gating schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "semver",
+    "format",
+    "backward_compatible"
+  ],
+  "properties": {
+    "contract_id": { "type": "string", "minLength": 1 },
+    "semver": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "format": { "type": "string", "enum": ["json_schema", "openapi_3_1", "asyncapi_3_0", "protobuf_v3"] },
+    "backward_compatible": { "type": "boolean", "const": true },
+    "breaking_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 0
+    }
+  }
+}
+```
+### Contract: contract_workflow_dag.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WorkflowDagContract",
+  "description": "Topological multi-agent workflow DAG and fail-closed prerequisite execution contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workflow_id",
+    "steps",
+    "max_swarm_depth",
+    "fail_closed_on_missing_executor"
+  ],
+  "properties": {
+    "workflow_id": { "type": "string", "minLength": 1 },
+    "max_swarm_depth": { "type": "integer", "minimum": 1, "maximum": 2 },
+    "fail_closed_on_missing_executor": { "type": "boolean", "const": true },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "depends_on"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "agent": { "type": "string" },
+          "depends_on": { "type": "array", "items": { "type": "string" } },
+          "output_artifacts": { "type": "array", "items": { "type": "string" } }
+        }
+      }
     }
   }
 }
@@ -588,6 +1224,165 @@ ledger_tracking:
   "additionalProperties": false
 }
 ```
+### Contract: data_pipeline_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataPipelineSpec",
+  "type": "object",
+  "required": [
+    "pipeline_id",
+    "stationarity_transform",
+    "normalization_method",
+    "clip_bounds",
+    "sliding_window_size"
+  ],
+  "properties": {
+    "pipeline_id": { "type": "string" },
+    "stationarity_transform": { "type": "string", "enum": ["log_returns", "differencing", "raw"] },
+    "normalization_method": { "type": "string", "enum": ["rolling_zscore", "minmax", "robust"] },
+    "clip_bounds": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "default": [-4.0, 4.0]
+    },
+    "sliding_window_size": { "type": "integer", "minimum": 1, "default": 8 }
+  }
+}
+```
+### Contract: dataset_stream_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DatasetStreamSpec",
+  "type": "object",
+  "properties": {
+    "dataset_name": { "type": "string" },
+    "domain": { "type": "string", "enum": ["market_finance", "physical_robotics", "industrial_iot", "multimodal_hybrid"] },
+    "observation_dim": { "type": "integer", "minimum": 2 },
+    "action_dim": { "type": "integer", "minimum": 1 },
+    "window_size": { "type": "integer", "minimum": 1 },
+    "sampling_rate_hz": { "type": "number", "minimum": 0.01 },
+    "streaming_speed_multiplier": { "type": "number", "minimum": 0.1 }
+  },
+  "required": [
+    "dataset_name",
+    "domain",
+    "observation_dim",
+    "action_dim",
+    "window_size"
+  ]
+}
+```
+### Contract: docs_manifest_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DocsManifestSpec",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "docs_directory",
+    "required_documents",
+    "mermaid_syntax_strict"
+  ],
+  "properties": {
+    "manifest_version": { "type": "string", "default": "2.0.0" },
+    "docs_directory": { "type": "string", "default": "workplace/docs" },
+    "mermaid_syntax_strict": { "type": "boolean", "default": true },
+    "required_documents": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 9
+    }
+  }
+}
+```
+### Contract: epistemic_attractor_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EpistemicAttractorSpec",
+  "type": "object",
+  "required": [
+    "step_size_eta",
+    "lambda_prior",
+    "lambda_smooth",
+    "initial_noise_sigma",
+    "noise_decay_gamma"
+  ],
+  "properties": {
+    "step_size_eta": { "type": "number", "default": 0.05 },
+    "lambda_prior": { "type": "number", "default": 0.01 },
+    "lambda_smooth": { "type": "number", "default": 0.05 },
+    "initial_noise_sigma": { "type": "number", "default": 0.05 },
+    "noise_decay_gamma": { "type": "number", "default": 0.85 }
+  }
+}
+```
+### Contract: epistemic_uncertainty_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EpistemicUncertaintySpec",
+  "type": "object",
+  "required": [
+    "uncertainty_dim",
+    "horizon_max",
+    "horizon_min",
+    "kappa_decay",
+    "variance_threshold_quarantine"
+  ],
+  "properties": {
+    "uncertainty_dim": { "type": "integer", "minimum": 1 },
+    "horizon_max": { "type": "integer", "default": 20 },
+    "horizon_min": { "type": "integer", "default": 3 },
+    "kappa_decay": { "type": "number", "default": 1.5 },
+    "variance_threshold_quarantine": { "type": "number", "default": 2.5 }
+  }
+}
+```
+### Contract: financial_model_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FinancialModelSpec",
+  "type": "object",
+  "required": [
+    "discount_rate",
+    "time_horizon_months",
+    "gpu_hourly_rates",
+    "token_volume_growth_monthly",
+    "capex_breakdown",
+    "opex_baseline_monthly"
+  ],
+  "properties": {
+    "discount_rate": { "type": "number", "default": 0.085 },
+    "time_horizon_months": { "type": "integer", "default": 36 },
+    "gpu_hourly_rates": {
+      "type": "object",
+      "properties": {
+        "local_m_series": { "type": "number", "default": 0.00 },
+        "nvidia_a10g": { "type": "number", "default": 1.85 },
+        "nvidia_h100": { "type": "number", "default": 3.90 }
+      }
+    },
+    "token_volume_growth_monthly": { "type": "number", "default": 0.10 },
+    "capex_breakdown": {
+      "type": "object",
+      "required": ["engineering_r_and_d", "infrastructure_setup", "base_checkpoint_training"],
+      "properties": {
+        "engineering_r_and_d": { "type": "number" },
+        "infrastructure_setup": { "type": "number" },
+        "base_checkpoint_training": { "type": "number" }
+      }
+    },
+    "opex_baseline_monthly": { "type": "number" }
+  }
+}
+```
 ### Contract: hierarchical_rule_contract.json
 ```yaml
 {
@@ -639,6 +1434,76 @@ ledger_tracking:
           "value": {}
         }
       }
+    }
+  }
+}
+```
+### Contract: inference_dsl_world_model_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InferenceDSLWorldModelContract",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "cargo_crate",
+    "target_hardware",
+    "entropy_gating",
+    "fisher_protection",
+    "quantization_bounds",
+    "sla_budgets"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "default": "domain_nlp_inference_dsl_layered_world_model"
+    },
+    "cargo_crate": {
+      "type": "string",
+      "default": "beehive-l3-nlp-inference-dsl"
+    },
+    "target_hardware": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["apple_silicon_m4_metal", "nvidia_cuda_sm90_cudarc"]
+    },
+    "entropy_gating": {
+      "type": "object",
+      "properties": {
+        "tau_entropy_nats": { "type": "number", "default": 1.4 },
+        "bypass_savings_ratio_min": { "type": "number", "default": 0.50 }
+      },
+      "required": ["tau_entropy_nats", "bypass_savings_ratio_min"]
+    },
+    "fisher_protection": {
+      "type": "object",
+      "properties": {
+        "veto_threshold": { "type": "number", "default": -0.20 },
+        "anchor_sample_count": { "type": "integer", "default": 5000 }
+      },
+      "required": ["veto_threshold", "anchor_sample_count"]
+    },
+    "quantization_bounds": {
+      "type": "object",
+      "properties": {
+        "max_functional_divergence_linf": { "type": "number", "default": 0.00012 },
+        "e4m3_max_range": { "type": "number", "default": 448.0 },
+        "tile_size": { "type": "integer", "default": 128 }
+      },
+      "required": ["max_functional_divergence_linf", "e4m3_max_range", "tile_size"]
+    },
+    "sla_budgets": {
+      "type": "object",
+      "properties": {
+        "morph_risc_total_surgery_us": { "type": "number", "default": 15.0 },
+        "rcu_descriptor_swap_ns": { "type": "number", "default": 150.0 },
+        "tile_scale_recalibration_us": { "type": "number", "default": 1.5 }
+      },
+      "required": [
+        "morph_risc_total_surgery_us",
+        "rcu_descriptor_swap_ns",
+        "tile_scale_recalibration_us"
+      ]
     }
   }
 }
@@ -708,6 +1573,362 @@ ledger_tracking:
   }
 }
 ```
+### Contract: jepa_weight_space_adapter_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JEPAWeightSpaceAdapterSpec",
+  "type": "object",
+  "required": [
+    "adapter_id",
+    "domain_type",
+    "latent_dim",
+    "synthesized_submodules",
+    "preservation_guarantees"
+  ],
+  "properties": {
+    "adapter_id": { "type": "string" },
+    "domain_type": {
+      "type": "string",
+      "enum": ["financial_lob", "crypto_coinmarketcap", "rssm_robotics", "transformer_discrete", "physics_engine", "industrial_prognostics"]
+    },
+    "latent_dim": { "type": "integer", "default": 256 },
+    "synthesized_submodules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["submodule_name", "shape", "parameter_count", "spectral_norm"],
+        "properties": {
+          "submodule_name": { "type": "string" },
+          "shape": { "type": "array", "items": { "type": "integer" } },
+          "parameter_count": { "type": "integer" },
+          "spectral_norm": { "type": "number" }
+        }
+      }
+    },
+    "preservation_guarantees": {
+      "type": "object",
+      "required": ["zero_shot_dynamics_error", "rollout_stability_steps"],
+      "properties": {
+        "zero_shot_dynamics_error": { "type": "number", "default": 0.08 },
+        "rollout_stability_steps": { "type": "integer", "default": 50 }
+      }
+    }
+  }
+}
+```
+### Contract: layer_expansion_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LayerExpansionSpec",
+  "type": "object",
+  "required": [
+    "max_layer_depth",
+    "cooldown_epochs_required",
+    "expansion_energy_threshold",
+    "identity_preservation_tolerance"
+  ],
+  "properties": {
+    "max_layer_depth": { "type": "integer", "default": 8 },
+    "cooldown_epochs_required": { "type": "integer", "default": 50 },
+    "expansion_energy_threshold": { "type": "number", "default": 0.35 },
+    "identity_preservation_tolerance": { "type": "number", "default": 1e-6 }
+  }
+}
+```
+### Contract: m4_prototype_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "M4PrototypeContract",
+  "type": "object",
+  "required": [
+    "target_hardware",
+    "prototype_dimensions",
+    "latency_thresholds",
+    "invariants",
+    "verification_tiers"
+  ],
+  "properties": {
+    "target_hardware": {
+      "type": "object",
+      "properties": {
+        "platform": { "type": "string", "default": "macOS Apple Silicon" },
+        "compute_device": { "type": "string", "enum": ["metal", "wgpu", "cpu"], "default": "metal" },
+        "rust_runtime": { "type": "string", "default": "candle-core + metal + arc-swap" },
+        "unified_memory_opt": { "type": "boolean", "default": true }
+      },
+      "required": ["platform", "compute_device"]
+    },
+    "prototype_dimensions": {
+      "type": "object",
+      "properties": {
+        "d_model": { "type": "integer", "default": 128 },
+        "n_heads": { "type": "integer", "default": 4 },
+        "d_head": { "type": "integer", "default": 32 },
+        "d_ffn_base": { "type": "integer", "default": 512 },
+        "d_ffn_widened": { "type": "integer", "default": 768 },
+        "n_layers_base": { "type": "integer", "default": 2 },
+        "n_layers_max": { "type": "integer", "default": 3 },
+        "vocab_size": { "type": "integer", "default": 1024 },
+        "context_length": { "type": "integer", "default": 64 },
+        "num_parallel_thoughts": { "type": "integer", "default": 2 },
+        "thought_length": { "type": "integer", "default": 4 },
+        "imagination_horizon": { "type": "integer", "default": 8 }
+      },
+      "required": ["d_model", "n_heads", "vocab_size", "context_length"]
+    },
+    "latency_thresholds": {
+      "type": "object",
+      "properties": {
+        "max_pointer_swap_latency_us": { "type": "number", "default": 500.0 },
+        "sla_max_splicing_latency_us": { "type": "number", "default": 1200.0 },
+        "max_test_suite_duration_sec": { "type": "number", "default": 30.0 }
+      },
+      "required": ["max_pointer_swap_latency_us", "max_test_suite_duration_sec"]
+    },
+    "invariants": {
+      "type": "object",
+      "properties": {
+        "net2deeper_max_drift": { "type": "number", "default": 1e-5 },
+        "net2wider_identity_diff": { "type": "number", "default": 1e-6 },
+        "fisher_conflict_veto_threshold": { "type": "number", "default": -0.20 },
+        "golden_ppl_drift_tolerance_pct": { "type": "number", "default": 0.50 }
+      },
+      "required": ["net2deeper_max_drift", "net2wider_identity_diff", "fisher_conflict_veto_threshold"]
+    },
+    "verification_tiers": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 5,
+      "default": 5
+    }
+  }
+}
+```
+### Contract: mathematical_audit_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MathematicalAuditSpec",
+  "type": "object",
+  "required": [
+    "spectral_radius_upper_bound",
+    "lyapunov_drift_required",
+    "banach_contraction_rho_max",
+    "max_frobenius_drift_ratio"
+  ],
+  "properties": {
+    "spectral_radius_upper_bound": { "type": "number", "default": 1.50 },
+    "lyapunov_drift_required": { "type": "boolean", "default": true },
+    "banach_contraction_rho_max": { "type": "number", "default": 0.95 },
+    "max_frobenius_drift_ratio": { "type": "number", "default": 0.10 }
+  }
+}
+```
+### Contract: memory_consolidation_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MemoryConsolidationContract",
+  "type": "object",
+  "required": [
+    "max_episodic_slots",
+    "adapter_rank",
+    "decay_lambda",
+    "rehearsal_threshold",
+    "saliency_threshold",
+    "eviction_saliency_floor"
+  ],
+  "properties": {
+    "max_episodic_slots": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 64,
+      "default": 8,
+      "description": "Maximum concurrent low-rank slots in volatile episodic buffer."
+    },
+    "adapter_rank": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 32,
+      "default": 4,
+      "description": "Rank r of low-rank factors U in R^{d_out x r}, V in R^{d_in x r}."
+    },
+    "decay_lambda": {
+      "type": "number",
+      "minimum": 0.001,
+      "maximum": 0.5,
+      "default": 0.05,
+      "description": "Exponential decay rate for unreinforced episodic memories."
+    },
+    "rehearsal_threshold": {
+      "type": "integer",
+      "minimum": 2,
+      "default": 5,
+      "description": "Minimum recall occurrences required before qualifying for structural consolidation."
+    },
+    "saliency_threshold": {
+      "type": "number",
+      "minimum": 1.0,
+      "default": 2.50,
+      "description": "Cumulative reward utility threshold required for consolidation."
+    },
+    "eviction_saliency_floor": {
+      "type": "number",
+      "minimum": 0.01,
+      "default": 0.10,
+      "description": "Saliency floor below which unreinforced noise slots are evicted."
+    }
+  }
+}
+```
+### Contract: mermaid_validation_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MermaidValidationContract",
+  "type": "object",
+  "required": [
+    "allowed_headers",
+    "strict_label_quoting",
+    "no_unquoted_braces"
+  ],
+  "properties": {
+    "allowed_headers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["graph", "sequenceDiagram", "timeline", "stateDiagram", "classDiagram", "erDiagram"]
+    },
+    "strict_label_quoting": { "type": "boolean", "default": true },
+    "no_unquoted_braces": { "type": "boolean", "default": true }
+  }
+}
+```
+### Contract: moe_expert_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MoEExpertSpec",
+  "type": "object",
+  "properties": {
+    "num_experts": { "type": "integer", "minimum": 2 },
+    "top_k": { "type": "integer", "minimum": 1 },
+    "input_dim": { "type": "integer", "minimum": 1 },
+    "hidden_dim": { "type": "integer", "minimum": 1 },
+    "output_dim": { "type": "integer", "minimum": 1 },
+    "load_balance_weight": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "activation": { "type": "string", "enum": ["relu", "gelu", "silu", "tanh"] }
+  },
+  "required": ["num_experts", "top_k", "input_dim", "hidden_dim", "output_dim", "load_balance_weight"]
+}
+```
+### Contract: morph_risc_isa_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MorphRiscISASpec",
+  "type": "object",
+  "required": [
+    "opcodes",
+    "max_bytecode_words",
+    "execution_latency_sla_us",
+    "register_count",
+    "stochastic_rounding"
+  ],
+  "properties": {
+    "opcodes": {
+      "type": "object",
+      "properties": {
+        "GATE_TEST": { "type": "string", "default": "0x01" },
+        "FISHER_VETO": { "type": "string", "default": "0x02" },
+        "SLAB_CLONE": { "type": "string", "default": "0x03" },
+        "WEIGHT_SCALE": { "type": "string", "default": "0x04" },
+        "ORTHO_INJECT": { "type": "string", "default": "0x05" },
+        "IDENTITY_INIT": { "type": "string", "default": "0x06" },
+        "KV_PAGE_ATTACH": { "type": "string", "default": "0x07" },
+        "DESC_SWAP": { "type": "string", "default": "0x08" }
+      },
+      "required": [
+        "GATE_TEST",
+        "FISHER_VETO",
+        "SLAB_CLONE",
+        "WEIGHT_SCALE",
+        "ORTHO_INJECT",
+        "IDENTITY_INIT",
+        "KV_PAGE_ATTACH",
+        "DESC_SWAP"
+      ]
+    },
+    "max_bytecode_words": { "type": "integer", "default": 64 },
+    "execution_latency_sla_us": { "type": "number", "default": 15.0 },
+    "register_count": { "type": "integer", "default": 16 },
+    "stochastic_rounding": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "prng_type": { "type": "string", "default": "Philox4x32" },
+        "saturation_clamp": { "type": "number", "default": 448.0 }
+      },
+      "required": ["enabled", "prng_type", "saturation_clamp"]
+    }
+  }
+}
+```
+### Contract: morphogenetic_bootstrapping_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MorphogeneticBootstrappingContract",
+  "type": "object",
+  "required": [
+    "bootstrapper_id",
+    "target_world_model_tier",
+    "weight_space_programmer_ref",
+    "bootstrapping_stages",
+    "convergence_criteria"
+  ],
+  "properties": {
+    "bootstrapper_id": {
+      "type": "string",
+      "default": "bootstrapper_jepa_wsp_v1"
+    },
+    "target_world_model_tier": {
+      "type": "string",
+      "enum": ["small_12m", "medium_250m", "large_1_3b"],
+      "default": "medium_250m"
+    },
+    "weight_space_programmer_ref": {
+      "type": "string",
+      "default": "l2_weight_space_programmer"
+    },
+    "bootstrapping_stages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "encoder_projection_synthesis",
+          "target_ema_initialization",
+          "mmoe_predictor_expert_spawning",
+          "rd_gate_spectral_calibration",
+          "domain_adapter_weight_compilation",
+          "rollout_budget_verification"
+        ]
+      }
+    },
+    "convergence_criteria": {
+      "type": "object",
+      "required": ["max_dynamics_loss", "min_halting_entropy", "max_forward_verification_rollouts"],
+      "properties": {
+        "max_dynamics_loss": { "type": "number", "default": 0.05 },
+        "min_halting_entropy": { "type": "number", "default": 0.80 },
+        "max_forward_verification_rollouts": { "type": "integer", "default": 100 }
+      }
+    }
+  }
+}
+```
 ### Contract: mtls_provisioning_contract.json
 ```yaml
 {
@@ -731,6 +1952,253 @@ ledger_tracking:
     "device_signature": {
       "type": "string",
       "description": "ECDSA signature over nonce using factory private key"
+    }
+  }
+}
+```
+### Contract: multimodal_event_contract.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MultimodalEventContract",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string" },
+    "timestamp": { "type": "number" },
+    "regime_id": { "type": "integer" },
+    "continuous_features": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "discrete_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "action_payload": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "reward_signal": { "type": "number" }
+  },
+  "required": [
+    "event_id",
+    "timestamp",
+    "regime_id",
+    "continuous_features"
+  ]
+}
+```
+### Contract: net2wider_expansion_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Net2WiderExpansionSpec",
+  "type": "object",
+  "required": [
+    "min_width",
+    "max_width",
+    "default_growth_factor",
+    "symmetry_breaking_noise_std",
+    "identity_preservation_tolerance"
+  ],
+  "properties": {
+    "min_width": {
+      "type": "integer",
+      "default": 16
+    },
+    "max_width": {
+      "type": "integer",
+      "default": 256
+    },
+    "default_growth_factor": {
+      "type": "number",
+      "default": 1.25
+    },
+    "symmetry_breaking_noise_std": {
+      "type": "number",
+      "default": 1e-5
+    },
+    "identity_preservation_tolerance": {
+      "type": "number",
+      "default": 1e-5
+    }
+  }
+}
+```
+### Contract: nlp_world_model_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NLPWorldModelSpec",
+  "description": "4-Layer Hierarchical NLP World Model Specification for M4 Prototyping",
+  "type": "object",
+  "required": [
+    "layer1_linguistic",
+    "layer2_deliberative",
+    "layer3_morphogenetic",
+    "layer4_synaptic",
+    "mpc_coordinator"
+  ],
+  "properties": {
+    "layer1_linguistic": {
+      "type": "object",
+      "required": ["rollout_horizon", "vocab_size", "default_temperature"],
+      "properties": {
+        "rollout_horizon": { "type": "integer", "default": 8, "minimum": 1, "maximum": 32 },
+        "vocab_size": { "type": "integer", "default": 1024 },
+        "default_temperature": { "type": "number", "default": 1.0 }
+      }
+    },
+    "layer2_deliberative": {
+      "type": "object",
+      "required": ["d_model", "thought_length", "num_parallel_thoughts", "langevin_steps", "langevin_lr"],
+      "properties": {
+        "d_model": { "type": "integer", "default": 128 },
+        "thought_length": { "type": "integer", "default": 4 },
+        "num_parallel_thoughts": { "type": "integer", "default": 2 },
+        "langevin_steps": { "type": "integer", "default": 3 },
+        "langevin_lr": { "type": "number", "default": 0.01 }
+      }
+    },
+    "layer3_morphogenetic": {
+      "type": "object",
+      "required": ["num_actions", "conflict_veto_threshold", "max_degradation_ppl_delta"],
+      "properties": {
+        "num_actions": { "type": "integer", "default": 7 },
+        "conflict_veto_threshold": { "type": "number", "default": -0.20 },
+        "max_degradation_ppl_delta": { "type": "number", "default": 0.05 }
+      }
+    },
+    "layer4_synaptic": {
+      "type": "object",
+      "required": ["lora_rank", "decay_lambda", "critical_retention", "consolidation_threshold"],
+      "properties": {
+        "lora_rank": { "type": "integer", "default": 4 },
+        "decay_lambda": { "type": "number", "default": 0.05 },
+        "critical_retention": { "type": "number", "default": 0.60 },
+        "consolidation_threshold": { "type": "integer", "default": 5 }
+      }
+    },
+    "mpc_coordinator": {
+      "type": "object",
+      "required": ["coordination_cycle", "action_choices"],
+      "properties": {
+        "coordination_cycle": { "type": "string", "enum": ["synchronous_per_token", "asynchronous_lookahead"] },
+        "action_choices": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["EMIT_TOKEN", "TRIGGER_SURGERY"]
+        }
+      }
+    }
+  }
+}
+```
+### Contract: operational_benefit_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OperationalBenefitSpec",
+  "type": "object",
+  "required": [
+    "target_verticals",
+    "tangible_benefits",
+    "intangible_benefits",
+    "stage_gates",
+    "kpi_milestones"
+  ],
+  "properties": {
+    "target_verticals": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tangible_benefits": {
+      "type": "object",
+      "properties": {
+        "compute_reduction_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "uptime_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "storage_reduction_pct": { "type": "number", "minimum": 0.0, "maximum": 100.0 }
+      }
+    },
+    "intangible_benefits": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stage_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase", "name", "duration_weeks", "exit_criteria"],
+        "properties": {
+          "phase": { "type": "integer" },
+          "name": { "type": "string" },
+          "duration_weeks": { "type": "integer" },
+          "exit_criteria": { "type": "string" }
+        }
+      }
+    },
+    "kpi_milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kpi_name", "target_value", "measurement_unit"],
+        "properties": {
+          "kpi_name": { "type": "string" },
+          "target_value": { "type": "number" },
+          "measurement_unit": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+```
+### Contract: options_greeks_surface_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OptionsGreeksSurfaceSpec",
+  "description": "Schema specification for analytical American/European options pricing, Halley IV inversion, and higher-order Greeks surfaces",
+  "type": "object",
+  "required": [
+    "american_pricing_engine",
+    "iv_solver_algorithm",
+    "iv_convergence_tolerance",
+    "max_iv_iterations",
+    "computed_greeks"
+  ],
+  "properties": {
+    "american_pricing_engine": {
+      "type": "string",
+      "enum": ["bjerksund_stensland_2002", "barone_adesi_whaley"],
+      "default": "bjerksund_stensland_2002"
+    },
+    "iv_solver_algorithm": {
+      "type": "string",
+      "enum": ["halley_high_order", "newton_raphson", "brent"],
+      "default": "halley_high_order"
+    },
+    "iv_convergence_tolerance": {
+      "type": "number",
+      "default": 1e-8
+    },
+    "max_iv_iterations": {
+      "type": "integer",
+      "default": 5
+    },
+    "computed_greeks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [
+        "delta",
+        "gamma",
+        "theta",
+        "vega",
+        "rho",
+        "vanna",
+        "volga",
+        "charm",
+        "speed"
+      ]
     }
   }
 }
@@ -831,6 +2299,319 @@ ledger_tracking:
   }
 }
 ```
+### Contract: pathway_protection_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PathwayProtectionSpec",
+  "type": "object",
+  "required": [
+    "fisher_threshold_percentile",
+    "gradient_conflict_threshold",
+    "min_anchor_samples",
+    "protection_ratio_congestion_cap"
+  ],
+  "properties": {
+    "fisher_threshold_percentile": {
+      "type": "number",
+      "minimum": 50.0,
+      "maximum": 99.0,
+      "default": 75.0,
+      "description": "Quantile threshold above which parameters are marked protected in m_protect."
+    },
+    "gradient_conflict_threshold": {
+      "type": "number",
+      "minimum": -1.0,
+      "maximum": 0.0,
+      "default": -0.20,
+      "description": "Cosine similarity floor below which gradient conflict vetoes in-place mutation."
+    },
+    "min_anchor_samples": {
+      "type": "integer",
+      "minimum": 4,
+      "default": 16,
+      "description": "Minimum anchor samples required to evaluate empirical Fisher Information."
+    },
+    "protection_ratio_congestion_cap": {
+      "type": "number",
+      "minimum": 0.50,
+      "maximum": 0.95,
+      "default": 0.85,
+      "description": "Upper bound of protected parameters before capacity congestion requires expansion."
+    }
+  }
+}
+```
+### Contract: plan_handover_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanHandoverContract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "plan_id",
+    "status",
+    "manifest_sha256",
+    "specification_sha256",
+    "prerequisite_handover_hashes",
+    "artifacts",
+    "recovery_point_id",
+    "handover_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "plan_id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "const": "SUCCESS" },
+    "manifest_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "specification_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "prerequisite_handover_hashes": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+    },
+    "artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+    },
+    "recovery_point_id": { "type": "string", "minLength": 1 },
+    "handover_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}
+```
+### Contract: plan_viability_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanViabilityContract",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "target_plan_path",
+    "overall_viability_score",
+    "viability_status",
+    "dimension_scores",
+    "hard_gate_results",
+    "financial_summary"
+  ],
+  "properties": {
+    "plan_id": { "type": "string" },
+    "target_plan_path": { "type": "string" },
+    "overall_viability_score": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+    "viability_status": { "type": "string", "enum": ["CERTIFIED_VIABLE", "CONDITIONALLY_VIABLE", "UNVIABLE_QUARANTINED"] },
+    "dimension_scores": {
+      "type": "object",
+      "required": ["logical", "mathematical", "architectural", "monetary", "strategic", "operational"],
+      "properties": {
+        "logical": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "mathematical": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "architectural": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "monetary": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "strategic": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "operational": { "type": "number", "minimum": 0.0, "maximum": 100.0 }
+      }
+    },
+    "hard_gate_results": {
+      "type": "object",
+      "required": ["spectral_safety", "sat_consistency", "rollback_enclosure", "unit_economic_feasibility"],
+      "properties": {
+        "spectral_safety": { "type": "boolean" },
+        "sat_consistency": { "type": "boolean" },
+        "rollback_enclosure": { "type": "boolean" },
+        "unit_economic_feasibility": { "type": "boolean" }
+      }
+    },
+    "financial_summary": {
+      "type": "object",
+      "required": ["npv_usd", "irr_percent", "roi_percent", "payback_months", "tco_3yr_usd"],
+      "properties": {
+        "npv_usd": { "type": "number" },
+        "irr_percent": { "type": "number" },
+        "roi_percent": { "type": "number" },
+        "payback_months": { "type": "number" },
+        "tco_3yr_usd": { "type": "number" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "viability_status": { "const": "CERTIFIED_VIABLE" }
+        },
+        "required": ["viability_status"]
+      },
+      "then": {
+        "properties": {
+          "hard_gate_results": {
+            "properties": {
+              "spectral_safety": { "const": true },
+              "sat_consistency": { "const": true },
+              "rollback_enclosure": { "const": true },
+              "unit_economic_feasibility": { "const": true }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+### Contract: pre_transmutation_simulation_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PreTransmutationSimulationSpec",
+  "description": "Schema specification for the two-tier pre-transmutation counterfactual rollout gate and cryptographic permit token",
+  "type": "object",
+  "required": [
+    "two_tier_cascade",
+    "glrt_significance_alpha",
+    "counterfactual_steps",
+    "max_simulated_var99_drawdown",
+    "cryptographic_permit_token"
+  ],
+  "properties": {
+    "two_tier_cascade": { "type": "boolean", "default": true },
+    "glrt_significance_alpha": { "type": "number", "default": 0.001 },
+    "counterfactual_steps": { "type": "integer", "default": 5 },
+    "impact_model": { "type": "string", "default": "almgren_chriss_sqrt" },
+    "max_simulated_var99_drawdown": { "type": "number", "default": 0.15 },
+    "cryptographic_permit_token": {
+      "type": "object",
+      "properties": {
+        "hash_algorithm": { "type": "string", "default": "sha256" },
+        "token_ttl_ms": { "type": "number", "default": 25.0 }
+      },
+      "required": ["hash_algorithm", "token_ttl_ms"]
+    }
+  }
+}
+```
+### Contract: probe_continuity_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProbeContinuitySpec",
+  "type": "object",
+  "required": [
+    "probe_sample_size",
+    "max_allowed_divergence",
+    "cooldown_epochs_required"
+  ],
+  "properties": {
+    "probe_sample_size": { "type": "integer", "default": 1000 },
+    "max_allowed_divergence": { "type": "number", "minimum": 0.0, "maximum": 0.005, "default": 0.005 },
+    "cooldown_epochs_required": { "type": "integer", "default": 50 }
+  }
+}
+```
+### Contract: quant_risc_isa_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QuantRiscISASpec",
+  "description": "Schema specification for the 16-opcode Quant-RISC mathematical microcode execution engine",
+  "type": "object",
+  "required": [
+    "opcodes",
+    "max_bytecode_words",
+    "instruction_width_bits",
+    "execution_latency_sla_ns"
+  ],
+  "properties": {
+    "opcodes": {
+      "type": "object",
+      "properties": {
+        "CHECK_OHLC_GEOM": { "type": "string", "default": "0x10" },
+        "CHECK_SPREAD_POS": { "type": "string", "default": "0x11" },
+        "CHECK_SPLIT_ANOM": { "type": "string", "default": "0x12" },
+        "CHECK_PARITY_ARB": { "type": "string", "default": "0x13" },
+        "CHECK_CONVEXITY": { "type": "string", "default": "0x14" },
+        "CALC_EMA_ROLL": { "type": "string", "default": "0x20" },
+        "CALC_RSI_WILDER": { "type": "string", "default": "0x21" },
+        "CALC_BOLLINGER": { "type": "string", "default": "0x22" },
+        "CALC_VWAP_ACCUM": { "type": "string", "default": "0x23" },
+        "CALC_GARMAN_KLASS": { "type": "string", "default": "0x24" },
+        "BSM_PRICE_GREEKS": { "type": "string", "default": "0x30" },
+        "SOLVE_IMPLIED_VOL": { "type": "string", "default": "0x31" },
+        "AMERICAN_APPROX": { "type": "string", "default": "0x32" },
+        "SIM_COUNTERFACT": { "type": "string", "default": "0x40" },
+        "REGIME_HYP_TEST": { "type": "string", "default": "0x41" },
+        "TRANSMUTE_VETO": { "type": "string", "default": "0x42" }
+      },
+      "required": [
+        "CHECK_OHLC_GEOM",
+        "CHECK_SPREAD_POS",
+        "CHECK_SPLIT_ANOM",
+        "CHECK_PARITY_ARB",
+        "CHECK_CONVEXITY",
+        "CALC_EMA_ROLL",
+        "CALC_RSI_WILDER",
+        "CALC_BOLLINGER",
+        "CALC_VWAP_ACCUM",
+        "CALC_GARMAN_KLASS",
+        "BSM_PRICE_GREEKS",
+        "SOLVE_IMPLIED_VOL",
+        "AMERICAN_APPROX",
+        "SIM_COUNTERFACT",
+        "REGIME_HYP_TEST",
+        "TRANSMUTE_VETO"
+      ]
+    },
+    "max_bytecode_words": { "type": "integer", "default": 128 },
+    "instruction_width_bits": { "type": "integer", "default": 32 },
+    "execution_latency_sla_ns": { "type": "number", "default": 5000.0 }
+  }
+}
+```
+### Contract: range_options_pricing_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RangeOptionsPricingSpec",
+  "type": "object",
+  "required": [
+    "supported_horizons",
+    "spot_range_resolution",
+    "volatility_model",
+    "american_pricing_enabled",
+    "max_latency_ms"
+  ],
+  "properties": {
+    "supported_horizons": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["3m", "6m", "12m", "24m"]
+    },
+    "spot_range_resolution": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 500,
+      "default": 50
+    },
+    "volatility_model": {
+      "type": "string",
+      "enum": ["svi_arbitrage_free", "sabr_hagan", "black_scholes_flat"],
+      "default": "svi_arbitrage_free"
+    },
+    "american_pricing_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "max_latency_ms": {
+      "type": "number",
+      "default": 15.0
+    },
+    "target_deltas": {
+      "type": "array",
+      "items": { "type": "number" },
+      "default": [0.25, 0.30, 0.50, 0.70, 0.75]
+    }
+  }
+}
+```
 ### Contract: rbac_permission_matrix.json
 ```yaml
 {
@@ -868,6 +2649,75 @@ ledger_tracking:
   }
 }
 ```
+### Contract: reasoning_loop_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReasoningLoopContract",
+  "type": "object",
+  "required": [
+    "latent_dim",
+    "max_deliberation_steps",
+    "min_deliberation_steps",
+    "halting_epsilon",
+    "energy_halting_tau",
+    "energy_threshold_expansion"
+  ],
+  "properties": {
+    "latent_dim": { "type": "integer", "minimum": 8, "default": 32 },
+    "max_deliberation_steps": { "type": "integer", "minimum": 1, "maximum": 50, "default": 15 },
+    "min_deliberation_steps": { "type": "integer", "minimum": 1, "default": 1 },
+    "halting_epsilon": { "type": "number", "minimum": 1e-6, "default": 1e-4 },
+    "energy_halting_tau": { "type": "number", "minimum": 1e-6, "default": 1e-3 },
+    "energy_threshold_expansion": { "type": "number", "default": 0.35 }
+  }
+}
+```
+### Contract: residual_block_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ResidualBlockSpec",
+  "type": "object",
+  "properties": {
+    "block_id": { "type": "string" },
+    "input_dim": { "type": "integer", "minimum": 1 },
+    "hidden_dim": { "type": "integer", "minimum": 1 },
+    "output_dim": { "type": "integer", "minimum": 1 },
+    "activation": { "type": "string", "enum": ["relu", "gelu", "silu", "leaky_relu"] },
+    "use_layer_norm": { "type": "boolean" },
+    "identity_bypass": { "type": "boolean", "const": true },
+    "state": { "type": "string", "enum": ["Active", "Shadow", "Canary", "Retired", "Quarantined"] },
+    "spectral_norm_limit": { "type": "number", "maximum": 1.50 }
+  },
+  "required": ["block_id", "input_dim", "hidden_dim", "output_dim", "identity_bypass", "state"]
+}
+```
+### Contract: residual_injection_contract.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ResidualInjectionContract",
+  "type": "object",
+  "properties": {
+    "target_block_index": { "type": "integer", "minimum": 0 },
+    "parameter_signatures": {
+      "type": "object",
+      "properties": {
+        "fc1.weight": { "type": "array", "items": { "type": "integer" } },
+        "fc1.bias": { "type": "array", "items": { "type": "integer" } },
+        "fc2.weight": { "type": "array", "items": { "type": "integer" } },
+        "fc2.bias": { "type": "array", "items": { "type": "integer" } }
+      },
+      "required": ["fc1.weight", "fc1.bias", "fc2.weight", "fc2.bias"]
+    },
+    "dtype": { "type": "string", "enum": ["float32", "float64", "bfloat16"] },
+    "atomic_injection": { "type": "boolean", "const": true },
+    "spectral_audit_passed": { "type": "boolean", "const": true }
+  },
+  "required": ["target_block_index", "parameter_signatures", "atomic_injection", "spectral_audit_passed"]
+}
+```
 ### Contract: sandbox_permission_contract.json
 ```yaml
 {
@@ -900,6 +2750,30 @@ ledger_tracking:
         "task_id": { "type": "string" }
       }
     }
+  }
+}
+```
+### Contract: sanity_oracle_verification_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SanityOracleVerificationSpec",
+  "description": "Schema specification for the Section 2.2 5-stage mathematical data quality and sanity oracle",
+  "type": "object",
+  "required": [
+    "geometric_ohlc_check",
+    "split_anomaly_ratio_threshold",
+    "put_call_parity_tolerance",
+    "quarantine_buffer_size",
+    "audit_receipt_logging"
+  ],
+  "properties": {
+    "geometric_ohlc_check": { "type": "boolean", "default": true },
+    "split_anomaly_ratio_threshold": { "type": "number", "default": 0.02 },
+    "put_call_parity_tolerance": { "type": "number", "default": 0.05 },
+    "quarantine_buffer_size": { "type": "integer", "default": 4096 },
+    "audit_receipt_logging": { "type": "boolean", "default": true },
+    "max_quarantine_rate_bps": { "type": "number", "default": 50.0 }
   }
 }
 ```
@@ -1121,6 +2995,195 @@ ledger_tracking:
   }
 }
 ```
+### Contract: snapshot_persistence_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SnapshotPersistenceSpec",
+  "description": "Hardware-compliant crash-consistent persistence, WAL journaling, active-slice snapshotting, and incremental training resumption specification for GPU-native Morph-RISC layered world model.",
+  "type": "object",
+  "required": [
+    "checkpoint_format",
+    "active_slice_serialization",
+    "atomic_double_buffering",
+    "wal_journaling",
+    "recovery_sla_ms",
+    "emergency_flush_budget_ms"
+  ],
+  "properties": {
+    "checkpoint_format": {
+      "type": "string",
+      "enum": ["mrisc_compact", "safetensors_active", "raw_binary_mapped"],
+      "default": "mrisc_compact"
+    },
+    "active_slice_serialization": {
+      "type": "object",
+      "required": [
+        "omit_headroom_padding",
+        "include_adamw_moments",
+        "include_calibration_tile_scales",
+        "include_uniform_descriptor"
+      ],
+      "properties": {
+        "omit_headroom_padding": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, omits static virtual slab headroom padding to shrink snapshot I/O footprint by up to 75%."
+        },
+        "include_adamw_moments": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, serializes AdamW first/second moment slices matching active dimensions for seamless incremental training resumption."
+        },
+        "include_calibration_tile_scales": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, serializes 128x128 tile Max-Abs quantization scaling factors."
+        },
+        "include_uniform_descriptor": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, serializes active LayerDescriptor state (active_dim, active_layers, max_stride, epoch_id)."
+        }
+      }
+    },
+    "atomic_double_buffering": {
+      "type": "object",
+      "required": ["staging_extension", "committed_extension", "atomic_rename"],
+      "properties": {
+        "staging_extension": { "type": "string", "default": ".mrisc.tmp" },
+        "committed_extension": { "type": "string", "default": ".mrisc" },
+        "atomic_rename": { "type": "boolean", "default": true }
+      }
+    },
+    "wal_journaling": {
+      "type": "object",
+      "required": ["enabled", "wal_file_path", "sync_on_write"],
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "wal_file_path": { "type": "string", "default": ".nb/context/ledger/morph_wal.journal" },
+        "sync_on_write": {
+          "type": "boolean",
+          "default": true,
+          "description": "Force fsync on every microcode entry before in-GPU memory mutation executes."
+        }
+      }
+    },
+    "recovery_sla_ms": {
+      "type": "number",
+      "default": 50.0,
+      "description": "Maximum allowed duration in milliseconds to deserialize active slices into static slabs and resume execution without graph re-compilation."
+    },
+    "emergency_flush_budget_ms": {
+      "type": "number",
+      "default": 500.0,
+      "description": "Maximum allowed duration in milliseconds to execute emergency flush upon receiving SIGTERM or SIGINT."
+    }
+  }
+}
+```
+### Contract: static_slab_memory_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StaticSlabMemorySpec",
+  "type": "object",
+  "required": [
+    "base_d_ffn",
+    "max_headroom_d_ffn",
+    "base_layers",
+    "max_headroom_layers",
+    "alignment_bytes",
+    "rcu_double_buffering",
+    "per_sequence_stride_predication"
+  ],
+  "properties": {
+    "base_d_ffn": { "type": "integer", "default": 512 },
+    "max_headroom_d_ffn": { "type": "integer", "default": 2048 },
+    "base_layers": { "type": "integer", "default": 4 },
+    "max_headroom_layers": { "type": "integer", "default": 48 },
+    "alignment_bytes": { "type": "integer", "default": 256 },
+    "rcu_double_buffering": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "descriptor_swap_latency_max_ns": { "type": "number", "default": 150.0 },
+        "page_chunk_size_bytes": { "type": "integer", "default": 2097152 }
+      },
+      "required": ["enabled", "descriptor_swap_latency_max_ns", "page_chunk_size_bytes"]
+    },
+    "per_sequence_stride_predication": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "max_batch_size": { "type": "integer", "default": 256 },
+        "atomic_drain_barrier": { "type": "boolean", "default": true }
+      },
+      "required": ["enabled", "max_batch_size", "atomic_drain_barrier"]
+    }
+  }
+}
+```
+### Contract: symplectic_dynamics_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SymplecticDynamicsSpec",
+  "type": "object",
+  "required": [
+    "state_dim",
+    "coord_dim",
+    "momentum_dim",
+    "dt",
+    "energy_drift_tolerance",
+    "volume_preservation"
+  ],
+  "properties": {
+    "state_dim": { "type": "integer", "minimum": 2 },
+    "coord_dim": { "type": "integer", "minimum": 1 },
+    "momentum_dim": { "type": "integer", "minimum": 1 },
+    "dt": { "type": "number", "default": 0.05 },
+    "energy_drift_tolerance": { "type": "number", "default": 0.05 },
+    "volume_preservation": { "type": "boolean", "default": true }
+  }
+}
+```
+### Contract: transmutation_tools_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TransmutationToolsSpec",
+  "type": "object",
+  "required": [
+    "toolbox_directory",
+    "cargo_crate",
+    "transmutation_privilege",
+    "rank_limit",
+    "trust_region_delta",
+    "spectral_limits"
+  ],
+  "properties": {
+    "toolbox_directory": { "type": "string", "default": "workplace/crates/beehive-l1-transmutative-reasoning/src/transmutation_toolbox" },
+    "cargo_crate": { "type": "string", "default": "beehive-l1-transmutative-reasoning" },
+    "rust_stack": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["candle-core", "candle-nn", "burn", "faer", "arc-swap"]
+    },
+    "transmutation_privilege": { "type": "boolean", "default": false },
+    "rank_limit": { "type": "integer", "default": 4 },
+    "trust_region_delta": { "type": "number", "default": 0.10 },
+    "spectral_limits": {
+      "type": "object",
+      "properties": {
+        "recurrent_layer": { "type": "number", "default": 1.20 },
+        "reasoning_highway": { "type": "number", "default": 1.45 },
+        "output_decoder": { "type": "number", "default": 1.50 }
+      }
+    }
+  }
+}
+```
 ### Contract: ui_theme_token_contract.json
 ```yaml
 {
@@ -1330,6 +3393,199 @@ ledger_tracking:
       "type": "object"
     }
   }
+}
+```
+### Contract: weight_injection_contract.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WeightInjectionContract",
+  "type": "object",
+  "properties": {
+    "target_module_id": { "type": "string" },
+    "parameter_tensors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "shape": { "type": "array", "items": { "type": "integer" } },
+          "dtype": { "type": "string", "enum": ["float32", "float64"] },
+          "requires_grad": { "type": "boolean" }
+        },
+        "required": ["shape", "dtype"]
+      }
+    }
+  },
+  "required": ["target_module_id", "parameter_tensors"]
+}
+```
+### Contract: weight_space_programmer_contract.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WeightSpaceProgrammerContract",
+  "type": "object",
+  "required": [
+    "contract_id",
+    "programmer_model_id",
+    "distillation_provenance",
+    "weight_representation_mode",
+    "verification_budget",
+    "safety_invariants"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "default": "contract_weight_space_programmer_v1"
+    },
+    "programmer_model_id": {
+      "type": "string",
+      "description": "Identifier of the distilled weight space programmer model (e.g., wsp-qwen3-8b, wsp-llama3.3-14b)"
+    },
+    "distillation_provenance": {
+      "type": "object",
+      "required": ["teacher_architecture", "student_architecture", "sft_dataset_hash", "dpo_preference_hash"],
+      "properties": {
+        "teacher_architecture": { "type": "string" },
+        "student_architecture": { "type": "string" },
+        "student_parameter_count": { "type": "string", "default": "7B" },
+        "sft_dataset_hash": { "type": "string" },
+        "dpo_preference_hash": { "type": "string" }
+      }
+    },
+    "weight_representation_mode": {
+      "type": "string",
+      "enum": ["direct_text_tensor", "symbolic_numpy_kernel", "spectral_svd_chunks", "quantized_hex_tiles"],
+      "default": "symbolic_numpy_kernel"
+    },
+    "verification_budget": {
+      "type": "object",
+      "required": ["max_forward_passes", "max_batch_size", "allow_backward_gradients"],
+      "properties": {
+        "max_forward_passes": { "type": "integer", "default": 50, "minimum": 0, "maximum": 50 },
+        "max_batch_size": { "type": "integer", "default": 128 },
+        "allow_backward_gradients": { "type": "boolean", "enum": [false], "default": false }
+      }
+    },
+    "safety_invariants": {
+      "type": "object",
+      "required": ["max_weight_mutation_ratio", "anchor_regression_veto_threshold", "spectral_norm_bound"],
+      "properties": {
+        "max_weight_mutation_ratio": { "type": "number", "default": 0.0005, "minimum": 0.0, "maximum": 0.0005, "description": "Maximum fraction of weights that can be modified in a single patch (0.05%)" },
+        "anchor_regression_veto_threshold": { "type": "number", "default": -0.02, "description": "Maximum allowed drop in anchor test performance" },
+        "spectral_norm_bound": { "type": "number", "default": 1.5, "description": "Upper bound on matrix 2-norm post-mutation" }
+      }
+    }
+  }
+}
+```
+### Contract: weight_surgery_patch_spec.json
+```yaml
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WeightSurgeryPatchSpec",
+  "type": "object",
+  "required": [
+    "patch_id",
+    "target_model_id",
+    "target_layers",
+    "surgery_operation",
+    "delta_tensor_spec",
+    "pre_surgery_hash",
+    "expected_post_hash"
+  ],
+  "properties": {
+    "patch_id": { "type": "string" },
+    "target_model_id": { "type": "string" },
+    "target_layers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "surgery_operation": {
+      "type": "string",
+      "enum": [
+        "subspace_direction_subtraction",
+        "rank_one_projection_edit",
+        "zero_shot_weight_synthesis",
+        "circuit_grafting",
+        "sparse_neuron_ablation",
+        "spectral_clamping"
+      ]
+    },
+    "delta_tensor_spec": {
+      "type": "object",
+      "required": ["modified_parameters_count", "total_parameters_count", "percentage_modified"],
+      "properties": {
+        "modified_parameters_count": { "type": "integer", "minimum": 0 },
+        "total_parameters_count": { "type": "integer", "minimum": 1 },
+        "percentage_modified": { "type": "number", "minimum": 0.0, "maximum": 0.05 }
+      }
+    },
+    "pre_surgery_hash": { "type": "string" },
+    "expected_post_hash": { "type": "string" },
+    "verification_telemetry": {
+      "type": "object",
+      "properties": {
+        "forward_passes_used": { "type": "integer" },
+        "metric_delta": { "type": "number" },
+        "anchor_invariance_score": { "type": "number" }
+      }
+    }
+  }
+}
+```
+### Contract: weight_telemetry_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WeightTelemetrySpec",
+  "type": "object",
+  "properties": {
+    "mutation_id": { "type": "string" },
+    "timestamp": { "type": "number" },
+    "target_module": { "type": "string" },
+    "target_parameter": { "type": "string" },
+    "frobenius_norm_delta": { "type": "number" },
+    "spectral_radius_pre": { "type": "number" },
+    "spectral_radius_post": { "type": "number" },
+    "canary_alpha_final": { "type": "number" },
+    "status": { "type": "string", "enum": ["promoted", "rolled_back", "clamped"] }
+  },
+  "required": [
+    "mutation_id",
+    "timestamp",
+    "target_module",
+    "target_parameter",
+    "frobenius_norm_delta",
+    "spectral_radius_post",
+    "status"
+  ]
+}
+```
+### Contract: world_model_spec.json
+```yaml
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WorldModelSpec",
+  "type": "object",
+  "properties": {
+    "obs_dim": { "type": "integer", "minimum": 1 },
+    "action_dim": { "type": "integer", "minimum": 1 },
+    "latent_dim": { "type": "integer", "minimum": 1 },
+    "hidden_dim": { "type": "integer", "minimum": 1 },
+    "dynamics_blocks": { "type": "integer", "minimum": 1 },
+    "imagination_horizon": { "type": "integer", "minimum": 1, "maximum": 50 },
+    "loss_weights": {
+      "type": "object",
+      "properties": {
+        "recon": { "type": "number", "minimum": 0.0 },
+        "dynamics": { "type": "number", "minimum": 0.0 },
+        "reward": { "type": "number", "minimum": 0.0 }
+      },
+      "required": ["recon", "dynamics", "reward"]
+    }
+  },
+  "required": ["obs_dim", "action_dim", "latent_dim", "dynamics_blocks", "imagination_horizon", "loss_weights"]
 }
 ```
 
@@ -3474,6 +5730,75 @@ class ContainerPlanExecutor:
         5. Validates gatekeeper.
         6. Returns structured PlanExecutionReceipt.
         """
+```
+
+### File: `workplace/core/contract_compatibility_checker.py`
+```py
+"""
+Percipience Wire Contract Compatibility & Breaking Change Checker
+Enforces Semantic Versioning (SemVer) and backward-compatibility rules on API & Event contracts.
+Flags breaking field removals or payload type alterations.
+"""
+
+import json
+import hashlib
+from pathlib import Path
+from typing import Dict, List, Any, Tuple
+
+class ContractCompatibilityChecker:
+    """Audits contract evolution between base and proposed revisions."""
+
+    @classmethod
+    def check_compatibility(
+    ) -> Dict[str, Any]:
+        breaking_changes = []
+        compatible_additions = []
+
+        base_props = base_contract.get("properties", {})
+        head_props = head_contract.get("properties", {})
+        base_req = set(base_contract.get("required", []))
+        head_req = set(head_contract.get("required", []))
+
+        # 1. Check for removed fields
+
+        # 2. Check for type mutations
+                head_spec = head_props[field]
+                b_type = base_spec.get("type")
+                h_type = head_spec.get("type")
+                if b_type != h_type:
+
+        # 3. Check for newly introduced required fields without defaults (breaking)
+
+        # 4. Check for compatible additions (new optional fields)
+
+        is_compatible = len(breaking_changes) == 0
+
+
+    @classmethod
+    def check_all_contracts(cls, workspace_root) -> Dict[str, Any]:
+        ...
+        """Audits all contracts for backward compatibility against recorded baseline evidence."""
+        from pathlib import Path
+        root = Path(workspace_root)
+        evidence_path = root / ".nb" / "context" / "ledger" / "contract_compatibility_results.json"
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                checks = evidence.get("checks", [])
+                    all_compatible = True
+                    violations = []
+                            all_compatible = False
+                        base_rel = check.get("baseline_path", "")
+                        head_rel = check.get("candidate_path", "")
+                        base_path = (root / base_rel).resolve()
+                        head_path = (root / head_rel).resolve()
+                            all_compatible = False
+                        base_sha = hashlib.sha256(base_path.read_bytes()).hexdigest()
+                        head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
+                        if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
+                            all_compatible = False
+                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                        res = cls.check_compatibility(base_obj, head_obj)
+                            all_compatible = False
 ```
 
 ### File: `workplace/core/distributed_test_runner.py`
@@ -6409,6 +8734,28 @@ class PlanModuleOrchestrator:
         ...
     def _write_if_changed(self, path: Path, content: str) -> str:
         ...
+    def synchronize_dependencies(self, target: str, **kwargs) -> List[Dict[str, Any]]:
+        ...
+        """Synchronize a target and its manifest prerequisites in dependency order."""
+        def normalize(value: str) -> str:
+            ...
+        for path in sorted(plan_root.rglob("MANIFEST.yaml")):
+            relative = path.parent.relative_to(plan_root)
+            manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
+            metadata = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else manifest
+            identity = metadata.get("id") or manifest.get("plan_id") or relative.as_posix()
+            manifests[path] = manifest
+
+        def resolve(reference: str) -> Path:
+            ...
+        ordered: List[Path] = []
+        visiting: List[Path] = []
+        visited = set()
+
+        def visit(path: Path) -> None:
+            ...
+        visit(resolve(target))
+
     def synchronize(
     ) -> Dict[str, Any]:
         plan = self.discover_plan(plan_dir)
@@ -9626,7 +11973,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable, Set
 import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) >= 3 and (Path(__file__).resolve().parents[2] / ".nb").exists() else Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parents[1].name == "workplace" else Path(__file__).resolve().parents[1]
 
 
 class WorkflowOrchestrator:
@@ -9638,7 +11985,7 @@ class WorkflowOrchestrator:
     @classmethod
     def load_workflow(cls, workflow_path: Path) -> Dict[str, Any]:
         ...
-        """Loads and validates a workflow YAML specification, normalizing steps and stages."""
+        """Loads and validates a workflow YAML specification."""
     @classmethod
     def execute_workflow(
     ) -> Dict[str, Any]:
@@ -9648,16 +11995,18 @@ class WorkflowOrchestrator:
         - `fan_in_barrier` waits for all steps in the parallel group to complete before proceeding.
         """
         step_executors = step_executors or {}
-        context = context or {}
+        context = context if context is not None else {}
+        if workflow_def.get("workflow_id") == "wf_sequential_plan_execution":
         steps: List[Dict[str, Any]] = workflow_def.get("steps", [])
-        
-        executed_steps: Set[str] = set()
-        step_results: Dict[str, Dict[str, Any]] = {}
-        total_start = time.time()
 
-        # Build dependency lookup
         step_lookup = {s["id"]: s for s in steps}
+        if len(step_lookup) != len(steps):
+            missing_dependencies = set(step.get("depends_on", [])) - set(step_lookup)
+
+        step_results: Dict[str, Dict[str, Any]] = {}
+        executed_steps: Set[str] = set()
         remaining_steps = list(steps)
+        total_start = time.time()
 
             # Find all steps whose dependencies are satisfied
             ready_steps = [
@@ -9674,16 +12023,16 @@ class WorkflowOrchestrator:
                 
                 group_results = cls._execute_parallel_group(group_steps, step_executors, max_workers, context)
                     step_results[sid] = res
-                    remaining_steps = [s for s in remaining_steps if s["id"] != sid]
+                failed = [(sid, res) for sid, res in group_results.items() if res.get("status") != "SUCCESS"]
+                    sid, res = failed[0]
+                remaining_steps = [s for s in remaining_steps if s["id"] not in group_results]
                 # Execute single step
                 target_step = ready_steps[0]
                 sid = target_step["id"]
                 res = cls._execute_single_step(target_step, step_executors, context)
                 step_results[sid] = res
+                if res.get("status") != "SUCCESS":
                 remaining_steps = [s for s in remaining_steps if s["id"] != sid]
-
-                # If step failed and fail_action is fatal, abort early
-                if res.get("status") == "FAILED" and target_step.get("fail_action") in ["QUARANTINE_AND_HALT", "BLOCK_BREAKING_CHANGE"]:
 
         total_duration = round(time.time() - total_start, 4)
 
@@ -9698,9 +12047,10 @@ class WorkflowOrchestrator:
         start_time = time.time()
                 res = func(step=step, context=context)
                 duration = round(time.time() - start_time, 4)
+                status = res.get("status")
+                    "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
+                    "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
-            # Simulated default success handler for built-in step definitions
-            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
@@ -17453,6 +19803,9 @@ Enforces Semantic Versioning (SemVer) and backward-compatibility rules on API & 
 Flags breaking field removals or payload type alterations.
 """
 
+import json
+import hashlib
+from pathlib import Path
 from typing import Dict, List, Any, Tuple
 
 class ContractCompatibilityChecker:
@@ -17487,11 +19840,28 @@ class ContractCompatibilityChecker:
     @classmethod
     def check_all_contracts(cls, workspace_root) -> Dict[str, Any]:
         ...
-        """Audits all contracts in context/contracts directory for backward compatibility."""
+        """Audits all contracts for backward compatibility against recorded baseline evidence."""
         from pathlib import Path
         root = Path(workspace_root)
-        contract_dir = (root / '.nb' / 'context' / 'contracts' if (root / '.nb' / 'context').exists() else root / 'context' / 'contracts')
-        contracts_found = list(contract_dir.glob('*.json')) if contract_dir.exists() else []
+        evidence_path = root / ".nb" / "context" / "ledger" / "contract_compatibility_results.json"
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                checks = evidence.get("checks", [])
+                    all_compatible = True
+                    violations = []
+                            all_compatible = False
+                        base_rel = check.get("baseline_path", "")
+                        head_rel = check.get("candidate_path", "")
+                        base_path = (root / base_rel).resolve()
+                        head_path = (root / head_rel).resolve()
+                            all_compatible = False
+                        base_sha = hashlib.sha256(base_path.read_bytes()).hexdigest()
+                        head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
+                        if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
+                            all_compatible = False
+                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                        res = cls.check_compatibility(base_obj, head_obj)
+                            all_compatible = False
 ```
 
 ### File: `workplace/modules/mod_intellij_plugin/src/main/resources/percipience/core/dependency_cve_sentinel.py`
@@ -19770,12 +22140,49 @@ class MerkleEngine:
         ...
         """Gathers files from context/contracts/, user/inputs/, and workplace/config/ to compute Merkle root."""
     @classmethod
-    def compute_block_hash(cls, block_id: int, prev_hash: str, merkle_root: str, git_sha: str, timestamp: str) -> str:
-        ...
+    def compute_block_hash(
+    ) -> str:
+            payload = json.dumps(
+                sort_keys=True,
+                separators=(",", ":"),
+        legacy_payload = f"{block_id}|{prev_hash}|{merkle_root}|{git_sha}|{timestamp}"
+            legacy_payload += f"|{recovery_point_id}"
+
     @classmethod
     def seal_block(cls, workspace_root: Path, action: str, git_sha: str = "HEAD", recovery_point_id: Optional[str] = None) -> Dict[str, Any]:
         ...
         """Appends a new verified Merkle block to context/ledger/context_ledger.yaml using atomic write."""
+            import re
+            m = re.search(r"\d+", last_block["block_id"])
+                num = int(m.group(0)) + 1
+                clean_act = action[:20].upper().replace(" ", "_").replace("(", "").replace(")", "").replace(":", "_")
+                next_block_id = f"BLOCK_{num:03d}_{clean_act}"
+                height = num + 1
+                next_block_id = f"BLOCK_{len(chain):03d}"
+                height = len(chain) + 1
+            next_block_id = len(chain)
+            height = len(chain) + 1
+
+        timestamp = datetime.now(timezone.utc).isoformat()
+        merkle_root = cls.compute_workspace_merkle_root(workspace_root)
+        current_hash = cls.compute_block_hash(
+
+        new_block = {
+        new_block["block_hash"] = current_hash
+        data["ledger_chain"] = chain
+
+
+        # Atomic save context_ledger.yaml
+
+        # Update public projection atomically
+        public_data = {
+
+        # Auto-checkpoint epoch if rolling active window exceeds threshold
+        if len(chain) >= cls.AUTO_CHECKPOINT_THRESHOLD or len(data.get("recovery_points", [])) >= cls.AUTO_CHECKPOINT_THRESHOLD:
+                retain_active_blocks=cls.RETAIN_ACTIVE_BLOCKS,
+                retain_active_recovery_points=cls.RETAIN_ACTIVE_RECOVERY_POINTS
+
+
     @classmethod
     def checkpoint_epoch(
     ) -> Dict[str, Any]:
@@ -19788,8 +22195,8 @@ class MerkleEngine:
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         with open(ledger_path, "r", encoding="utf-8") as f:
-                data = yaml.load(f, Loader=SafeLoader)
-                data = yaml.safe_load(f)
+                docs = [d for d in yaml.safe_load_all(f) if isinstance(d, dict)]
+                data = docs[0] if docs else {}
                 data = json.load(f)
 
         chain = data.get("ledger_chain", [])
@@ -19810,11 +22217,12 @@ class MerkleEngine:
 
             start_id = archived_blocks[0]["block_id"]
             end_id = archived_blocks[-1]["block_id"]
-            epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+                epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+                epoch_id = f"epoch_{str(start_id).lower()}_{str(end_id).lower()}"
             epoch_file = archive_dir / f"{epoch_id}.json"
 
             # Compute epoch Merkle root
-            block_hashes = [b["current_block_hash"] for b in archived_blocks]
+            block_hashes = [(b.get("current_block_hash") or b.get("block_hash") or b.get("merkle_hash") or "") for b in archived_blocks]
             epoch_rollup_hash = hashlib.sha256("".join(block_hashes).encode("utf-8")).hexdigest()
 
             epoch_payload = {
@@ -19835,10 +22243,17 @@ class MerkleEngine:
 
 
 
+    @staticmethod
+    def _resolve_archive_file(workspace_root: Path, archive_path: str) -> Optional[Path]:
+        ...
     @classmethod
     def verify_chain(cls, workspace_root: Path) -> Tuple[bool, List[str]]:
         ...
         """Verifies 100% cryptographic continuity across archived epochs and the active rolling chain."""
+    @classmethod
+    def verify_recovery_point(cls, workspace_root: Path, recovery_point_id: str) -> bool:
+        ...
+        """Verify a recovery point is ledger-backed by a block on a valid chain."""
 ```
 
 ### File: `workplace/modules/mod_intellij_plugin/src/main/resources/percipience/core/nbpack_envelope.py`
@@ -20383,6 +22798,28 @@ class PlanModuleOrchestrator:
         ...
     def _write_if_changed(self, path: Path, content: str) -> str:
         ...
+    def synchronize_dependencies(self, target: str, **kwargs) -> List[Dict[str, Any]]:
+        ...
+        """Synchronize a target and its manifest prerequisites in dependency order."""
+        def normalize(value: str) -> str:
+            ...
+        for path in sorted(plan_root.rglob("MANIFEST.yaml")):
+            relative = path.parent.relative_to(plan_root)
+            manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
+            metadata = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else manifest
+            identity = metadata.get("id") or manifest.get("plan_id") or relative.as_posix()
+            manifests[path] = manifest
+
+        def resolve(reference: str) -> Path:
+            ...
+        ordered: List[Path] = []
+        visiting: List[Path] = []
+        visited = set()
+
+        def visit(path: Path) -> None:
+            ...
+        visit(resolve(target))
+
     def synchronize(
     ) -> Dict[str, Any]:
         plan = self.discover_plan(plan_dir)
@@ -21597,10 +24034,17 @@ multi-agent handovers, living documentation, and supply-chain purity.
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List
+import hashlib
+import json
+import xml.etree.ElementTree as ET
 
-from .living_doc_engine import LivingDocEngine
 from .contract_compatibility_checker import ContractCompatibilityChecker
+from .living_doc_engine import LivingDocEngine
 from .dependency_cve_sentinel import DependencyCVESentinel
+from .merkle_engine import MerkleEngine
+from .orchestrator_state_manager import OrchestratorStateManager
+from .plan_dependency_resolver import PlanDependencyResolver
+from .plan_handover import PlanHandoverVerifier
 
 
 class SemanticParityEngine:
@@ -21611,19 +24055,25 @@ class SemanticParityEngine:
     @classmethod
     def evaluate_ast_symbols(cls, workspace_root: Path) -> float:
         ...
-        """Evaluates AST symbol completeness and unmapped drift."""
+        """AST parity has no verified evidence implementation yet; fail closed."""
+    @staticmethod
+    def _read_hashed_artifact(workspace_root: Path, relative_path: str, expected_hash: str) -> bytes:
+        ...
+    @staticmethod
+    def _conservative_contract_compatibility(base: Dict[str, Any], head: Dict[str, Any]) -> bool:
+        ...
     @classmethod
     def evaluate_wire_contracts(cls, workspace_root: Path) -> float:
         ...
-        """Evaluates OpenAPI/AsyncAPI wire contracts for breaking changes."""
+        """Score explicit compatibility evidence; missing baselines fail closed."""
     @classmethod
     def evaluate_behavior_tests(cls, workspace_root: Path) -> float:
         ...
-        """Evaluates TDD / unit & integration test coverage & pass rate."""
+        """Score a complete test-run report rather than assuming tests passed."""
     @classmethod
     def evaluate_handover_integrity(cls, workspace_root: Path) -> float:
         ...
-        """Evaluates inter-agent handoff conformity and zero rogue subagents."""
+        """Validate persisted plan handovers against specs, artifacts, and Merkle RPs."""
     @classmethod
     def evaluate_living_docs(cls, workspace_root: Path) -> float:
         ...
@@ -22975,22 +25425,9 @@ import time
 import concurrent.futures
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable, Set
-import json
-    import yaml
-        from yaml import CSafeLoader as SafeLoader, CSafeDumper as SafeDumper
-        from yaml import SafeLoader, SafeDumper
-    class _FallbackYaml:
-        @staticmethod
-        def safe_load(stream):
-            ...
-        @staticmethod
-        def dump(data, stream=None, sort_keys=False, **kwargs):
-            ...
-    yaml = _FallbackYaml()
-    SafeLoader = None
-    SafeDumper = None
+import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) >= 3 and (Path(__file__).resolve().parents[2] / ".nb").exists() else Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parents[1].name == "workplace" else Path(__file__).resolve().parents[1]
 
 
 class WorkflowOrchestrator:
@@ -23002,7 +25439,7 @@ class WorkflowOrchestrator:
     @classmethod
     def load_workflow(cls, workflow_path: Path) -> Dict[str, Any]:
         ...
-        """Loads and validates a workflow YAML specification, normalizing steps and stages."""
+        """Loads and validates a workflow YAML specification."""
     @classmethod
     def execute_workflow(
     ) -> Dict[str, Any]:
@@ -23012,16 +25449,18 @@ class WorkflowOrchestrator:
         - `fan_in_barrier` waits for all steps in the parallel group to complete before proceeding.
         """
         step_executors = step_executors or {}
-        context = context or {}
+        context = context if context is not None else {}
+        if workflow_def.get("workflow_id") == "wf_sequential_plan_execution":
         steps: List[Dict[str, Any]] = workflow_def.get("steps", [])
-        
-        executed_steps: Set[str] = set()
-        step_results: Dict[str, Dict[str, Any]] = {}
-        total_start = time.time()
 
-        # Build dependency lookup
         step_lookup = {s["id"]: s for s in steps}
+        if len(step_lookup) != len(steps):
+            missing_dependencies = set(step.get("depends_on", [])) - set(step_lookup)
+
+        step_results: Dict[str, Dict[str, Any]] = {}
+        executed_steps: Set[str] = set()
         remaining_steps = list(steps)
+        total_start = time.time()
 
             # Find all steps whose dependencies are satisfied
             ready_steps = [
@@ -23038,16 +25477,16 @@ class WorkflowOrchestrator:
                 
                 group_results = cls._execute_parallel_group(group_steps, step_executors, max_workers, context)
                     step_results[sid] = res
-                    remaining_steps = [s for s in remaining_steps if s["id"] != sid]
+                failed = [(sid, res) for sid, res in group_results.items() if res.get("status") != "SUCCESS"]
+                    sid, res = failed[0]
+                remaining_steps = [s for s in remaining_steps if s["id"] not in group_results]
                 # Execute single step
                 target_step = ready_steps[0]
                 sid = target_step["id"]
                 res = cls._execute_single_step(target_step, step_executors, context)
                 step_results[sid] = res
+                if res.get("status") != "SUCCESS":
                 remaining_steps = [s for s in remaining_steps if s["id"] != sid]
-
-                # If step failed and fail_action is fatal, abort early
-                if res.get("status") == "FAILED" and target_step.get("fail_action") in ["QUARANTINE_AND_HALT", "BLOCK_BREAKING_CHANGE"]:
 
         total_duration = round(time.time() - total_start, 4)
 
@@ -23062,9 +25501,10 @@ class WorkflowOrchestrator:
         start_time = time.time()
                 res = func(step=step, context=context)
                 duration = round(time.time() - start_time, 4)
+                status = res.get("status")
+                    "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
+                    "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
-            # Simulated default success handler for built-in step definitions
-            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
@@ -25744,6 +28184,9 @@ Enforces Semantic Versioning (SemVer) and backward-compatibility rules on API & 
 Flags breaking field removals or payload type alterations.
 """
 
+import json
+import hashlib
+from pathlib import Path
 from typing import Dict, List, Any, Tuple
 
 class ContractCompatibilityChecker:
@@ -25778,11 +28221,28 @@ class ContractCompatibilityChecker:
     @classmethod
     def check_all_contracts(cls, workspace_root) -> Dict[str, Any]:
         ...
-        """Audits all contracts in context/contracts directory for backward compatibility."""
+        """Audits all contracts for backward compatibility against recorded baseline evidence."""
         from pathlib import Path
         root = Path(workspace_root)
-        contract_dir = (root / '.nb' / 'context' / 'contracts' if (root / '.nb' / 'context').exists() else root / 'context' / 'contracts')
-        contracts_found = list(contract_dir.glob('*.json')) if contract_dir.exists() else []
+        evidence_path = root / ".nb" / "context" / "ledger" / "contract_compatibility_results.json"
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                checks = evidence.get("checks", [])
+                    all_compatible = True
+                    violations = []
+                            all_compatible = False
+                        base_rel = check.get("baseline_path", "")
+                        head_rel = check.get("candidate_path", "")
+                        base_path = (root / base_rel).resolve()
+                        head_path = (root / head_rel).resolve()
+                            all_compatible = False
+                        base_sha = hashlib.sha256(base_path.read_bytes()).hexdigest()
+                        head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
+                        if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
+                            all_compatible = False
+                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                        res = cls.check_compatibility(base_obj, head_obj)
+                            all_compatible = False
 ```
 
 ### File: `workplace/modules/mod_vscode_extension/percipience_runtime/core/dependency_cve_sentinel.py`
@@ -27921,12 +30381,49 @@ class MerkleEngine:
         ...
         """Gathers files from context/contracts/, user/inputs/, and workplace/config/ to compute Merkle root."""
     @classmethod
-    def compute_block_hash(cls, block_id: int, prev_hash: str, merkle_root: str, git_sha: str, timestamp: str) -> str:
-        ...
+    def compute_block_hash(
+    ) -> str:
+            payload = json.dumps(
+                sort_keys=True,
+                separators=(",", ":"),
+        legacy_payload = f"{block_id}|{prev_hash}|{merkle_root}|{git_sha}|{timestamp}"
+            legacy_payload += f"|{recovery_point_id}"
+
     @classmethod
     def seal_block(cls, workspace_root: Path, action: str, git_sha: str = "HEAD", recovery_point_id: Optional[str] = None) -> Dict[str, Any]:
         ...
         """Appends a new verified Merkle block to context/ledger/context_ledger.yaml using atomic write."""
+            import re
+            m = re.search(r"\d+", last_block["block_id"])
+                num = int(m.group(0)) + 1
+                clean_act = action[:20].upper().replace(" ", "_").replace("(", "").replace(")", "").replace(":", "_")
+                next_block_id = f"BLOCK_{num:03d}_{clean_act}"
+                height = num + 1
+                next_block_id = f"BLOCK_{len(chain):03d}"
+                height = len(chain) + 1
+            next_block_id = len(chain)
+            height = len(chain) + 1
+
+        timestamp = datetime.now(timezone.utc).isoformat()
+        merkle_root = cls.compute_workspace_merkle_root(workspace_root)
+        current_hash = cls.compute_block_hash(
+
+        new_block = {
+        new_block["block_hash"] = current_hash
+        data["ledger_chain"] = chain
+
+
+        # Atomic save context_ledger.yaml
+
+        # Update public projection atomically
+        public_data = {
+
+        # Auto-checkpoint epoch if rolling active window exceeds threshold
+        if len(chain) >= cls.AUTO_CHECKPOINT_THRESHOLD or len(data.get("recovery_points", [])) >= cls.AUTO_CHECKPOINT_THRESHOLD:
+                retain_active_blocks=cls.RETAIN_ACTIVE_BLOCKS,
+                retain_active_recovery_points=cls.RETAIN_ACTIVE_RECOVERY_POINTS
+
+
     @classmethod
     def checkpoint_epoch(
     ) -> Dict[str, Any]:
@@ -27939,8 +30436,8 @@ class MerkleEngine:
         archive_dir.mkdir(parents=True, exist_ok=True)
 
         with open(ledger_path, "r", encoding="utf-8") as f:
-                data = yaml.load(f, Loader=SafeLoader)
-                data = yaml.safe_load(f)
+                docs = [d for d in yaml.safe_load_all(f) if isinstance(d, dict)]
+                data = docs[0] if docs else {}
                 data = json.load(f)
 
         chain = data.get("ledger_chain", [])
@@ -27961,11 +30458,12 @@ class MerkleEngine:
 
             start_id = archived_blocks[0]["block_id"]
             end_id = archived_blocks[-1]["block_id"]
-            epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+                epoch_id = f"epoch_{start_id:04d}_{end_id:04d}"
+                epoch_id = f"epoch_{str(start_id).lower()}_{str(end_id).lower()}"
             epoch_file = archive_dir / f"{epoch_id}.json"
 
             # Compute epoch Merkle root
-            block_hashes = [b["current_block_hash"] for b in archived_blocks]
+            block_hashes = [(b.get("current_block_hash") or b.get("block_hash") or b.get("merkle_hash") or "") for b in archived_blocks]
             epoch_rollup_hash = hashlib.sha256("".join(block_hashes).encode("utf-8")).hexdigest()
 
             epoch_payload = {
@@ -27986,10 +30484,17 @@ class MerkleEngine:
 
 
 
+    @staticmethod
+    def _resolve_archive_file(workspace_root: Path, archive_path: str) -> Optional[Path]:
+        ...
     @classmethod
     def verify_chain(cls, workspace_root: Path) -> Tuple[bool, List[str]]:
         ...
         """Verifies 100% cryptographic continuity across archived epochs and the active rolling chain."""
+    @classmethod
+    def verify_recovery_point(cls, workspace_root: Path, recovery_point_id: str) -> bool:
+        ...
+        """Verify a recovery point is ledger-backed by a block on a valid chain."""
 ```
 
 ### File: `workplace/modules/mod_vscode_extension/percipience_runtime/core/output_guardrail_validator.py`
@@ -30486,22 +32991,9 @@ import time
 import concurrent.futures
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable, Set
-import json
-    import yaml
-        from yaml import CSafeLoader as SafeLoader, CSafeDumper as SafeDumper
-        from yaml import SafeLoader, SafeDumper
-    class _FallbackYaml:
-        @staticmethod
-        def safe_load(stream):
-            ...
-        @staticmethod
-        def dump(data, stream=None, sort_keys=False, **kwargs):
-            ...
-    yaml = _FallbackYaml()
-    SafeLoader = None
-    SafeDumper = None
+import yaml
 
-REPO_ROOT = Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) >= 3 and (Path(__file__).resolve().parents[2] / ".nb").exists() else Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parents[1].name == "workplace" else Path(__file__).resolve().parents[1]
 
 
 class WorkflowOrchestrator:
@@ -30513,7 +33005,7 @@ class WorkflowOrchestrator:
     @classmethod
     def load_workflow(cls, workflow_path: Path) -> Dict[str, Any]:
         ...
-        """Loads and validates a workflow YAML specification, normalizing steps and stages."""
+        """Loads and validates a workflow YAML specification."""
     @classmethod
     def execute_workflow(
     ) -> Dict[str, Any]:
@@ -30523,16 +33015,18 @@ class WorkflowOrchestrator:
         - `fan_in_barrier` waits for all steps in the parallel group to complete before proceeding.
         """
         step_executors = step_executors or {}
-        context = context or {}
+        context = context if context is not None else {}
+        if workflow_def.get("workflow_id") == "wf_sequential_plan_execution":
         steps: List[Dict[str, Any]] = workflow_def.get("steps", [])
-        
-        executed_steps: Set[str] = set()
-        step_results: Dict[str, Dict[str, Any]] = {}
-        total_start = time.time()
 
-        # Build dependency lookup
         step_lookup = {s["id"]: s for s in steps}
+        if len(step_lookup) != len(steps):
+            missing_dependencies = set(step.get("depends_on", [])) - set(step_lookup)
+
+        step_results: Dict[str, Dict[str, Any]] = {}
+        executed_steps: Set[str] = set()
         remaining_steps = list(steps)
+        total_start = time.time()
 
             # Find all steps whose dependencies are satisfied
             ready_steps = [
@@ -30549,16 +33043,16 @@ class WorkflowOrchestrator:
                 
                 group_results = cls._execute_parallel_group(group_steps, step_executors, max_workers, context)
                     step_results[sid] = res
-                    remaining_steps = [s for s in remaining_steps if s["id"] != sid]
+                failed = [(sid, res) for sid, res in group_results.items() if res.get("status") != "SUCCESS"]
+                    sid, res = failed[0]
+                remaining_steps = [s for s in remaining_steps if s["id"] not in group_results]
                 # Execute single step
                 target_step = ready_steps[0]
                 sid = target_step["id"]
                 res = cls._execute_single_step(target_step, step_executors, context)
                 step_results[sid] = res
+                if res.get("status") != "SUCCESS":
                 remaining_steps = [s for s in remaining_steps if s["id"] != sid]
-
-                # If step failed and fail_action is fatal, abort early
-                if res.get("status") == "FAILED" and target_step.get("fail_action") in ["QUARANTINE_AND_HALT", "BLOCK_BREAKING_CHANGE"]:
 
         total_duration = round(time.time() - total_start, 4)
 
@@ -30573,9 +33067,10 @@ class WorkflowOrchestrator:
         start_time = time.time()
                 res = func(step=step, context=context)
                 duration = round(time.time() - start_time, 4)
+                status = res.get("status")
+                    "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
+                    "error": res.get("error") if status != "SUCCESS" else None,
                 duration = round(time.time() - start_time, 4)
-            # Simulated default success handler for built-in step definitions
-            duration = round(time.time() - start_time, 4)
 
     @classmethod
     def _execute_parallel_group(
@@ -41699,6 +44194,10 @@ def _write(path: Path, content: str) -> None:
 class TestPlanModuleOrchestrator(unittest.TestCase):
 
     def setUp(self):
+        ...
+    def test_dependency_synchronization_orders_and_validates_before_writing(self):
+        ...
+    def test_dependency_synchronization_rejects_missing_and_ambiguous_references(self):
         ...
     def _make_plan(self, modules_dir: bool = True, manifest_modules=None):
         ...

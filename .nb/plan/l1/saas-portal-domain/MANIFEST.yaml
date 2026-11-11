@@ -1,3 +1,8 @@
+plan:
+  id: domain_saas_portal
+  name: Enterprise SaaS, Corporate Portals & Web Platform Ecosystem
+  category: l1
+  layer: l1
 schema_version: 3.0.0
 plan_id: domain_saas_portal
 plan_name: Enterprise SaaS, Corporate Portals & Web Platform Ecosystem
@@ -37,14 +42,14 @@ file_versions:
   concise:
     path: concise.md
     version: 1.1.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: dc6a4c98a44f3054ae3a76d50f1a78659d296caf76edfacad5ae581aacad59bb
     line_count: 88
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.1.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: a0c5fc10330d63d1e9f2b5839d4185be90697a1756009324ffca5ba8404c605d
     line_count: 306
     primary_purpose: Extended implementation guide with web architecture, commercial
@@ -52,7 +57,7 @@ file_versions:
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 9dde005d0088aed98d556e951acc9801a185de094ec847d37b06b6d6fb348a45
     line_count: 28
     primary_purpose: Quick reference and navigation
@@ -63,3 +68,32 @@ implementation_phases:
   phase_4: Commercial Packaging, License Minting & IDE Provisioner
   phase_5: Next.js Frontend & 5-Tab Observability Hub
   phase_6: E2E Playwright & Vitest Quality CI Verification
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.1.0
+    last_updated: '2026-11-11T18:04:00.876997Z'
+    content_hash: sha256:dc6a4c98a44f3054ae3a76d50f1a78659d296caf76edfacad5ae581aacad59bb
+    lines: 88
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.1.0
+    last_updated: '2026-11-11T18:04:00.876997Z'
+    content_hash: sha256:a0c5fc10330d63d1e9f2b5839d4185be90697a1756009324ffca5ba8404c605d
+    lines: 306
+  readme:
+    file: README.md
+    format: overview
+    version: 1.1.0
+    last_updated: '2026-11-11T18:04:00.876997Z'
+    content_hash: sha256:9dde005d0088aed98d556e951acc9801a185de094ec847d37b06b6d6fb348a45
+    lines: 28
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:00.876997Z'
+  sync_direction: concise_to_detailed
+  differences: []

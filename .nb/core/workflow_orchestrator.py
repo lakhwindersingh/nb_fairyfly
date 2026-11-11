@@ -8,53 +8,9 @@ import time
 import concurrent.futures
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Callable, Set
-import json
-try:
-    import yaml
-    try:
-        from yaml import CSafeLoader as SafeLoader, CSafeDumper as SafeDumper
-    except ImportError:
-        from yaml import SafeLoader, SafeDumper
-except ImportError:
-    class _FallbackYaml:
-        @staticmethod
-        def safe_load(stream):
-            if hasattr(stream, "read"):
-                content = stream.read()
-            else:
-                content = str(stream)
-            try:
-                return json.loads(content)
-            except Exception:
-                pass
-            res = {}
-            for line in content.splitlines():
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                if ":" in line:
-                    k, v = line.split(":", 1)
-                    k = k.strip()
-                    v = v.strip().strip("'\"")
-                    if v.lower() == "true": res[k] = True
-                    elif v.lower() == "false": res[k] = False
-                    elif v.isdigit(): res[k] = int(v)
-                    else: res[k] = v
-            return res
+import yaml
 
-        @staticmethod
-        def dump(data, stream=None, sort_keys=False, **kwargs):
-            content = json.dumps(data, indent=2, sort_keys=sort_keys)
-            if stream and hasattr(stream, "write"):
-                stream.write(content)
-                return None
-            return content
-
-    yaml = _FallbackYaml()
-    SafeLoader = None
-    SafeDumper = None
-
-REPO_ROOT = Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) >= 3 and (Path(__file__).resolve().parents[2] / ".nb").exists() else Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2] if Path(__file__).resolve().parents[1].name == "workplace" else Path(__file__).resolve().parents[1]
 
 
 class WorkflowOrchestrator:
@@ -65,27 +21,13 @@ class WorkflowOrchestrator:
 
     @classmethod
     def load_workflow(cls, workflow_path: Path) -> Dict[str, Any]:
-        """Loads and validates a workflow YAML specification, normalizing steps and stages."""
+        """Loads and validates a workflow YAML specification."""
         if not workflow_path.exists():
             raise FileNotFoundError(f"Workflow definition not found at: {workflow_path}")
         with open(workflow_path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
-        
-        workflow_id = data.get("workflow_id") or data.get("name") or data.get("id") or workflow_path.stem
-        raw_steps = data.get("steps") or data.get("stages") or []
-        if not workflow_id or not raw_steps:
-            raise ValueError(f"Invalid workflow schema in {workflow_path}: missing workflow_id/steps/stages")
-
-        normalized_steps = []
-        for s in raw_steps:
-            if isinstance(s, dict):
-                norm_s = dict(s)
-                norm_s["id"] = s.get("id") or s.get("step_id") or s.get("stage_id") or f"step_{len(normalized_steps)}"
-                norm_s["executor"] = s.get("executor") or s.get("agent") or "generic_executor"
-                normalized_steps.append(norm_s)
-
-        data["workflow_id"] = workflow_id
-        data["steps"] = normalized_steps
+        if "workflow_id" not in data or "steps" not in data:
+            raise ValueError(f"Invalid workflow schema in {workflow_path}")
         return data
 
     @classmethod
@@ -102,16 +44,27 @@ class WorkflowOrchestrator:
         - `fan_in_barrier` waits for all steps in the parallel group to complete before proceeding.
         """
         step_executors = step_executors or {}
-        context = context or {}
+        context = context if context is not None else {}
+        if workflow_def.get("workflow_id") == "wf_sequential_plan_execution":
+            raise ValueError(
+                "Sequential plan workflows must be dispatched through WorkflowRunner.run_plan_by_id"
+            )
         steps: List[Dict[str, Any]] = workflow_def.get("steps", [])
-        
-        executed_steps: Set[str] = set()
-        step_results: Dict[str, Dict[str, Any]] = {}
-        total_start = time.time()
 
-        # Build dependency lookup
         step_lookup = {s["id"]: s for s in steps}
+        if len(step_lookup) != len(steps):
+            raise ValueError("Workflow contains duplicate step IDs")
+        for step in steps:
+            missing_dependencies = set(step.get("depends_on", [])) - set(step_lookup)
+            if missing_dependencies:
+                raise ValueError(
+                    f"Step {step['id']} references unknown dependencies: {sorted(missing_dependencies)}"
+                )
+
+        step_results: Dict[str, Dict[str, Any]] = {}
+        executed_steps: Set[str] = set()
         remaining_steps = list(steps)
+        total_start = time.time()
 
         while remaining_steps:
             # Find all steps whose dependencies are satisfied
@@ -142,27 +95,38 @@ class WorkflowOrchestrator:
                 group_results = cls._execute_parallel_group(group_steps, step_executors, max_workers, context)
                 for sid, res in group_results.items():
                     step_results[sid] = res
-                    executed_steps.add(sid)
-                    remaining_steps = [s for s in remaining_steps if s["id"] != sid]
+                failed = [(sid, res) for sid, res in group_results.items() if res.get("status") != "SUCCESS"]
+                if failed:
+                    sid, res = failed[0]
+                    return {
+                        "workflow_id": workflow_def.get("workflow_id"),
+                        "status": "FAILED",
+                        "failed_step": sid,
+                        "error": res.get("error"),
+                        "step_count": len(step_results),
+                        "executed_steps": step_results,
+                        "duration_sec": round(time.time() - total_start, 4),
+                    }
+                executed_steps.update(group_results)
+                remaining_steps = [s for s in remaining_steps if s["id"] not in group_results]
             else:
                 # Execute single step
                 target_step = ready_steps[0]
                 sid = target_step["id"]
                 res = cls._execute_single_step(target_step, step_executors, context)
                 step_results[sid] = res
-                executed_steps.add(sid)
-                remaining_steps = [s for s in remaining_steps if s["id"] != sid]
-
-                # If step failed and fail_action is fatal, abort early
-                if res.get("status") == "FAILED" and target_step.get("fail_action") in ["QUARANTINE_AND_HALT", "BLOCK_BREAKING_CHANGE"]:
+                if res.get("status") != "SUCCESS":
                     return {
                         "workflow_id": workflow_def.get("workflow_id"),
                         "status": "FAILED",
                         "failed_step": sid,
                         "error": res.get("error"),
+                        "step_count": len(step_results),
                         "executed_steps": step_results,
                         "duration_sec": round(time.time() - total_start, 4)
                     }
+                executed_steps.add(sid)
+                remaining_steps = [s for s in remaining_steps if s["id"] != sid]
 
         total_duration = round(time.time() - total_start, 4)
         return {
@@ -190,12 +154,16 @@ class WorkflowOrchestrator:
         if func:
             try:
                 res = func(step=step, context=context)
+                if not isinstance(res, dict):
+                    raise TypeError(f"Executor for {sid} must return a result dictionary")
                 duration = round(time.time() - start_time, 4)
+                status = res.get("status")
                 return {
                     "step_id": sid,
                     "name": step.get("name", sid),
-                    "status": res.get("status", "SUCCESS"),
+                    "status": "SUCCESS" if status == "SUCCESS" else "FAILED",
                     "output": res,
+                    "error": res.get("error") if status != "SUCCESS" else None,
                     "duration_sec": duration
                 }
             except Exception as e:
@@ -208,15 +176,12 @@ class WorkflowOrchestrator:
                     "duration_sec": duration
                 }
         else:
-            # Simulated default success handler for built-in step definitions
-            time.sleep(0.005)
-            duration = round(time.time() - start_time, 4)
             return {
                 "step_id": sid,
                 "name": step.get("name", sid),
-                "status": "SUCCESS",
-                "output": {"message": f"Step {sid} executed successfully"},
-                "duration_sec": duration
+                "status": "FAILED",
+                "error": f"No executor registered for step {sid} ({executor_key})",
+                "duration_sec": round(time.time() - start_time, 4)
             }
 
     @classmethod

@@ -1,3 +1,8 @@
+plan:
+  id: percipience_master_test_plan
+  name: Percipience Master Test Governance & AI-Assisted Verification Framework
+  category: plan
+  layer: test
 schema_version: 3.0.0
 plan_id: percipience_master_test_plan
 plan_name: Percipience Master Test Governance & AI-Assisted Verification Framework
@@ -35,29 +40,58 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: d98efffc369faa7abe2d007f71755b0cd6a470b14ec3820e6aae4b117e7a5506
     line_count: 109
     primary_purpose: High-density testing specification for rapid AI context ingestion
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: b2396976f805fe2d80b77fc6cb55420b9ae8606371cae08c4579ca9d31414cfc
     line_count: 432
     primary_purpose: Comprehensive 360-degree test plan covering all 18 subsystems
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 3dc3b9efa445a40398c2aa7f057d97e8f3daa880929befe902ff4538c2ea068e
     line_count: 96
     primary_purpose: Space overview, test pyramid, and execution guide
   test_runner:
     path: test_runner.py
     version: 1.0.0
-    last_modified: '2026-10-08'
+    last_modified: '2026-11-11'
     content_hash: 22a938459ad0dacf48a9c21d412bcd49aa81ba9bcb8b51bcfa51af80a9967d5a
     line_count: 317
     primary_purpose: Automatable AI test orchestrator, reporting engine, and failure
       triager
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.108312Z'
+    content_hash: sha256:d98efffc369faa7abe2d007f71755b0cd6a470b14ec3820e6aae4b117e7a5506
+    lines: 109
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.108312Z'
+    content_hash: sha256:b2396976f805fe2d80b77fc6cb55420b9ae8606371cae08c4579ca9d31414cfc
+    lines: 432
+  readme:
+    file: README.md
+    format: overview
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.108312Z'
+    content_hash: sha256:3dc3b9efa445a40398c2aa7f057d97e8f3daa880929befe902ff4538c2ea068e
+    lines: 96
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.108312Z'
+  sync_direction: concise_to_detailed
+  differences: []

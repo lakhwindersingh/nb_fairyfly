@@ -1,26 +1,23 @@
-# ==============================================================================
-# Percipience Canonical Plan Manifest Template v3.0
-# Reference Schema: .nb/plan/MANIFEST_SCHEMA.json
-# Validation Command: bash .nb/plan/scripts/validate.sh
-# ==============================================================================
-
-schema_version: "3.0.0"
-plan_id: "domain_{{DOMAIN_SLUG}}"
-plan_name: "{{DOMAIN_NAME}}"
-version: "1.0.0"
-layer: "{{LAYER:-l1}}"                         # Options: master | l1 | test
-capability_rating: "{{CAPABILITY_RATING:-TIER_L1}}"
-status: "active"                               # Options: active | production | draft | deprecated
-
+plan:
+  id: domain_{{DOMAIN_SLUG}}
+  name: '{{DOMAIN_NAME}}'
+  category: plan
+  layer: '{{LAYER:-l1}}'
+schema_version: 3.0.0
+plan_id: domain_{{DOMAIN_SLUG}}
+plan_name: '{{DOMAIN_NAME}}'
+version: 1.0.0
+layer: '{{LAYER:-l1}}'
+capability_rating: '{{CAPABILITY_RATING:-TIER_L1}}'
+status: active
 maturity:
-  stage: "IMPLEMENTATION_READY"                # Options: PLANNED | ACTIVE_DRAFT | IMPLEMENTATION_READY | COMPLETED | DEPRECATED
-  implementation_status: "structured_specification"
+  stage: IMPLEMENTATION_READY
+  implementation_status: structured_specification
   test_coverage: 100
   production_ready: true
-
 semantic_parity:
   composite_score: 0.985
-  gate_status: "PASSED"                        # Options: PASSED | WARNING | BLOCKED
+  gate_status: PASSED
   vectors:
     ast_parity: 0.99
     contract_parity: 0.98
@@ -28,44 +25,70 @@ semantic_parity:
     handover_parity: 0.98
     doc_parity: 0.98
     supply_chain_parity: 0.99
-
 dependencies:
   requires:
-    - "master_parent_framework"
+  - master_parent_framework
   enables: []
-
 key_capabilities:
-  - "{{DOMAIN_CAPABILITY_1}}"
-  - "{{DOMAIN_CAPABILITY_2}}"
-  - "{{DOMAIN_CAPABILITY_3}}"
-  - "{{DOMAIN_CAPABILITY_4}}"
-
+- '{{DOMAIN_CAPABILITY_1}}'
+- '{{DOMAIN_CAPABILITY_2}}'
+- '{{DOMAIN_CAPABILITY_3}}'
+- '{{DOMAIN_CAPABILITY_4}}'
 file_versions:
   concise:
-    path: "concise.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
-    line_count: 0
-    primary_purpose: "Compact domain specification for token-optimized agentic context"
+    path: concise.md
+    version: 1.0.0
+    last_modified: '2026-11-11'
+    content_hash: c0311717074a18805d01cc246ff8f9ea051e39d82b32c0406b555b96669dc2df
+    line_count: 143
+    primary_purpose: Compact domain specification for token-optimized agentic context
   detailed:
-    path: "detailed.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
-    line_count: 0
-    primary_purpose: "Comprehensive implementation blueprint, wire contracts, and test harness"
+    path: detailed.md
+    version: 1.0.0
+    last_modified: '2026-11-11'
+    content_hash: e3a2043e27a8a1262b271270260cc8ef8a59d1ad9defdaac931c33d59c915753
+    line_count: 431
+    primary_purpose: Comprehensive implementation blueprint, wire contracts, and test
+      harness
   readme:
-    path: "README.md"
-    version: "1.0.0"
-    last_modified: "{{CURRENT_DATE}}"
-    content_hash: "{{SHA256_HASH}}"
-    line_count: 0
-    primary_purpose: "Quick reference, domain overview, and developer navigation"
-
+    path: README.md
+    version: 1.0.0
+    last_modified: '2026-11-11'
+    content_hash: cdc205485dcb1fa43700024fa18d4302c1ee9dd5978ee7165e9e401c8d9b4174
+    line_count: 163
+    primary_purpose: Quick reference, domain overview, and developer navigation
 implementation_phases:
-  phase_1: "Wire Contracts, Schema Definitions & Boundary Invariants"
-  phase_2: "Domain Implementation & Subsystem Architecture"
-  phase_3: "Specialist Subagents & Verification Workflows"
-  phase_4: "Visual Pipeline DAG & Contract Drawer Integration"
-  phase_5: "Packaging, Distribution & Gateway Provisioning"
+  phase_1: Wire Contracts, Schema Definitions & Boundary Invariants
+  phase_2: Domain Implementation & Subsystem Architecture
+  phase_3: Specialist Subagents & Verification Workflows
+  phase_4: Visual Pipeline DAG & Contract Drawer Integration
+  phase_5: Packaging, Distribution & Gateway Provisioning
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.102568Z'
+    content_hash: sha256:c0311717074a18805d01cc246ff8f9ea051e39d82b32c0406b555b96669dc2df
+    lines: 143
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.102568Z'
+    content_hash: sha256:e3a2043e27a8a1262b271270260cc8ef8a59d1ad9defdaac931c33d59c915753
+    lines: 431
+  readme:
+    file: README.md
+    format: overview
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:01.102568Z'
+    content_hash: sha256:cdc205485dcb1fa43700024fa18d4302c1ee9dd5978ee7165e9e401c8d9b4174
+    lines: 163
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.102568Z'
+  sync_direction: concise_to_detailed
+  differences: []

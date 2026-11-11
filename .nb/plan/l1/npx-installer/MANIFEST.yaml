@@ -1,3 +1,8 @@
+plan:
+  id: domain_npx_installer
+  name: NPX Instant Execution & Bootstrapping Architecture Plan
+  category: l1
+  layer: l1
 schema_version: 3.0.0
 plan_id: domain_npx_installer
 plan_name: NPX Instant Execution & Bootstrapping Architecture Plan
@@ -34,21 +39,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 905c6c43de5803b607a0615165e2f2c4932141dcf9a1e5c85d371a7676eec11c
     line_count: 133
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 87c34a62453cf506cd85b543b62bbf12ff1d7e3f87fed85732dee4064514ded2
     line_count: 354
     primary_purpose: Extended implementation guide for npx distribution
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: d38cb84d417f0d1684156a32f25c845393dde09d9e4466489b243417a9f6ee79
     line_count: 28
     primary_purpose: Quick reference and navigation
@@ -58,3 +63,32 @@ implementation_phases:
   phase_3: Quad-Space & MCP Provisioning Templates
   phase_4: Ephemeral CI Mode & POSIX Exit Codes
   phase_5: npm Registry Publication & Air-Gapped Verification
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.871777Z'
+    content_hash: sha256:905c6c43de5803b607a0615165e2f2c4932141dcf9a1e5c85d371a7676eec11c
+    lines: 133
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.871777Z'
+    content_hash: sha256:87c34a62453cf506cd85b543b62bbf12ff1d7e3f87fed85732dee4064514ded2
+    lines: 354
+  readme:
+    file: README.md
+    format: overview
+    version: 1.0.0
+    last_updated: '2026-11-11T18:04:00.871777Z'
+    content_hash: sha256:d38cb84d417f0d1684156a32f25c845393dde09d9e4466489b243417a9f6ee79
+    lines: 28
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:00.871777Z'
+  sync_direction: concise_to_detailed
+  differences: []

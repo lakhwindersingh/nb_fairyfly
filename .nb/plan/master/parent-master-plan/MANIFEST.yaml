@@ -1,3 +1,8 @@
+plan:
+  id: master_parent_framework
+  name: Parent Master Context Engineering Framework
+  category: master
+  layer: master
 schema_version: 3.0.0
 plan_id: master_parent_framework
 plan_name: Parent Master Context Engineering Framework
@@ -68,7 +73,7 @@ file_versions:
   concise:
     path: concise.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: d3cc67d66e2aaa75bd0bdbf02e5c640024b018b6b969e55cc5738fedd1cc5fce
     line_count: 192
     primary_purpose: Complete specification for agentic context with Phase 1 bootstrap
@@ -76,21 +81,21 @@ file_versions:
   detailed:
     path: detailed.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215
     line_count: 1693
     primary_purpose: Extended implementation guide with complete capability breakdowns
   readme:
     path: README.md
     version: 7.6.0
-    last_modified: '2026-10-14'
+    last_modified: '2026-11-11'
     content_hash: 07c876edb034aa0b003f7750c5d5494c161e2fb12cf0956fd6da47990e6efd7d
     line_count: 31
     primary_purpose: Quick reference and navigation
   phase1_checklist:
     path: ../PHASE_1_CAPABILITY_CHECKLIST.md
     version: 1.0.0
-    last_modified: '2026-10-13'
+    last_modified: '2026-11-11'
     content_hash: 09226064f965c871a36a9fd2c6208f798632ed9f858d09dc9c3452e6f07d9924
     line_count: 321
     primary_purpose: Absolute implementation tracker for Phase 1-4 essential capabilities
@@ -118,3 +123,32 @@ phase_1_metrics:
   total_files_created: 2
   total_lines_added: ~500
   syntax_errors: 0
+versions:
+  concise:
+    file: concise.md
+    format: token_optimized
+    target_tokens: 3500
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.078260Z'
+    content_hash: sha256:d3cc67d66e2aaa75bd0bdbf02e5c640024b018b6b969e55cc5738fedd1cc5fce
+    lines: 192
+  detailed:
+    file: detailed.md
+    format: implementation_spec
+    target_tokens: 35000
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.078260Z'
+    content_hash: sha256:6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215
+    lines: 1693
+  readme:
+    file: README.md
+    format: overview
+    version: 7.6.0
+    last_updated: '2026-11-11T18:04:01.078260Z'
+    content_hash: sha256:07c876edb034aa0b003f7750c5d5494c161e2fb12cf0956fd6da47990e6efd7d
+    lines: 31
+sync_status:
+  in_sync: true
+  last_sync: '2026-11-11T18:04:01.078260Z'
+  sync_direction: concise_to_detailed
+  differences: []
