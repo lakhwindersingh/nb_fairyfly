@@ -31,6 +31,8 @@ dependencies:
   enables: []
 key_capabilities:
 - 18-Subsystem Test Pyramid
+- 4-Tier Commercial Capability Regression Matrix
+- OWASP LLM Top 10 & Zero-Trust Vulnerability Red Team
 - Pytest 8.4+ Allure Test Reporting
 - DeepEval & Ragas GenAI Evaluation Harness
 - Playwright 1.48+ Web Quality & WCAG 2.1 AA CI
@@ -40,23 +42,23 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: d98efffc369faa7abe2d007f71755b0cd6a470b14ec3820e6aae4b117e7a5506
-    line_count: 109
+    last_modified: '2026-11-17'
+    content_hash: dec323c989dbd383260a6fe664af94d57f89eca784265c1f7277c9e6113df161
+    line_count: 112
     primary_purpose: High-density testing specification for rapid AI context ingestion
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: b2396976f805fe2d80b77fc6cb55420b9ae8606371cae08c4579ca9d31414cfc
-    line_count: 432
+    last_modified: '2026-11-17'
+    content_hash: 922223063ebba4f497e1b5dc176c9db041f318ef0d8efef427f454b7bd9e9489
+    line_count: 484
     primary_purpose: Comprehensive 360-degree test plan covering all 18 subsystems
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: 3dc3b9efa445a40398c2aa7f057d97e8f3daa880929befe902ff4538c2ea068e
-    line_count: 96
+    last_modified: '2026-11-17'
+    content_hash: a52bec9719984f7443f7fbbdadc342ce281da8eb6af6c7e321ba84ea9420d996
+    line_count: 105
     primary_purpose: Space overview, test pyramid, and execution guide
   test_runner:
     path: test_runner.py

@@ -21,7 +21,7 @@
 | [`domain_saas_portal`](./l1/saas-portal-domain) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
 | [`domain_tiered_wheel_packaging`](./l1/tiered-wheel-packaging) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_vscode_plugin`](./l1/vscode-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
-| [`percipience_master_test_plan`](./test) | `test` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
+| [`percipience_master_test_plan`](./test) | `test` | `COMPLETED` | `0.985` | ✅ Ready | 8 |
 
 ---
 
@@ -203,6 +203,8 @@
 - **Requires**: `master_parent_framework`
 - **Key Capabilities**:
   - 18-Subsystem Test Pyramid
+  - 4-Tier Commercial Capability Regression Matrix
+  - OWASP LLM Top 10 & Zero-Trust Vulnerability Red Team
   - Pytest 8.4+ Allure Test Reporting
   - DeepEval & Ragas GenAI Evaluation Harness
   - Playwright 1.48+ Web Quality & WCAG 2.1 AA CI

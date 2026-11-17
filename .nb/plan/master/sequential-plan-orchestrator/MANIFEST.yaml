@@ -36,43 +36,46 @@ dependencies:
   - all_sequential_plan_implementations
   - l1_through_l5_autonomous_pipeline
 key_capabilities:
-- 'Sequential Topological Execution'
-- 'Token Budget Phased Gating'
-- 'Reentrant State Resumption'
-- 'Zero Token Fast Forward'
-- 'Hallucination Drift Prevention'
-- 'Six Vector Semantic Parity'
-- 'Reentrant Hook Lifecycle'
-- 'Bounded Tdd Self Healing'
-- 'Context Poisoning Isolation Rollback'
-- 'Dynamic Model Tiering Router'
-- 'Ephemeral Worktree Isolation'
-- 'Cryptographic Merkle State Sealing'
-- 'Autonomous Living Docs Synthesis'
-- 'Differential Skippability Engine'
-- 'Target Plan Boundary Resolver'
+- Sequential Topological Execution
+- Token Budget Phased Gating
+- Reentrant State Resumption
+- Zero Token Fast Forward
+- Hallucination Drift Prevention
+- Six Vector Semantic Parity
+- Reentrant Hook Lifecycle
+- Bounded Tdd Self Healing
+- Context Poisoning Isolation Rollback
+- Dynamic Model Tiering Router
+- Ephemeral Worktree Isolation
+- Cryptographic Merkle State Sealing
+- Autonomous Living Docs Synthesis
+- Differential Skippability Engine
+- Target Plan Boundary Resolver
 file_versions:
   concise:
     path: concise.md
     version: 2.0.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: ee91f56a525ad4b81420f42a91fed3b5b9304475438633d6af7c98cfeababc5b
     line_count: 158
-    primary_purpose: Compact token-optimized agentic specification for sequential execution
+    primary_purpose: Compact token-optimized agentic specification for sequential
+      execution
   detailed:
     path: detailed.md
     version: 2.0.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: 665d8296a2542db98f13a4b9abac977244adc19b4bf77ca3ee299978fb2efb7a
     line_count: 695
-    primary_purpose: Exhaustive implementation guide, topological stages, Rust architecture, and zero-drift mechanics
+    primary_purpose: Exhaustive implementation guide, topological stages, Rust architecture,
+      and zero-drift mechanics
   readme:
     path: README.md
     version: 2.0.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: caeeb2c7197674b24b56ece4ac6599ee8e39f4d78c9ffe3793e2d106afa51ec9
     line_count: 59
-    primary_purpose: Master plan directory overview, navigation guide, and architectural summary
+    primary_purpose: Master plan directory overview, navigation guide, and architectural
+      summary
 rust_deliverables:
   workspace_crate: crates/beehive-sequential-orchestrator
   manifest: crates/beehive-sequential-orchestrator/Cargo.toml

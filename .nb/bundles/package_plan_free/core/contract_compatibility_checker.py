@@ -99,8 +99,13 @@ class ContractCompatibilityChecker:
                             all_compatible = False
                             violations.append(f"Hash mismatch for {base_rel}")
                             break
-                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
-                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                        try:
+                            import yaml
+                            base_obj = yaml.safe_load(base_path.read_text(encoding="utf-8")) or {}
+                            head_obj = yaml.safe_load(head_path.read_text(encoding="utf-8")) or {}
+                        except Exception:
+                            base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                            head_obj = json.loads(head_path.read_text(encoding="utf-8"))
                         res = cls.check_compatibility(base_obj, head_obj)
                         if not res.get("is_compatible"):
                             all_compatible = False

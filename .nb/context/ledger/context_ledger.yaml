@@ -512,6 +512,50 @@ ledger_chain:
   recovery_point_id: null
   action: PR_GATE_VERIFICATION_PASSED
   block_hash: 3c4a46a266940ec2f50aa424c2740da303a06a143ff4db0f6c94417784c14662
+- hash_version: 2
+  block_id: 301
+  block_type: STATE_UPDATE
+  prev_block_hash: 3c4a46a266940ec2f50aa424c2740da303a06a143ff4db0f6c94417784c14662
+  timestamp: '2026-11-11T20:19:40.867106+00:00'
+  git_sha: HEAD
+  merkle_root: e89b0e4ddf3f4858e615997ae915d6290e35d4221effebe594ea8bd2afd8ebfd
+  current_block_hash: 9dbd6b64a1b92fc51707fa860e051eb8fe5e0246e86a9246deba0eaf655ea6e6
+  recovery_point_id: null
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 9dbd6b64a1b92fc51707fa860e051eb8fe5e0246e86a9246deba0eaf655ea6e6
+- hash_version: 2
+  block_id: 302
+  block_type: STATE_UPDATE
+  prev_block_hash: 9dbd6b64a1b92fc51707fa860e051eb8fe5e0246e86a9246deba0eaf655ea6e6
+  timestamp: '2026-11-11T20:26:27.621080+00:00'
+  git_sha: HEAD
+  merkle_root: 48241d6d577540248399b0e57c29b9e6c32defe0a5c36aaa383764bdbb255ded
+  current_block_hash: 7170afe67996af5e0fc748ba16f0ff481153b8cc79524fb3e1457f8869cd9dbb
+  recovery_point_id: null
+  action: FORMAL_REQUEST_INGESTED:jira_issue_interchange:PERC-8787
+  block_hash: 7170afe67996af5e0fc748ba16f0ff481153b8cc79524fb3e1457f8869cd9dbb
+- hash_version: 2
+  block_id: 303
+  block_type: STATE_UPDATE
+  prev_block_hash: 7170afe67996af5e0fc748ba16f0ff481153b8cc79524fb3e1457f8869cd9dbb
+  timestamp: '2026-11-11T20:26:28.394457+00:00'
+  git_sha: HEAD
+  merkle_root: 69dcc3400731366c9d447127eea5406d0b408936b445882a5af2708c34815fa9
+  current_block_hash: 6990d6caddd8c24a1b139d990d24ce8169604c418bc429f6bc661978a72ad307
+  recovery_point_id: null
+  action: FORMAL_REQUEST_INGESTED:jira_issue_interchange:PERC-8788
+  block_hash: 6990d6caddd8c24a1b139d990d24ce8169604c418bc429f6bc661978a72ad307
+- hash_version: 2
+  block_id: 304
+  block_type: STATE_UPDATE
+  prev_block_hash: 6990d6caddd8c24a1b139d990d24ce8169604c418bc429f6bc661978a72ad307
+  timestamp: '2026-11-17T23:13:06.658388+00:00'
+  git_sha: HEAD
+  merkle_root: 69dcc3400731366c9d447127eea5406d0b408936b445882a5af2708c34815fa9
+  current_block_hash: 575c444074d1418e54db85661ac9f6383d57e08decb670a18579153073653373
+  recovery_point_id: null
+  action: PR_GATE_VERIFICATION_PASSED
+  block_hash: 575c444074d1418e54db85661ac9f6383d57e08decb670a18579153073653373
 quarantined_tests: []
 poisoning_incidents: []
 git_commits:
@@ -1998,5 +2042,17 @@ formal_requests:
   format_type: jira_issue_interchange
   file_path: user/inputs/formal_requests/jira_story_20261111_193059_perc_5459.json
   ingested_at: '2026-11-11T19:30:59.282476+00:00'
+  workflow: wf_derivation_pipeline
+  status: INGESTED_AND_VERIFIED
+- request_id: PERC-8787
+  format_type: jira_issue_interchange
+  file_path: user/inputs/formal_requests/jira_story_20261111_202627_perc_8787.json
+  ingested_at: '2026-11-11T20:26:27.478985+00:00'
+  workflow: derivation_pipeline
+  status: INGESTED_AND_VERIFIED
+- request_id: PERC-8788
+  format_type: jira_issue_interchange
+  file_path: user/inputs/formal_requests/jira_story_20261111_202628_perc_8788.json
+  ingested_at: '2026-11-11T20:26:28.288583+00:00'
   workflow: wf_derivation_pipeline
   status: INGESTED_AND_VERIFIED

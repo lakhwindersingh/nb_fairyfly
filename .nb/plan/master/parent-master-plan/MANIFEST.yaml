@@ -73,7 +73,7 @@ file_versions:
   concise:
     path: concise.md
     version: 7.6.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: d3cc67d66e2aaa75bd0bdbf02e5c640024b018b6b969e55cc5738fedd1cc5fce
     line_count: 192
     primary_purpose: Complete specification for agentic context with Phase 1 bootstrap
@@ -81,14 +81,14 @@ file_versions:
   detailed:
     path: detailed.md
     version: 7.6.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: 6429578220aa7cb87642604b44b10f513c5c31402ecf48fb580af2a637c3e215
     line_count: 1693
     primary_purpose: Extended implementation guide with complete capability breakdowns
   readme:
     path: README.md
     version: 7.6.0
-    last_modified: '2026-11-11'
+    last_modified: '2026-11-17'
     content_hash: 07c876edb034aa0b003f7750c5d5494c161e2fb12cf0956fd6da47990e6efd7d
     line_count: 31
     primary_purpose: Quick reference and navigation

@@ -1,6 +1,6 @@
 # Percipience AST-Compressed Project Context for Claude Code
 > **Notice to Claude Code**: All source files below are presented in AST-pruned skeleton format (function signatures, docstrings, type annotations, and structural DOM tags). Full internal implementation bodies have been stripped by Percipience to optimize token efficiency (~70% savings). If you need full function implementations to perform surgical refactors, inspect specific files or lines using your file viewing tools.
-> **FinOps Efficiency**: Raw Context: 919,717 tokens | Pruned Context: 435,313 tokens | Savings: 52.7%
+> **FinOps Efficiency**: Raw Context: 919,954 tokens | Pruned Context: 435,496 tokens | Savings: 52.7%
 
 ## Active Wire Contracts & Schemas
 ### Contract: billing_meter_contract.yaml
@@ -3873,8 +3873,11 @@ class ContractCompatibilityChecker:
                         head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
                         if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
                             all_compatible = False
-                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
-                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                            import yaml
+                            base_obj = yaml.safe_load(base_path.read_text(encoding="utf-8")) or {}
+                            head_obj = yaml.safe_load(head_path.read_text(encoding="utf-8")) or {}
+                            base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                            head_obj = json.loads(head_path.read_text(encoding="utf-8"))
                         res = cls.check_compatibility(base_obj, head_obj)
                             all_compatible = False
 ```
@@ -17942,8 +17945,11 @@ class ContractCompatibilityChecker:
                         head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
                         if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
                             all_compatible = False
-                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
-                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                            import yaml
+                            base_obj = yaml.safe_load(base_path.read_text(encoding="utf-8")) or {}
+                            head_obj = yaml.safe_load(head_path.read_text(encoding="utf-8")) or {}
+                            base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                            head_obj = json.loads(head_path.read_text(encoding="utf-8"))
                         res = cls.check_compatibility(base_obj, head_obj)
                             all_compatible = False
 ```
@@ -26329,8 +26335,11 @@ class ContractCompatibilityChecker:
                         head_sha = hashlib.sha256(head_path.read_bytes()).hexdigest()
                         if base_sha != check.get("baseline_sha256") or head_sha != check.get("candidate_sha256"):
                             all_compatible = False
-                        base_obj = json.loads(base_path.read_text(encoding="utf-8"))
-                        head_obj = json.loads(head_path.read_text(encoding="utf-8"))
+                            import yaml
+                            base_obj = yaml.safe_load(base_path.read_text(encoding="utf-8")) or {}
+                            head_obj = yaml.safe_load(head_path.read_text(encoding="utf-8")) or {}
+                            base_obj = json.loads(base_path.read_text(encoding="utf-8"))
+                            head_obj = json.loads(head_path.read_text(encoding="utf-8"))
                         res = cls.check_compatibility(base_obj, head_obj)
                             all_compatible = False
 ```
