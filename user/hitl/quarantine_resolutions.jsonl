@@ -502,3 +502,7 @@
 {"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 514, "resolved_at": "2026-11-17T23:32:12.860877+00:00"}
 {"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 525, "resolved_at": "2026-11-17T23:32:20.321694+00:00"}
 {"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 526, "resolved_at": "2026-11-17T23:32:20.467391+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 549, "resolved_at": "2026-11-18T17:58:53.403528+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 550, "resolved_at": "2026-11-18T17:58:53.529268+00:00"}
+{"incident_id": "INC_TEST_DIAG_001", "module_id": "mod_portal_marketing", "status": "RESOLVED_VIA_DIAGNOSTIC_REPROMPT", "attempts": 1, "resolved_block_id": 562, "resolved_at": "2026-11-18T17:59:02.451039+00:00"}
+{"incident_id": "INC_TEST_FAIL_002", "module_id": "mod_portal_marketing", "status": "SURGICALLY_ROLLED_BACK", "attempts": 2, "resolved_block_id": 563, "resolved_at": "2026-11-18T17:59:02.576765+00:00"}

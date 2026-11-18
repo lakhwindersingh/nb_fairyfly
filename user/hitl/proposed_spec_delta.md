@@ -1,11 +1,11 @@
-# Proposed Specification Delta RFC: DELTA_20261117_233239
+# Proposed Specification Delta RFC: DELTA_20261118_175902
 ## Evolutionary Architecture Request (Evolve Mode)
 
-- **Delta ID:** `DELTA_20261117_233239`
+- **Delta ID:** `DELTA_20261118_175902`
 - **Source Module:** `mod_portal_marketing`
 - **Title:** Add Streaming Response Header
-- **Status:** `AWAITING_HITL_REVIEW`
-- **Created At:** `2026-11-17T23:32:39.918179+00:00`
+- **Status:** `APPROVED_AND_BASELINED` (Approved: 2026-11-18T17:59:02.739679+00:00)
+- **Created At:** `2026-11-18T17:59:02.739288+00:00`
 
 ---
 
@@ -24,12 +24,12 @@ Necessary wire addition for async chunking.
 ### 3. Proposed Schema & Contract Additions
 | Field Name | Type | Description |
 | :--- | :--- | :--- |
-| `x_stream_protocol` | `string` |  |
+| `x_chunk_id` | `string` | Chunk identifier |
 
 ---
 
 ### 4. Human-in-the-Loop Decision Gate
 To approve this specification delta and baseline `user/inputs/`, run:
 ```bash
-./workplace/bin/percipience drift approve-delta --delta-id DELTA_20261117_233239
+./workplace/bin/percipience drift approve-delta --delta-id DELTA_20261118_175902
 ```

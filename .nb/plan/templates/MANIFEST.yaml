@@ -34,61 +34,90 @@ key_capabilities:
 - '{{DOMAIN_CAPABILITY_2}}'
 - '{{DOMAIN_CAPABILITY_3}}'
 - '{{DOMAIN_CAPABILITY_4}}'
+autonomous_execution:
+  orchestrator_agent: "agent_sequential_plan_orchestrator"
+  execution_engine: "dynamic_dag"
+  worktree_isolation: true
+  max_healing_loops: 3
+  handoff_protocol: "hmac_sha256_attested"
+  anti_drift_gate: true
+  finops_metering: true
+lifecycle_hooks:
+  pre_spawn: "percipience worktree lease --module {{MODULE_PROVIDER}}"
+  pre_execution: "percipience check --ast-prune --schema-lint"
+  post_execution: "pytest workplace/tests/test_{{DOMAIN_SLUG}}_space.py -v"
+  handover: "percipience handoff issue --from agent_{{SPECIALIST_AGENT_1}} --to agent_{{SPECIALIST_AGENT_2}}"
+  pre_merge_gate: "percipience gate"
+  self_healing: "percipience heal --max-attempts 3"
+  post_merge_seal: "percipience merkle seal --worm-egress"
+specification_contracts:
+  wire_contracts:
+    - path: ".nb/context/contracts/{{DOMAIN_WIRE_CONTRACT_1}}.yaml"
+      type: "RPC_OR_EVENT_STREAM"
+      strict_mode: true
+    - path: ".nb/context/contracts/{{DOMAIN_WIRE_CONTRACT_2}}.json"
+      type: "STATE_TELEMETRY"
+      strict_mode: true
+  invariant_rules:
+    - path: ".nb/context/rules/{{DOMAIN_INVARIANT_RULE_1}}.md"
+      type: "ARCHITECTURAL_BOUNDARIES"
+    - path: ".nb/context/rules/{{DOMAIN_INVARIANT_RULE_2}}.md"
+      type: "PERFORMANCE_AND_SECURITY"
 file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: c0311717074a18805d01cc246ff8f9ea051e39d82b32c0406b555b96669dc2df
-    line_count: 143
-    primary_purpose: Compact domain specification for token-optimized agentic context
+    last_modified: '{{CURRENT_DATE:-2026-11-18}}'
+    content_hash: '{{CONCISE_HASH}}'
+    line_count: 213
+    primary_purpose: Compact domain specification for token-optimized autonomous agent context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: e3a2043e27a8a1262b271270260cc8ef8a59d1ad9defdaac931c33d59c915753
-    line_count: 431
-    primary_purpose: Comprehensive implementation blueprint, wire contracts, and test
-      harness
+    last_modified: '{{CURRENT_DATE:-2026-11-18}}'
+    content_hash: '{{DETAILED_HASH}}'
+    line_count: 596
+    primary_purpose: Comprehensive implementation blueprint, wire contracts, lifecycle hooks, and test harness
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: cdc205485dcb1fa43700024fa18d4302c1ee9dd5978ee7165e9e401c8d9b4174
-    line_count: 163
-    primary_purpose: Quick reference, domain overview, and developer navigation
+    last_modified: '{{CURRENT_DATE:-2026-11-18}}'
+    content_hash: '{{README_HASH}}'
+    line_count: 184
+    primary_purpose: Quick reference, autonomous execution guide, and developer navigation
 implementation_phases:
   phase_1: Wire Contracts, Schema Definitions & Boundary Invariants
-  phase_2: Domain Implementation & Subsystem Architecture
-  phase_3: Specialist Subagents & Verification Workflows
-  phase_4: Visual Pipeline DAG & Contract Drawer Integration
-  phase_5: Packaging, Distribution & Gateway Provisioning
+  phase_2: Provider Subsystem Scaffolding & Core Domain Engine
+  phase_3: Consumer Subsystem, Client RPC & Loopback Harness
+  phase_4: Specialist Subagents, Handoff Tokens & Verification Workflows
+  phase_5: Visual Pipeline DAG, Contract Drawer & Gatekeeper Verification
+  phase_6: Packaging, Distribution & Sealed .nbpack Provisioning
 versions:
   concise:
     file: concise.md
     format: token_optimized
     target_tokens: 3500
     version: 1.0.0
-    last_updated: '2026-11-11T18:04:01.102568Z'
-    content_hash: sha256:c0311717074a18805d01cc246ff8f9ea051e39d82b32c0406b555b96669dc2df
-    lines: 143
+    last_updated: '2026-11-18T12:00:00Z'
+    content_hash: sha256:{{CONCISE_HASH}}
+    lines: 213
   detailed:
     file: detailed.md
     format: implementation_spec
     target_tokens: 35000
     version: 1.0.0
-    last_updated: '2026-11-11T18:04:01.102568Z'
-    content_hash: sha256:e3a2043e27a8a1262b271270260cc8ef8a59d1ad9defdaac931c33d59c915753
-    lines: 431
+    last_updated: '2026-11-18T12:00:00Z'
+    content_hash: sha256:{{DETAILED_HASH}}
+    lines: 596
   readme:
     file: README.md
     format: overview
     version: 1.0.0
-    last_updated: '2026-11-11T18:04:01.102568Z'
-    content_hash: sha256:cdc205485dcb1fa43700024fa18d4302c1ee9dd5978ee7165e9e401c8d9b4174
-    lines: 163
+    last_updated: '2026-11-18T12:00:00Z'
+    content_hash: sha256:{{README_HASH}}
+    lines: 184
 sync_status:
   in_sync: true
-  last_sync: '2026-11-11T18:04:01.102568Z'
+  last_sync: '2026-11-18T12:00:00Z'
   sync_direction: concise_to_detailed
   differences: []
