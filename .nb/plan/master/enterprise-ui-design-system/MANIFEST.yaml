@@ -45,6 +45,36 @@ key_capabilities:
 - 'full_width_fluid_responsive_design: True'
 - 'tabbed_workspaces_and_decluttering: True'
 - 'collapsible_chrome_and_sidebar: True'
+autonomous_execution:
+  orchestrator_agent: agent_sequential_plan_orchestrator
+  specialist_agent: agent_ui_design_system_architect
+  execution_engine: dynamic_dag
+  worktree_isolation: true
+  max_healing_loops: 3
+  handoff_protocol: hmac_sha256_attested
+  anti_drift_gate: true
+  finops_metering: true
+lifecycle_hooks:
+  pre_spawn: percipience worktree lease --module master_ui_design_system
+  pre_execution: percipience check --ast-prune --schema-lint
+  post_execution: pytest workplace/tests/test_ui_design_system.py -v
+  handover: percipience handoff issue --from agent_ui_design_system_architect --to agent_qa_sentinel
+  pre_merge_gate: percipience gate
+  self_healing: percipience heal --max-attempts 3
+  post_merge_seal: percipience merkle seal --worm-egress
+specification_contracts:
+  wire_contracts:
+  - path: .nb/context/contracts/ui_token_design_contract.yaml
+    type: RPC_OR_EVENT_STREAM
+    strict_mode: true
+  - path: .nb/context/contracts/component_telemetry_schema.json
+    type: STATE_TELEMETRY
+    strict_mode: true
+  invariant_rules:
+  - path: .nb/context/rules/wcag_aa_accessibility_invariants.md
+    type: ARCHITECTURAL_BOUNDARIES
+  - path: .nb/context/rules/design_token_immutability.md
+    type: PERFORMANCE_AND_SECURITY
 file_versions:
   concise:
     path: concise.md

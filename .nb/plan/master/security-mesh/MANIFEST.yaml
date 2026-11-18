@@ -35,6 +35,36 @@ dependencies:
 key_capabilities:
 - Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA
   & PII Protection Mesh Core Engine & Runtime Governance
+autonomous_execution:
+  orchestrator_agent: agent_sequential_plan_orchestrator
+  specialist_agent: agent_zero_trust_security_architect
+  execution_engine: dynamic_dag
+  worktree_isolation: true
+  max_healing_loops: 3
+  handoff_protocol: hmac_sha256_attested
+  anti_drift_gate: true
+  finops_metering: true
+lifecycle_hooks:
+  pre_spawn: percipience worktree lease --module master_security_mesh
+  pre_execution: percipience check --ast-prune --schema-lint
+  post_execution: pytest workplace/tests/test_security_mesh.py workplace/tests/test_tenant_provisioning.py -v
+  handover: percipience handoff issue --from agent_zero_trust_security_architect --to agent_red_team_sentinel
+  pre_merge_gate: percipience gate
+  self_healing: percipience heal --max-attempts 3
+  post_merge_seal: percipience merkle seal --worm-egress
+specification_contracts:
+  wire_contracts:
+  - path: .nb/context/contracts/security_mesh_wire_contract.yaml
+    type: RPC_OR_EVENT_STREAM
+    strict_mode: true
+  - path: .nb/context/contracts/auth_telemetry_schema.json
+    type: STATE_TELEMETRY
+    strict_mode: true
+  invariant_rules:
+  - path: .nb/context/rules/zero_trust_mesh_invariants.md
+    type: ARCHITECTURAL_BOUNDARIES
+  - path: .nb/context/rules/cryptographic_token_invariants.md
+    type: PERFORMANCE_AND_SECURITY
 file_versions:
   concise:
     path: concise.md

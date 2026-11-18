@@ -141,6 +141,34 @@
           "required": ["path", "version", "last_modified", "content_hash", "line_count", "primary_purpose"]
         }
       }
+    },
+    "autonomous_execution": {
+      "type": "object",
+      "properties": {
+        "orchestrator_agent": { "type": "string" },
+        "specialist_agent": { "type": "string" },
+        "execution_engine": { "type": "string" },
+        "worktree_isolation": { "type": "boolean" },
+        "max_healing_loops": { "type": "integer" },
+        "handoff_protocol": { "type": "string" },
+        "anti_drift_gate": { "type": "boolean" },
+        "finops_metering": { "type": "boolean" }
+      }
+    },
+    "lifecycle_hooks": {
+      "type": "object",
+      "properties": {
+        "pre_spawn": { "type": "string" },
+        "pre_execution": { "type": "string" },
+        "post_execution": { "type": "string" },
+        "handover": { "type": "string" },
+        "pre_merge_gate": { "type": "string" },
+        "self_healing": { "type": "string" },
+        "post_merge_seal": { "type": "string" }
+      }
+    },
+    "specification_contracts": {
+      "type": "object"
     }
   }
 }

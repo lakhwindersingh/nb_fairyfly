@@ -62,7 +62,8 @@ class PlanVersionSync:
         today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         file_versions = manifest.setdefault("file_versions", {})
-        for file_type in ["concise", "detailed", "readme"]:
+        file_types = list(dict.fromkeys(["concise", "detailed", "readme"] + list(file_versions.keys())))
+        for file_type in file_types:
             default_path = f"{file_type}.md" if file_type != "readme" else "README.md"
             if file_type not in file_versions:
                 file_versions[file_type] = {
@@ -107,7 +108,8 @@ class PlanVersionSync:
         issues = []
         file_versions = manifest.get("file_versions", {})
 
-        for file_type in ["concise", "detailed", "readme"]:
+        check_types = list(dict.fromkeys(["concise", "detailed", "readme"] + list(file_versions.keys())))
+        for file_type in check_types:
             if file_type not in file_versions:
                 issues.append(f"Missing '{file_type}' entry in file_versions")
                 continue

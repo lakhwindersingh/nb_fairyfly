@@ -37,6 +37,36 @@ key_capabilities:
 - Secure Webview Panel & Interactive Visualizer
 - In-Editor CodeLens Triggers on Contracts & Workflows
 - Activity Bar Navigation & Status Bar FinOps Meters
+autonomous_execution:
+  orchestrator_agent: agent_sequential_plan_orchestrator
+  specialist_agent: agent_vscode_lsp_architect
+  execution_engine: dynamic_dag
+  worktree_isolation: true
+  max_healing_loops: 3
+  handoff_protocol: hmac_sha256_attested
+  anti_drift_gate: true
+  finops_metering: true
+lifecycle_hooks:
+  pre_spawn: percipience worktree lease --module l1_vscode_extension
+  pre_execution: percipience check --ast-prune --schema-lint
+  post_execution: pytest workplace/tests/test_ide_plugins_space.py -v
+  handover: percipience handoff issue --from agent_vscode_lsp_architect --to agent_qa_sentinel
+  pre_merge_gate: percipience gate
+  self_healing: percipience heal --max-attempts 3
+  post_merge_seal: percipience merkle seal --worm-egress
+specification_contracts:
+  wire_contracts:
+  - path: .nb/context/contracts/lsp_percipience_bridge.yaml
+    type: RPC_OR_EVENT_STREAM
+    strict_mode: true
+  - path: .nb/context/contracts/vscode_telemetry_schema.json
+    type: STATE_TELEMETRY
+    strict_mode: true
+  invariant_rules:
+  - path: .nb/context/rules/ide_boundary_invariants.md
+    type: ARCHITECTURAL_BOUNDARIES
+  - path: .nb/context/rules/zero_trust_sandbox_rules.md
+    type: PERFORMANCE_AND_SECURITY
 file_versions:
   concise:
     path: concise.md
