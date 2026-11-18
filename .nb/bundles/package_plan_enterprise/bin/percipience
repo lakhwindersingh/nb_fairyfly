@@ -2470,7 +2470,7 @@ def main():
 
     # test
     p_test = subparsers.add_parser("test", help="Execute automatable AI-assisted test suites across architectural tiers")
-    p_test.add_argument("--tier", choices=["all", "unit", "integration", "portal", "guardrails", "governance", "benchmarks"], default="all", help="Target test tier")
+    p_test.add_argument("--tier", choices=["all", "unit", "integration", "portal", "guardrails", "governance", "security", "benchmarks"], default="all", help="Target test tier")
     p_test.add_argument("--output-dir", default="", help="Custom output directory for test reports")
     p_test.add_argument("--ai-triage", action="store_true", help="Perform automated AI failure diagnosis and surgical patch synthesis on failures")
     p_test.add_argument("--eval-ai", action="store_true", default=True, help="Run quantitative GenAI evaluation metrics")

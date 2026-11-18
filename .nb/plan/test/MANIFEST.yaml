@@ -63,9 +63,9 @@ file_versions:
   test_runner:
     path: test_runner.py
     version: 1.0.0
-    last_modified: '2026-11-11'
-    content_hash: 22a938459ad0dacf48a9c21d412bcd49aa81ba9bcb8b51bcfa51af80a9967d5a
-    line_count: 317
+    last_modified: '2026-11-17'
+    content_hash: fe087d22d52e4e61a89ca1569014f81fdea30f2204ed5891b5f4e423c88c1306
+    line_count: 318
     primary_purpose: Automatable AI test orchestrator, reporting engine, and failure
       triager
 versions:

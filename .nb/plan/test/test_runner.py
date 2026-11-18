@@ -8,7 +8,7 @@ Usage:
     python3 .nb/plan/test/test_runner.py [OPTIONS]
 
 Options:
-    --tier [all|unit|integration|portal|guardrails|governance|benchmarks]
+    --tier [all|unit|integration|portal|guardrails|governance|security|benchmarks]
                         Test tier to execute (default: all)
     --report [json,html,junit,markdown]
                         Comma-separated report formats to generate (default: json,markdown)
@@ -55,6 +55,7 @@ TIER_MAPPING = {
         "workplace/tests/test_hitl_checkpoint_manager.py",
         "workplace/tests/test_agent_capability_guard.py"
     ],
+    "security": ["workplace/tests/test_vulnerability_suite.py"],
     "benchmarks": ["workplace/tests/benchmarks/test_agent_benchmarks.py"]
 }
 

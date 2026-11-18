@@ -94,7 +94,7 @@ class TestAITestOrchestratorExecution(unittest.TestCase):
 
     def test_05_tier_mapping_completeness(self):
         """Verify test tier mappings cover all expected functional domains."""
-        expected_tiers = ["all", "unit", "integration", "portal", "guardrails", "governance", "benchmarks"]
+        expected_tiers = ["all", "unit", "integration", "portal", "guardrails", "governance", "security", "benchmarks"]
         for tier in expected_tiers:
             self.assertIn(tier, TIER_MAPPING, f"Missing tier: {tier}")
             targets = TIER_MAPPING[tier]
@@ -103,6 +103,10 @@ class TestAITestOrchestratorExecution(unittest.TestCase):
             for t in targets:
                 p = REPO_ROOT / t
                 self.assertTrue(p.exists(), f"Target test path does not exist: {t}")
+
+        # Verify dedicated vulnerability suite exists
+        vuln_suite = REPO_ROOT / "workplace" / "tests" / "test_vulnerability_suite.py"
+        self.assertTrue(vuln_suite.exists(), "test_vulnerability_suite.py must exist")
 
     def test_06_orchestrator_execution_and_reports(self):
         """Execute unit tier programmatically and verify structured report generation."""
@@ -138,6 +142,18 @@ class TestAITestOrchestratorExecution(unittest.TestCase):
         self.assertIn("Percipience Test Execution Report", md_content)
         self.assertIn("Execution Summary", md_content)
         self.assertIn("AI & GenAI Quality Evaluation", md_content)
+
+    def test_06b_orchestrator_security_tier_execution(self):
+        """Execute dedicated security red-team tier programmatically."""
+        orchestrator = PercipienceTestOrchestrator(
+            tier="security",
+            output_dir=self.temp_out,
+            eval_ai=True
+        )
+        results = orchestrator.run_tests(quiet=True)
+        self.assertEqual(results["status"], "PASSED")
+        self.assertEqual(results["exit_code"], 0)
+        self.assertGreaterEqual(results["summary"]["total"], 18)
 
     def test_07_genai_evaluation_metrics(self):
         """Verify quantitative GenAI evaluation metrics meet SLA thresholds."""
