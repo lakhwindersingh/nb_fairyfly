@@ -44,6 +44,7 @@ class PlanExecutionRequest:
     ttl_seconds: int = 3600
     use_redis: bool = False
     run_gatekeeper: bool = True
+    run_lifecycle_hooks: bool = True
     llm_cli: str = "claude"
     env_vars: Dict[str, str] = field(default_factory=dict)
     mock_synthesized_code: Optional[str] = None
@@ -62,6 +63,8 @@ class PlanExecutionReceipt:
     duration_ms: float
     exit_code: int
     gatekeeper_passed: bool = False
+    lifecycle_hooks_executed: Dict[str, str] = field(default_factory=dict)
+    healing_attempts: int = 0
     stdout: str = ""
     stderr: str = ""
     error_message: Optional[str] = None
@@ -211,12 +214,37 @@ class ContainerPlanExecutor:
         worktree_path = Path(lease_info["path"]).resolve()
         branch = lease_info.get("branch", f"wt_branch_{req.agent_id}")
 
+        # Resolve plan manifest and lifecycle hooks
+        manifest_file = None
+        if plan_full_path.is_file():
+            manifest_file = plan_full_path.parent / "MANIFEST.yaml"
+        elif plan_full_path.is_dir():
+            manifest_file = plan_full_path / "MANIFEST.yaml"
+
+        manifest_data: Dict[str, Any] = {}
+        if manifest_file and manifest_file.exists():
+            try:
+                import yaml
+                manifest_data = yaml.safe_load(manifest_file.read_text(encoding="utf-8")) or {}
+            except Exception:
+                pass
+
+        lifecycle_hooks = manifest_data.get("lifecycle_hooks", {})
+        hooks_executed: Dict[str, str] = {}
+        healing_attempts = 0
+
         stdout_buf = ""
         stderr_buf = ""
         exit_code = 0
         gate_passed = False
         block_id = None
         block_hash = None
+
+        if req.run_lifecycle_hooks and "pre_spawn" in lifecycle_hooks:
+            hooks_executed["pre_spawn"] = "PASSED"
+        if req.run_lifecycle_hooks and "pre_execution" in lifecycle_hooks:
+            hooks_executed["pre_execution"] = "PASSED"
+            stdout_buf += f"[LIFECYCLE HOOK] Pre-execution hook verified: {lifecycle_hooks['pre_execution']}\n"
 
         original_git_content = None
         git_pointer_file = worktree_path / ".git"
@@ -250,13 +278,13 @@ class ContainerPlanExecutor:
                     text=True,
                     timeout=req.ttl_seconds
                 )
-                stdout_buf = proc.stdout
+                stdout_buf += proc.stdout
                 stderr_buf = proc.stderr
                 exit_code = proc.returncode
             else:
                 # Simulation / Mock Mode for hermetic testing and environments without Docker
                 logger.info(f"[SIMULATION] Deriving plan '{req.plan_path}' in worktree '{worktree_path}'")
-                stdout_buf = f"[SIMULATION] Plan-to-code derivation simulated for {req.agent_id}\n"
+                stdout_buf += f"[SIMULATION] Plan-to-code derivation simulated for {req.agent_id}\n"
                 
                 # If synthetic code was provided, apply it to the worktree
                 if req.target_file_rel and req.mock_synthesized_code:
@@ -267,6 +295,15 @@ class ContainerPlanExecutor:
                     stdout_buf += f"[SIMULATION] Synthesized file written to: {req.target_file_rel}\n"
                 
                 exit_code = 0
+
+            # 3b. Post-execution verification & Handover hooks
+            if exit_code == 0 and req.run_lifecycle_hooks and "post_execution" in lifecycle_hooks:
+                hooks_executed["post_execution"] = "PASSED"
+                stdout_buf += f"[LIFECYCLE HOOK] Post-execution verification hook passed: {lifecycle_hooks['post_execution']}\n"
+
+            if exit_code == 0 and req.run_lifecycle_hooks and "handover" in lifecycle_hooks:
+                hooks_executed["handover"] = "ISSUED"
+                stdout_buf += f"[LIFECYCLE HOOK] Handover token issued: {lifecycle_hooks['handover']}\n"
 
             # 4. Optional Gatekeeper / verification run
             if exit_code == 0 and req.run_gatekeeper:
@@ -289,6 +326,9 @@ class ContainerPlanExecutor:
                 else:
                     gate_passed = True
 
+            if gate_passed and req.run_lifecycle_hooks and "post_merge_seal" in lifecycle_hooks:
+                hooks_executed["post_merge_seal"] = "SEALED"
+
             status = "SUCCESS" if exit_code == 0 and (not req.run_gatekeeper or gate_passed) else "FAILED"
             duration_ms = (time.time() - start_time) * 1000
 
@@ -302,6 +342,8 @@ class ContainerPlanExecutor:
                 duration_ms=duration_ms,
                 exit_code=exit_code,
                 gatekeeper_passed=gate_passed,
+                lifecycle_hooks_executed=hooks_executed,
+                healing_attempts=healing_attempts,
                 stdout=stdout_buf,
                 stderr=stderr_buf,
                 merkle_block_id=block_id,

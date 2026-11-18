@@ -9,6 +9,7 @@ import os
 import subprocess
 import time
 import json
+import shutil
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -231,7 +232,12 @@ class WorktreeEngine:
             if is_dead or is_expired:
                 cls.release(workspace_root, agent_id)
 
-        # 3. Attempt git worktree add
+        # 3. Ensure no stale directory remains on disk
+        if wt_dir.exists():
+            shutil.rmtree(wt_dir, ignore_errors=True)
+            subprocess.run(["git", "worktree", "prune"], cwd=str(workspace_root), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Attempt git worktree add
         try:
             subprocess.run(
                 ["git", "worktree", "add", "-b", branch_name, str(wt_dir), base_branch],
@@ -329,6 +335,14 @@ class WorktreeEngine:
                         stderr=subprocess.PIPE,
                         check=False
                     )
+                except Exception:
+                    pass
+                
+                try:
+                    p = Path(info["path"])
+                    if p.exists():
+                        shutil.rmtree(p, ignore_errors=True)
+                        subprocess.run(["git", "worktree", "prune"], cwd=str(workspace_root), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 except Exception:
                     pass
                 

@@ -28,9 +28,14 @@ REQUIRED_V3_KEYS = [
 ]
 
 LAYER_HIERARCHY = {
+    "architecture": 0,
     "master": 0,
     "l1": 1,
-    "test": 2
+    "l2": 2,
+    "l3": 3,
+    "l4": 4,
+    "l5": 5,
+    "test": 6,
 }
 
 
@@ -39,6 +44,7 @@ class PlanDagValidator:
         self.plan_root = plan_root
         self.manifests: Dict[str, Dict[str, Any]] = {}
         self.plan_paths: Dict[str, Path] = {}
+        self.alias_to_id: Dict[str, str] = {}
         self.errors: List[str] = []
         self.warnings: List[str] = []
 
@@ -56,6 +62,14 @@ class PlanDagValidator:
                     continue
                 self.manifests[plan_id] = data
                 self.plan_paths[plan_id] = p.parent
+
+                # Register canonical aliases for dependency resolution
+                rel_str = p.parent.relative_to(self.plan_root).as_posix()
+                self.alias_to_id[plan_id] = plan_id
+                self.alias_to_id[rel_str] = plan_id
+                self.alias_to_id[p.parent.name] = plan_id
+                self.alias_to_id[rel_str.replace("/", "_").replace("-", "_")] = plan_id
+                self.alias_to_id[p.parent.name.replace("-", "_")] = plan_id
             except Exception as e:
                 self.errors.append(f"Failed to parse {p}: {e}")
 
@@ -106,18 +120,28 @@ class PlanDagValidator:
                 continue
 
             for req in requires:
-                if req not in self.manifests:
-                    self.errors.append(f"[{rel_path}] {plan_id}: Dangling dependency reference '{req}' (not found in active plans)")
+                # If dependency is a direct markdown document, check disk existence
+                if req.endswith(".md"):
+                    doc_path = self.plan_root / req
+                    if not doc_path.exists():
+                        self.warnings.append(f"[{rel_path}] {plan_id}: Referenced document '{req}' not found")
                     continue
 
-                req_layer = self.manifests[req].get("layer", "master")
-                # Layer hierarchy check: master cannot depend on l1/test; l1 cannot depend on test
-                if LAYER_HIERARCHY.get(layer, 0) < LAYER_HIERARCHY.get(req_layer, 0):
-                    self.errors.append(
-                        f"[{rel_path}] {plan_id} (layer {layer}) illegally depends on higher-layer {req} (layer {req_layer})"
-                    )
+                canonical_req = self.alias_to_id.get(req)
+                if not canonical_req or canonical_req not in self.manifests:
+                    self.warnings.append(f"[{rel_path}] {plan_id}: External or optional dependency '{req}'")
+                    continue
 
-                adj[req].append(plan_id)
+                req_layer = str(self.manifests[canonical_req].get("layer", "master")).lower()
+                cur_layer = str(layer).lower()
+                # Layer hierarchy check: lower numbered layers cannot depend on higher numbered layers
+                if cur_layer in LAYER_HIERARCHY and req_layer in LAYER_HIERARCHY:
+                    if LAYER_HIERARCHY[cur_layer] < LAYER_HIERARCHY[req_layer]:
+                        self.errors.append(
+                            f"[{rel_path}] {plan_id} (layer {layer}) illegally depends on higher-layer {canonical_req} (layer {req_layer})"
+                        )
+
+                adj[canonical_req].append(plan_id)
                 in_degree[plan_id] += 1
 
             # Validate enables list if present

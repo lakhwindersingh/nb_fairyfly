@@ -32,17 +32,12 @@ class PlanVersionSync:
             return len(f.readlines())
 
     def get_plan_dirs(self) -> List[Path]:
-        """Find all plan directories under known categories."""
+        """Find all plan directories containing a MANIFEST.yaml file."""
         plan_dirs = []
-        for category in ["master", "l1", "l2", "l3", "architecture", "plays"]:
-            cat_path = self.plan_root / category
-            if cat_path.exists() and cat_path.is_dir():
-                for sub in sorted(cat_path.iterdir()):
-                    if sub.is_dir() and (sub / "MANIFEST.yaml").exists():
-                        plan_dirs.append(sub)
-        test_dir = self.plan_root / "test"
-        if test_dir.exists() and (test_dir / "MANIFEST.yaml").exists():
-            plan_dirs.append(test_dir)
+        for manifest_path in sorted(self.plan_root.glob("**/MANIFEST.yaml")):
+            if "templates" in manifest_path.parts or "archive" in manifest_path.parts:
+                continue
+            plan_dirs.append(manifest_path.parent)
         return plan_dirs
 
     def update_manifest(self, plan_dir: Path) -> bool:

@@ -390,10 +390,13 @@ class PlanModuleOrchestrator:
 
     def _root_agent_manifest(self, plan: Dict[str, Any]) -> Dict[str, Any]:
         docs = [d for d in (plan["concise"], plan["detailed"]) if d]
-        return {
+        manifest = plan.get("manifest", {})
+        manifest_data = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else manifest
+        version = str(manifest.get("version") or manifest_data.get("version") or "1.0.0")
+        agent_manifest = {
             "agent_id": plan["agent_id"],
             "name": f"{plan['plan_name']} - Root Plan Orchestrator",
-            "version": "1.0.0",
+            "version": version,
             "category": "plan_derivation",
             "model": "claude-3-5-sonnet",
             "model_tier": "tier_a",
@@ -424,8 +427,16 @@ class PlanModuleOrchestrator:
                 f"sequential derivation of each discovered submodule.\n"
             ),
         }
+        if "autonomous_execution" in manifest:
+            agent_manifest["autonomous_execution"] = manifest["autonomous_execution"]
+        if "lifecycle_hooks" in manifest:
+            agent_manifest["lifecycle_hooks"] = manifest["lifecycle_hooks"]
+        if "specification_contracts" in manifest:
+            agent_manifest["specification_contracts"] = manifest["specification_contracts"]
+        return agent_manifest
 
     def _workflow_doc(self, plan: Dict[str, Any], modules: List[Dict[str, Any]]) -> Dict[str, Any]:
+        manifest = plan.get("manifest", {})
         steps: List[Dict[str, Any]] = [
             {
                 "id": "step_plan_root",
@@ -460,7 +471,7 @@ class PlanModuleOrchestrator:
                 "action": "SEAL_BLOCK",
             }
         )
-        return {
+        wf_doc = {
             "workflow_id": plan["workflow_id"],
             "description": _LiteralStr(
                 f"Autonomous sequential derivation workflow for the {plan['plan_id']} "
@@ -473,6 +484,13 @@ class PlanModuleOrchestrator:
             "generated_by": "agent_plan_module_orchestrator",
             "steps": steps,
         }
+        if "autonomous_execution" in manifest:
+            wf_doc["autonomous_execution"] = manifest["autonomous_execution"]
+        if "lifecycle_hooks" in manifest:
+            wf_doc["lifecycle_hooks"] = manifest["lifecycle_hooks"]
+        if "specification_contracts" in manifest:
+            wf_doc["specification_contracts"] = manifest["specification_contracts"]
+        return wf_doc
 
     # ------------------------------------------------------------------
     # Filesystem writes

@@ -32,17 +32,12 @@ class PlanVersionSync:
             return len(f.readlines())
 
     def get_plan_dirs(self) -> List[Path]:
-        """Find all plan directories under known categories."""
+        """Find all plan directories containing a MANIFEST.yaml file."""
         plan_dirs = []
-        for category in ["master", "l1", "l2", "l3", "architecture", "plays"]:
-            cat_path = self.plan_root / category
-            if cat_path.exists() and cat_path.is_dir():
-                for sub in sorted(cat_path.iterdir()):
-                    if sub.is_dir() and (sub / "MANIFEST.yaml").exists():
-                        plan_dirs.append(sub)
-        test_dir = self.plan_root / "test"
-        if test_dir.exists() and (test_dir / "MANIFEST.yaml").exists():
-            plan_dirs.append(test_dir)
+        for manifest_path in sorted(self.plan_root.glob("**/MANIFEST.yaml")):
+            if "templates" in manifest_path.parts or "archive" in manifest_path.parts:
+                continue
+            plan_dirs.append(manifest_path.parent)
         return plan_dirs
 
     def update_manifest(self, plan_dir: Path) -> bool:
@@ -62,7 +57,8 @@ class PlanVersionSync:
         today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         file_versions = manifest.setdefault("file_versions", {})
-        for file_type in ["concise", "detailed", "readme"]:
+        file_types = list(dict.fromkeys(["concise", "detailed", "readme"] + list(file_versions.keys())))
+        for file_type in file_types:
             default_path = f"{file_type}.md" if file_type != "readme" else "README.md"
             if file_type not in file_versions:
                 file_versions[file_type] = {
@@ -107,7 +103,8 @@ class PlanVersionSync:
         issues = []
         file_versions = manifest.get("file_versions", {})
 
-        for file_type in ["concise", "detailed", "readme"]:
+        check_types = list(dict.fromkeys(["concise", "detailed", "readme"] + list(file_versions.keys())))
+        for file_type in check_types:
             if file_type not in file_versions:
                 issues.append(f"Missing '{file_type}' entry in file_versions")
                 continue
