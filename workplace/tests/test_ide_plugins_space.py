@@ -11,6 +11,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT / "workplace"))
+sys.path.insert(0, str(REPO_ROOT / ".nb" / "core_legacy"))
 sys.path.insert(0, str(REPO_ROOT / ".nb" / "core"))
 sys.path.insert(0, str(REPO_ROOT / "workplace" / "modules" / "mod_intellij_plugin" / "templates" / "bridge"))
 sys.path.insert(0, str(REPO_ROOT / "workplace" / "modules" / "mod_vscode_extension" / "templates" / "bridge"))
@@ -257,12 +258,9 @@ class TestIdePluginsSpace(unittest.TestCase):
                 self.assertIn("percipience/config/token_compression_rules.yaml", jar_files)
                 self.assertIn("percipience/workflows/basic_autonomous_cicd.yaml", jar_files)
                 self.assertIn("percipience/plan/claude-context-engineering-parent-master-free_plan.md", jar_files)
-                self.assertIn("percipience/core/__init__.py", jar_files)
-                self.assertIn("percipience/core/ast_optimizer.py", jar_files)
-                self.assertIn("percipience/core/merkle_engine.py", jar_files)
-                self.assertIn("percipience/core/token_tracker.py", jar_files)
-                self.assertIn("percipience/core/nbpack_envelope.py", jar_files)
-                self.assertIn("percipience/core/autonomous_cicd.py", jar_files)
+                self.assertIn("percipience/version.json", jar_files)
+                self.assertIn("percipience/tenant_license.json", jar_files)
+                self.assertFalse(any(f.startswith("percipience/core/") for f in jar_files), "IntelliJ JAR must be pure Rust without legacy core/ python files")
 
     def test_11_workspace_bootstrapper_hydration(self):
         """Tests that WorkspaceBootstrapper can unpack assets and initialize a clean workspace."""
@@ -287,8 +285,10 @@ class TestIdePluginsSpace(unittest.TestCase):
             shutil.copyfile(src_res / "bin" / "percipience", bin_dir / "percipience")
             os.chmod(bin_dir / "percipience", 0o755)
 
-            for py_file in (src_res / "core").glob("*.py"):
-                shutil.copyfile(py_file, core_dir / py_file.name)
+            legacy_core = self.repo_root / ".nb" / "core_legacy"
+            if legacy_core.exists():
+                for py_file in legacy_core.glob("*.py"):
+                    shutil.copyfile(py_file, core_dir / py_file.name)
 
             shutil.copyfile(src_res / "config" / "billing_plans.yaml", config_dir / "billing_plans.yaml")
             shutil.copyfile(src_res / "config" / "token_compression_rules.yaml", config_dir / "token_compression_rules.yaml")
@@ -312,10 +312,10 @@ class TestIdePluginsSpace(unittest.TestCase):
                     }]
                 }, lf)
 
-            # Verify files exist and percipience bin is executable
+            # Verify files exist, percipience bin is executable, and bundle is pure Rust
             self.assertTrue((bin_dir / "percipience").exists())
             self.assertTrue(os.access(bin_dir / "percipience", os.X_OK))
-            self.assertTrue((core_dir / "ast_optimizer.py").exists())
+            self.assertFalse((src_res / "core").exists(), "IntelliJ bundle must be pure Rust without legacy core directory")
             self.assertTrue((config_dir / "billing_plans.yaml").exists())
             self.assertTrue((plan_dir / "claude-context-engineering-parent-master-free_plan.md").exists())
             self.assertTrue((ledger_dir / "context_ledger.yaml").exists())
@@ -478,11 +478,14 @@ class TestIdePluginsSpace(unittest.TestCase):
         self.assertIn("com.neutronbinary.percipience.InspectFleet", pxml_content)
 
         # 5. Embedded swarm core engines and executable binaries
-        self.assertTrue((res_core / "dynamic_dag_orchestrator.py").exists())
-        self.assertTrue((res_core / "self_reflection_engine.py").exists())
-        self.assertTrue((res_core / "consensus_quorum_engine.py").exists())
-        self.assertTrue((res_core / "agent_capability_guard.py").exists())
-        self.assertTrue((res_core / "fleet_manager.py").exists())
+        legacy_core = self.repo_root / ".nb" / "core_legacy"
+        if legacy_core.exists():
+            self.assertTrue((legacy_core / "dynamic_dag_orchestrator.py").exists())
+            self.assertTrue((legacy_core / "self_reflection_engine.py").exists())
+            self.assertTrue((legacy_core / "consensus_quorum_engine.py").exists())
+            self.assertTrue((legacy_core / "agent_capability_guard.py").exists())
+            self.assertTrue((legacy_core / "fleet_manager.py").exists())
+        self.assertFalse(res_core.exists(), "IntelliJ bundle must be pure Rust without legacy core directory")
         self.assertTrue((res_bin / "percipience").exists())
         self.assertTrue(os.access(res_bin / "percipience", os.X_OK))
 
@@ -613,9 +616,9 @@ class TestIdePluginsSpace(unittest.TestCase):
     def test_21_offline_plugin_auto_upgrade(self):
         """Validates local-file-system plugin auto-upgrade: manifest embedding, discovery, selection, and apply."""
         # 1. Canonical resolver engine present and mirrored identically
-        resolver_nb = self.repo_root / ".nb" / "core" / "plugin_update_resolver.py"
+        resolver_nb = self.repo_root / ".nb" / "core_legacy" / "plugin_update_resolver.py" if (self.repo_root / ".nb" / "core_legacy").exists() else self.repo_root / ".nb" / "core" / "plugin_update_resolver.py"
         resolver_wp = self.repo_root / "workplace" / "core" / "plugin_update_resolver.py"
-        self.assertTrue(resolver_nb.exists(), "plugin_update_resolver.py must exist in .nb/core")
+        self.assertTrue(resolver_nb.exists(), "plugin_update_resolver.py must exist in .nb/core_legacy")
         self.assertTrue(resolver_wp.exists(), "plugin_update_resolver.py must be mirrored in workplace/core")
         self.assertEqual(resolver_nb.read_bytes(), resolver_wp.read_bytes(), "resolver mirrors must be identical")
 
@@ -637,7 +640,8 @@ class TestIdePluginsSpace(unittest.TestCase):
                 with zipfile.ZipFile(io.BytesIO(zf.read(jar_name))) as jar:
                     names = jar.namelist()
                     self.assertIn("percipience/version.json", names, f"{tier} jar must embed version manifest")
-                    self.assertIn("percipience/core/plugin_update_resolver.py", names)
+                    self.assertIn("percipience/bin/percipience", names, f"{tier} jar must embed native static binary")
+                    self.assertFalse(any(n.startswith("percipience/core/") for n in names), f"{tier} jar must be pure Rust without legacy core/ python files")
                     embedded = json.loads(jar.read("percipience/version.json").decode("utf-8"))
                     self.assertEqual(embedded["tier"], f"plan_{tier}")
 

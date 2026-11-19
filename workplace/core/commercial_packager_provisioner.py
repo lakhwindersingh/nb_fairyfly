@@ -306,6 +306,8 @@ class CommercialPackagerProvisioner:
         # 4. Package .nb/core/ based on tier filtering
         core_src = workspace_root / ".nb" / "core"
         if not core_src.exists():
+            core_src = workspace_root / ".nb" / "core_legacy"
+        if not core_src.exists():
             core_src = workspace_root / "workplace" / "core"
 
         core_dst = output_dir / "core"
@@ -567,7 +569,9 @@ class CommercialPackagerProvisioner:
         if target in ["all", "intellij", "pycharm", "ide", "mod_intellij_plugin"]:
             ij_resources = workspace_root / "workplace" / "modules" / "mod_intellij_plugin" / "src" / "main" / "resources" / "percipience"
             ij_resources.mkdir(parents=True, exist_ok=True)
-            for item in ["bin", "config", "core", "agentic", "plan", "workflows", "scripts", "hooks"]:
+            if (ij_resources / "core").exists():
+                shutil.rmtree(ij_resources / "core")
+            for item in ["bin", "config", "agentic", "plan", "workflows", "contracts", "scripts", "hooks"]:
                 src_item = src_pkg_dir / item
                 dst_item = ij_resources / item
                 if src_item.exists():
@@ -611,7 +615,9 @@ class CommercialPackagerProvisioner:
             if vscode_dir.exists():
                 vscode_runtime = vscode_dir / "percipience_runtime"
                 vscode_runtime.mkdir(parents=True, exist_ok=True)
-                for item in ["bin", "config", "core", "agentic", "plan", "workflows", "scripts", "hooks"]:
+                if (vscode_runtime / "core").exists():
+                    shutil.rmtree(vscode_runtime / "core")
+                for item in ["bin", "config", "agentic", "plan", "workflows", "contracts", "scripts", "hooks"]:
                     src_item = src_pkg_dir / item
                     dst_item = vscode_runtime / item
                     if src_item.exists():

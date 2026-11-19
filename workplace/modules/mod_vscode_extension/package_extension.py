@@ -12,6 +12,7 @@ import sys
 import zipfile
 import shutil
 import argparse
+import subprocess
 from pathlib import Path
 
 EXT_ROOT = Path(__file__).resolve().parent
@@ -20,6 +21,7 @@ DIST_DIR = EXT_ROOT / "dist"
 OUT_BUNDLE = REPO_ROOT / ".nb" / "bundles"
 PLANS_DIR = REPO_ROOT / ".nb" / "plan"
 
+sys.path.insert(0, str(REPO_ROOT / ".nb" / "core_legacy"))
 sys.path.insert(0, str(REPO_ROOT / ".nb" / "core"))
 sys.path.insert(0, str(REPO_ROOT / "workplace" / "core"))
 
@@ -101,17 +103,22 @@ def package_vscode_extension(target_tier: str = "all"):
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     OUT_BUNDLE.mkdir(parents=True, exist_ok=True)
 
-    try:
-        from commercial_packager_provisioner import CommercialPackagerProvisioner
-        # Provision runtime
-        CommercialPackagerProvisioner.provision_target(
-            workspace_root=REPO_ROOT,
-            tenant_id="tenant_community_default",
-            tier="plan_free",
-            target="vscode"
-        )
-    except Exception as e:
-        print(f"Warning: Provisioning runtime for VSCode extension: {e}")
+    # Provision runtime via native Rust packager
+    rust_bin = REPO_ROOT / ".nb" / "bin" / "percipience"
+    if rust_bin.exists() and os.access(str(rust_bin), os.X_OK):
+        print(f"🦀 Running native Rust packager: {rust_bin} commercial provision --target vscode")
+        subprocess.run([str(rust_bin), "commercial", "provision", "--target", "vscode", "--tier", "plan_free", "--tenant", "tenant_community_default"], check=True)
+    else:
+        try:
+            from commercial_packager_provisioner import CommercialPackagerProvisioner
+            CommercialPackagerProvisioner.provision_target(
+                workspace_root=REPO_ROOT,
+                tenant_id="tenant_community_default",
+                tier="plan_free",
+                target="vscode"
+            )
+        except Exception as e:
+            print(f"Warning: Provisioning runtime for VSCode extension: {e}")
 
     # 1. Standard universal bundle
     default_vsix = DIST_DIR / "percipience-vscode-extension-1.0.0.vsix"

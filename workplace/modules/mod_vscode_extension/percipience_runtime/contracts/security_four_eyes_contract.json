@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security_Four_Eyes_Dual_Control_Contract",
+  "description": "Four-Eyes Principle dual-control multi-signature authorization and Merkle block sealing contract",
+  "type": "object",
+  "required": ["action_id", "tenant_id", "action_type", "initiator_id", "status"],
+  "properties": {
+    "action_id": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": ["SECURITY_POLICY_OVERRIDE", "SURGICAL_ROLLBACK", "KEY_ROTATION", "WORM_RETENTION_ALTER", "TENANT_DECOMMISSION"]
+    },
+    "initiator_id": {
+      "type": "string"
+    },
+    "initiator_signature": {
+      "type": "string"
+    },
+    "approver_id": {
+      "type": "string"
+    },
+    "approver_signature": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING_APPROVAL", "APPROVED", "REJECTED", "MERKLE_SEALED"]
+    },
+    "merkle_leaf_hash": {
+      "type": "string"
+    }
+  }
+}

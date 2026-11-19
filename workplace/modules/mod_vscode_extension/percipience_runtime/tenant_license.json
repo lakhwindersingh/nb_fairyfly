@@ -1,0 +1,17 @@
+{
+  "capabilities": {
+    "allows_custom_agents": false,
+    "allows_multi_cloud": false,
+    "allows_sealed_nbpack": false,
+    "max_monthly_audits": 500,
+    "max_seats": 1,
+    "max_worktrees": 1,
+    "tier": "Free"
+  },
+  "issued_at": "2026-11-19T02:43:30.543342+00:00",
+  "license_id": "d535d469-eb1e-456e-8405-af47049ce1cf",
+  "license_signature": "sha256:c7211db339d6cc9dd2b545701b5502b74be610b609fb5cd8dec05c0fe5d7f553",
+  "status": "PROVISIONED",
+  "tenant_id": "tenant_community_default",
+  "tier": "free"
+}

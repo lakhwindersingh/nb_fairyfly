@@ -153,8 +153,8 @@ impl PlanParityComparator {
         let mut tags = HashSet::new();
         for word in text.split_whitespace() {
             let cleaned = word.trim_matches(|c: char| !c.is_alphanumeric() && c != '-');
-            if cleaned.starts_with("CAP-") {
-                if let Ok(num) = cleaned[4..].parse::<u32>() {
+            if let Some(rest) = cleaned.strip_prefix("CAP-") {
+                if let Ok(num) = rest.parse::<u32>() {
                     tags.insert(format!("CAP-{:02}", num));
                 } else {
                     tags.insert(cleaned.to_string());

@@ -1,0 +1,46 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceTenantOnboardingContract"
+description: "Contract schema governing tenant registration, SSO binding, CMEK key registration, and Quad-Space workspace provisioning."
+type: "object"
+required:
+  - "tenant_id"
+  - "organization_name"
+  - "admin_email"
+  - "subscription_tier"
+  - "auth_provider"
+  - "timestamp"
+properties:
+  tenant_id:
+    type: "string"
+    format: "uuid"
+    description: "Globally unique identifier for the enterprise tenant."
+  organization_name:
+    type: "string"
+    minLength: 2
+    maxLength: 100
+  admin_email:
+    type: "string"
+    format: "email"
+  subscription_tier:
+    type: "string"
+    enum: ["plan_team", "plan_business", "plan_enterprise"]
+  auth_provider:
+    type: "string"
+    enum: ["workos_sso", "clerk", "okta_saml", "azure_ad"]
+  cmek_key_arn:
+    type: "string"
+    description: "Optional AWS KMS ARN or GCP KMS resource name for customer-managed encryption keys."
+  byor_config:
+    type: "object"
+    description: "Bring-Your-Own-Repository configuration for on-premise Git hosts."
+    properties:
+      git_remote_url:
+        type: "string"
+      auth_type:
+        type: "string"
+        enum: ["ssh_key", "pat_token", "github_app"]
+      ca_bundle_cert:
+        type: "string"
+  timestamp:
+    type: "string"
+    format: "date-time"

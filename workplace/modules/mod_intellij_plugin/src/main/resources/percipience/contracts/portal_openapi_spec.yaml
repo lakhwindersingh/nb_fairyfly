@@ -1,0 +1,50 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "EnterpriseSaaSPortalAndGatewayAPI"
+type: "object"
+openapi: "3.1.0"
+description: "Wire contract governing SaaS Portal frontend, API Gateway, and FinOps telemetry services"
+required:
+  - "openapi"
+  - "info"
+  - "paths"
+info:
+  title: "Enterprise SaaS Portal & Gateway API"
+  version: "1.0.0"
+  description: "Wire contract governing SaaS Portal frontend, API Gateway, and FinOps telemetry services"
+paths:
+  /api/v1/telemetry/maturity:
+    get:
+      summary: "Retrieve 6-dimensional context maturity score"
+      responses:
+        '200':
+          description: "Maturity evaluation matrix"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overall_score: { type: number }
+                  dimensions: { type: object }
+  /api/v1/agents/plugins:
+    get:
+      summary: "List registered autonomous custom agents"
+      responses:
+        '200':
+          description: "List of active agent manifests"
+    post:
+      summary: "Register new custom agent plugin"
+      responses:
+        '201':
+          description: "Plugin registered and Merkle block sealed"
+  /api/v1/cicd/pipeline/run:
+    post:
+      summary: "Trigger autonomous self-sustaining CI/CD verification cycle"
+      responses:
+        '200':
+          description: "Verification execution result and Merkle block"
+  /api/v1/billing/savings:
+    get:
+      summary: "Retrieve real-time token savings and performance fee metrics"
+      responses:
+        '200':
+          description: "FinOps billing summary"

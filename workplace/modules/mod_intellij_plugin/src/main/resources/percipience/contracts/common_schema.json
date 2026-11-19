@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Percipience Common DTO Schemas",
+  "type": "object",
+  "required": [
+    "definitions"
+  ],
+  "definitions": {
+    "TelemetryBatch": {
+      "type": "object",
+      "required": ["batch_id", "producer_id", "timestamp", "metrics"],
+      "properties": {
+        "batch_id": { "type": "string" },
+        "producer_id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "number" },
+              "unit": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

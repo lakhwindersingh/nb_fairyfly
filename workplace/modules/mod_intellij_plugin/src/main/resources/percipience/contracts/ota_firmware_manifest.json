@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OTAFirmwareManifest",
+  "type": "object",
+  "header_magic": "0x4E425F4F544131",
+  "target_chip": "nRF5340_AppCore",
+  "max_binary_size_bytes": 1048576,
+  "signature_algorithm": "ECDSA_P256_SHA256",
+  "anti_rollback_security_version": 3,
+  "required": [
+    "header_magic",
+    "target_chip",
+    "signature_algorithm",
+    "slot_verification"
+  ],
+  "slot_verification": {
+    "bootloader_slot_a": "0x00010000",
+    "bootloader_slot_b": "0x00100000",
+    "confirm_handshake_timeout_seconds": 30
+  }
+}

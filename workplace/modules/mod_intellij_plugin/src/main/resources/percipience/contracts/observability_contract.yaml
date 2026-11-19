@@ -1,0 +1,47 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "PercipienceObservabilityEvent"
+description: "Telemetry contract between worker nodes/AST engines and the live UI observability dashboard."
+type: "object"
+required:
+  - "telemetry_id"
+  - "tenant_id"
+  - "timestamp"
+  - "metric_type"
+  - "data"
+properties:
+  telemetry_id:
+    type: "string"
+    format: "uuid"
+  tenant_id:
+    type: "string"
+  timestamp:
+    type: "string"
+    format: "date-time"
+  metric_type:
+    type: "string"
+    enum:
+      - "token_velocity"
+      - "prompt_cache_hit_rate"
+      - "ast_pruning_ratio"
+      - "merkle_block_sealed"
+      - "quarantine_alert"
+      - "worktree_lease_event"
+  data:
+    type: "object"
+    properties:
+      tokens_spent:
+        type: "integer"
+      tokens_saved:
+        type: "integer"
+      cache_hit_ratio:
+        type: "number"
+      merkle_block_id:
+        type: "integer"
+      block_hash:
+        type: "string"
+      worktree_id:
+        type: "string"
+      agent_id:
+        type: "string"
+      quarantine_incident_id:
+        type: "string"

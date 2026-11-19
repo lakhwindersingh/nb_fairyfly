@@ -26,17 +26,13 @@ object WorkspaceBootstrapper {
         val cicdFile = File(root, ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml")
         val claudeMcpFile = File(root, ".claude/mcp.json")
         val claudeSettingsFile = File(root, ".claude/settings.json")
-        val coreDir = File(root, ".nb/core")
-        val coreReady = File(coreDir, "ast_optimizer.py").exists() && File(coreDir, "merkle_engine.py").exists()
-
         return (binFile.exists() && binFile.canExecute() &&
                 billingFile.exists() &&
                 (planFile.exists() || masterPlanFile.exists()) &&
                 ledgerFile.exists() &&
                 cicdFile.exists() &&
                 claudeMcpFile.exists() &&
-                claudeSettingsFile.exists() &&
-                coreReady)
+                claudeSettingsFile.exists())
     }
 
     fun bootstrapWorkspace(projectBasePath: String): BootstrapResult {
@@ -124,71 +120,10 @@ if __name__ == "__main__":
             binFile.setExecutable(true, false)
         }
 
-        // 3. Deploy Essential Platform Core Engines (.nb/core/*.py)
-        val coreDir = File(root, ".nb/core")
-        if (!coreDir.exists()) {
-            coreDir.mkdirs()
-        }
-        val essentialCoreFiles = listOf(
-            "__init__.py",
-            "adversarial_fuzzer.py",
-            "agent_plugin_engine.py",
-            "ambiguity_resolver.py",
-            "ast_optimizer.py",
-            "attention_budgeter.py",
-            "autonomous_cicd.py",
-            "byor_adapter.py",
-            "cognitive_router.py",
-            "commercial_packager_provisioner.py",
-            "context_gateway.py",
-            "contract_compatibility_checker.py",
-            "dependency_cve_sentinel.py",
-            "diagnostic_reprompt.py",
-            "doc_drift_synchronizer.py",
-            "error_recovery_orchestrator.py",
-            "eval_scoring_engine.py",
-            "flaky_test_detector.py",
-            "handoff_validator.py",
-            "layered_context_validator.py",
-            "living_doc_engine.py",
-            "maturity_evaluator.py",
-            "merkle_engine.py",
-            "nbpack_envelope.py",
-            "otel_exporter.py",
-            "output_guardrail_validator.py",
-            "pii_sanitizer.py",
-            "plugin_update_resolver.py",
-            "poisoning_sentinel.py",
-            "prompt_benchmark_engine.py",
-            "prompt_drift_sentinel.py",
-            "prompt_injection_guard.py",
-            "reconciliation_engine.py",
-            "request_formalizer.py",
-            "semantic_parity_engine.py",
-            "semantic_prompt_cache.py",
-            "swarm_governor.py",
-            "terminal_agent_ast_proxy.py",
-            "token_optimizer_suite.py",
-            "token_tracker.py",
-            "trajectory_recorder.py",
-            "tree_sitter_daemon.py",
-            "workflow_orchestrator.py",
-            "worktree_engine.py",
-            "worm_egress.py"
-        )
-        for (coreFileName in essentialCoreFiles) {
-            val targetCoreFile = File(coreDir, coreFileName)
-            if (!targetCoreFile.exists()) {
-                val resourceStream: InputStream? = javaClass.getResourceAsStream("/percipience/core/$coreFileName")
-                if (resourceStream != null) {
-                    resourceStream.use { input ->
-                        targetCoreFile.outputStream().use { output ->
-                            input.copyTo(output)
-                        }
-                    }
-                    createdFiles.add(".nb/core/$coreFileName")
-                }
-            }
+        // 3. Ensure Native Configuration and Contracts Plane
+        val contractsDir = File(root, ".nb/context/contracts")
+        if (!contractsDir.exists()) {
+            contractsDir.mkdirs()
         }
 
         // 4. Ensure billing plans configuration (.nb/config/billing_plans.yaml)

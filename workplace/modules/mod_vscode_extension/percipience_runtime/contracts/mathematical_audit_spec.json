@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MathematicalAuditSpec",
+  "type": "object",
+  "required": [
+    "spectral_radius_upper_bound",
+    "lyapunov_drift_required",
+    "banach_contraction_rho_max",
+    "max_frobenius_drift_ratio"
+  ],
+  "properties": {
+    "spectral_radius_upper_bound": { "type": "number", "default": 1.50 },
+    "lyapunov_drift_required": { "type": "boolean", "default": true },
+    "banach_contraction_rho_max": { "type": "number", "default": 0.95 },
+    "max_frobenius_drift_ratio": { "type": "number", "default": 0.10 }
+  }
+}

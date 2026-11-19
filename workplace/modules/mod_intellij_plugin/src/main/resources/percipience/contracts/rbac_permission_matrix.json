@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Multi_Tenant_RBAC_Permission_Matrix",
+  "type": "object",
+  "required": ["roles", "resources", "role_permissions"],
+  "properties": {
+    "roles": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["OWNER", "ADMIN", "OPERATOR", "AUDITOR", "VIEWER"] }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "tenant.config",
+          "billing.invoices",
+          "cicd.pipelines",
+          "agent.plugins",
+          "merkle.ledger",
+          "worm.audit",
+          "surgical.rollback"
+        ]
+      }
+    },
+    "role_permissions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  }
+}

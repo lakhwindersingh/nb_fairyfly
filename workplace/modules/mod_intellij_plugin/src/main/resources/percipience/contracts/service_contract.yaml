@@ -1,0 +1,47 @@
+title: "Percipience Core Provider Service API"
+type: "object"
+required:
+  - openapi
+  - info
+  - paths
+openapi: 3.1.0
+info:
+  title: Percipience Core Provider Service API
+  version: 1.2.0
+  description: Canonical cross-module service contract for provider-consumer boundaries.
+paths:
+  /api/v1/health:
+    get:
+      summary: Health Check Endpoint
+      operationId: checkHealth
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  uptime_seconds:
+                    type: number
+                  version:
+                    type: string
+                    example: 1.2.0
+  /api/v1/telemetry:
+    post:
+      summary: Ingest Component Telemetry
+      operationId: ingestTelemetry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './common_schema.json#/definitions/TelemetryBatch'
+      responses:
+        '202':
+          description: Telemetry accepted for asynchronous processing
+        '400':
+          description: Invalid telemetry payload

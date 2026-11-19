@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanViabilityContract",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "target_plan_path",
+    "overall_viability_score",
+    "viability_status",
+    "dimension_scores",
+    "hard_gate_results",
+    "financial_summary"
+  ],
+  "properties": {
+    "plan_id": { "type": "string" },
+    "target_plan_path": { "type": "string" },
+    "overall_viability_score": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+    "viability_status": { "type": "string", "enum": ["CERTIFIED_VIABLE", "CONDITIONALLY_VIABLE", "UNVIABLE_QUARANTINED"] },
+    "dimension_scores": {
+      "type": "object",
+      "required": ["logical", "mathematical", "architectural", "monetary", "strategic", "operational"],
+      "properties": {
+        "logical": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "mathematical": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "architectural": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "monetary": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "strategic": { "type": "number", "minimum": 0.0, "maximum": 100.0 },
+        "operational": { "type": "number", "minimum": 0.0, "maximum": 100.0 }
+      }
+    },
+    "hard_gate_results": {
+      "type": "object",
+      "required": ["spectral_safety", "sat_consistency", "rollback_enclosure", "unit_economic_feasibility"],
+      "properties": {
+        "spectral_safety": { "type": "boolean" },
+        "sat_consistency": { "type": "boolean" },
+        "rollback_enclosure": { "type": "boolean" },
+        "unit_economic_feasibility": { "type": "boolean" }
+      }
+    },
+    "financial_summary": {
+      "type": "object",
+      "required": ["npv_usd", "irr_percent", "roi_percent", "payback_months", "tco_3yr_usd"],
+      "properties": {
+        "npv_usd": { "type": "number" },
+        "irr_percent": { "type": "number" },
+        "roi_percent": { "type": "number" },
+        "payback_months": { "type": "number" },
+        "tco_3yr_usd": { "type": "number" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "viability_status": { "const": "CERTIFIED_VIABLE" }
+        },
+        "required": ["viability_status"]
+      },
+      "then": {
+        "properties": {
+          "hard_gate_results": {
+            "properties": {
+              "spectral_safety": { "const": true },
+              "sat_consistency": { "const": true },
+              "rollback_enclosure": { "const": true },
+              "unit_economic_feasibility": { "const": true }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

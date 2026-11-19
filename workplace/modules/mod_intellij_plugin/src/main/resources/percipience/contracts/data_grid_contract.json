@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataGridRowContract",
+  "description": "Standard schema for high-density virtualized data grid rows with tabular numeric formatting and status indicators",
+  "type": "object",
+  "required": [
+    "row_id",
+    "name",
+    "category",
+    "status",
+    "primary_metric",
+    "secondary_metric",
+    "timestamp"
+  ],
+  "properties": {
+    "row_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Unique identifier for the row item"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the resource or entity"
+    },
+    "category": {
+      "type": "string",
+      "description": "Grouping category"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "PENDING", "WARNING", "ERROR", "ARCHIVED", "OPEN", "COMPLETED"],
+      "description": "Operational state indicator"
+    },
+    "primary_metric": {
+      "type": "number",
+      "description": "Primary numeric telemetry value"
+    },
+    "secondary_metric": {
+      "type": "number",
+      "description": "Secondary numeric telemetry value"
+    },
+    "change_pct": {
+      "type": "number",
+      "description": "Relative percentage delta"
+    },
+    "timestamp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Unix epoch timestamp of last update"
+    }
+  },
+  "additionalProperties": false
+}

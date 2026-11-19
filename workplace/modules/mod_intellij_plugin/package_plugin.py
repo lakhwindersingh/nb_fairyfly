@@ -23,6 +23,7 @@ DIST_DIR = PLUGIN_ROOT / "build" / "distributions"
 OUT_BUNDLE = REPO_ROOT / ".nb" / "bundles"
 PLANS_DIR = REPO_ROOT / ".nb" / "plan"
 
+sys.path.insert(0, str(REPO_ROOT / ".nb" / "core_legacy"))
 sys.path.insert(0, str(REPO_ROOT / ".nb" / "core"))
 sys.path.insert(0, str(REPO_ROOT / "workplace" / "core"))
 from nbpack_envelope import NBPackEnvelope
@@ -146,6 +147,22 @@ def build_intellij_plugin_zip(jar_path: Path, zip_path: Path, tier_label: str = 
     print(f"📦 Built Plugin ZIP Distribution: {zip_path} ({zip_path.stat().st_size:,} bytes)")
 
 
+def provision_runtime_bundle(tier: str, tenant_id: str, target: str = "intellij"):
+    rust_bin = REPO_ROOT / ".nb" / "bin" / "percipience"
+    if rust_bin.exists() and os.access(str(rust_bin), os.X_OK):
+        print(f"🦀 Running native Rust packager: {rust_bin} commercial provision --target {target} --tier {tier} --tenant {tenant_id}")
+        res = subprocess.run([str(rust_bin), "commercial", "provision", "--target", target, "--tier", tier, "--tenant", tenant_id], capture_output=True, text=True)
+        if res.returncode == 0:
+            print(res.stdout)
+            return
+    CommercialPackagerProvisioner.provision_target(
+        workspace_root=REPO_ROOT,
+        tenant_id=tenant_id,
+        tier=tier if tier.startswith("plan_") else f"plan_{tier}",
+        target=target
+    )
+
+
 def package_intellij_bundle(target_tier: str = "all"):
     """Generates JAR, ZIP, tier-specific bundles, and .nbpack layer package for IntelliJ / PyCharm."""
     DIST_DIR.mkdir(parents=True, exist_ok=True)
@@ -160,12 +177,7 @@ def package_intellij_bundle(target_tier: str = "all"):
     for t in tiers:
         tier_plan_id = f"plan_{t}"
         print(f"\n🚀 Provisioning runtime bundle for tier: {tier_plan_id}...")
-        CommercialPackagerProvisioner.provision_target(
-            workspace_root=REPO_ROOT,
-            tenant_id=f"tenant_{t}_test",
-            tier=tier_plan_id,
-            target="intellij"
-        )
+        provision_runtime_bundle(tier=t, tenant_id=f"tenant_{t}_test", target="intellij")
 
         tier_jar = DIST_DIR / f"percipience-intellij-plugin-{t}-1.0.0.jar"
         tier_zip = DIST_DIR / f"percipience-intellij-plugin-{t}-1.0.0.zip"
@@ -176,12 +188,7 @@ def package_intellij_bundle(target_tier: str = "all"):
         shutil.copy2(tier_zip, OUT_BUNDLE / tier_zip.name)
 
     # 2. Build default universal bundle (provisioned with plan_free as canonical base)
-    CommercialPackagerProvisioner.provision_target(
-        workspace_root=REPO_ROOT,
-        tenant_id="tenant_community_default",
-        tier="plan_free",
-        target="intellij"
-    )
+    provision_runtime_bundle(tier="free", tenant_id="tenant_community_default", target="intellij")
     default_jar = DIST_DIR / "percipience-intellij-plugin-1.0.0.jar"
     default_zip = DIST_DIR / "percipience-intellij-plugin-1.0.0.zip"
     build_intellij_plugin_jar(default_jar)

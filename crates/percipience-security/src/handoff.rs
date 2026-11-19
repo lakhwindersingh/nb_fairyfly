@@ -25,6 +25,7 @@ pub struct HandoffToken {
 impl HandoffToken {
     pub const EXPIRATION_SECONDS: i64 = 300;
 
+    #[allow(clippy::too_many_arguments)]
     pub fn mint(
         secret_key: &[u8],
         workflow_id: &str,

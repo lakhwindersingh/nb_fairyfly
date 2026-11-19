@@ -1,0 +1,29 @@
+title: "Percipience Cross-Module Event Stream"
+type: "object"
+required:
+  - asyncapi
+  - info
+  - channels
+asyncapi: 3.0.0
+info:
+  title: Percipience Cross-Module Event Stream
+  version: 2.0.0
+  description: Event stream contract for cross-module asynchronous pub/sub messaging.
+channels:
+  systemEvents:
+    address: events.system.v1
+    messages:
+      stateTransition:
+        summary: Module state transition event
+        payload:
+          type: object
+          properties:
+            event_id:
+              type: string
+            module_id:
+              type: string
+            transition_type:
+              type: string
+            timestamp:
+              type: string
+              format: date-time

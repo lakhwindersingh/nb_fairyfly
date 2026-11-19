@@ -1,0 +1,77 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "HITLMilestoneCheckpointSchema"
+description: "JSON Schema for proactive milestone-based Human-In-The-Loop interactive checkpoints."
+type: "object"
+required:
+  - "checkpoint_id"
+  - "milestone_type"
+  - "title"
+  - "status"
+  - "selectable_options"
+  - "timeout_action"
+  - "created_at"
+properties:
+  checkpoint_id:
+    type: "string"
+    pattern: "^chk_[a-f0-9]{8,16}$"
+  milestone_type:
+    type: "string"
+    enum:
+      - "ARCH_DESIGN_APPROVAL"
+      - "SCHEMA_EVOLUTION_RFC"
+      - "UI_WIREFRAME_SIGN_OFF"
+      - "PRODUCTION_DEPLOY_APPROVAL"
+      - "SECURITY_POLICY_OVERRIDE"
+  title:
+    type: "string"
+  description:
+    type: "string"
+  diff_preview:
+    type: "string"
+  blast_radius:
+    type: "object"
+    properties:
+      affected_modules:
+        type: "array"
+        items:
+          type: "string"
+      symbols_modified:
+        type: "integer"
+      breaking_changes:
+        type: "boolean"
+  selectable_options:
+    type: "array"
+    items:
+      type: "string"
+    default: ["APPROVE", "REJECT", "MODIFY"]
+  status:
+    type: "string"
+    enum:
+      - "PENDING"
+      - "APPROVED"
+      - "REJECTED"
+      - "TIMED_OUT"
+      - "AUTO_RESOLVED"
+  timeout_seconds:
+    type: "integer"
+    default: 3600
+  timeout_action:
+    type: "string"
+    enum:
+      - "AUTO_PAUSE"
+      - "QUARANTINE"
+      - "PROCEED_CONSERVATIVE"
+  resolution:
+    type: "object"
+    properties:
+      decision:
+        type: "string"
+      reason:
+        type: "string"
+      resolver:
+        type: "string"
+      resolved_at:
+        type: "string"
+  created_at:
+    type: "string"
+    format: "date-time"
