@@ -476,71 +476,55 @@ When `WorkspaceBootstrapper.kt` initializes any workspace (or when `package_plug
 {
   "mcpServers": {
     "percipience": {
-      "command": "python3",
-      "args": [
-        ".nb/bin/percipience"
-      ],
+      "command": ".nb/bin/percipience",
+      "args": [],
       "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
         "PERCIPIENCE_TERMINAL_MODE": "1",
         "PERCIPIENCE_AST_COMPRESSION": "1"
       },
       "description": "Percipience Context Engineering CLI for running multi-agent workflows, managing worktrees, and auditing Merkle ledger."
     },
     "ast_optimizer": {
-      "command": "python3",
+      "command": ".nb/bin/percipience",
       "args": [
-        ".nb/bin/percipience",
-        "optimize"
+        "tokens",
+        "summary"
       ],
-      "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
-      },
+      "env": {},
       "description": "Polyglot Tree-Sitter 6D AST skeletonization and token pruning engine (cuts prompt overhead by 60-85%)."
     },
     "gatekeeper": {
-      "command": "python3",
+      "command": ".nb/bin/percipience",
       "args": [
-        ".nb/bin/percipience",
         "gate"
       ],
-      "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
-      },
+      "env": {},
       "description": "Automated 7-stage CI/CD gatekeeper validating wire contracts, security invariants, and test regressions."
     },
     "merkle_auditor": {
-      "command": "python3",
+      "command": ".nb/bin/percipience",
       "args": [
-        ".nb/bin/percipience",
         "audit"
       ],
-      "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
-      },
+      "env": {},
       "description": "Cryptographic SHA-256 Merkle DAG state auditor, recovery point validator, and maturity scorecard evaluator."
     },
-    "worktree_manager": {
-      "command": "python3",
+    "plan_orchestrator": {
+      "command": ".nb/bin/percipience",
       "args": [
-        ".nb/bin/percipience",
-        "worktree"
+        "plan",
+        "orchestrate"
       ],
-      "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
-      },
-      "description": "Ephemeral Git worktree allocator and concurrency isolator preventing workspace clobbering."
+      "env": {},
+      "description": "Sequential plan module orchestrator generating and tracking agent swarm derivation state."
     },
-    "living_doc_engine": {
-      "command": "python3",
+    "bootstrap_runner": {
+      "command": ".nb/bin/percipience",
       "args": [
-        ".nb/bin/percipience",
-        "doc"
+        "bootstrap"
       ],
-      "env": {
-        "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core"
-      },
-      "description": "AST-to-Mermaid architecture synchronizer and living contract documentation generator."
+      "env": {},
+      "description": "5-phase deterministic quad-space workspace bootstrap orchestrator."
     }
   }
 }
@@ -577,7 +561,6 @@ When `WorkspaceBootstrapper.kt` initializes any workspace (or when `package_plug
     }
   },
   "runtime_environment": {
-    "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
     "PERCIPIENCE_CLI": ".nb/bin/percipience",
     "PERCIPIENCE_TERMINAL_MODE": "1",
     "PERCIPIENCE_AST_COMPRESSION": "1"
@@ -633,7 +616,7 @@ When `WorkspaceBootstrapper.kt` initializes any workspace (or when `package_plug
    - When a developer opens a terminal session or launches Claude Code / Gemini CLI inside IntelliJ/PyCharm, the customizer injects:
      - `PERCIPIENCE_TERMINAL_MODE=1`
      - `PERCIPIENCE_AST_COMPRESSION=1`
-     - `PYTHONPATH=.:.nb:.nb/core:workplace:workplace/core`
+     - `PERCIPIENCE_CLI=.nb/bin/percipience`
 2. **Transparent Prompt Squeezing (60-85% Token Reduction)**:
    - When external agents query files via MCP or CLI, the AST Pruner strips function/method bodies, AST comments, and unreferenced docstrings according to `.nb/config/token_compression_rules.yaml`.
    - The token savings are logged to `.nb/context/ledger/token_savings_ledger.yaml` with gross USD cost avoidance metrics.

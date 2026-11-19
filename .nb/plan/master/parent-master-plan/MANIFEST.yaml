@@ -105,7 +105,7 @@ file_versions:
     path: concise.md
     version: 7.6.0
     last_modified: '2026-11-19'
-    content_hash: 338045356465495c1c24a7b13d800d4791d9a287d4248bea0a7359db2896d356
+    content_hash: b436c899ff38b1d5293c3554c81087f842a85d13fdb8375f08b30530b6c37ad4
     line_count: 188
     primary_purpose: Complete specification for agentic context with Phase 1 bootstrap
       tracking
@@ -113,7 +113,7 @@ file_versions:
     path: detailed.md
     version: 7.6.0
     last_modified: '2026-11-19'
-    content_hash: 1f7a1f7cdc3885b46055ee5dcbc469a7d661cd024b2a900af875f3f69d7cf9f1
+    content_hash: 5d939396e1d54a62f03afb38a5a3ca394f72900278ef1c404056387c1682c89b
     line_count: 1707
     primary_purpose: Extended implementation guide with complete capability breakdowns
   readme:

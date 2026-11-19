@@ -99,7 +99,7 @@ file_versions:
     path: detailed.md
     version: 7.6.0
     last_modified: '2026-11-19'
-    content_hash: b3f415700b26eac22fce5dd0fb746f7daf7b0be1898d155f8ffc63d1db3b377a
+    content_hash: 10f942c190e861e936748f5c03c357ea52408643a42bf968ee6cdaad2047ea96
     line_count: 362
     primary_purpose: Extended implementation guide with IDE embedding and Phase 1
       verification

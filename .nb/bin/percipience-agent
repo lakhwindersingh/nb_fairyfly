@@ -15,7 +15,7 @@ import time
 CURRENT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = CURRENT_DIR.parent.parent
 
-for p in [REPO_ROOT, REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / "workplace"]:
+for p in [REPO_ROOT, REPO_ROOT / ".nb", REPO_ROOT / ".nb" / "core", REPO_ROOT / ".nb" / "core_legacy", REPO_ROOT / "workplace"]:
     p_str = str(p)
     if p_str not in sys.path:
         sys.path.insert(0, p_str)

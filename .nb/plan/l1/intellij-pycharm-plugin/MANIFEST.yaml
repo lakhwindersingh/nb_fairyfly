@@ -85,8 +85,8 @@ file_versions:
     path: detailed.md
     version: 1.3.0
     last_modified: '2026-11-19'
-    content_hash: 5de65fac5894a294f62c583f9d6b20c22486b6a45e8c3d2486ef06976e2b7089
-    line_count: 656
+    content_hash: e1b92191b30f6e269abe2ad5adb88af3491fa311ce27db46248dc8f64403e60f
+    line_count: 639
     primary_purpose: Extended implementation guide with JetBrains SDK, PSI architecture,
       and Claude MCP integration
   readme:
