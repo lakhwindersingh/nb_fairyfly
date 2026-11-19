@@ -4,9 +4,21 @@ use percipience_orchestrator::{
 use std::collections::BTreeMap;
 use tempfile::tempdir;
 
+fn find_repo_root() -> std::path::PathBuf {
+    let mut cur = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).to_path_buf();
+    while !cur.join(".nb").exists() {
+        if let Some(parent) = cur.parent() {
+            cur = parent.to_path_buf();
+        } else {
+            break;
+        }
+    }
+    cur
+}
+
 #[test]
 fn test_agent_manifest_and_quota_enforcement() {
-    let repo_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().parent().unwrap();
+    let repo_root = find_repo_root();
     let manifest_path = repo_root.join(".nb/agentic/agents/agent_manifest.yaml");
     let manifest = AgentManifest::load_from_yaml(&manifest_path).expect("Failed to load agent manifest");
 
@@ -58,11 +70,7 @@ fn test_multi_llm_projection() {
 
 #[test]
 fn test_submodule_orchestration_state() {
-    let repo_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap();
+    let repo_root = find_repo_root();
     let temp_dir = tempdir().unwrap();
     let ledger_out = temp_dir.path().join("orchestrator_state.json");
     let plan_dir = repo_root.join(".nb/plan/master/enterprise-ui-design-system");

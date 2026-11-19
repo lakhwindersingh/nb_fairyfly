@@ -309,6 +309,19 @@ async fn main() -> Result<()> {
             let eval = LifecycleHookManager::execute_pre_merge_gate(SemanticParityVectors::default())?;
             println!("   [7/7] Anti-Drift Parity Gate: PASSED (Score: {:.3} >= 0.950)", eval.composite_score);
             println!("🎉 ALL 7 GATEKEEPER STAGES PASSED!");
+
+            // Seal cryptographic Merkle block into context_ledger.yaml
+            let ledger_path = Path::new(".nb/context/ledger/context_ledger.yaml");
+            if ledger_path.exists() {
+                match MerkleLedger::seal_block_to_file(ledger_path, "PR_GATE_VERIFICATION_PASSED", "HEAD", None) {
+                    Ok(block) => {
+                        println!("🔒 Sealed Merkle block [{}] into context_ledger.yaml: {}", block.block_id, block.block_hash);
+                    }
+                    Err(e) => {
+                        eprintln!("⚠️  Warning: Failed to seal Merkle block: {}", e);
+                    }
+                }
+            }
         }
         Commands::Drift { enforce_gate } => {
             let eval = ParityEvaluation::evaluate(SemanticParityVectors::default());

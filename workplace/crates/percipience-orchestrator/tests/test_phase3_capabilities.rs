@@ -6,12 +6,15 @@ use std::path::Path;
 use tempfile::tempdir;
 
 fn get_repo_root() -> std::path::PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .parent()
-        .unwrap()
-        .to_path_buf()
+    let mut cur = Path::new(env!("CARGO_MANIFEST_DIR")).to_path_buf();
+    while !cur.join(".nb").exists() {
+        if let Some(parent) = cur.parent() {
+            cur = parent.to_path_buf();
+        } else {
+            break;
+        }
+    }
+    cur
 }
 
 #[test]

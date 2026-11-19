@@ -1,13 +1,13 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/percipience-core",
-    "crates/percipience-security",
-    "crates/percipience-orchestrator",
-    "crates/percipience-packager",
-    "crates/percipience-server",
-    "crates/percipience-lsp",
-    "crates/percipience-cli",
+    "workplace/crates/percipience-core",
+    "workplace/crates/percipience-security",
+    "workplace/crates/percipience-orchestrator",
+    "workplace/crates/percipience-packager",
+    "workplace/crates/percipience-server",
+    "workplace/crates/percipience-lsp",
+    "workplace/crates/percipience-cli",
 ]
 
 [workspace.package]
