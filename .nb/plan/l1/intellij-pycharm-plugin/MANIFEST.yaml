@@ -37,7 +37,8 @@ key_capabilities:
 - Model Context Protocol (MCP) Interoperability Across All Bundles (.claude/mcp.json)
 - Tier-Gated Autonomous Delivery Workflow & Git Hook Bundling (percipience/workflows/,
   percipience/hooks/)
-- Offline Local-Filesystem Plugin Auto-Upgrade (percipience/version.json, plugin_update_resolver.py)
+- Offline Local-Filesystem Plugin Auto-Upgrade (percipience/version.json, native update
+  resolver)
 - Program Structure Interface (PSI) Multi-Language AST Pruning
 - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
 - JCEF Chromium Embedded Living Visualizer
@@ -54,7 +55,7 @@ autonomous_execution:
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module l1_jetbrains_plugin
   pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_ide_plugins_space.py -v
+  post_execution: cargo test -p percipience-lsp
   handover: percipience handoff issue --from agent_jetbrains_psi_architect --to agent_qa_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
@@ -76,23 +77,23 @@ file_versions:
   concise:
     path: concise.md
     version: 1.3.0
-    last_modified: '2026-11-17'
-    content_hash: 503ea7ecc2603f30280e5ac335ee45dc650d4cd86ec0cd5b82ca8367be868465
+    last_modified: '2026-11-19'
+    content_hash: a465253e018c35db9f96d3336ecd5e679beee61fd8930448204a79e2f4ac6de6
     line_count: 131
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.3.0
-    last_modified: '2026-11-17'
-    content_hash: b98d9bc05bdb61ab99b592d3cfbe88cf8fcf61527d6d6e0cf1f44023893e27e7
+    last_modified: '2026-11-19'
+    content_hash: 5de65fac5894a294f62c583f9d6b20c22486b6a45e8c3d2486ef06976e2b7089
     line_count: 656
     primary_purpose: Extended implementation guide with JetBrains SDK, PSI architecture,
       and Claude MCP integration
   readme:
     path: README.md
     version: 1.3.0
-    last_modified: '2026-11-17'
-    content_hash: a47b70d3d2fdf233a3b58326e3d76eb5accbef504135c810cf412b82899e89ed
+    last_modified: '2026-11-19'
+    content_hash: 9cc2489ac12ae2488c3a9c367d8d98464dd73e43fa22f8c4f3f5b87c158234e6
     line_count: 35
     primary_purpose: Quick reference and navigation
 implementation_phases:

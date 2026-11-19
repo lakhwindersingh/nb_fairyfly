@@ -259,7 +259,7 @@ export interface BlotterRowData {
 Used in Admin Portals for tenant access rules, and in Trading Portals for custom risk alert criteria (e.g. `IF (Net Delta > 0.35 AND DaysToExpiration < 14) OR (DrawdownPercent < -25% AND ImpliedVolRank > 80)`):
 - **Nested Grouping**: Supports infinite recursive grouping (`AND` / `OR` group nodes).
 - **Type-Safe Operand Inputs**: Field selector dropdown determines the operator list (`>`, `<`, `==`, `between`, `in`) and the corresponding value input type.
-- **Live AST Export**: Emits a clean JSON Abstract Syntax Tree (AST) ready for server-side evaluation by policy engines (OpenFGA, OPA/Rego, or Python Zen Guard).
+- **Live AST Export**: Emits a clean JSON Abstract Syntax Tree (AST) ready for server-side evaluation by policy engines (OpenFGA, OPA/Rego, or Rust Cedar Guard).
 
 ### 3.4 Four-Eyes Dual Control Signer Widget (`<FourEyesApprovalWidget />`)
 

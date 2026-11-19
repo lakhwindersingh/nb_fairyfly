@@ -109,19 +109,24 @@ graph TD
 │       └── workflows/
 │           ├── security_mesh_continuous_audit.yaml   # Continuous security verification workflow
 │           └── pii_leakage_scan_workflow.yaml        # Automated log and prompt PII audit flow
+├── crates/
+│   └── percipience-security/                  # [Rust] Core authentication, ReBAC, FPE, mTLS
+│       ├── Cargo.toml                         # Crate manifest with zeroize, ring, tower, axum
+│       ├── src/
+│       │   ├── lib.rs                         # Crate root & security mesh API facade
+│       │   ├── rbac/                          # Multi-tenant ReBAC graph & Cedar engine
+│       │   ├── auth/                          # WebAuthn passkeys, TOTP & adaptive risk
+│       │   ├── zerotrust/                     # SPIFFE mTLS, Redis Bloom filter revocation
+│       │   ├── privacy/                       # NIST FF1 FPE encryption & log/prompt scrubber
+│       │   ├── compliance/                    # KMS envelope encryption & WORM egress
+│       │   ├── injection.rs                   # Automated plan injection engine
+│       │   └── linter.rs                      # Security policy and RLS linter
+│       └── tests/                             # Security mesh integration test suites
+│           ├── test_multitenant_rls.rs        # Row-level security enforcement tests
+│           ├── test_webauthn_passkeys.rs      # Passkey and adaptive risk authentication tests
+│           ├── test_zero_trust_mtls.rs        # SPIFFE mTLS and Bloom filter revocation tests
+│           └── test_pii_ff1_masking.rs        # Format-preserving encryption and scrubber tests
 ├── workplace/
-│   ├── modules/
-│   │   └── mod_security_core/                 # [Rust] Core authentication, ReBAC, FPE, mTLS
-│   │       ├── src/
-│   │       │   ├── rbac/                      # Multi-tenant ReBAC graph & Cedar engine
-│   │       │   ├── auth/                      # WebAuthn passkeys, TOTP & adaptive risk
-│   │       │   ├── zerotrust/                 # SPIFFE mTLS, Redis Bloom filter revocation
-│   │       │   ├── privacy/                   # NIST FF1 FPE encryption & log/prompt scrubber
-│   │       │   └── compliance/                # KMS envelope encryption & WORM egress
-│   ├── shared/
-│   │   └── tools/
-│   │       ├── inject_security_mesh.py        # Automated injection tool for existing plans
-│   │       └── lint_security_parity.py        # Security policy and RLS linter
 │   └── docs/                                  # Living security documentation & architecture
 └── user/
     ├── inputs/                                # Tenant configurations, IdP metadata (SAML/OIDC)
@@ -205,10 +210,10 @@ ightarrow$ `412-89-0532`).
 
 ## 7. Plan Injection Protocol
 
-The plan injection engine (`inject_security_mesh.py`) enables zero-friction composition:
-1. **Dependency Weaving**: Adds `security-mesh` to target plan dependencies.
+The native plan injection engine (`./percipience security inject`) enables zero-friction composition:
+1. **Dependency Weaving**: Adds `security-mesh` to target plan dependencies and manifest contracts.
 2. **Schema Migration Injection**: Adds `tenant_id` columns, RLS policies, WebAuthn tables, and FPE token vaults.
-3. **Middleware Hooking**: Wraps API endpoints with continuous Zero-Trust checks and PII scrubbers.
+3. **Middleware Hooking**: Wraps Axum/Tower service endpoints with continuous Zero-Trust checks and PII scrubbers.
 4. **Agent Swarm Integration**: Registers `agent_cloud_security_officer` and continuous audit gates into the delivery workflow.
 
 ---
@@ -217,3 +222,23 @@ The plan injection engine (`inject_security_mesh.py`) enables zero-friction comp
 
 1. `agent_cloud_security_officer`: Enforces multi-tenant RLS, WebAuthn passkeys, SPIFFE mTLS, and Redis Bloom filter revocation.
 2. `agent_privacy_compliance_auditor`: Audits data models for zero plaintext PII, validates NIST FF1 encryption, embeds real-time prompt scrubbers, and verifies SEC 17a-4 WORM archives.
+
+---
+
+## 9. Rust Implementation & Verification Harness
+
+The security mesh is implemented within `crates/percipience-security`:
+- **Memory Safety & Secret Hygiene**: Uses `zeroize::Zeroize` and `zeroize::ZeroizeOnDrop` to scrub all transient cryptographic material, private keys, and intermediate DEKs from memory.
+- **Constant-Time Verification**: Utilizes `ring::constant_time` and `subtle::ConstantTimeEq` for HMAC, token, and signature comparisons to defeat timing side-channel attacks.
+- **High-Throughput Token Revocation**: In-memory Redis Bloom filter with bitwise hashing for $< 0.1\text{ms}$ token revocation decisions.
+- **Verification Commands**:
+  ```bash
+  # Run all security mesh unit & integration suites
+  cargo test -p percipience-security
+
+  # Verify RLS and Zero-Trust policy invariants
+  ./percipience security lint
+
+  # Inject security mesh into target plan
+  ./percipience security inject <target_plan_path>
+  ```

@@ -16,7 +16,11 @@ from pathlib import Path
 
 import yaml
 
-from core.plan_module_orchestrator import PlanModuleOrchestrator
+try:
+    from workplace.core.plan_module_orchestrator import PlanModuleOrchestrator
+except ImportError:
+    from core.plan_module_orchestrator import PlanModuleOrchestrator
+
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
@@ -196,6 +200,53 @@ class TestPlanModuleOrchestrator(unittest.TestCase):
             self.assertTrue(rule.exists(), f"missing rule for {module['id']}")
         for category in report["artifacts"].values():
             self.assertTrue(all(item["state"] == "unchanged" for item in category), category)
+
+    def test_07_projects_autonomous_execution_and_lifecycle_hooks(self):
+        """Verifies that autonomous_execution, lifecycle_hooks, and contracts are projected into agent and workflow."""
+        root, plan = self._make_plan(modules_dir=False)
+        manifest_path = plan / "MANIFEST.yaml"
+        manifest = yaml.safe_load(manifest_path.read_text())
+        manifest["autonomous_execution"] = {
+            "orchestrator_agent": "agent_sequential_plan_orchestrator",
+            "execution_engine": "dynamic_dag",
+            "worktree_isolation": True,
+            "max_healing_loops": 3,
+            "handoff_protocol": "hmac_sha256_attested",
+            "anti_drift_gate": True,
+        }
+        manifest["lifecycle_hooks"] = {
+            "pre_spawn": "percipience worktree lease",
+            "pre_execution": "percipience check --ast-prune",
+            "post_execution": "pytest workplace/tests/ -v",
+            "handover": "percipience handoff issue",
+            "pre_merge_gate": "percipience gate",
+            "self_healing": "percipience heal --max-attempts 3",
+            "post_merge_seal": "percipience merkle seal",
+        }
+        manifest["specification_contracts"] = {
+            "wire_contracts": [{"path": ".nb/context/contracts/demo.yaml", "type": "RPC", "strict_mode": True}]
+        }
+        _write(manifest_path, yaml.safe_dump(manifest))
+
+        orch = PlanModuleOrchestrator(root)
+        report = orch.synchronize(plan, sync_registries=False)
+        self.assertEqual(report["status"], "SYNCHRONIZED")
+
+        root_agent = root / ".nb/agentic/custom/agents/agent_master_demo_plan.yaml"
+        self.assertTrue(root_agent.exists())
+        agent_data = yaml.safe_load(root_agent.read_text(encoding="utf-8"))
+        self.assertIn("autonomous_execution", agent_data)
+        self.assertEqual(agent_data["autonomous_execution"]["execution_engine"], "dynamic_dag")
+        self.assertIn("lifecycle_hooks", agent_data)
+        self.assertEqual(agent_data["lifecycle_hooks"]["pre_merge_gate"], "percipience gate")
+        self.assertIn("specification_contracts", agent_data)
+
+        workflow = root / ".nb/agentic/workflows/wf_master_demo_plan_derivation.yaml"
+        self.assertTrue(workflow.exists())
+        wf_data = yaml.safe_load(workflow.read_text(encoding="utf-8"))
+        self.assertIn("autonomous_execution", wf_data)
+        self.assertIn("lifecycle_hooks", wf_data)
+        self.assertIn("specification_contracts", wf_data)
 
 
 class TestPlanOrchestratorCli(unittest.TestCase):

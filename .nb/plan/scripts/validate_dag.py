@@ -31,7 +31,10 @@ LAYER_HIERARCHY = {
     "architecture": 0,
     "master": 0,
     "l1": 1,
+    "domain": 1,
     "l2": 2,
+    "extensions": 2,
+    "extension": 2,
     "l3": 3,
     "l4": 4,
     "l5": 5,
@@ -120,14 +123,15 @@ class PlanDagValidator:
                 continue
 
             for req in requires:
+                req_clean = req.split("(")[0].strip() if isinstance(req, str) else str(req)
                 # If dependency is a direct markdown document, check disk existence
-                if req.endswith(".md"):
-                    doc_path = self.plan_root / req
+                if req_clean.endswith(".md"):
+                    doc_path = self.plan_root / req_clean
                     if not doc_path.exists():
-                        self.warnings.append(f"[{rel_path}] {plan_id}: Referenced document '{req}' not found")
+                        self.warnings.append(f"[{rel_path}] {plan_id}: Referenced document '{req_clean}' not found")
                     continue
 
-                canonical_req = self.alias_to_id.get(req)
+                canonical_req = self.alias_to_id.get(req_clean) or self.alias_to_id.get(req)
                 if not canonical_req or canonical_req not in self.manifests:
                     self.warnings.append(f"[{rel_path}] {plan_id}: External or optional dependency '{req}'")
                     continue

@@ -59,10 +59,10 @@ Implements concrete runtime spaces:
 - **`vscode-plugin`**: VSCode Extension API & LSP 3.17.
 - **`saas-portal-domain`**: Modular portal, RBAC, PostgreSQL RLS, and pipeline visualizer drawer.
 - **`npx-installer`**: Zero-Install Instant Onboarding & Ephemeral CI/CD Gatekeeper.
-- **`tiered-wheel-packaging`**: Multi-Tier Python Wheel Packaging across Free, Team, Business & Enterprise Tiers.
+- **`tiered-wheel-packaging`**: Multi-Tier Rust Binary, Crate & Polyglot Packaging across Free, Team, Business & Enterprise Tiers.
 
 ### Test Governance (`test/`)
-- **`test`**: Authoritative 18-subsystem automated test governance, Pytest test runner, and GenAI evaluation metrics.
+- **`test`**: Authoritative 18-subsystem automated test governance, Rust native test harness, Criterion benchmarks, and GenAI evaluation metrics.
 
 ---
 
@@ -72,7 +72,7 @@ Run the full verification suite before committing any changes to `.nb/plan/`:
 
 ```bash
 # 1. Synchronize cryptographic file hashes and line counts
-python3 .nb/plan/sync_plan_versions.py
+python3 .nb/plan/scripts/sync_plan_versions.py
 
 # 2. Run automated validation gates (DAG, Schema v3.0, Content Hashes, Capability Matrix)
 bash .nb/plan/scripts/validate.sh

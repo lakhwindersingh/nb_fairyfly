@@ -9,12 +9,20 @@ import subprocess
 from pathlib import Path
 import pytest
 
-from workplace.core.container_plan_executor import (
-    ContainerPlanExecutor,
-    PlanExecutionRequest,
-    PlanExecutionReceipt
-)
-from workplace.core.worktree_engine import WorktreeEngine
+try:
+    from workplace.core.container_plan_executor import (
+        ContainerPlanExecutor,
+        PlanExecutionRequest,
+        PlanExecutionReceipt
+    )
+    from workplace.core.worktree_engine import WorktreeEngine
+except ImportError:
+    from core.container_plan_executor import (
+        ContainerPlanExecutor,
+        PlanExecutionRequest,
+        PlanExecutionReceipt
+    )
+    from core.worktree_engine import WorktreeEngine
 
 
 @pytest.fixture
@@ -23,7 +31,11 @@ def repo_root():
 
 
 @pytest.fixture
-def plan_path():
+def plan_path(repo_root):
+    candidates = list((repo_root / ".nb" / "plan").glob("**/detailed.md"))
+    valid = [c for c in candidates if "templates" not in c.parts and "archive" not in c.parts]
+    if valid:
+        return str(valid[0].relative_to(repo_root))
     return ".nb/plan/master/parent-master-free-plan/detailed.md"
 
 
@@ -197,3 +209,36 @@ def test_cli_swarm_exec_subcommand(repo_root, plan_path):
         assert "Containerized plan execution succeeded" in proc.stdout
     finally:
         WorktreeEngine.release(repo_root, agent_id)
+
+
+def test_execute_plan_with_lifecycle_hooks(repo_root, plan_path):
+    """Validates that ContainerPlanExecutor resolves and executes manifest lifecycle hooks."""
+    agent_id = "agent_hooks_test_01"
+    executor = ContainerPlanExecutor(workspace_root=repo_root, mock_mode=True)
+
+    req = PlanExecutionRequest(
+        plan_path=plan_path,
+        agent_id=agent_id,
+        target_module="workplace/core",
+        prompt="Verify lifecycle hooks",
+        run_gatekeeper=False,
+        run_lifecycle_hooks=True,
+        target_file_rel="workplace/core/hook_test.py",
+        mock_synthesized_code="# hook test\n"
+    )
+
+    try:
+        receipt = executor.execute(req)
+        assert receipt.status == "SUCCESS"
+        assert "pre_spawn" in receipt.lifecycle_hooks_executed
+        assert receipt.lifecycle_hooks_executed["pre_spawn"] == "PASSED"
+        assert "pre_execution" in receipt.lifecycle_hooks_executed
+        assert receipt.lifecycle_hooks_executed["pre_execution"] == "PASSED"
+        assert "post_execution" in receipt.lifecycle_hooks_executed
+        assert receipt.lifecycle_hooks_executed["post_execution"] == "PASSED"
+        assert "handover" in receipt.lifecycle_hooks_executed
+        assert receipt.lifecycle_hooks_executed["handover"] == "ISSUED"
+        assert "LIFECYCLE HOOK" in receipt.stdout
+    finally:
+        executor.release_worktree(agent_id)
+

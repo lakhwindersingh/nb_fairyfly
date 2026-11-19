@@ -19,7 +19,7 @@
 | [`domain_intellij_pycharm_plugin`](./l1/intellij-pycharm-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 9 |
 | [`domain_npx_installer`](./l1/npx-installer) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`domain_saas_portal`](./l1/saas-portal-domain) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 6 |
-| [`domain_tiered_wheel_packaging`](./l1/tiered-wheel-packaging) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
+| [`domain_tiered_wheel_packaging`](./l1/tiered-wheel-packaging) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 7 |
 | [`domain_vscode_plugin`](./l1/vscode-plugin) | `l1` | `COMPLETED` | `0.985` | ✅ Ready | 5 |
 | [`percipience_master_test_plan`](./test) | `test` | `COMPLETED` | `0.985` | ✅ Ready | 8 |
 
@@ -146,7 +146,7 @@
   - Dynamic Tier-Aware Control Plane Action Button Matrix
   - Model Context Protocol (MCP) Interoperability Across All Bundles (.claude/mcp.json)
   - Tier-Gated Autonomous Delivery Workflow & Git Hook Bundling (percipience/workflows/, percipience/hooks/)
-  - Offline Local-Filesystem Plugin Auto-Upgrade (percipience/version.json, plugin_update_resolver.py)
+  - Offline Local-Filesystem Plugin Auto-Upgrade (percipience/version.json, native update resolver)
   - Program Structure Interface (PSI) Multi-Language AST Pruning
   - In-Editor Annotators, Gutter Icons & Quick-Fix Intentions
   - JCEF Chromium Embedded Living Visualizer
@@ -160,7 +160,7 @@
   - Zero-Install Ephemeral PR Gatekeeper Execution
   - Single-Command Quad-Space Initialization (<3s)
   - Automated Claude / MCP Protocol Server Provisioning
-  - Multi-Platform Binary & Python Bridge Fallback Resolution
+  - Multi-Platform Native Binary Resolution & Caching Engine
   - Enterprise Air-Gapped & Proxy (.npmrc) Support
 
 ### `domain_saas_portal`: Enterprise SaaS, Corporate Portals & Web Platform Ecosystem
@@ -175,16 +175,18 @@
   - Observability Hub Dashboard & Real-Time Telemetry Feeds
   - WCAG 2.1 AA & Core Web Vitals Quality Harnesses
 
-### `domain_tiered_wheel_packaging`: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
+### `domain_tiered_wheel_packaging`: Multi-Tier Rust Binary, Crate & Polyglot Packaging Architecture Plan
 - **Location**: [l1/tiered-wheel-packaging](./l1/tiered-wheel-packaging)
 - **Layer**: `l1`
 - **Requires**: `master_parent_framework`
 - **Key Capabilities**:
-  - Automated Multi-Tier Wheel Compilation (Free, Team, Business, Enterprise)
-  - Build-Time Proprietary Engine Exclusion Boundaries
-  - PEP 427, PEP 517, PEP 621 Standard Package Formatting
-  - SHA-256 Merkle Block Sealing for Built Wheel Artifacts
-  - Public PyPI & Enterprise Private Index Authentication (AWS CodeArtifact, Artifactory)
+  - Automated Multi-Tier Rust Static Binary Compilation (Free, Team, Business, Enterprise)
+  - Build-Time Feature Gating via Cargo Features (#[cfg(feature = "enterprise")])
+  - Universal Cross-Platform Targets (macOS aarch64/x86_64, Linux musl, Windows .exe)
+  - Self-Contained Asset Embedding via rust-embed (< 15MB Static Binary)
+  - SHA-256 Merkle Block Sealing for Built Binary and Crate Artifacts
+  - Optional Polyglot PyO3/maturin Wheels and NAPI Node.js Modules
+  - Automated Distribution via GitHub Releases, crates.io, and Private Registries
 
 ### `domain_vscode_plugin`: Visual Studio Code Extension, Language Server Protocol & Percipience Control Plane Space
 - **Location**: [l1/vscode-plugin](./l1/vscode-plugin)

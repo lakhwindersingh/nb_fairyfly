@@ -3,7 +3,7 @@
 > **Master Test Governance & Automated Verification Framework**  
 > **Target Release**: Percipience v3.0 & Enterprise Platform v7.2.0-prod  
 > **Status**: **ACTIVE & CODIFIED**  
-> **Framework Stack**: **Pytest 8.4+ Enterprise Engine + Allure Report 2.x + DeepEval / Ragas AI Evaluation + Playwright 1.48+ E2E + OpenTelemetry GenAI + OWASP LLM Red-Team Suite**  
+> **Framework Stack**: **Rust Native Engine (`cargo test --workspace`) + Criterion Benchmarks + Miri Memory Verification + Playwright 1.48+ E2E + OpenTelemetry GenAI + OWASP LLM Red-Team Suite**  
 
 ---
 
@@ -26,14 +26,15 @@ The `.nb/plan/test/` space defines the authoritative, end-to-end testing and vul
 
 To satisfy the dual requirements of **human developer ergonomics** and **autonomous AI coding agent orchestration**, the testing stack is standardized on:
 
-1. **Pytest 8.4+ / 9.x Enterprise Engine**:
-   - Universal execution engine for backend services, AST compiler, cryptographic Merkle state, and CLI commands.
-   - Strict async support (`pytest-asyncio`), parallel execution (`pytest-xdist`), and isolated mock workspaces.
-2. **Allure Report 2.x & `pytest-json-report`**:
-   - Machine-readable structured JSON outputs (`test_results.json`) consumed instantly by AI agents.
+1. **Rust Native Cargo Workspace Test Engine**:
+   - High-performance, concurrent test execution across all crates (`percipience-core`, `percipience-cli`, `percipience-orchestrator`, `percipience-security`, `percipience-server`, `percipience-lsp`, `percipience-packager`).
+   - Zero-overhead native execution, strict async tests (`tokio::test`), and isolated tempdir worktrees.
+2. **Machine-Readable Structured Telemetry & Allure Output**:
+   - Structured JSON outputs (`test_results.json`) consumed instantly by AI agents.
    - Interactive HTML visual reports with step-by-step logs, attachment diffs, and execution timelines.
-3. **DeepEval / Ragas / G-Eval AI Evaluation Engine**:
-   - Quantitative evaluation of LLM prompt outputs: **Faithfulness ($\ge 0.90$)**, **Hallucination Freedom ($\ge 0.95$)**, **Context Relevancy ($\ge 0.85$)**, and **Spec-to-Code Semantic Parity ($S_{SP} \ge 0.950$)**.
+3. **Quantitative LLM Evaluation & Miri Memory Checks**:
+   - Native evaluation of LLM prompt outputs: **Faithfulness ($\ge 0.90$)**, **Hallucination Freedom ($\ge 0.95$)**, **Context Relevancy ($\ge 0.85$)**, and **Spec-to-Code Semantic Parity ($S_{SP} \ge 0.950$)**.
+   - Miri undefined-behavior and memory-safety verification for unsafe blocks.
 4. **Adversarial Security & OWASP LLM Top 10 Suite**:
    - Comprehensive vulnerability testing: Direct/indirect prompt injection, jailbreaks, PII exfiltration, AST shellcode injection, `HandoffToken` HMAC forgery/replay, Merkle collisions, and gVisor container breakouts.
 5. **OpenTelemetry GenAI (OTel) Distributed Tracing**:
@@ -41,7 +42,7 @@ To satisfy the dual requirements of **human developer ergonomics** and **autonom
 6. **Playwright 1.48+ & Vitest 2.x / Axe-Core**:
    - Headless browser testing of the SaaS Portal, interactive AST pruner playground, and WCAG 2.1 AA accessibility benchmarks.
 7. **Percipience Autonomous Self-Healing Triad**:
-   - Direct integration with `workplace/core/diagnostic_reprompt.py` to trigger bounded 3-step AI repair loops upon test failures.
+   - Direct integration with `crates/percipience-core/src/diagnostic.rs` to trigger bounded 3-step AI repair loops upon test failures.
 
 ---
 
@@ -74,26 +75,26 @@ To satisfy the dual requirements of **human developer ergonomics** and **autonom
 
 ### 1. Run Complete Automated Test Suite
 ```bash
-python3 -m pytest workplace/tests/ -v
+cargo test --workspace
 ```
 
 ### 2. Run via AI-Assisted Test Orchestrator
 ```bash
 # Execute specific tier with structured JSON output and AI evaluation
-python3 .nb/plan/test/test_runner.py --tier all --report json,html
+./percipience test --tier all --report json,html
 
 # Execute with automated AI failure diagnosis and surgical repair suggestions
-python3 .nb/plan/test/test_runner.py --tier unit --ai-triage
+./percipience test --tier unit --ai-triage
 ```
 
 ### 3. Run Dedicated Vulnerability Red-Team Suite
 ```bash
-pytest workplace/tests/test_vulnerability_suite.py -v --alluredir=.scratch/test_reports/security/
+cargo test -p percipience-security --test test_vulnerability_suite -v
 ```
 
 ### 4. Verify 6-Vector Semantic Parity
 ```bash
-python3 workplace/core/semantic_parity_engine.py --enforce-gate
+./percipience drift check --enforce-gate
 ```
 
 ---

@@ -272,11 +272,13 @@ The workspace maintains strict separation across four distinct directories, dist
 
 ```text
 nb_fairyfly/ (Workspace Root)
+├── Cargo.toml                                # Rust Cargo Workspace definition
+├── crates/                                   # Platform Crates (percipience-core, percipience-cli, percipience-orchestrator)
+├── target/release/percipience                # Single static binary executable (< 15MB)
 ├── .nb/                                      # [PLATFORM AGENTIC CI/CD SYSTEM]
 │   ├── bin/
 │   │   └── percipience                       # Unified Agentic CI/CD CLI & Gatekeeper (Sole Executable)
 │   ├── config/                               # Platform Configurations
-│   ├── core/                                 # Platform Engines (38 Python modules)
 │   ├── scripts/                              # Pre-commit & CI/CD Hooks
 │   ├── tests/                                # Platform CI/CD Verification Suites
 │   ├── plan/                                 # Governing Master Plans
@@ -300,9 +302,9 @@ nb_fairyfly/ (Workspace Root)
 The Percipience IntelliJ / PyCharm Plugin (`mod_intellij_plugin`) acts as the comprehensive IDE control plane for the Free Community Tier:
 
 ### 7.1 Bundled Free Tier Platform Assets in Plugin Distribution
-The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) directly packages the canonical platform binary, configurations, core engine modules, and workflows inside its JAR resources (`percipience/`):
-- `percipience/bin/percipience`: The full platform CLI binary (packaged with automatic Unix execution permissions `0755` applied on extraction).
-- `percipience/core/`: The essential platform core engines (all 38 Python modules including `ast_optimizer.py`, `merkle_engine.py`, `autonomous_cicd.py`, `token_tracker.py`, `workflow_orchestrator.py`, `poisoning_sentinel.py`, `tree_sitter_daemon.py`, etc., plus `__init__.py`) bundled directly into the plugin JAR resources for complete offline execution autonomy and zero-dependency environment hydration.
+The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) directly packages the canonical platform binary, configurations, embedded engine schemas, and workflows inside its JAR resources (`percipience/`):
+- `percipience/bin/percipience`: The full platform CLI single static binary (packaged with automatic Unix execution permissions `0755` applied on extraction).
+- `percipience/embedded/`: Embedded engine assets and wire contracts via `rust-embed` for complete offline execution autonomy and zero-dependency environment hydration.
 - `percipience/config/billing_plans.yaml`: Billing configuration enforcing the Free Community Tier (`plan_free`: 1 seat, 1 worktree, 500 PR audits/mo, AST token pruning, Merkle audit, basic autonomous CI/CD).
 - `percipience/config/token_compression_rules.yaml`: AST pruning thresholds preserving function signatures while collapsing bodies.
 - `percipience/workflows/basic_autonomous_cicd.yaml`: Ready-to-run 5-step autonomous CI/CD workflow.
@@ -310,7 +312,7 @@ The compiled plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0
 
 ### 7.2 Automated Workspace Detection & Interactive Startup Prompt
 - **Startup Hook (`PercipienceProjectStartupActivity`)**: Implements JetBrains `com.intellij.openapi.startup.ProjectActivity`. When any project is opened, it evaluates `WorkspaceBootstrapper.isWorkspaceConfigured(basePath)`.
-- **Interactive Balloon Notification**: If the workspace lacks `.nb/bin/percipience`, `.nb/config/billing_plans.yaml`, `.nb/core/ast_optimizer.py`, or `.nb/context/ledger/context_ledger.yaml`, it raises a non-intrusive interactive notification to initialize the Free Community Tier.
+- **Interactive Balloon Notification**: If the workspace lacks `./percipience` (or `.nb/bin/percipience`), `.nb/config/billing_plans.yaml`, or `.nb/context/ledger/context_ledger.yaml`, it raises a non-intrusive interactive notification to initialize the Free Community Tier.
 - **Action Handlers**: Unpacks bundled resources, scaffolds Quad-Space folders, and commits genesis Merkle block `RP_GENESIS_000`.
 
 ### 7.3 Asynchronous Execution Service (`PercipienceExecutionService`) & IDE Action Suite
@@ -322,38 +324,38 @@ The plugin registers a project-level service (`PercipienceExecutionService`) tha
 
 | ID | Foundational Capability | Free Community Tier Status | Platform Implementation Location |
 | :--- | :--- | :--- | :--- |
-| `CAP-01` | Multi-Format MVS Ingestion | Supported (Markdown & OpenAPI) | `.nb/core/request_formalizer.py` |
-| `CAP-02` | Context Poisoning Detection & Rollback | Supported (Local Recovery Points) | `.nb/core/poisoning_sentinel.py`, `.nb/core/surgical_rollback.py` |
-| `CAP-03` | Context Compression & GenAI Optimization | Supported (60%–80% AST Pruning) | `.nb/core/ast_optimizer.py`, `.nb/core/token_optimizer_suite.py` |
-| `CAP-04` | Dynamic Multi-Model Cascading & Tiering | Supported (Local / BYO API Key) | `.nb/core/cognitive_router.py` |
-| `CAP-05` | Git Worktree Workspace Isolation | Supported (Single Local Worktree) | `.nb/core/worktree_engine.py` |
-| `CAP-06` | Automated Spec-to-Code Semantic Parity | Supported (AST Parity Verification) | `.nb/core/living_doc_engine.py` |
-| `CAP-07` | Bounded TDD Self-Healing | Supported (1 Retry Auto-Repair) | `.nb/core/error_recovery_orchestrator.py` |
-| `CAP-08` | Cryptographic Ledger Hash-Chain | Supported (SHA-256 `context_ledger.yaml`) | `.nb/core/merkle_engine.py` |
+| `CAP-01` | Multi-Format MVS Ingestion | Supported (Markdown & OpenAPI) | `crates/percipience-core/src/request_formalizer.rs` |
+| `CAP-02` | Context Poisoning Detection & Rollback | Supported (Local Recovery Points) | `crates/percipience-security/src/poisoning_sentinel.rs`, `crates/percipience-orchestrator/src/surgical_rollback.rs` |
+| `CAP-03` | Context Compression & GenAI Optimization | Supported (60%–80% AST Pruning) | `crates/percipience-core/src/ast_optimizer.rs`, `crates/percipience-core/src/token_optimizer_suite.rs` |
+| `CAP-04` | Dynamic Multi-Model Cascading & Tiering | Supported (Local / BYO API Key) | `crates/percipience-orchestrator/src/cognitive_router.rs` |
+| `CAP-05` | Git Worktree Workspace Isolation | Supported (Single Local Worktree) | `crates/percipience-orchestrator/src/worktree_engine.rs` |
+| `CAP-06` | Automated Spec-to-Code Semantic Parity | Supported (AST Parity Verification) | `crates/percipience-core/src/living_doc_engine.rs` |
+| `CAP-07` | Bounded TDD Self-Healing | Supported (1 Retry Auto-Repair) | `crates/percipience-orchestrator/src/error_recovery_orchestrator.rs` |
+| `CAP-08` | Cryptographic Ledger Hash-Chain | Supported (SHA-256 `context_ledger.yaml`) | `crates/percipience-core/src/merkle_engine.rs` |
 | `CAP-09` | Time-Travel Debugging & Visual DAG | Supported (Static HTML Dashboard) | `user/outputs/dashboard/index.html` |
-| `CAP-10` | Context Maturity Evaluation Scorecard | Supported (Standard 6D Scorecard) | `.nb/core/maturity_evaluator.py` |
+| `CAP-10` | Context Maturity Evaluation Scorecard | Supported (Standard 6D Scorecard) | `crates/percipience-core/src/maturity_evaluator.rs` |
 | `CAP-11` | Master Context Ledger & Commit Traceability | Supported (Full Traceability) | `.nb/context/ledger/context_ledger.yaml` |
-| `CAP-12` | Universal Quad-Space Clean Bootstrapping | Supported (Automated in IDE Plugin) | `.nb/bin/percipience init` |
-| `CAP-13` | Zero-Overhead Dual-Mode Architecture | Supported (Single & Multi-Module) | `.nb/bin/percipience` |
-| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Platform Assets (`.nb/` & Master Plans) Stay Encrypted & Readable by `percipience`; User Plan Packaging Paid Tier Only | `.nb/core/nbpack_envelope.py` |
+| `CAP-12` | Universal Quad-Space Clean Bootstrapping | Supported (Automated in IDE Plugin) | `./percipience init` |
+| `CAP-13` | Zero-Overhead Dual-Mode Architecture | Supported (Single & Multi-Module) | `./percipience` |
+| `CAP-14` | Proprietary Obfuscation & `.nbpack` Enclaves | Platform Assets (`.nb/` & Master Plans) Stay Encrypted & Readable by `percipience`; User Plan Packaging Paid Tier Only | `crates/percipience-security/src/nbpack_envelope.rs` |
 | `CAP-15` | External Issue Tracker & Jira MCP Server | Paid Tier Only (Team / Enterprise) | `.nb/config/issue_tracker_mcp.yaml` |
-| `CAP-16` | Autonomous CI/CD Triad | Supported (`basic_autonomous_cicd.yaml`) | `.nb/core/autonomous_cicd.py` |
-| `CAP-17` | Extensible Custom Agent Plugins | Supported (Local Custom Agents) | `.nb/core/agent_plugin_engine.py` |
-| `CAP-18` | Production Token FinOps & Metering | Supported (Local Token Ledger) | `.nb/core/token_tracker.py` |
-| `CAP-19` | Enterprise Observability Hub & Telemetry | Supported (Local Web Dashboard) | `.nb/core/open_telemetry_exporter.py` |
-| `CAP-20` | 3-Tier Layered Context & BYOR | Supported (Local Git & SSH) | `.nb/core/byor_adapter.py`, `.nb/core/layered_context_validator.py` |
-| `CAP-21` | Autonomous Living Documentation Engine | Supported (Markdown + Mermaid) | `.nb/core/living_doc_engine.py` |
-| `CAP-22` | Distributed Redis Redlock Concurrency | Paid Tier Only (Enterprise) | `.nb/core/worktree_engine.py` |
-| `CAP-23` | SEC 17a-4 / FINRA WORM Cloud Vault Egress | Paid Tier Only (Enterprise) | `.nb/core/worm_egress.py` |
-| `CAP-24` | High-Throughput Tree-Sitter AST Daemon | Paid Tier Only (Enterprise) | `.nb/core/native_tree_sitter_daemon.py` |
-| `CAP-25` | Multi-Dimensional 6D Token Compression Suite | Supported (AST + Doc + Config) | `.nb/core/token_optimizer_suite.py` |
-| `CAP-26` | Multi-Dialect Diagnostic Log Slicing | Supported (Standard Traceback Slicer) | `.nb/core/diagnostic_log_pruner.py` |
-| `CAP-27` | Declarative Quad-Space Runtime Boundary | Supported (Zero-Logic Facade) | `.nb/agentic/runtime/` |
-| `CAP-28` | Barrier Join Synchronization Engine | Supported (Local Step DAG) | `.nb/core/workflow_orchestrator.py` |
-| `CAP-29` | 4-Pillar Error Taxonomy & Playbooks | Supported (Basic Healing Playbooks) | `.nb/core/error_recovery_orchestrator.py` |
-| `CAP-30` | Cryptographic Prompt Manifest & Static Pinning | Supported (`prompt_manifest.yaml`) | `.nb/core/prompt_drift_sentinel.py`, `.nb/core/prompt_prefix_pinning.py` |
-| `CAP-31` | Hierarchical Swarm Authority Tree | Supported (Local Agent Hierarchy) | `.nb/core/swarm_governor.py` |
-| `CAP-32` | Adversarial Red-Team Fuzzing Engine | Supported (Standard Test Fuzzing) | `.nb/core/adversarial_fuzzer.py` |
-| `CAP-33` | Proportional Attention Budgeting | Supported (15/25/35/10/15 Rule) | `.nb/core/attention_budgeter.py` |
-| `CAP-34` | ReAct Trajectory Recording & Replay | Supported (`agentic/trajectories/`) | `.nb/core/trajectory_recorder.py` |
-| `CAP-35` | Ambiguity Resolution & Clarification RFCs | Supported (`user/hitl/`) | `.nb/core/ambiguity_resolver.py` |
+| `CAP-16` | Autonomous CI/CD Triad | Supported (`basic_autonomous_cicd.yaml`) | `crates/percipience-orchestrator/src/autonomous_cicd.rs` |
+| `CAP-17` | Extensible Custom Agent Plugins | Supported (Local Custom Agents) | `crates/percipience-core/src/agent_plugin_engine.rs` |
+| `CAP-18` | Production Token FinOps & Metering | Supported (Local Token Ledger) | `crates/percipience-core/src/token_tracker.rs` |
+| `CAP-19` | Enterprise Observability Hub & Telemetry | Supported (Local Web Dashboard) | `crates/percipience-server/src/open_telemetry_exporter.rs` |
+| `CAP-20` | 3-Tier Layered Context & BYOR | Supported (Local Git & SSH) | `crates/percipience-orchestrator/src/byor_adapter.rs`, `crates/percipience-core/src/layered_context_validator.rs` |
+| `CAP-21` | Autonomous Living Documentation Engine | Supported (Markdown + Mermaid) | `crates/percipience-core/src/living_doc_engine.rs` |
+| `CAP-22` | Distributed Redis Redlock Concurrency | Paid Tier Only (Enterprise) | `crates/percipience-orchestrator/src/worktree_engine.rs` |
+| `CAP-23` | SEC 17a-4 / FINRA WORM Cloud Vault Egress | Paid Tier Only (Enterprise) | `crates/percipience-security/src/worm_egress.rs` |
+| `CAP-24` | High-Throughput Tree-Sitter AST Daemon | Paid Tier Only (Enterprise) | `crates/percipience-core/src/native_tree_sitter_daemon.rs` |
+| `CAP-25` | Multi-Dimensional 6D Token Compression Suite | Supported (AST + Doc + Config) | `crates/percipience-core/src/token_optimizer_suite.rs` |
+| `CAP-26` | Multi-Dialect Diagnostic Log Slicing | Supported (Standard Traceback Slicer) | `crates/percipience-core/src/diagnostic_log_pruner.rs` |
+| `CAP-27` | Declarative Quad-Space Runtime Boundary | Supported (Zero-Logic Facade) | `crates/percipience-core/src/runtime/` |
+| `CAP-28` | Barrier Join Synchronization Engine | Supported (Local Step DAG) | `crates/percipience-orchestrator/src/workflow_orchestrator.rs` |
+| `CAP-29` | 4-Pillar Error Taxonomy & Playbooks | Supported (Basic Healing Playbooks) | `crates/percipience-orchestrator/src/error_recovery_orchestrator.rs` |
+| `CAP-30` | Cryptographic Prompt Manifest & Static Pinning | Supported (`prompt_manifest.yaml`) | `crates/percipience-core/src/prompt_drift_sentinel.rs`, `crates/percipience-core/src/prompt_prefix_pinning.rs` |
+| `CAP-31` | Hierarchical Swarm Authority Tree | Supported (Local Agent Hierarchy) | `crates/percipience-security/src/swarm_governor.rs` |
+| `CAP-32` | Adversarial Red-Team Fuzzing Engine | Supported (Standard Test Fuzzing) | `crates/percipience-security/src/adversarial_fuzzer.rs` |
+| `CAP-33` | Proportional Attention Budgeting | Supported (15/25/35/10/15 Rule) | `crates/percipience-core/src/attention_budgeter.rs` |
+| `CAP-34` | ReAct Trajectory Recording & Replay | Supported (`agentic/trajectories/`) | `crates/percipience-orchestrator/src/trajectory_recorder.rs` |
+| `CAP-35` | Ambiguity Resolution & Clarification RFCs | Supported (`user/hitl/`) | `crates/percipience-core/src/ambiguity_resolver.rs` |

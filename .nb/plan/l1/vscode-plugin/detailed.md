@@ -80,7 +80,6 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   ├── modules/
 │   │   └── mod_vscode_extension/
 │   │       ├── package.json                           # VSCode extension manifest & configuration
-│   │       ├── package_extension.py                   # Multi-tier VSIX packaging script
 │   │       ├── tsconfig.json                          # TypeScript compiler options
 │   │       ├── esbuild.js                             # Multi-target bundle script (extension + server)
 │   │       ├── src/
@@ -321,7 +320,7 @@ sequenceDiagram
 ```
 
 ### 6.3. Separate Multi-Tier VSIX Bundles for Permission Verification
-The VSCode packager (`package_extension.py`) generates dedicated tier-aware VSIX distributions in `.nb/bundles/`:
+The native packager (`./percipience package --target vscode`) generates dedicated tier-aware VSIX distributions in `.nb/bundles/`:
 - `percipience-vscode-extension-free-1.0.0.vsix`: Community edition with gatekeeper-only surface.
 - `percipience-vscode-extension-team-1.0.0.vsix`: Team edition with worktrees and custom agent registry.
 - `percipience-vscode-extension-business-1.0.0.vsix`: Business edition with sealed `.nbpack` compiler and gateway provisioner.

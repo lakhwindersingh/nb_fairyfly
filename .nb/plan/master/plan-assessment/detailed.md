@@ -17,10 +17,10 @@ model_tiering_policy:
   tier_a_reference_models: ["claude-3-7-sonnet", "gemini-2.0-pro", "gpt-4o", "deepseek-r1"]
   tier_b_reference_models: ["claude-3-5-haiku", "gemini-2.0-flash", "gpt-4o-mini"]
 environment_toolchain:
-  package_manager: "uv (>= 0.11.0)"
-  python_version: ">= 3.11.9"
-  dependency_spec: "pyproject.toml"
-  virtualenv_strategy: "hermetic .venv with auto-detection"
+  build_tool: "cargo (>= 1.78.0)"
+  rust_version: ">= 1.78.0"
+  dependency_spec: "Cargo.toml (Workspace)"
+  compilation_target: "single static binary ./percipience"
 shared_infrastructure:
   - "Percipience Autonomous Agentic Swarm & Worktree Orchestrator (.nb/core/)"
   - "Lyapunov Power-Iteration Spectral Safety Oracle (.nb/context/rules/spectral_stability_rules.md)"

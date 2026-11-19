@@ -1,11 +1,11 @@
 plan:
   id: domain_tiered_wheel_packaging
-  name: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
+  name: Multi-Tier Rust Binary, Crate & Polyglot Packaging Architecture Plan
   category: l1
   layer: l1
 schema_version: 3.0.0
 plan_id: domain_tiered_wheel_packaging
-plan_name: Multi-Tier Python Wheel Packaging & Distribution Architecture Plan
+plan_name: Multi-Tier Rust Binary, Crate & Polyglot Packaging Architecture Plan
 version: 1.0.0
 layer: l1
 capability_rating: L1
@@ -30,11 +30,13 @@ dependencies:
   - master_parent_framework
   enables: []
 key_capabilities:
-- Automated Multi-Tier Wheel Compilation (Free, Team, Business, Enterprise)
-- Build-Time Proprietary Engine Exclusion Boundaries
-- PEP 427, PEP 517, PEP 621 Standard Package Formatting
-- SHA-256 Merkle Block Sealing for Built Wheel Artifacts
-- Public PyPI & Enterprise Private Index Authentication (AWS CodeArtifact, Artifactory)
+- Automated Multi-Tier Rust Static Binary Compilation (Free, Team, Business, Enterprise)
+- Build-Time Feature Gating via Cargo Features (#[cfg(feature = "enterprise")])
+- Universal Cross-Platform Targets (macOS aarch64/x86_64, Linux musl, Windows .exe)
+- Self-Contained Asset Embedding via rust-embed (< 15MB Static Binary)
+- SHA-256 Merkle Block Sealing for Built Binary and Crate Artifacts
+- Optional Polyglot PyO3/maturin Wheels and NAPI Node.js Modules
+- Automated Distribution via GitHub Releases, crates.io, and Private Registries
 autonomous_execution:
   orchestrator_agent: agent_sequential_plan_orchestrator
   specialist_agent: agent_packaging_release_engineer
@@ -47,8 +49,9 @@ autonomous_execution:
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module l1_wheel_packaging
   pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_commercial_license_management.py workplace/tests/test_tier3_enterprise_launch.py -v
-  handover: percipience handoff issue --from agent_packaging_release_engineer --to agent_qa_sentinel
+  post_execution: cargo test -p percipience-packager
+  handover: percipience handoff issue --from agent_packaging_release_engineer --to
+    agent_qa_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
   post_merge_seal: percipience merkle seal --worm-egress
@@ -69,23 +72,23 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: a4c8a994127e9e3748a85845568f177a2d5fe7a7981469557e64f96f285fab6d
-    line_count: 106
+    last_modified: '2026-11-19'
+    content_hash: 89173f50e46f692c6433969b55422be51e37cd5b2b4ce618d9bc221a78d1a81b
+    line_count: 105
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: fda1a445c4beca1f7f1795fe06819eb3b6b7b5ba16129501d56e0d9801d02409
-    line_count: 269
+    last_modified: '2026-11-19'
+    content_hash: 6e4cdb4620f8660916ec0e77b164a028423cf305bdb29a0e01cb204558d8e422
+    line_count: 228
     primary_purpose: Extended implementation guide for multi-tier wheel packaging
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: db56f3e4f5dfbcd49b3c1df41a7095d158cb9ef3fcd5f2bf226c1b3303bc46b6
-    line_count: 32
+    last_modified: '2026-11-19'
+    content_hash: 723fbd2dabb2612c8c18210ec00ea3995f9cdbd6176facb5ea0f0fc862168d12
+    line_count: 33
     primary_purpose: Quick reference and navigation
 implementation_phases:
   phase_1: Core Engine Classification & Tier Rules Definition

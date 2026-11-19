@@ -15,7 +15,7 @@ The **Generic Multi-Tenant Security & PII Protection Mesh** is a modular, layera
 - **Continuous Zero-Trust & mTLS**: NIST SP 800-207 continuous authorization, SPIFFE/SPIRE SVID workload identities rotated every 60 minutes, and sub-millisecond Redis Bloom filter token revocation.
 - **PII Protection & Dynamic Masking**: NIST SP 800-38G Format-Preserving Encryption (FF1), dynamic role-based field masking, KMS envelope encryption, and real-time streaming log & LLM prompt scrubbing.
 - **Cloud Security Posture & Compliance**: Automated CSPM policy-as-code audits, CIS cloud benchmarks, and immutable SEC Rule 17a-4 / FINRA 4511 WORM cloud vault egress mirroring.
-- **Automated Plan Injection**: Python injection tooling (`inject_security_mesh.py`) allowing one-line security injection into any target domain plan.
+- **Automated Plan Injection**: Native Rust injection command (`./percipience security inject`) allowing one-line security injection into any target domain plan.
 
 ---
 
@@ -47,9 +47,9 @@ This plan is organized into modular specifications under [`modules/`](modules/):
 ## Universal Injection Guide
 To inject this security mesh into an existing domain plan (e.g. `quantlib-financial-app`):
 ```bash
-python workplace/shared/tools/inject_security_mesh.py .nb/plan/quantlib-financial-app
+./percipience security inject .nb/plan/quantlib-financial-app
 ```
 To layer this security plan onto the Percipience workspace:
 ```bash
-./.nb/bin/percipience layer apply --plan .nb/plan/master/security-mesh/concise.md
+./percipience layer apply --plan .nb/plan/master/security-mesh/concise.md
 ```

@@ -392,9 +392,9 @@ sequenceDiagram
 ```
 
 ### 6.3. Bundled Free Tier Platform Core Assets & Autonomous Bootstrapping
-The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) packages the entire offline platform engine within the plugin JAR (`percipience/core/` containing all 38 Python modules + `__init__.py`). When initialized via `BootstrapWorkspaceAction` or the interactive startup prompt (`PercipienceProjectStartupActivity`), `WorkspaceBootstrapper.kt` extracts:
+The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) packages the offline platform engine within the plugin JAR (`percipience/bin/percipience` as a single static Rust binary with embedded schemas via `rust-embed`). When initialized via `BootstrapWorkspaceAction` or the interactive startup prompt (`PercipienceProjectStartupActivity`), `WorkspaceBootstrapper.kt` extracts:
 1. `percipience/bin/percipience` with Unix `0755` executable permissions.
-2. `percipience/core/*.py` into `.nb/core/` (AST optimizer, Merkle engine, CI/CD, token tracker, etc.).
+2. `percipience/embedded/` containing embedded schemas, contracts, and rules.
 3. `percipience/config/` (`billing_plans.yaml`, `token_compression_rules.yaml`).
 4. `percipience/workflows/` — the tier-gated autonomous delivery flows entitled to the active license (`basic_autonomous_cicd.yaml` in Free; `+vscode_plugin_delivery_flow.yaml` in Team; `+commercial_packaging_provisioning_flow.yaml`, `saas_portal_delivery_flow.yaml`, `iot_mobile_delivery_flow.yaml` in Business; all flows incl. `enterprise_sdlc.yaml` in Enterprise) into `.nb/agentic/custom/workflows/`.
 5. `percipience/hooks/pre-commit.sh` (strict Merkle/parity guardrail) into `.nb/git_hooks/` and `percipience/scripts/install_git_hook.sh` into `.nb/scripts/`, enabling one-command pre-commit gate installation.
@@ -404,7 +404,7 @@ The IntelliJ/PyCharm plugin ZIP distribution (`.nb/bundles/percipience-intellij-
 9. Claude agent configuration, model tiering routing, and context rule bindings (`.claude/settings.json` and `settings.json`).
 
 ### 6.4. Separate Multi-Tier Plugin Bundles for Permission Verification
-To test and verify dynamic permission enforcement across all tiers in staging and automated test harnesses, the packager (`package_plugin.py`) generates dedicated tier-aware plugin distributions in `.nb/bundles/`:
+To test and verify dynamic permission enforcement across all tiers in staging and automated test harnesses, the packager (`./percipience package --target intellij`) generates dedicated tier-aware plugin distributions in `.nb/bundles/`:
 - `percipience-intellij-plugin-free-1.0.0.zip`: Community edition pre-provisioned with `plan_free` license and gatekeeper-only surface.
 - `percipience-intellij-plugin-team-1.0.0.zip`: Team edition with worktree and custom agent provisioning.
 - `percipience-intellij-plugin-business-1.0.0.zip`: Business edition with full platform tools, NBPack encrypted packaging, and multi-tenant provisioner.
@@ -414,11 +414,11 @@ To test and verify dynamic permission enforcement across all tiers in staging an
 Each tier bundle is assembled by `CommercialPackagerProvisioner.package_tier()`, which mirrors the `CORE_TIER_RULES` engine gating with a per-tier `allowed_workflows` entitlement set: Free ships the baseline CI/CD + IntelliJ delivery flows, Team adds the VS Code delivery flow, Business adds the commercial packaging, SaaS portal, and IoT/mobile flows, and Enterprise ships every flow (including `enterprise_sdlc.yaml`). Git guardrail hooks (`percipience/hooks/pre-commit.sh`) and the installer (`percipience/scripts/install_git_hook.sh`) are bundled into every tier and hydrated into `.nb/git_hooks/` and `.nb/scripts/` by `WorkspaceBootstrapper.kt`.
 
 ### 6.5. Offline Local-Filesystem Plugin Auto-Upgrade
-Every tier bundle embeds a canonical version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`, `released_at`), emitted by `CommercialPackagerProvisioner.package_tier()` / `provision_target()` via the canonical Python engine `plugin_update_resolver.py` (mirrored by the Kotlin `PluginUpdateChecker`). No network access is ever performed:
+Every tier bundle embeds a canonical version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`, `released_at`), emitted by `CommercialPackagerProvisioner.package_tier()` / `provision_target()` via the native Rust engine (mirrored by the Kotlin `PluginUpdateChecker`). No network access is ever performed:
 
 1. **Discover** — `PluginUpdateChecker.discoverLocalCandidates()` scans the ordered local locations `PERCIPIENCE_UPDATE_DIR` → `<workspace>/.nb/bundles` → `<workspace>/.nb/updates` → `~/.percipience/updates` for staged update directories (containing `version.json`) and prebuilt `.jar`/`.zip` plugin archives, transparently unwrapping the JetBrains `<plugin>/lib/<plugin>.jar` distribution layout.
 2. **Select** — `selectUpgrade()` chooses the highest `plugin_version` that is strictly newer than the installed plugin and whose `manifest_schema` matches; same/older versions and incompatible schemas are rejected.
-3. **Apply** — `applyRuntimeUpgrade()` materializes the candidate payload into the workspace `.nb/` tree (`core`, `bin`, `config`, `workflows`, `hooks`, `scripts`, `plan`) with executable bits for `bin`/`hooks`/`scripts`, then records the applied version in `.nb/config/runtime_version.json`.
+3. **Apply** — `applyRuntimeUpgrade()` materializes the candidate payload into the workspace `.nb/` tree (`bin`, `config`, `workflows`, `hooks`, `scripts`, `plan`) with executable bits for `bin`/`hooks`/`scripts`, then records the applied version in `.nb/config/runtime_version.json`.
 
 `PercipienceProjectStartupActivity` triggers the check automatically for configured workspaces; the **Check for Percipience Updates** action (`CheckForUpdatesAction`) triggers it on demand. `PluginUpdateService` surfaces an interactive upgrade prompt, or auto-applies when `PERCIPIENCE_AUTO_UPGRADE=1`. End-to-end coverage lives in `test_21_offline_plugin_auto_upgrade`.
 
@@ -453,11 +453,11 @@ graph TD
     McpDoc["living_doc_engine (Continuous Sync)"]
   end
 
-  subgraph Platform_Core["Platform Runtime (.nb/core/ & .nb/bin/)"]
-    BinCli[".nb/bin/percipience"]
-    AstCore["ast_optimizer.py"]
-    CicdCore["autonomous_cicd.py"]
-    MerkleCore["merkle_engine.py"]
+  subgraph Platform_Core["Platform Runtime (Rust Native Binary & Crates)"]
+    BinCli["./percipience"]
+    AstCore["crates/percipience-core"]
+    CicdCore["crates/percipience-orchestrator"]
+    MerkleCore["crates/percipience-security"]
   end
 
   ClaudeCode & GeminiAgent & CursorAgent & TerminalAgent --> MCP_Json

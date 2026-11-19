@@ -32,14 +32,14 @@ graph TD
     CommercialUI["Commercial Provisioner Console"]
   end
 
-  subgraph API_Gateway_Layer["API Gateway & Services"]
-    PortalServer["Portal Gateway Server (/api/commercial/*)"]
+  subgraph API_Gateway_Layer["API Gateway & Services (Rust Axum / Tokio)"]
+    PortalServer["Portal Server (crates/percipience-server)"]
     KmsBroker["KMS & RLS Tenant Broker"]
-    PackagerEngine["CommercialPackagerProvisioner"]
+    PackagerEngine["crates/percipience-packager"]
   end
 
-  subgraph Platform_Core_Layer[".nb/ Platform System"]
-    PlatformCli[".nb/bin/percipience"]
+  subgraph Platform_Core_Layer["Percipience Rust Platform"]
+    PlatformCli["./percipience"]
     LedgerEngine["Merkle State Ledger"]
   end
 
@@ -61,8 +61,9 @@ graph TD
 - `.nb/context/rules/`: `web_accessibility_rules.md`, `tenant_isolation_invariants.md`, `commercial_tier_permissioning_rules.md`
 - `.nb/agentic/custom/agents/`: `agent_saas_portal_architect.yaml`, `agent_commercial_packager_provisioner.yaml`, `agent_billing_integration_engineer.yaml`, `agent_observability_frontend_specialist.yaml`
 - `.nb/agentic/custom/workflows/`: `saas_portal_delivery_flow.yaml`, `commercial_packaging_provisioning_flow.yaml`
-- `.nb/core/`: `commercial_packager_provisioner.py`
-- `workplace/portal/`: Modular Enterprise SaaS Portal (`server.py`, `core/`, `content/`, `templates/`, `static/`, `routes/`)
+- `crates/percipience-server/`: Rust Axum & Tokio web/API server, WebSocket telemetry bus, and Connect-RPC endpoints
+- `crates/percipience-packager/`: Multi-tier binary compiler, Ed25519 license minter, and multi-IDE provisioner
+- `workplace/portal/`: Frontend corporate portal and UI assets embedded via `rust-embed`
 - `workplace/modules/`: `mod_corp_site/`, `mod_saas_portal/`, `mod_billing_engine/`, `mod_api_gateway/`
 - `user/outputs/`: Maturity reports, commercial bundle packages, and live dashboard feeds.
 
@@ -72,14 +73,14 @@ graph TD
 
 ```bash
 # Package layer bundle
-./.nb/bin/percipience layer pack --plan .nb/plan/l1/saas-portal-domain/concise.md --output .nb/bundles/saas_portal_domain.nbpack
+./percipience layer pack --plan .nb/plan/l1/saas-portal-domain/concise.md --output .nb/bundles/saas_portal_domain.nbpack
 
 # Apply layer bundle
-./.nb/bin/percipience layer apply --pack .nb/bundles/saas_portal_domain.nbpack --in-memory-only
+./percipience layer apply --pack .nb/bundles/saas_portal_domain.nbpack --in-memory-only
 
 # Commercial packaging & provisioning
-./.nb/bin/percipience commercial package --tier enterprise --tenant tenant_acme_fintech
-./.nb/bin/percipience commercial provision --tenant tenant_acme_fintech --tier enterprise --target all
+./percipience commercial package --tier enterprise --tenant tenant_acme_fintech
+./percipience commercial provision --tenant tenant_acme_fintech --tier enterprise --target all
 ```
 
 ## 4. Visual Delivery Pipelines & Stage Handled Contracts Governance

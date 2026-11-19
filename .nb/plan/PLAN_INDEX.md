@@ -30,7 +30,7 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 │   ├── vscode-plugin/               ← VSCode Extension & LSP 3.17 Space
 │   ├── saas-portal-domain/          ← SaaS Customer Portal & Observability Web
 │   ├── npx-installer/               ← NPX Instant Execution & Bootstrapping
-│   └── tiered-wheel-packaging/      ← Multi-Tier Python Wheel Packaging
+│   └── tiered-wheel-packaging/      ← Multi-Tier Rust Binary, Crate & Polyglot Packaging
 ├── 🧪 test/                         ← Master Test Plan & Verification (1 Plan)
 │   ├── README.md                    ← Test Governance Overview & Pyramid
 │   ├── MANIFEST.yaml                ← Cryptographic Test Manifest
@@ -138,7 +138,7 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/saas-portal-domain/concise.md](./l1/saas-portal-domain/concise.md)
 - **Detailed Guide**: [l1/saas-portal-domain/detailed.md](./l1/saas-portal-domain/detailed.md)
 - **Manifest**: [l1/saas-portal-domain/MANIFEST.yaml](./l1/saas-portal-domain/MANIFEST.yaml)
-- **Purpose**: Next.js 14 / FastAPI modular web portal, RBAC & PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
+- **Purpose**: Next.js 14 / Axum Rust modular web portal, RBAC & PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
 
 ### NPX Instant Execution & Bootstrapping Space
 - **ID**: `domain_npx_installer`
@@ -146,15 +146,15 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Concise Spec**: [l1/npx-installer/concise.md](./l1/npx-installer/concise.md)
 - **Detailed Guide**: [l1/npx-installer/detailed.md](./l1/npx-installer/detailed.md)
 - **Manifest**: [l1/npx-installer/MANIFEST.yaml](./l1/npx-installer/MANIFEST.yaml)
-- **Purpose**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding (`npx percipience init`), automated `.claude/mcp.json` provisioning, and platform binary resolution.
+- **Purpose**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding (`npx percipience init`), automated `.claude/mcp.json` provisioning, and native Rust platform binary resolution.
 
-### Multi-Tier Python Wheel Packaging & Distribution Space
+### Multi-Tier Rust Binary, Crate & Polyglot Packaging Space
 - **ID**: `domain_tiered_wheel_packaging`
 - **Location**: [l1/tiered-wheel-packaging/](./l1/tiered-wheel-packaging/)
 - **Concise Spec**: [l1/tiered-wheel-packaging/concise.md](./l1/tiered-wheel-packaging/concise.md)
 - **Detailed Guide**: [l1/tiered-wheel-packaging/detailed.md](./l1/tiered-wheel-packaging/detailed.md)
 - **Manifest**: [l1/tiered-wheel-packaging/MANIFEST.yaml](./l1/tiered-wheel-packaging/MANIFEST.yaml)
-- **Purpose**: Automated PEP 427 Python wheel compilation across all 4 commercial tiers (Free, Team, Business, Enterprise), strict build-time engine exclusion boundaries, SHA-256 Merkle block sealing, and index distribution (PyPI, AWS CodeArtifact, Artifactory).
+- **Purpose**: Automated native Rust compilation matrix across all 4 commercial tiers (Free, Team, Business, Enterprise), Cargo feature gates (`tier_free`, `tier_team`, `tier_business`, `tier_enterprise`), single static binary packaging (`./percipience`), crate distribution, and polyglot bridges.
 
 ---
 
@@ -167,4 +167,4 @@ organization_schema: "hierarchical_with_dual_format_and_canonical_v3_manifest"
 - **Detailed Guide**: [test/detailed.md](./test/detailed.md)
 - **Manifest**: [test/MANIFEST.yaml](./test/MANIFEST.yaml)
 - **Test Orchestrator**: [test/test_runner.py](./test/test_runner.py)
-- **Purpose**: Authoritative 18-subsystem automated test governance, Pytest Allure test execution, DeepEval AI quantitative evaluations, Playwright E2E testing, and autonomous self-healing test execution.
+- **Purpose**: Authoritative 18-subsystem automated test governance, Rust native Cargo test workspace, Criterion benchmarks, Miri memory verification, Playwright E2E testing, and autonomous self-healing test execution.

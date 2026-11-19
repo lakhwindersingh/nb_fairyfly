@@ -19,9 +19,9 @@ flowchart TD
   subgraph TestPyramid["Percipience 5-Tier Verification Hierarchy"]
     T5["Tier 5: Adversarial Red-Team & Sandbox Escapes (OWASP LLM01-10, gVisor)"]
     T4["Tier 4: Enterprise Multi-Cloud & Zero-Trust (K8s, SPIFFE, Postgres RLS)"]
-    T3["Tier 3: Business SaaS & FinOps Telemetry (Playwright E2E, Stripe, Billing)"]
+    T3["Tier 3: Business SaaS & FinOps Telemetry (Playwright E2E, Stripe, Axum)"]
     T2["Tier 2: Team Worktrees & Collaborative Handoffs (Git Worktrees, Gatekeeper)"]
-    T1["Tier 1: Free Community Core Invariants & AST Pruning (Pytest, Merkle)"]
+    T1["Tier 1: Free Community Core Invariants & AST Pruning (cargo test, Merkle)"]
   end
   T1 --> T2 --> T3 --> T4 --> T5
 ```
@@ -37,30 +37,16 @@ flowchart TD
 ## 2. Core Subsystem & Test Suite Catalog
 
 ```text
-workplace/tests/
-├── test_play3_suite.py                    ← Core 25 Subsystem Integration Tests (CAP-01 - CAP-35)
-├── test_vulnerability_suite.py            ← OWASP LLM Top 10 & Zero-Trust Sandbox Red Team
-├── test_todo_capabilities.py              ← Comprehensive Capability Coverage (58 Invariant Tests)
-├── test_solution_simplification.py        ← Unified 5-Point Policy Engine & Invariant Verification
-├── test_runtime_guardrails.py             ← Prompt Injection, PII Sanitization, Output Guards
-├── test_dynamic_dag_orchestrator.py       ← Kahn Acyclicity, Topological Dispatch, Subagent Waves
-├── test_portal_commercial_provisioning.py ← Tenant Onboarding, KMS CMEK Derivation, API Keys
-├── test_portal_observability_auth.py      ← Merkle DAG API, Surgical Rollback Trigger, JWT Auth
-├── test_portal_swarm_governance.py        ← Swarm Authority Hierarchy, Anti-Drift Handover Gates
-├── test_ide_plugins_space.py              ← VS Code LSP 3.17 & PyCharm PSI AST Invariant Tests
-├── test_fleet_telemetry_finops.py         ← Workstation Daemon, Redis Heartbeats, 15% FinOps Billing
-├── test_enterprise_cicd_sandboxing.py     ← gVisor / runsc MicroVM Container Sandboxing & Isolation
-├── test_container_plan_executor.py        ← Sandboxed Docker Plan Derivation & Worktree Isolation
-├── test_git_bundle_transport.py           ← Streaming Git Bundle Packaging, Zero-Cloud Clutter
-├── test_tool_contract_validator.py        ← Tool Definition Schema Enforcement & Parameter Scoping
-├── test_self_reflection_engine.py         ← Autonomous Retrospective Diagnosis & Self-Healing Patch
-├── test_consensus_quorum_engine.py        ← Multi-Agent Voting, PBFT Quorum & Disagreement Resolution
-├── test_hitl_checkpoint_manager.py        ← Human-in-the-Loop Quarantine Spool & Approval Gating
-├── test_few_shot_retriever.py             ← Semantic Context Retrieval & Prompt Dynamic Paging
-├── test_agent_memory_engine.py            ← Working, Episodic, and Semantic Memory Tier Isolation
-├── test_agent_capability_guard.py         ← Capability-Based Access Control (CBAC) HMAC Tokens
-└── benchmarks/
-    └── test_agent_benchmarks.py           ← Token Reduction, Latency Waterfalls, AST Parsing Throughput
+crates/
+├── percipience-core/tests/           ← Invariants, AST Pruner, Merkle State & Token Compression
+├── percipience-cli/tests/            ← Single Binary Commands, NPX Bootstrap & Subcommands
+├── percipience-orchestrator/tests/   ← Dynamic DAG, Kahn Acyclicity & Wave Dispatch
+├── percipience-security/tests/       ← OWASP LLM01-10 Red Team, FPE Vault & Cedar Guardrails
+├── percipience-server/tests/         ← Axum HTTP, Connect-RPC, Telemetry & WebSocket Feeds
+├── percipience-lsp/tests/            ← LSP 3.17 Protocol, AST Skeletons & IDE Diagnostics
+└── percipience-packager/tests/       ← Tier Compilation Matrix, Ed25519 & Artifact Sealer
+benches/
+└── benchmarks.rs                     ← Criterion High-Throughput AST & Merkle Hashing Benchmarks
 ```
 
 ---
@@ -85,10 +71,11 @@ workplace/tests/
 
 1. **Autonomous Invocation**:
    ```bash
-   python3 .nb/plan/test/test_runner.py --tier all --report json,html
+   cargo test --workspace
+   ./percipience test --tier all --report json,html
    ```
 2. **AI Failure Diagnosis & Self-Repair SLA**:
-   - On test failure, `test_runner.py --ai-triage` invokes `workplace/core/diagnostic_reprompt.py`.
+   - On test failure, `./percipience test --ai-triage` invokes `crates/percipience-core/src/diagnostic.rs`.
    - Synthesizes isolated AST failure diffs (70–88% token reduction, zero conversational noise).
    - Maximum 3 self-healing retry iterations before falling back to surgical rollback ($RP_k$).
 
@@ -98,9 +85,9 @@ workplace/tests/
 
 | Gate Metric | Target Threshold | Verification Mechanism |
 | :--- | :---: | :--- |
-| **Unit & Integration Pass Rate** | **100% (Zero Failures)** | `pytest workplace/tests/` |
-| **Vulnerability Flaws** | **0 High / 0 Critical CVEs** | `pytest workplace/tests/test_vulnerability_suite.py` |
-| **6-Vector Semantic Parity** | **$S_{SP} \ge 0.950$** | `percipience drift check` |
+| **Unit & Integration Pass Rate** | **100% (Zero Failures)** | `cargo test --workspace` |
+| **Vulnerability Flaws** | **0 High / 0 Critical CVEs** | `cargo test -p percipience-security --test test_vulnerability_suite` |
+| **6-Vector Semantic Parity** | **$S_{SP} \ge 0.950$** | `./percipience drift check` |
 | **AST Token Compression Ratio** | **$60.0\% - 85.0\%$** | `TokenTracker.get_summary()` |
 | **AST Pruning Latency** | **$\le 120\text{ms}$** | `TreeSitterDaemon.prune()` |
 | **Web Accessibility Standard** | **WCAG 2.1 AA (0 Violations)** | `axe_accessibility_test.ts` |

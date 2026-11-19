@@ -33,7 +33,7 @@ key_capabilities:
 - Zero-Install Ephemeral PR Gatekeeper Execution
 - Single-Command Quad-Space Initialization (<3s)
 - Automated Claude / MCP Protocol Server Provisioning
-- Multi-Platform Binary & Python Bridge Fallback Resolution
+- Multi-Platform Native Binary Resolution & Caching Engine
 - Enterprise Air-Gapped & Proxy (.npmrc) Support
 autonomous_execution:
   orchestrator_agent: agent_sequential_plan_orchestrator
@@ -47,8 +47,9 @@ autonomous_execution:
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module l1_npx_bootstrap
   pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_play3_suite.py -v
-  handover: percipience handoff issue --from agent_npx_distribution_engineer --to agent_qa_sentinel
+  post_execution: cargo test -p percipience-cli --test test_npx_installer
+  handover: percipience handoff issue --from agent_npx_distribution_engineer --to
+    agent_qa_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
   post_merge_seal: percipience merkle seal --worm-egress
@@ -69,22 +70,22 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 905c6c43de5803b607a0615165e2f2c4932141dcf9a1e5c85d371a7676eec11c
+    last_modified: '2026-11-19'
+    content_hash: 3c85d0a876e00b478e5285e7cf78c1fef5d0c5c5a6e5d3a42a85eac46a741e46
     line_count: 133
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 87c34a62453cf506cd85b543b62bbf12ff1d7e3f87fed85732dee4064514ded2
-    line_count: 354
+    last_modified: '2026-11-19'
+    content_hash: 80ea14a95fabde7ab86ed86f53c2ef99b1da235d04f2563f462186a4e5260623
+    line_count: 348
     primary_purpose: Extended implementation guide for npx distribution
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: d38cb84d417f0d1684156a32f25c845393dde09d9e4466489b243417a9f6ee79
+    last_modified: '2026-11-19'
+    content_hash: 1cfebddab0c8110e8d770f141da5512325dba87b2b4c0197c216580533e4951a
     line_count: 28
     primary_purpose: Quick reference and navigation
 implementation_phases:

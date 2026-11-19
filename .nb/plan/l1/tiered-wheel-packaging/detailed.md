@@ -1,4 +1,4 @@
-# Multi-Tier Python Wheel Packaging & Distribution Architecture Plan (Detailed Specification)
+# Multi-Tier Rust Binary, Crate & Polyglot Packaging Architecture Plan (Detailed Specification)
 
 > **Plan ID**: `domain_tiered_wheel_packaging`  
 > **Capability Rating**: `L1` (Foundation Layer)  
@@ -9,236 +9,195 @@
 
 ## 1. Executive Summary & Strategic Rationale
 
-The **Multi-Tier Python Wheel Packaging Subsystem** provides standardized Python binary packaging (`.whl` adhering to PEP 427, PEP 517, PEP 621) across Percipience's commercial distribution tiers. It balances commercial intellectual property protection with seamless developer experience:
+The **Multi-Tier Rust Binary, Crate and Polyglot Packaging Subsystem** provides standardized native binary packaging, Cargo crate publishing, and optional polyglot bindings (Python wheels via PyO3/maturin, Node via NAPI-RS) across Percipience's commercial distribution tiers:
 
-1. **Strict Code-Level Isolation**: Proprietary enterprise engines (e.g., encrypted `.nbpack` compilers, private VPC adapters, distributed Redis Redlock swarm orchestrators) are physically omitted from public Community and Team distributions at build time.
-2. **Unified Command Surface**: Regardless of the tier installed (`percipience-free`, `percipience-team`, `percipience-business`, or `percipience-enterprise`), the user interacts via identical console entry points (`percipience` and `percipience-agent`).
-3. **Cryptographic Supply-Chain Sealing**: Every wheel artifact generated has its SHA-256 hash appended to the immutable Merkle chain in `context_ledger.yaml` before release.
+1. **Zero-Dependency Native Binaries**: Compiles into a single portable static binary (`./percipience`) across macOS, Linux (musl), and Windows (.exe), eliminating Python runtime dependencies, virtual environments, and package manager incompatibilities.
+2. **Compile-Time Feature Isolation**: Proprietary enterprise modules (e.g., encrypted `.nbpack` compilers, private VPC adapters, distributed Redis Redlock swarm orchestrators) are physically omitted from public Community and Team binaries at compile time via Cargo feature gates (`#[cfg(feature = "enterprise")]`).
+3. **Unified Command Surface**: Regardless of the tier compiled (`tier_free`, `tier_team`, `tier_business`, or `tier_enterprise`), the user interacts via an identical executable command surface (`./percipience`).
+4. **Cryptographic Supply-Chain Sealing**: Every binary and package artifact generated has its SHA-256 hash appended to the immutable Merkle chain in `context_ledger.yaml` before release.
 
 ```mermaid
 sequenceDiagram
   autonumber
   actor CI as Release Pipeline
-  participant Packager as build_tier_wheels.py
-  participant Rules as CORE_TIER_RULES
-  participant Builder as Python Build Engine (flit/hatchling)
+  participant Packager as percipience-packager
+  participant Features as Cargo Feature Flags
+  participant Compiler as rustc / cargo (cross)
   participant Ledger as Merkle State Ledger
-  participant Registry as PyPI / Enterprise Artifactory
+  participant Registry as GitHub Releases / crates.io / Private S3
 
   CI->>Packager: Build Tier Matrix (free, team, business, enterprise)
-  loop For each Tier
-    Packager->>Rules: Query Allowed Engines & Features
-    Rules-->>Packager: File inclusion set & metadata
-    Packager->>Packager: Assemble isolated build workspace
-    Packager->>Packager: Inject tier_manifest.json & version info
-    Packager->>Builder: Compile .whl archive (PEP 427)
-    Builder-->>Packager: percipience_<tier>-1.0.0-py3-none-any.whl
+  loop For each Tier & Target Architecture
+    Packager->>Features: Resolve Feature Set (--features tier_<tier>)
+    Features-->>Packager: Active crate capabilities & embedded assets
+    Packager->>Compiler: Compile single static binary (< 15MB)
+    Compiler-->>Packager: target/<target>/release/percipience
+    Packager->>Packager: Strip symbols & inject signed tier_manifest.json
     Packager->>Ledger: Record SHA-256 Block Seal
   end
-  Packager->>Registry: Publish artifacts to appropriate indexes
+  Packager->>Registry: Publish artifacts to appropriate download endpoints
 ```
 
 ---
 
-## 2. Tier Engine Exclusion & Boundary Architecture
+## 2. Tier Feature Exclusion & Boundary Architecture
 
-The packaging system strictly enforces module-level filtering derived from `CommercialPackagerProvisioner` (`workplace/core/commercial_packager_provisioner.py`) and `billing_plans.yaml`:
+The packaging system strictly enforces compile-time feature gating derived from `crates/percipience-packager` and `billing_plans.yaml`:
 
-### 2.1. Free Community Edition (`percipience-free`)
-- **Package Slug**: `percipience-free` (aliased to `percipience` on public PyPI).
-- **Included Core Modules**:
-  - `ast_optimizer.py`, `token_tracker.py`, `token_optimizer_suite.py` (AST token skeletonization, 60-80% compression).
-  - `merkle_engine.py` (SHA-256 cryptographic state verification).
-  - `autonomous_cicd.py` (Single-attempt bounded self-repair).
-  - `contract_compatibility_checker.py`, `dependency_cve_sentinel.py`, `flaky_test_detector.py`.
-  - `terminal_agent_ast_proxy.py`, `attention_budgeter.py`, `living_doc_engine.py`.
-- **Excluded Features & Modules**:
-  - `nbpack_envelope.py` (No encrypted `.nbpack` compilation; user plans must remain plaintext).
-  - `worktree_engine.py` (No multi-worktree concurrency; 1 worktree max).
-  - `swarm_governor.py` (No distributed multi-agent swarm orchestration).
-  - `basic_platform_tools_exposure`: Low-level platform internals remain hidden; only high-level gatekeeper actions exposed.
+### 2.1. Free Community Edition (`tier_free`)
+- **Compilation Flag**: `cargo build --release --features tier_free`
+- **Binary Footprint**: $< 12\text{ MB}$ stripped.
+- **Included Core Crates & Modules**:
+  - `percipience-core` (AST token skeletonization, 60-80% compression, Merkle hash engine).
+  - `percipience-orchestrator` (Single-attempt bounded self-repair, local DAG execution).
+  - Wire contracts, living documentation engine, and basic gatekeeper commands (`gate`, `audit`, `cicd`, `tokens`, `validate`).
+- **Excluded Features**:
+  - `percipience-security/nbpack` (No encrypted `.nbpack` compilation; user plans must remain plaintext).
+  - Multi-worktree concurrent leases (1 local worktree max).
+  - Distributed multi-agent swarm orchestration.
+  - Low-level internal developer utilities unexposed.
 
-### 2.2. Team Edition (`percipience-team`)
-- **Package Slug**: `percipience-team`.
+### 2.2. Team Edition (`tier_team`)
+- **Compilation Flag**: `cargo build --release --features tier_team`
 - **Additions Over Free Tier**:
-  - `worktree_engine.py` (Up to 5 concurrent Git worktree leases).
-  - `agent_plugin_engine.py` (Specialist subagent creation SDK).
-  - `prompt_drift_sentinel.py`, `doc_drift_synchronizer.py` (Real-time drift detection).
+  - Up to 5 concurrent Git worktree directory leases.
+  - Specialist subagent creation SDK and plugin registry synchronizer.
+  - Real-time prompt drift and doc drift sentinels.
 
-### 2.3. Business Edition (`percipience-business`)
-- **Package Slug**: `percipience-business`.
+### 2.3. Business Edition (`tier_business`)
+- **Compilation Flag**: `cargo build --release --features tier_business`
 - **Additions Over Team Tier**:
-  - `nbpack_envelope.py` (AES-256 encrypted `.nbpack` compilation and in-memory hydration).
-  - `cognitive_router.py` (Multi-LLM cognitive routing & parity reports).
+  - AES-256 encrypted `.nbpack` compilation and in-memory enclave hydration.
+  - Multi-LLM cognitive routing & parity reports.
   - Multi-tenant gateway provisioner and 20 concurrent worktree leases.
-  - `basic_platform_tools_exposure = true` (Full unrestricted platform tool APIs).
+  - Full unrestricted platform developer tool APIs.
 
-### 2.4. Enterprise Dedicated Edition (`percipience-enterprise`)
-- **Package Slug**: `percipience-enterprise`.
+### 2.4. Enterprise Dedicated Edition (`tier_enterprise`)
+- **Compilation Flag**: `cargo build --release --features tier_enterprise`
 - **Additions Over Business Tier**:
-  - `swarm_governor.py` (Distributed multi-container swarm fleet with Redis 7.x Redlock leases).
+  - Distributed multi-container swarm fleet with Redis 7.x Redlock leases.
   - Private VPC air-gapped sync adapters.
-  - Immutable WORM cloud egress export and compliance audit logs.
+  - Immutable WORM cloud egress export and SEC 17a-4 / FINRA compliance audit logs.
   - Unlimited concurrent worktrees, unlimited PR audits, and RAM Enclave zero-disk execution.
 
 ---
 
-## 3. Wheel Package Specifications & Layout
+## 3. Package Specifications & Distribution Targets
 
-### 3.1. Directory Structure of Built Wheel
+### 3.1. Native Compilation Target Matrix
 ```text
-percipience_enterprise-1.0.0-py3-none-any.whl/
-├── percipience/
-│   ├── __init__.py
-│   ├── cli.py                        ← Standard console entry point
-│   ├── agent_cli.py                  ← Agent runner entry point
-│   ├── tier_broker.py                ← In-package tier & feature entitlement broker
-│   ├── tier_manifest.json            ← Signed build manifest with tier identity
-│   ├── core/                         ← Tier-filtered core engines
-│   │   ├── merkle_engine.py
-│   │   ├── ast_optimizer.py
-│   │   ├── swarm_governor.py         ← (Only present in Enterprise wheel)
-│   │   └── ...
-│   ├── context/                      ← Bundled schemas & rules
-│   │   ├── contracts/
-│   │   └── rules/
-│   └── agentic/                      ← Tier-filtered workflow & prompt templates
-├── percipience_enterprise-1.0.0.dist-info/
-│   ├── METADATA                      ← PEP 621 package metadata
-│   ├── WHEEL                         ← PEP 427 wheel metadata
-│   ├── entry_points.txt              ← Console script registrations
-│   ├── licenses/
-│   │   └── LICENSE
-│   └── RECORD                        ← Cryptographic SHA-256 hashes of all wheel files
+Compilation Target               OS / Architecture             Artifact Filename
+----------------------------------------------------------------------------------------
+aarch64-apple-darwin             macOS Apple Silicon (M1-M4)   percipience-darwin-arm64
+x86_64-apple-darwin              macOS Intel x86_64            percipience-darwin-x86_64
+x86_64-unknown-linux-musl        Linux Static Musl (Agnostic)  percipience-linux-amd64
+aarch64-unknown-linux-musl       Linux ARM64 / AWS Graviton    percipience-linux-arm64
+x86_64-pc-windows-msvc           Windows x86_64                percipience-windows-amd64.exe
 ```
 
-### 3.2. PyProject Template (`pyproject.toml`)
-```toml
-[build-system]
-requires = ["hatchling>=1.18.0"]
-build-backend = "hatchling.build"
+### 3.2. Cargo Workspace Crate Layout
+```text
+percipience/
+├── Cargo.toml                        ← Workspace definition & feature flags
+├── Cargo.lock                        ← Pinned supply chain ledger
+├── crates/
+│   ├── percipience-core/             ← Merkle engine, AST pruning, DAG validation
+│   ├── percipience-cli/              ← CLI command interface (clap v4)
+│   ├── percipience-orchestrator/     ← Async DAG execution engine (tokio)
+│   ├── percipience-security/         ← ZTA, ReBAC, PII encryption, zeroize
+│   ├── percipience-lsp/              ← IDE LSP daemon (tower-lsp)
+│   ├── percipience-server/           ← Async HTTP/gRPC server (axum)
+│   └── percipience-packager/         ← Multi-tier binary builder & asset embedder
+```
 
-[project]
-name = "percipience-enterprise"
-version = "1.0.0"
-description = "Percipience Enterprise Context Engineering OS (Enterprise Dedicated Tier)"
-readme = "README.md"
-requires-python = ">=3.10"
-license = "Proprietary"
-authors = [
-    { name = "Neutron Binary Engineering", email = "engineering@neutronbinary.com" }
-]
-dependencies = [
-    "pyyaml>=6.0",
-    "pydantic>=2.0",
-    "click>=8.1",
-    "redis>=5.0.0",
-    "cryptography>=41.0.0"
-]
+### 3.3. Polyglot Packaging Interoperability
+While the primary deliverable is the standalone static binary, Percipience supports polyglot ecosystems:
+- **Python Wheel via Maturin**: `crates/percipience-pyo3` compiled with `maturin build --release` produces standard `.whl` archives exposing the Rust engine to Python callers.
+- **Node.js Addon via NAPI-RS**: `crates/percipience-napi` produces native `.node` modules for TypeScript/JavaScript runtimes.
 
-[project.scripts]
-percipience = "percipience.cli:main"
-percipience-agent = "percipience.agent_cli:main"
+---
 
-[tool.hatch.build.targets.wheel]
-packages = ["percipience"]
+## 4. Build Automation Pipeline (`percipience-packager`)
+
+The automated packaging engine implements the following deterministic sequence:
+
+```rust
+// crates/percipience-packager/src/lib.rs
+pub fn build_tier_binary(tier: &str, target: &str, output_dir: &Path) -> Result<PathBuf> {
+    // 1. Resolve feature flags
+    let feature_flag = format!("tier_{}", tier);
+    
+    // 2. Execute cross-compilation
+    let status = Command::new("cargo")
+        .args(&[
+            "build",
+            "--release",
+            "--target", target,
+            "--features", &feature_flag,
+            "-p", "percipience-cli",
+        ])
+        .status()?;
+    assert!(status.success());
+    
+    // 3. Strip binary symbols for minimum footprint
+    let binary_path = output_dir.join(format!("percipience-{}", target));
+    strip_binary_symbols(&binary_path)?;
+    
+    // 4. Seal binary SHA-256 hash in Merkle ledger
+    seal_binary_in_merkle_ledger(&binary_path, tier)?;
+    
+    Ok(binary_path)
+}
 ```
 
 ---
 
-## 4. Build Automation Pipeline (`build_tier_wheels.py`)
-
-The automated packaging utility implements the following deterministic sequence:
-
-```python
-def build_tier_wheel(tier_id: str, output_dir: Path) -> Path:
-    # 1. Normalize tier identifier
-    norm_tier = CommercialPackagerProvisioner.TIER_NORMALIZATION.get(tier_id, "plan_free")
-    rules = CommercialPackagerProvisioner.CORE_TIER_RULES[norm_tier]
-    
-    # 2. Create isolated build sandbox
-    build_sandbox = Path(f".nb/workspaces/build_wheel_{norm_tier}")
-    build_sandbox.mkdir(parents=True, exist_ok=True)
-    
-    # 3. Assemble package structure & filter allowed engines
-    pkg_dir = build_sandbox / "percipience"
-    pkg_dir.mkdir(parents=True, exist_ok=True)
-    
-    for engine_name in rules["allowed_engines"]:
-        src = Path("workplace/core") / engine_name
-        if src.exists():
-            shutil.copy2(src, pkg_dir / "core" / engine_name)
-            
-    # 4. Generate tier_manifest.json with build timestamp and active features
-    manifest = {
-        "tier_id": norm_tier,
-        "built_at": datetime.now(timezone.utc).isoformat(),
-        "features": rules,
-        "build_version": "1.0.0"
-    }
-    (pkg_dir / "tier_manifest.json").write_text(json.dumps(manifest, indent=2))
-    
-    # 5. Compile wheel using Python build engine
-    subprocess.run([sys.executable, "-m", "build", "--wheel", "--outdir", str(output_dir)], cwd=str(build_sandbox), check=True)
-    
-    # 6. Cryptographically seal wheel hash in Merkle ledger
-    wheel_file = list(output_dir.glob(f"*{norm_tier}*.whl"))[0]
-    seal_wheel_in_merkle_ledger(wheel_file, norm_tier)
-    
-    return wheel_file
-```
-
----
-
-## 5. Enterprise Index Hosting & Pip Installation
+## 5. Binary Installation & Distribution Endpoints
 
 ```mermaid
 graph TD
-  DevFree["Community Developer"] -->|pip install percipience| PyPI["Public PyPI (pypi.org)"]
-  DevTeam["Team Developer"] -->|pip install percipience-team| Cloudsmith["Cloudsmith / Private Team Repo"]
-  DevBiz["Business Org"] -->|pip install percipience-business| CodeArtifact["AWS CodeArtifact / GCP Artifact Registry"]
-  DevEnt["Enterprise Air-Gapped"] -->|pip install percipience-enterprise| Artifactory["JFrog Artifactory (Private On-Prem)"]
+  DevFree["Community Developer"] -->|curl installer| GitHubRel["GitHub Releases / get.percipience.ai"]
+  DevTeam["Team Developer"] -->|curl / cargo install| Cloudsmith["Private Team S3 / Cloudsmith"]
+  DevBiz["Business Org"] -->|enterprise artifact sync| CodeArtifact["AWS CodeArtifact / GCP Artifact Registry"]
+  DevEnt["Enterprise Air-Gapped"] -->|air-gapped bundle| Artifactory["JFrog Artifactory / Air-Gapped VPC"]
 
-  PyPI --> WhlFree["percipience_free-*.whl"]
-  Cloudsmith --> WhlTeam["percipience_team-*.whl"]
-  CodeArtifact --> WhlBiz["percipience_business-*.whl"]
-  Artifactory --> WhlEnt["percipience_enterprise-*.whl"]
+  GitHubRel --> BinFree["percipience (Free Binary)"]
+  Cloudsmith --> BinTeam["percipience (Team Binary)"]
+  CodeArtifact --> BinBiz["percipience (Business Binary)"]
+  Artifactory --> BinEnt["percipience (Enterprise Binary)"]
 ```
 
-### 5.1. Public vs. Private Repository Authentication
-- **Public PyPI**:
-  `pip install percipience` downloads the Free Community wheel.
-- **AWS CodeArtifact**:
+### 5.1. Installation Commands
+- **Universal One-Line Script**:
   ```bash
-  aws codeartifact login --tool pip --domain neutronbinary --repository percipience-commercial
-  pip install percipience-business
+  curl -fsSL https://get.percipience.ai | sh
   ```
-- **JFrog Artifactory / Air-Gapped Mirrors**:
+- **Cargo Install**:
   ```bash
-  pip install percipience-enterprise \
-    --index-url https://artifactory.corp.internal/artifactory/api/pypi/pypi-commercial/simple \
-    --trusted-host artifactory.corp.internal
+  cargo install percipience-cli
   ```
-- **Local Wheel Air-Gap Direct Install**:
+- **Air-Gapped Binary Deployment**:
   ```bash
-  pip install .nb/bundles/percipience_enterprise-1.0.0-py3-none-any.whl --no-index
+  cp /mnt/secure_media/percipience /usr/local/bin/percipience
+  chmod +x /usr/local/bin/percipience
+  ./percipience audit --offline
   ```
 
 ---
 
 ## 6. End-to-End Delivery Flow Integration
 
-The multi-tier wheel packaging workflow is registered directly inside:
+The multi-tier binary packaging workflow is registered directly inside:
 [`.nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml`](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml)
 
 ```yaml
-- id: step_build_tier_wheels
-  name: Build Multi-Tier Python Wheel Artifacts
-  agent: agent_commercial_packager_provisioner
-  action: build_wheels
+- id: step_build_tier_binaries
+  name: Build Multi-Tier Native Binary Artifacts
+  agent: agent_packaging_release_engineer
+  action: build_binaries
   inputs:
-    target_tiers: [plan_free, plan_team, plan_business, plan_enterprise]
-    output_dir: .nb/bundles/wheels/
+    target_tiers: [tier_free, tier_team, tier_business, tier_enterprise]
+    output_dir: target/release/dist/
   handled_contracts:
     - contract_id: commercial_provisioning_contract
       name: Commercial Provisioning & Asset Filter Contract
@@ -249,21 +208,21 @@ The multi-tier wheel packaging workflow is registered directly inside:
       name: Cryptographic Merkle State Seal Contract
       path: .nb/context/contracts/security_four_eyes_contract.json
       type: json_schema
-      action: seal_wheel_release
+      action: seal_binary_release
 ```
 
 ---
 
 ## 7. Verification & Smoke Testing Strategy
 
-1. **Test 01: Tier Module Exclusion Verification**:
-   - Compiles `percipience-free` wheel.
-   - Inspects wheel ZIP archive contents; asserts `swarm_governor.py` and `nbpack_envelope.py` are strictly absent.
-2. **Test 02: Enterprise Wheel Integrity**:
-   - Compiles `percipience-enterprise` wheel.
+1. **Test 01: Tier Feature Gate Exclusion Verification**:
+   - Compiles binary with `--features tier_free`.
+   - Asserts absence of Redis Redlock and NBPack encryption symbols via `nm` / symbol table inspection.
+2. **Test 02: Enterprise Binary Integrity**:
+   - Compiles binary with `--features tier_enterprise`.
    - Asserts inclusion of Redis Redlock swarm components, encrypted NBPack handlers, and WORM egress modules.
-3. **Test 03: Virtual Environment Installation & CLI Invocation**:
-   - Installs compiled wheel into clean virtual environment (`python -m venv test_env`).
-   - Executes `percipience --version` and `percipience status`; validates exit code `0` and correct tier identification.
+3. **Test 03: Standalone Execution & Version Probing**:
+   - Executes `./percipience --version` and `./percipience status` in a clean container with zero libraries installed.
+   - Validates exit code `0` and correct tier identification.
 4. **Test 04: Merkle State Ledger Continuity**:
-   - Asserts that all 4 compiled wheel SHA-256 hashes are recorded in `context_ledger.yaml`.
+   - Asserts that all compiled binary SHA-256 hashes are recorded in `context_ledger.yaml`.

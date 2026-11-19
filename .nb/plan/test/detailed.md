@@ -36,7 +36,7 @@ The **Percipience Master Test Plan** establishes a multi-tiered verification har
 
 ```mermaid
 flowchart TD
-  subgraph Orchestrator["AI-Assisted Test Orchestrator (.nb/plan/test/test_runner.py)"]
+  subgraph Orchestrator["AI-Assisted Test Orchestrator (./percipience test)"]
     CLI["CLI Runner (--tier all --ai-triage --eval-ai)"]
     Parser["Structured Results Parser"]
     Triage["Diagnostic Reprompter & Self-Repair Healer"]
@@ -44,10 +44,10 @@ flowchart TD
 
   subgraph TestExecutionLayer["Multi-Engine Test Execution Harness"]
     direction TB
-    PytestEngine["Pytest 8.4+ Engine<br/>(Unit, Invariants, Core Logic)"]
+    CargoEngine["Cargo Native Engine<br/>(cargo test --workspace)"]
     DeepEvalEngine["DeepEval / Ragas GenAI Engine<br/>(Faithfulness, Hallucination, Relevancy)"]
     PlaywrightEngine["Playwright 1.48+ Browser Engine<br/>(SaaS Portal, A11y WCAG 2.1, E2E)"]
-    SecurityEngine["Adversarial Security & Fuzzing<br/>(OWASP LLM Top 10, Hypothesis, Bandit)"]
+    SecurityEngine["Adversarial Security & Fuzzing<br/>(OWASP LLM Top 10, Proptest, Miri)"]
     SandboxEngine["MicroVM / gVisor Engine<br/>(Syscall Isolation, Privilege Escalation Defense)"]
   end
 
@@ -58,19 +58,19 @@ flowchart TD
     WORMProof["Merkle Proof & WORM Audit Trail<br/>(SOC 2 Non-Repudiation)"]
   end
 
-  CLI --> PytestEngine & DeepEvalEngine & PlaywrightEngine & SecurityEngine & SandboxEngine
-  PytestEngine & DeepEvalEngine & PlaywrightEngine & SecurityEngine & SandboxEngine --> Parser
+  CLI --> CargoEngine & DeepEvalEngine & PlaywrightEngine & SecurityEngine & SandboxEngine
+  CargoEngine & DeepEvalEngine & PlaywrightEngine & SecurityEngine & SandboxEngine --> Parser
   Parser --> JSONReport & AllureReport & OTelSpans & WORMProof
   Parser -.->|On Failure| Triage
 ```
 
 ### 1.2 Technology & Tooling Stack
-1. **Universal Backend Execution**: `pytest >= 8.4.1` with `pytest-asyncio` (strict async mode), `pytest-mock`, and `pytest-xdist`.
-2. **AI-Ready Machine Reporting**: `pytest-json-report` and `allure-pytest >= 2.13.0` emitting complete JSON execution traces into `.scratch/test_reports/test_results.json`.
-3. **Quantitative LLM Evaluation**: `DeepEval` and `Ragas` frameworks evaluating prompt faithfulness, context relevancy, and hallucination metrics against golden ground truths.
+1. **Universal Native Execution**: `cargo test --workspace` with `tokio::test` (strict async mode), `proptest` for property testing, and `criterion` for high-throughput benchmarks.
+2. **AI-Ready Machine Reporting**: Structured JSON telemetry and `cargo-nextest` emitting complete JSON execution traces into `.scratch/test_reports/test_results.json`.
+3. **Quantitative LLM Evaluation & Miri**: Quantitative evaluation of prompt faithfulness, context relevancy, and hallucination metrics against golden ground truths; `cargo miri test` verifying memory safety.
 4. **End-to-End Web & Accessibility**: `Playwright 1.48+` running headless Chromium/WebKit and `@axe-core/playwright` enforcing strict WCAG 2.1 AA accessibility.
 5. **Distributed GenAI Tracing**: Native OpenTelemetry GenAI semantic spans (`gen_ai.system`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens`).
-6. **Vulnerability Fuzzing & Static Analysis**: `hypothesis` for property-based fuzzing, `bandit` for AST security checks, `pip-audit` for supply-chain vulnerability tracking, and `NeMo Guardrails` for input/output sanitization.
+6. **Vulnerability Fuzzing & Static Analysis**: `proptest` and `cargo-fuzz` for property-based fuzzing, `cargo clippy --all-targets` for static analysis, `cargo audit` for supply-chain vulnerability tracking, and Cedar Guardrails for input/output authorization.
 7. **Container Sandboxing**: `gVisor` (`runsc`) and Firecracker microVM execution harnesses for untrusted code execution.
 
 ---
@@ -451,20 +451,23 @@ sequenceDiagram
 ### 5.1 CLI Execution Protocol
 
 ```bash
-# 1. Run Free Community Tier Tests
-./.nb/bin/percipience test --tier unit --verbose
+# 1. Run Complete Cargo Workspace Tests
+cargo test --workspace
 
-# 2. Run Integration Tests with Automated AI Triage
-./.nb/bin/percipience test --tier integration --ai-triage
+# 2. Run Free Community Tier Tests
+./percipience test --tier unit --verbose
 
-# 3. Run Pre-Merge Gatekeeper (7 Stages)
-./.nb/bin/percipience gate
+# 3. Run Integration Tests with Automated AI Triage
+./percipience test --tier integration --ai-triage
 
-# 4. Run Dedicated Vulnerability & Security Suite
-pytest workplace/tests/test_vulnerability_suite.py -v --alluredir=.scratch/test_reports/security/
+# 4. Run Pre-Merge Gatekeeper (7 Stages)
+./percipience gate
 
-# 5. Check 6-Vector Semantic Parity Gate
-python3 workplace/core/semantic_parity_engine.py --enforce-gate
+# 5. Run Dedicated Vulnerability & Security Suite
+cargo test -p percipience-security --test test_vulnerability_suite -v
+
+# 6. Check 6-Vector Semantic Parity Gate
+./percipience drift check --enforce-gate
 ```
 
 ---

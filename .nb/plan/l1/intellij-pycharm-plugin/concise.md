@@ -90,7 +90,7 @@ graph TD
 ./.nb/bin/percipience layer pack --plan .nb/plan/l1/intellij-pycharm-plugin/concise.md --output .nb/bundles/intellij_pycharm_plugin_domain.nbpack
 
 # Package separate tier-specific plugin bundles for permission verification
-python workplace/modules/mod_intellij_plugin/package_plugin.py --tier all
+./percipience package --target intellij --tier all
 
 # Apply layer bundle
 ./.nb/bin/percipience layer apply --pack .nb/bundles/intellij_pycharm_plugin_domain.nbpack --in-memory-only
@@ -111,7 +111,7 @@ These resources are provisioned into each plugin JAR/ZIP at `percipience/workflo
 
 ### 3.2 Offline Local-Filesystem Auto-Upgrade
 
-The plugin embeds a version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`). The canonical Python engine `plugin_update_resolver.py` (mirrored in Kotlin by `PluginUpdateChecker` / `PluginUpdateService`) discovers, selects, and applies updates entirely from the local file system:
+The plugin embeds a version manifest at `percipience/version.json` (`manifest_schema`, `plugin_version`, `platform_version`, `tier`, `channel`). The native Rust engine (mirrored in Kotlin by `PluginUpdateChecker` / `PluginUpdateService`) discovers, selects, and applies updates entirely from the local file system:
 
 | Step | Behaviour |
 | :--- | :--- |

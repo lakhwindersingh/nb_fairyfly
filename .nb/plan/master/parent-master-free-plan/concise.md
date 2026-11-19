@@ -57,9 +57,9 @@ The following capabilities are now **MANDATORY** for Free Community Edition:
 
 1. **Embedded Free Tier Platform Assets** ✅ COMPLETE
    - The IntelliJ / PyCharm plugin distribution (`.nb/bundles/percipience-intellij-plugin-1.0.0.zip`) packages the canonical free-tier runtime under its internal JAR resources (`percipience/`):
-     - `percipience/bin/percipience` — canonical CLI gatekeeper (Unix `0755` applied on extraction).
+     - `percipience/bin/percipience` — single static Rust CLI binary (Unix `0755` applied on extraction).
      - `percipience/config/` — `billing_plans.yaml`, `token_compression_rules.yaml`.
-     - `percipience/core/` — bundled platform engines for offline, zero-dependency execution.
+     - `percipience/embedded/` — embedded Rust engine assets and schemas via `rust-embed` for offline, zero-dependency execution.
      - `percipience/agentic/custom/workflows/` — ready-to-run free-tier workflows (`basic_autonomous_cicd.yaml`).
      - `percipience/plan/` — the free community and parent master plan templates.
    - Free Tier: ✅ INCLUDED
@@ -79,9 +79,9 @@ The following capabilities are now **MANDATORY** for Free Community Edition:
 ## 1. Executive Summary & Free Plan Scope
 
 The **Percipience Parent Master Context Engineering Plan (Free Community Edition)** delivers a deterministic, tamper-evident, and token-efficient AI-driven software engineering framework for individual developers, open-source maintainers, and community teams:
-- **Unified Agentic Platform in `.nb/`**: Complete platform engine, gatekeeper CLI, and test suites self-contained inside `.nb/`.
-- **Single Canonical Binary (`.nb/bin/percipience`)**: Sole, cross-platform executable platform entry point.
-- **Embedded Free Tier Assets in IDE Plugins**: Bundled runtime assets directly in IntelliJ / VSCode plugin distributions for zero-dependency operation.
+- **Rust Native Single Binary Platform**: Sole static binary executable `./percipience` (< 15MB) with zero Python or virtualenv dependencies.
+- **Single Canonical Binary (`./percipience`)**: Sole, cross-platform executable platform entry point across macOS, Linux, and Windows.
+- **Embedded Free Tier Assets in IDE Plugins**: Bundled native binary and runtime assets directly in IntelliJ / VSCode plugin distributions for zero-dependency operation.
 - **Interactive Workspace Startup Activity**: Automated detection and prompt on project open for uninitialized workspaces.
 - **High-Efficiency Token Reduction**: 60%–80% context compression via AST skeletonization and attention budgeting.
 - **Cryptographic Merkle State Chain**: Continuous SHA-256 tamper-evident ledger tracking all artifact modifications.
@@ -95,19 +95,19 @@ graph TD
     UserSpace["user/<br/>• inputs/ (MVS Inputs)<br/>• hitl/ (Quarantine)<br/>• outputs/ (Observability)"]
     WorkplaceSpace["workplace/<br/>• src/ & modules/ (Project Code)<br/>• config/ (Project Policy)<br/>• docs/ (Living Specs)"]
     
-    subgraph Agentic_CICD_Platform[".nb/ — Agentic CI/CD Platform System"]
-      NBCli[".nb/bin/percipience<br/>(Sole Canonical Gatekeeper CLI)"]
-      NBConfig[".nb/config/<br/>(billing_plans, token_compression)"]
-      NBCore[".nb/core/<br/>(Platform Engines: AST, Merkle, CI/CD)"]
+    subgraph Agentic_CICD_Platform["Rust Native Percipience Platform"]
+      NBCli["./percipience<br/>(Sole Canonical Gatekeeper Static Binary)"]
+      NBCrateCore["crates/percipience-core<br/>(Merkle Engine, AST Pruner, DAG Engine)"]
+      NBCrateOrch["crates/percipience-orchestrator<br/>(Autonomous CI/CD & Hook Runner)"]
       NBContext[".nb/context/<br/>(Contracts, Invariants, Merkle Ledger)"]
       NBAgentic[".nb/agentic/<br/>(Prompts, Workflows, Local Agents)"]
     end
   end
 
-  NBCli --> NBCore
-  NBConfig --> NBCore
-  NBCore --> NBContext
-  NBCore --> NBAgentic
+  NBCli --> NBCrateCore
+  NBCli --> NBCrateOrch
+  NBCrateCore --> NBContext
+  NBCrateOrch --> NBAgentic
 ```
 
 ---

@@ -29,7 +29,7 @@ graph TD
     L1 --> VS["vscode-plugin (VSCode & LSP 3.17)"]
     L1 --> SP["saas-portal-domain (Next.js & Multi-Tenant)"]
     L1 --> NPX["npx-installer (Zero-Install CI & Scaffolding)"]
-    L1 --> TWP["tiered-wheel-packaging (Multi-Tier Wheel Distribution)"]
+    L1 --> TWP["tiered-wheel-packaging (Multi-Tier Rust Binary & Crate Distribution)"]
 
     Test --> TP["test (18-Subsystem Test Plan)"]
 ```
@@ -66,12 +66,12 @@ Every active plan directory adheres strictly to the **Percipience 4-File Convent
 ### 🔌 Tier 1: Foundation Domain Layers (`l1/`)
 - **[IntelliJ IDEA & PyCharm Plugin Space (`intellij-pycharm-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/intellij-pycharm-plugin/detailed.md)**: JetBrains Platform SDK plugin, PSI multi-language AST token reduction, dockable ToolWindow control plane, and pipeline DAG visualizer.
 - **[VSCode Extension Space (`vscode-plugin/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/vscode-plugin/detailed.md)**: VSCode Extension API, Language Server Protocol (LSP 3.17), hierarchical pipeline stage/contract tree provider, and Webview DAG cards.
-- **[SaaS Portal & Observability Domain (`saas-portal-domain/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/saas-portal-domain/detailed.md)**: Next.js 14 / FastAPI modular web portal, RBAC, PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
+- **[SaaS Portal & Observability Domain (`saas-portal-domain/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/saas-portal-domain/detailed.md)**: Next.js 14 / Axum Rust modular web portal, RBAC, PostgreSQL RLS, FinOps token analytics, and interactive visual pipeline DAG & stage contract inspector drawer.
 - **[NPX Instant Execution Space (`npx-installer/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/npx-installer/detailed.md)**: Zero-installation ephemeral CI PR Gatekeeper validation, instant Quad-Space scaffolding, and platform binary resolution.
-- **[Multi-Tier Python Wheel Packaging (`tiered-wheel-packaging/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/tiered-wheel-packaging/detailed.md)**: Automated PEP 427 Python wheel compilation across all 4 commercial tiers (Free, Team, Business, Enterprise) with strict build-time engine exclusion boundaries.
+- **[Multi-Tier Rust Binary & Polyglot Packaging (`tiered-wheel-packaging/`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/l1/tiered-wheel-packaging/detailed.md)**: Automated native Rust compilation matrix across all 4 commercial tiers (Free, Team, Business, Enterprise) with Cargo feature gates and single static binary packaging.
 
 ### 🧪 test/ (Test Governance & Verification)
-- **[Percipience Master Test Governance Framework (`test/detailed.md`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/detailed.md)**: 18-subsystem automated test governance, Pytest test execution, DeepEval AI quantitative evaluations, Playwright E2E, and AI-assisted self-healing test orchestrator (`.nb/plan/test/test_runner.py`).
+- **[Percipience Master Test Governance Framework (`test/detailed.md`)](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/test/detailed.md)**: 18-subsystem automated test governance, Rust native Cargo test workspace, Criterion benchmarks, Miri memory verification, Playwright E2E, and AI-assisted self-healing test orchestrator (`.nb/plan/test/test_runner.py`).
 
 ### 📐 Scaffolding Templates (`templates/`)
 - **[Custom Domain Layer Template](file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/plan/templates/custom_domain_layer_template.md)**: Standardized template for scaffolding custom enterprise domain layers.

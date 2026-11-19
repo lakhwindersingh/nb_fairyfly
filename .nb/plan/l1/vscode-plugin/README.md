@@ -25,7 +25,7 @@ This domain plan defines the architecture and implementation for the VSCode exte
 
 ## Success Criteria
 
-- 100% passing tests in `workplace/tests/test_ide_plugins_space.py`.
+- 100% passing tests in `cargo test -p percipience-lsp` and VS Code extension test suites.
 - Strict CSP compliance with zero inline script vulnerabilities.
 - Real-time Merkle chain status indicators in the VSCode status bar.
 - Complete action hierarchy parity between VSCode and IntelliJ Control Planes.

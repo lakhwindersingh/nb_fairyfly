@@ -92,7 +92,7 @@ Tasks within each plan execution step are routed according to cognitive complexi
 |---|---|---|---|
 | **Tier A (Frontier Reasoning)** | Spec derivation, contract validation, invariant proofs, root-cause poisoning diagnosis | `claude-3-7-sonnet`, `gemini-2.0-pro`, `gpt-4o`, `deepseek-r1` | Frontier tokens, KV-cache prefix pinned |
 | **Tier B (High-Throughput)** | AST symbol extraction, code scaffolding, unit test synthesis, diff serialization | `claude-3-5-haiku`, `gemini-2.0-flash`, `gpt-4o-mini` | High throughput, 70% cost reduction |
-| **Tier C (Deterministic Offline)** | Tree-Sitter AST pruning, SHA-256 Merkle chain verification, regex linting, WORM egress | Offline Python/Rust engine, zero external LLM tokens | Zero API cost, sub-millisecond execution |
+| **Tier C (Deterministic Offline)** | Tree-Sitter AST pruning, SHA-256 Merkle chain verification, regex linting, WORM egress | Offline native Rust engine (`percipience-core`), zero external LLM tokens | Zero API cost, sub-millisecond execution |
 
 ---
 
@@ -141,25 +141,35 @@ authority_permissions:
 
 tool_bindings:
   - name: "plan_ingestion_parser"
-    engine: ".nb/core/request_formalizer.py"
+    crate: "percipience-core"
+    engine: "crates/percipience-core/src/request_formalizer.rs"
   - name: "dag_topological_resolver"
-    engine: ".nb/core/workflow_orchestrator.py"
+    crate: "percipience-orchestrator"
+    engine: "crates/percipience-orchestrator/src/workflow_orchestrator.rs"
   - name: "token_budget_accountant"
-    engine: ".nb/core/token_budget_engine.py"
+    crate: "percipience-orchestrator"
+    engine: "crates/percipience-orchestrator/src/token_budget_engine.rs"
   - name: "state_reentrancy_engine"
-    engine: ".nb/core/orchestrator_state_manager.py"
+    crate: "percipience-orchestrator"
+    engine: "crates/percipience-orchestrator/src/orchestrator_state_manager.rs"
   - name: "ast_skeleton_compressor"
-    engine: ".nb/core/ast_optimizer.py"
+    crate: "percipience-core"
+    engine: "crates/percipience-core/src/ast_optimizer.rs"
   - name: "parity_evaluator"
-    engine: ".nb/core/semantic_parity_engine.py"
+    crate: "percipience-core"
+    engine: "crates/percipience-core/src/semantic_parity_engine.rs"
   - name: "bounded_tdd_healer"
-    engine: ".nb/core/autonomous_cicd.py"
+    crate: "percipience-orchestrator"
+    engine: "crates/percipience-orchestrator/src/autonomous_cicd.rs"
   - name: "poisoning_rollback_sentinel"
-    engine: ".nb/core/poisoning_sentinel.py"
+    crate: "percipience-security"
+    engine: "crates/percipience-security/src/poisoning_sentinel.rs"
   - name: "living_doc_architect"
-    engine: ".nb/core/living_doc_engine.py"
+    crate: "percipience-core"
+    engine: "crates/percipience-core/src/living_doc_engine.rs"
   - name: "merkle_state_sealer"
-    engine: ".nb/core/merkle_engine.py"
+    crate: "percipience-core"
+    engine: "crates/percipience-core/src/merkle_engine.rs"
 ```
 
 ### 3.2 System Prompt & Metacognitive Protocol
@@ -453,7 +463,7 @@ steps:
       - ".nb/plan/l1/transmutative-reasoning/concise.md"
     outputs:
       - "workplace/src/l1/transmutative/"
-      - "workplace/tests/l1/test_transmutative.py"
+      - "workplace/tests/l1/test_transmutative.rs"
       - "RP_L1_FOUNDATION"
     depends_on: [] # Foundational Root
 
@@ -470,7 +480,7 @@ steps:
       - ".nb/plan/l2/neural-architecture-foundation/concise.md"
     outputs:
       - "workplace/src/l2/neural_foundation/"
-      - "workplace/tests/l2/test_neural_foundation.py"
+      - "workplace/tests/l2/test_neural_foundation.rs"
       - "RP_L2_FOUNDATION"
     depends_on: ["step_plan_l1_transmutative_reasoning"]
 
@@ -484,7 +494,7 @@ steps:
       - ".nb/plan/l2/nlp-self-evolution-toolchain/concise.md"
     outputs:
       - "workplace/src/l2/nlp_toolchain/"
-      - "workplace/tests/l2/test_nlp_toolchain.py"
+      - "workplace/tests/l2/test_nlp_toolchain.rs"
       - "RP_L2_TOOLCHAIN"
     depends_on: ["step_plan_l2_neural_foundation"]
 
@@ -501,7 +511,7 @@ steps:
       - ".nb/plan/l3/nlp-inference-dsl/concise.md"
     outputs:
       - "workplace/src/l3/dsl/"
-      - "workplace/tests/l3/test_inference_dsl.py"
+      - "workplace/tests/l3/test_inference_dsl.rs"
       - "RP_L3_DSL"
     depends_on: ["step_plan_l2_nlp_toolchain"]
 
@@ -515,7 +525,7 @@ steps:
       - ".nb/plan/l3/performance-ledger/concise.md"
     outputs:
       - "workplace/src/l3/ledger/"
-      - "workplace/tests/l3/test_performance_ledger.py"
+      - "workplace/tests/l3/test_performance_ledger.rs"
       - "RP_L3_LEDGER"
     depends_on: ["step_plan_l2_neural_foundation"]
 
@@ -529,7 +539,7 @@ steps:
       - ".nb/plan/l3/system-one-decision-dsl/concise.md"
     outputs:
       - "workplace/src/l3/system_one/"
-      - "workplace/tests/l3/test_system_one.py"
+      - "workplace/tests/l3/test_system_one.rs"
       - "RP_L3_SYSTEM_ONE"
     depends_on: ["step_plan_l2_neural_foundation"]
 
@@ -545,7 +555,7 @@ steps:
       - ".nb/plan/l3/production-runtime-verification/concise.md"
     outputs:
       - "workplace/src/l3/verification/"
-      - "workplace/tests/l3/test_production_verification.py"
+      - "workplace/tests/l3/test_production_verification.rs"
       - "RP_L3_VERIFICATION"
     depends_on:
       - "step_plan_l3_nlp_inference_dsl"
@@ -579,7 +589,7 @@ steps:
       - ".nb/plan/l4/poly-architectural-morphogenesis/concise.md"
     outputs:
       - "workplace/src/l4/poly_morph/"
-      - "workplace/tests/l4/test_poly_morph.py"
+      - "workplace/tests/l4/test_poly_morph.rs"
       - "RP_L4_POLYMORPH"
     depends_on: ["step_plan_l3_production_verification"]
 
@@ -593,7 +603,7 @@ steps:
       - ".nb/plan/l4/cognitive-orchestrator-fusion/concise.md"
     outputs:
       - "workplace/src/l4/cognitive_fusion/"
-      - "workplace/tests/l4/test_cognitive_fusion.py"
+      - "workplace/tests/l4/test_cognitive_fusion.rs"
       - "RP_L4_FUSION"
     depends_on: ["step_plan_l4_poly_morphogenesis"]
 
@@ -607,7 +617,7 @@ steps:
       - ".nb/plan/l4/zk-formal-verification-ledger/concise.md"
     outputs:
       - "workplace/src/l4/zk_ledger/"
-      - "workplace/tests/l4/test_zk_ledger.py"
+      - "workplace/tests/l4/test_zk_ledger.rs"
       - "RP_L4_ZK"
     depends_on: ["step_plan_l4_cognitive_fusion"]
 
@@ -624,7 +634,7 @@ steps:
       - ".nb/plan/l5/swarm-consensus-collective-beehive/concise.md"
     outputs:
       - "workplace/src/l5/swarm/"
-      - "workplace/tests/l5/test_swarm.py"
+      - "workplace/tests/l5/test_swarm.rs"
       - "RP_L5_SWARM"
     depends_on: ["step_plan_l4_zk_ledger"]
 
@@ -638,7 +648,7 @@ steps:
       - ".nb/plan/l5/causal-physical-world-emulator/concise.md"
     outputs:
       - "workplace/src/l5/causal_emulator/"
-      - "workplace/tests/l5/test_causal_emulator.py"
+      - "workplace/tests/l5/test_causal_emulator.rs"
       - "RP_L5_CAUSAL"
     depends_on: ["step_plan_l5_swarm_consensus"]
 
@@ -652,7 +662,7 @@ steps:
       - ".nb/plan/l5/robotics-kinematics-control/concise.md"
     outputs:
       - "workplace/src/l5/robotics/"
-      - "workplace/tests/l5/test_robotics.py"
+      - "workplace/tests/l5/test_robotics.rs"
       - "RP_L5_ROBOTICS"
     depends_on: ["step_plan_l5_causal_world_emulator"]
 

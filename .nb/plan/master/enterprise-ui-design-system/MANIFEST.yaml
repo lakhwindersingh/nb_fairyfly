@@ -8,7 +8,7 @@ schema_version: 3.0.0
 plan_id: master_enterprise_ui_design_system
 plan_name: Enterprise Unified Design System & Multi-Surface Application Look-and-Feel
   Architecture
-version: null
+version: 1.0.0
 layer: master
 capability_rating: TIER_MASTER
 status: active
@@ -57,8 +57,9 @@ autonomous_execution:
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module master_ui_design_system
   pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_ui_design_system.py -v
-  handover: percipience handoff issue --from agent_ui_design_system_architect --to agent_qa_sentinel
+  post_execution: cargo test -p percipience-core --test test_ui_design_system
+  handover: percipience handoff issue --from agent_ui_design_system_architect --to
+    agent_qa_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
   post_merge_seal: percipience merkle seal --worm-egress
@@ -79,21 +80,21 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-17'
+    last_modified: '2026-11-19'
     content_hash: 8b5e9147f40ccd29fc7fa286178692b88f8b0c851d844409ec0b75a082eded8d
     line_count: 176
     primary_purpose: Concise documentation
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 0031f43c33040e5b73dbf091f7731cf646a94ca35c753a1dbd6b0a4a71a90a12
+    last_modified: '2026-11-19'
+    content_hash: 4dcd9effd0e279acc14f9cd423811176be3c9cf93b332526493b20c74b992f97
     line_count: 458
     primary_purpose: Detailed documentation
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-17'
+    last_modified: '2026-11-19'
     content_hash: 22b91b6a44bcc687f5049b4ba4b638337ca7c50252e46600c8d88b591e1f737a
     line_count: 82
     primary_purpose: Readme documentation

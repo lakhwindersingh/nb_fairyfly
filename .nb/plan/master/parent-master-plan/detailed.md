@@ -1489,30 +1489,30 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`user/`** | Visual DAG & Time-Travel Console | `user/outputs/dashboard/index.html` | HTML5 / CSS3 / JS | Static Browser Visualization | **Planned** |
 | **`user/`** | Visual DAG Frontend Controller | `user/outputs/dashboard/app.js` | Vanilla ES6 JavaScript | Real-time Merkle Node Explorer | **Planned** |
 | **`user/`** | Visual DAG Dark-Mode Styling | `user/outputs/dashboard/style.css` | Modern CSS Grid / Flex | Responsive Dashboard Styling | **Planned** |
-| **`.nb/`**     | Autonomous CI/CD Triad Engine | `.nb/core/autonomous_cicd.py` | Python 3 Module | Self-Sustaining, Self-Recovering, Self-Improving | **Planned** |
-| **`.nb/`**     | Agent Plugin Engine | `.nb/core/agent_plugin_engine.py` | Python 3 Module | Custom Plugin Lifecycle & Merkle Sealing | **Planned** |
-| **`.nb/`**     | Token FinOps & Savings Tracker | `.nb/core/token_tracker.py` | Python 3 Module | Real-time AST Token Metering & 15% Rev-Share | **Planned** |
-| **`.nb/`**     | Multi-VCS BYOR Remote Adapter | `.nb/core/byor_adapter.py` | Python 3 Module | SSH Key & Webhook Multi-Vendor VCS Bridge | **Planned** |
-| **`.nb/`**     | 3-Tier Layered Context Validator | `.nb/core/layered_context_validator.py` | Python 3 Module | Platform Invariant Precedence Enforcement | **Planned** |
-| **`workplace/`**| Observability Telemetry Gateway | `workplace/portal/server.py` | Python 3 HTTP Server | Observability REST APIs & Gateway Proxy | **Planned** |
-| **`.nb/`**     | Living Documentation Engine | `.nb/core/living_doc_engine.py` | Python 3 Module | AST & Contract living docs & Mermaid visualizer | **Planned** |
+| **`crates/`**   | Autonomous CI/CD Triad Engine | `crates/percipience-orchestrator/src/autonomous_cicd.rs` | Rust Native Crate | Self-Sustaining, Self-Recovering, Self-Improving | **Planned** |
+| **`crates/`**   | Agent Plugin Engine | `crates/percipience-core/src/agent_plugin_engine.rs` | Rust Native Crate | Custom Plugin Lifecycle & Merkle Sealing | **Planned** |
+| **`crates/`**   | Token FinOps & Savings Tracker | `crates/percipience-core/src/token_tracker.rs` | Rust Native Crate | Real-time AST Token Metering & 15% Rev-Share | **Planned** |
+| **`crates/`**   | Multi-VCS BYOR Remote Adapter | `crates/percipience-orchestrator/src/byor_adapter.rs` | Rust Native Crate | SSH Key & Webhook Multi-Vendor VCS Bridge | **Planned** |
+| **`crates/`**   | 3-Tier Layered Context Validator | `crates/percipience-core/src/layered_context_validator.rs` | Rust Native Crate | Platform Invariant Precedence Enforcement | **Planned** |
+| **`crates/`**   | Observability Telemetry Gateway | `crates/percipience-server/src/main.rs` | Rust Axum/Tokio Server | Observability REST/gRPC APIs & Gateway Proxy | **Planned** |
+| **`crates/`**   | Living Documentation Engine | `crates/percipience-core/src/living_doc_engine.rs` | Rust Native Crate | AST & Contract living docs & Mermaid visualizer | **Planned** |
 | **`agentic/`** | Custom Agent Plugin Template | `agentic/templates/custom_agent_template.yaml` | YAML Specification | Standardized Healthy Plugin Schema | **Planned** |
 | **`agentic/`** | Agent Plugin Architecture Guide | `workplace/docs/guides/AGENT_PLUGIN_GUIDE.md` | Markdown Specification | Healthy Integration Pattern Documentation | **Planned** |
 | **`context/`** | Token Savings Ledger | `.nb/context/ledger/token_savings_ledger.yaml` | YAML Ledger | 15% Performance Fee & Savings Accounting | **Planned** |
 | **`context/`** | Self-Improving Telemetry Ledger | `.nb/context/ledger/self_improving_ledger.yaml` | YAML Ledger | Closed-Loop Optimization History | **Planned** |
-| **`.nb/`**     | Multi-Dimensional Token Optimizer Suite | `.nb/core/token_optimizer_suite.py` | Python 3 Module | 6D Token Compression & Slicing Suite | **Verified** |
-| **`.nb/`**     | Diagnostic Re-Prompting Engine | `.nb/core/diagnostic_reprompt.py` | Python 3 Module | Tiered SLA Prompt Escalation & Auto-Heal | **Verified** |
-| **`.nb/`**     | Cloud WORM Vault Mirror Egress | `.nb/core/worm_egress_manager.py` | Python 3 Module | S3 Object Lock & GCS SEC 17a-4 Compliance | **Verified** |
+| **`crates/`**   | Multi-Dimensional Token Optimizer Suite | `crates/percipience-core/src/token_optimizer_suite.rs` | Rust Native Crate | 6D Token Compression & Slicing Suite | **Verified** |
+| **`crates/`**   | Diagnostic Re-Prompting Engine | `crates/percipience-orchestrator/src/diagnostic_reprompt.rs` | Rust Native Crate | Tiered SLA Prompt Escalation & Auto-Heal | **Verified** |
+| **`crates/`**   | Cloud WORM Vault Mirror Egress | `crates/percipience-security/src/worm_egress_manager.rs` | Rust Native Crate | S3 Object Lock & GCS SEC 17a-4 Compliance | **Verified** |
 | **`user/`** | Autonomous CI/CD Strategic Roadmap| `workplace/docs/reports/autonomous_cicd_roadmap.md` | Markdown Blueprint | 4-Phase Autonomous Delivery Roadmap | **Planned** |
 | **`user/`** | Benchmark Whitepaper (62% Savings)| `workplace/docs/reports/token_savings_whitepaper.md`| Markdown Document | Empirical FinOps Case Study & Cost Model | **Planned** |
 | **`user/`** | Token Savings Scorecard Report | `workplace/docs/reports/token_savings_report.md` | Markdown Scorecard | Real-time Financial Metering Output | **Planned** |
-| **`.nb/`**     | Unified CLI Control Plane | `.nb/bin/percipience` | Executable Shell / Python | Unified Subcommand Architecture | **Planned** |
+| **`crates/`**   | Unified CLI Control Plane | `crates/percipience-cli/src/main.rs` | Rust Native Binary (`target/release/percipience`) | Unified Subcommand Architecture (< 15MB Static Binary) | **Planned** |
 | **`user/`** | Context Maturity Report | `workplace/docs/reports/context_maturity_report.md` | Markdown Scorecard | Quantitative 6-D Evaluation (0.95)| **Planned** |
-| **`.nb/`**     | Model Cognitive Router | `.nb/core/cognitive_router.py` | Python 3 Module | Tier A / Tier B Model Dispatcher & FinOps Arbitrage | **Planned** |
-| **`.nb/`**     | Flaky Test Isolation Engine | `.nb/core/flaky_test_detector.py` | Python 3 Module | Multi-run Test Stability & Non-blocking Quarantine | **Planned** |
-| **`.nb/`**     | Contract Compatibility Checker | `.nb/core/contract_compatibility_checker.py` | Python 3 Module | SemVer & Wire Contract Backward-Compatibility Diff | **Planned** |
-| **`.nb/`**     | Dependency CVE Sentinel | `.nb/core/dependency_cve_sentinel.py` | Python 3 Module | Supply-Chain Vulnerability & License Auditor | **Planned** |
-| **`.nb/`**     | Doc Drift Synchronizer | `.nb/core/doc_drift_synchronizer.py` | Python 3 Module | AST Export vs Markdown Blueprint Sync | **Planned** |
+| **`crates/`**   | Model Cognitive Router | `crates/percipience-orchestrator/src/cognitive_router.rs` | Rust Native Crate | Tier A / Tier B Model Dispatcher & FinOps Arbitrage | **Planned** |
+| **`crates/`**   | Flaky Test Isolation Engine | `crates/percipience-orchestrator/src/flaky_test_detector.rs` | Rust Native Crate | Multi-run Test Stability & Non-blocking Quarantine | **Planned** |
+| **`crates/`**   | Contract Compatibility Checker | `crates/percipience-core/src/contract_compatibility_checker.rs` | Rust Native Crate | SemVer & Wire Contract Backward-Compatibility Diff | **Planned** |
+| **`crates/`**   | Dependency CVE Sentinel | `crates/percipience-security/src/dependency_cve_sentinel.rs` | Rust Native Crate | Supply-Chain Vulnerability & License Auditor | **Planned** |
+| **`crates/`**   | Doc Drift Synchronizer | `crates/percipience-core/src/doc_drift_synchronizer.rs` | Rust Native Crate | AST Export vs Markdown Blueprint Sync | **Planned** |
 | **`agentic/`** | Flaky Test Detector Manifest | `.nb/agentic/custom/agents/flaky_test_detector.yaml` | YAML Specification | Autonomous Flaky Test Isolation Guard | **Planned** |
 | **`agentic/`** | Contract Checker Manifest | `.nb/agentic/custom/agents/contract_compatibility_checker.yaml` | YAML Specification | Wire Contract Evolution & SemVer Guard | **Planned** |
 | **`agentic/`** | Dependency CVE Manifest | `.nb/agentic/custom/agents/dependency_cve_sentinel.yaml` | YAML Specification | Supply-Chain Security & License Sentinel | **Planned** |
@@ -1526,22 +1526,22 @@ To guarantee enterprise rigor and zero ambiguity, every architectural component 
 | **`workplace/`**| Data Flow & Pipeline Document | `workplace/docs/data_flow.md` | Markdown + Mermaid | Ingestion DAGs, Event Streams & State Machines | **Planned** |
 | **`workplace/`**| Entity-Relationship Document | `workplace/docs/entity_relationship.md` | Markdown + Mermaid | DDL Relations, Data Models & Schema Mappings | **Planned** |
 | **`workplace/`**| Domain Layer Extensions Document| `workplace/docs/domain_extensions.md` | Markdown + Mermaid | Active Layered Domain Deep Dive Visuals | **Planned** |
-| **`.nb/`**     | Parallel Workflow Orchestrator | `.nb/core/workflow_orchestrator.py` | Python 3 Module | Concurrent Fan-Out & Barrier Sync DAG Engine | **Implemented** |
-| **`.nb/`**     | Error Recovery Orchestrator | `.nb/core/error_recovery_orchestrator.py` | Python 3 Module | 4-Pillar Taxonomy & Adaptive Recovery Playbooks | **Implemented** |
-| **`.nb/`**     | Prompt Drift Sentinel | `.nb/core/prompt_drift_sentinel.py` | Python 3 Module | SHA-256 Manifest & Prefix Pinning Auditor | **Implemented** |
-| **`.nb/`**     | Swarm Governor & Authority Tree | `.nb/core/swarm_governor.py` | Python 3 Module | 4-Tier Authority & Anti-Usurpation Interceptor | **Implemented** |
-| **`.nb/`**     | Adversarial Mutation Fuzzer | `.nb/core/adversarial_fuzzer.py` | Python 3 Module | Boundary & Security Injection Red-Team Fuzzer | **Implemented** |
-| **`.nb/`**     | Context Attention Budgeter | `.nb/core/attention_budgeter.py` | Python 3 Module | 5-Slice Proportional Context Quota Enforcer | **Implemented** |
-| **`.nb/`**     | Trajectory Recorder & Replayer | `.nb/core/trajectory_recorder.py` | Python 3 Module | ReAct Trajectory Serialization & Determinism Replay | **Implemented** |
-| **`.nb/`**     | Ambiguity Resolver & RFC Engine | `.nb/core/ambiguity_resolver.py` | Python 3 Module | Requirement Entropy & HITL Clarification RFCs | **Implemented** |
+| **`crates/`**   | Parallel Workflow Orchestrator | `crates/percipience-orchestrator/src/workflow_orchestrator.rs` | Rust Native Crate | Concurrent Fan-Out & Barrier Sync DAG Engine | **Implemented** |
+| **`crates/`**   | Error Recovery Orchestrator | `crates/percipience-orchestrator/src/error_recovery_orchestrator.rs` | Rust Native Crate | 4-Pillar Taxonomy & Adaptive Recovery Playbooks | **Implemented** |
+| **`crates/`**   | Prompt Drift Sentinel | `crates/percipience-core/src/prompt_drift_sentinel.rs` | Rust Native Crate | SHA-256 Manifest & Prefix Pinning Auditor | **Implemented** |
+| **`crates/`**   | Swarm Governor & Authority Tree | `crates/percipience-security/src/swarm_governor.rs` | Rust Native Crate | 4-Tier Authority & Anti-Usurpation Interceptor | **Implemented** |
+| **`crates/`**   | Adversarial Mutation Fuzzer | `crates/percipience-security/src/adversarial_fuzzer.rs` | Rust Native Crate | Boundary & Security Injection Red-Team Fuzzer | **Implemented** |
+| **`crates/`**   | Context Attention Budgeter | `crates/percipience-core/src/attention_budgeter.rs` | Rust Native Crate | 5-Slice Proportional Context Quota Enforcer | **Implemented** |
+| **`crates/`**   | Trajectory Recorder & Replayer | `crates/percipience-orchestrator/src/trajectory_recorder.rs` | Rust Native Crate | ReAct Trajectory Serialization & Determinism Replay | **Implemented** |
+| **`crates/`**   | Ambiguity Resolver & RFC Engine | `crates/percipience-core/src/ambiguity_resolver.rs` | Rust Native Crate | Requirement Entropy & HITL Clarification RFCs | **Implemented** |
 | **`agentic/`** | Prompt SemVer Manifest | `agentic/prompts/prompt_manifest.yaml` | YAML Specification | Cryptographic Hash Baseline for All Prompts | **Implemented** |
 | **`agentic/`** | Adversarial Fuzzer Agent Manifest | `.nb/agentic/custom/agents/agent_adversarial_fuzzer.yaml` | YAML Specification | Autonomous Red-Team Fuzzing Sentinel | **Implemented** |
 | **`agentic/`** | Ambiguity Resolver Agent Manifest | `.nb/agentic/custom/agents/agent_ambiguity_resolver.yaml` | YAML Specification | Requirement Entropy & Ambiguity Gate Specialist | **Implemented** |
-| **`platform`** | Standardized Integration Test Suite | `workplace/tests/test_play3_suite.py` | Python 3 Unittest | 17-Test Comprehensive End-to-End Suite | **Implemented** |
-| **`.nb/`**     | Section 17.2 SDLC Test Suite | `.nb/tests/test_agentic_sdlc_suite.py` | Python 3 Unittest | 16-Test Swarm & Workflow Governance Suite | **Implemented** |
-| **`.nb/`**     | Section 17.3 Cognitive Test Suite | `.nb/tests/test_section_17_3_suite.py` | Python 3 Unittest | 10-Test Fuzzing & Attention Budget Suite | **Implemented** |
-| **`.nb/`**     | Registry / Hook / Multi-LLM Synchronizer | `.nb/core/agent_registry_synchronizer.py` | Python 3 Module | Idempotent registry reconciliation across Claude/Gemini/Aider/Cursor settings | **Verified** |
-| **`.nb/`**     | Sequential Plan Module Orchestrator | `.nb/core/plan_module_orchestrator.py` | Python 3 Module | Plan submodule discovery, agent/rule/workflow synthesis & tiered bundling | **Verified** |
+| **`tests/`**    | Standardized Integration Test Suite | `tests/test_play3_suite.rs` | Rust Integration Test (`cargo test`) | Comprehensive End-to-End Suite | **Implemented** |
+| **`tests/`**    | Section 17.2 SDLC Test Suite | `crates/percipience-orchestrator/tests/test_agentic_sdlc.rs` | Rust Integration Test (`cargo test`) | Swarm & Workflow Governance Suite | **Implemented** |
+| **`tests/`**    | Section 17.3 Cognitive Test Suite | `crates/percipience-core/tests/test_cognitive_suite.rs` | Rust Integration Test (`cargo test`) | Fuzzing & Attention Budget Suite | **Implemented** |
+| **`crates/`**   | Registry / Hook / Multi-LLM Synchronizer | `crates/percipience-core/src/agent_registry_synchronizer.rs` | Rust Native Crate | Idempotent registry reconciliation across Claude/Gemini/Aider/Cursor settings | **Verified** |
+| **`crates/`**   | Sequential Plan Module Orchestrator | `crates/percipience-orchestrator/src/plan_module_orchestrator.rs` | Rust Native Crate | Plan submodule discovery, agent/rule/workflow synthesis & tiered bundling | **Verified** |
 | **`agentic/`** | Registry Synchronizer Agent Manifest | `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` | YAML Specification | Gatekeeper preflight registry & hook reconciliation guard (`IMPL-2.2`) | **Verified** |
 | **`.nb/`**     | Multi-LLM Settings Projections | `settings.json`, `.claude/settings.json`, `.gemini/settings.json`, `.aider.conf.yml`, `.cursor/settings.json` | JSON / YAML | `percipience`-namespaced registry projection for every supported coding agent | **Verified** |
 
@@ -1557,9 +1557,9 @@ Verification is performed by executing the Parent Master Prompt Suite against sy
 4. **Cross-Module Contract Compatibility Gate Test**: Intentionally alter an endpoint payload schema in `service_contract.yaml`; verify `gate_cross_module_compatibility` flags the breaking change before merging.
 5. **Surgical Rollback Isolation Test**: Introduce a context poisoning hallucination into the Consumer module; verify that only the Consumer module rolls back to its recovery point (`RP_CONS_004`), leaving the Provider Service builds (`RP_PROV_003`) completely untouched.
 6. **Virtual Emulation Bridge Test**: Execute automated integration tests in `workplace/tests/integration/` where the client application simulator interacts with the mock service daemon over loopback, confirming request routing, payload rendering, and event streaming.
-7. **Living Documentation & Mermaid Visualizer Verification Test**: Run `.nb/core/living_doc_engine.py` across derived multi-module repositories; verify that `workplace/docs/` contains complete, non-empty Markdown files (`architecture.md`, `module_catalog.md`, `sequence_flows.md`, `data_flow.md`, `entity_relationship.md`, `domain_extensions.md`), that all embedded Mermaid blocks pass syntax parsing, and that AST-to-doc hash synchronization avoids unnecessary token burn on unchanged files.
-8. **Autonomous SDLC & Swarm Governance Verification Test**: Run `.nb/tests/test_agentic_sdlc_suite.py` to verify declarative Quad-Space facade boundaries, multi-threaded parallel fan-out/fan-in barriers with cycle detection, 4-pillar error recovery playbooks, prompt manifest cryptographic integrity, and 4-tier swarm authority anti-usurpation spawning constraints.
-9. **Cognitive Attention, Prefix Pinning, Fuzzing & Ambiguity Verification Test**: Run `.nb/tests/test_section_17_3_suite.py` to verify adversarial red-team fuzzing resilience, 5-slice attention quota enforcement, static prefix pinning KV-cache compliance across all prompts, ReAct trajectory recording & replay determinism, and requirement ambiguity entropy scoring with interactive clarification RFC generation.
+7. **Living Documentation & Mermaid Visualizer Verification Test**: Execute `cargo test -p percipience-core --test test_living_docs` across derived multi-module repositories; verify that `workplace/docs/` contains complete, non-empty Markdown files (`architecture.md`, `module_catalog.md`, `sequence_flows.md`, `data_flow.md`, `entity_relationship.md`, `domain_extensions.md`), that all embedded Mermaid blocks pass syntax parsing, and that AST-to-doc hash synchronization avoids unnecessary token burn on unchanged files.
+8. **Autonomous SDLC & Swarm Governance Verification Test**: Execute `cargo test -p percipience-orchestrator --test test_agentic_sdlc` to verify declarative Quad-Space facade boundaries, multi-threaded parallel fan-out/fan-in barriers with cycle detection, 4-pillar error recovery playbooks, prompt manifest cryptographic integrity, and 4-tier swarm authority anti-usurpation spawning constraints.
+9. **Cognitive Attention, Prefix Pinning, Fuzzing & Ambiguity Verification Test**: Execute `cargo test -p percipience-core --test test_cognitive_suite` to verify adversarial red-team fuzzing resilience, 5-slice attention quota enforcement, static prefix pinning KV-cache compliance across all prompts, ReAct trajectory recording & replay determinism, and requirement ambiguity entropy scoring with interactive clarification RFC generation.
 10. **All Core Capabilities**: Dynamic model cascading, bounded TDD self-healing, cryptographic Merkle ledger chaining, and visual DAG dashboard rendering.
 
 ---
@@ -1645,17 +1645,17 @@ Scale the context engineering platform for high-throughput enterprise repositori
 ### Step 14: Autonomous CI/CD Specialist Agent Plugins & 6-Stage Gatekeeper Integration
 Build a standardized fleet of specialist agent plugins under `.nb/agentic/custom/agents/` and integrate them into the PR verification gatekeeper.
 
-- Scaffold `agent_flaky_test_detector` (`flaky_test_detector.py`) with non-blocking quarantine in `user/hitl/flaky_quarantine.yaml`.
-- Scaffold `agent_contract_compatibility_checker` (`contract_compatibility_checker.py`) enforcing SemVer rules and blocking breaking wire contract removals.
-- Scaffold `agent_dependency_cve_sentinel` (`dependency_cve_sentinel.py`) detecting compromised dependencies and restrictive licenses.
-- Scaffold `agent_doc_drift_synchronizer` (`doc_drift_synchronizer.py`) auditing exported AST interface coverage against architecture plans.
-- Upgrade `.nb/agentic/workflows/pr_gatekeeper.yaml` and `./.nb/bin/percipience gate` into a comprehensive verification pipeline.
-- Expand the automated test suite in `workplace/tests/test_play3_suite.py` to end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems.
+- Scaffold `agent_flaky_test_detector` (`crates/percipience-orchestrator/src/flaky_test_detector.rs`) with non-blocking quarantine in `user/hitl/flaky_quarantine.yaml`.
+- Scaffold `agent_contract_compatibility_checker` (`crates/percipience-core/src/contract_compatibility_checker.rs`) enforcing SemVer rules and blocking breaking wire contract removals.
+- Scaffold `agent_dependency_cve_sentinel` (`crates/percipience-security/src/dependency_cve_sentinel.rs`) detecting compromised dependencies and restrictive licenses.
+- Scaffold `agent_doc_drift_synchronizer` (`crates/percipience-core/src/doc_drift_synchronizer.rs`) auditing exported AST interface coverage against architecture plans.
+- Upgrade `.nb/agentic/workflows/pr_gatekeeper.yaml` and `./percipience gate` into a comprehensive verification pipeline.
+- Expand the automated test suite in `tests/test_play3_suite.rs` to end-to-end integration tests, validating all reliability, scalability, and specialist plugin subsystems via `cargo test --test test_play3_suite`.
 
 ### Step 15: Autonomous Living Documentation Agent & In-Workflow Mermaid Visualizer Integration
 Build and integrate the autonomous in-workflow documentation engine and Mermaid visualizer (`agent_living_doc_architect`) to continuously synchronize `workplace/docs/` with zero drift.
 
-- Implement `LivingDocEngine` in `.nb/core/living_doc_engine.py`:
+- Implement `LivingDocEngine` in `crates/percipience-core/src/living_doc_engine.rs`:
   - *AST Symbol & Contract Parser*: Automatically extracts module hierarchies, exported classes/methods, REST/gRPC endpoints, event stream channels, and DDL entity schemas.
   - *Mermaid Visual Generators*:
     - C4 Architecture & Topologies (`render_architecture_mermaid()`): Renders boundary graphs (`graph TD` / `graph LR`) showing client tiers, API gateways, worker pools, persistence tiers, and virtual simulation bridges.
@@ -1668,7 +1668,7 @@ Build and integrate the autonomous in-workflow documentation engine and Mermaid 
   - *Mermaid Syntax Validator*: Enforces node quotation rules (`id["Label (Details)"]`) and checks syntax validity before persisting Markdown files.
 - Scaffold specialist agent manifest `.nb/agentic/custom/agents/agent_living_doc_architect.yaml` (Tier B execution for routine extraction, escalating to Tier A for complex architectural disambiguation).
 - Inject `agent_living_doc_architect` and `gate_doc_drift_verification` into `.nb/agentic/workflows/pr_gatekeeper.yaml` and `.nb/agentic/workflows/cross_module_orchestrator.yaml`.
-- Implement automated verification test in `.nb/tests/test_living_doc_engine.py` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
+- Implement automated verification test in `crates/percipience-core/tests/test_living_docs.rs` validating that document generation succeeds, all Mermaid blocks are valid, and Merkle ledger entries are sealed under `living_docs`.
 
 ---
 

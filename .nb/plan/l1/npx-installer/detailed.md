@@ -23,8 +23,8 @@ sequenceDiagram
 
   Dev->>NPX: npx @neutronbinary/percipience init
   NPX->>CLI: Launch ephemeral CLI process
-  CLI->>Resolver: Detect Platform & Arch (darwin-arm64, linux-x64, etc.)
-  Resolver-->>CLI: Return verified binary path or Python fallback
+  CLI->>Resolver: Detect Platform & Arch (darwin-arm64, linux-x64, win32-x64)
+  Resolver-->>CLI: Return verified native Rust binary path (cached or fetched)
   CLI->>OS: Scaffold Quad-Space Layout (.nb/, workplace/, user/)
   CLI->>OS: Write .claude/mcp.json & .claude/settings.json
   CLI->>OS: Install local fast-path binary (.nb/bin/percipience)
@@ -140,26 +140,20 @@ function resolveExecutable() {
     // Optional dependency not installed or unsupported platform
   }
 
-  // 3. Priority C: Embedded Python bridge fallback
-  const pythonBridge = path.join(__dirname, '..', 'vendor', 'python_bridge', 'percipience_bridge.py');
-  if (fs.existsSync(pythonBridge)) {
-    return { type: 'python', path: pythonBridge };
+  // 3. Priority C: Download verified precompiled release to ~/.percipience/cache/
+  const cacheDir = path.join(require('os').homedir(), '.percipience', 'cache');
+  const cachedBin = path.join(cacheDir, platform === 'win32' ? 'percipience.exe' : 'percipience');
+  if (fs.existsSync(cachedBin)) {
+    return { type: 'native', path: cachedBin };
   }
-
-  throw new Error(`Unable to resolve Percipience binary for platform ${platform}-${arch}`);
+  return downloadAndVerifyBinary(platform, arch, cacheDir);
 }
 
 function main() {
   const target = resolveExecutable();
   const args = process.argv.slice(2);
 
-  let child;
-  if (target.type === 'native') {
-    child = spawn(target.path, args, { stdio: 'inherit' });
-  } else {
-    const pythonCmd = process.env.PYTHON || 'python3';
-    child = spawn(pythonCmd, [target.path, ...args], { stdio: 'inherit' });
-  }
+  const child = spawn(target.path, args, { stdio: 'inherit' });
 
   child.on('error', (err) => {
     console.error(`[percipience-npx] Execution failed: ${err.message}`);

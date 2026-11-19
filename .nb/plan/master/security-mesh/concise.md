@@ -80,7 +80,7 @@ graph TD
   end
 
   subgraph PlanInjection["6. Generic Plan Injection Engine"]
-    WeaverScript["Automated Plan Injector<br/>(inject_security_mesh.py)"]
+    WeaverScript["Automated Plan Injector<br/>(percipience security inject)"]
     MerkleChain["Cryptographic Merkle State Ledger<br/>(context_ledger.yaml)"]
     WeaverScript --> MerkleChain
   end
@@ -94,7 +94,17 @@ graph TD
 .
 ├── Cargo.toml                                 # [Rust Workspace] Security core, ZTA, crypto crates
 ├── package.json                               # [Frontend] WebAuthn browser bindings & auth components
-├── pyproject.toml                             # [uv Spec] CSPM scanners, policy linters
+├── crates/
+│   └── percipience-security/                  # [Rust] Core authentication, ReBAC, FPE, mTLS
+│       ├── src/
+│       │   ├── rbac/                          # Multi-tenant ReBAC graph & Cedar engine
+│       │   ├── auth/                          # WebAuthn passkeys, TOTP & adaptive risk
+│       │   ├── zerotrust/                     # SPIFFE mTLS, Redis Bloom filter revocation
+│       │   ├── privacy/                       # NIST FF1 FPE encryption & log/prompt scrubber
+│       │   ├── compliance/                    # KMS envelope encryption & WORM egress
+│       │   ├── injection.rs                   # Automated plan injection engine
+│       │   └── linter.rs                      # Security policy and RLS linter
+│       └── tests/                             # Security mesh integration suites
 ├── .nb/context/
 │   ├── contracts/
 │   │   ├── security_tenant_profile_contract.json  # Multi-tenant isolation configuration schema
@@ -119,18 +129,6 @@ graph TD
 │           ├── security_mesh_continuous_audit.yaml   # Continuous security verification workflow
 │           └── pii_leakage_scan_workflow.yaml        # Automated log and prompt PII audit flow
 ├── workplace/
-│   ├── modules/
-│   │   └── mod_security_core/                 # [Rust] Core authentication, ReBAC, FPE, mTLS
-│   │       ├── src/
-│   │       │   ├── rbac/                      # Multi-tenant ReBAC graph & Cedar engine
-│   │       │   ├── auth/                      # WebAuthn passkeys, TOTP & adaptive risk
-│   │       │   ├── zerotrust/                 # SPIFFE mTLS, Redis Bloom filter revocation
-│   │       │   ├── privacy/                   # NIST FF1 FPE encryption & log/prompt scrubber
-│   │       │   └── compliance/                # KMS envelope encryption & WORM egress
-│   ├── shared/
-│   │   └── tools/
-│   │       ├── inject_security_mesh.py        # Automated injection tool for existing plans
-│   │       └── lint_security_parity.py        # Security policy and RLS linter
 │   └── docs/                                  # Living security documentation & architecture
 └── user/
     ├── inputs/                                # Tenant configurations, IdP metadata (SAML/OIDC)
@@ -185,9 +183,9 @@ graph TD
 
 To inject this generic security mesh into any existing domain plan:
 ```bash
-python workplace/shared/tools/inject_security_mesh.py .nb/plan/quantlib-financial-app
+./percipience security inject .nb/plan/quantlib-financial-app
 ```
 And seal the layered state into the Percipience Merkle ledger:
 ```bash
-./.nb/bin/percipience layer apply --plan .nb/plan/master/security-mesh/concise.md
+./percipience layer apply --plan .nb/plan/master/security-mesh/concise.md
 ```

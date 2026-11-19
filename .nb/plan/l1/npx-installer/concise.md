@@ -22,11 +22,11 @@ This plan defines the **NPX Instant Execution and Bootstrapping Subsystem** for 
 graph TD
   Developer["Developer / CI Runner"] -->|npx @neutronbinary/percipience init| NpxRunner["npx / Node.js Engine (>=18.0.0)"]
   NpxRunner --> Detect["Environment & Platform Detection"]
-  Detect --> BinaryResolve{"Native Binary Available?"}
-  BinaryResolve -->|Yes (darwin/linux/win)| ExecNative["Execute Prebuilt Binary (.nb/bin/percipience)"]
-  BinaryResolve -->|No (Fallback)| ExecPython["Execute Python Bridge (.nb/core/ percipience)"]
+  Detect --> BinaryResolve{"Native Binary Cached / Installed?"}
+  BinaryResolve -->|Yes (darwin/linux/win)| ExecNative["Execute Native Static Binary (./percipience)"]
+  BinaryResolve -->|No| FetchRelease["Fetch Precompiled Binary from CDN / GitHub Releases"]
+  FetchRelease --> ExecNative
   ExecNative --> Scaffold["Scaffold Quad-Space (.nb/, workplace/, user/)"]
-  ExecPython --> Scaffold
   Scaffold --> ProvisionMcp["Provision .claude/mcp.json & settings.json"]
   Scaffold --> SealGenesis["Seal Genesis Merkle Block (#0)"]
   Scaffold --> FastPath["Install Fast-Path Script to package.json"]
@@ -70,9 +70,9 @@ graph TD
 ### 1.2. CLI Entry Point (`bin/percipience-cli.js`)
 - **Node.js Wrapper**: Inspects host architecture (`process.arch`) and platform (`process.platform`).
 - **Binary Resolution Order**:
-  1. Local repository binary: `.nb/bin/percipience` (if initialized).
+  1. Local repository binary: `./percipience` or `.nb/bin/percipience` (if initialized).
   2. Platform optional dependency binary in `node_modules/@neutronbinary/percipience-<os>-<arch>/bin/percipience`.
-  3. Python fallback bridge invoking system Python (`python3 .nb/core/...`).
+  3. Direct on-demand authenticated CDN/Release fetch to `~/.percipience/cache/` with SHA-256 integrity verification.
 - **Execution Pipeline**: Forwards command line arguments, handles POSIX exit codes (`0` success, `1` general error, `2` security/gate failure), and pipes `stdio`.
 
 ---

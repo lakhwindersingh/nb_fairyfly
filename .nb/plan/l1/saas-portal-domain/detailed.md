@@ -78,8 +78,9 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │       └── workflows/
 │           ├── saas_portal_delivery_flow.yaml          # Onboarding -> Billing -> UI Dashboard -> Gateway -> Verifier
 │           └── commercial_packaging_provisioning_flow.yaml # Spec Retrieval -> Tier Filtering -> Sealing -> Provisioning
-├── .nb/core/
-│   └── commercial_packager_provisioner.py  # Tier packaging, license minting, RBAC and multi-IDE provisioning
+├── crates/
+│   ├── percipience-server/                        # Rust Axum & Tokio web/API server, Connect-RPC & telemetry bus
+│   └── percipience-packager/                      # Multi-tier binary compiler, Ed25519 minter & IDE provisioner
 ├── workplace/
 │   ├── docs/
 │   │   ├── saas_portal_architecture.md            # System C4 component topologies & module interfaces (Mermaid)
@@ -87,13 +88,11 @@ This document is a **Layerable Domain-Specific Context Engineering Plan** design
 │   │   ├── saas_portal_data_flow.md               # Topological data flow & contract exchange DAGs (Mermaid)
 │   │   ├── saas_portal_entity_relation.md         # Entity-relationship & state transition models (Mermaid)
 │   │   └── saas_portal_contracts_registry.md      # Machine-readable contract registry & artifact handoff matrix
-│   ├── portal/                                    # Modular Percipience SaaS Portal & API Gateway
-│   │   ├── server.py                              # Lean orchestrator (Uvicorn ASGI app & native HTTPServer)
-│   │   ├── core/                                  # Runtime singletons (state.py), session store & ASGI adapter
+│   ├── portal/                                    # Modular Percipience SaaS Portal & Static Assets (rust-embed)
+│   │   ├── src/                                   # Frontend web application (Next.js 14 / React)
 │   │   ├── content/                               # Centralized JSON content manager (tiers, SLAs, metadata)
-│   │   ├── templates/                             # Modular HTML templates & TemplateRenderer (pages, header, base)
-│   │   ├── static/                                # Externalized CSS (portal.css) and JS (head_nav.js, portal_app.js)
-│   │   └── routes/                                # Modular API route handlers (/api/*)
+│   │   ├── templates/                             # Modular HTML templates & UI views
+│   │   └── static/                                # Externalized CSS (portal.css) and JS (head_nav.js, portal_app.js)
 │   └── modules/
 │       ├── mod_corp_site/                         # Public marketing site, MDX docs, AST ROI calculator
 │       ├── mod_saas_portal/                       # Tenant customer portal, RBAC, commercial provisioner UI
@@ -187,7 +186,7 @@ properties:
 - **Role**: Commercial Packaging, Multi-Tier Asset Filtering, Cryptographic License Minting & IDE Provisioner
 - **Model Tier**: `Tier_A` (`claude-3-7-sonnet / pro`, `gemini-2.0-pro`, `gpt-4o`)
 - **Sandboxed Worktree**: `.nb/workspaces/wt_commercial_01`
-- **Module Scope**: `.nb/core/commercial_packager_provisioner.py`, `workplace/modules/mod_saas_portal/`
+- **Module Scope**: `crates/percipience-packager/`, `workplace/modules/mod_saas_portal/`
 
 ### 3.3. `.nb/agentic/custom/agents/agent_billing_integration_engineer.yaml`
 - **Role**: Stripe/Paddle Subscriptions, Usage-Based Metering & Rev-Share Ledger Engineer
@@ -210,16 +209,16 @@ sequenceDiagram
   autonumber
   participant Cust as Enterprise Customer
   participant Next as SaaS Portal (Next.js 14 App Router)
-  participant Gateway as API Gateway (FastAPI / Express)
-  participant Packager as CommercialPackagerProvisioner
-  participant Core as Percipience Core Daemon (.nb/bin/percipience)
+  participant Gateway as API Gateway (crates/percipience-server Axum)
+  participant Packager as crates/percipience-packager
+  participant Core as Percipience Rust Runtime (./percipience)
   participant Stripe as Stripe Billing Gateway
   participant Ledger as Merkle Accounting Chain (.nb/context/ledger)
 
   Note over Cust,Next: 1. Customer Onboarding & BYOR Workspace Provisioning
   Cust->>Next: Register Organization & link GitHub Enterprise repo
   Next->>Gateway: POST /api/v1/onboard (onboarding_contract.yaml)
-  Gateway->>Core: Execute: ./bin/percipience byor init --repo-url ...
+  Gateway->>Core: Execute: ./percipience byor init --repo-url ...
   Core->>Ledger: Commit Genesis Block RP_TENANT_INIT_001
   Gateway-->>Next: Return Workspace Ready + Telemetry Stream URL
 
@@ -272,7 +271,7 @@ sequenceDiagram
 
 ## 6. Commercial Packaging & SaaS Control Plane Endpoints
 
-### 6.1. API Gateway Endpoints (`workplace/portal/server.py` & `workplace/portal/routes/`)
+### 6.1. API Gateway Endpoints (`crates/percipience-server` Axum / Connect-RPC)
 - `GET /api/commercial/tiers`: Returns specifications, pricing, seats, worktrees, PR audits, and allowed engine matrix for all 4 commercial tiers.
 - `GET /api/commercial/entitlements?tenant_id={id}`: Audits active tenant entitlements and quota utilization.
 - `GET /api/commercial/packages`: Lists compiled commercial bundles and cryptographic SHA-256 hashes in `.nb/bundles/`.
@@ -283,13 +282,13 @@ sequenceDiagram
 ### 6.2. Consuming the Commercial Engine in CLI
 ```bash
 # Package a commercial tier
-./bin/percipience commercial package --tier enterprise --tenant tenant_acme_fintech
+./percipience commercial package --tier enterprise --tenant tenant_acme_fintech
 
 # Provision multi-IDE targets
-./bin/percipience commercial provision --tenant tenant_acme_fintech --tier enterprise --target all
+./percipience commercial provision --tenant tenant_acme_fintech --tier enterprise --target all
 
 # Audit billing entitlements
-./bin/percipience commercial audit-entitlements --tenant tenant_acme_fintech
+./percipience commercial audit-entitlements --tenant tenant_acme_fintech
 ```
 
 ## 7. Visual Delivery Pipelines & Stage Handled Contracts Hub
@@ -301,6 +300,6 @@ sequenceDiagram
   - **Stage Handled Contracts Registry**: Full-width data table detailing stage ID, executor, handled contracts, schema type, gate action, and description.
   - **Live Schema Inspector**: Modal/drawer loading contract schema content directly from `/api/observability/contract-detail`.
 
-### 7.2. Backend Endpoints (`request_handler.py`)
+### 7.2. Backend Endpoints (`crates/percipience-server`)
 - `GET /api/observability/workflows`: Dynamically parses and serves all 7 delivery workflows with stages and `handled_contracts`.
 - `GET /api/observability/contract-detail?path={path}`: Safely retrieves and returns contract schema contents from `.nb/context/contracts/`.

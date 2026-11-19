@@ -49,9 +49,9 @@ autonomous_execution:
   finops_metering: true
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module test_governance
-  pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_master_test_plan.py workplace/tests/test_vulnerability_suite.py -v
-  handover: percipience handoff issue --from agent_test_governance_architect --to agent_red_team_sentinel
+  post_execution: cargo test --workspace
+  handover: percipience handoff issue --from agent_test_governance_architect --to
+    agent_red_team_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
   post_merge_seal: percipience merkle seal --worm-egress
@@ -72,28 +72,28 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: dec323c989dbd383260a6fe664af94d57f89eca784265c1f7277c9e6113df161
-    line_count: 112
+    last_modified: '2026-11-19'
+    content_hash: 5c20b9f82e1f294491c296e8008569eb22e004d5ca8a1fa91e65c8f00d156a40
+    line_count: 99
     primary_purpose: High-density testing specification for rapid AI context ingestion
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 922223063ebba4f497e1b5dc176c9db041f318ef0d8efef427f454b7bd9e9489
-    line_count: 484
+    last_modified: '2026-11-19'
+    content_hash: 60b05accb0b5d65da4fb2ea4a2eb7fb96f390dbf7fa75c0ba8071ae647aaeea0
+    line_count: 487
     primary_purpose: Comprehensive 360-degree test plan covering all 18 subsystems
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: a52bec9719984f7443f7fbbdadc342ce281da8eb6af6c7e321ba84ea9420d996
-    line_count: 105
+    last_modified: '2026-11-19'
+    content_hash: a4bafe9cd98a97dfef7329e3fd3b66d4aaaf771112cbdd0bd535de23f439d178
+    line_count: 106
     primary_purpose: Space overview, test pyramid, and execution guide
   test_runner:
     path: test_runner.py
     version: 1.0.0
-    last_modified: '2026-11-17'
+    last_modified: '2026-11-19'
     content_hash: fe087d22d52e4e61a89ca1569014f81fdea30f2204ed5891b5f4e423c88c1306
     line_count: 318
     primary_purpose: Automatable AI test orchestrator, reporting engine, and failure

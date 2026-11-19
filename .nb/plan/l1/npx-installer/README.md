@@ -24,5 +24,5 @@ This plan defines the architectural, packaging, and execution specifications for
 - **Zero-Install Ephemeral Execution**: Execute gatekeeper and audit commands in CI/CD without global package installation.
 - **Single-Command Quad-Space Scaffolding**: `npx @neutronbinary/percipience init` bootstraps `.nb/`, `workplace/`, and `user/` in $<3$ seconds.
 - **Automated Claude / MCP Provisioning**: Automatically writes and synchronizes `.claude/mcp.json` and `.claude/settings.json`.
-- **Platform Binary & Fallback Resolution**: Multi-platform prebuilt binaries with graceful fallback to Python AST engines.
+- **Platform Native Binary Resolution**: Multi-platform prebuilt Rust binaries with SHA-256 integrity verification and automated cache management.
 - **Enterprise Air-Gapped & Proxy Support**: Compatible with private npm registries (Artifactory, Nexus, GitHub Packages) and corporate proxies.

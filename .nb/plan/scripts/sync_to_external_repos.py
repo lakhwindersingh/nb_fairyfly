@@ -25,6 +25,8 @@ TARGET_REPOS = [
     Path("/Users/lakhwinder/PycharmProjects/nb_beehive"),
     Path("/Users/lakhwinder/PycharmProjects/nb_waspnest"),
     Path("/Users/lakhwinder/PycharmProjects/nb_spanishfly"),
+    Path("/Users/lakhwinder/RustroverProjects/nb_cicada"),
+    Path("/Users/lakhwinder/RustroverProjects/nb_antwalk"),
 ]
 
 # Standard master specs matching Schema v3.0
@@ -417,15 +419,20 @@ def sync_core_framework(target_repo: Path):
 
 def ensure_v3_manifest_fields(manifest: Dict[str, Any], plan_dir: Path, plan_root: Path) -> Dict[str, Any]:
     plan_meta = manifest.get("plan") if isinstance(manifest.get("plan"), dict) else {}
-    plan_id = manifest.get("plan_id") or plan_meta.get("id") or plan_dir.name
-    plan_name = manifest.get("plan_name") or plan_meta.get("name") or plan_dir.name.replace("-", " ").title()
+    plan_id = manifest.get("plan_id") or plan_meta.get("id") or manifest.get("manifest_id") or plan_dir.name
+    plan_name = manifest.get("plan_name") or plan_meta.get("name") or manifest.get("name") or plan_dir.name.replace("-", " ").title()
     version = manifest.get("version") or plan_meta.get("version") or "1.0.0"
 
     # Determine layer
     layer = manifest.get("layer") or plan_meta.get("layer")
     if not layer:
         rel = plan_dir.relative_to(plan_root)
-        layer = rel.parts[0].lower() if len(rel.parts) > 1 else "l1"
+        if len(rel.parts) > 1:
+            layer = rel.parts[0].lower()
+        elif plan_id == "domain_personal_os" or "personal_os" in plan_dir.name:
+            layer = "domain"
+        else:
+            layer = "l1"
     else:
         layer = str(layer).lower()
 
@@ -471,12 +478,22 @@ def ensure_v3_manifest_fields(manifest: Dict[str, Any], plan_dir: Path, plan_roo
     # Dependencies
     deps = manifest.setdefault("dependencies", {})
     if isinstance(deps, list):
-        manifest["dependencies"] = {"requires": deps, "enables": []}
+        clean_reqs = [r.split("(")[0].strip() if isinstance(r, str) else str(r) for r in deps]
+        manifest["dependencies"] = {"requires": clean_reqs, "enables": []}
     elif isinstance(deps, dict):
+        if "upstream" in deps and "requires" not in deps:
+            deps["requires"] = [r.split("(")[0].strip() if isinstance(r, str) else str(r) for r in deps["upstream"]]
+        elif "requires" in deps:
+            deps["requires"] = [r.split("(")[0].strip() if isinstance(r, str) else str(r) for r in deps["requires"]]
         deps.setdefault("requires", [])
         deps.setdefault("enables", [])
     else:
         manifest["dependencies"] = {"requires": [], "enables": []}
+
+    parent = manifest.get("parent_plan")
+    if parent and not manifest["dependencies"]["requires"]:
+        p_clean = parent.split("(")[0].strip()
+        manifest["dependencies"]["requires"].append(p_clean)
 
     # Key Capabilities
     caps = manifest.setdefault("key_capabilities", [])

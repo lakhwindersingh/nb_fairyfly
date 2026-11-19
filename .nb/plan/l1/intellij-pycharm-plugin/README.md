@@ -28,7 +28,7 @@ This domain plan specifies the architecture and implementation for the JetBrains
 
 ## Success Criteria
 
-- 100% passing tests in `workplace/tests/test_ide_plugins_space.py`.
+- 100% passing tests via `cargo test -p percipience-lsp` and Gradle plugin test suites.
 - Non-blocking EDT operations across all PSI and CLI actions.
 - Automatic provisioning of `.claude/mcp.json` and `.claude/settings.json` in every bootstrapped workspace.
 - Zero-drift Merkle ledger synchronization with IDE ToolWindow.

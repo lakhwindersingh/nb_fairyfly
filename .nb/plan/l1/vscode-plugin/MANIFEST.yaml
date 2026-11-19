@@ -49,7 +49,7 @@ autonomous_execution:
 lifecycle_hooks:
   pre_spawn: percipience worktree lease --module l1_vscode_extension
   pre_execution: percipience check --ast-prune --schema-lint
-  post_execution: pytest workplace/tests/test_ide_plugins_space.py -v
+  post_execution: cargo test -p percipience-lsp
   handover: percipience handoff issue --from agent_vscode_lsp_architect --to agent_qa_sentinel
   pre_merge_gate: percipience gate
   self_healing: percipience heal --max-attempts 3
@@ -71,22 +71,22 @@ file_versions:
   concise:
     path: concise.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 2fbd41358615b6e4d0213aac5a601eb8c367ac7b1e9900c86a6ad692450eb411
+    last_modified: '2026-11-19'
+    content_hash: 4370beb48a098866b5c69dbbe3ef6edd73fb21ab31a987f645b84069650b6d00
     line_count: 92
     primary_purpose: Complete specification for agentic context
   detailed:
     path: detailed.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: 69b11cea8b76979aa46fa24b5bdb30a65de53fb3215eb14e4fd51689797b8881
-    line_count: 340
+    last_modified: '2026-11-19'
+    content_hash: f41a812b33f018de73fda5a92de4a3f3444353df976fb83d428b57964b7b0765
+    line_count: 339
     primary_purpose: Extended implementation guide with LSP 3.17 and Webview architecture
   readme:
     path: README.md
     version: 1.0.0
-    last_modified: '2026-11-17'
-    content_hash: b0a8877f08e46135c4bfef9b921b9acd645292562d2d35c37b77c57db0ce4cd4
+    last_modified: '2026-11-19'
+    content_hash: 11bd6821c5138f2e1d34b1f726d63840bf63c6ec73ce70ba45233fac4d689b49
     line_count: 31
     primary_purpose: Quick reference and navigation
 implementation_phases:

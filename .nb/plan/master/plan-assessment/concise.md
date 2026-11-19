@@ -67,9 +67,24 @@ The plan operates across six foundational pillars:
 
 ```
 .
-├── pyproject.toml                          # [uv Project Spec] Z3 Solver, SymPy, NumPy, SciPy, PyYAML, PyTest
-├── uv.lock                                 # [uv Lockfile] Deterministic cryptographic package graph
-├── .venv/                                  # [uv Hermetic Venv] Isolated virtual environment (Python >= 3.11)
+├── Cargo.toml                              # [Cargo Workspace Spec] petgraph, serde, serde_yaml, criterion
+├── Cargo.lock                              # Deterministic cryptographic package graph
+├── crates/
+│   ├── percipience-core/
+│   │   ├── src/
+│   │   │   └── assessor/
+│   │   │       ├── mod.rs                  # Assessor engine namespace & registry
+│   │   │       ├── plan_parser.rs          # Plan AST extractor, frontmatter parser & contract validator
+│   │   │       ├── logic_auditor.rs        # State reachability, DAG acyclicity & SAT invariant verifier
+│   │   │       ├── mathematical_auditor.rs # Lyapunov stability, spectral norm & asymptotic complexity auditor
+│   │   │       ├── architectural_profiler.rs # RAM/VRAM envelope, memory bandwidth & latency budget analyzer
+│   │   │       ├── financial_engine.rs     # FLOPs calculator, TCO modeler, NPV/IRR/ROI financial engine
+│   │   │       ├── benefits_analyzer.rs    # Tangible/intangible benefit profiler & sensitivity modeler
+│   │   │       └── viability_report_generator.rs # Synthesizes 360-degree viability report & audit certificates
+│   │   └── tests/
+│   │       └── test_plan_assessment.rs     # Full assessment pipeline run against live domain plans
+│   └── percipience-cli/
+│       └── src/commands/plan_audit.rs      # CLI utility to evaluate any plan: ./percipience plan audit <plan_path>
 ├── .nb/context/
 │   ├── contracts/
 │   │   ├── plan_viability_contract.json      # Universal schema for plan viability scoring & audit dimensions
@@ -97,33 +112,11 @@ The plan operates across six foundational pillars:
 ├── workplace/
 │   ├── config/
 │   │   └── plan_assessor_config.yaml         # Cost rates ($/GPU-hr), risk discount rates, and target benchmarks
-│   ├── docs/
-│   │   ├── plan_viability_methodology.md     # Mathematical foundations of automated multi-dimensional auditing
-│   │   ├── compute_economics_framework.md    # FLOPs-to-USD conversion formulas, instance tiers, and TCO equations
-│   │   ├── real_world_application_matrix.md  # Detailed vertical mapping, market sizing & competitive moat analysis
-│   │   └── benefits_realization_playbook.md  # Stage-by-stage operationalization, governance & KPI realization guides
-│   ├── modules/
-│   │   └── mod_plan_assessor/
-│   │       ├── src/
-│   │       │   ├── __init__.py               # Assessor engine namespace & registry
-│   │       │   ├── plan_parser.py            # Plan AST extractor, frontmatter parser & contract validator
-│   │       │   ├── logic_auditor.py          # State reachability, DAG acyclicity & SAT invariant verifier
-│   │       │   ├── mathematical_auditor.py   # Lyapunov stability, spectral norm & asymptotic complexity auditor
-│   │       │   ├── architectural_profiler.py # RAM/VRAM envelope, memory bandwidth & latency budget analyzer
-│   │       │   ├── financial_engine.py       # FLOPs calculator, TCO modeler, NPV/IRR/ROI financial engine
-│   │       │   ├── benefits_analyzer.py      # Tangible/intangible benefit profiler & sensitivity modeler
-│   │       │   └── viability_report_generator.py # Synthesizes 360-degree viability report & audit certificates
-│   │       └── tests/
-│   │           ├── test_plan_parser.py       # Validates parsing across all 8 repository domain plans
-│   │           ├── test_logic_auditor.py     # Tests SAT solver, deadlock detection & invariant verification
-│   │           ├── test_mathematical_auditor.py # Tests spectral bounds, Lyapunov proof checks & complexity derivation
-│   │           ├── test_financial_engine.py  # Tests FLOPs-to-USD calculations, NPV/IRR and sensitivity tables
-│   │           ├── test_benefits_analyzer.py # Tests tangible/intangible benefit scoring & real-world mapping
-│   │           └── test_end_to_end_assessor.py # Full assessment pipeline run against live domain plans
-│   └── templates/
-│       └── bridge/
-│           ├── plan_assessment_runner.py     # CLI utility to evaluate any plan: ./bin/percipience plan audit <plan_path>
-│           └── viability_benchmark_suite.py  # Comparative benchmark suite comparing multiple architecture candidates
+│   └── docs/
+│       ├── plan_viability_methodology.md     # Mathematical foundations of automated multi-dimensional auditing
+│       ├── compute_economics_framework.md    # FLOPs-to-USD conversion formulas, instance tiers, and TCO equations
+│       ├── real_world_application_matrix.md  # Detailed vertical mapping, market sizing & competitive moat analysis
+│       └── benefits_realization_playbook.md  # Stage-by-stage operationalization, governance & KPI realization guides
 └── user/
     ├── hitl/
     │   └── unviable_plan_quarantine.md       # Quarantined plans failing viability thresholds (Score < 75.0%)
@@ -228,7 +221,7 @@ graph TD
     PlanDoc["Target Plan Document<br/>(Markdown / AST)"]
     ContractSpec["JSON Wire Contracts<br/>(.nb/context/contracts/)"]
     RulesSpec["Markdown Rules & Invariants<br/>(.nb/context/rules/)"]
-    PlanParser["plan_parser.py:<br/>AST & Symbol Extractor"]
+    PlanParser["plan_parser.rs:<br/>AST & Symbol Extractor"]
 
     PlanDoc --> PlanParser
     ContractSpec --> PlanParser
@@ -236,9 +229,9 @@ graph TD
   end
 
   subgraph FormalAudit["2. Formal Logical & Mathematical Audit"]
-    LogicEngine["logic_auditor.py:<br/>Z3 SAT Solver & DAG Reachability"]
-    MathEngine["mathematical_auditor.py:<br/>Lyapunov & Spectral Stability"]
-    ArchProfiler["architectural_profiler.py:<br/>RAM / VRAM & Latency Envelope"]
+    LogicEngine["logic_auditor.rs:<br/>Z3 SAT Solver & DAG Reachability"]
+    MathEngine["mathematical_auditor.rs:<br/>Lyapunov & Spectral Stability"]
+    ArchProfiler["architectural_profiler.rs:<br/>RAM / VRAM & Latency Envelope"]
 
     PlanParser --> LogicEngine
     PlanParser --> MathEngine
@@ -247,7 +240,7 @@ graph TD
 
   subgraph EconomicModeling["3. Monetary & Cost-Benefit Modeling"]
     FlopsCalc["FLOPs Calculator:<br/>Pre-training, Deliberation & Mutation"]
-    FinancialEngine["financial_engine.py:<br/>CapEx/OpEx, TCO & Cash Flow"]
+    FinancialEngine["financial_engine.rs:<br/>CapEx/OpEx, TCO & Cash Flow"]
     DCFModel["DCF / NPV / IRR / ROI<br/>& Payback Analysis"]
 
     ArchProfiler --> FlopsCalc
@@ -256,7 +249,7 @@ graph TD
   end
 
   subgraph ViabilitySynthesis["4. Multi-Dimensional Viability Synthesis"]
-    BenefitsAnalyzer["benefits_analyzer.py:<br/>Tangible / Intangible Profiling"]
+    BenefitsAnalyzer["benefits_analyzer.rs:<br/>Tangible / Intangible Profiling"]
     ViabilityScore["Viability Scorer:<br/>Overall Score S in [0, 100]"]
     ViabilityCheck{"Is Overall Score >= 75.0% AND Critical Gates Pass?"}
 
@@ -457,7 +450,7 @@ model: claude-3-7-sonnet
 model_tier: tier_a
 role: FLOPs-to-Cost Modeling, TCO Projections, Discounted Cash Flow (DCF), NPV, IRR & Payback Analysis
 sandboxed_worktree: .workspaces/wt_financial_roi_01
-module_scope: workplace/modules/mod_plan_assessor/src/financial_engine.py
+module_scope: crates/percipience-core/src/assessor/financial_engine.rs
 system_prompt: |
   You are the Compute Economics & Financial ROI Specialist.
   Your responsibility is to establish deep, quantitative financial foundations for proposed architectures:
@@ -662,8 +655,8 @@ graph LR
   - Machine-readable JSON contract compliance with `plan_viability_contract.json`.
 
 ### Milestone 5: End-to-End Percipience CLI Integration & Testbench
-- Implement `plan_assessment_runner.py` and connect to `./bin/percipience plan audit`.
+- Implement plan audit subcommand in `crates/percipience-cli/src/commands/plan_audit.rs` and connect to `./percipience plan audit`.
 - Audit all existing repository domain plans to establish baseline viability scorecards.
 - **Concrete Success Metrics**:
-  - $100\%$ pass rate across automated pytest suite `workplace/modules/mod_plan_assessor/tests/`.
+  - $100\%$ pass rate across automated cargo test suite `cargo test -p percipience-core --test test_plan_assessment`.
   - Cryptographic state block committed to `context_ledger.yaml`.

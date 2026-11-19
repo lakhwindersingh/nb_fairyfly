@@ -143,31 +143,27 @@ graph TD
 
 ---
 
-## 3. Core Engine Architecture
+## 3. Core Engine Architecture (Rust Native Workspace)
+
+Percipience is implemented as a high-performance, single static binary compiled with Rust (`./percipience`), backed by a modular Cargo workspace:
 
 ```
-.nb/
-├── bin/percipience                       # Sole canonical executable gatekeeper CLI
-├── config/
-│   ├── billing_plans.yaml                # Plan entitlement tiers
-│   ├── token_compression_rules.yaml      # AST pruning policies
-│   └── byor_config.yaml                  # Enterprise VCS adapter settings
-├── context/
-│   ├── contracts/                        # Inter-module and plugin wire contracts
-│   ├── invariants/                       # Non-overridable platform invariants
-│   ├── rules/                            # Enterprise global policies
-│   └── ledger/                           # Merkle DAG state ledgers
-├── core/                                 # 38 Python platform engines
-│   ├── ast_optimizer.py                  # Tree-Sitter AST compression
-│   ├── merkle_engine.py                  # SHA-256 state chain
-│   ├── autonomous_cicd.py                # Self-healing CI/CD triad
-│   ├── agent_registry_synchronizer.py    # Registry / hook / multi-LLM settings sync
-│   ├── plan_module_orchestrator.py       # Sequential plan submodule orchestration
-│   ├── surgical_rollback.py              # Context poisoning isolation
-│   └── nbpack_envelope.py                # Encrypted envelope packaging
-└── agentic/
-    ├── custom/agents/                    # Custom agent manifests
-    └── custom/workflows/                 # Declarative YAML workflow DAGs
+percipience/
+├── Cargo.toml                            # Cargo Workspace root definition
+├── Cargo.lock                            # Deterministic pinned supply chain ledger
+├── crates/
+│   ├── percipience-core/                 # Merkle engine, AST pruning, DAG validation, crypto verification
+│   ├── percipience-cli/                  # Fast CLI interface (clap v4), rich terminal UI (ratatui)
+│   ├── percipience-orchestrator/         # Async DAG execution engine, lifecycle hooks, worktree isolation (tokio)
+│   ├── percipience-security/             # Zero-trust security mesh, KMS broker, capability sandbox, zeroize
+│   ├── percipience-lsp/                  # Language Server Protocol daemon for IntelliJ & VS Code (tower-lsp)
+│   ├── percipience-server/               # High-throughput asynchronous HTTP/gRPC server (axum, tower)
+│   └── percipience-packager/             # Multi-tier binary packager, asset embedding (rust-embed)
+├── target/release/percipience            # Compiled single static binary executable (< 15MB)
+└── .nb/
+    ├── bin/percipience                   # Canonical embedded binary runner
+    ├── context/                          # Wire contracts, invariants, policies, Merkle state ledgers
+    └── agentic/                          # Custom agent manifests & declarative workflow DAGs
 ```
 
 ---

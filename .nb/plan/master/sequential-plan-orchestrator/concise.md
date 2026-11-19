@@ -61,12 +61,12 @@ $$S_{SP} = 0.20 S_{\text{AST}} + 0.25 S_{\text{Contract}} + 0.20 S_{\text{Behavi
 
 | Vector | Metric Definition | Evaluation Engine | Hard Threshold |
 |---|---|---|---|
-| $S_{\text{AST}}$ | Normalized Tree-Sitter AST symbol overlap between spec and source | `ast_optimizer.py` | $\ge 0.90$ |
-| $S_{\text{Contract}}$ | JSON Schema Draft-07 / OpenAPI 3.1 contract strict validation | `contract_compatibility_checker.py` | $\equiv 1.00$ |
-| $S_{\text{Behavior}}$ | Bounded unit/integration test suite pass rate ($\frac{T_{\text{pass}}}{T_{\text{total}}}$) | `autonomous_cicd.py` | $\equiv 1.00$ |
-| $S_{\text{Handover}}$ | Cryptographic HMAC-SHA256 `HandoffToken` signature & state continuity | `handoff_validator.py` | $\equiv 1.00$ |
-| $S_{\text{Doc}}$ | AST-to-Mermaid Living Documentation sync score in `workplace/docs/` | `living_doc_engine.py` | $\ge 0.95$ |
-| $S_{\text{SupplyChain}}$ | CycloneDX/SPDX SBOM dependency vulnerability score ($1.00 - \text{CVE}_{\text{score}}$) | `dependency_cve_sentinel.py` | $\equiv 1.00$ |
+| $S_{\text{AST}}$ | Normalized Tree-Sitter AST symbol overlap between spec and source | `crates/percipience-core/src/ast_optimizer.rs` | $\ge 0.90$ |
+| $S_{\text{Contract}}$ | JSON Schema Draft-07 / OpenAPI 3.1 contract strict validation | `crates/percipience-core/src/contract_compatibility_checker.rs` | $\equiv 1.00$ |
+| $S_{\text{Behavior}}$ | Bounded unit/integration test suite pass rate ($\frac{T_{\text{pass}}}{T_{\text{total}}}$) | `crates/percipience-orchestrator/src/autonomous_cicd.rs` | $\equiv 1.00$ |
+| $S_{\text{Handover}}$ | Cryptographic HMAC-SHA256 `HandoffToken` signature & state continuity | `crates/percipience-core/src/handoff_validator.rs` | $\equiv 1.00$ |
+| $S_{\text{Doc}}$ | AST-to-Mermaid Living Documentation sync score in `workplace/docs/` | `crates/percipience-core/src/living_doc_engine.rs` | $\ge 0.95$ |
+| $S_{\text{SupplyChain}}$ | CycloneDX/SPDX SBOM dependency vulnerability score ($1.00 - \text{CVE}_{\text{score}}$) | `crates/percipience-security/src/dependency_cve_sentinel.rs` | $\equiv 1.00$ |
 
 ---
 

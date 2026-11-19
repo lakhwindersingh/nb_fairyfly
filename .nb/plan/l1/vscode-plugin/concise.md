@@ -80,7 +80,7 @@ graph TD
 ./.nb/bin/percipience layer pack --plan .nb/plan/l1/vscode-plugin/concise.md --output .nb/bundles/vscode_plugin_domain.nbpack
 
 # Package separate tier-specific VSIX extension bundles for permission verification
-python workplace/modules/mod_vscode_extension/package_extension.py --tier all
+./percipience package --target vscode --tier all
 
 # Apply layer bundle
 ./.nb/bin/percipience layer apply --pack .nb/bundles/vscode_plugin_domain.nbpack --in-memory-only
