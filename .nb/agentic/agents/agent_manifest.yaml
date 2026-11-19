@@ -1,0 +1,120 @@
+version: "1.0.0"
+schema_version: "3.0.0"
+manifest_id: "agent_capability_and_quota_manifest"
+last_updated: "2026-11-18T19:40:00Z"
+governing_standard: "ISO/IEC/IEEE 29119-3:2021"
+
+defaults:
+  token_budget_per_invocation: 18000
+  timeout_seconds: 120
+  max_retries: 3
+  fail_action: "QUARANTINE_AND_HALT"
+  sliding_window_tokens: 32000
+
+agents:
+  # Tier A: Frontier High-Reasoning Agents
+  agent_parent_framework_architect:
+    tier: "Tier_A"
+    models: ["claude-3-7-sonnet", "gemini-2.0-pro", "gpt-4o"]
+    token_budget: 28000
+    timeout_seconds: 300
+    capabilities: ["architecture_design", "contract_validation", "merkle_sealing"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  agent_sequential_plan_orchestrator:
+    tier: "Tier_A"
+    models: ["claude-3-7-sonnet", "gemini-2.0-pro", "gpt-4o"]
+    token_budget: 24000
+    timeout_seconds: 240
+    capabilities: ["dag_resolution", "wave_scheduling", "plan_orchestration"]
+    fail_action: "SURGICAL_ROLLBACK"
+
+  agent_registry_synchronizer:
+    tier: "Tier_A"
+    models: ["claude-3-7-sonnet", "gemini-2.0-flash"]
+    token_budget: 16000
+    timeout_seconds: 120
+    capabilities: ["registry_sync", "multi_llm_projection", "hook_binding_validation"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  agent_plan_viability_auditor:
+    tier: "Tier_A"
+    models: ["claude-3-7-sonnet", "deepseek-r1"]
+    token_budget: 20000
+    timeout_seconds: 180
+    capabilities: ["parity_audit", "drift_detection", "gate_enforcement"]
+    fail_action: "HALT_BEFORE_MERGE"
+
+  agent_generic_multitenant_security_mesh:
+    tier: "Tier_A"
+    models: ["claude-3-7-sonnet", "gpt-4o"]
+    token_budget: 20000
+    timeout_seconds: 180
+    capabilities: ["rbac_enforcement", "rls_brokerage", "zero_trust_mesh"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  # Tier B: High-Throughput Specialist Workers
+  agent_ast_optimizer:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash", "gpt-4o-mini"]
+    token_budget: 12000
+    timeout_seconds: 60
+    capabilities: ["ast_pruning", "token_compression", "skeleton_generation"]
+    fail_action: "RETRY_WITH_BACKOFF"
+
+  agent_dependency_cve_sentinel:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash"]
+    token_budget: 10000
+    timeout_seconds: 60
+    capabilities: ["sbom_audit", "cve_scanning", "lockfile_verification"]
+    fail_action: "HALT_ON_HIGH_CVE"
+
+  agent_commercial_packager_provisioner:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash"]
+    token_budget: 14000
+    timeout_seconds: 90
+    capabilities: ["tier_packaging", "license_minting", "ide_provisioning"]
+    fail_action: "ROLLBACK_STEP"
+
+  agent_jetbrains_plugin_architect:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash"]
+    token_budget: 16000
+    timeout_seconds: 120
+    capabilities: ["psi_ast_sync", "toolwindow_ui", "plugin_packaging"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  agent_vscode_extension_architect:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash"]
+    token_budget: 16000
+    timeout_seconds: 120
+    capabilities: ["lsp_sync", "webview_dag", "vsix_packaging"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  agent_test_governance_architect:
+    tier: "Tier_B"
+    models: ["claude-3-5-haiku", "gemini-2.0-flash"]
+    token_budget: 16000
+    timeout_seconds: 120
+    capabilities: ["test_execution", "vulnerability_red_team", "miri_verification"]
+    fail_action: "QUARANTINE_AND_HALT"
+
+  # Tier C: Deterministic Offline Invariant Engines
+  engine_merkle_ledger_daemon:
+    tier: "Tier_C"
+    models: ["local_deterministic"]
+    token_budget: 0
+    timeout_seconds: 10
+    capabilities: ["sha256_chaining", "block_sealing", "merkle_audit"]
+    fail_action: "CRITICAL_PANIC"
+
+  engine_tree_sitter_daemon:
+    tier: "Tier_C"
+    models: ["local_deterministic"]
+    token_budget: 0
+    timeout_seconds: 10
+    capabilities: ["fast_ast_parse", "cache_indexing"]
+    fail_action: "FALLBACK_TO_LOCAL"

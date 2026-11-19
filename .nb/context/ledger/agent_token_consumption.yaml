@@ -1,0 +1,36 @@
+version: "1.0.0"
+ledger_type: "agent_token_consumption"
+last_updated: "2026-11-19T00:50:00.000Z"
+total_actual_consumption:
+  total_events: 82380
+  total_consumed_tokens: 51805375
+  total_cost_usd: 155.4161
+consumption_records:
+  - record_id: "cons_rec_20261119_0001"
+    timestamp: "2026-11-19T00:09:12.626358+00:00"
+    agent_id: "agent_ast_pruner"
+    session_or_pr: "pr_gatekeeper"
+    model_id: "claude-3-5-sonnet-20241022"
+    tokens_consumed: 566
+    cost_usd: 0.001698
+  - record_id: "cons_rec_20261119_0002"
+    timestamp: "2026-11-19T00:09:12.626361+00:00"
+    agent_id: "agent_few_shot_retriever"
+    session_or_pr: "pr_gatekeeper"
+    model_id: "claude-3-5-sonnet-20241022"
+    tokens_consumed: 454
+    cost_usd: 0.001362
+  - record_id: "cons_rec_20261119_0003"
+    timestamp: "2026-11-19T00:09:12.626364+00:00"
+    agent_id: "agent_fleet"
+    session_or_pr: "pr_gatekeeper"
+    model_id: "claude-3-5-sonnet-20241022"
+    tokens_consumed: 571
+    cost_usd: 0.001713
+  - record_id: "cons_rec_20261119_0004"
+    timestamp: "2026-11-19T00:09:12.626367+00:00"
+    agent_id: "agent_prompt_benchmark"
+    session_or_pr: "pr_gatekeeper"
+    model_id: "claude-3-5-sonnet-20241022"
+    tokens_consumed: 340
+    cost_usd: 0.001020

@@ -1,0 +1,27 @@
+[package]
+name = "percipience-packager"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Multi-tier binary compiler, license minting, and cross-IDE packager"
+
+[features]
+default = ["tier_free"]
+tier_free = []
+tier_team = ["tier_free"]
+tier_business = ["tier_team"]
+tier_enterprise = ["tier_business"]
+
+[dependencies]
+percipience-core = { path = "../percipience-core" }
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

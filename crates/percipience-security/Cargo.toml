@@ -1,0 +1,23 @@
+[package]
+name = "percipience-security"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Zero-trust security mesh, HMAC handoff tokens, and guardrails"
+
+[dependencies]
+percipience-core = { path = "../percipience-core" }
+serde.workspace = true
+serde_json.workspace = true
+hmac.workspace = true
+sha2.workspace = true
+hex.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

@@ -1,3 +1,7 @@
+# Rust Build Outputs
+target/
+Cargo.lock
+
 # Operating System & IDE Artifacts
 .DS_Store
 Thumbs.db

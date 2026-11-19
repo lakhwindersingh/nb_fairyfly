@@ -1,0 +1,48 @@
+version: "3.0.0"
+sequence_id: "percipience_quad_space_bootstrap"
+description: "5-phase deterministic bootstrapping with idempotency guarantees for quad-space workspace"
+governance:
+  associated_cap: "CAP-12"
+  fail_action: "QUARANTINE_AND_HALT"
+
+phases:
+  - id: "phase_1_quad_space_init"
+    name: "Quad-Space Directory Initialization"
+    description: "Verifies and initializes the 4 canonical workspace roots (.nb/context, .nb/plan, .nb/agentic, workplace)"
+    idempotent: true
+    required_paths:
+      - ".nb/context"
+      - ".nb/plan"
+      - ".nb/agentic"
+      - "workplace"
+    action: "VERIFY_AND_CREATE"
+
+  - id: "phase_2_engine_init"
+    name: "Native Rust Engine Verification"
+    description: "Validates presence, version, and integrity of the compiled percipience binary"
+    idempotent: true
+    required_binaries:
+      - ".nb/bin/percipience"
+      - "percipience"
+    action: "VALIDATE_EXEC_PERMISSIONS"
+
+  - id: "phase_3_merkle_genesis"
+    name: "Merkle DAG Genesis Ledger Verification"
+    description: "Audits master context ledger continuity and cryptographically verifies genesis block"
+    idempotent: true
+    required_ledger: ".nb/context/ledger/context_ledger.yaml"
+    action: "VERIFY_CRYPTO_HASH_CHAIN"
+
+  - id: "phase_4_agent_registry"
+    name: "Agent Registry & Multi-LLM Materialization"
+    description: "Loads agent manifest, validates hook bindings, and projects LLM configuration profiles"
+    idempotent: true
+    manifest_path: ".nb/agentic/agents/agent_manifest.yaml"
+    action: "SYNC_HOOKS_AND_PROJECT_CONFIGS"
+
+  - id: "phase_5_cicd_validation"
+    name: "CI/CD & Git Hook Gate Enforcement"
+    description: "Ensures pre-commit hook is active and plan DAG dependency structure is acyclic"
+    idempotent: true
+    git_hook_path: ".nb/git_hooks/pre-commit.sh"
+    action: "ENFORCE_PRE_COMMIT_ACTIVE"

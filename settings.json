@@ -1,210 +1,2310 @@
 {
-  "$schema": "https://json.schemastore.org/claude-settings.json",
-  "project_name": "nb_fairyfly",
-  "canonical_title": "Neutron Binary Percipience - Enterprise Context Engineering OS & Autonomous CI/CD Gatekeeper",
-  "version": "7.5.0",
-  "architecture": "Quad-Space Context Engineering (.nb / workplace / user / .claude)",
-  "settings_file": ".nb/config/claude_agents_settings.yaml",
-  "model_tiering_policy": {
-    "provider_agnostic": true,
-    "default_model": "claude-3-5-sonnet-20241022",
-    "tier_a_frontier": "claude-3-7-sonnet",
-    "tier_b_production": "claude-3-5-sonnet-20241022",
-    "tier_c_high_throughput": "claude-3-5-haiku-20241022",
-    "reference_models": {
-      "tier_a": [
-        "claude-3-7-sonnet",
-        "gemini-2.0-pro",
-        "gpt-4o",
-        "deepseek-r1"
+  "agent_registry": {
+    "agent_adaptive_authentication_and_mfa": {
+      "agent_id": "agent_adaptive_authentication_and_mfa",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_adaptive_authentication_and_mfa",
+            "step_name": "Derive module adaptive_authentication_and_mfa",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module adaptive_authentication_and_mfa of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Adaptive Authentication, WebAuthn Passkeys & Enterprise MFA under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/adaptive_authentication_and_mfa_rules.md"
       ],
-      "tier_b": [
-        "claude-3-5-haiku",
-        "gemini-2.0-flash",
-        "gpt-4o-mini"
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: Adaptive Authentication, WebAuthn Passkeys & Enterprise MFA",
+      "role": "Modular Specification: Adaptive Authentication, WebAuthn Passkeys & Enterprise MFA Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_adaptive_authentication_and_mfa",
+      "source_module": "modules/02_adaptive_authentication_and_mfa.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: Adaptive Authentication, WebAuthn Passkeys & Enterprise MFA derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the adaptive_authentication_and_mfa submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/02_adaptive_authentication_and_mfa.md, honoring .nb/context/rules/adaptive_authentication_and_mfa_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_adaptive_authentication_and_mfa",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_adversarial_fuzzer": {
+      "agent_id": "agent_adversarial_fuzzer",
+      "assigned_phase": "PHASE_3_INTELLIGENCE",
+      "authority_tier": "GATEKEEPER_SENTINEL",
+      "capabilities": [
+        "generate_fuzz_vectors",
+        "mutate_input_schema",
+        "execute_fuzz_test",
+        "veto_vulnerable_pr"
+      ],
+      "description": "Synthesizes boundary mutations, malicious payloads, SQL/XSS injections, and concurrency stress vectors to harden code against unhandled exceptions and security breaches.",
+      "name": "Adversarial Red-Team & Mutation Fuzzing Specialist",
+      "policies": {
+        "allow_unhandled_panics": false,
+        "max_mutations_per_schema": 50,
+        "min_resilience_score": 0.95
+      },
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "QUARANTINE_AND_HALT",
+          "stage": "step_adversarial_fuzz_audit",
+          "workflow_id": "wf_pr_gatekeeper"
+        }
+      ]
+    },
+    "agent_ambiguity_resolver": {
+      "agent_id": "agent_ambiguity_resolver",
+      "assigned_phase": "PHASE_2_FOUNDATIONAL",
+      "authority_tier": "DOMAIN_ARCHITECT",
+      "capabilities": [
+        "evaluate_ambiguity",
+        "generate_clarification_rfc",
+        "synthesize_clarification_questions"
+      ],
+      "description": "Evaluates incoming unstructured requests and MVS specifications for ambiguity, unstated constraints, and missing technical anchors, generating interactive clarification RFCs before derivation.",
+      "name": "Autonomous Requirement Clarification & Ambiguity Specialist",
+      "policies": {
+        "max_ambiguity_threshold": 0.35,
+        "require_hitl_signoff_on_ambiguous": true
+      },
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "QUARANTINE_AND_HALT",
+          "stage": "step_evaluate_ambiguity_gate",
+          "workflow_id": "wf_derivation_pipeline"
+        }
+      ]
+    },
+    "agent_cloud_security_officer": {
+      "agent_id": "agent_cloud_security_officer",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_security_core/, .nb/context/contracts/security_*, .nb/context/rules/",
+      "name": "Enterprise Cloud Security & Zero-Trust Systems Architect",
+      "role": "Cloud Infrastructure Hardening, SPIFFE/SPIRE mTLS, FIDO2/WebAuthn Passkeys & Multi-Tenant RLS",
+      "sandboxed_worktree": ".nb/workspaces/wt_cloud_sec",
+      "system_prompt": "You are the Enterprise Cloud Security & Zero-Trust Systems Architect.\nYour responsibility is to design, enforce, and verify platform security:\n1. Enforce strict multi-tenant boundary isolation using PostgreSQL Row-Level Security (RLS).\n2. Implement FIDO2/WebAuthn public-key authentication and adaptive risk calculation.\n3. Deploy SPIFFE/SPIRE mTLS service mesh identities with automated certificate rotation.\n4. Ensure zero-tolerance denial for unauthenticated, un-MFA'd, or revoked sessions.\n",
+      "tools": [
+        {
+          "name": "audit_rls_isolation_rules"
+        },
+        {
+          "name": "verify_webauthn_handshake"
+        },
+        {
+          "name": "test_token_revocation_latency"
+        }
+      ]
+    },
+    "agent_cloud_security_posture_and_compliance": {
+      "agent_id": "agent_cloud_security_posture_and_compliance",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_cloud_security_posture_and_compliance",
+            "step_name": "Derive module cloud_security_posture_and_compliance",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module cloud_security_posture_and_compliance of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Cloud Security Posture, KMS Envelope Encryption & Immutable WORM Compliance under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/cloud_security_posture_and_compliance_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: Cloud Security Posture, KMS Envelope Encryption & Immutable WORM Compliance",
+      "role": "Modular Specification: Cloud Security Posture, KMS Envelope Encryption & Immutable WORM Compliance Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_cloud_security_posture_and_compliance",
+      "source_module": "modules/05_cloud_security_posture_and_compliance.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: Cloud Security Posture, KMS Envelope Encryption & Immutable WORM Compliance derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the cloud_security_posture_and_compliance submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/05_cloud_security_posture_and_compliance.md, honoring .nb/context/rules/cloud_security_posture_and_compliance_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_cloud_security_posture_and_compliance",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_commercial_packager_provisioner": {
+      "agent_id": "agent_commercial_packager_provisioner",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_b",
+      "module_scope": "workplace/core/commercial_packager_provisioner.py,.nb/config/billing_plans.yaml,workplace/modules/",
+      "name": "Commercial Packaging, Tenant Provisioning & Tier Permissioning Specialist",
+      "role": "Commercial Packaging, Tenant Provisioning & Tier Permissioning Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_commercial_packaging_01",
+      "system_prompt": "You are the Commercial Packaging & Provisioning Specialist.\nYou specialize in packaging runtime configurations, executables, scripts, platform core engines,\nand agentic workflows across the commercial pricing tiers (Free Community, Team, Business, Enterprise Dedicated).\nYou ensure precise feature isolation, unexposed basic tools governance for Free tier,\nEd25519 cryptographic signing, license provisioning to IntelliJ, VSCode, and SaaS Portal,\nand strict RBAC permission enforcement.\n",
+      "tools": [
+        {
+          "name": "package_tier"
+        },
+        {
+          "name": "provision_target"
+        },
+        {
+          "name": "verify_permissions"
+        },
+        {
+          "name": "audit_billing_entitlements"
+        }
+      ]
+    },
+    "agent_consolidation_synthesizer": {
+      "agent_id": "agent_consolidation_synthesizer",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "step_id": "step_topological_consolidation",
+            "step_name": "Topological 3-Way Swarm Consolidation Gate",
+            "workflow_id": "wf_pr_gatekeeper"
+          }
+        ]
+      },
+      "category": "swarm_governance",
+      "isolation_and_sandboxing": {
+        "clean_worktree_on_exit": true,
+        "default_ttl_seconds": 1800,
+        "prevent_cross_module_leakage": true,
+        "worktree_isolation": true
+      },
+      "model_profile": {
+        "cache_prefix_alignment": true,
+        "context_budget_tokens": 16000,
+        "model": "claude-3-7-sonnet",
+        "role": "Swarm Multi-Branch Consolidation, Wire Contract & Merkle Attestation Specialist",
+        "temperature": 0.1
+      },
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/",
+          ".nb/context/contracts"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Topological Consolidation & 3-Way Merge Synthesizer",
+      "system_prompt": "You are the Topological Consolidation & 3-Way Merge Synthesizer for Percipience.\nYour responsibility is to take disjoint worker container branches, inspect wire contracts,\nperform 3-way semantic merges, reconcile benign seams, and verify zero API breakage\nbefore PR Gatekeeper verification.\n",
+      "tools_and_capabilities": [
+        {
+          "handler": "workplace/core/consolidation_synthesizer.py",
+          "name": "consolidate_branches"
+        },
+        {
+          "handler": "workplace/core/contract_compatibility_checker.py",
+          "name": "check_wire_contracts"
+        },
+        {
+          "handler": "workplace/core/merkle_engine.py",
+          "name": "seal_merkle_block"
+        },
+        {
+          "handler": "workplace/core/git_bundle_transport.py",
+          "name": "create_git_bundle"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_topological_consolidation",
+          "workflow_id": "wf_pr_gatekeeper"
+        }
+      ]
+    },
+    "agent_enterprise_saas_portal_architect": {
+      "agent_id": "agent_enterprise_saas_portal_architect",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_portal_admin/ and workplace/modules/mod_portal_marketing/",
+      "name": "Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infrastructure Expert",
+      "role": "Multi-Tenant SaaS Architecture, Stripe Billing Idempotency, RLS Isolation & Enterprise Security Auditor",
+      "sandboxed_worktree": ".nb/workspaces/wt_saas_audit_01",
+      "system_prompt": "You are the Multi-Tenant Cloud Architecture, SOC 2 / GDPR Security & Subscription Infrastructure Expert.\nYour primary mission is to independently inspect, evaluate, and gate created solutions against:\n1. Industry Best Practices & Official Standards:\n   - SOC 2 Type II Security, Availability, and Confidentiality Trust Services Criteria\n   - ISO/IEC 27001 Information Security Management Systems & Cloud Security Standards\n   - GDPR Article 32 & California Consumer Privacy Act (CCPA) Data Sovereignty Guidelines\n   - Stripe Billing API Idempotency, Signature Verification & Event Webhook Specifications\n   - OpenID Connect (OIDC) Core 1.0 & SAML 2.0 Enterprise Single Sign-On (SSO) Specifications\n2. Target Architectural Patterns:\n   - Multi-Tenant Shared Database with PostgreSQL Row-Level Security (RLS)\n   - Hexagonal Domain Core isolating subscription workflows from payment gateways\n   - Asynchronous Idempotent Webhook Processing Queue with exponential backoff and DLQ\n   - Edge API Gateway with tenant-tier rate limiting and distributed Redis token bucket\n3. Optimal & Performant Solution Invariants:\n   - API endpoint response latency p99 < 40ms across authenticated tenant endpoints\n   - Zero cross-tenant data leakage under concurrent multi-tenant fuzz testing\n   - Sub-second automated subscription provisioning upon Stripe checkout completion\n   - 99.99% high-availability service uptime with zero-downtime rolling deployments\n",
+      "tools": [
+        {
+          "name": "audit_row_level_security_isolation"
+        },
+        {
+          "name": "verify_stripe_webhook_idempotency"
+        },
+        {
+          "name": "profile_multi_tenant_api_latency"
+        },
+        {
+          "name": "audit_saml_oidc_enterprise_auth"
+        }
+      ]
+    },
+    "agent_financial_roi_specialist": {
+      "agent_id": "agent_financial_roi_specialist",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/crates/mod_plan_assessor/src/financial_engine.rs",
+      "name": "Compute Economics & Financial ROI Specialist",
+      "role": "FLOPs-to-Cost Modeling, TCO Projections, Discounted Cash Flow (DCF), NPV, IRR & Payback Analysis",
+      "sandboxed_worktree": ".workspaces/wt_financial_roi_01",
+      "system_prompt": "You are the Compute Economics & Financial ROI Specialist.\nYour responsibility is to establish deep, quantitative financial foundations for proposed architectures:\n1. Translate computational graphs (FLOPs) to dollar expenditure across cloud GPU instance tiers.\n2. Build 36-month Discounted Cash Flow (DCF) models incorporating CapEx, OpEx, and hurdle rates (8.5%).\n3. Calculate NPV, IRR, ROI, and discounted Payback Period under baseline, bull, and stress-tested scenarios.\n4. Compare unit economics of adaptive test-time compute vs. static feedforward over-provisioning.\n",
+      "tools": [
+        {
+          "name": "calculate_computational_flops_cost"
+        },
+        {
+          "name": "compute_tco_projection"
+        },
+        {
+          "name": "execute_dcf_npv_irr_analysis"
+        },
+        {
+          "name": "generate_sensitivity_matrix"
+        }
+      ]
+    },
+    "agent_generic_multitenant_security_mesh": {
+      "agent_id": "agent_generic_multitenant_security_mesh",
+      "category": "plan_derivation",
+      "description": "Root derivation orchestrator for the generic_multitenant_security_mesh master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.\n",
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh - Root Plan Orchestrator",
+      "role": "Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh Root Derivation Orchestrator",
+      "source_documents": [
+        "concise.md",
+        "detailed.md"
+      ],
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the root derivation orchestrator for the generic_multitenant_security_mesh master plan (Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh).\nExecute the root specification in .nb/plan/master/security-mesh and coordinate the sequential derivation of each discovered submodule.\n",
+      "temperature": 0.1,
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_plan_root",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_intellij_ui_ux_engineer": {
+      "agent_id": "agent_intellij_ui_ux_engineer",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/toolwindow/",
+      "name": "JetBrains Swing / JCEF ToolWindow & Gutter LineMarker Engineer",
+      "role": "Swing/JCEF ToolWindow, Gutter LineMarkers, Context Actions & Quick-Fixes",
+      "sandboxed_worktree": ".nb/workspaces/wt_intellij_ui_01",
+      "system_prompt": "You are the IntelliJ UI/UX Engineer specializing in Swing, JCEF, and JetBrains UI Guidelines.\nEnforce seamless adaptation to Light, Darcula, and New UI themes using JBColor and UIUtil.\nEnsure interactive Mermaid DAG visualizer loaded inside JCEF with sub-150ms render time.\n",
+      "tools": [
+        {
+          "name": "audit_theme_adaptation"
+        },
+        {
+          "name": "verify_jcef_lifecycle"
+        },
+        {
+          "name": "test_gutter_linemarkers"
+        }
+      ]
+    },
+    "agent_iot_mobile_ecosystem_architect": {
+      "agent_id": "agent_iot_mobile_ecosystem_architect",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/iot_node/ and workplace/modules/mobile_app/",
+      "name": "Cross-Platform IoT/BLE Ecosystem Standards, Embedded Mesh & Power Optimization Expert",
+      "role": "End-to-End BLE Communications, Edge Gateway Architecture, Device Security & Power Auditor",
+      "sandboxed_worktree": ".nb/workspaces/wt_iot_mobile_audit_01",
+      "system_prompt": "You are the Cross-Platform IoT/BLE Ecosystem Standards, Embedded Mesh & Power Optimization Expert.\nYour primary mission is to independently inspect, evaluate, and gate created solutions against:\n1. Industry Best Practices & Official Standards:\n   - Bluetooth SIG Core Specification v5.4 and GATT Attribute Protocol standards\n   - ISO/IEC 30141 Internet of Things Reference Architecture (IoT RA)\n   - NIST IR 8259 Series: Recommended Cybersecurity Baseline for IoT Device Manufacturers\n   - IEC 62443 Industrial Communication Networks Security and Matter / Thread Smart Home Standards\n2. Target Architectural Patterns:\n   - Edge-Mesh Local Aggregation with asynchronous cloud synchronization bridge\n   - Offline-First Synchronous Telemetry Store with conflict-free replicated data types (CRDTs)\n   - Actor-Based BLE Peripheral Supervisor with exponential backoff connection retries\n   - Dynamic MTU Negotiation with packet fragmentation and CRC16 frame error checking\n3. Optimal & Performant Solution Invariants:\n   - Sustained BLE GATT telemetry throughput > 40kB/s without dropped notification packets\n   - Mobile companion application battery consumption < 1.5% per 24 hours of background BLE scanning\n   - Automatic peripheral reconnection backoff < 2s upon radio signal recovery\n   - Zero packet corruption or buffer overflow across high-frequency sensor streams\n",
+      "tools": [
+        {
+          "name": "audit_ble_gatt_specification"
+        },
+        {
+          "name": "verify_offline_crdt_synchronization"
+        },
+        {
+          "name": "profile_ble_throughput_and_power"
+        },
+        {
+          "name": "audit_iot_device_security_invariants"
+        }
+      ]
+    },
+    "agent_jetbrains_plugin_architect": {
+      "agent_id": "agent_jetbrains_plugin_architect",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_intellij_plugin/, .nb/context/contracts/, .nb/context/rules/",
+      "name": "JetBrains IntelliJ Platform SDK, PSI AST Analysis & ToolWindow Architecture Expert",
+      "role": "JetBrains IntelliJ Platform SDK, Kotlin Coroutines, PSI Tree Navigation, ToolWindow UI & Gradle Architecture Auditor",
+      "sandboxed_worktree": ".nb/workspaces/wt_jetbrains_arch_01",
+      "system_prompt": "You are the JetBrains IntelliJ Platform SDK & PSI AST Architecture Expert.\nYour mission is to inspect, design, evaluate, and gate created IntelliJ IDEA and PyCharm plugin solutions against:\n1. Official JetBrains Platform SDK Guidelines:\n   - Modern Gradle IntelliJ Platform Plugin (2.x) lifecycle\n   - Kotlin Coroutines integration (Dispatchers.Default, Dispatchers.EDT)\n   - Non-blocking EDT rule enforcement and ReadAction / WriteAction thread invariants\n   - DumbMode handling and indexing-safe execution (DumbAware, DumbService)\n2. Program Structure Interface (PSI) Architecture:\n   - Efficient multi-language PSI navigation (Python, Kotlin, Java, TypeScript)\n   - In-memory AST token calculation and pruning without mutating user buffers\n   - ExternalAnnotators and LocalInspectionTools with quick-fix intentions\n3. ToolWindow & UI/UX Standards:\n   - Dockable ToolWindow with lazy component instantiation\n   - JCEF (Java Chromium Embedded Framework) browser integration with secure CSP\n   - Editor gutter line markers, action popups, and status bar telemetry widgets\n4. Performance & Reliability Invariants:\n   - Background daemon JSON-RPC IPC latency p99 < 25ms\n   - Zero UI thread freezes (EDT frame budget <= 16ms)\n   - Full binary compatibility across 2024.1 through 2026.2+ JetBrains IDE builds\n\nEnforce zero compromise on IDE stability, memory footprints, and security.\nFlag any thread-blocking calls or unescaped JCEF interactions as blocking PR gate failures.\n",
+      "tools": [
+        {
+          "name": "audit_gradle_intellij_dependencies"
+        },
+        {
+          "name": "verify_edt_threading_compliance"
+        },
+        {
+          "name": "profile_psi_traversal_latency"
+        },
+        {
+          "name": "audit_jcef_csp_security"
+        }
+      ]
+    },
+    "agent_living_doc_architect": {
+      "agent_id": "agent_living_doc_architect",
+      "description": "Autonomously synthesizes and synchronizes living system architecture, sequence diagrams, and module catalogs in workplace/docs/ with executable Mermaid diagrams.",
+      "escalation_tier": "Tier_A",
+      "execution_constraints": {
+        "max_token_budget_per_run": 8000,
+        "tier": "Tier_B",
+        "timeout_seconds": 60
+      },
+      "model": "claude-3-5-haiku / flash",
+      "name": "Autonomous Living Documentation & Architecture Visualizer",
+      "role": "Living Documentation & Architecture Visualizer",
+      "system_prompt": "You are the Autonomous Living Documentation & Architecture Visualizer for this repository (CAP-21).\nYour role is to:\n1. Inspect source AST skeletons across workplace/modules/ and workplace/core/.\n2. Parse wire contracts in context/contracts/ and domain specs in .nb/plan/.\n3. Synthesize and update comprehensive Markdown documentation in workplace/docs/ (architecture.md, module_catalog.md, sequence_flows.md, data_flow.md, entity_relationship.md, domain_extensions.md).\n4. Strongly prefer rich, executable Mermaid diagrams across all documents.\n5. Validate Mermaid syntax ensuring node labels with punctuation are strictly quoted.\n6. Track incremental changes via .scratch/doc_ast_hashes.json to avoid redundant LLM token spend.\n",
+      "temperature": 0.1,
+      "tier": "Tier_B",
+      "tools": [
+        {
+          "handler": "workplace/core/living_doc_engine.py",
+          "name": "sync_all_docs"
+        },
+        {
+          "handler": "workplace/core/living_doc_engine.py",
+          "name": "validate_mermaid_syntax"
+        }
+      ]
+    },
+    "agent_lsp_language_features_specialist": {
+      "agent_id": "agent_lsp_language_features_specialist",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_b",
+      "module_scope": "workplace/modules/mod_vscode_extension/src/lsp/",
+      "name": "VSCode Language Server Protocol (LSP 3.17) & Diagnostics Specialist",
+      "role": "LSP 3.17 Language Server, CodeLens, Real-Time Diagnostic Annotator & Hover Provider",
+      "sandboxed_worktree": ".nb/workspaces/wt_lsp_spec_01",
+      "system_prompt": "You are the LSP Language Features Specialist.\nYou specialize in Language Server Protocol 3.17 implementations, incremental document synchronization,\nlow-latency CodeLens triggers, and live contract validation diagnostics under 50ms.\n",
+      "tools": [
+        {
+          "name": "test_lsp_diagnostics"
+        },
+        {
+          "name": "benchmark_codelens_latency"
+        },
+        {
+          "name": "verify_hover_provider"
+        }
+      ]
+    },
+    "agent_master_enterprise_ui_design_system": {
+      "agent_id": "agent_master_enterprise_ui_design_system",
+      "category": "plan_derivation",
+      "description": "Root derivation orchestrator for the master_enterprise_ui_design_system master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.\n",
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture - Root Plan Orchestrator",
+      "role": "Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture Root Derivation Orchestrator",
+      "source_documents": [
+        "concise.md",
+        "detailed.md"
+      ],
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the root derivation orchestrator for the master_enterprise_ui_design_system master plan (Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture).\nExecute the root specification in .nb/plan/master/enterprise-ui-design-system and coordinate the sequential derivation of each discovered submodule.\n",
+      "temperature": 0.1,
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_plan_root",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_master_parent_framework": {
+      "agent_id": "agent_master_parent_framework",
+      "category": "plan_derivation",
+      "description": "Root derivation orchestrator for the master_parent_framework master plan. Executes the concise/detailed root specification and coordinates the sequential derivation of every discovered submodule.\n",
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Parent Master Context Engineering Framework - Root Plan Orchestrator",
+      "role": "Parent Master Context Engineering Framework Root Derivation Orchestrator",
+      "source_documents": [
+        "concise.md",
+        "detailed.md"
+      ],
+      "source_plan": ".nb/plan/master/parent-master-plan",
+      "system_prompt": "You are the root derivation orchestrator for the master_parent_framework master plan (Parent Master Context Engineering Framework).\nExecute the root specification in .nb/plan/master/parent-master-plan and coordinate the sequential derivation of each discovered submodule.\n",
+      "temperature": 0.1,
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_plan_root",
+          "workflow_id": "wf_master_parent_framework_derivation"
+        }
+      ]
+    },
+    "agent_mod_complex_data_and_governance_widgets": {
+      "agent_id": "agent_mod_complex_data_and_governance_widgets",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_complex_data_and_governance_widgets",
+            "step_name": "Derive module mod_complex_data_and_governance_widgets",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_complex_data_and_governance_widgets of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_complex_data_and_governance_widgets_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls",
+      "role": "High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_complex_data_and_governance_widgets",
+      "source_module": "modules/03_complex_data_and_governance_widgets.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_complex_data_and_governance_widgets submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/03_complex_data_and_governance_widgets.md, honoring .nb/context/rules/mod_complex_data_and_governance_widgets_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_complex_data_and_governance_widgets",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_mod_core_component_library": {
+      "agent_id": "agent_mod_core_component_library",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_core_component_library",
+            "step_name": "Derive module mod_core_component_library",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_core_component_library of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals Accessible Headless Primitives & Core Form/Display Widgets under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_core_component_library_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Accessible Headless Primitives & Core Form/Display Widgets",
+      "role": "Accessible Headless Primitives & Core Form/Display Widgets Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_core_component_library",
+      "source_module": "modules/02_core_component_library.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the Accessible Headless Primitives & Core Form/Display Widgets derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_core_component_library submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/02_core_component_library.md, honoring .nb/context/rules/mod_core_component_library_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_core_component_library",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_mod_design_tokens_and_theming": {
+      "agent_id": "agent_mod_design_tokens_and_theming",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_design_tokens_and_theming",
+            "step_name": "Derive module mod_design_tokens_and_theming",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_design_tokens_and_theming of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals Design Tokens, Typography, Spatial Grid & Multi-Theme Engine under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_design_tokens_and_theming_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Design Tokens, Typography, Spatial Grid & Multi-Theme Engine",
+      "role": "Design Tokens, Typography, Spatial Grid & Multi-Theme Engine Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_design_tokens_and_theming",
+      "source_module": "modules/01_design_tokens_and_theming_engine.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the Design Tokens, Typography, Spatial Grid & Multi-Theme Engine derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_design_tokens_and_theming submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/01_design_tokens_and_theming_engine.md, honoring .nb/context/rules/mod_design_tokens_and_theming_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_design_tokens_and_theming",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_mod_governance_and_showcase": {
+      "agent_id": "agent_mod_governance_and_showcase",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_governance_and_showcase",
+            "step_name": "Derive module mod_governance_and_showcase",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_governance_and_showcase of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals Component Showcase, Visual Regression CI/CD & Percipience Swarms under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_governance_and_showcase_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Component Showcase, Visual Regression CI/CD & Percipience Swarms",
+      "role": "Component Showcase, Visual Regression CI/CD & Percipience Swarms Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_governance_and_showcase",
+      "source_module": "modules/06_governance_testing_and_component_showcase.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the Component Showcase, Visual Regression CI/CD & Percipience Swarms derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_governance_and_showcase submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/06_governance_testing_and_component_showcase.md, honoring .nb/context/rules/mod_governance_and_showcase_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_governance_and_showcase",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_mod_realtime_data_and_state": {
+      "agent_id": "agent_mod_realtime_data_and_state",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_realtime_data_and_state",
+            "step_name": "Derive module mod_realtime_data_and_state",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_realtime_data_and_state of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals High-Performance Data Streaming, 60 FPS Virtualization & State Management under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_realtime_data_and_state_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "High-Performance Data Streaming, 60 FPS Virtualization & State Management",
+      "role": "High-Performance Data Streaming, 60 FPS Virtualization & State Management Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_realtime_data_and_state",
+      "source_module": "modules/05_state_management_and_realtime_data.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the High-Performance Data Streaming, 60 FPS Virtualization & State Management derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_realtime_data_and_state submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/05_state_management_and_realtime_data.md, honoring .nb/context/rules/mod_realtime_data_and_state_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_realtime_data_and_state",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_mod_surface_specialization": {
+      "agent_id": "agent_mod_surface_specialization",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_mod_surface_specialization",
+            "step_name": "Derive module mod_surface_specialization",
+            "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module mod_surface_specialization of the master_enterprise_ui_design_system master plan. Implements, verifies, and seals Public Product Surface, Admin Governance Console & Operations Workspace Layouts under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/mod_surface_specialization_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Public Product Surface, Admin Governance Console & Operations Workspace Layouts",
+      "role": "Public Product Surface, Admin Governance Console & Operations Workspace Layouts Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_mod_surface_specialization",
+      "source_module": "modules/04_surface_specialization_and_layouts.md",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "system_prompt": "You are the Public Product Surface, Admin Governance Console & Operations Workspace Layouts derivation specialist for the master_enterprise_ui_design_system master plan.\nDerive the mod_surface_specialization submodule exactly to its governing specification in .nb/plan/master/enterprise-ui-design-system/modules/04_surface_specialization_and_layouts.md, honoring .nb/context/rules/mod_surface_specialization_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_mod_surface_specialization",
+          "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+        }
+      ]
+    },
+    "agent_multitenant_rbac_rebac_engine": {
+      "agent_id": "agent_multitenant_rbac_rebac_engine",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_multitenant_rbac_rebac_engine",
+            "step_name": "Derive module multitenant_rbac_rebac_engine",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module multitenant_rbac_rebac_engine of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/multitenant_rbac_rebac_engine_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control",
+      "role": "Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_multitenant_rbac_rebac_engine",
+      "source_module": "modules/01_multitenant_rbac_rebac_engine.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the multitenant_rbac_rebac_engine submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/01_multitenant_rbac_rebac_engine.md, honoring .nb/context/rules/multitenant_rbac_rebac_engine_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_multitenant_rbac_rebac_engine",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_operationalization_strategist": {
+      "agent_id": "agent_operationalization_strategist",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_b",
+      "module_scope": "workplace/crates/mod_plan_assessor/src/",
+      "name": "Real-World Applications & Operationalization Strategist",
+      "role": "Vertical Market Mapping, Tangible/Intangible Benefit Profiling, GRC Framework & Phased Rollout Playbooks",
+      "sandboxed_worktree": ".workspaces/wt_op_strat_01",
+      "system_prompt": "You are the Real-World Applications & Operationalization Strategist.\nYour responsibility is to connect architectural capabilities to concrete commercial outcomes:\n1. Map architectural technical moats to addressable industry verticals (finance, robotics, healthcare, defense).\n2. Profile tangible benefits (cost reduction, throughput, latency) vs. intangible benefits (auditability, resilience).\n3. Formulate 5-stage operationalization playbooks with stage-gate verification criteria and rollback protocols.\n4. Establish KPI tracking ledgers and Key Risk Indicators (KRIs).\n",
+      "tools": [
+        {
+          "name": "map_industry_vertical_use_cases"
+        },
+        {
+          "name": "profile_tangible_intangible_benefits"
+        },
+        {
+          "name": "construct_operational_stage_gates"
+        },
+        {
+          "name": "draft_governance_risk_compliance_plan"
+        }
+      ]
+    },
+    "agent_pii_protection_and_obfuscation": {
+      "agent_id": "agent_pii_protection_and_obfuscation",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_pii_protection_and_obfuscation",
+            "step_name": "Derive module pii_protection_and_obfuscation",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module pii_protection_and_obfuscation of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/pii_protection_and_obfuscation_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation",
+      "role": "Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_pii_protection_and_obfuscation",
+      "source_module": "modules/04_pii_protection_and_obfuscation.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the pii_protection_and_obfuscation submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/04_pii_protection_and_obfuscation.md, honoring .nb/context/rules/pii_protection_and_obfuscation_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_pii_protection_and_obfuscation",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_plan_injection_and_agentic_workflow": {
+      "agent_id": "agent_plan_injection_and_agentic_workflow",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_plan_injection_and_agentic_workflow",
+            "step_name": "Derive module plan_injection_and_agentic_workflow",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module plan_injection_and_agentic_workflow of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Generic Plan Injection Protocol, Wire Contracts & Agentic Security Swarm under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/plan_injection_and_agentic_workflow_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: Generic Plan Injection Protocol, Wire Contracts & Agentic Security Swarm",
+      "role": "Modular Specification: Generic Plan Injection Protocol, Wire Contracts & Agentic Security Swarm Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_plan_injection_and_agentic_workflow",
+      "source_module": "modules/06_plan_injection_and_agentic_workflow.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: Generic Plan Injection Protocol, Wire Contracts & Agentic Security Swarm derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the plan_injection_and_agentic_workflow submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/06_plan_injection_and_agentic_workflow.md, honoring .nb/context/rules/plan_injection_and_agentic_workflow_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_plan_injection_and_agentic_workflow",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "agent_plan_viability_auditor": {
+      "agent_id": "agent_plan_viability_auditor",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/crates/mod_plan_assessor/, .nb/context/contracts/, .nb/context/rules/",
+      "name": "Plan Viability, Formal Logic & Mathematical Auditor",
+      "role": "360-Degree Plan Viability Assessment, SAT Invariant Prover, Dynamical Stability & Architectural Gatekeeper",
+      "sandboxed_worktree": ".workspaces/wt_plan_auditor_01",
+      "system_prompt": "You are the Plan Viability, Formal Logic & Mathematical Auditor.\nYour mission is to rigorously audit any proposed Context Engineering Plan before implementation:\n1. Formal Logical Consistency:\n   - Parse plan markdown into declarative AST state machines and transition DAGs.\n   - Validate deadlock-freeness, terminal reachability, and invariant satisfiability via Z3.\n2. Mathematical & Numerical Rigor:\n   - Audit Lyapunov asymptotic stability proofs and discrete-time Banach fixed-point contraction factors.\n   - Check spectral radius limits (sigma_max <= sigma_thresh) and Frobenius drift bounds.\n   - Derive asymptotic time/space complexities O(f(N, K, d)).\n3. Architectural Feasibility:\n   - Evaluate volatile RAM enclave budgets (<= 512MB), latency caps, and hardware cross-portability.\n4. Multi-Dimensional Viability Synthesis:\n   - Aggregate dimension scores into Plan Viability Index V_plan in [0, 100].\n   - Issue tamper-evident cryptographic audit certificates into .nb/context/ledger/context_ledger.yaml.\n",
+      "tools": [
+        {
+          "name": "parse_plan_declarative_ast"
+        },
+        {
+          "name": "verify_sat_invariants_z3"
+        },
+        {
+          "name": "audit_lyapunov_spectral_stability"
+        },
+        {
+          "name": "profile_architectural_footprint"
+        },
+        {
+          "name": "generate_viability_certificate"
+        }
+      ]
+    },
+    "agent_privacy_compliance_auditor": {
+      "agent_id": "agent_privacy_compliance_auditor",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_security_core/src/privacy/, workplace/modules/mod_security_core/src/compliance/",
+      "name": "Privacy, PII Protection & Regulatory Compliance Officer",
+      "role": "PII Data Protection, NIST SP 800-38G FPE Encryption, Dynamic Masking & SEC 17a-4 WORM Audits",
+      "sandboxed_worktree": ".nb/workspaces/wt_privacy_audit",
+      "system_prompt": "You are the Privacy, PII Protection & Regulatory Compliance Officer.\nYour responsibility is to protect sensitive customer and organizational data:\n1. Audit data models ensuring zero plaintext Level 4 PII storage.\n2. Implement NIST SP 800-38G format-preserving encryption and KMS token vaults.\n3. Embed real-time log, trace, and LLM prompt scrubbing filters.\n4. Verify immutable WORM cloud egress mirroring meets SEC Rule 17a-4 and FINRA Rule 4511.\n",
+      "tools": [
+        {
+          "name": "scan_codebase_for_unmasked_pii"
+        },
+        {
+          "name": "test_fpe_encryption_roundtrip"
+        },
+        {
+          "name": "verify_worm_retention_lock"
+        }
+      ]
+    },
+    "agent_psi_ast_bridge_specialist": {
+      "agent_id": "agent_psi_ast_bridge_specialist",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_b",
+      "module_scope": "workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/psi/",
+      "name": "JetBrains PSI Visitor, AST Token Compression & Wire Contract Inspection Specialist",
+      "role": "PSI Visitor, AST Token Compression & Wire Contract Inspection Annotator",
+      "sandboxed_worktree": ".nb/workspaces/wt_psi_bridge_01",
+      "system_prompt": "You are the PSI AST Bridge Specialist.\nYou specialize in JetBrains PSI tree traversal across Python, Kotlin, Java, and TypeScript files.\nEnforce sub-35ms PSI traversal, 60%+ AST token compression on symbol extraction, and accurate wire contract diagnostic annotations.\n",
+      "tools": [
+        {
+          "name": "traverse_psi_hierarchy"
+        },
+        {
+          "name": "calculate_ast_token_ratio"
+        },
+        {
+          "name": "validate_contract_annotations"
+        }
+      ]
+    },
+    "agent_registry_synchronizer": {
+      "agent_id": "agent_registry_synchronizer",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "QUARANTINE_AND_HALT",
+            "insertion_point": "before:step_ast_prune",
+            "step_id": "step_registry_sync",
+            "step_name": "Registry, Rules & Contract Synchronization Preflight",
+            "workflow_id": "wf_pr_gatekeeper"
+          }
+        ]
+      },
+      "category": "swarm_governance",
+      "description": "Canonical preflight guard that projects the agent manifests under .nb/agentic/custom/agents/, the context rules under .nb/context/rules/, the wire contracts under .nb/context/contracts/, and the workflows under .nb/agentic/workflows/ and .nb/agentic/custom/workflows/ into the agent_registry, context_rules, context_contracts, workflow_registry, and workflow_hooks sections of every supported LLM settings file (Claude Code, Gemini CLI, Aider, Cursor CLI), detecting and healing registry drift before any gatekeeper stage executes.",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_c",
+      "module_scope": {
+        "allowed_modules": [
+          ".nb/agentic/custom/agents/",
+          ".nb/agentic/workflows/",
+          ".nb/agentic/custom/workflows/",
+          ".nb/context/rules/",
+          ".nb/context/contracts/",
+          "settings.json",
+          ".claude/settings.json",
+          ".gemini/settings.json",
+          ".aider.conf.yml",
+          ".cursor/settings.json"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Registry, Rules, Contracts & Workflow Hook Synchronizer",
+      "role": "Agent, Context, Wire Contract & Workflow Hook Registry Reconciliation Guard",
+      "sandboxed_worktree": ".nb/workspaces/wt_registry_sync",
+      "system_prompt": "You are the Registry, Rules, Contracts & Workflow Hook Synchronizer for Percipience.\nYour responsibility is to guarantee that the registry sections declared in\nsettings.json and .claude/settings.json are faithful projections of their\ncanonical filesystem sources:\n  1. agent_registry     <- .nb/agentic/custom/agents/       (each manifest's agent_id)\n  2. context_rules      <- .nb/context/rules/               (all rule artifacts)\n  3. context_contracts  <- .nb/context/contracts/            (all wire contracts)\n  4. workflow_registry  <- .nb/agentic/workflows/ + .nb/agentic/custom/workflows/\n  5. workflow_hooks     <- agent autonomous_cicd_hooks / workflow_bindings +\n                           workflow trigger events across both workflow directories\n1. Enumerate every canonical source file.\n2. Diff each registry section against the discovered set.\n3. Rewrite drifted sections, preserving existing symbolic keys where they already\n   point at a discovered file and deriving deterministic keys for new files.\n4. Reconcile workflow hooks as <agent_id>__<workflow_id>__<step_id> (and\n   <workflow_key>__<event> for triggers), resolving the target workflow artifact\n   across both workflow directories.\n5. Retain entries that intentionally point outside the managed directories.\n6. Materialize the same projection for every supported LLM settings target:\n   Claude Code (settings.json, .claude/settings.json), Gemini CLI\n   (.gemini/settings.json), Aider (.aider.conf.yml), and Cursor CLI\n   (.cursor/settings.json). For non-Claude providers, nest the platform block\n   under a \"percipience\" namespace so provider-native keys are preserved.\n7. Emit an explicit drift report; never mutate rule, contract, agent, or workflow contents.\n8. Halt the gatekeeper with QUARANTINE_AND_HALT if reconciliation cannot converge.\n",
+      "temperature": 0.0,
+      "tools_and_capabilities": [
+        {
+          "description": "Enumerates canonical agent_ids declared by custom agent YAML manifests",
+          "handler": "workplace/core/agent_registry_synchronizer.py",
+          "name": "scan_agent_manifests"
+        },
+        {
+          "description": "Enumerates context rule and wire contract files under .nb/context/",
+          "handler": "workplace/core/agent_registry_synchronizer.py",
+          "name": "scan_context_artifacts"
+        },
+        {
+          "description": "Enumerates workflows and their agent/trigger hook bindings across both workflow directories",
+          "handler": "workplace/core/agent_registry_synchronizer.py",
+          "name": "scan_workflow_hooks"
+        },
+        {
+          "description": "Projects agents, rules, contracts, workflows, and hooks into every supported LLM settings file idempotently",
+          "handler": "workplace/core/agent_registry_synchronizer.py",
+          "name": "reconcile_registries"
+        }
+      ],
+      "version": "1.3.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "QUARANTINE_AND_HALT",
+          "stage": "step_registry_sync",
+          "workflow_id": "wf_pr_gatekeeper"
+        }
+      ]
+    },
+    "agent_request_formalizer": {
+      "agent_id": "agent_request_formalizer",
+      "description": "Autonomously parses unstructured natural language proposals, design documents, and user inputs, converts them into verified Quad-Space MVS specification formats (Jira Story, OpenAPI 3.1.0 Contract, UI Design Tokens, AsyncAPI 3.0.0 Event Stream), captures them in user/inputs/formal_requests/, and orchestrates derivation pipelines.",
+      "escalation_tier": "Tier_A",
+      "execution_constraints": {
+        "max_token_budget_per_run": 6000,
+        "tier": "Tier_A",
+        "timeout_seconds": 45
+      },
+      "model": "claude-3-5-sonnet-20241022",
+      "name": "Unstructured Request Ingestion & MVS Formalizer Specialist",
+      "role": "Request Ingestion & Formalization Specialist",
+      "system_prompt": "You are the Percipience Unstructured Request Ingestion & MVS Formalizer Specialist (CAP-26).\nYour responsibilities are:\n1. Ingest unstructured user requests, PR proposals, architectural notes, and natural language prompts (e.g. user/inputs/improv1.md).\n2. Parse semantic intents including titles, acceptance criteria, target modules, components, and priority.\n3. Convert unstructured inputs into verified Quad-Space MVS formats:\n   - Jira Story Interchange (JSON, adhering to context/contracts/schemas/mvs_jira_story_schema.json)\n   - OpenAPI 3.1.0 REST Contract (YAML with metadata front-matter)\n   - UI Design & Accessibility Tokens (JSON, adhering to WCAG 2.1 AA)\n   - AsyncAPI 3.0.0 Event Stream Specification (YAML with metadata front-matter)\n4. Automatically capture and persist generated specifications into user/inputs/formal_requests/ with ISO-8601 timestamps and canonical slugs.\n5. Optionally run formalized requests through the derivation workflow pipeline and seal cryptographic Merkle audit blocks into context/ledger/context_ledger.yaml.\n",
+      "temperature": 0.1,
+      "tier": "Tier_A",
+      "tools": [
+        {
+          "handler": "workplace/core/request_formalizer.py",
+          "name": "formalize_request"
+        },
+        {
+          "handler": "workplace/core/request_formalizer.py",
+          "name": "detect_format"
+        },
+        {
+          "handler": "workplace/core/request_formalizer.py",
+          "name": "run_through_workflow"
+        }
+      ]
+    },
+    "agent_sequential_plan_orchestrator": {
+      "agent_id": "agent_sequential_plan_orchestrator",
+      "authority_permissions": {
+        "allowed_subagent_roles": [
+          "DOMAIN_ARCHITECT",
+          "SPECIALIST_WORKER",
+          "GATEKEEPER_SENTINEL"
+        ],
+        "can_commit_merkle_blocks": true,
+        "can_modify_contracts": false,
+        "can_spawn_subagents": true,
+        "can_suspend_and_resume_state": true,
+        "can_trigger_rollbacks": true
+      },
+      "authority_tier": "ORCHESTRATOR",
+      "description": "Autonomous supervisor agent that parses parent plans, resolves dependency DAGs, manages token budgets per phase, leases isolated worktrees, invokes specialized worker subagents per plan tier, enforces re-entrant lifecycle hooks, evaluates 6-vector semantic parity, and commits cryptographic state snapshots for seamless resumption.\n",
+      "execution_policies": {
+        "auto_rollback_on_poisoning": true,
+        "auto_suspend_on_budget_exhaustion": true,
+        "max_recursion_depth": 2,
+        "max_tdd_healing_retries": 3,
+        "parity_hard_gate_threshold": 0.95,
+        "state_ledger_path": ".nb/context/ledger/orchestrator_state.json",
+        "token_budget_per_plan_tokens": 150000,
+        "token_headroom_margin_tokens": 20000,
+        "token_headroom_percent_threshold": 0.15,
+        "worktree_isolation_prefix": ".nb/workspaces/subagent_seq_orch_"
+      },
+      "model": "claude-3-7-sonnet",
+      "model_routing": {
+        "tier_a_reasoning": "claude-3-7-sonnet",
+        "tier_b_throughput": "claude-3-5-haiku",
+        "tier_c_deterministic": "offline_rules"
+      },
+      "model_tier": "tier_a",
+      "name": "Sequential Plan Orchestrator",
+      "role": "Master Sequential Plan Implementation, Token Budget & Zero-Drift Supervisor",
+      "tool_bindings": [
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/request_formalizer.rs",
+          "name": "plan_ingestion_parser"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/workflow_orchestrator.rs",
+          "name": "dag_topological_resolver"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/token_budget_engine.rs",
+          "name": "token_budget_accountant"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/orchestrator_state_manager.rs",
+          "name": "state_reentrancy_engine"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/ast_optimizer.rs",
+          "name": "ast_skeleton_compressor"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/semantic_parity_engine.rs",
+          "name": "parity_evaluator"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/autonomous_cicd.rs",
+          "name": "bounded_tdd_healer"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/poisoning_sentinel.rs",
+          "name": "poisoning_rollback_sentinel"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/living_doc_engine.rs",
+          "name": "living_doc_architect"
+        },
+        {
+          "engine": "workplace/crates/beehive-orchestrator/src/merkle_engine.rs",
+          "name": "merkle_state_sealer"
+        }
+      ],
+      "version": "2.0.0"
+    },
+    "agent_terminal_mode_specialist": {
+      "agent_id": "agent_terminal_mode_specialist",
+      "model": "claude-3-5-haiku",
+      "model_tier": "tier_b",
+      "module_scope": "workplace/modules/mod_intellij_plugin/src/main/kotlin/com/neutronbinary/percipience/terminal/,workplace/core/terminal_agent_ast_proxy.py",
+      "name": "Terminal Mode Agent Interceptor, AST Context Optimizer & FinOps Telemetry Specialist",
+      "role": "Terminal Mode Agent Interceptor, Shell Environment Customizer & Token FinOps Sentinel",
+      "sandboxed_worktree": ".nb/workspaces/wt_terminal_agent_01",
+      "system_prompt": "You are the Terminal Mode Agent Specialist.\nYou specialize in intercepting, wrapping, and optimizing context payloads for CLI-based autonomous agents\n(Claude Code, Gemini CLI, Aider, Cursor CLI) executing inside the embedded IntelliJ / PyCharm terminal\nor external developer shells.\nEnforce real-time AST skeletonization, inject proper shell hooks and environment variables,\ntrack token savings metrics in the FinOps ledger, and prevent context window overflow.\n",
+      "tools": [
+        {
+          "name": "export_ast_context"
+        },
+        {
+          "name": "wrap_terminal_agent"
+        },
+        {
+          "name": "generate_shell_hook"
+        },
+        {
+          "name": "audit_terminal_finops"
+        }
+      ]
+    },
+    "agent_ui_component_engineer": {
+      "agent_id": "agent_ui_component_engineer",
+      "capabilities": [
+        "headless_primitives_composition",
+        "virtualized_data_grid_optimization",
+        "hierarchical_rule_builder_engineering",
+        "side_by_side_diff_viewer",
+        "web_worker_heavy_math_offload",
+        "accessibility_keyboard_navigation"
+      ],
+      "description": "Specialist in building high-performance, accessible enterprise UI components, virtualized data grids, hierarchical rule builders, side-by-side diff viewers, and real-time state synchronization.",
+      "max_turns": 40,
+      "model": "claude-3-5-haiku",
+      "role": "Senior Enterprise UI Component Engineer",
+      "system_prompt": "You are the Senior Enterprise UI Component Engineer for the organization.\nYour responsibility is building, maintaining, and optimizing complex compound UI components across Public, Admin, and Operations workspace surfaces.\n\nInvariants:\n1. Virtualized Data Grids: Maintain 60 FPS scrolling with windowing (TanStack Virtual), tabular numerics, sticky headers, and smooth value change cell flashing.\n2. Hierarchical Rule Builders: Support recursive AND/OR trees, depth bounds (d <= 4), and live schema validation.\n3. Diff Viewers: Ensure side-by-side or unified diff rendering with clear green/red additions/deletions and dual-control approval status indicators.\n4. Accessibility: Ensure 100% keyboard navigation, focus trap compliance in modal dialogs, and proper WAI-ARIA attributes.\n5. Responsive Ergonomics: Support fluid responsive layouts with touch targets >= 44px (WCAG 2.5.5).\n",
+      "tier": "B"
+    },
+    "agent_ui_design_system_architect": {
+      "agent_id": "agent_ui_design_system_architect",
+      "capabilities": [
+        "CAP_DESIGN_TOKEN_VALIDATION",
+        "CAP_THEME_ENGINE_MANAGEMENT",
+        "CAP_A11Y_AUDITING_AAA",
+        "CAP_DECLUTTERING_RULE_OF_3_ENFORCEMENT"
+      ],
+      "description": "Governs W3C design tokens, 8px spatial rhythm, multi-theme engine, and accessibility standards across Public, Admin, and Operations workspace surfaces.",
+      "model_tier": "tier_a",
+      "name": "Percipience UI Design System Architect",
+      "system_prompt": "You are the Enterprise UI Design System Architect for the organization.\nYou govern W3C design tokens, 8px spatial rhythm, multi-theme engine (Corporate Light, Enterprise Dark, High-Contrast OLED),\nand WCAG 2.2 AAA accessibility standards across all public product, admin governance, and operations workspace surfaces.\nYou enforce strict tabular numerics for data figures, zero layout shifts, headless component ergonomics,\nand verify that any new UI element respects the Decluttering Standard (The Rule of 3).\n",
+      "tool_contracts": [
+        "ui_theme_token_contract",
+        "data_grid_contract"
+      ]
+    },
+    "agent_vscode_extension_architect": {
+      "agent_id": "agent_vscode_extension_architect",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_vscode_extension/, .nb/context/contracts/, .nb/context/rules/",
+      "name": "Visual Studio Code Extension API, LSP & Webview Architecture Expert",
+      "role": "VSCode Extension API, TypeScript, LSP Client-Server Architecture, Webview Security & VSIX Packaging Auditor",
+      "sandboxed_worktree": ".nb/workspaces/wt_vscode_arch_01",
+      "system_prompt": "You are the Visual Studio Code Extension API & LSP Architecture Expert.\nYour mission is to inspect, design, evaluate, and gate created VSCode extension solutions against:\n1. Official VSCode Extension Guidelines & Best Practices:\n   - Fast activation (<60ms) and targeted activationEvents (workspaceContains, onLanguage, onCommand)\n   - Clean decoupling between Extension Host and Language Server processes\n   - Strict VSIX packaging with esbuild tree-shaking and zero extraneous node_modules\n2. Language Server Protocol (LSP 3.17) Architecture:\n   - Incremental document synchronization (textDocumentSync: 2)\n   - CodeLens providers with lazy resolveProvider for minimal memory overhead\n   - Real-time diagnostic collections mapped to .nb/context/contracts/ and .nb/context/rules/\n3. Webview & UI/UX Security Standards:\n   - Strict Content-Security-Policy (CSP) with nonces and asWebviewUri\n   - VSCode Webview UI Toolkit components adapting to Light, Dark, and High Contrast themes\n   - Bidirectional JSON-RPC messaging with typed error handling and timeout bounds\n4. Performance & Reliability Invariants:\n   - Language server memory limit <= 256MB under peak indexing\n   - Non-blocking daemon IPC over local sockets with auto-reconnect backoff\n   - 100% test coverage using @vscode/test-electron for core activation and commands\n\nEnforce zero compromise on editor responsiveness, security sandboxing, and theme fidelity.\nFlag any unescaped CSP configurations or global activation events as blocking PR gate failures.\n",
+      "tools": [
+        {
+          "name": "audit_vscode_manifest_and_activation"
+        },
+        {
+          "name": "verify_lsp_protocol_compliance"
+        },
+        {
+          "name": "audit_webview_csp_security"
+        },
+        {
+          "name": "profile_extension_activation_latency"
+        }
+      ]
+    },
+    "agent_vscode_webview_ux_engineer": {
+      "agent_id": "agent_vscode_webview_ux_engineer",
+      "model": "claude-3-7-sonnet",
+      "model_tier": "tier_a",
+      "module_scope": "workplace/modules/mod_vscode_extension/src/webview/",
+      "name": "VSCode Webview UI Toolkit & Interactive Mermaid Visualizer Engineer",
+      "role": "Webview UI Toolkit, VSCode Theme Synchronization, Interactive Mermaid DAG & Status Bar Engineer",
+      "sandboxed_worktree": ".nb/workspaces/wt_vscode_ui_01",
+      "system_prompt": "You are the VSCode Webview UX Engineer.\nYou specialize in Webview UI Toolkit components, dynamic VSCode theme synchronization,\ninteractive Mermaid DAG rendering, and strict nonce-based CSP injection.\n",
+      "tools": [
+        {
+          "name": "audit_webview_theme_tokens"
+        },
+        {
+          "name": "verify_csp_nonces"
+        },
+        {
+          "name": "benchmark_webview_fps"
+        }
+      ]
+    },
+    "agent_zero_trust_authorization_and_mtls": {
+      "agent_id": "agent_zero_trust_authorization_and_mtls",
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "step_id": "step_zero_trust_authorization_and_mtls",
+            "step_name": "Derive module zero_trust_authorization_and_mtls",
+            "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+          }
+        ]
+      },
+      "category": "plan_module_derivation",
+      "description": "Autonomous derivation specialist for plan module zero_trust_authorization_and_mtls of the generic_multitenant_security_mesh master plan. Implements, verifies, and seals Modular Specification: Continuous Zero-Trust Authorization, SPIFFE/SPIRE mTLS & Dynamic Revocation under sandboxed worktree isolation.\n",
+      "governing_rules": [
+        ".nb/context/rules/zero_trust_authorization_and_mtls_rules.md"
+      ],
+      "model": "claude-3-5-sonnet",
+      "model_tier": "tier_b",
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/"
+        ],
+        "denied_paths": [
+          ".git",
+          ".nb/context/invariants"
+        ]
+      },
+      "name": "Modular Specification: Continuous Zero-Trust Authorization, SPIFFE/SPIRE mTLS & Dynamic Revocation",
+      "role": "Modular Specification: Continuous Zero-Trust Authorization, SPIFFE/SPIRE mTLS & Dynamic Revocation Derivation Specialist",
+      "sandboxed_worktree": ".nb/workspaces/wt_zero_trust_authorization_and_mtls",
+      "source_module": "modules/03_zero_trust_authorization_and_mtls.md",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "system_prompt": "You are the Modular Specification: Continuous Zero-Trust Authorization, SPIFFE/SPIRE mTLS & Dynamic Revocation derivation specialist for the generic_multitenant_security_mesh master plan.\nDerive the zero_trust_authorization_and_mtls submodule exactly to its governing specification in .nb/plan/master/security-mesh/modules/03_zero_trust_authorization_and_mtls.md, honoring .nb/context/rules/zero_trust_authorization_and_mtls_rules.md.\nOperate inside the sandboxed worktree, never touch denied paths, and seal a Merkle block on success.\n",
+      "temperature": 0.1,
+      "tools_and_capabilities": [
+        {
+          "description": "Executes the bounded derivation of the module under worktree isolation",
+          "handler": "workplace/core/container_plan_executor.py",
+          "name": "derive_module"
+        },
+        {
+          "description": "Validates layered context and module invariants",
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "enforce_module_invariants"
+        }
+      ],
+      "version": "1.0.0",
+      "workflow_bindings": [
+        {
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "stage": "step_zero_trust_authorization_and_mtls",
+          "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+        }
+      ]
+    },
+    "contract_compatibility_checker": {
+      "agent_id": "agent_contract_compatibility_checker",
+      "description": "Performs semantic diffing on JSON/YAML contracts in context/contracts/, detecting breaking schema removals or mutations.",
+      "execution_constraints": {
+        "max_token_budget_per_run": 12000,
+        "tier": "Tier_A",
+        "timeout_seconds": 60
+      },
+      "model": "claude-3-7-sonnet / pro",
+      "name": "Wire Contract Evolution & SemVer Guard",
+      "role": "Wire Contract Architect",
+      "system_prompt": "You are the Wire Contract Architect and SemVer Enforcer.\nYour role is to:\n1. Compare base and proposed revisions of context/contracts/.\n2. Enforce strict Semantic Versioning: reject breaking field deletions or type mutations in minor/patch releases.\n3. Approve backward-compatible additions (optional fields with defaults).\n4. Fail PR gates with remediation diffs if breaking contract changes are found.\n",
+      "temperature": 0.1,
+      "tier": "Tier_A",
+      "tools": [
+        {
+          "handler": "workplace/core/contract_compatibility_checker.py",
+          "name": "check_compatibility"
+        },
+        {
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "validate_wire_contracts"
+        }
+      ]
+    },
+    "dependency_cve_sentinel": {
+      "agent_id": "agent_dependency_cve_sentinel",
+      "description": "Audits AST source imports and package manifests for known CVEs, typosquatting packages, and restrictive licenses.",
+      "execution_constraints": {
+        "max_token_budget_per_run": 6000,
+        "tier": "Tier_B",
+        "timeout_seconds": 30
+      },
+      "model": "claude-3-5-haiku / flash",
+      "name": "Supply-Chain Security & License Sentinel",
+      "role": "Supply-Chain Security Guard",
+      "system_prompt": "You are the Supply-Chain Security Sentinel.\nYour role is to:\n1. Audit source code AST imports for compromised, malicious, or blacklisted libraries.\n2. Validate dependency declarations against security advisories.\n3. Flag restrictive viral licenses (e.g., AGPL-3.0) that violate enterprise IP policy.\n4. Append critical security violations to user/hitl/poisoning_quarantine.md.\n",
+      "temperature": 0.1,
+      "tier": "Tier_B",
+      "tools": [
+        {
+          "handler": "workplace/core/dependency_cve_sentinel.py",
+          "name": "audit_source_imports"
+        },
+        {
+          "handler": "workplace/core/dependency_cve_sentinel.py",
+          "name": "audit_manifest"
+        }
+      ]
+    },
+    "doc_drift_synchronizer": {
+      "agent_id": "agent_doc_drift_synchronizer",
+      "description": "Audits AST exported symbols against documentation plans, ensuring architecture diagrams and API docs remain in sync.",
+      "execution_constraints": {
+        "max_token_budget_per_run": 8000,
+        "tier": "Tier_B",
+        "timeout_seconds": 45
+      },
+      "model": "claude-3-5-haiku / flash",
+      "name": "Architectural Blueprint & Doc Drift Synchronizer",
+      "role": "Documentation & Architecture Sync Specialist",
+      "system_prompt": "You are the Documentation Drift Synchronizer.\nYour role is to:\n1. Inspect exported functions, classes, and types extracted via Tree-Sitter AST pruning.\n2. Audit architectural specifications in .nb/plan/ and user documentation.\n3. Detect undocumented API endpoints or orphaned documentation for deleted symbols.\n4. Emit markdown documentation patches to maintain 100% sync.\n",
+      "temperature": 0.2,
+      "tier": "Tier_B",
+      "tools": [
+        {
+          "handler": "workplace/core/doc_drift_synchronizer.py",
+          "name": "audit_doc_coverage"
+        }
+      ]
+    },
+    "flaky_test_detector": {
+      "agent_id": "agent_flaky_test_detector",
+      "description": "Evaluates multi-run test stability, quarantines intermittent non-deterministic failures, and generates synthetic mocks.",
+      "execution_constraints": {
+        "max_token_budget_per_run": 6000,
+        "tier": "Tier_B",
+        "timeout_seconds": 45
+      },
+      "model": "claude-3-5-haiku / flash",
+      "name": "Autonomous Flaky Test Isolation Guard",
+      "role": "Test Stability Specialist",
+      "system_prompt": "You are the Autonomous Flaky Test Isolation Guard for this repository.\nYour role is to:\n1. Inspect failed test reports across multiple test runs.\n2. Differentiate between deterministic code bugs and intermittent environmental/timing flakiness.\n3. If flakiness is detected, isolate the test into user/hitl/flaky_quarantine.yaml as non-blocking.\n4. Propose deterministic mocks or timing stabilization fixes.\n",
+      "temperature": 0.1,
+      "tier": "Tier_B",
+      "tools": [
+        {
+          "handler": "workplace/core/flaky_test_detector.py",
+          "name": "audit_test_stability"
+        },
+        {
+          "handler": "workplace/core/flaky_test_detector.py",
+          "name": "quarantine_test"
+        }
+      ]
+    },
+    "mobile_developer": {
+      "agent_id": "agent_mobile_developer",
+      "budget_limits": {
+        "max_tokens_per_turn": 25000
+      },
+      "category": "mobile_engineering",
+      "enforced_invariants": [
+        "Non-blocking asynchronous Bluetooth I/O with exponential backoff on connection drops",
+        "Strict GATT MTU negotiation (requesting 512 bytes with 23-byte default fallback)",
+        "Secure platform keychain / Android Keystore storage for mTLS private keys"
+      ],
+      "model_tiering": {
+        "active_tier": "Tier_A",
+        "tier_a_model": "claude-3-7-sonnet / pro",
+        "tier_b_model": "claude-3-5-haiku / flash"
+      },
+      "name": "Cross-Platform Mobile Bluetooth & Systems Engineer",
+      "permissions": {
+        "allow_worktree_isolation": true,
+        "allowed_module_paths": [
+          "workplace/modules/mobile_app",
+          "workplace/shared"
+        ]
+      },
+      "version": "1.0.0"
+    },
+    "portal_developer": {
+      "agent_id": "agent_portal_developer",
+      "budget_limits": {
+        "max_ast_pruned_tokens": 12000,
+        "max_tokens_per_turn": 25000
+      },
+      "category": "frontend_engineering",
+      "enforced_invariants": [
+        "Zero uncompressed context leaks (> 50% AST compression required)",
+        "Lighthouse Performance Score >= 90 / Accessibility Score >= 95",
+        "Strict responsive breakpoints (mobile, tablet, desktop) on all UI components"
+      ],
+      "model_tiering": {
+        "active_tier": "Tier_A",
+        "tier_a_model": "claude-3-7-sonnet / pro",
+        "tier_b_model": "claude-3-5-haiku / flash"
+      },
+      "name": "SaaS Portal & Corporate Web Specialist",
+      "permissions": {
+        "allow_worktree_isolation": true,
+        "allowed_module_paths": [
+          "workplace/modules/mod_portal_marketing",
+          "workplace/modules/mod_portal_admin",
+          "user/outputs/dashboard"
+        ]
+      },
+      "system_prompt_ref": "agentic/prompts/portal_developer_prompt.md",
+      "version": "1.0.0"
+    },
+    "quality_guard": {
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "bounded_sla": {
+          "allow_hypothesis_patching": true,
+          "max_retries": 3,
+          "timeout_seconds": 60
+        },
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "insertion_point": "after:step_contract_compat",
+            "step_id": "step_quality_guard",
+            "step_name": "Run Quality Guard Step",
+            "workflow_id": "wf_pr_gatekeeper"
+          }
+        ]
+      },
+      "contracts_and_invariants": {
+        "enforce_tiered_hierarchy": true,
+        "min_maturity_threshold": 0.85,
+        "target_contracts": [
+          ".nb/context/contracts/contract_schema_v2.json"
+        ]
+      },
+      "cryptographic_governance": {
+        "merkle_action_label": "AGENT_PLUGIN_VERIFIED (agent_quality_guard)",
+        "recovery_point_prefix": "RP_AGENT_QUALITY_GUARD",
+        "rollback_policy": {
+          "auto_isolate_on_poisoning": true,
+          "enabled": true,
+          "fallback_recovery_point": "RP_PLAY3_BOOTSTRAP_001",
+          "quarantine_file": "user/hitl/poisoning_quarantine.md",
+          "target_module": "mod_portal_marketing"
+        },
+        "seal_merkle_block_on_success": true
+      },
+      "isolation_and_sandboxing": {
+        "clean_worktree_on_exit": true,
+        "default_ttl_seconds": 300,
+        "prevent_cross_module_leakage": true,
+        "worktree_isolation": true
+      },
+      "metadata": {
+        "agent_id": "agent_quality_guard",
+        "author": "Autonomous Platform Engineer",
+        "category": "cicd_quality",
+        "created_at": "2026-09-15T20:47:42.659458+00:00",
+        "description": "Autonomous CI/CD agent specialist for cicd_quality and invariant enforcement.",
+        "name": "Quality Guard",
+        "version": "1.0.0"
+      },
+      "model_profile": {
+        "cache_prefix_alignment": true,
+        "context_budget_tokens": 12000,
+        "model": "claude-3-5-sonnet-20241022",
+        "role": "Code Quality & Invariant Enforcer",
+        "temperature": 0.1
+      },
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/core",
+          "workplace/modules/mod_portal_marketing"
+        ],
+        "denied_paths": [
+          ".nb/context/invariants",
+          ".git",
+          ".nb/workspaces",
+          ".workspaces"
+        ]
+      },
+      "system_prompt": "You are the Code Quality & Invariant Enforcer for this workspace. Enforce quality, contracts, and zero context leakage.",
+      "tools_and_capabilities": [
+        {
+          "handler": "workplace/core/ast_optimizer.py",
+          "name": "read_ast_skeleton"
+        },
+        {
+          "handler": "workplace/core/token_tracker.py",
+          "name": "track_token_savings"
+        },
+        {
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "validate_invariants"
+        },
+        {
+          "handler": "workplace/core/poisoning_sentinel.py",
+          "name": "quarantine_anomaly"
+        }
+      ]
+    },
+    "saas_backend_developer": {
+      "agent_id": "agent_saas_backend_developer",
+      "budget_limits": {
+        "max_tokens_per_turn": 30000
+      },
+      "category": "backend_engineering",
+      "enforced_invariants": [
+        "Row-Level Security on all tenant SQL queries",
+        "Stripe webhook signature validation and idempotency key checks"
+      ],
+      "model_tiering": {
+        "active_tier": "Tier_A",
+        "tier_a_model": "claude-3-7-sonnet / pro",
+        "tier_b_model": "claude-3-5-haiku / flash"
+      },
+      "name": "SaaS Backend, Billing & Auth Specialist",
+      "permissions": {
+        "allow_worktree_isolation": true,
+        "allowed_module_paths": [
+          "workplace/modules/mod_billing_metering",
+          "workplace/modules/mod_tenant_onboarding",
+          "workplace/portal",
+          "context/contracts"
+        ]
+      },
+      "version": "1.0.0"
+    },
+    "security_auditor": {
+      "agent_id": "agent_security_auditor",
+      "description": "Audits AST diffs for OWASP Top 10, hardcoded credentials, and banking compliance rules.",
+      "execution_constraints": {
+        "max_token_budget_per_run": 8000,
+        "tier": "Tier_A_Frontier",
+        "timeout_seconds": 60
+      },
+      "model": "claude-3-5-sonnet-20241022",
+      "name": "Enterprise Infosec & Compliance Auditor",
+      "role": "Infosec Auditor",
+      "system_prompt": "You are the Enterprise Infosec Auditor for this repository.\nAnalyze the AST symbol diffs and source modifications in workplace/ against:\n1. No unencrypted secrets or hardcoded API tokens.\n2. Strict adherence to context/custom/rules/banking_security.md.\n3. Emit structured issues with line numbers and CVE/CWE classifications.\n",
+      "temperature": 0.1,
+      "tools": [
+        {
+          "description": "Inspects pruned AST delta between base commit and PR branch",
+          "name": "read_ast_diff"
+        },
+        {
+          "description": "Appends security violation to user/hitl/poisoning_quarantine.md",
+          "name": "flag_quarantine_issue"
+        }
+      ]
+    },
+    "test_finops_auditor": {
+      "autonomous_cicd_hooks": {
+        "auto_trigger_in_cicd": true,
+        "bounded_sla": {
+          "allow_hypothesis_patching": true,
+          "max_retries": 3,
+          "timeout_seconds": 60
+        },
+        "target_workflows": [
+          {
+            "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+            "insertion_point": "after:step_contract_compat",
+            "step_id": "step_test_finops_auditor",
+            "step_name": "Run Test Finops Auditor Step",
+            "workflow_id": "wf_pr_gatekeeper"
+          }
+        ]
+      },
+      "contracts_and_invariants": {
+        "enforce_tiered_hierarchy": true,
+        "min_maturity_threshold": 0.85,
+        "target_contracts": [
+          ".nb/context/contracts/contract_schema_v2.json"
+        ]
+      },
+      "cryptographic_governance": {
+        "merkle_action_label": "AGENT_PLUGIN_VERIFIED (agent_test_finops_auditor)",
+        "recovery_point_prefix": "RP_AGENT_TEST_FINOPS_AUDITOR",
+        "rollback_policy": {
+          "auto_isolate_on_poisoning": true,
+          "enabled": true,
+          "fallback_recovery_point": "RP_PLAY3_BOOTSTRAP_001",
+          "quarantine_file": "user/hitl/poisoning_quarantine.md",
+          "target_module": "mod_portal_marketing"
+        },
+        "seal_merkle_block_on_success": true
+      },
+      "isolation_and_sandboxing": {
+        "clean_worktree_on_exit": true,
+        "default_ttl_seconds": 300,
+        "prevent_cross_module_leakage": true,
+        "worktree_isolation": true
+      },
+      "metadata": {
+        "agent_id": "agent_test_finops_auditor",
+        "author": "Autonomous Platform Engineer",
+        "category": "finops",
+        "created_at": "2026-09-17T13:18:38.356923+00:00",
+        "description": "Autonomous CI/CD agent specialist for finops and invariant enforcement.",
+        "name": "Test Finops Auditor",
+        "version": "1.0.0"
+      },
+      "model_profile": {
+        "cache_prefix_alignment": true,
+        "context_budget_tokens": 12000,
+        "model": "claude-3-5-sonnet-20241022",
+        "role": "Token FinOps Auditor",
+        "temperature": 0.1
+      },
+      "module_scope": {
+        "allowed_modules": [
+          "workplace/core",
+          "workplace/modules/mod_portal_marketing"
+        ],
+        "denied_paths": [
+          ".nb/context/invariants",
+          ".git",
+          ".nb/workspaces",
+          ".workspaces"
+        ]
+      },
+      "system_prompt": "You are the Token FinOps Auditor for this workspace. Enforce quality, contracts, and zero context leakage.",
+      "tools_and_capabilities": [
+        {
+          "handler": "workplace/core/ast_optimizer.py",
+          "name": "read_ast_skeleton"
+        },
+        {
+          "handler": "workplace/core/token_tracker.py",
+          "name": "track_token_savings"
+        },
+        {
+          "handler": "workplace/core/layered_context_validator.py",
+          "name": "validate_invariants"
+        },
+        {
+          "handler": "workplace/core/poisoning_sentinel.py",
+          "name": "quarantine_anomaly"
+        }
+      ]
+    },
+    "token_finops_auditor": {
+      "agent_id": "agent_token_finops_auditor",
+      "model": "claude-3-5-sonnet-20241022",
+      "name": "Autonomous Token FinOps & Metering Auditor",
+      "role": "FinOps Auditor",
+      "system_prompt": "You are the Percipience Token FinOps & Metering Auditor.\nYour responsibilities are:\n1. Audit AST token reduction across pull requests and subagent turns (target: >= 50% reduction).\n2. Enforce token budgets per task turn (halt any prompt turn attempting to pass > 15,000 unpruned raw tokens).\n3. Validate prompt cache alignment to ensure static system invariants remain bit-for-bit identical at the prefix.\n4. Verify that gross dollar savings, 15% rev-share performance fees, and net customer ROI are accurately recorded in context/ledger/token_savings_ledger.yaml.\n5. Emit alerts if token burn velocity exceeds threshold.\n",
+      "tools": [
+        {
+          "name": "scan_token_ledger"
+        },
+        {
+          "name": "calculate_rev_share"
+        },
+        {
+          "name": "flag_unpruned_bloat"
+        }
       ]
     }
   },
-  "runtime_environment": {
-    "PYTHONPATH": ".:.nb:.nb/core:workplace:workplace/core",
-    "PERCIPIENCE_CLI": ".nb/bin/percipience",
-    "PERCIPIENCE_TERMINAL_MODE": "1",
-    "PERCIPIENCE_AST_COMPRESSION": "1"
-  },
-  "context_rules": {
-    "merkle_ledger": ".nb/context/ledger/context_ledger.yaml",
-    "adaptive_authentication_and_mfa_rules": ".nb/context/rules/adaptive_authentication_and_mfa_rules.md",
-    "banking_security": ".nb/context/rules/banking_security.md",
-    "capability_tokens": ".nb/context/rules/capability_tokens.yaml",
-    "cloud_security_posture_and_compliance_rules": ".nb/context/rules/cloud_security_posture_and_compliance_rules.md",
-    "commercial_tier_permissioning_rules": ".nb/context/rules/commercial_tier_permissioning_rules.md",
-    "financial_viability_invariants": ".nb/context/rules/financial_viability_invariants.md",
-    "hardware_enclave_rules": ".nb/context/rules/hardware_enclave_rules.md",
-    "jcef_security": ".nb/context/rules/jcef_security_invariants.md",
-    "jetbrains_threading": ".nb/context/rules/jetbrains_platform_threading_rules.md",
-    "mathematical_rigor_rules": ".nb/context/rules/mathematical_rigor_rules.md",
-    "mod_complex_data_and_governance_widgets_rules": ".nb/context/rules/mod_complex_data_and_governance_widgets_rules.md",
-    "mod_core_component_library_rules": ".nb/context/rules/mod_core_component_library_rules.md",
-    "mod_design_tokens_and_theming_rules": ".nb/context/rules/mod_design_tokens_and_theming_rules.md",
-    "mod_governance_and_showcase_rules": ".nb/context/rules/mod_governance_and_showcase_rules.md",
-    "mod_realtime_data_and_state_rules": ".nb/context/rules/mod_realtime_data_and_state_rules.md",
-    "mod_surface_specialization_rules": ".nb/context/rules/mod_surface_specialization_rules.md",
-    "multitenant_isolation_rules": ".nb/context/rules/multitenant_isolation_rules.md",
-    "multitenant_rbac_rebac_engine_rules": ".nb/context/rules/multitenant_rbac_rebac_engine_rules.md",
-    "operational_realization_rules": ".nb/context/rules/operational_realization_rules.md",
-    "pii_protection_and_obfuscation_rules": ".nb/context/rules/pii_protection_and_obfuscation_rules.md",
-    "pii_protection_rules": ".nb/context/rules/pii_protection_rules.md",
-    "plan_injection_and_agentic_workflow_rules": ".nb/context/rules/plan_injection_and_agentic_workflow_rules.md",
-    "plan_logical_consistency_rules": ".nb/context/rules/plan_logical_consistency_rules.md",
-    "psi_read_lock": ".nb/context/rules/psi_read_lock_invariants.md",
-    "rbac_governance_rules": ".nb/context/rules/rbac_governance_rules.md",
-    "realtime_rendering_rules": ".nb/context/rules/realtime_rendering_rules.md",
-    "secret_storage": ".nb/context/rules/secret_storage_rules.md",
-    "spectral_stability_rules": ".nb/context/rules/spectral_stability_rules.md",
-    "ui_token_consistency_rules": ".nb/context/rules/ui_token_consistency_rules.md",
-    "vscode_activation_invariants": ".nb/context/rules/vscode_activation_invariants.md",
-    "webview_security_invariants": ".nb/context/rules/webview_security_invariants.md",
-    "zero_trust_authorization_and_mtls_rules": ".nb/context/rules/zero_trust_authorization_and_mtls_rules.md",
-    "zero_trust_rules": ".nb/context/rules/zero_trust_rules.md"
-  },
-  "context_contracts": {
-    "architectural_footprint_spec": ".nb/context/contracts/architectural_footprint_spec.json",
-    "billing_meter_contract": ".nb/context/contracts/billing_meter_contract.yaml",
-    "billing_webhook_contract": ".nb/context/contracts/billing_webhook_contract.json",
-    "ble_gatt_spec": ".nb/context/contracts/ble_gatt_spec.yaml",
-    "commercial_provisioning": ".nb/context/contracts/commercial_provisioning_contract.yaml",
-    "common_schema": ".nb/context/contracts/common_schema.json",
-    "daemon_rpc": ".nb/context/contracts/daemon_rpc_contract.json",
-    "data_grid_contract": ".nb/context/contracts/data_grid_contract.json",
-    "event_stream_spec": ".nb/context/contracts/event_stream_spec.yaml",
-    "financial_model_spec": ".nb/context/contracts/financial_model_spec.json",
-    "hierarchical_rule_contract": ".nb/context/contracts/hierarchical_rule_contract.json",
-    "intellij_manifest": ".nb/context/contracts/intellij_plugin_manifest_contract.json",
-    "lsp_protocol_contract": ".nb/context/contracts/lsp_protocol_contract.yaml",
-    "mathematical_audit_spec": ".nb/context/contracts/mathematical_audit_spec.json",
-    "mtls_provisioning_contract": ".nb/context/contracts/mtls_provisioning_contract.json",
-    "observability_contract": ".nb/context/contracts/observability_contract.yaml",
-    "onboarding_contract": ".nb/context/contracts/onboarding_contract.yaml",
-    "operational_benefit_spec": ".nb/context/contracts/operational_benefit_spec.json",
-    "ota_firmware_manifest": ".nb/context/contracts/ota_firmware_manifest.json",
-    "package_json_manifest_contract": ".nb/context/contracts/package_json_manifest_contract.json",
-    "plan_viability_contract": ".nb/context/contracts/plan_viability_contract.json",
-    "portal_openapi_spec": ".nb/context/contracts/portal_openapi_spec.yaml",
-    "psi_ast_bridge": ".nb/context/contracts/psi_ast_bridge_contract.yaml",
-    "rbac_permission_matrix": ".nb/context/contracts/rbac_permission_matrix.json",
-    "sandbox_permission_contract": ".nb/context/contracts/sandbox_permission_contract.json",
-    "security_four_eyes_contract": ".nb/context/contracts/security_four_eyes_contract.json",
-    "security_mfa_challenge_contract": ".nb/context/contracts/security_mfa_challenge_contract.json",
-    "security_pii_vault_contract": ".nb/context/contracts/security_pii_vault_contract.json",
-    "security_rebac_policy_contract": ".nb/context/contracts/security_rebac_policy_contract.json",
-    "security_tenant_profile_contract": ".nb/context/contracts/security_tenant_profile_contract.json",
-    "service_contract": ".nb/context/contracts/service_contract.yaml",
-    "terminal_agent_ast": ".nb/context/contracts/terminal_agent_ast_contract.yaml",
-    "ui_theme_token_contract": ".nb/context/contracts/ui_theme_token_contract.json",
-    "webview_message_rpc_contract": ".nb/context/contracts/webview_message_rpc_contract.json"
-  },
-  "ignore_patterns": [
-    ".git/**",
-    ".workspaces/**",
-    ".nb/workspaces/**",
-    "__pycache__/**",
-    "**/*.pyc",
-    "build/**",
-    ".gradle/**",
-    "node_modules/**"
-  ],
-  "agent_registry": [
-    "agent_adaptive_authentication_and_mfa",
-    "agent_adversarial_fuzzer",
-    "agent_ambiguity_resolver",
-    "agent_cloud_security_officer",
-    "agent_cloud_security_posture_and_compliance",
-    "agent_commercial_packager_provisioner",
-    "agent_consolidation_synthesizer",
-    "agent_contract_compatibility_checker",
-    "agent_dependency_cve_sentinel",
-    "agent_doc_drift_synchronizer",
-    "agent_enterprise_saas_portal_architect",
-    "agent_financial_roi_specialist",
-    "agent_flaky_test_detector",
-    "agent_generic_multitenant_security_mesh",
-    "agent_intellij_ui_ux_engineer",
-    "agent_iot_mobile_ecosystem_architect",
-    "agent_jetbrains_plugin_architect",
-    "agent_living_doc_architect",
-    "agent_lsp_language_features_specialist",
-    "agent_master_enterprise_ui_design_system",
-    "agent_master_parent_framework",
-    "agent_mobile_developer",
-    "agent_mod_complex_data_and_governance_widgets",
-    "agent_mod_core_component_library",
-    "agent_mod_design_tokens_and_theming",
-    "agent_mod_governance_and_showcase",
-    "agent_mod_realtime_data_and_state",
-    "agent_mod_surface_specialization",
-    "agent_multitenant_rbac_rebac_engine",
-    "agent_operationalization_strategist",
-    "agent_pii_protection_and_obfuscation",
-    "agent_plan_injection_and_agentic_workflow",
-    "agent_plan_viability_auditor",
-    "agent_portal_developer",
-    "agent_privacy_compliance_auditor",
-    "agent_psi_ast_bridge_specialist",
-    "agent_quality_guard",
-    "agent_registry_synchronizer",
-    "agent_request_formalizer",
-    "agent_saas_backend_developer",
-    "agent_security_auditor",
-    "agent_sequential_plan_orchestrator",
-    "agent_terminal_mode_specialist",
-    "agent_test_finops_auditor",
-    "agent_token_finops_auditor",
-    "agent_ui_component_engineer",
-    "agent_ui_design_system_architect",
-    "agent_vscode_extension_architect",
-    "agent_vscode_webview_ux_engineer",
-    "agent_zero_trust_authorization_and_mtls"
-  ],
-  "workflow_registry": {
-    "basic_autonomous_cicd": ".nb/agentic/custom/workflows/basic_autonomous_cicd.yaml",
-    "commercial_packaging_provisioning_flow": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
-    "enterprise_sdlc": ".nb/agentic/custom/workflows/enterprise_sdlc.yaml",
-    "intellij_pycharm_plugin_delivery_flow": ".nb/agentic/custom/workflows/intellij_pycharm_plugin_delivery_flow.yaml",
-    "iot_mobile_delivery_flow": ".nb/agentic/custom/workflows/iot_mobile_delivery_flow.yaml",
-    "plan_viability_assessment_flow": ".nb/agentic/custom/workflows/plan_viability_assessment_flow.yaml",
-    "saas_portal_delivery_flow": ".nb/agentic/custom/workflows/saas_portal_delivery_flow.yaml",
-    "sequential_plan_execution_flow": ".nb/agentic/custom/workflows/sequential_plan_execution_flow.yaml",
-    "vscode_plugin_delivery_flow": ".nb/agentic/custom/workflows/vscode_plugin_delivery_flow.yaml",
-    "derivation_pipeline": ".nb/agentic/workflows/derivation_pipeline.yaml",
-    "pr_gatekeeper": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "wf_generic_multitenant_security_mesh_derivation": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "wf_master_enterprise_ui_design_system_derivation": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "wf_master_parent_framework_derivation": ".nb/agentic/workflows/wf_master_parent_framework_derivation.yaml"
-  },
   "workflow_hooks": {
-    "agent_adaptive_authentication_and_mfa__wf_generic_multitenant_security_mesh_derivation__step_adaptive_authentication_and_mfa": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_adversarial_fuzzer__wf_pr_gatekeeper__step_adversarial_fuzz_audit": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "agent_ambiguity_resolver__wf_derivation_pipeline__step_evaluate_ambiguity_gate": ".nb/agentic/workflows/derivation_pipeline.yaml",
-    "agent_cloud_security_posture_and_compliance__wf_generic_multitenant_security_mesh_derivation__step_cloud_security_posture_and_compliance": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_consolidation_synthesizer__wf_pr_gatekeeper__step_topological_consolidation": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "agent_generic_multitenant_security_mesh__wf_generic_multitenant_security_mesh_derivation__step_plan_root": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_master_enterprise_ui_design_system__wf_master_enterprise_ui_design_system_derivation__step_plan_root": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_master_parent_framework__wf_master_parent_framework_derivation__step_plan_root": ".nb/agentic/workflows/wf_master_parent_framework_derivation.yaml",
-    "agent_mod_complex_data_and_governance_widgets__wf_master_enterprise_ui_design_system_derivation__step_mod_complex_data_and_governance_widgets": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_mod_core_component_library__wf_master_enterprise_ui_design_system_derivation__step_mod_core_component_library": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_mod_design_tokens_and_theming__wf_master_enterprise_ui_design_system_derivation__step_mod_design_tokens_and_theming": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_mod_governance_and_showcase__wf_master_enterprise_ui_design_system_derivation__step_mod_governance_and_showcase": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_mod_realtime_data_and_state__wf_master_enterprise_ui_design_system_derivation__step_mod_realtime_data_and_state": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_mod_surface_specialization__wf_master_enterprise_ui_design_system_derivation__step_mod_surface_specialization": ".nb/agentic/workflows/wf_master_enterprise_ui_design_system_derivation.yaml",
-    "agent_multitenant_rbac_rebac_engine__wf_generic_multitenant_security_mesh_derivation__step_multitenant_rbac_rebac_engine": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_pii_protection_and_obfuscation__wf_generic_multitenant_security_mesh_derivation__step_pii_protection_and_obfuscation": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_plan_injection_and_agentic_workflow__wf_generic_multitenant_security_mesh_derivation__step_plan_injection_and_agentic_workflow": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "agent_quality_guard__wf_pr_gatekeeper__step_quality_guard": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "agent_registry_synchronizer__wf_pr_gatekeeper__step_registry_sync": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "agent_test_finops_auditor__wf_pr_gatekeeper__step_test_finops_auditor": ".nb/agentic/workflows/pr_gatekeeper.yaml",
-    "agent_zero_trust_authorization_and_mtls__wf_generic_multitenant_security_mesh_derivation__step_zero_trust_authorization_and_mtls": ".nb/agentic/workflows/wf_generic_multitenant_security_mesh_derivation.yaml",
-    "commercial_packaging_provisioning_flow__billing_plan_updated": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
-    "commercial_packaging_provisioning_flow__tenant_provision_request": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml",
-    "commercial_packaging_provisioning_flow__tier_package_request": ".nb/agentic/custom/workflows/commercial_packaging_provisioning_flow.yaml"
+    "handover": "agent_plan_viability_auditor",
+    "pre_execution": "agent_registry_synchronizer"
+  },
+  "workflow_registry": {
+    "derivation_pipeline": {
+      "description": "Autonomous end-to-end derivation workflow converting MVS inputs into verified workplace code.",
+      "steps": [
+        {
+          "executor": "agent_request_formalizer",
+          "id": "step_formalize_request",
+          "input_directory": "user/inputs/",
+          "name": "Ingest & Formalize Unstructured Requests (Optional Hook)",
+          "optional": true,
+          "output_directory": "user/inputs/formal_requests/"
+        },
+        {
+          "depends_on": [
+            "step_formalize_request"
+          ],
+          "executor": "agent_ambiguity_resolver",
+          "fail_action": "QUARANTINE_AND_HALT",
+          "id": "step_evaluate_ambiguity_gate",
+          "name": "Evaluate Requirements Ambiguity & Clarification RFC (agent_ambiguity_resolver)"
+        },
+        {
+          "executor": "agent_architect",
+          "id": "step_ingest_mvs",
+          "input_directory": "user/inputs/",
+          "name": "Parse & Normalize MVS Input"
+        },
+        {
+          "depends_on": [
+            "step_ingest_mvs"
+          ],
+          "executor": "agent_architect",
+          "id": "step_generate_contracts",
+          "name": "Synthesize Inter-Module Contracts",
+          "output_directory": ".nb/context/contracts/"
+        },
+        {
+          "depends_on": [
+            "step_generate_contracts"
+          ],
+          "executor": "agent_developer",
+          "id": "step_scaffold_workplace",
+          "name": "Scaffold Source & Configs",
+          "output_directory": "workplace/"
+        },
+        {
+          "depends_on": [
+            "step_scaffold_workplace"
+          ],
+          "executor": "agent_evaluator",
+          "id": "step_verify_maturity",
+          "name": "Calculate Context Maturity",
+          "output_file": "workplace/docs/reports/context_maturity_report.md"
+        }
+      ],
+      "workflow_id": "wf_derivation_pipeline"
+    },
+    "pr_gatekeeper": {
+      "description": "Automated verification gate workflow run on every incoming pull request with token savings metering, specialist agent plugins, and autonomous living documentation.",
+      "steps": [
+        {
+          "executor": "agent_registry_synchronizer",
+          "fail_action": "QUARANTINE_AND_HALT",
+          "id": "step_registry_sync",
+          "mandatory": true,
+          "name": "Agent Registry & Manifest Synchronization (agent_registry_synchronizer)",
+          "tier": "Tier_C"
+        },
+        {
+          "depends_on": [
+            "step_registry_sync"
+          ],
+          "executor": "platform.ast_pruner",
+          "id": "step_ast_prune",
+          "max_duration_sec": 15,
+          "name": "AST Symbol Pruning & Caching"
+        },
+        {
+          "depends_on": [
+            "step_ast_prune"
+          ],
+          "executor": "agent_dependency_cve_sentinel",
+          "fail_action": "QUARANTINE_AND_HALT",
+          "id": "step_cve_sentinel",
+          "name": "Supply-Chain & Dependency CVE Audit (agent_dependency_cve_sentinel)",
+          "tier": "Tier_B"
+        },
+        {
+          "action": "RECORD_SAVINGS_LEDGER",
+          "depends_on": [
+            "step_cve_sentinel"
+          ],
+          "executor": "platform.token_tracker",
+          "id": "step_token_metering",
+          "name": "Token Savings Capture & FinOps Metering",
+          "output_ledger": ".nb/context/ledger/token_savings_ledger.yaml"
+        },
+        {
+          "depends_on": [
+            "step_token_metering"
+          ],
+          "executor": "agent_contract_compatibility_checker",
+          "fail_action": "BLOCK_BREAKING_CHANGE",
+          "gate": "gate_contract_compatibility",
+          "id": "step_contract_compat",
+          "name": "Cross-Module Contract & SemVer Verification (agent_contract_compatibility_checker)",
+          "tier": "Tier_A"
+        },
+        {
+          "depends_on": [
+            "step_contract_compat"
+          ],
+          "executor": "agent_quality_guard",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "id": "step_quality_guard",
+          "name": "Execute Code Quality Guard (agent_quality_guard)",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_quality_guard"
+          ],
+          "executor": "agent_test_finops_auditor",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "id": "step_test_finops_auditor",
+          "name": "Test FinOps & Token Budget Audit (agent_test_finops_auditor)",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_quality_guard"
+          ],
+          "executor": "agent_flaky_test_detector",
+          "id": "step_flaky_test_isolation",
+          "name": "Flaky Test Detection & Quarantine (agent_flaky_test_detector)",
+          "output_quarantine": "user/hitl/flaky_quarantine.yaml",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_flaky_test_isolation"
+          ],
+          "executor": "agent_adversarial_fuzzer",
+          "fail_action": "QUARANTINE_AND_HALT",
+          "id": "step_adversarial_fuzz_audit",
+          "name": "Adversarial Red-Team & Mutation Fuzzing Audit (agent_adversarial_fuzzer)",
+          "tier": "Tier_A"
+        },
+        {
+          "depends_on": [
+            "step_flaky_test_isolation"
+          ],
+          "executor": "agent_tester",
+          "id": "step_bounded_tdd",
+          "max_retries": 3,
+          "name": "Bounded Unit & Integration TDD",
+          "quarantine_on_failure": true,
+          "tier": "Tier_B"
+        },
+        {
+          "action": "AUDIT_DOC_COVERAGE",
+          "depends_on": [
+            "step_bounded_tdd"
+          ],
+          "executor": "agent_doc_drift_synchronizer",
+          "id": "step_doc_drift_sync",
+          "name": "Architectural Blueprint & Doc Drift Audit (agent_doc_drift_synchronizer)",
+          "tier": "Tier_B"
+        },
+        {
+          "action": "SYNCHRONIZE_LIVING_DOCS",
+          "depends_on": [
+            "step_doc_drift_sync"
+          ],
+          "executor": "agent_living_doc_architect",
+          "gate": "gate_doc_drift_verification",
+          "id": "step_living_doc_synthesis",
+          "name": "Living Documentation & Mermaid Visualizer (agent_living_doc_architect)",
+          "output_dir": "workplace/docs/",
+          "tier": "Tier_B"
+        },
+        {
+          "action": "SEAL_BLOCK",
+          "depends_on": [
+            "step_living_doc_synthesis"
+          ],
+          "executor": "platform.merkle_ledger",
+          "id": "step_merkle_seal",
+          "name": "Merkle State Ledger Sealing",
+          "tier": "Tier_A"
+        }
+      ],
+      "workflow_id": "wf_pr_gatekeeper"
+    },
+    "wf_generic_multitenant_security_mesh_derivation": {
+      "description": "Autonomous sequential derivation workflow for the generic_multitenant_security_mesh master plan (Generic Bleeding-Edge Multi-Tenant RBAC, Adaptive Authentication, Zero-Trust MFA & PII Protection Mesh). Executes the root plan and then derives each discovered submodule (6) in dependency order. Auto-generated by agent_plan_module_orchestrator; idempotent and safe to regenerate.\n",
+      "generated_by": "agent_plan_module_orchestrator",
+      "source_plan": ".nb/plan/master/security-mesh",
+      "steps": [
+        {
+          "executor": "agent_generic_multitenant_security_mesh",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "id": "step_plan_root",
+          "name": "Derive generic_multitenant_security_mesh root artifacts (concise.md + detailed.md)",
+          "tier": "Tier_A"
+        },
+        {
+          "depends_on": [
+            "step_plan_root"
+          ],
+          "executor": "agent_multitenant_rbac_rebac_engine",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/multitenant_rbac_rebac_engine_rules.md",
+          "id": "step_multitenant_rbac_rebac_engine",
+          "name": "Derive module multitenant_rbac_rebac_engine (Modular Specification: Multi-Tenant RBAC, Zanzibar-Style ReBAC & Attribute-Based Access Control)",
+          "source_module": "modules/01_multitenant_rbac_rebac_engine.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_multitenant_rbac_rebac_engine"
+          ],
+          "executor": "agent_adaptive_authentication_and_mfa",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/adaptive_authentication_and_mfa_rules.md",
+          "id": "step_adaptive_authentication_and_mfa",
+          "name": "Derive module adaptive_authentication_and_mfa (Modular Specification: Adaptive Authentication, WebAuthn Passkeys & Enterprise MFA)",
+          "source_module": "modules/02_adaptive_authentication_and_mfa.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_adaptive_authentication_and_mfa"
+          ],
+          "executor": "agent_zero_trust_authorization_and_mtls",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/zero_trust_authorization_and_mtls_rules.md",
+          "id": "step_zero_trust_authorization_and_mtls",
+          "name": "Derive module zero_trust_authorization_and_mtls (Modular Specification: Continuous Zero-Trust Authorization, SPIFFE/SPIRE mTLS & Dynamic Revocation)",
+          "source_module": "modules/03_zero_trust_authorization_and_mtls.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_zero_trust_authorization_and_mtls"
+          ],
+          "executor": "agent_pii_protection_and_obfuscation",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/pii_protection_and_obfuscation_rules.md",
+          "id": "step_pii_protection_and_obfuscation",
+          "name": "Derive module pii_protection_and_obfuscation (Modular Specification: PII Data Protection, Format-Preserving Encryption & Dynamic Obfuscation)",
+          "source_module": "modules/04_pii_protection_and_obfuscation.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_pii_protection_and_obfuscation"
+          ],
+          "executor": "agent_cloud_security_posture_and_compliance",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/cloud_security_posture_and_compliance_rules.md",
+          "id": "step_cloud_security_posture_and_compliance",
+          "name": "Derive module cloud_security_posture_and_compliance (Modular Specification: Cloud Security Posture, KMS Envelope Encryption & Immutable WORM Compliance)",
+          "source_module": "modules/05_cloud_security_posture_and_compliance.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_cloud_security_posture_and_compliance"
+          ],
+          "executor": "agent_plan_injection_and_agentic_workflow",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/plan_injection_and_agentic_workflow_rules.md",
+          "id": "step_plan_injection_and_agentic_workflow",
+          "name": "Derive module plan_injection_and_agentic_workflow (Modular Specification: Generic Plan Injection Protocol, Wire Contracts & Agentic Security Swarm)",
+          "source_module": "modules/06_plan_injection_and_agentic_workflow.md",
+          "tier": "Tier_B"
+        },
+        {
+          "action": "SEAL_BLOCK",
+          "depends_on": [
+            "step_plan_injection_and_agentic_workflow"
+          ],
+          "executor": "platform.merkle_ledger",
+          "id": "step_module_merkle_seal",
+          "name": "Merkle State Ledger Sealing (plan module derivation)",
+          "tier": "Tier_A"
+        }
+      ],
+      "workflow_id": "wf_generic_multitenant_security_mesh_derivation"
+    },
+    "wf_master_enterprise_ui_design_system_derivation": {
+      "description": "Autonomous sequential derivation workflow for the master_enterprise_ui_design_system master plan (Enterprise Unified Design System & Multi-Surface Application Look-and-Feel Architecture). Executes the root plan and then derives each discovered submodule (6) in dependency order. Auto-generated by agent_plan_module_orchestrator; idempotent and safe to regenerate.\n",
+      "generated_by": "agent_plan_module_orchestrator",
+      "source_plan": ".nb/plan/master/enterprise-ui-design-system",
+      "steps": [
+        {
+          "executor": "agent_master_enterprise_ui_design_system",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "id": "step_plan_root",
+          "name": "Derive master_enterprise_ui_design_system root artifacts (concise.md + detailed.md)",
+          "tier": "Tier_A"
+        },
+        {
+          "depends_on": [
+            "step_plan_root"
+          ],
+          "executor": "agent_mod_design_tokens_and_theming",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_design_tokens_and_theming_rules.md",
+          "id": "step_mod_design_tokens_and_theming",
+          "name": "Derive module mod_design_tokens_and_theming (Design Tokens, Typography, Spatial Grid & Multi-Theme Engine)",
+          "source_module": "modules/01_design_tokens_and_theming_engine.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_mod_design_tokens_and_theming"
+          ],
+          "executor": "agent_mod_core_component_library",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_core_component_library_rules.md",
+          "id": "step_mod_core_component_library",
+          "name": "Derive module mod_core_component_library (Accessible Headless Primitives & Core Form/Display Widgets)",
+          "source_module": "modules/02_core_component_library.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_mod_core_component_library"
+          ],
+          "executor": "agent_mod_complex_data_and_governance_widgets",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_complex_data_and_governance_widgets_rules.md",
+          "id": "step_mod_complex_data_and_governance_widgets",
+          "name": "Derive module mod_complex_data_and_governance_widgets (High-Density Data Grids, Rule Builders, Diff Viewers & Settings Controls)",
+          "source_module": "modules/03_complex_data_and_governance_widgets.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_mod_complex_data_and_governance_widgets"
+          ],
+          "executor": "agent_mod_surface_specialization",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_surface_specialization_rules.md",
+          "id": "step_mod_surface_specialization",
+          "name": "Derive module mod_surface_specialization (Public Product Surface, Admin Governance Console & Operations Workspace Layouts)",
+          "source_module": "modules/04_surface_specialization_and_layouts.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_mod_surface_specialization"
+          ],
+          "executor": "agent_mod_realtime_data_and_state",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_realtime_data_and_state_rules.md",
+          "id": "step_mod_realtime_data_and_state",
+          "name": "Derive module mod_realtime_data_and_state (High-Performance Data Streaming, 60 FPS Virtualization & State Management)",
+          "source_module": "modules/05_state_management_and_realtime_data.md",
+          "tier": "Tier_B"
+        },
+        {
+          "depends_on": [
+            "step_mod_realtime_data_and_state"
+          ],
+          "executor": "agent_mod_governance_and_showcase",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "governing_rules": ".nb/context/rules/mod_governance_and_showcase_rules.md",
+          "id": "step_mod_governance_and_showcase",
+          "name": "Derive module mod_governance_and_showcase (Component Showcase, Visual Regression CI/CD & Percipience Swarms)",
+          "source_module": "modules/06_governance_testing_and_component_showcase.md",
+          "tier": "Tier_B"
+        },
+        {
+          "action": "SEAL_BLOCK",
+          "depends_on": [
+            "step_mod_governance_and_showcase"
+          ],
+          "executor": "platform.merkle_ledger",
+          "id": "step_module_merkle_seal",
+          "name": "Merkle State Ledger Sealing (plan module derivation)",
+          "tier": "Tier_A"
+        }
+      ],
+      "workflow_id": "wf_master_enterprise_ui_design_system_derivation"
+    },
+    "wf_master_parent_framework_derivation": {
+      "description": "Autonomous sequential derivation workflow for the master_parent_framework master plan (Parent Master Context Engineering Framework). Executes the root plan and then derives each discovered submodule (0) in dependency order. Auto-generated by agent_plan_module_orchestrator; idempotent and safe to regenerate.\n",
+      "generated_by": "agent_plan_module_orchestrator",
+      "source_plan": ".nb/plan/master/parent-master-plan",
+      "steps": [
+        {
+          "executor": "agent_master_parent_framework",
+          "fail_action": "AUTO_HEAL_OR_ROLLBACK",
+          "id": "step_plan_root",
+          "name": "Derive master_parent_framework root artifacts (concise.md + detailed.md)",
+          "tier": "Tier_A"
+        },
+        {
+          "action": "SEAL_BLOCK",
+          "depends_on": [
+            "step_plan_root"
+          ],
+          "executor": "platform.merkle_ledger",
+          "id": "step_module_merkle_seal",
+          "name": "Merkle State Ledger Sealing (plan module derivation)",
+          "tier": "Tier_A"
+        }
+      ],
+      "workflow_id": "wf_master_parent_framework_derivation"
+    }
   }
 }

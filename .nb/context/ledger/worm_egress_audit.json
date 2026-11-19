@@ -13421,6 +13421,22 @@
       "retention_days": 365,
       "egress_timestamp": "2026-11-18T21:47:58Z",
       "status": "MIRRORED_IMMUTABLE"
+    },
+    {
+      "block_id": 734,
+      "block_hash": "4d6d8a5bb6137ba3582ec7379079d033484147b9d6643ccee6ce27d8d218d3d5",
+      "merkle_root": "5de706ba3747c9892c3fbf0a2a82ad1db2147041f8d8f6363184541fea69f6ac",
+      "provider": "LOCAL_WORM_VAULT_EMULATION",
+      "vault_uri": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_000734_4d6d8a5bb6137ba3.json",
+      "vault_id": "file:///Users/lakhwinder/PycharmProjects/nb_fairyfly/.nb/workspaces/worm_vault/block_000734_4d6d8a5bb6137ba3.json",
+      "object_key": "merkle_blocks/block_000734_4d6d8a5bb6137ba3.json",
+      "cloud_target": "auto",
+      "compliance_mode": "ENFORCE_IMMUTABLE_MODE",
+      "retention_mode": "ENFORCE_IMMUTABLE_MODE",
+      "legal_hold": true,
+      "retention_days": 365,
+      "egress_timestamp": "2026-11-19T00:09:12Z",
+      "status": "MIRRORED_IMMUTABLE"
     }
   ]
 }

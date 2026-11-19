@@ -19,6 +19,7 @@ The **Percipience Parent Master Context Engineering Plan (Free Community Edition
 - **Basic Autonomous CI/CD Setup**: Lightweight self-sustaining workspace hygiene, single-attempt bounded self-repair, contract verification, and automated Merkle state sealing.
 - **Granular Sandbox Permissions for Local LLMs**: Scaffolding and granular cross-plugin sandbox permission control (`SandboxPermissionBroker`) for IDE-embedded LLMs.
 - **Attested Multi-Agent Handover & Guaranteed Delivery Spooling**: Zero-drift attested tokens ($S_{SP} \ge 0.95$), persistent outbox/inbox delivery queues, single-use nonce replay defense, and topological cycle sentinel (`GAP-AGT-19`).
+- **Essential Bootstrap Capabilities (IMPL-1.1, IMPL-1.2, IMPL-2.1, IMPL-5.1, IMPL-2.2, IMPL-4.1)**: Pre-commit git hook auto-installation (`IMPL-1.1`), pre-commit validator script (`IMPL-1.2`), agent swarm spawning (`IMPL-2.1`), Merkle chain blocking CI gate (`IMPL-5.1`), workflow hook registry synchronization (`IMPL-2.2`), and agent capability quota enforcement (`IMPL-4.1`).
 
 ```mermaid
 graph TD
@@ -27,11 +28,11 @@ graph TD
     WorkplaceSpace["workplace/<br/>(Project Code, Layered Modules, Portal)"]
     
     subgraph Agentic_CICD_Platform[".nb/ — Agentic CI/CD Platform System"]
-      NBCli[".nb/bin/percipience<br/>(Sole Canonical Gatekeeper CLI)"]
+      NBCli[".nb/bin/percipience<br/>(Sole Canonical Native Rust Gatekeeper CLI)"]
       NBConfig[".nb/config/<br/>(billing_plans, token_compression, byor)"]
-      NBCore[".nb/core/<br/>(38 Platform Engines: AST, Merkle, CI/CD)"]
+      NBCore["Native Rust Engines (crates/*)<br/>(AST, Merkle, CI/CD, Parity, Packager)"]
       NBContext[".nb/context/<br/>(Contracts, Invariants, Merkle Ledger)"]
-      NBAgentic[".nb/agentic/<br/>(Prompts, Workflows, Local Agents)"]
+      NBAgentic[".nb/agentic/<br/>(Declarative Agents, Workflows, Prompts, Schemas)"]
       NBScripts[".nb/scripts/<br/>(Pre-commit & CI/CD Hooks)"]
       NBTests[".nb/tests/<br/>(Platform CI/CD Verification Suites)"]
     end

@@ -1,0 +1,18 @@
+[package]
+name = "percipience-lsp"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Language Server Protocol (LSP 3.17) daemon for AST diagnostics & IDE synchronization"
+
+[dependencies]
+percipience-core = { path = "../percipience-core" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

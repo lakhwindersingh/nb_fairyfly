@@ -1,0 +1,31 @@
+[package]
+name = "percipience-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Canonical single binary CLI for Percipience Context Engineering OS"
+
+[[bin]]
+name = "percipience"
+path = "src/main.rs"
+
+[dependencies]
+percipience-core = { path = "../percipience-core" }
+percipience-security = { path = "../percipience-security" }
+percipience-orchestrator = { path = "../percipience-orchestrator" }
+percipience-packager = { path = "../percipience-packager" }
+percipience-server = { path = "../percipience-server" }
+percipience-lsp = { path = "../percipience-lsp" }
+axum.workspace = true
+clap.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

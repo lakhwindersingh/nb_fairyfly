@@ -48,7 +48,7 @@ The following capabilities are now **MANDATORY** for all deployments (Free, Team
 The following capabilities extend the Phase 1 bootstrap and are **MANDATORY** for Team, Business, and Enterprise deployments:
 
 1. **IMPL-2.2: Workflow Hook Registry Binding Validation** ✅ COMPLETE
-   - Engine: `.nb/core/agent_registry_synchronizer.py`; agent: `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` (v1.3.0)
+   - Native Rust Engine: `crates/percipience-orchestrator/src/registry_sync.rs` (CLI `./percipience registry sync`); agent: `.nb/agentic/custom/agents/agent_registry_synchronizer.yaml` (v1.3.0)
    - Reconciles the registry sections embedded in every AI agent settings file against their canonical filesystem sources of truth:
      - `agent_registry`     ← `.nb/agentic/custom/agents/*.yaml` (declared `agent_id`s)
      - `context_rules`      ← `.nb/context/rules/**`
@@ -68,7 +68,7 @@ The following capabilities extend the Phase 1 bootstrap and are **MANDATORY** fo
    - Non-Claude providers nest the platform block under a `percipience` namespace so provider-native keys are never clobbered.
 
 3. **Sequential Plan Module Orchestration** ✅ COMPLETE
-   - Engine: `.nb/core/plan_module_orchestrator.py`; CLI `percipience plan orchestrate` / `percipience plan bundle`.
+   - Native Rust Engine: `crates/percipience-orchestrator/src/submodule_orchestrator.rs` (CLI `percipience plan orchestrate` / `percipience plan bundle`).
    - Discovers a plan's declared and discovered submodules, then synthesizes per-module agents, context rules, and a sequential derivation workflow (root → modules in dependency order → Merkle seal); idempotent.
    - Tiers: Business ✅, Enterprise ✅
 
